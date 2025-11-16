@@ -1,7 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import clsx from 'clsx';
 import { civicsQuestions } from '@/constants/civicsQuestions';
+import AppNavigation from '@/components/AppNavigation';
 
 const categoryColors: Record<string, string> = {
   'Principles of American Democracy': 'from-rose-500 to-pink-500',
@@ -14,11 +17,59 @@ const categoryColors: Record<string, string> = {
 };
 
 const StudyGuidePage = () => {
-  const [category, setCategory] = useState<string>('all');
-  const categories = useMemo(
-    () => ['all', ...new Set(civicsQuestions.map(question => question.category))],
+  const questionCategories = useMemo<string[]>(
+    () => Array.from(new Set(civicsQuestions.map(question => question.category))),
     []
   );
+  const categories = useMemo(() => ['all', ...questionCategories], [questionCategories]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  const getValidCategory = useCallback(
+    (params: URLSearchParams) => {
+      const param = params.get('category');
+      if (param && questionCategories.includes(param)) {
+        return param;
+      }
+      return 'all';
+    },
+    [questionCategories]
+  );
+
+  const [category, setCategory] = useState<string>(() => getValidCategory(searchParams));
+  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    const nextCategory = getValidCategory(searchParams);
+    if (nextCategory !== category) {
+      setCategory(nextCategory);
+    }
+  }, [category, getValidCategory, searchParams]);
+
+  useEffect(() => {
+    if (location.hash) {
+      const target = document.getElementById(location.hash.replace('#', ''));
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [location.hash]);
+
+  const toggleCard = useCallback((id: number) => {
+    setFlippedCards(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }, []);
+
+  const handleCategoryChange = (value: string) => {
+    setCategory(value);
+    const nextParams = new URLSearchParams(searchParams);
+    if (value === 'all') {
+      nextParams.delete('category');
+    } else {
+      nextParams.set('category', value);
+    }
+    setSearchParams(nextParams, { replace: true });
+  };
 
   const filteredQuestions = useMemo(() => {
     return category === 'all'
@@ -27,56 +78,84 @@ const StudyGuidePage = () => {
   }, [category]);
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
-      <div className="mx-auto max-w-6xl">
-        <header className="flex flex-col gap-4 rounded-3xl border border-white/60 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="page-shell">
+      <AppNavigation />
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <header className="glass-panel flex flex-col gap-4 p-6 shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Study guide</p>
-            <h1 className="text-3xl font-bold text-slate-900">Interactive bilingual flip-cards</h1>
-            <p className="text-slate-600">Hover or tap each card to reveal Burmese answers instantly.</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">Study guide · လေ့လာမှုအညွှန်း</p>
+            <h1 className="text-3xl font-bold text-foreground">
+              Interactive bilingual flip-cards
+              <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ</span>
+            </h1>
+            <p className="text-muted-foreground">Tap a card to reveal Burmese answers with extra spacing for easier reading.</p>
           </div>
           <div>
-            <label className="text-xs uppercase tracking-[0.3em] text-slate-500">Sort by category</label>
+            <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Sort by category · <span className="font-myanmar text-muted-foreground">အပိုင်းရွေးချယ်ရန်</span>
+            </label>
             <select
-              className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+              className="mt-2 w-full rounded-2xl border border-border bg-card/80 px-4 py-3 text-sm"
               value={category}
-              onChange={event => setCategory(event.target.value)}
+              onChange={event => handleCategoryChange(event.target.value)}
             >
               {categories.map(option => (
                 <option key={option} value={option}>
-                  {option === 'all' ? 'All categories' : option}
+                  {option === 'all' ? 'All categories · အားလုံး' : option}
                 </option>
               ))}
             </select>
           </div>
         </header>
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filteredQuestions.map(question => (
-            <div key={question.id} className="group h-64 [perspective:1200px]">
-              <div className="relative h-full w-full rounded-3xl border border-slate-100 bg-white text-slate-900 transition [transform-style:preserve-3d] duration-500 group-hover:[transform:rotateY(180deg)]">
-                <div className="absolute inset-0 flex flex-col rounded-3xl p-5 [backface-visibility:hidden]">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{question.category}</p>
-                  <p className="mt-4 text-lg font-semibold text-slate-900">{question.question_en}</p>
-                  <p className="text-sm text-slate-500">{question.question_my}</p>
-                </div>
-                <div
-                  className={`absolute inset-0 flex flex-col rounded-3xl p-5 text-white [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br ${
-                    categoryColors[question.category] ?? 'from-primary to-primary'
-                  }`}
+        <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {filteredQuestions.map(question => {
+            const isLocked = Boolean(flippedCards[question.id]);
+            const isFlipped = isLocked;
+            return (
+              <div key={question.id} className="flip-card" data-flipped={isFlipped}>
+                <button
+                  type="button"
+                  className="flip-card-button"
+                  onClick={() => toggleCard(question.id)}
+                  aria-pressed={isLocked}
+                  aria-label={`Reveal answer for ${question.question_en}`}
                 >
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">မြန်မာလို အဖြေ</p>
-                  <ul className="mt-4 space-y-2">
-                    {question.studyAnswers.map(answer => (
-                      <li key={answer.text_en} className="rounded-2xl bg-white/20 px-3 py-2">
-                        <p className="text-sm font-semibold">{answer.text_en}</p>
-                        <p className="text-sm text-white/90">{answer.text_my}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div
+                    className={clsx(
+                      'flip-card-inner rounded-3xl border border-border/70 bg-card/95 text-foreground shadow-xl shadow-primary/10',
+                      'min-h-[40rem]'
+                    )}
+                  >
+                    <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{question.category}</p>
+                      <div>
+                        <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
+                        <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
+                      </div>
+                      <p className="text-sm font-semibold text-primary">Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span></p>
+                    </div>
+                    <div
+                      className={clsx(
+                        'flip-card-face flip-card-back flex h-full flex-col rounded-3xl p-6 text-white',
+                        'bg-gradient-to-br',
+                        categoryColors[question.category] ?? 'from-primary to-primary'
+                      )}
+                    >
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">မြန်မာလို အဖြေ</p>
+                      <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
+                        {question.studyAnswers.map(answer => (
+                          <li key={answer.text_en} className="rounded-2xl bg-white/15 px-4 py-3 shadow-inner">
+                            <p className="text-sm font-semibold tracking-wide">{answer.text_en}</p>
+                            <p className="text-sm text-white/90 font-myanmar leading-relaxed">{answer.text_my}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

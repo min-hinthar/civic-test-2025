@@ -38,6 +38,8 @@ export interface QuestionResult {
   category: Category;
 }
 
+export type TestEndReason = 'passThreshold' | 'failThreshold' | 'time' | 'complete';
+
 export interface TestSession {
   id?: string;
   date: string;
@@ -45,6 +47,8 @@ export interface TestSession {
   totalQuestions: number;
   durationSeconds: number;
   passed: boolean;
+  incorrectCount: number;
+  endReason: TestEndReason;
   results: QuestionResult[];
 }
 

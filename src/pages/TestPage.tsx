@@ -2,32 +2,64 @@
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fullCivicsQuestions } from '@/constants/civicsQuestions';
-import type { Answer, QuestionResult, TestSession } from '@/types';
+import { Clock3, Sparkles } from 'lucide-react';
+import AppNavigation from '@/components/AppNavigation';
+import { civicsQuestions } from '@/constants/civicsQuestions';
+import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 
 const TEST_DURATION_SECONDS = 20 * 60;
+const PASS_THRESHOLD = 12;
+const INCORRECT_LIMIT = 9;
 
 const shuffle = <T,>(array: T[]) => {
   return [...array].sort(() => Math.random() - 0.5);
 };
 
 const TestPage = () => {
-  const { saveTestSession } = useAuth();
+  const { saveTestSession, isSavingSession } = useAuth();
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [endReason, setEndReason] = useState<TestEndReason | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
+  const [hasSavedSession, setHasSavedSession] = useState(false);
+  const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
 
-  const questions = useMemo(() => shuffle(fullCivicsQuestions).slice(0, 20), []);
+  const questions = useMemo(
+    () =>
+      shuffle(civicsQuestions)
+        .slice(0, 20)
+        .map(question => ({
+          ...question,
+          answers: shuffle(question.answers),
+        })),
+    []
+  );
+  const currentQuestion = !isFinished ? questions[currentIndex] : null;
 
-  const currentQuestion = questions[currentIndex];
+  const answeredQuestions = results.length;
+  const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
 
-  if (!currentQuestion) {
-    return null;
-  }
+  const formattedTime = useMemo(() => {
+    const minutes = Math.floor(timeLeft / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = (timeLeft % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }, [timeLeft]);
+
+  const correctCount = results.filter(result => result.isCorrect).length;
+  const askedCount = results.length;
+  const incorrectCount = askedCount - correctCount;
+  const completionMessage: Record<TestEndReason, string> = {
+    passThreshold: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early.',
+    failThreshold: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
+    time: 'Time expired before the full set finished.',
+    complete: 'You completed all 20 questions.',
+  };
 
   const handleAnswer = useCallback(
     (answer: Answer) => {
@@ -42,15 +74,27 @@ const TestPage = () => {
         isCorrect: answer.correct,
         category: currentQuestion.category,
       };
-      setResults(prev => [...prev, result]);
 
-      if (currentIndex === questions.length - 1) {
+      const nextResults = [...results, result];
+      const nextCorrect = nextResults.filter(item => item.isCorrect).length;
+      const nextIncorrect = nextResults.length - nextCorrect;
+      const answeredAll = nextResults.length === questions.length;
+      const reachedPass = nextCorrect >= PASS_THRESHOLD;
+      const reachedFail = nextIncorrect >= INCORRECT_LIMIT;
+
+      setResults(nextResults);
+
+      if (reachedPass || reachedFail) {
         setIsFinished(true);
+        setEndReason(reachedPass ? 'passThreshold' : 'failThreshold');
+      } else if (answeredAll) {
+        setIsFinished(true);
+        setEndReason('complete');
       } else {
-        setCurrentIndex(prev => prev + 1);
+        setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
       }
     },
-    [currentIndex, currentQuestion, isFinished, questions.length]
+    [currentQuestion, isFinished, questions.length, results]
   );
 
   useEffect(() => {
@@ -59,6 +103,7 @@ const TestPage = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
+          setEndReason(current => current ?? 'time');
           setIsFinished(true);
           return 0;
         }
@@ -69,108 +114,237 @@ const TestPage = () => {
   }, [isFinished]);
 
   useEffect(() => {
-    if (!isFinished || !results.length) return;
+    if (isFinished) return;
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+      toast({
+        title: 'Finish the mock test first',
+        description: lockMessage,
+        variant: 'destructive',
+      });
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    window.history.pushState(null, '', window.location.href);
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isFinished, lockMessage]);
+
+  useEffect(() => {
+    if (!isFinished || !results.length || hasSavedSession) return;
     const correctAnswers = results.filter(result => result.isCorrect).length;
+    const incorrectAnswers = results.length - correctAnswers;
+    const completedFullSet = results.length === questions.length;
+    const fallbackReason: TestEndReason = endReason ?? (completedFullSet ? 'complete' : 'time');
     const session: Omit<TestSession, 'id'> = {
       date: new Date().toISOString(),
       score: correctAnswers,
-      totalQuestions: questions.length,
+      totalQuestions: results.length,
       durationSeconds: TEST_DURATION_SECONDS - timeLeft,
-      passed: correctAnswers >= 12,
+      passed: correctAnswers >= PASS_THRESHOLD,
+      incorrectCount: incorrectAnswers,
+      endReason: fallbackReason,
       results,
     };
-    saveTestSession(session).then(() => {
-      toast({
-        title: 'Mock test saved',
-        description: `You answered ${correctAnswers} questions correctly.`,
-      });
-    });
-  }, [isFinished, questions.length, results, saveTestSession, timeLeft]);
+    setHasSavedSession(true);
+    const persist = async () => {
+      try {
+        await saveTestSession(session);
+        toast({
+          title: 'Mock test saved',
+          description: `You answered ${correctAnswers} questions correctly.`,
+        });
+      } catch (error) {
+        console.error(error);
+        setHasSavedSession(false);
+        toast({
+          title: 'Unable to save test',
+          description: 'Please check your connection and try again.',
+          variant: 'destructive',
+        });
+      }
+    };
+    persist();
+  }, [endReason, hasSavedSession, isFinished, questions.length, results, saveTestSession, timeLeft]);
 
-  const formattedTime = useMemo(() => {
-    const minutes = Math.floor(timeLeft / 60)
-      .toString()
-      .padStart(2, '0');
-    const seconds = (timeLeft % 60).toString().padStart(2, '0');
-    return `${minutes}:${seconds}`;
-  }, [timeLeft]);
+  useEffect(() => {
+    if (isFinished) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isFinished]);
 
-  const correctCount = results.filter(result => result.isCorrect).length;
-
-  if (isFinished) {
+  if (!currentQuestion && !isFinished) {
     return (
-      <div className="min-h-screen bg-slate-50 px-4 py-10">
-        <div className="mx-auto max-w-3xl rounded-3xl border border-white/60 bg-white p-8 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Results</p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">You scored {correctCount} / {questions.length}</h1>
-          <p className="text-slate-600">Review each answer below and retake anytime.</p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="rounded-2xl border border-slate-200 px-4 py-2 font-semibold text-slate-700"
-            >
-              Back to dashboard
-            </button>
-            <button
-              onClick={() => window.location.reload()}
-              className="rounded-2xl bg-primary px-4 py-2 font-semibold text-primary-foreground"
-            >
-              Retake test
-            </button>
-          </div>
-          <div className="mt-10 space-y-6">
-            {results.map(result => (
-              <div key={result.questionId} className="rounded-2xl border border-slate-100 p-4">
-                <p className="text-sm font-semibold text-slate-700">{result.questionText_en}</p>
-                <p className="text-sm text-slate-500">{result.questionText_my}</p>
-                <p className={`mt-2 text-sm font-semibold ${result.isCorrect ? 'text-emerald-600' : 'text-red-600'}`}>
-                  {result.isCorrect ? 'Correct' : 'Correct answer: ' + result.correctAnswer.text_en}
-                </p>
-                {!result.isCorrect && (
-                  <p className="text-sm text-slate-500">{result.correctAnswer.text_my}</p>
-                )}
-              </div>
-            ))}
-          </div>
+      <div className="page-shell">
+        <AppNavigation locked lockMessage={lockMessage} />
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">
+          Preparing your next question…
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 py-10">
-      <div className="mx-auto max-w-4xl rounded-3xl border border-white/60 bg-white p-8 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  const activeView = (
+    <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
+      <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Mock Test</p>
-            <h1 className="text-2xl font-bold text-slate-900">
-              Question {currentIndex + 1} / {questions.length}
+            <p className="text-xs uppercase tracking-[0.3em] text-primary">Mock Test · စမ်းသပ်မေးခွန်း</p>
+            <h1 className="text-3xl font-bold text-foreground">
+              Question {currentIndex + 1} <span className="text-muted-foreground">/ {questions.length}</span>
             </h1>
+            <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
+            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
           </div>
-          <div className="text-right">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Time remaining</p>
-            <p className="text-3xl font-semibold text-primary">{formattedTime}</p>
+          <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 px-4 py-3 text-foreground">
+            <Clock3 className="h-5 w-5 text-primary" />
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Time remaining · <span className="font-myanmar">ချိန်ရှည်</span>
+              </p>
+              <p className="text-2xl font-semibold text-foreground">{formattedTime}</p>
+            </div>
           </div>
         </div>
-        <div className="mt-8 rounded-2xl bg-slate-50 p-6">
-          <p className="text-lg font-semibold text-slate-900">{currentQuestion.question_en}</p>
-          <p className="text-base text-slate-600">{currentQuestion.question_my}</p>
-          <p className="mt-4 text-xs uppercase tracking-[0.2em] text-slate-500">{currentQuestion.category}</p>
+
+        <div className="mt-6 flex flex-col gap-6 lg:flex-row">
+          <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
+            <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
+            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
+          </div>
+          <div className="w-full rounded-2xl border border-border bg-card/80 p-6 lg:w-64">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Progress · <span className="font-myanmar">တိုးတက်မှု</span>
+            </p>
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
+                <div className="h-2 rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${progressPercent}%` }} />
+              </div>
+              <span className="text-sm font-semibold text-muted-foreground">{progressPercent}%</span>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">Answered {answeredQuestions} of {questions.length}</p>
+            <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Saving · <span className="font-myanmar">မှတ်တမ်းသိမ်းဆည်း</span>
+            </p>
+            <p className="text-sm font-semibold text-foreground">{isSavingSession ? 'Syncing…' : 'Secure Supabase sync'}</p>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Interview ends early after 12 correct or 9 incorrect answers.
+            </p>
+          </div>
         </div>
-        <div className="mt-6 grid gap-4">
-          {currentQuestion.answers.map(answer => (
+
+        <div className="mt-8 grid gap-4">
+          {currentQuestion?.answers.map(answer => (
             <button
               key={answer.text_en}
               onClick={() => handleAnswer(answer)}
-              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-primary hover:shadow"
+              className="rounded-2xl border border-border bg-card/80 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-primary"
             >
-              <p className="font-semibold text-slate-900">{answer.text_en}</p>
-              <p className="text-sm text-slate-600">{answer.text_my}</p>
+              <p className="font-semibold text-foreground">{answer.text_en}</p>
+              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{answer.text_my}</p>
             </button>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm text-slate-500">Select an answer to move to the next question.</p>
+        <p className="mt-6 text-center text-sm text-muted-foreground">Tap an answer to move to the next question.</p>
       </div>
+    </div>
+  );
+
+  const resultView = (
+    <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
+      <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary">Results · အောင်မြင်မှု</p>
+            <h1 className="text-3xl font-bold text-foreground">
+              You scored {correctCount} / {askedCount}
+              <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
+                မှတ် {correctCount} / {askedCount}
+              </span>
+            </h1>
+            <p className="text-muted-foreground">Review your answers and retake the mock test anytime.</p>
+            {endReason && (
+              <p className="mt-2 text-sm font-semibold text-primary">{completionMessage[endReason]}</p>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground"
+            >
+              Back to dashboard
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-primary-foreground shadow-xl shadow-primary/40"
+            >
+              <Sparkles className="h-4 w-4" /> Retake test
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-4">
+          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Duration</p>
+            <p className="text-2xl font-bold text-foreground">{Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
+            <p className="text-2xl font-bold text-emerald-500">{correctCount}</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
+            <p className="text-2xl font-bold text-red-500">{incorrectCount}</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
+            <p className={`text-2xl font-bold ${correctCount >= PASS_THRESHOLD ? 'text-emerald-500' : 'text-red-500'}`}>
+              {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-10 space-y-6">
+          {results.map(result => (
+            <div key={result.questionId} className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm">
+              <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
+              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Your answer · <span className="font-myanmar">အဖြေ</span>
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{result.selectedAnswer.text_en}</p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.selectedAnswer.text_my}</p>
+                </div>
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Official answer · <span className="font-myanmar">အဖြေမှန်</span>
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{result.correctAnswer.text_en}</p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
+                </div>
+              </div>
+              <p className={`mt-3 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
+                {result.isCorrect ? 'Correct · မှန်' : 'Review this answer · ပြန်လည်လေ့လာပါ'}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="page-shell">
+      <AppNavigation locked={!isFinished} lockMessage={lockMessage} />
+      {isFinished ? resultView : activeView}
     </div>
   );
 };

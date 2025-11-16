@@ -14,6 +14,28 @@ create policy "Profiles are upsertable by the owner" on public.profiles
 create policy "Profiles are updateable by the owner" on public.profiles
   for update using (auth.uid() = id);
 
+-- Automatically hydrate the profiles table whenever a new auth user is created
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id, email, full_name)
+  values (new.id, new.email, coalesce(new.raw_user_meta_data->>'full_name', new.email))
+  on conflict (id) do update
+    set email = excluded.email,
+        full_name = coalesce(excluded.full_name, public.profiles.full_name);
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute function public.handle_new_user();
+
 -- Store the outcome of each timed mock test
 create table if not exists public.mock_tests (
   id uuid primary key default gen_random_uuid(),
@@ -23,6 +45,24 @@ create table if not exists public.mock_tests (
   duration_seconds integer not null default 0,
   completed_at timestamptz not null default now()
 );
+
+alter table public.mock_tests
+  add column if not exists passed boolean not null default false;
+alter table public.mock_tests
+  add column if not exists incorrect_count integer not null default 0;
+alter table public.mock_tests
+  add column if not exists end_reason text not null default 'complete';
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'mock_tests_end_reason_check'
+  ) then
+    alter table public.mock_tests
+      add constraint mock_tests_end_reason_check
+      check (end_reason in ('passThreshold', 'failThreshold', 'time', 'complete'));
+  end if;
+end $$;
 
 alter table public.mock_tests enable row level security;
 create policy "Users can manage their own mock tests" on public.mock_tests
