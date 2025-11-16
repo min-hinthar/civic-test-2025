@@ -25,7 +25,16 @@ const TestPage = () => {
   const [hasSavedSession, setHasSavedSession] = useState(false);
   const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
 
-  const questions = useMemo(() => shuffle(civicsQuestions).slice(0, 20), []);
+  const questions = useMemo(
+    () =>
+      shuffle(civicsQuestions)
+        .slice(0, 20)
+        .map(question => ({
+          ...question,
+          answers: shuffle(question.answers),
+        })),
+    []
+  );
   const currentQuestion = questions[currentIndex];
 
   const answeredQuestions = results.length;

@@ -28,27 +28,33 @@ const Dashboard = () => {
   const cards = [
     {
       title: 'Attempts completed',
+      titleMy: 'လုပ်ဆောင်မှုအရေအတွက်',
       value: history.length,
       description: 'Each mock test contains 20 randomized questions.',
       icon: FileText,
+      href: '/history#overview',
     },
     {
       title: 'Average accuracy',
+      titleMy: 'မှန်ကန်မှုပျမ်းမျှ',
       value: `${accuracy || 0}%`,
       description: 'Across every completed mock test.',
       icon: BookOpenCheck,
+      href: '/history#trend',
     },
     {
       title: 'Latest duration',
+      titleMy: 'နောက်ဆုံးအချိန်',
       value: latestAttempt ? `${Math.round(latestAttempt.durationSeconds / 60)} mins` : '—',
       description: latestAttempt ? new Date(latestAttempt.date).toLocaleDateString() : 'No attempts yet',
       icon: Clock3,
+      href: latestAttempt ? '/history#attempts' : '/test',
     },
   ];
 
   const quickActions = [
     {
-      href: '/history',
+      href: '/history#trend',
       title: 'View analytics',
       titleMy: 'အချက်အလက်ဇယား',
       description: 'Open your Supabase-synced score trend.',
@@ -56,7 +62,7 @@ const Dashboard = () => {
       gradient: 'from-sky-500/20 via-sky-400/10 to-indigo-500/20',
     },
     {
-      href: '/study',
+      href: '/study#cards',
       title: 'Master categories',
       titleMy: 'အပိုင်းလိုက်ကျွမ်းကျင်ရေး',
       description: 'Jump straight to bilingual flip-cards.',
@@ -99,13 +105,21 @@ const Dashboard = () => {
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {cards.map(card => (
-            <div key={card.title} className="stat-card p-6 transition hover:-translate-y-1">
+            <Link
+              key={card.title}
+              to={card.href}
+              className="stat-card focus-visible:ring-primary/50 p-6 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2"
+              aria-label={`${card.title} – ${card.titleMy}`}
+            >
               <card.icon className="h-6 w-6 text-primary" />
               <p className="mt-4 text-sm text-muted-foreground">{card.title}</p>
               <p className="text-3xl font-bold text-foreground">{card.value}</p>
               <p className="text-sm text-muted-foreground">{card.description}</p>
-              <p className="text-xs text-muted-foreground font-myanmar mt-1">{card.title}</p>
-            </div>
+              <p className="mt-1 text-xs text-muted-foreground font-myanmar">{card.titleMy}</p>
+              <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
+                {card.href.startsWith('/history') ? 'View details →' : 'Start practicing →'}
+              </span>
+            </Link>
           ))}
         </div>
 
@@ -131,7 +145,7 @@ const Dashboard = () => {
             </div>
           </div>
           <Link
-            to={latestAttempt ? '/history' : '/test'}
+            to={latestAttempt ? '/history#attempts' : '/test'}
             className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 text-left shadow-lg transition hover:-translate-y-1"
           >
             <h2 className="text-lg font-semibold text-foreground">Latest summary · <span className="font-myanmar text-muted-foreground">နောက်ဆုံးရလေ့ကျင့်မှု</span></h2>

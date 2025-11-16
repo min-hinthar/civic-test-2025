@@ -57,17 +57,17 @@ const StudyGuidePage = () => {
             </select>
           </div>
         </header>
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredQuestions.map(question => (
-            <div key={question.id} className="group [perspective:1600px]">
-              <div className="relative h-full min-h-[28rem] w-full overflow-hidden rounded-3xl border border-border/70 bg-card/90 text-foreground transition duration-500 [transform-style:preserve-3d] shadow-xl shadow-primary/10 group-hover:[transform:rotateY(180deg)]">
-                <div className="absolute inset-0 flex h-full flex-col justify-between rounded-3xl p-6 [backface-visibility:hidden]">
+            <div key={question.id} className="flip-card" tabIndex={0}>
+              <div className="flip-card-inner h-full min-h-[32rem] rounded-3xl border border-border/70 bg-card/90 text-foreground shadow-xl shadow-primary/10">
+                <div className="flip-card-face flex h-full flex-col justify-between rounded-3xl p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{question.category}</p>
                   <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
                   <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                 </div>
                 <div
-                  className={`absolute inset-0 flex h-full flex-col rounded-3xl p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br ${
+                  className={`flip-card-face flip-card-back flex h-full flex-col rounded-3xl p-6 text-white bg-gradient-to-br ${
                     categoryColors[question.category] ?? 'from-primary to-primary'
                   }`}
                 >

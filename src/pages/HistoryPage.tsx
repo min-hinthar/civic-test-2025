@@ -43,7 +43,10 @@ const HistoryPage = () => {
           <p className="text-muted-foreground">Every attempt is securely stored in Supabase so you can review trends anytime.</p>
         </header>
 
-        <section className="mt-8 grid gap-6 sm:grid-cols-3">
+        <section id="overview" className="mt-8 grid gap-6 sm:grid-cols-3" aria-labelledby="history-overview">
+          <span id="history-overview" className="sr-only">
+            Overview statistics
+          </span>
           <div className="stat-card p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Attempts</p>
             <p className="text-3xl font-bold text-foreground">{history.length}</p>
@@ -64,8 +67,8 @@ const HistoryPage = () => {
           </div>
         </section>
 
-        <section className="mt-8 glass-panel p-6 shadow-primary/15">
-          <h2 className="text-lg font-semibold text-foreground">Score trend · <span className="font-myanmar text-muted-foreground">အမှတ်တိုးတက်မှု</span></h2>
+        <section id="trend" className="mt-8 glass-panel p-6 shadow-primary/15" aria-labelledby="history-trend">
+          <h2 id="history-trend" className="text-lg font-semibold text-foreground">Score trend · <span className="font-myanmar text-muted-foreground">အမှတ်တိုးတက်မှု</span></h2>
           <div className="mt-6 h-72 w-full">
             {chartData.length ? (
               <ResponsiveContainer>
@@ -83,11 +86,11 @@ const HistoryPage = () => {
           </div>
         </section>
 
-        <section className="mt-8 space-y-6">
+        <section id="attempts" className="mt-8 space-y-6" aria-labelledby="history-attempts">
           <div className="flex items-center gap-3">
             <Layers3 className="h-5 w-5 text-primary" />
             <div>
-              <h2 className="text-lg font-semibold text-foreground">Attempt log · <span className="font-myanmar text-muted-foreground">မှတ်တမ်းဇယား</span></h2>
+              <h2 id="history-attempts" className="text-lg font-semibold text-foreground">Attempt log · <span className="font-myanmar text-muted-foreground">မှတ်တမ်းဇယား</span></h2>
               <p className="text-sm text-muted-foreground">Tap any row to review every question you answered.</p>
             </div>
           </div>
