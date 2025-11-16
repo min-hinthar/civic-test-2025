@@ -38,7 +38,7 @@ const TestPage = () => {
         })),
     []
   );
-  const currentQuestion = questions[currentIndex];
+  const currentQuestion = !isFinished ? questions[currentIndex] : null;
 
   const answeredQuestions = results.length;
   const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
@@ -75,30 +75,26 @@ const TestPage = () => {
         category: currentQuestion.category,
       };
 
-      setResults(prev => {
-        const nextResults = [...prev, result];
-        const nextCorrect = nextResults.filter(item => item.isCorrect).length;
-        const nextIncorrect = nextResults.length - nextCorrect;
-        const answeredAll = nextResults.length === questions.length;
+      const nextResults = [...results, result];
+      const nextCorrect = nextResults.filter(item => item.isCorrect).length;
+      const nextIncorrect = nextResults.length - nextCorrect;
+      const answeredAll = nextResults.length === questions.length;
+      const reachedPass = nextCorrect >= PASS_THRESHOLD;
+      const reachedFail = nextIncorrect >= INCORRECT_LIMIT;
 
-        const reachedPass = nextCorrect >= PASS_THRESHOLD;
-        const reachedFail = nextIncorrect >= INCORRECT_LIMIT;
+      setResults(nextResults);
 
-        if (reachedPass || reachedFail) {
-          setIsFinished(true);
-          setEndReason(reachedPass ? 'passThreshold' : 'failThreshold');
-          setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
-        } else if (answeredAll) {
-          setIsFinished(true);
-          setEndReason('complete');
-        } else {
-          setCurrentIndex(prevIndex => prevIndex + 1);
-        }
-
-        return nextResults;
-      });
+      if (reachedPass || reachedFail) {
+        setIsFinished(true);
+        setEndReason(reachedPass ? 'passThreshold' : 'failThreshold');
+      } else if (answeredAll) {
+        setIsFinished(true);
+        setEndReason('complete');
+      } else {
+        setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
+      }
     },
-    [currentQuestion, isFinished, questions.length]
+    [currentQuestion, isFinished, questions.length, results]
   );
 
   useEffect(() => {
@@ -184,7 +180,14 @@ const TestPage = () => {
   }, [isFinished]);
 
   if (!currentQuestion && !isFinished) {
-    return null;
+    return (
+      <div className="page-shell">
+        <AppNavigation locked lockMessage={lockMessage} />
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">
+          Preparing your next question…
+        </div>
+      </div>
+    );
   }
 
   const activeView = (

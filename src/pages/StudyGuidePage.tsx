@@ -38,7 +38,6 @@ const StudyGuidePage = () => {
 
   const [category, setCategory] = useState<string>(() => getValidCategory(searchParams));
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     const nextCategory = getValidCategory(searchParams);
@@ -46,10 +45,6 @@ const StudyGuidePage = () => {
       setCategory(nextCategory);
     }
   }, [category, getValidCategory, searchParams]);
-
-  useEffect(() => {
-    setHoveredCard(null);
-  }, [category]);
 
   useEffect(() => {
     if (location.hash) {
@@ -93,7 +88,7 @@ const StudyGuidePage = () => {
               Interactive bilingual flip-cards
               <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ</span>
             </h1>
-            <p className="text-muted-foreground">Hover, tap, or swipe to reveal Burmese answers with extra spacing for easier reading.</p>
+            <p className="text-muted-foreground">Tap a card to reveal Burmese answers with extra spacing for easier reading.</p>
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -115,15 +110,13 @@ const StudyGuidePage = () => {
         <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredQuestions.map(question => {
             const isLocked = Boolean(flippedCards[question.id]);
-            const isFlipped = hoveredCard === question.id || isLocked;
+            const isFlipped = isLocked;
             return (
               <div key={question.id} className="flip-card" data-flipped={isFlipped}>
                 <button
                   type="button"
                   className="flip-card-button"
                   onClick={() => toggleCard(question.id)}
-                  onMouseEnter={() => setHoveredCard(question.id)}
-                  onMouseLeave={() => setHoveredCard(prev => (prev === question.id ? null : prev))}
                   aria-pressed={isLocked}
                   aria-label={`Reveal answer for ${question.question_en}`}
                 >
@@ -139,7 +132,7 @@ const StudyGuidePage = () => {
                         <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
                         <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                       </div>
-                      <p className="text-sm font-semibold text-primary">Tap or hover to flip · <span className="font-myanmar">နှိပ်ပါ/လှည့်ပါ</span></p>
+                      <p className="text-sm font-semibold text-primary">Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span></p>
                     </div>
                     <div
                       className={clsx(

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/toaster';
@@ -27,16 +27,15 @@ const AppShell = () => {
 
   return (
     <ThemeProvider>
-      <HelmetProvider>
-        <AuthProvider>
-          <Router>
-            <Helmet>
-              <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
-              <meta
-                name="description"
-                content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
-              />
-            </Helmet>
+      <AuthProvider>
+        <Router>
+          <Head>
+            <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
+            <meta
+              name="description"
+              content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
+            />
+          </Head>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
@@ -77,7 +76,6 @@ const AppShell = () => {
             <Toaster />
           </Router>
         </AuthProvider>
-      </HelmetProvider>
     </ThemeProvider>
   );
 };
