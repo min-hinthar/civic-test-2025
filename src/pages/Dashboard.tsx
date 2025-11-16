@@ -189,17 +189,26 @@ const Dashboard = () => {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {Object.entries(categoryBreakdown).map(([category, stats]) => {
               const rate = Math.round((stats.correct / stats.total) * 100);
+              const encodedCategory = encodeURIComponent(category);
               return (
-                <div key={category} className="rounded-2xl border border-border/60 p-4">
+                <Link
+                  key={category}
+                  to={`/study?category=${encodedCategory}#cards`}
+                  className="group rounded-2xl border border-border/60 p-4 transition hover:-translate-y-0.5 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  aria-label={`Review ${category}`}
+                >
                   <p className="text-sm font-semibold text-foreground">{category}</p>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
-                      <div className="h-2 rounded-full bg-primary" style={{ width: `${rate}%` }} />
+                      <div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${rate}%` }} />
                     </div>
                     <span className="text-sm font-semibold text-foreground">{rate}%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">{stats.correct} correct out of {stats.total} questions</p>
-                </div>
+                  <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
+                    Go to flip-cards →
+                  </span>
+                </Link>
               );
             })}
             {!Object.keys(categoryBreakdown).length && <p className="text-muted-foreground">Complete a mock test to unlock insights.</p>}
