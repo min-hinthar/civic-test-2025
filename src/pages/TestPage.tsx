@@ -10,6 +10,8 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 
 const TEST_DURATION_SECONDS = 20 * 60;
+const PASS_THRESHOLD = 12;
+const INCORRECT_LIMIT = 9;
 
 const shuffle = <T,>(array: T[]) => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -21,6 +23,7 @@ const TestPage = () => {
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [endReason, setEndReason] = useState<'threshold' | 'time' | 'complete' | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [hasSavedSession, setHasSavedSession] = useState(false);
   const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
@@ -49,6 +52,12 @@ const TestPage = () => {
   }, [timeLeft]);
 
   const correctCount = results.filter(result => result.isCorrect).length;
+  const askedCount = results.length || questions.length;
+  const completionMessage: Record<'threshold' | 'time' | 'complete', string> = {
+    threshold: 'Test auto-completed after meeting the USCIS 12-correct / 9-incorrect requirement.',
+    time: 'Time expired before the full set finished.',
+    complete: 'You completed all 20 questions.',
+  };
 
   const handleAnswer = useCallback(
     (answer: Answer) => {
@@ -63,15 +72,27 @@ const TestPage = () => {
         isCorrect: answer.correct,
         category: currentQuestion.category,
       };
-      setResults(prev => [...prev, result]);
 
-      if (currentIndex === questions.length - 1) {
-        setIsFinished(true);
-      } else {
-        setCurrentIndex(prev => prev + 1);
-      }
+      setResults(prev => {
+        const nextResults = [...prev, result];
+        const nextCorrect = nextResults.filter(item => item.isCorrect).length;
+        const nextIncorrect = nextResults.length - nextCorrect;
+        const answeredAll = nextResults.length === questions.length;
+
+        if (nextCorrect >= PASS_THRESHOLD || nextIncorrect >= INCORRECT_LIMIT) {
+          setIsFinished(true);
+          setEndReason('threshold');
+        } else if (answeredAll) {
+          setIsFinished(true);
+          setEndReason('complete');
+        } else {
+          setCurrentIndex(prevIndex => prevIndex + 1);
+        }
+
+        return nextResults;
+      });
     },
-    [currentIndex, currentQuestion, isFinished, questions.length]
+    [currentQuestion, isFinished, questions.length]
   );
 
   useEffect(() => {
@@ -80,6 +101,7 @@ const TestPage = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
+          setEndReason(current => current ?? 'time');
           setIsFinished(true);
           return 0;
         }
@@ -118,9 +140,9 @@ const TestPage = () => {
     const session: Omit<TestSession, 'id'> = {
       date: new Date().toISOString(),
       score: correctAnswers,
-      totalQuestions: questions.length,
+      totalQuestions: results.length,
       durationSeconds: TEST_DURATION_SECONDS - timeLeft,
-      passed: correctAnswers >= 12,
+      passed: correctAnswers >= PASS_THRESHOLD,
       results,
     };
     setHasSavedSession(true);
@@ -142,7 +164,7 @@ const TestPage = () => {
       }
     };
     persist();
-  }, [hasSavedSession, isFinished, questions.length, results, saveTestSession, timeLeft]);
+  }, [hasSavedSession, isFinished, results, saveTestSession, timeLeft]);
 
   if (!currentQuestion && !isFinished) {
     return null;
@@ -191,6 +213,9 @@ const TestPage = () => {
               Saving · <span className="font-myanmar">မှတ်တမ်းသိမ်းဆည်း</span>
             </p>
             <p className="text-sm font-semibold text-foreground">{isSavingSession ? 'Syncing…' : 'Secure Supabase sync'}</p>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Interview ends early after 12 correct or 9 incorrect answers.
+            </p>
           </div>
         </div>
 
@@ -218,12 +243,15 @@ const TestPage = () => {
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-primary">Results · အောင်မြင်မှု</p>
             <h1 className="text-3xl font-bold text-foreground">
-              You scored {correctCount} / {questions.length}
+              You scored {correctCount} / {askedCount}
               <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
-                မှတ် {correctCount} / {questions.length}
+                မှတ် {correctCount} / {askedCount}
               </span>
             </h1>
             <p className="text-muted-foreground">Review your answers and retake the mock test anytime.</p>
+            {endReason && (
+              <p className="mt-2 text-sm font-semibold text-primary">{completionMessage[endReason]}</p>
+            )}
           </div>
           <div className="flex flex-wrap gap-3">
             <button
@@ -252,8 +280,8 @@ const TestPage = () => {
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
-            <p className={`text-2xl font-bold ${correctCount >= 12 ? 'text-emerald-500' : 'text-red-500'}`}>
-              {correctCount >= 12 ? 'Pass' : 'Review'}
+            <p className={`text-2xl font-bold ${correctCount >= PASS_THRESHOLD ? 'text-emerald-500' : 'text-red-500'}`}>
+              {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
             </p>
           </div>
         </div>

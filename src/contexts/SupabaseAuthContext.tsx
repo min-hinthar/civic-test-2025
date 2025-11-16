@@ -18,6 +18,8 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+const PASS_THRESHOLD = 12;
+
 const mapResponses = (test: any): TestSession => {
   const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: any): QuestionResult => ({
     questionId: response.question_id,
@@ -41,7 +43,7 @@ const mapResponses = (test: any): TestSession => {
     ? results.filter(result => result.isCorrect).length
     : test.score ?? 0;
   const totalQuestions = test.total_questions ?? (results.length || 20);
-  const passed = derivedScore >= Math.ceil(totalQuestions * 0.6);
+  const passed = derivedScore >= PASS_THRESHOLD;
 
   return {
     id: test.id,

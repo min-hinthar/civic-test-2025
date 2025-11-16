@@ -10,8 +10,9 @@ const Dashboard = () => {
   const { user } = useAuth();
   const history = user?.testHistory ?? [];
   const latestAttempt = history[0];
-  const accuracy = history.length
-    ? Math.round((history.reduce((sum, session) => sum + session.score, 0) / (history.length * 20)) * 100)
+  const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
+  const accuracy = totalQuestionsAnswered
+    ? Math.round((history.reduce((sum, session) => sum + session.score, 0) / totalQuestionsAnswered) * 100)
     : 0;
 
   const categoryBreakdown = history.reduce<Record<string, { correct: number; total: number }>>((acc, session) => {
@@ -33,7 +34,7 @@ const Dashboard = () => {
       title: 'Attempts completed',
       titleMy: 'လုပ်ဆောင်မှုအရေအတွက်',
       value: history.length,
-      description: 'Each mock test contains 20 randomized questions.',
+      description: 'Each mock test draws up to 20 randomized questions.',
       icon: FileText,
       href: '/history#overview',
     },

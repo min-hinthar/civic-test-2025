@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip, CartesianGrid, YAxis } from 'recharts';
 import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
@@ -8,6 +9,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const HistoryPage = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const history = user?.testHistory ?? [];
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
@@ -23,12 +25,21 @@ const HistoryPage = () => {
     [history]
   );
 
-  const bestScore = history.reduce((max, session) => Math.max(max, session.score), 0);
+  const bestSession = history.reduce<(typeof history)[number] | null>((best, session) => {
+    if (!best) return session;
+    return session.score > best.score ? session : best;
+  }, history[0] ?? null);
   const passRate = history.length ? Math.round((history.filter(session => session.passed).length / history.length) * 100) : 0;
 
   const toggleSession = (id: string) => {
     setExpandedSessionId(prev => (prev === id ? null : id));
   };
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const target = document.getElementById(location.hash.replace('#', ''));
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [location.hash]);
 
   return (
     <div className="page-shell">
@@ -55,7 +66,9 @@ const HistoryPage = () => {
           </div>
           <div className="stat-card p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Best score</p>
-            <p className="text-3xl font-bold text-foreground">{bestScore} / 20</p>
+            <p className="text-3xl font-bold text-foreground">
+              {bestSession ? `${bestSession.score} / ${bestSession.totalQuestions}` : '—'}
+            </p>
             <p className="text-sm text-muted-foreground">Keep chasing perfection</p>
             <p className="text-xs text-muted-foreground font-myanmar">အကောင်းဆုံးအမှတ်</p>
           </div>
