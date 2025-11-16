@@ -25,6 +25,9 @@ const Dashboard = () => {
     return acc;
   }, {});
 
+  const trackedCategories = Object.keys(categoryBreakdown).length;
+  const masteredCategories = Object.values(categoryBreakdown).filter(stats => stats.total > 0 && stats.correct === stats.total).length;
+
   const cards = [
     {
       title: 'Attempts completed',
@@ -71,6 +74,37 @@ const Dashboard = () => {
     },
   ];
 
+  const detailTiles = [
+    {
+      href: '/history#trend',
+      title: 'Analytics snapshot',
+      titleMy: 'ဆန်းစစ်ချက်',
+      stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
+      description: history.length ? 'Based on all completed mock tests.' : 'Complete a mock test to unlock insights.',
+      gradient: 'from-sky-500/30 via-indigo-500/20 to-purple-500/10',
+    },
+    {
+      href: '/study#cards',
+      title: 'Master categories',
+      titleMy: 'အပိုင်းကျွမ်းကျင်',
+      stat: trackedCategories ? `${masteredCategories}/${trackedCategories} mastered` : '0 categories tracked',
+      description: trackedCategories
+        ? 'Tap to revisit bilingual flip-cards by category.'
+        : 'Review flip-cards to start tracking mastery.',
+      gradient: 'from-emerald-500/30 via-lime-500/20 to-teal-500/10',
+    },
+    {
+      href: latestAttempt ? '/history#attempts' : '/test',
+      title: 'Latest summary',
+      titleMy: 'နောက်ဆုံးအကျဉ်းချုံး',
+      stat: latestAttempt ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}` : 'No attempts yet',
+      description: latestAttempt
+        ? `Finished in ${Math.round(latestAttempt.durationSeconds / 60)} mins on ${new Date(latestAttempt.date).toLocaleDateString()}`
+        : 'Start a mock test to save your first report.',
+      gradient: 'from-rose-500/30 via-amber-400/20 to-orange-500/10',
+    },
+  ];
+
   return (
     <div className="page-shell">
       <AppNavigation />
@@ -103,7 +137,10 @@ const Dashboard = () => {
           </div>
         </header>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <section id="highlights" className="mt-8 grid gap-6 md:grid-cols-3" aria-labelledby="dashboard-highlights">
+          <span id="dashboard-highlights" className="sr-only">
+            Dashboard highlights
+          </span>
           {cards.map(card => (
             <Link
               key={card.title}
@@ -121,9 +158,12 @@ const Dashboard = () => {
               </span>
             </Link>
           ))}
-        </div>
+        </section>
 
-        <section className="mt-8 grid gap-6 md:grid-cols-2">
+        <section id="navigation" className="mt-8 grid gap-6 md:grid-cols-2" aria-labelledby="dashboard-navigation">
+          <h2 id="dashboard-navigation" className="sr-only">
+            Quick navigation
+          </h2>
           <div className="stat-card p-6">
             <h2 className="text-lg font-semibold text-foreground">Navigate faster · <span className="font-myanmar text-muted-foreground">လမ်းကြောင်းမည်သို့လဲ</span></h2>
             <p className="text-sm text-muted-foreground">Quick actions optimized for thumb reach on any phone.</p>
@@ -147,6 +187,8 @@ const Dashboard = () => {
           <Link
             to={latestAttempt ? '/history#attempts' : '/test'}
             className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 text-left shadow-lg transition hover:-translate-y-1"
+            id="latest-summary"
+            aria-label="Latest summary"
           >
             <h2 className="text-lg font-semibold text-foreground">Latest summary · <span className="font-myanmar text-muted-foreground">နောက်ဆုံးရလေ့ကျင့်မှု</span></h2>
             <p className="text-sm text-muted-foreground">
@@ -179,9 +221,36 @@ const Dashboard = () => {
           </Link>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg">
+        <section id="deep-dive" className="mt-8" aria-labelledby="deep-dive-title">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 id="deep-dive-title" className="text-lg font-semibold text-foreground">
+              Tap for more data · <span className="font-myanmar text-muted-foreground">အသေးစိတ်အချက်အလက်</span>
+            </h2>
+            <p className="text-sm text-muted-foreground">Each tile opens the relevant section with deeper analytics.</p>
+          </div>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            {detailTiles.map(tile => (
+              <Link
+                key={tile.title}
+                to={tile.href}
+                className={`interactive-tile ${tile.gradient}`}
+                aria-label={`${tile.title} – ${tile.titleMy}`}
+              >
+                <p className="text-sm font-semibold text-foreground">{tile.title}</p>
+                <p className="text-xs text-muted-foreground font-myanmar">{tile.titleMy}</p>
+                <p className="mt-3 text-2xl font-bold text-foreground">{tile.stat}</p>
+                <p className="text-sm text-muted-foreground">{tile.description}</p>
+                <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">Open details →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section id="category-accuracy" className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg" aria-labelledby="category-accuracy-title">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">Category accuracy · <span className="font-myanmar text-muted-foreground">အပိုင်းလိုက်မှန်ကန်မှု</span></h2>
+            <h2 id="category-accuracy-title" className="text-lg font-semibold text-foreground">
+              Category accuracy · <span className="font-myanmar text-muted-foreground">အပိုင်းလိုက်မှန်ကန်မှု</span>
+            </h2>
             <Link to="/history" className="text-sm font-semibold text-primary">
               View full analytics →
             </Link>

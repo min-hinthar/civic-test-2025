@@ -92,9 +92,15 @@ const StudyGuidePage = () => {
         </header>
         <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredQuestions.map(question => (
-            <div key={question.id} className="flip-card" tabIndex={0}>
-              <div className="flip-card-inner h-full min-h-[34rem] rounded-3xl border border-border/70 bg-card/90 text-foreground shadow-xl shadow-primary/10">
-                <div className="flip-card-face flex h-full flex-col justify-between rounded-3xl p-6">
+            <div
+              key={question.id}
+              className="flip-card"
+              tabIndex={0}
+              role="button"
+              aria-label={`Reveal answer for ${question.question_en}`}
+            >
+              <div className="flip-card-inner h-full min-h-[36rem] rounded-3xl border border-border/70 bg-card/90 text-foreground shadow-xl shadow-primary/10">
+                <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{question.category}</p>
                   <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
                   <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
