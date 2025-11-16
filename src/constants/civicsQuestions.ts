@@ -1,4 +1,4 @@
-import { Question } from '../types';
+import { Question } from '@/types';
 
 export const civicsQuestions: Question[] = [
   // Principles of American Democracy

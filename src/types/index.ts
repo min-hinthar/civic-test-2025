@@ -35,18 +35,21 @@ export interface QuestionResult {
   selectedAnswer: Answer;
   correctAnswer: Answer;
   isCorrect: boolean;
+  category: Category;
 }
 
 export interface TestSession {
+  id?: string;
   date: string;
   score: number;
   totalQuestions: number;
-
+  durationSeconds: number;
   passed: boolean;
   results: QuestionResult[];
 }
 
 export interface User {
+  id: string;
   email: string;
   name: string;
   testHistory: TestSession[];
