@@ -139,11 +139,11 @@ html {
 
 @layer components {
   .glass-panel {
-    @apply rounded-3xl border border-border/70 bg-card/90 shadow-2xl shadow-primary/10 backdrop-blur-xl;
+    @apply rounded-3xl border border-border/70 bg-card/90 shadow-2xl shadow-primary/10 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/80;
   }
 
   .stat-card {
-    @apply rounded-3xl border border-border bg-card/80 shadow-lg shadow-primary/10;
+    @apply rounded-3xl border border-border bg-card/80 shadow-lg shadow-primary/10 dark:border-white/10 dark:bg-slate-950/70;
   }
 
   .pill-accent {

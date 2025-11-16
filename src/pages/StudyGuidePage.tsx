@@ -60,19 +60,19 @@ const StudyGuidePage = () => {
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredQuestions.map(question => (
             <div key={question.id} className="group [perspective:1600px]">
-              <div className="relative h-full min-h-[22rem] w-full rounded-3xl border border-border/70 bg-card/90 text-foreground transition duration-500 [transform-style:preserve-3d] shadow-xl shadow-primary/10 group-hover:[transform:rotateY(180deg)]">
-                <div className="absolute inset-0 flex flex-col rounded-3xl p-6 [backface-visibility:hidden]">
+              <div className="relative h-full min-h-[28rem] w-full overflow-hidden rounded-3xl border border-border/70 bg-card/90 text-foreground transition duration-500 [transform-style:preserve-3d] shadow-xl shadow-primary/10 group-hover:[transform:rotateY(180deg)]">
+                <div className="absolute inset-0 flex h-full flex-col justify-between rounded-3xl p-6 [backface-visibility:hidden]">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{question.category}</p>
                   <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
                   <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                 </div>
                 <div
-                  className={`absolute inset-0 flex flex-col rounded-3xl p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br ${
+                  className={`absolute inset-0 flex h-full flex-col rounded-3xl p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br ${
                     categoryColors[question.category] ?? 'from-primary to-primary'
                   }`}
                 >
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">မြန်မာလို အဖြေ</p>
-                  <ul className="mt-4 space-y-2">
+                  <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
                     {question.studyAnswers.map(answer => (
                       <li key={answer.text_en} className="rounded-2xl bg-white/15 px-4 py-3 shadow-inner">
                         <p className="text-sm font-semibold tracking-wide">{answer.text_en}</p>

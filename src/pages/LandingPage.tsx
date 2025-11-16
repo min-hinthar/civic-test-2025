@@ -1,8 +1,9 @@
 'use client';
 
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Languages, Map, Smartphone } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const features = [
   {
@@ -29,6 +30,12 @@ const features = [
 ];
 
 const LandingPage = () => {
+  const { user } = useAuth();
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="page-shell overflow-hidden">
       <div className="pointer-events-none absolute inset-x-0 top-[-200px] mx-auto h-[420px] w-[640px] rounded-full bg-gradient-to-r from-primary/40 via-rose-300/40 to-amber-200/40 blur-[120px]" />

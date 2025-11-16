@@ -118,21 +118,36 @@ const HistoryPage = () => {
                 {isExpanded && (
                   <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
                     {session.results.map(result => (
-                      <div key={`${sessionId}-${result.questionId}`} className="rounded-2xl border border-border/60 bg-muted/30 p-3">
+                      <div
+                        key={`${sessionId}-${result.questionId}`}
+                        className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
+                      >
                         <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
                         <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
-                        <p className={`text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
-                          {result.isCorrect ? 'Correct' : 'Review this one'}
-                        </p>
-                        {!result.isCorrect && (
-                          <div className="mt-1 text-sm text-muted-foreground">
-                            <p>
-                              Correct answer: <span className="font-semibold text-foreground">{result.correctAnswer.text_en}</span>
+                        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                          <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                              Your answer · <span className="font-myanmar">အဖြေ</span>
                             </p>
-                            <p className="font-myanmar">{result.correctAnswer.text_my}</p>
+                            <p className="text-sm font-semibold text-foreground">{result.selectedAnswer.text_en}</p>
+                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.selectedAnswer.text_my}</p>
                           </div>
-                        )}
-                        <p className="text-xs text-muted-foreground">{result.category}</p>
+                          <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                              Official answer · <span className="font-myanmar">အဖြေမှန်</span>
+                            </p>
+                            <p className="text-sm font-semibold text-foreground">{result.correctAnswer.text_en}</p>
+                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
+                          </div>
+                        </div>
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
+                          <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                            {result.category}
+                          </span>
+                          <span className={result.isCorrect ? 'text-emerald-500' : 'text-red-500'}>
+                            {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား' }
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>

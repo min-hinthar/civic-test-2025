@@ -18,14 +18,8 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const mapResponses = (test: any): TestSession => ({
-  id: test.id,
-  date: test.completed_at,
-  score: test.score,
-  totalQuestions: test.total_questions,
-  durationSeconds: test.duration_seconds ?? 0,
-  passed: test.score >= Math.ceil((test.total_questions ?? 20) * 0.6),
-  results: (test.mock_test_responses ?? []).map((response: any): QuestionResult => ({
+const mapResponses = (test: any): TestSession => {
+  const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: any): QuestionResult => ({
     questionId: response.question_id,
     questionText_en: response.question_en,
     questionText_my: response.question_my,
@@ -41,8 +35,24 @@ const mapResponses = (test: any): TestSession => ({
     },
     isCorrect: response.is_correct,
     category: response.category,
-  })),
-});
+  }));
+
+  const derivedScore = results.length
+    ? results.filter(result => result.isCorrect).length
+    : test.score ?? 0;
+  const totalQuestions = test.total_questions ?? (results.length || 20);
+  const passed = derivedScore >= Math.ceil(totalQuestions * 0.6);
+
+  return {
+    id: test.id,
+    date: test.completed_at,
+    score: derivedScore,
+    totalQuestions,
+    durationSeconds: test.duration_seconds ?? 0,
+    passed,
+    results,
+  };
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);

@@ -46,6 +46,25 @@ const Dashboard = () => {
     },
   ];
 
+  const quickActions = [
+    {
+      href: '/history',
+      title: 'View analytics',
+      titleMy: 'အချက်အလက်ဇယား',
+      description: 'Open your Supabase-synced score trend.',
+      icon: HistoryIcon,
+      gradient: 'from-sky-500/20 via-sky-400/10 to-indigo-500/20',
+    },
+    {
+      href: '/study',
+      title: 'Master categories',
+      titleMy: 'အပိုင်းလိုက်ကျွမ်းကျင်ရေး',
+      description: 'Jump straight to bilingual flip-cards.',
+      icon: Compass,
+      gradient: 'from-emerald-500/20 via-lime-400/10 to-teal-500/20',
+    },
+  ];
+
   return (
     <div className="page-shell">
       <AppNavigation />
@@ -95,23 +114,30 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold text-foreground">Navigate faster · <span className="font-myanmar text-muted-foreground">လမ်းကြောင်းမည်သို့လဲ</span></h2>
             <p className="text-sm text-muted-foreground">Quick actions optimized for thumb reach on any phone.</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Link
-                to="/history"
-                className="flex items-center gap-3 rounded-2xl border border-border/70 px-4 py-3 text-sm font-semibold text-foreground transition hover:-translate-y-0.5 hover:border-primary"
-              >
-                <HistoryIcon className="h-4 w-4 text-primary" /> View analytics
-              </Link>
-              <Link
-                to="/study"
-                className="flex items-center gap-3 rounded-2xl border border-border/70 px-4 py-3 text-sm font-semibold text-foreground transition hover:-translate-y-0.5 hover:border-primary"
-              >
-                <Compass className="h-4 w-4 text-emerald-500" /> Master categories
-              </Link>
+              {quickActions.map(action => (
+                <Link
+                  key={action.href}
+                  to={action.href}
+                  className={`group flex items-center gap-3 rounded-3xl border border-border/60 bg-gradient-to-br ${action.gradient} px-4 py-4 text-left text-sm font-semibold text-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:shadow-primary/30`}
+                >
+                  <action.icon className="h-5 w-5 text-primary" />
+                  <div>
+                    <p>{action.title}</p>
+                    <p className="text-xs text-muted-foreground font-myanmar">{action.titleMy}</p>
+                    <p className="text-xs text-muted-foreground">{action.description}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 shadow-lg">
+          <Link
+            to={latestAttempt ? '/history' : '/test'}
+            className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 text-left shadow-lg transition hover:-translate-y-1"
+          >
             <h2 className="text-lg font-semibold text-foreground">Latest summary · <span className="font-myanmar text-muted-foreground">နောက်ဆုံးရလေ့ကျင့်မှု</span></h2>
-            <p className="text-sm text-muted-foreground">{latestAttempt ? 'Keep the streak going!' : 'Take your first mock test to begin tracking.'}</p>
+            <p className="text-sm text-muted-foreground">
+              {latestAttempt ? 'Tap to review full analytics.' : 'Tap to launch your very first mock test.'}
+            </p>
             {latestAttempt && (
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-2xl bg-card/70 p-4">
@@ -128,7 +154,15 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-          </div>
+            {!latestAttempt && (
+              <div className="mt-4 rounded-2xl bg-card/70 p-4 text-sm text-muted-foreground">
+                Start your journey with a bilingual mock test and we will track every result automatically.
+              </div>
+            )}
+            <p className="mt-4 text-sm font-semibold text-primary">
+              {latestAttempt ? 'View full analytics →' : 'Start mock test →'}
+            </p>
+          </Link>
         </section>
 
         <section className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg">

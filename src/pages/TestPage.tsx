@@ -23,6 +23,7 @@ const TestPage = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [hasSavedSession, setHasSavedSession] = useState(false);
+  const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
 
   const questions = useMemo(() => shuffle(civicsQuestions).slice(0, 20), []);
   const currentQuestion = questions[currentIndex];
@@ -78,6 +79,29 @@ const TestPage = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, [isFinished]);
+
+  useEffect(() => {
+    if (isFinished) return;
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+      toast({
+        title: 'Finish the mock test first',
+        description: lockMessage,
+        variant: 'destructive',
+      });
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    window.history.pushState(null, '', window.location.href);
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isFinished, lockMessage]);
 
   useEffect(() => {
     if (!isFinished || !results.length || hasSavedSession) return;
@@ -230,12 +254,25 @@ const TestPage = () => {
             <div key={result.questionId} className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm">
               <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
               <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
-              <p className={`mt-2 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
-                {result.isCorrect ? 'Correct' : `Correct answer: ${result.correctAnswer.text_en}`}
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Your answer · <span className="font-myanmar">အဖြေ</span>
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{result.selectedAnswer.text_en}</p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.selectedAnswer.text_my}</p>
+                </div>
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Official answer · <span className="font-myanmar">အဖြေမှန်</span>
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{result.correctAnswer.text_en}</p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
+                </div>
+              </div>
+              <p className={`mt-3 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
+                {result.isCorrect ? 'Correct · မှန်' : 'Review this answer · ပြန်လည်လေ့လာပါ'}
               </p>
-              {!result.isCorrect && (
-                <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
-              )}
             </div>
           ))}
         </div>
@@ -245,7 +282,7 @@ const TestPage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation />
+      <AppNavigation locked={!isFinished} lockMessage={lockMessage} />
       {isFinished ? resultView : activeView}
     </div>
   );
