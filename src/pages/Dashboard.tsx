@@ -1,10 +1,18 @@
 'use client';
 
-import { Link } from 'react-router-dom';
+import { Link, type To } from 'react-router-dom';
 import { ArrowRight, BookOpenCheck, Clock3, Compass, FileText, History as HistoryIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
+
+const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
+const studyCardsLink = (category?: string): To => ({
+  pathname: '/study',
+  search: category ? `?category=${encodeURIComponent(category)}` : undefined,
+  hash: '#cards',
+});
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -29,14 +37,21 @@ const Dashboard = () => {
   const trackedCategories = Object.keys(categoryBreakdown).length;
   const masteredCategories = Object.values(categoryBreakdown).filter(stats => stats.total > 0 && stats.correct === stats.total).length;
 
-  const cards = [
+  const cards: Array<{
+    title: string;
+    titleMy: string;
+    value: string | number;
+    description: string;
+    icon: LucideIcon;
+    to: To;
+  }> = [
     {
       title: 'Attempts completed',
       titleMy: 'လုပ်ဆောင်မှုအရေအတွက်',
       value: history.length,
       description: 'Each mock test draws up to 20 randomized questions.',
       icon: FileText,
-      href: '/history#overview',
+      to: historyLink('overview'),
     },
     {
       title: 'Average accuracy',
@@ -44,7 +59,7 @@ const Dashboard = () => {
       value: `${accuracy || 0}%`,
       description: 'Across every completed mock test.',
       icon: BookOpenCheck,
-      href: '/history#trend',
+      to: historyLink('trend'),
     },
     {
       title: 'Latest duration',
@@ -52,13 +67,20 @@ const Dashboard = () => {
       value: latestAttempt ? `${Math.round(latestAttempt.durationSeconds / 60)} mins` : '—',
       description: latestAttempt ? new Date(latestAttempt.date).toLocaleDateString() : 'No attempts yet',
       icon: Clock3,
-      href: latestAttempt ? '/history#attempts' : '/test',
+      to: latestAttempt ? historyLink('attempts') : '/test',
     },
   ];
 
-  const quickActions = [
+  const quickActions: Array<{
+    to: To;
+    title: string;
+    titleMy: string;
+    description: string;
+    icon: LucideIcon;
+    gradient: string;
+  }> = [
     {
-      href: '/history#trend',
+      to: historyLink('trend'),
       title: 'View analytics',
       titleMy: 'အချက်အလက်ဇယား',
       description: 'Open your Supabase-synced score trend.',
@@ -66,7 +88,7 @@ const Dashboard = () => {
       gradient: 'from-sky-500/20 via-sky-400/10 to-indigo-500/20',
     },
     {
-      href: '/study#cards',
+      to: studyCardsLink(),
       title: 'Master categories',
       titleMy: 'အပိုင်းလိုက်ကျွမ်းကျင်ရေး',
       description: 'Jump straight to bilingual flip-cards.',
@@ -75,9 +97,16 @@ const Dashboard = () => {
     },
   ];
 
-  const detailTiles = [
+  const detailTiles: Array<{
+    to: To;
+    title: string;
+    titleMy: string;
+    stat: string;
+    description: string;
+    gradient: string;
+  }> = [
     {
-      href: '/history#trend',
+      to: historyLink('trend'),
       title: 'Analytics snapshot',
       titleMy: 'ဆန်းစစ်ချက်',
       stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
@@ -85,7 +114,7 @@ const Dashboard = () => {
       gradient: 'from-sky-500/30 via-indigo-500/20 to-purple-500/10',
     },
     {
-      href: '/study#cards',
+      to: studyCardsLink(),
       title: 'Master categories',
       titleMy: 'အပိုင်းကျွမ်းကျင်',
       stat: trackedCategories ? `${masteredCategories}/${trackedCategories} mastered` : '0 categories tracked',
@@ -95,7 +124,7 @@ const Dashboard = () => {
       gradient: 'from-emerald-500/30 via-lime-500/20 to-teal-500/10',
     },
     {
-      href: latestAttempt ? '/history#attempts' : '/test',
+      to: latestAttempt ? historyLink('attempts') : '/test',
       title: 'Latest summary',
       titleMy: 'နောက်ဆုံးအကျဉ်းချုံး',
       stat: latestAttempt ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}` : 'No attempts yet',
@@ -145,7 +174,7 @@ const Dashboard = () => {
           {cards.map(card => (
             <Link
               key={card.title}
-              to={card.href}
+              to={card.to}
               className="stat-card focus-visible:ring-primary/50 p-6 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2"
               aria-label={`${card.title} – ${card.titleMy}`}
             >
@@ -155,7 +184,7 @@ const Dashboard = () => {
               <p className="text-sm text-muted-foreground">{card.description}</p>
               <p className="mt-1 text-xs text-muted-foreground font-myanmar">{card.titleMy}</p>
               <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
-                {card.href.startsWith('/history') ? 'View details →' : 'Start practicing →'}
+                {typeof card.to === 'string' && card.to === '/test' ? 'Start practicing →' : 'View details →'}
               </span>
             </Link>
           ))}
@@ -171,8 +200,8 @@ const Dashboard = () => {
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {quickActions.map(action => (
                 <Link
-                  key={action.href}
-                  to={action.href}
+                  key={action.title}
+                  to={action.to}
                   className={`group flex items-center gap-3 rounded-3xl border border-border/60 bg-gradient-to-br ${action.gradient} px-4 py-4 text-left text-sm font-semibold text-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:shadow-primary/30`}
                 >
                   <action.icon className="h-5 w-5 text-primary" />
@@ -186,7 +215,7 @@ const Dashboard = () => {
             </div>
           </div>
           <Link
-            to={latestAttempt ? '/history#attempts' : '/test'}
+            to={latestAttempt ? historyLink('attempts') : '/test'}
             className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 text-left shadow-lg transition hover:-translate-y-1"
             id="latest-summary"
             aria-label="Latest summary"
@@ -233,7 +262,7 @@ const Dashboard = () => {
             {detailTiles.map(tile => (
               <Link
                 key={tile.title}
-                to={tile.href}
+                to={tile.to}
                 className={`interactive-tile ${tile.gradient}`}
                 aria-label={`${tile.title} – ${tile.titleMy}`}
               >
@@ -259,11 +288,10 @@ const Dashboard = () => {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {Object.entries(categoryBreakdown).map(([category, stats]) => {
               const rate = Math.round((stats.correct / stats.total) * 100);
-              const encodedCategory = encodeURIComponent(category);
               return (
                 <Link
                   key={category}
-                  to={`/study?category=${encodedCategory}#cards`}
+                  to={studyCardsLink(category)}
                   className="group rounded-2xl border border-border/60 p-4 transition hover:-translate-y-0.5 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   aria-label={`Review ${category}`}
                 >

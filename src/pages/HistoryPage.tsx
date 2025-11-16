@@ -6,6 +6,14 @@ import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip, CartesianGrid, YA
 import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import type { TestEndReason } from '@/types';
+
+const reasonCopy: Record<TestEndReason, string> = {
+  passThreshold: 'Ended early after 12 correct answers',
+  failThreshold: 'Stopped after 9 incorrect answers',
+  time: 'Time limit reached',
+  complete: 'Completed all 20 questions',
+};
 
 const HistoryPage = () => {
   const { user } = useAuth();
@@ -121,6 +129,7 @@ const HistoryPage = () => {
                         {session.passed ? 'PASS' : 'REVIEW'}
                       </span>
                     </p>
+                    <p className="text-xs text-muted-foreground">{reasonCopy[session.endReason]}</p>
                   </div>
                   <button
                     type="button"

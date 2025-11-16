@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Clock3, Sparkles } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { civicsQuestions } from '@/constants/civicsQuestions';
-import type { Answer, QuestionResult, TestSession } from '@/types';
+import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 
@@ -23,7 +23,7 @@ const TestPage = () => {
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
-  const [endReason, setEndReason] = useState<'threshold' | 'time' | 'complete' | null>(null);
+  const [endReason, setEndReason] = useState<TestEndReason | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [hasSavedSession, setHasSavedSession] = useState(false);
   const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
@@ -52,9 +52,11 @@ const TestPage = () => {
   }, [timeLeft]);
 
   const correctCount = results.filter(result => result.isCorrect).length;
-  const askedCount = results.length || questions.length;
-  const completionMessage: Record<'threshold' | 'time' | 'complete', string> = {
-    threshold: 'Test auto-completed after meeting the USCIS 12-correct / 9-incorrect requirement.',
+  const askedCount = results.length;
+  const incorrectCount = askedCount - correctCount;
+  const completionMessage: Record<TestEndReason, string> = {
+    passThreshold: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early.',
+    failThreshold: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
     time: 'Time expired before the full set finished.',
     complete: 'You completed all 20 questions.',
   };
@@ -79,9 +81,13 @@ const TestPage = () => {
         const nextIncorrect = nextResults.length - nextCorrect;
         const answeredAll = nextResults.length === questions.length;
 
-        if (nextCorrect >= PASS_THRESHOLD || nextIncorrect >= INCORRECT_LIMIT) {
+        const reachedPass = nextCorrect >= PASS_THRESHOLD;
+        const reachedFail = nextIncorrect >= INCORRECT_LIMIT;
+
+        if (reachedPass || reachedFail) {
           setIsFinished(true);
-          setEndReason('threshold');
+          setEndReason(reachedPass ? 'passThreshold' : 'failThreshold');
+          setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
         } else if (answeredAll) {
           setIsFinished(true);
           setEndReason('complete');
@@ -137,12 +143,17 @@ const TestPage = () => {
   useEffect(() => {
     if (!isFinished || !results.length || hasSavedSession) return;
     const correctAnswers = results.filter(result => result.isCorrect).length;
+    const incorrectAnswers = results.length - correctAnswers;
+    const completedFullSet = results.length === questions.length;
+    const fallbackReason: TestEndReason = endReason ?? (completedFullSet ? 'complete' : 'time');
     const session: Omit<TestSession, 'id'> = {
       date: new Date().toISOString(),
       score: correctAnswers,
       totalQuestions: results.length,
       durationSeconds: TEST_DURATION_SECONDS - timeLeft,
       passed: correctAnswers >= PASS_THRESHOLD,
+      incorrectCount: incorrectAnswers,
+      endReason: fallbackReason,
       results,
     };
     setHasSavedSession(true);
@@ -164,7 +175,13 @@ const TestPage = () => {
       }
     };
     persist();
-  }, [hasSavedSession, isFinished, results, saveTestSession, timeLeft]);
+  }, [endReason, hasSavedSession, isFinished, questions.length, results, saveTestSession, timeLeft]);
+
+  useEffect(() => {
+    if (isFinished) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isFinished]);
 
   if (!currentQuestion && !isFinished) {
     return null;
@@ -269,7 +286,7 @@ const TestPage = () => {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid gap-4 sm:grid-cols-4">
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Duration</p>
             <p className="text-2xl font-bold text-foreground">{Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins</p>
@@ -277,6 +294,10 @@ const TestPage = () => {
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
             <p className="text-2xl font-bold text-emerald-500">{correctCount}</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
+            <p className="text-2xl font-bold text-red-500">{incorrectCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>

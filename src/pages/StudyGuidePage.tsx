@@ -38,6 +38,7 @@ const StudyGuidePage = () => {
 
   const [category, setCategory] = useState<string>(() => getValidCategory(searchParams));
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     const nextCategory = getValidCategory(searchParams);
@@ -45,6 +46,10 @@ const StudyGuidePage = () => {
       setCategory(nextCategory);
     }
   }, [category, getValidCategory, searchParams]);
+
+  useEffect(() => {
+    setHoveredCard(null);
+  }, [category]);
 
   useEffect(() => {
     if (location.hash) {
@@ -109,20 +114,23 @@ const StudyGuidePage = () => {
         </header>
         <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredQuestions.map(question => {
-            const isFlipped = Boolean(flippedCards[question.id]);
+            const isLocked = Boolean(flippedCards[question.id]);
+            const isFlipped = hoveredCard === question.id || isLocked;
             return (
               <div key={question.id} className="flip-card" data-flipped={isFlipped}>
                 <button
                   type="button"
                   className="flip-card-button"
                   onClick={() => toggleCard(question.id)}
-                  aria-pressed={isFlipped}
+                  onMouseEnter={() => setHoveredCard(question.id)}
+                  onMouseLeave={() => setHoveredCard(prev => (prev === question.id ? null : prev))}
+                  aria-pressed={isLocked}
                   aria-label={`Reveal answer for ${question.question_en}`}
                 >
                   <div
                     className={clsx(
                       'flip-card-inner rounded-3xl border border-border/70 bg-card/95 text-foreground shadow-xl shadow-primary/10',
-                      'min-h-[38rem]'
+                      'min-h-[40rem]'
                     )}
                   >
                     <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">

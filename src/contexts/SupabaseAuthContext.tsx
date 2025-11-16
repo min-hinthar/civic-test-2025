@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { PostgrestError, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
-import type { QuestionResult, TestSession, User } from '@/types';
+import type { QuestionResult, TestEndReason, TestSession, User } from '@/types';
 
 interface AuthContextValue {
   user: User | null;
@@ -19,6 +19,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const PASS_THRESHOLD = 12;
+const END_REASONS: TestEndReason[] = ['passThreshold', 'failThreshold', 'time', 'complete'];
+const isEndReason = (value: unknown): value is TestEndReason =>
+  typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
 
 const mapResponses = (test: any): TestSession => {
   const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: any): QuestionResult => ({
@@ -43,7 +46,9 @@ const mapResponses = (test: any): TestSession => {
     ? results.filter(result => result.isCorrect).length
     : test.score ?? 0;
   const totalQuestions = test.total_questions ?? (results.length || 20);
-  const passed = derivedScore >= PASS_THRESHOLD;
+  const derivedIncorrect = test.incorrect_count ?? Math.max(totalQuestions - derivedScore, 0);
+  const normalizedReason = isEndReason(test.end_reason) ? test.end_reason : 'complete';
+  const passed = typeof test.passed === 'boolean' ? test.passed : derivedScore >= PASS_THRESHOLD;
 
   return {
     id: test.id,
@@ -52,6 +57,8 @@ const mapResponses = (test: any): TestSession => {
     totalQuestions,
     durationSeconds: test.duration_seconds ?? 0,
     passed,
+    incorrectCount: derivedIncorrect,
+    endReason: normalizedReason,
     results,
   };
 };
@@ -85,7 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         supabase
           .from('mock_tests')
           .select(
-            `id, completed_at, score, total_questions, duration_seconds, mock_test_responses (
+            `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
               question_id, question_en, question_my, category, selected_answer_en, selected_answer_my,
               correct_answer_en, correct_answer_my, is_correct
             )`
@@ -182,8 +189,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             score: session.score,
             total_questions: session.totalQuestions,
             duration_seconds: session.durationSeconds,
+            incorrect_count: session.incorrectCount,
+            end_reason: session.endReason,
+            passed: session.passed,
           })
-          .select('id, completed_at, score, total_questions, duration_seconds')
+          .select('id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed')
           .single();
 
         if (error || !data?.id) {
@@ -212,6 +222,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           ...session,
           id: data.id,
           date: data.completed_at ?? session.date,
+          incorrectCount: data.incorrect_count ?? session.incorrectCount,
+          endReason: isEndReason(data.end_reason) ? data.end_reason : session.endReason,
+          passed: typeof data.passed === 'boolean' ? data.passed : session.passed,
         };
 
         setUser(prev => (prev ? { ...prev, testHistory: [persistedSession, ...prev.testHistory] } : prev));

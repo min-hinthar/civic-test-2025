@@ -46,6 +46,24 @@ create table if not exists public.mock_tests (
   completed_at timestamptz not null default now()
 );
 
+alter table public.mock_tests
+  add column if not exists passed boolean not null default false;
+alter table public.mock_tests
+  add column if not exists incorrect_count integer not null default 0;
+alter table public.mock_tests
+  add column if not exists end_reason text not null default 'complete';
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'mock_tests_end_reason_check'
+  ) then
+    alter table public.mock_tests
+      add constraint mock_tests_end_reason_check
+      check (end_reason in ('passThreshold', 'failThreshold', 'time', 'complete'));
+  end if;
+end $$;
+
 alter table public.mock_tests enable row level security;
 create policy "Users can manage their own mock tests" on public.mock_tests
   using (auth.uid() = user_id);
