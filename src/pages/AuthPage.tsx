@@ -37,19 +37,19 @@ const AuthPage = () => {
   }, [navigate, user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sky-50">
+    <div className="page-shell">
       <AppNavigation translucent />
       <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 pb-16 pt-10 lg:flex-row">
-        <div className="flex-1 rounded-3xl border border-white/60 bg-white/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
-          <div className="mb-6 flex justify-between rounded-full bg-slate-100 p-1 text-sm font-semibold">
+        <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
+          <div className="mb-6 flex justify-between rounded-full bg-muted/50 p-1 text-sm font-semibold">
             <button
-              className={`flex-1 rounded-full px-3 py-2 ${mode === 'login' ? 'bg-white text-slate-900 shadow' : 'text-slate-500'}`}
+              className={`flex-1 rounded-full px-3 py-2 ${mode === 'login' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('login')}
             >
               Sign in
             </button>
             <button
-              className={`flex-1 rounded-full px-3 py-2 ${mode === 'register' ? 'bg-white text-slate-900 shadow' : 'text-slate-500'}`}
+              className={`flex-1 rounded-full px-3 py-2 ${mode === 'register' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('register')}
             >
               Create account
@@ -58,11 +58,11 @@ const AuthPage = () => {
           <form className="space-y-4" onSubmit={handleSubmit}>
             {mode === 'register' && (
               <div>
-                <label className="text-sm font-medium text-slate-600">
-                  Full name · <span className="font-myanmar text-slate-500">အမည်အပြည့်အစုံ</span>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Full name · <span className="font-myanmar text-muted-foreground">အမည်အပြည့်အစုံ</span>
                 </label>
                 <input
-                  className="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-3"
+                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                   value={form.name}
                   onChange={event => setForm({ ...form, name: event.target.value })}
                   required
@@ -70,11 +70,11 @@ const AuthPage = () => {
               </div>
             )}
             <div>
-              <label className="text-sm font-medium text-slate-600">
-                Email · <span className="font-myanmar text-slate-500">အီးမေးလ်</span>
+              <label className="text-sm font-medium text-muted-foreground">
+                Email · <span className="font-myanmar text-muted-foreground">အီးမေးလ်</span>
               </label>
               <input
-                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-3"
+                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                 type="email"
                 value={form.email}
                 onChange={event => setForm({ ...form, email: event.target.value })}
@@ -82,11 +82,11 @@ const AuthPage = () => {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-600">
-                Password · <span className="font-myanmar text-slate-500">လျှို့ဝှက်နံပါတ်</span>
+              <label className="text-sm font-medium text-muted-foreground">
+                Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်နံပါတ်</span>
               </label>
               <input
-                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-4 py-3"
+                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                 type="password"
                 value={form.password}
                 onChange={event => setForm({ ...form, password: event.target.value })}
@@ -101,36 +101,36 @@ const AuthPage = () => {
               {mode === 'login' ? 'Sign in' : 'Create free account'}
             </button>
             {mode === 'register' && (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 You will receive a Supabase confirmation email. <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>
               </p>
             )}
           </form>
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             Back to{' '}
             <Link className="font-semibold text-primary" to="/">
               landing page
             </Link>
           </p>
         </div>
-        <div className="flex-1 rounded-3xl border border-white/60 bg-gradient-to-br from-primary/10 via-rose-300/10 to-amber-200/10 p-8 shadow-xl">
+        <div className="flex-1 rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-rose-300/10 to-amber-200/10 p-8 shadow-xl">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">သင့်အတွက် အထူးပြင်ဆင်ထားသည်</p>
-          <h2 className="mt-3 text-3xl font-semibold text-slate-900">
+          <h2 className="mt-3 text-3xl font-semibold text-foreground">
             Study in both English and မြန်မာ
-            <span className="block text-lg font-normal text-slate-500 font-myanmar">တစ်မျိုးစီ ဖတ်ရလွယ်ကူ</span>
+            <span className="block text-lg font-normal text-muted-foreground font-myanmar">တစ်မျိုးစီ ဖတ်ရလွယ်ကူ</span>
           </h2>
-          <p className="mt-3 text-base text-slate-600 font-myanmar">
+          <p className="mt-3 text-base text-muted-foreground font-myanmar">
             အသံထွက်လွယ်သော မြန်မာစာ၊ အင်္ဂလိပ်စာကို ခြားနားကာဖတ်နိုင်ရန် ကြားကာအကွာအဝေးများထည့်သွင်းထားပြီး iOS/Android အပေါ်တွင်လည်း လက်ဖက်ရည်တစ်ခွက်နဲ့ သင်ယူရတာလို ပေါ့ပါးသိမ်မွေ့စေပါသည်။
           </p>
           <div className="mt-8 space-y-4">
-            <div className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">One tap navigation</p>
-              <p className="text-sm text-slate-500">Dashboard → Test → History without leaving the app shell.</p>
+            <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm">
+              <p className="text-sm font-semibold text-foreground">One tap navigation</p>
+              <p className="text-sm text-muted-foreground">Dashboard → Test → History without leaving the app shell.</p>
             </div>
-            <div className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">Progress sync via Supabase</p>
-              <p className="text-sm text-slate-500">Mock tests, categories, and accuracy update instantly.</p>
-              <p className="text-sm text-slate-500 font-myanmar">Supabase နှင့် ချိတ်ဆက်ထားသောကြောင့် မေးခွန်းမှတ်တမ်းများ အချိန်နှင့်တပြေးညီ ပြန်လည်ပြင်ဆင်ပေးနိုင်ပါသည်။</p>
+            <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm">
+              <p className="text-sm font-semibold text-foreground">Progress sync via Supabase</p>
+              <p className="text-sm text-muted-foreground">Mock tests, categories, and accuracy update instantly.</p>
+              <p className="text-sm text-muted-foreground font-myanmar">Supabase နှင့် ချိတ်ဆက်ထားသောကြောင့် မေးခွန်းမှတ်တမ်းများ အချိန်နှင့်တပြေးညီ ပြန်လည်ပြင်ဆင်ပေးနိုင်ပါသည်။</p>
             </div>
           </div>
         </div>

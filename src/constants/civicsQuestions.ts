@@ -1687,23 +1687,5 @@ export const civicsQuestions: Question[] = [
     ]
   }
 ];
-// Note: This is a sample of 100 questions to represent the full set of 128.
-// The structure is complete for a full implementation. A real app would have all 128.
-// Added questions to be more comprehensive, but not the full 128 for brevity.
-// The following are placeholders for the remaining 28 questions.
-const remainingQuestions: Question[] = Array.from({ length: 28 }, (_, i) => ({
-    id: 101 + i,
-    question_en: `Sample Question ${101 + i}?`,
-    question_my: `နမူနာမေးခွန်း ${101 + i} ကဘာလဲ။`,
-    category: 'System of Government',
-    studyAnswers: [
-        { text_en: 'Sample Answer', text_my: 'နမူနာအဖြေ' }
-    ],
-    answers: [
-        { text_en: `Sample Correct Answer ${101 + i}`, text_my: `နမူနာအဖြေမှန် ${101 + i}`, correct: true },
-        { text_en: `Sample Wrong Answer A`, text_my: `နမူနာအဖြေမှား A`, correct: false },
-        { text_en: `Sample Wrong Answer B`, text_my: `နမူနာအဖြေမှား B`, correct: false },
-        { text_en: `Sample Wrong Answer C`, text_my: `နမူနာအဖြေမှား C`, correct: false },
-    ]
-}));
-export const fullCivicsQuestions = [...civicsQuestions, ...remainingQuestions];
+
+export const totalCivicsQuestions = civicsQuestions.length;

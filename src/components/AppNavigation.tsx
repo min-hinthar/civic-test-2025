@@ -28,14 +28,14 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
   }, [location.pathname]);
 
   const shellClasses = translucent
-    ? 'bg-white/70 dark:bg-slate-900/80'
-    : 'bg-gradient-to-r from-white/95 via-rose-50/80 to-sky-50/80 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900';
+    ? 'bg-card/70 shadow-sm'
+    : 'bg-gradient-to-r from-primary/10 via-background/70 to-accent/10 dark:from-slate-900/70 dark:via-slate-950 dark:to-slate-900 shadow-lg shadow-primary/10';
 
   return (
     <nav className={`sticky top-0 z-30 border-b border-border/60 backdrop-blur-xl ${shellClasses}`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link to="/" className="text-lg font-semibold text-primary">
-          Civic Test Prep · <span className="font-myanmar text-sm text-slate-500">နိုင်ငံသားသင်ခန်းစာ</span>
+        <Link to="/" className="text-lg font-semibold text-foreground">
+          Civic Test Prep · <span className="font-myanmar text-sm text-muted-foreground">နိုင်ငံသားသင်ခန်းစာ</span>
         </Link>
         <div className="hidden items-center gap-2 md:flex">
           {navLinks.map(link => {
@@ -46,12 +46,12 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
                 to={link.href}
                 className={`rounded-2xl px-4 py-2 text-left text-sm font-semibold transition ${
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
-                    : 'text-slate-600 hover:bg-white/70'
+                    ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30'
+                    : 'text-muted-foreground hover:bg-muted/40'
                 }`}
               >
                 <span>{link.labelEn}</span>
-                <span className="block text-xs font-normal text-slate-200/90 dark:text-slate-300/80 font-myanmar">
+                <span className="block text-xs font-normal text-muted-foreground font-myanmar">
                   {link.labelMy}
                 </span>
               </Link>
@@ -63,7 +63,7 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
           {user ? (
             <button
               onClick={() => logout().then(() => navigate('/'))}
-              className="hidden items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-muted md:inline-flex"
+              className="hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 md:inline-flex"
             >
               <LogOut className="h-4 w-4" />
               Sign out
@@ -71,14 +71,14 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
           ) : (
             <Link
               to="/auth"
-              className="hidden rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-muted md:inline-flex"
+              className="hidden rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 md:inline-flex"
             >
               Sign in
             </Link>
           )}
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 text-foreground md:hidden"
             onClick={() => setIsMenuOpen(prev => !prev)}
             aria-label="Toggle navigation menu"
           >
@@ -95,12 +95,12 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
                 to={link.href}
                 className={`rounded-2xl px-4 py-3 text-left text-sm font-semibold ${
                   location.pathname === link.href
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-white/80 text-slate-700 shadow-sm'
+                    ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground shadow'
+                    : 'bg-card/80 text-foreground shadow-sm'
                 }`}
               >
                 <span>{link.labelEn}</span>
-                <span className="block text-xs font-normal text-slate-500 font-myanmar">{link.labelMy}</span>
+                <span className="block text-xs font-normal text-muted-foreground font-myanmar">{link.labelMy}</span>
               </Link>
             ))}
             {user ? (
@@ -113,7 +113,7 @@ const AppNavigation = ({ translucent = false }: AppNavigationProps) => {
             ) : (
               <Link
                 to="/auth"
-                className="rounded-2xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
+                className="rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
               >
                 Sign in
               </Link>
