@@ -26,7 +26,7 @@ const TestPage = () => {
   const [endReason, setEndReason] = useState<TestEndReason | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [hasSavedSession, setHasSavedSession] = useState(false);
-  const lockMessage = 'Complete the mock test before leaving · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ';
+  const lockMessage = 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
 
   const questions = useMemo(
     () =>
@@ -55,8 +55,8 @@ const TestPage = () => {
   const askedCount = results.length;
   const incorrectCount = askedCount - correctCount;
   const completionMessage: Record<TestEndReason, string> = {
-    passThreshold: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early.',
-    failThreshold: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
+    passThreshold: 'USCIS interview stops after 12 correct answers 🎉 Great job reaching the passing threshold early 🍾 အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။ 🥳',
+    failThreshold: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying. -  အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
     time: 'Time expired before the full set finished.',
     complete: 'You completed all 20 questions.',
   };
@@ -122,7 +122,7 @@ const TestPage = () => {
     const handlePopState = () => {
       window.history.pushState(null, '', window.location.href);
       toast({
-        title: 'Finish the mock test first',
+        title: 'Please finish the mock test first!',
         description: lockMessage,
         variant: 'destructive',
       });
@@ -195,32 +195,25 @@ const TestPage = () => {
       <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">Mock Test · စမ်းသပ်မေးခွန်း</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary">Mock Test · စမ်းသပ်စာမေးပွဲ</p>
             <h1 className="text-3xl font-bold text-foreground">
               Question {currentIndex + 1} <span className="text-muted-foreground">/ {questions.length}</span>
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
-            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
+            {/* <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p> */}
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 px-4 py-3 text-foreground">
             <Clock3 className="h-5 w-5 text-primary" />
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Time remaining · <span className="font-myanmar">ချိန်ရှည်</span>
+                Time remaining · <span className="font-myanmar">အချိန်လက်ကျန်</span>
               </p>
               <p className="text-2xl font-semibold text-foreground">{formattedTime}</p>
             </div>
           </div>
-        </div>
 
-        <div className="mt-6 flex flex-col gap-6 lg:flex-row">
-          <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
-            <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
-            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
-          </div>
           <div className="w-full rounded-2xl border border-border bg-card/80 p-6 lg:w-64">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Progress · <span className="font-myanmar">တိုးတက်မှု</span>
+              Test Progress · <span className="font-myanmar">စာမေးပွဲပြီးဆုံးရန်</span>
             </p>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
@@ -230,13 +223,21 @@ const TestPage = () => {
             </div>
             <p className="mt-2 text-xs text-muted-foreground">Answered {answeredQuestions} of {questions.length}</p>
             <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Saving · <span className="font-myanmar">မှတ်တမ်းသိမ်းဆည်း</span>
+              <span className="font-myanmar">အဖြေမှန် ၁၂ ခု သို့မဟုတ် အဖြေမှား ၉ ခု ဖြေပြီးလျှင် စာမေးပွဲပြီးဆုံးစေပါမည်။</span>
             </p>
-            <p className="text-sm font-semibold text-foreground">{isSavingSession ? 'Syncing…' : 'Secure Supabase sync'}</p>
+            {/* <p className="text-sm font-semibold text-foreground">{isSavingSession ? `Secure Supabase sync`: 'Syncing…'}</p> */}
             <p className="mt-4 text-xs text-muted-foreground">
               Interview ends early after 12 correct or 9 incorrect answers.
             </p>
           </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-6 lg:flex-row">
+          <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
+            <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
+            <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
+            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
+          </div>          
         </div>
 
         <div className="mt-8 grid gap-4">
@@ -244,7 +245,7 @@ const TestPage = () => {
             <button
               key={answer.text_en}
               onClick={() => handleAnswer(answer)}
-              className="rounded-2xl border border-border bg-card/80 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-primary"
+              className="rounded-2xl border border-border bg-card/80 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-primary interactive-tile"
             >
               <p className="font-semibold text-foreground">{answer.text_en}</p>
               <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{answer.text_my}</p>

@@ -14,10 +14,10 @@ interface AppNavigationProps {
 }
 
 const navLinks = [
-  { href: '/dashboard', labelEn: 'Dashboard', labelMy: 'ဒိုင်ခွက်' },
-  { href: '/study', labelEn: 'Study guide', labelMy: 'လေ့လာမှုအညွှန်း' },
-  { href: '/test', labelEn: 'Mock test', labelMy: 'စမ်းသပ်မေးခွန်း' },
-  { href: '/history', labelEn: 'History', labelMy: 'မှတ်တမ်း' },
+  { href: '/dashboard', labelEn: 'Dashboard', labelMy: 'ဒက်ရှ်ဘုတ်' },
+  { href: '/study', labelEn: 'Study Guide', labelMy: 'လေ့လာမှုအညွှန်း' },
+  { href: '/test', labelEn: 'Mock Test', labelMy: 'စမ်းသပ်စာမေးပွဲ' },
+  { href: '/history', labelEn: 'Test History', labelMy: 'စာမေးပွဲမှတ်တမ်း' },
 ];
 
 const AppNavigation = ({ translucent = false, locked = false, lockMessage }: AppNavigationProps) => {
@@ -35,8 +35,8 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
     if (href && href === '/test') return;
     event.preventDefault();
     toast({
-      title: 'Finish your mock test first',
-      description: lockMessage ?? 'Complete the mock test before leaving this page. · စမ်းသပ်မေးခွန်းပြီးမှ ထွက်ပါ',
+      title: 'Please finish your mock test first!',
+      description: lockMessage ?? 'Complete the mock test before leaving this page. · စမ်းသပ်စာမေးပွဲပြီးမှ ထွက်ပါ',
       variant: 'destructive',
     });
   };
@@ -54,7 +54,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
           onClick={event => locked && handleGuardedNavigation(event)}
           aria-disabled={locked}
         >
-          Civic Test Prep · <span className="font-myanmar text-sm text-muted-foreground">နိုင်ငံသားသင်ခန်းစာ</span>
+          U.S Citizenship Civic Test Prep App - <span className="font-myanmar text-sm text-muted-foreground"> အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုးညွှန်း</span>
         </Link>
         <div className="hidden items-center gap-2 md:flex">
           {navLinks.map(link => {
@@ -96,7 +96,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
               aria-disabled={locked}
             >
               <LogOut className="h-4 w-4" />
-              Sign out
+              Sign Out
             </button>
           ) : (
             <Link
@@ -107,7 +107,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
               }`}
               aria-disabled={locked}
             >
-              Sign in
+              Sign In
             </Link>
           )}
           <button
@@ -157,7 +157,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
                 }}
                 aria-disabled={locked}
               >
-                <LogOut className="h-4 w-4" /> Sign out
+                <LogOut className="h-4 w-4" /> Sign Out
               </button>
             ) : (
               <Link
@@ -168,7 +168,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
                 }`}
                 aria-disabled={locked}
               >
-                Sign in
+                Sign In
               </Link>
             )}
           </div>

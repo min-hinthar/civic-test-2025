@@ -46,15 +46,15 @@ const Dashboard = () => {
     to: To;
   }> = [
     {
-      title: 'Attempts completed',
-      titleMy: 'လုပ်ဆောင်မှုအရေအတွက်',
+      title: 'Attempts Completed',
+      titleMy: 'အစမ်းစာမေးပွဲဖြေဆိုမှု အရေအတွက်',
       value: history.length,
       description: 'Each mock test draws up to 20 randomized questions.',
       icon: FileText,
       to: historyLink('overview'),
     },
     {
-      title: 'Average accuracy',
+      title: 'Average Accuracy',
       titleMy: 'မှန်ကန်မှုပျမ်းမျှ',
       value: `${accuracy || 0}%`,
       description: 'Across every completed mock test.',
@@ -62,7 +62,7 @@ const Dashboard = () => {
       to: historyLink('trend'),
     },
     {
-      title: 'Latest duration',
+      title: 'Latest Duration',
       titleMy: 'နောက်ဆုံးအချိန်',
       value: latestAttempt ? `${Math.round(latestAttempt.durationSeconds / 60)} mins` : '—',
       description: latestAttempt ? new Date(latestAttempt.date).toLocaleDateString() : 'No attempts yet',
@@ -90,7 +90,7 @@ const Dashboard = () => {
     {
       to: studyCardsLink(),
       title: 'Master categories',
-      titleMy: 'အပိုင်းလိုက်ကျွမ်းကျင်ရေး',
+      titleMy: 'ကဏ္ဍလိုက်ကျွမ်းကျင်ရေး',
       description: 'Jump straight to bilingual flip-cards.',
       icon: Compass,
       gradient: 'from-emerald-500/20 via-lime-400/10 to-teal-500/20',
@@ -107,7 +107,7 @@ const Dashboard = () => {
   }> = [
     {
       to: historyLink('trend'),
-      title: 'Analytics snapshot',
+      title: 'Analytics Snapshot',
       titleMy: 'ဆန်းစစ်ချက်',
       stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
       description: history.length ? 'Based on all completed mock tests.' : 'Complete a mock test to unlock insights.',
@@ -115,8 +115,8 @@ const Dashboard = () => {
     },
     {
       to: studyCardsLink(),
-      title: 'Master categories',
-      titleMy: 'အပိုင်းကျွမ်းကျင်',
+      title: 'Master Categories',
+      titleMy: 'ကဏ္ဍအလိုက်ကျွမ်းကျင်မှု',
       stat: trackedCategories ? `${masteredCategories}/${trackedCategories} mastered` : '0 categories tracked',
       description: trackedCategories
         ? 'Tap to revisit bilingual flip-cards by category.'
@@ -125,8 +125,8 @@ const Dashboard = () => {
     },
     {
       to: latestAttempt ? historyLink('attempts') : '/test',
-      title: 'Latest summary',
-      titleMy: 'နောက်ဆုံးအကျဉ်းချုံး',
+      title: 'Latest Test Summary',
+      titleMy: 'နောက်ဆုံးဖြေဆိုခဲ့သည့် စာမေးပွဲအကျဉ်းချုံး',
       stat: latestAttempt ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}` : 'No attempts yet',
       description: latestAttempt
         ? `Finished in ${Math.round(latestAttempt.durationSeconds / 60)} mins on ${new Date(latestAttempt.date).toLocaleDateString()}`
@@ -141,33 +141,33 @@ const Dashboard = () => {
       <div className="mx-auto max-w-6xl px-6 py-10">
         <header className="glass-panel flex flex-col gap-4 p-8 shadow-rose-100/50 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">Dashboard · ဒိုင်ခွက်</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">Dashboard · ဒက်ရှ်ဘုတ်</p>
             <h1 className="text-3xl font-bold text-foreground">
               Welcome back, {user?.name?.split(' ')[0] ?? 'Learner'}!
               <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">
-                သင့်ရဲ့ မေးခွန်းသင်ကြားမှု တိုးတက်မှုများကို ဤနေရာတွင် ကြည့်ရှုနိုင်ပါသည်။
+                မင်္ဂလာပါ၊ အမေရိကန်ပြည်သူ့နီတိ စာသင်ခန်းမှ ကြိုဆိုပါတယ် 🙏🏽
               </span>
             </h1>
-            <p className="text-muted-foreground">Track your bilingual study journey, jump into a new test, or brush up with flip cards.</p>
+            <p className="text-muted-foreground">Track your bilingual U.S civics study journey, jump into a new mock test, or brush up with flip-cards.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               to="/study"
               className="inline-flex items-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40"
             >
-              <BookOpenCheck className="h-4 w-4" /> Study guide
+              <BookOpenCheck className="h-4 w-4" /> Study Guide
             </Link>
             <Link
               to="/test"
               className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30"
             >
-              Start mock test
+              Start Mock Test
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </header>
 
-        <section id="highlights" className="mt-8 grid gap-6 md:grid-cols-3" aria-labelledby="dashboard-highlights">
+        {/* <section id="highlights" className="mt-8 grid gap-6 md:grid-cols-3" aria-labelledby="dashboard-highlights">
           <span id="dashboard-highlights" className="sr-only">
             Dashboard highlights
           </span>
@@ -249,14 +249,14 @@ const Dashboard = () => {
               {latestAttempt ? 'View full analytics →' : 'Start mock test →'}
             </p>
           </Link>
-        </section>
+        </section> */}
 
         <section id="deep-dive" className="mt-8" aria-labelledby="deep-dive-title">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <h2 id="deep-dive-title" className="text-lg font-semibold text-foreground">
-              Tap for more data · <span className="font-myanmar text-muted-foreground">အသေးစိတ်အချက်အလက်</span>
+              Personalized Data Analytics <span className="font-myanmar text-muted-foreground">- ဒေတာပိုင်းခြားစိတ်ဖြာမှု</span>
             </h2>
-            <p className="text-sm text-muted-foreground">Each tile opens the relevant section with deeper analytics.</p>
+            <p className="text-sm text-muted-foreground">Each tile opens the relevant section with deeper analytics - သင့်ရဲ့လေ့လာသင်ကြားတိုးတက်မှုများကို ဤနေရာတွင်ကြည့်ရှုနိုင်ပါသည်။</p>
           </div>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             {detailTiles.map(tile => (
@@ -279,13 +279,13 @@ const Dashboard = () => {
         <section id="category-accuracy" className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg" aria-labelledby="category-accuracy-title">
           <div className="flex items-center justify-between">
             <h2 id="category-accuracy-title" className="text-lg font-semibold text-foreground">
-              Category accuracy · <span className="font-myanmar text-muted-foreground">အပိုင်းလိုက်မှန်ကန်မှု</span>
+              Category Accuracy 🎯 <span className="font-myanmar text-muted-foreground"> - ကဏ္ဍအလိုက်တိကျမှန်ကန်မှု</span>
             </h2>
-            <Link to="/history" className="text-sm font-semibold text-primary">
-              View full analytics →
-            </Link>
+              <Link to="/history" className="text-sm font-semibold text-primary">
+                View full analytics →
+              </Link>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 interactive-tile">
             {Object.entries(categoryBreakdown).map(([category, stats]) => {
               const rate = Math.round((stats.correct / stats.total) * 100);
               return (

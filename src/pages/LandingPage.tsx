@@ -7,24 +7,24 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const features = [
   {
-    title: 'Bilingual Mastery • 双ဘာသာ',
+    title: 'Bilingual Mastery • အင်္ဂလိပ်/မြန်မာ',
     description: 'Every civic question is available in English and Burmese with culturally aware explanations.',
     descriptionMy:
-      'အမေရိကန်နိုင်ငံသားမေးခွန်းတစ်ခုချင်းစီကို အင်္ဂလိပ်/မြန်မာနောက်ခံနှစ်မျိုးဖြင့် ဖတ်ရှုလေ့လာနိုင်ပါသည်။',
+      'အမေရိကန်နိုင်ငံသားမေးခွန်းတစ်ခုချင်းစီကို အင်္ဂလိပ်/မြန်မာ ဘာသာနှစ်မျိုးဖြင့် ဖတ်ရှုလေ့လာနိုင်ပါသည်။',
     icon: Languages,
   },
   {
-    title: 'Smart Practice Tests • စမ်းသပ်မေးခွန်း',
+    title: 'Smart Practice Tests • စမ်းသပ်မေးခွန်း စာမေးပွဲ',
     description: 'Timed, randomized 20-question mock tests with real-time scoring feedback.',
     descriptionMy:
-      'နေရာမရွေး ဖုန်းထဲကနေ အသုံးပြုနိုင်သော အချိန်တိုင်းတာမေးခွန်း ၂၀ မျိုးဖြင့် လေ့ကျင့်နိုင်ပါသည်။',
+      'နေရာမရွေး ဖုန်းထဲကနေ အသုံးပြုနိုင်သော မိနစ် ၂၀ အချိန်၊ မေးခွန်း ၂၀ ဖြင့် လေ့ကျင့်နိုင်ပါသည်။',
     icon: CheckCircle2,
   },
   {
-    title: 'Category Insights • အပိုင်းလိုက် မျက်နှာမီ',
+    title: 'Category Insights • အမျိုးအစားအလိုက် ထိုးထွင်းသိမြင်မှု',
     description: 'Analytics that reveal strengths and blind spots across all USCIS knowledge areas.',
     descriptionMy:
-      'Supabase အချက်အလက်ဖြင့် သင်၏ အားသာချက်၊ အားနည်းချက်များကို အပိုင်းလိုက် လိုက်ကြည့်လေ့လာနိုင်ပါသည်။',
+      'Supabase အချက်အလက်ဖြင့် သင်၏ အားသာချက်၊ အားနည်းချက်များကို အမျိုးအစားအလိုက် လေ့လာနိုင်ပါသည်။',
     icon: ArrowRight,
   },
 ];
@@ -43,12 +43,12 @@ const LandingPage = () => {
       <header className="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-20 pt-16 text-center lg:flex-row lg:items-center lg:text-left">
         <div className="flex-1 space-y-6">
           <span className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-            Burmese friendly · Mobile ready
+            Burmese Language · Mobile ready
           </span>
           <h1 className="text-4xl font-extrabold leading-tight text-foreground sm:text-5xl">
             Prepare confidently for the U.S. civics interview — bilingual, modern, and always with you.
             <span className="mt-3 block text-2xl font-semibold text-muted-foreground font-myanmar">
-              အမေရိကန်နိုင်ငံသား စစ်ဆေးမေးမြန်းမှုကို အင်္ဂလိပ်/မြန်မာနှစ်ဘာသာဖြင့် ခိုင်ခိုင်မာမာ ပြင်ဆင်ကြရအောင်။
+              အမေရိကန်နိုင်ငံသားဖြစ်မှုဆိုင်ရာ စမ်းသပ်စစ်ဆေးမေးခွန်းများကို အင်္ဂလိပ်/မြန်မာနှစ်ဘာသာဖြင့် လေ့လာပြင်ဆင်နိုင်ပါပြီ။
             </span>
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -66,7 +66,7 @@ const LandingPage = () => {
               to="/study"
               className="inline-flex items-center justify-center rounded-full border border-border px-8 py-3 text-base font-semibold text-foreground transition hover:bg-muted/40"
             >
-              Explore the study guide
+              အခမဲ့အကောင့်ဖွင့်ပါ
             </Link>
           </div>
         </div>
@@ -99,7 +99,7 @@ const LandingPage = () => {
           <p className="text-center text-sm font-semibold uppercase tracking-[0.3em] text-primary">Everything you need</p>
           <h2 className="mt-4 text-center text-3xl font-bold text-foreground">
             Your bilingual toolkit
-            <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">အင်္ဂလိပ်·မြန်မာ သင့်အတွက် တစ်ခုတည်း</span>
+            <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">အင်္ဂလိပ်·မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း</span>
           </h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {features.map(feature => (
@@ -129,7 +129,7 @@ const LandingPage = () => {
             <p className="mt-2 text-muted-foreground">
               Gesture-friendly flip cards, larger tap targets, and breathable Burmese spacing keep the experience smooth on every iOS and Android screen size.
             </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">iOS · Android တွင် လက်နှစ်ဖက်မလွတ်ဘဲ အလွယ်တကူ နည်းလမ်းလေးများနှင့် လေ့လာနိုင်စေသည်။</p>
+            <p className="mt-2 text-muted-foreground font-myanmar">iOS · Android တွင် နှစ်ဘက်လှည့်ကတ်များဖြင့် အလွယ်တကူလေ့လာသင်ယူနိုင်ပါသည်။</p>
           </div>
           <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-rose-500/10 to-amber-400/10 p-8 shadow-lg">
             <Map className="h-8 w-8 text-rose-500" />
@@ -137,7 +137,7 @@ const LandingPage = () => {
             <p className="mt-2 text-muted-foreground">
               Color-coded categories, animated transitions, and Supabase-backed history let you navigate between study, tests, and analytics in a single tap.
             </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">အရောင်အလိုက် အပိုင်းများနှင့် Supabase မှ မှတ်တမ်းများကြောင့် တစ်ချက်တည်းနှိပ်ရုံဖြင့် လိုအပ်ရာစာအုပ်သို့ ပြန်သွားနိုင်ပါသည်။</p>
+            <p className="mt-2 text-muted-foreground font-myanmar">အရောင်အလိုက် ကဏ္ဍများအလိုက်၊ Supabase မှ မှတ်တမ်းများကို တစ်ချက်တည်းနှိပ်ရုံဖြင့် အသုံးပြုနိုင်ပါသည်။</p>
           </div>
         </div>
       </section>

@@ -83,16 +83,16 @@ const StudyGuidePage = () => {
       <div className="mx-auto max-w-6xl px-4 py-10">
         <header className="glass-panel flex flex-col gap-4 p-6 shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">Study guide · လေ့လာမှုအညွှန်း</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">Study Guide · လေ့လာမှုအညွှန်း</p>
             <h1 className="text-3xl font-bold text-foreground">
-              Interactive bilingual flip-cards
+              Interactive Bilingual Flip-Cards
               <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ</span>
             </h1>
             <p className="text-muted-foreground">Tap a card to reveal Burmese answers with extra spacing for easier reading.</p>
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Sort by category · <span className="font-myanmar text-muted-foreground">အပိုင်းရွေးချယ်ရန်</span>
+              Sort by category · <span className="font-myanmar text-muted-foreground">ကဏ္ဍရွေးချယ်ရန်</span>
             </label>
             <select
               className="mt-2 w-full rounded-2xl border border-border bg-card/80 px-4 py-3 text-sm"
@@ -101,7 +101,7 @@ const StudyGuidePage = () => {
             >
               {categories.map(option => (
                 <option key={option} value={option}>
-                  {option === 'all' ? 'All categories · အားလုံး' : option}
+                  {option === 'all' ? 'All Categories · အားလုံး' : option}
                 </option>
               ))}
             </select>
@@ -115,7 +115,7 @@ const StudyGuidePage = () => {
               <div key={question.id} className="flip-card" data-flipped={isFlipped}>
                 <button
                   type="button"
-                  className="flip-card-button"
+                  className="flip-card-button interactive-tile"
                   onClick={() => toggleCard(question.id)}
                   aria-pressed={isLocked}
                   aria-label={`Reveal answer for ${question.question_en}`}
@@ -123,11 +123,14 @@ const StudyGuidePage = () => {
                   <div
                     className={clsx(
                       'flip-card-inner rounded-3xl border border-border/70 bg-card/95 text-foreground shadow-xl shadow-primary/10',
-                      'min-h-[40rem]'
+                      'min-h-[30rem]'
                     )}
                   >
                     <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{question.category}</p>
+                      <p className={clsx(
+                        'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80',
+                        categoryColors[question.category] ?? 'from-primary to-primary'
+                      )}>{question.category}</p>
                       <div>
                         <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
                         <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
@@ -141,12 +144,12 @@ const StudyGuidePage = () => {
                         categoryColors[question.category] ?? 'from-primary to-primary'
                       )}
                     >
-                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">မြန်မာလို အဖြေ</p>
-                      <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">Answer - အဖြေ</p>
+                      <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
                         {question.studyAnswers.map(answer => (
-                          <li key={answer.text_en} className="rounded-2xl bg-white/15 px-4 py-3 shadow-inner">
-                            <p className="text-sm font-semibold tracking-wide">{answer.text_en}</p>
-                            <p className="text-sm text-white/90 font-myanmar leading-relaxed">{answer.text_my}</p>
+                          <li key={answer.text_en} className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner">
+                            <p className="text-base font-semibold tracking-wide">{answer.text_en}</p>
+                            <p className="pt-1 text-base font-myanmar leading-relaxed">{answer.text_my}</p>
                           </li>
                         ))}
                       </ul>

@@ -46,7 +46,7 @@ export const civicsQuestions: Question[] = [
       { text_en: 'We the People', text_my: 'ငါတို့ပြည်သူတွေ', correct: true },
       { text_en: 'We the States', text_my: 'ငါတို့ပြည်နယ်တွေ', correct: false },
       { text_en: 'Congress shall make', text_my: 'ကွန်ဂရက်ကလုပ်ရမယ်။', correct: false },
-      { text_en: 'Life, Liberty, Happiness', text_my: 'ဘဝ၊ လွတ်လပ်မှု၊ ပျော်ရွှင်မှု', correct: false },
+      { text_en: 'Life, Liberty, Happiness', text_my: 'အသက်ရှင်သန်မှု၊ လွတ်လပ်မှု၊ ပျော်ရွှင်မှု', correct: false },
     ],
   },
   {
@@ -86,14 +86,14 @@ export const civicsQuestions: Question[] = [
     question_my: "ပထမပြင်ဆင်ချက်ပါ အခွင့်အရေး ဒါမှမဟုတ် လွတ်လပ်ခွင့်တစ်ခုက ဘာလဲ။",
     category: 'Principles of American Democracy',
     studyAnswers: [
-        { text_en: 'speech', text_my: 'မိန့်ခွန်း' },
-        { text_en: 'religion', text_my: 'ဘာသာ' },
-        { text_en: 'assembly', text_my: 'စည်းဝေး' },
+        { text_en: 'speech', text_my: 'ပြောဆိုခွင့်' },
+        { text_en: 'religion', text_my: 'ဘာသာရေး' },
+        { text_en: 'assembly', text_my: 'စည်းဝေးခွင့်' },
         { text_en: 'press', text_my: 'စာနယ်ဇင်း' },
         { text_en: 'petition the government', text_my: 'အစိုးရကို အသနားခံစာတင်ခြင်း' },
     ],
     answers: [
-      { text_en: "Speech", text_my: "မိန့်ခွန်း", correct: true },
+      { text_en: "Speech", text_my: "ပြောဆိုခွင့်", correct: true },
       { text_en: "To bear arms", text_my: "လက်နက်ကိုင်ဆောင်ရန်", correct: false },
       { text_en: "Trial by jury", text_my: "ဂျူရီလူကြီးဖြင့် စစ်ဆေးခြင်း။", correct: false },
       { text_en: "To vote", text_my: "မဲပေးရန်", correct: false }
@@ -137,12 +137,12 @@ export const civicsQuestions: Question[] = [
     question_my: "လွတ်လပ်ရေးကြေညာစာတမ်းပါ အခွင့်အရေးနှစ်ခုက ဘာတွေလဲ။",
     category: 'Principles of American Democracy',
     studyAnswers: [
-        { text_en: 'life', text_my: 'ဘဝ' },
+        { text_en: 'life', text_my: 'အသက်ရှင်သန်မှု' },
         { text_en: 'liberty', text_my: 'လွတ်လပ်မှု' },
         { text_en: 'pursuit of happiness', text_my: 'ပျော်ရွှင်မှုကိုရှာဖွေခြင်း' }
     ],
     answers: [
-      { text_en: "life and liberty", text_my: "ဘဝနှင့်လွတ်လပ်မှု", correct: true },
+      { text_en: "life and liberty", text_my: "အသက်ရှင်သန်မှုနှင့်လွတ်လပ်မှု", correct: true },
       { text_en: "freedom of speech and religion", text_my: "လွတ်လပ်စွာပြောဆိုခွင့်နှင့် ကိုးကွယ်ယုံကြည်ခွင့်", correct: false },
       { text_en: "the right to bear arms and the right to a trial", text_my: "လက်နက်ကိုင်ဆောင်ခွင့်နှင့် တရားစီရင်ခွင့်", correct: false },
       { text_en: "the right to vote and the right to work", text_my: "မဲပေးခွင့်နှင့် အလုပ်လုပ်ခွင့်", correct: false }
@@ -173,7 +173,7 @@ export const civicsQuestions: Question[] = [
         { text_en: 'market economy', text_my: 'စျေးကွက်စီးပွားရေး' }
     ],
     answers: [
-      { text_en: "capitalist economy", text_my: "အရင်းရှင်စီးပွားရေး", correct: true },
+      { text_en: "capitalist economy", text_my: "အရင်းရှင်စျေးကွက်စီးပွားရေး", correct: true },
       { text_en: "socialist economy", text_my: "ဆိုရှယ်လစ်စီးပွားရေး", correct: false },
       { text_en: "communist economy", text_my: "ကွန်မြူနစ်စီးပွားရေး", correct: false },
       { text_en: "barter economy", text_my: "ကုန်စည်ဖလှယ်ရေးစီးပွားရေး", correct: false }
@@ -317,10 +317,10 @@ export const civicsQuestions: Question[] = [
     question_my: "ယခု သင့်ပြည်နယ်၏ အမေရိကန် အထက်လွှတ်တော်အမတ်တစ်ဦးက မည်သူနည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Answers will vary.', text_my: 'အဖြေများ ကွဲပြားပါမည်။' }
+        { text_en: 'Adam Schiff', text_my: 'အက်ဒမ် ရှစ်ဖ်' }
     ],
     answers: [
-      { text_en: "Answers will vary.", text_my: "အဖြေများ ကွဲပြားပါမည်။", correct: true },
+      { text_en: "Adam Schiff", text_my: "အက်ဒမ် ရှစ်ဖ်", correct: true },
       { text_en: "The Governor of your state", text_my: "သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူး", correct: false },
       { text_en: "The state's Attorney General", text_my: "ပြည်နယ်၏ ရှေ့နေချုပ်", correct: false },
       { text_en: "The Speaker of the State House", text_my: "ပြည်နယ်လွှတ်တော်ဥက္ကဋ္ဌ", correct: false }
@@ -362,10 +362,10 @@ export const civicsQuestions: Question[] = [
     question_my: "သင်၏ အမေရိကန် ကိုယ်စားလှယ်ကို အမည်ပေးပါ။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Answers will vary.', text_my: 'အဖြေများ ကွဲပြားပါမည်။' }
+        { text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး' }
     ],
     answers: [
-      { text_en: "Answers will vary.", text_my: "အဖြေများ ကွဲပြားပါမည်။", correct: true },
+      { text_en: "Judy Chu", text_my: "ဂျူဒီ ချူး", correct: true },
       { text_en: "The Speaker of the House", text_my: "အောက်လွှတ်တော်ဥက္ကဋ္ဌ", correct: false },
       { text_en: "The Governor of your state", text_my: "သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူး", correct: false },
       { text_en: "The Senator from your district", text_my: "သင်၏ခရိုင်မှ အထက်လွှတ်တော်အမတ်", correct: false }
@@ -439,11 +439,11 @@ export const civicsQuestions: Question[] = [
     question_my: "ယခု အမေရိကန်ပြည်ထောင်စု၏ သမ္မတအမည်ကား အဘယ်နည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Joe Biden', text_my: 'ဂျိုးဘိုင်ဒင်' }
+        { text_en: 'Donald Trump', text_my: 'ဒေါ်နယ်ထရန့်' }
     ],
     answers: [
-      { text_en: "Joe Biden", text_my: "ဂျိုးဘိုင်ဒင်", correct: true },
-      { text_en: "Donald Trump", text_my: "ဒေါ်နယ်ထရန့်", correct: false },
+      { text_en: "Joe Biden", text_my: "ဂျိုးဘိုင်ဒင်", correct: false },
+      { text_en: "Donald Trump", text_my: "ဒေါ်နယ်ထရန့်", correct: true },
       { text_en: "Barack Obama", text_my: "ဘားရက်အိုဘားမား", correct: false },
       { text_en: "Kamala Harris", text_my: "ကမလာ ဟားရစ်", correct: false }
     ]
@@ -454,10 +454,10 @@ export const civicsQuestions: Question[] = [
     question_my: "ယခု အမေရိကန်ပြည်ထောင်စု၏ ဒုတိယသမ္မတအမည်ကား အဘယ်နည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Kamala Harris', text_my: 'ကမလာ ဟားရစ်' }
+        { text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ်' }
     ],
     answers: [
-      { text_en: "Kamala Harris", text_my: "ကမလာ ဟားရစ်", correct: true },
+      { text_en: "JD Vance", text_my: "ဂျေဒီ ဗန်စ်", correct: true },
       { text_en: "Mike Pence", text_my: "မိုက်ပင့်", correct: false },
       { text_en: "Joe Biden", text_my: "ဂျိုးဘိုင်ဒင်", correct: false },
       { text_en: "Nancy Pelosi", text_my: "နန်စီ ပလိုစီ", correct: false }
@@ -689,10 +689,10 @@ export const civicsQuestions: Question[] = [
     question_my: "ယခု သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူးသည် မည်သူနည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Answers will vary.', text_my: 'အဖြေများ ကွဲပြားပါမည်။' }
+        { text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးစမ်' }
     ],
     answers: [
-      { text_en: "Answers will vary.", text_my: "အဖြေများ ကွဲပြားပါမည်။", correct: true },
+      { text_en: "Gavin Newsom", text_my: "ဂက်ဗင် နျူးစမ်", correct: true },
       { text_en: "The President", text_my: "သမ္မတ", correct: false },
       { text_en: "The Mayor of your city", text_my: "သင်၏မြို့တော်ဝန်", correct: false },
       { text_en: "The Speaker of the State House", text_my: "ပြည်နယ်လွှတ်တော်ဥက္ကဋ္ဌ", correct: false }
@@ -704,10 +704,10 @@ export const civicsQuestions: Question[] = [
     question_my: "သင်၏ပြည်နယ်၏ မြို့တော်ကား အဘယ်နည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Answers will vary.', text_my: 'အဖြေများ ကွဲပြားပါမည်။' }
+        { text_en: 'Sacramento', text_my: 'ဆက်ကရမေန်တို' }
     ],
     answers: [
-      { text_en: "Answers will vary.", text_my: "အဖြေများ ကွဲပြားပါမည်။", correct: true },
+      { text_en: "Sacramento", text_my: "ဆက်ကရမေန်တို", correct: true },
       { text_en: "Washington, D.C.", text_my: "ဝါရှင်တန်ဒီစီ", correct: false },
       { text_en: "New York City", text_my: "နယူးယောက်မြို့", correct: false },
       { text_en: "The largest city in your state", text_my: "သင်၏ပြည်နယ်၏ အကြီးဆုံးမြို့", correct: false }
@@ -734,11 +734,11 @@ export const civicsQuestions: Question[] = [
     question_my: "ယခု သမ္မတ၏ နိုင်ငံရေးပါတီကား အဘယ်နည်း။",
     category: 'System of Government',
     studyAnswers: [
-        { text_en: 'Democratic Party', text_my: 'ဒီမိုကရက်တစ်ပါတီ' }
+        { text_en: 'Republican Party', text_my: 'ရီပတ်ဘလစ်ကန်ပါတီ' }
     ],
     answers: [
-      { text_en: "Democratic Party", text_my: "ဒီမိုကရက်တစ်ပါတီ", correct: true },
-      { text_en: "Republican Party", text_my: "ရီပတ်ဘလစ်ကန်ပါတီ", correct: false },
+      { text_en: "Democratic Party", text_my: "ဒီမိုကရက်တစ်ပါတီ", correct: false },
+      { text_en: "Republican Party", text_my: "ရီပတ်ဘလစ်ကန်ပါတီ", correct: true },
       { text_en: "Independent", text_my: "လွတ်လပ်သော", correct: false },
       { text_en: "Libertarian Party", text_my: "လစ်ဘရယ်ပါတီ", correct: false }
     ]
@@ -966,7 +966,7 @@ export const civicsQuestions: Question[] = [
         { text_en: 'Native Americans', text_my: 'ဇာတိ အမေရိကန်များ' }
     ],
     answers: [
-      { text_en: "Native Americans", text_my: "ဇာတိ အမေရိကန်များ", correct: true },
+      { text_en: "Native Americans", text_my: "ဇာတိအမေရိကန် အင်ဒီးယန်းများ", correct: true },
       { text_en: "Canadians", text_my: "ကနေဒါလူမျိုးများ", correct: false },
       { text_en: "Mexicans", text_my: "မက္ကဆီကိုလူမျိုးများ", correct: false },
       { text_en: "No one", text_my: "ဘယ်သူမှ မရှိ", correct: false }

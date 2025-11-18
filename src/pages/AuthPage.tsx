@@ -18,10 +18,10 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         await login(form.email, form.password);
-        toast({ title: 'သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ', description: 'Welcome back! 🎉' });
+        toast({ title: 'သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ', description: 'Welcome back! ကြိုဆိုပါတယ် 🎉' });
       } else {
         await register(form.name, form.email, form.password);
-        toast({ title: 'အကောင့်အသစ် ဖန်တီးပြီးပါပြီ', description: 'Check your inbox to verify your email.' });
+        toast({ title: 'အကောင့်အသစ် ဖန်တီးပြီးပါပြီ', description: 'Please click link in email to confirm your account on Civic Test App! သင့်အကောင့်ကို အတည်ပြုရန် email တွင်လင့်ခ်ကိုနှိပ်ပါ။' });
       }
       const redirectTo = (location.state as { from?: string })?.from ?? '/dashboard';
       navigate(redirectTo, { replace: true });
@@ -83,7 +83,7 @@ const AuthPage = () => {
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
-                Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်နံပါတ်</span>
+                Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်စာနံပါတ်</span>
               </label>
               <input
                 className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
@@ -114,13 +114,13 @@ const AuthPage = () => {
           </p>
         </div>
         <div className="flex-1 rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-rose-300/10 to-amber-200/10 p-8 shadow-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">သင့်အတွက် အထူးပြင်ဆင်ထားသည်</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">အင်္ဂလိပ်-မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း</p>
           <h2 className="mt-3 text-3xl font-semibold text-foreground">
             Study in both English and မြန်မာ
-            <span className="block text-lg font-normal text-muted-foreground font-myanmar">တစ်မျိုးစီ ဖတ်ရလွယ်ကူ</span>
+            <span className="block text-lg font-normal text-muted-foreground font-myanmar">လေ့လာသင်ယူ ဖတ်ရလွယ်ကူ</span>
           </h2>
           <p className="mt-3 text-base text-muted-foreground font-myanmar">
-            အသံထွက်လွယ်သော မြန်မာစာ၊ အင်္ဂလိပ်စာကို ခြားနားကာဖတ်နိုင်ရန် ကြားကာအကွာအဝေးများထည့်သွင်းထားပြီး iOS/Android အပေါ်တွင်လည်း လက်ဖက်ရည်တစ်ခွက်နဲ့ သင်ယူရတာလို ပေါ့ပါးသိမ်မွေ့စေပါသည်။
+            မြန်မာစာ-အင်္ဂလိပ်စာဖြင့် iOS/Android များတွင်လွယ်လွယ်ကူကူအသုံးပြုနိုင်ပါပြီ။
           </p>
           <div className="mt-8 space-y-4">
             <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm">

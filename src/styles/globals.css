@@ -68,7 +68,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   background: radial-gradient(circle at 15% 20%, rgba(255, 182, 193, 0.35), transparent 55%),
     radial-gradient(circle at 80% 0%, rgba(129, 212, 250, 0.3), transparent 60%),
     radial-gradient(circle at 50% 80%, rgba(186, 230, 253, 0.25), transparent 65%);
@@ -125,7 +125,7 @@ html {
 .flip-card {
   position: relative;
   width: 100%;
-  min-height: 40rem;
+  min-height: 20rem;
 }
 
 .flip-card-button {
@@ -170,14 +170,14 @@ html {
 
 .flip-card-back {
   opacity: 0;
-  transform: rotateY(-18deg) translateY(1rem);
+  transform: rotateY(-180deg) translateY(1rem);
   pointer-events: none;
   z-index: 1;
 }
 
 .flip-card[data-flipped='true'] .flip-card-front {
   opacity: 0;
-  transform: rotateY(18deg) translateY(-1rem);
+  transform: rotateY(180deg) translateY(-1rem);
   pointer-events: none;
 }
 
