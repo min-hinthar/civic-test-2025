@@ -1,17 +1,28 @@
+// pages/_error.tsx
 import * as Sentry from "@sentry/nextjs";
-import Error from "next/error";
+import Error, { ErrorProps } from "next/error";
+import { NextPageContext } from "next";
 
-const CustomErrorComponent = (props) => {
-  return <Error statusCode={props.statusCode} />;
+/**
+ * Custom error page that integrates with Sentry.
+ * Properly typed with ErrorProps and NextPageContext.
+ */
+function MyError({ statusCode }: ErrorProps) {
+  return <Error statusCode={statusCode ?? 500} />;
+}
+
+MyError.getInitialProps = async (context: NextPageContext) => {
+  const { res, err } = context;
+
+  const statusCode = res?.statusCode ?? err?.statusCode ?? 404;
+
+  // Capture the error with Sentry (only if an actual error object exists)
+  if (err) {
+    Sentry.captureException(err);
+    await Sentry.flush(2000); // ensure events are sent before the page closes
+  }
+
+  return { statusCode };
 };
 
-CustomErrorComponent.getInitialProps = async (contextData) => {
-  // In case this is running in a serverless function, await this in order to give Sentry
-  // time to send the error before the lambda exits
-  await Sentry.captureUnderscoreErrorException(contextData);
-
-  // This will contain the status code of the response
-  return Error.getInitialProps(contextData);
-};
-
-export default CustomErrorComponent;
+export default MyError;
