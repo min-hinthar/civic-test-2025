@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 *.env
+.env.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -420,3 +421,6 @@ FodyWeavers.xsd
 # Next.js build artifacts
 .next
 
+
+# Sentry Config File
+.env.sentry-build-plugin
