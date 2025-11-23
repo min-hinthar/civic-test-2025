@@ -1,34 +1,102 @@
-# Civic Test Prep (English • Burmese)
+# Bilingual U.S. Citizenship Civics Quiz (2025 Edition)
 
-A Next.js-powered, mobile-first experience that helps Burmese-speaking learners master the U.S. citizenship civics interview. The app uses Supabase for authentication and attempt storage, animated bilingual study cards, and a randomized 20-question mock test with analytics.
+A free, bilingual web app designed to help **Burmese-speaking learners** prepare for the U.S. Citizenship Civics Test while also deepening their understanding of American civics.  
+This project combines **modern web technologies**, **workflow automation**, and **bilingual accessibility** to deliver a secure, user-friendly learning experience.
 
-## Highlights
+---
 
-- **Supabase auth + history sync** – Email/password accounts (stored in `profiles`) automatically sync attempts + per-question results to `mock_tests` and `mock_test_responses`.
-- **Next.js + React Router SPA shell** – We render a single-page experience (Landing, Auth, Dashboard, Test, Study, History) inside Next.js for fast transitions, SEO via `react-helmet`, and Tailwind styling.
-- **Bilingual flip-card study guide** – Category color-coded cards flip between English prompts and Burmese answers with filtering controls.
-- **Timed mock exams** – Randomized 20-question set, 20-minute countdown, 3 distractors + 1 correct answer, bilingual review, and Supabase persistence.
-- **Analytics dashboard** – Score trend line chart, category accuracy bars, and full attempt log so learners can target weak areas.
+## 🌟 Purpose & Vision
 
-## Supabase setup
+- **Accessibility:** Provide Burmese immigrants with reliable, bilingual study resources for the U.S. civics test.  
+- **Education:** Promote civic knowledge beyond test preparation — understanding rights, responsibilities, and history.  
+- **Community Empowerment:** Remove financial barriers by offering a free, open-source platform.  
+- **Inclusivity:** Support learners who may be new to English while reinforcing civic knowledge in their native language.
 
-1. Run the SQL located at [`supabase/schema.sql`](supabase/schema.sql) inside your Supabase project to create the tables + RLS policies.
-2. The project is pre-configured with the provided Supabase URL/key. To override, create `.env.local` with:
+---
 
+## 🚀 Live Demo
+
+- **App Deployment:** [Live App](https://civic-test-2025.vercel.app/)  
+- **Source Code:** [GitHub Repository](https://github.com/min-hinthar/civic-test-2025)
+
+- **App Screenshots:** ![App Screenshot](public\Screenshot_1.jpeg) ![App Screenshot](public\Screenshot_2.jpeg) ![App Screenshot](public\Screenshot_3.jpeg) ![App Screenshot](public\Screenshot_4.jpeg) ![App Screenshot](public\Screenshot_5.jpeg)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Next.js 15** — modern React framework for scalable apps.  
+- **Supabase / Clerk / Appwrite** — secure authentication and user management.  
+- **n8n Workflows** — automated logging and progress tracking.  
+- **TypeScript** — type safety and maintainability.  
+- **Sentry.io** — error monitoring and debugging.  
+- **Google Sheets Integration** — learner progress tracking keyed by `userId`.  
+
+---
+
+## 📚 Features
+
+- ✅ 100 civics questions in **English + Burmese**  
+- ✅ Flip-card UI for bilingual study experience  
+- ✅ Real-time progress tracking with secure backend logging  
+- ✅ Authentication for personalized learning journeys  
+- ✅ Error monitoring with Sentry for reliability  
+- ✅ Open-source and community-driven  
+
+---
+
+## ⚡ Development Journey & AI Acknowledgment
+
+This project was accelerated using coding AIs such as **Codex** and **Gemini**, which provided templates and boilerplate code.  
+However, ensuring **security, accessibility, and UI/UX quality** required extensive debugging, refactoring, and recoding.  
+
+- **AI Contribution:** Boosted productivity by ~100%, enabling faster prototyping.  
+- **Human Oversight:** Debugging, refactoring, and securing workflows to ensure reliability and inclusivity.  
+- **Design Philosophy:** Minimal, resilient fixes with a focus on accessibility for bilingual and RTL audiences.  
+
+---
+
+## 📖 Getting Started
+
+### Prerequisites
+- Node.js 18+  
+- npm or yarn  
+- Supabase / Clerk / Appwrite credentials  
+- Sentry.io account (optional, for error monitoring)  
+
+### Installation
 ```bash
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-```
-
-## Development
-
-```bash
+git clone https://github.com/min-hinthar/civic-test-2025
+cd civic-test-2025
 npm install
 npm run dev
+
 ```
+### Deployment
+Optimized for Vercel. Set environment variables in your Vercel dashboard:
 
-Navigate to `http://localhost:3000` – the optional catch-all Next.js route renders the SPA shell so any deep links (e.g., `/dashboard`) work with client-side routing.
+- SUPABASE_URL
 
-## Data source
+- SUPABASE_KEY
 
-The bilingual civics bank (100 detailed questions + 28 placeholders to reach 128) powers both the mock test and flip cards. You can edit it in [`src/constants/civicsQuestions.ts`](src/constants/civicsQuestions.ts).
+- SENTRY_DSN
+
+---
+
+## ✅ Contributions are welcome!
+
+- Fork the repo
+
+- Create a feature branch
+
+- Submit a pull request
+
+## 📜 License
+Licensed under the MIT License — free to use, modify, and distribute.
+
+## 👤 Author
+- Min Hinthar
+
+- GitHub: @min-hinthar
+
+- Focus: bilingual educational tools, workflow automation, and civic education accessibility.
