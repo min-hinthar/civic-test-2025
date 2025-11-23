@@ -19,7 +19,7 @@ This project combines **modern web technologies**, **workflow automation**, and 
 - **App Deployment:** [Live App](https://civic-test-2025.vercel.app/)  
 - **Source Code:** [GitHub Repository](https://github.com/min-hinthar/civic-test-2025)
 
-- **App Screenshots:** ![App Screenshot](public\Screenshot_1.jpeg) ![App Screenshot](public\Screenshot_2.jpeg) ![App Screenshot](public\Screenshot_3.jpeg) ![App Screenshot](public\Screenshot_4.jpeg) ![App Screenshot](public\Screenshot_5.jpeg)
+- **App Screenshots:** ![App Screenshot](https://github.com/min-hinthar/civic-test-2025/blob/main/public/Screenshot_1.jpeg) ![App Screenshot](https://github.com/min-hinthar/civic-test-2025/blob/main/public/Screenshot_2.jpeg) ![App Screenshot](https://github.com/min-hinthar/civic-test-2025/blob/main/public/Screenshot_3.jpeg) ![App Screenshot](https://github.com/min-hinthar/civic-test-2025/blob/main/public/Screenshot_4.jpeg) ![App Screenshot](https://github.com/min-hinthar/civic-test-2025/blob/main/public/Screenshot_5.jpeg)
 
 ---
 
