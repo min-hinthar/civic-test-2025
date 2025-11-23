@@ -57,7 +57,7 @@ const HistoryPage = () => {
           <p className="text-sm uppercase tracking-[0.3em] text-primary">History · မှတ်တမ်း</p>
           <h1 className="text-3xl font-bold text-foreground">
             Mock test performance
-            <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">စမ်းသပ်မေးခွန်းကျော်ကြားမှု</span>
+            <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">စာမေးပွဲစွမ်းဆောင်ရည်စမ်းသပ်မှု</span>
           </h1>
           <p className="text-muted-foreground">Every attempt is securely stored in Supabase so you can review trends anytime.</p>
         </header>
@@ -70,7 +70,7 @@ const HistoryPage = () => {
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Attempts</p>
             <p className="text-3xl font-bold text-foreground">{history.length}</p>
             <p className="text-sm text-muted-foreground">Total Supabase-synced tests</p>
-            <p className="text-xs text-muted-foreground font-myanmar">လုပ်ဆောင်မှု စုစုပေါင်း</p>
+            <p className="text-xs text-muted-foreground font-myanmar">စာမေးပွဲ စုစုပေါင်း</p>
           </div>
           <div className="stat-card p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Best score</p>

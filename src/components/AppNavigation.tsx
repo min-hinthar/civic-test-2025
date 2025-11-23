@@ -46,8 +46,8 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
     : 'bg-gradient-to-r from-primary/10 via-background/70 to-accent/10 dark:from-slate-900/70 dark:via-slate-950 dark:to-slate-900 shadow-lg shadow-primary/10';
 
   return (
-    <nav className={`sticky top-0 z-30 border-b border-border/60 backdrop-blur-xl ${shellClasses}`}>
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+    <nav className={`nav-safe-area sticky top-0 z-30 border-b border-border/60 backdrop-blur-xl ${shellClasses}`}>
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-2 sm:px-4 py-3 sm:py-4">
         <Link
           to="/"
           className={`text-lg font-semibold text-foreground ${locked ? 'cursor-not-allowed opacity-70' : ''}`}
@@ -125,7 +125,7 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
         </div>
       </div>
       {isMenuOpen && (
-        <div className="border-t border-border/60 px-4 py-3 md:hidden">
+        <div className="card-edge-safe border-t border-border/60 px-4 py-3 md:hidden">
           <div className="flex flex-col gap-2">
             {navLinks.map(link => (
               <Link

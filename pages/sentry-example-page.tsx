@@ -1,3 +1,5 @@
+"use client";
+
 import Head from "next/head";
 import * as Sentry from "@sentry/nextjs";
 import { useState, useEffect } from "react";
@@ -9,7 +11,7 @@ class SentryExampleFrontendError extends Error {
   }
 }
 
-export default function Page() {
+export default function SentryExamplePage() {
   const [hasSentError, setHasSentError] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
   
