@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 :root {
+  --app-viewport-height: 100vh;
+  --app-viewport-offset-top: 0px;
+  --app-viewport-offset-left: 0px;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --background: 210 60% 99%;
   --foreground: 222 47% 12%;
   --card: 0 0% 100%;
@@ -54,14 +59,17 @@ body {
   color: hsl(var(--foreground));
   font-family: 'Inter', 'Noto Sans Myanmar', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: var(--app-viewport-height);
 }
 
 .page-shell {
   position: relative;
-  min-height: 100vh;
+  min-height: var(--app-viewport-height);
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   isolation: isolate;
+  padding-top: var(--safe-area-top);
+  padding-bottom: calc(var(--safe-area-bottom) + 1rem);
 }
 
 .page-shell::before {
@@ -119,6 +127,19 @@ html {
 .font-myanmar {
   font-family: 'Noto Sans Myanmar', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   letter-spacing: 0.02em;
+}
+
+.nav-safe-area {
+  padding-top: max(0.5rem, var(--safe-area-top));
+  padding-bottom: max(0.5rem, calc(var(--safe-area-bottom) / 2));
+  padding-left: max(1rem, var(--app-viewport-offset-left));
+  padding-right: max(1rem, var(--app-viewport-offset-left));
+}
+
+.card-edge-safe {
+  border-radius: var(--radius);
+  box-shadow: 0 20px 80px -30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
 }
 
 

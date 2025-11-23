@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/toaster';
+import { useViewportHeight } from '@/lib/useViewportHeight';
 import LandingPage from '@/pages/LandingPage';
 import AuthPage from '@/pages/AuthPage';
 import Dashboard from '@/pages/Dashboard';
@@ -16,6 +17,8 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 const AppShell = () => {
   const [isClient, setIsClient] = useState(false);
+
+  useViewportHeight();
 
   useEffect(() => {
     setIsClient(true);
