@@ -19,51 +19,56 @@ const GoogleOneTapSignIn = () => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
-  const canPrompt = useMemo(() => scriptLoaded && !user && !dismissed, [dismissed, scriptLoaded, user]);
+  const shouldAutoPrompt = useMemo(() => scriptLoaded && !user && !dismissed, [dismissed, scriptLoaded, user]);
 
-  const attemptPrompt = useCallback(() => {
-    if (!window.google?.accounts?.id || !canPrompt) return;
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      cancel_on_tap_outside: true,
-      context: 'signin',
-      ux_mode: 'popup',
-      callback: async ({ credential }: { credential: string }) => {
-        if (!credential) return;
-        try {
-          await loginWithGoogleIdToken(credential);
-          toast({
-            title: 'Signed in with Google',
-            description: 'One Tap sign-in succeeded. Welcome back! 🎉',
-          });
-        } catch (error) {
-          console.error('Google One Tap failed', error);
-          toast({
-            title: 'Google sign-in blocked',
-            description: 'We could not complete Google One Tap. Please try again or use email.',
-            variant: 'destructive',
-          });
+  const attemptPrompt = useCallback(
+    (forceManual = false) => {
+      if (!window.google?.accounts?.id) return;
+      if (!forceManual && !shouldAutoPrompt) return;
+      if (user) return;
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        cancel_on_tap_outside: true,
+        context: 'signin',
+        ux_mode: 'popup',
+        callback: async ({ credential }: { credential: string }) => {
+          if (!credential) return;
+          try {
+            await loginWithGoogleIdToken(credential);
+            toast({
+              title: 'Signed in with Google',
+              description: 'One Tap sign-in succeeded. Welcome back! 🎉',
+            });
+          } catch (error) {
+            console.error('Google One Tap failed', error);
+            toast({
+              title: 'Google sign-in blocked',
+              description: 'We could not complete Google One Tap. Please try again or use email.',
+              variant: 'destructive',
+            });
+          }
+        },
+      });
+      window.google.accounts.id.prompt(notification => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          setDismissed(true);
         }
-      },
-    });
-    window.google.accounts.id.prompt(notification => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        setDismissed(true);
-      }
-    });
-  }, [canPrompt, loginWithGoogleIdToken]);
+      });
+    },
+    [loginWithGoogleIdToken, shouldAutoPrompt, user],
+  );
 
   useEffect(() => {
-    if (!canPrompt) return;
+    if (!shouldAutoPrompt) return;
     attemptPrompt();
-  }, [attemptPrompt, canPrompt]);
+  }, [attemptPrompt, shouldAutoPrompt]);
 
   return (
     <div className="space-y-2">
       <Script src="https://accounts.google.com/gsi/client" async defer onLoad={() => setScriptLoaded(true)} />
       <button
         type="button"
-        onClick={attemptPrompt}
+        onClick={() => attemptPrompt(true)}
         className="flex w-full items-center justify-center gap-2 rounded-2xl border border-border bg-card/70 px-4 py-3 font-semibold shadow-sm transition hover:border-primary/60 hover:text-primary"
       >
         <span>Continue with Google</span>

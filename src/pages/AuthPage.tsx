@@ -123,16 +123,23 @@ const AuthPage = () => {
                   value={form.password}
                   onChange={event => setForm({ ...form, password: event.target.value })}
                   required={mode !== 'forgot'}
-                  minLength={12}
+                  minLength={mode === 'register' ? 12 : 6}
                 />
-                <p className="mt-1 text-xs text-muted-foreground">Use 12+ characters to keep your account safe.</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {mode === 'register'
+                    ? 'Use 12+ characters to keep your new account safe.'
+                    : 'Existing accounts can use your current password (minimum 6 characters).'}
+                </p>
               </div>
             )}
             {authError && <p className="text-sm text-red-600">{authError}</p>}
             <button
               type="submit"
               className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-xl shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-70"
-              disabled={mode !== 'forgot' && form.password.length < 12}
+              disabled={
+                (mode === 'register' && form.password.length < 12) ||
+                (mode === 'login' && form.password.length < 6)
+              }
             >
               {mode === 'login' && 'Sign in securely'}
               {mode === 'register' && 'Create free account'}
