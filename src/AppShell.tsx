@@ -14,6 +14,8 @@ import TestPage from '@/pages/TestPage';
 import StudyGuidePage from '@/pages/StudyGuidePage';
 import HistoryPage from '@/pages/HistoryPage';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import PasswordResetPage from '@/pages/PasswordResetPage';
+import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
 
 const AppShell = () => {
   const [isClient, setIsClient] = useState(false);
@@ -42,6 +44,8 @@ const AppShell = () => {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/auth/forgot" element={<PasswordResetPage />} />
+              <Route path="/auth/update-password" element={<PasswordUpdatePage />} />
               <Route
                 path="/dashboard"
                 element={
