@@ -122,7 +122,7 @@ const AuthPage = () => {
                   type="password"
                   value={form.password}
                   onChange={event => setForm({ ...form, password: event.target.value })}
-                  required={mode !== 'forgot'}
+                  required
                   minLength={mode === 'register' ? 12 : 6}
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
