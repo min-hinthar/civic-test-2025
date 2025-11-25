@@ -5,10 +5,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 import AppNavigation from '@/components/AppNavigation';
+import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 
 const AuthPage = () => {
-  const { login, register, authError, user } = useAuth();
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const { login, register, authError, user, sendPasswordReset } = useAuth();
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,9 +20,18 @@ const AuthPage = () => {
       if (mode === 'login') {
         await login(form.email, form.password);
         toast({ title: 'သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ', description: 'Welcome back! ကြိုဆိုပါတယ် 🎉' });
-      } else {
+      } else if (mode === 'register') {
         await register(form.name, form.email, form.password);
         toast({ title: 'အကောင့်အသစ် ဖန်တီးပြီးပါပြီ', description: 'Please click link in email to confirm your account on Civic Test App! သင့်အကောင့်ကို အတည်ပြုရန် email တွင်လင့်ခ်ကိုနှိပ်ပါ။' });
+      } else {
+        await sendPasswordReset(form.email, `${window.location.origin}/auth/update-password`);
+        toast({
+          title: 'Check your inbox for a secure link',
+          description:
+            'We sent a password reset email that opens our trusted update screen. Link expires for your security.',
+        });
+        setMode('login');
+        return;
       }
       const redirectTo = (location.state as { from?: string })?.from ?? '/dashboard';
       navigate(redirectTo, { replace: true });
@@ -41,20 +51,36 @@ const AuthPage = () => {
       <AppNavigation translucent />
       <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 pb-16 pt-10 lg:flex-row">
         <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
-          <div className="mb-6 flex justify-between rounded-full bg-muted/50 p-1 text-sm font-semibold">
+          <div className="mb-6 grid grid-cols-3 gap-1 rounded-full bg-muted/50 p-1 text-sm font-semibold">
             <button
-              className={`flex-1 rounded-full px-3 py-2 ${mode === 'login' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              className={`rounded-full px-3 py-2 ${mode === 'login' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('login')}
             >
               Sign in
             </button>
             <button
-              className={`flex-1 rounded-full px-3 py-2 ${mode === 'register' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              className={`rounded-full px-3 py-2 ${mode === 'register' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('register')}
             >
               Create account
             </button>
+            <button
+              className={`rounded-full px-3 py-2 ${mode === 'forgot' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              onClick={() => setMode('forgot')}
+            >
+              Forgot?
+            </button>
           </div>
+
+          <div className="mb-6">
+            <GoogleOneTapSignIn />
+            <div className="my-4 flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
+              <span className="h-px flex-1 bg-border" />
+              <span>or use email</span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+          </div>
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             {mode === 'register' && (
               <div>
@@ -65,7 +91,7 @@ const AuthPage = () => {
                   className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                   value={form.name}
                   onChange={event => setForm({ ...form, name: event.target.value })}
-                  required
+                  required={mode === 'register'}
                 />
               </div>
             )}
@@ -81,28 +107,52 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်စာနံပါတ်</span>
-              </label>
-              <input
-                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
-                type="password"
-                value={form.password}
-                onChange={event => setForm({ ...form, password: event.target.value })}
-                required
-              />
-            </div>
+            {mode !== 'forgot' && (
+              <div>
+                <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
+                  <label>
+                    Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်စာနံပါတ်</span>
+                  </label>
+                  <button type="button" className="text-xs text-primary" onClick={() => setMode('forgot')}>
+                    Forgot password?
+                  </button>
+                </div>
+                <input
+                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
+                  type="password"
+                  value={form.password}
+                  onChange={event => setForm({ ...form, password: event.target.value })}
+                  required
+                  minLength={mode === 'register' ? 12 : 6}
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {mode === 'register'
+                    ? 'Use 12+ characters to keep your new account safe.'
+                    : 'Existing accounts can use your current password (minimum 6 characters).'}
+                </p>
+              </div>
+            )}
             {authError && <p className="text-sm text-red-600">{authError}</p>}
             <button
               type="submit"
-              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-xl shadow-primary/40"
+              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-xl shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-70"
+              disabled={
+                (mode === 'register' && form.password.length < 12) ||
+                (mode === 'login' && form.password.length < 6)
+              }
             >
-              {mode === 'login' ? 'Sign in' : 'Create free account'}
+              {mode === 'login' && 'Sign in securely'}
+              {mode === 'register' && 'Create free account'}
+              {mode === 'forgot' && 'Send reset email'}
             </button>
             {mode === 'register' && (
               <p className="text-xs text-muted-foreground">
                 You will receive a Supabase confirmation email. <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>
+              </p>
+            )}
+            {mode === 'forgot' && (
+              <p className="text-xs text-muted-foreground">
+                Password resets redirect you back to this app. <span className="font-myanmar">လေ့လာမှုအတွက် အတည်ပြုလင့်ခ်မှသာ အဝင်ပြောင်းပါ။</span>
               </p>
             )}
           </form>

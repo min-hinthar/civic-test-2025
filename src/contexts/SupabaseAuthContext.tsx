@@ -12,6 +12,9 @@ interface AuthContextValue {
   isSavingSession: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  loginWithGoogleIdToken: (credential: string, nonce?: string) => Promise<void>;
+  sendPasswordReset: (email: string, redirectTo: string) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   saveTestSession: (payload: Omit<TestSession, 'id'>) => Promise<void>;
 }
@@ -167,6 +170,55 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [hydrateFromSupabase, syncProfile]
   );
 
+  const loginWithGoogleIdToken = useCallback(
+    async (credential: string, nonce?: string) => {
+      setAuthError(null);
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: credential,
+        nonce,
+      });
+      if (error) {
+        setAuthError(error.message);
+        throw error;
+      }
+      if (data?.user) {
+        await syncProfile({
+          id: data.user.id,
+          email: data.user.email ?? '',
+          full_name: (data.user.user_metadata as any)?.full_name ?? data.user.email ?? 'Learner',
+        });
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData.session) {
+          await hydrateFromSupabase(sessionData.session);
+        }
+      }
+    },
+    [hydrateFromSupabase, syncProfile]
+  );
+
+  const sendPasswordReset = useCallback(async (email: string, redirectTo: string) => {
+    setAuthError(null);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+    if (error) {
+      setAuthError(error.message);
+      throw error;
+    }
+  }, []);
+
+  const updatePassword = useCallback(async (newPassword: string) => {
+    setAuthError(null);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      setAuthError(error.message);
+      throw error;
+    }
+    const { data } = await supabase.auth.getSession();
+    await hydrateFromSupabase(data.session ?? null);
+  }, [hydrateFromSupabase]);
+
   const logout = useCallback(async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -240,8 +292,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const value = useMemo(
-    () => ({ user, isLoading, authError, isSavingSession, login, register, logout, saveTestSession }),
-    [user, isLoading, authError, isSavingSession, login, register, logout, saveTestSession]
+    () => ({
+      user,
+      isLoading,
+      authError,
+      isSavingSession,
+      login,
+      register,
+      loginWithGoogleIdToken,
+      sendPasswordReset,
+      updatePassword,
+      logout,
+      saveTestSession,
+    }),
+    [
+      authError,
+      isLoading,
+      isSavingSession,
+      login,
+      loginWithGoogleIdToken,
+      logout,
+      register,
+      saveTestSession,
+      sendPasswordReset,
+      updatePassword,
+      user,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
