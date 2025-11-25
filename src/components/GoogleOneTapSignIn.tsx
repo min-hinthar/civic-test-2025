@@ -6,14 +6,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/supabaseClient';
 
-declare global {
-  interface Window {
-    google?: any;
-  }
-}
-
-const GOOGLE_CLIENT_ID =
-  '717300076212-40vlhmfqjgap04gsbo9hmdat188k57ve.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 const GoogleOneTapSignIn = () => {
   const { user, loginWithGoogleIdToken } = useAuth();
@@ -24,7 +17,7 @@ const GoogleOneTapSignIn = () => {
   const buttonRef = useRef<HTMLDivElement | null>(null);
 
   const handleCredential = useCallback(
-    async ({ credential }: { credential: string }) => {
+    async ({ credential }: google.accounts.id.CredentialResponse) => {
       if (!credential) return;
       try {
         await loginWithGoogleIdToken(credential);
@@ -50,7 +43,7 @@ const GoogleOneTapSignIn = () => {
   );
 
   const ensureGoogleInitialized = useCallback(() => {
-    if (!window.google?.accounts?.id || user) return false;
+    if (!GOOGLE_CLIENT_ID || !window.google?.accounts?.id || user) return false;
     window.google.accounts.id.initialize({
       client_id: GOOGLE_CLIENT_ID,
       cancel_on_tap_outside: true,
@@ -113,7 +106,7 @@ const GoogleOneTapSignIn = () => {
       }
       if (!forceManual && !shouldAutoPrompt) return;
       if (user) return;
-      window.google.accounts.id.prompt(notification => {
+      window.google.accounts.id.prompt((notification: google.accounts.id.PromptMomentNotification) => {
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
           setDismissed(true);
         }

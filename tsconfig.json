@@ -19,6 +19,6 @@
     },
     "types": ["node", "react", "react-dom"]
   },
-  "include": ["next-env.d.ts", "pages", "src", "src/types"],
+  "include": ["next-env.d.ts", "pages", "src", "src/types", "src/types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }
