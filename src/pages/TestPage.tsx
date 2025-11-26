@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock3, Sparkles } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
+import SpeechButton from '@/components/ui/SpeechButton';
 import { civicsQuestions } from '@/constants/civicsQuestions';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -39,6 +40,8 @@ const TestPage = () => {
     []
   );
   const currentQuestion = !isFinished ? questions[currentIndex] : null;
+  const questionAudioText = currentQuestion?.question_en ?? '';
+  const answerChoicesAudioText = currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
 
   const answeredQuestions = results.length;
   const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
@@ -237,7 +240,19 @@ const TestPage = () => {
             <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
             <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
             <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
-          </div>          
+            <div className="mt-4 flex flex-wrap gap-2">
+              <SpeechButton
+                text={questionAudioText}
+                label="Play English question"
+                ariaLabel="Play English question audio"
+              />
+              <SpeechButton
+                text={answerChoicesAudioText}
+                label="Play answer choices"
+                ariaLabel="Play English answer choices audio"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-4">
@@ -316,6 +331,18 @@ const TestPage = () => {
             <div key={result.questionId} className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm">
               <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
               <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <SpeechButton
+                  text={result.questionText_en}
+                  label="Play English question"
+                  ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                />
+                <SpeechButton
+                  text={result.correctAnswer.text_en}
+                  label="Play official answer"
+                  ariaLabel={`Play English official answer for ${result.questionText_en}`}
+                />
+              </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">

@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip, CartesianGrid, YAxis } from 'recharts';
 import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
+import SpeechButton from '@/components/ui/SpeechButton';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { TestEndReason } from '@/types';
 
@@ -149,6 +150,18 @@ const HistoryPage = () => {
                       >
                         <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
                         <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <SpeechButton
+                            text={result.questionText_en}
+                            label="Play English question"
+                            ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                          />
+                          <SpeechButton
+                            text={result.correctAnswer.text_en}
+                            label="Play official answer"
+                            ariaLabel={`Play official English answer for ${result.questionText_en}`}
+                          />
+                        </div>
                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                           <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
                             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
