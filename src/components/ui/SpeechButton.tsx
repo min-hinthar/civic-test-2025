@@ -8,6 +8,9 @@ interface SpeechButtonProps {
   label: string;
   ariaLabel?: string;
   lang?: string;
+  pitch?: number;
+  rate?: number;
+  voiceName?: string;
   className?: string;
   stopPropagation?: boolean;
 }
@@ -17,6 +20,9 @@ const SpeechButton = ({
   label,
   ariaLabel,
   lang = 'en-US',
+  pitch,
+  rate,
+  voiceName = 'Samantha',
   className,
   stopPropagation = false,
 }: SpeechButtonProps) => {
@@ -26,7 +32,12 @@ const SpeechButton = ({
     if (stopPropagation) {
       event.stopPropagation();
     }
-    speak(text, lang);
+    speak(text, {
+      lang,
+      pitch,
+      rate,
+      preferredVoiceName: voiceName,
+    });
   };
 
   return (
