@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, KeyboardEvent } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { civicsQuestions } from '@/constants/civicsQuestions';
 import AppNavigation from '@/components/AppNavigation';
+import SpeechButton from '@/components/ui/SpeechButton';
 
 const categoryColors: Record<string, string> = {
   'Principles of American Democracy': 'from-rose-500 to-pink-500',
@@ -111,12 +112,23 @@ const StudyGuidePage = () => {
           {filteredQuestions.map(question => {
             const isLocked = Boolean(flippedCards[question.id]);
             const isFlipped = isLocked;
+            const englishAnswersText = question.studyAnswers.map(answer => answer.text_en).join('. ');
+
+            const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleCard(question.id);
+              }
+            };
+
             return (
               <div key={question.id} className="flip-card" data-flipped={isFlipped}>
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   className="flip-card-button interactive-tile"
                   onClick={() => toggleCard(question.id)}
+                  onKeyDown={handleCardKeyDown}
                   aria-pressed={isLocked}
                   aria-label={`Reveal answer for ${question.question_en}`}
                 >
@@ -131,9 +143,17 @@ const StudyGuidePage = () => {
                         'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80',
                         categoryColors[question.category] ?? 'from-primary to-primary'
                       )}>{question.category}</p>
-                      <div>
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                          <SpeechButton
+                            text={question.question_en}
+                            label="Play Question"
+                            ariaLabel={`Play English question audio for ${question.question_en}`}
+                            stopPropagation
+                          />
+                        </div>
                         <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
-                        <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
+                        <p className="text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                       </div>
                       <p className="text-sm font-semibold text-primary">Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span></p>
                     </div>
@@ -144,7 +164,15 @@ const StudyGuidePage = () => {
                         categoryColors[question.category] ?? 'from-primary to-primary'
                       )}
                     >
-                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">Answer - အဖြေ</p>
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
+                        <p className="text-sm font-semibold uppercase tracking-[0.2em]">Answer - အဖြေ</p>
+                        <SpeechButton
+                          text={englishAnswersText}
+                          label="Play Answers"
+                          ariaLabel={`Play English answers for ${question.question_en}`}
+                          stopPropagation
+                        />
+                      </div>
                       <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
                         {question.studyAnswers.map(answer => (
                           <li key={answer.text_en} className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner">
@@ -155,7 +183,7 @@ const StudyGuidePage = () => {
                       </ul>
                     </div>
                   </div>
-                </button>
+                </div>
               </div>
             );
           })}

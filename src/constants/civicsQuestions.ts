@@ -939,7 +939,7 @@ export const civicsQuestions: Question[] = [
   {
     id: 58,
     question_en: "What is one reason colonists came to America?",
-    question_my: "ကိုလိုနီနယ်ချဲ့များ အမေရိကသို့ လာရောက်ရသည့် အကြောင်းရင်းတစ်ခုကား အဘယ်နည်း။",
+    question_my: "ကိုလိုနိစ်များ အမေရိကသို့ လာရောက်ရသည့် အကြောင်းရင်းတစ်ခုကား အဘယ်နည်း။",
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
         { text_en: 'freedom', text_my: 'လွတ်လပ်မှု' },
@@ -991,7 +991,7 @@ export const civicsQuestions: Question[] = [
   {
     id: 61,
     question_en: "Why did the colonists fight the British?",
-    question_my: "ကိုလိုနီနယ်ချဲ့များသည် ဗြိတိသျှတို့ကို အဘယ်ကြောင့် တိုက်ခိုက်ခဲ့သနည်း။",
+    question_my: "ကိုလိုနိစ်များသည် ဗြိတိသျှတို့ကို အဘယ်ကြောင့် တိုက်ခိုက်ခဲ့သနည်း။",
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
         { text_en: 'because of high taxes (taxation without representation)', text_my: 'အခွန်ကြီးမြင့်မှုကြောင့် (ကိုယ်စားပြုမှုမရှိဘဲ အခွန်ကောက်ခံခြင်း)' },
