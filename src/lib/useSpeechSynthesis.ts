@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const DEFAULT_LANG = 'en-US';
-const PREFERRED_US_VOICES = ['samantha', 'siri', 'ava', 'allison', 'alex', 'victoria', 'karen'];
+const VOICE_LOAD_RETRIES = 8;
+const VOICE_LOAD_INTERVAL = 250;
+
+const APPLE_US_VOICES = ['samantha', 'siri', 'ava', 'allison', 'alex', 'victoria', 'karen'];
+const ANDROID_US_VOICES = ['google us english', 'google en-us', 'english united states'];
+const ENHANCED_HINTS = ['enhanced', 'premium'];
 
 type SpeakOptions = {
   lang?: string;
@@ -22,6 +27,9 @@ export const useSpeechSynthesis = () => {
     synthesisRef.current = synth;
     setIsSupported(true);
 
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let attempts = 0;
+
     const updateVoices = () => {
       const voices = synth.getVoices();
       if (voices?.length) {
@@ -29,11 +37,20 @@ export const useSpeechSynthesis = () => {
       }
     };
 
-    updateVoices();
+    const ensureVoicesLoaded = () => {
+      updateVoices();
+      if (!voicesRef.current.length && attempts < VOICE_LOAD_RETRIES) {
+        attempts += 1;
+        retryTimer = setTimeout(ensureVoicesLoaded, VOICE_LOAD_INTERVAL);
+      }
+    };
+
+    ensureVoicesLoaded();
     synth.addEventListener('voiceschanged', updateVoices);
 
     return () => {
       synth.removeEventListener('voiceschanged', updateVoices);
+      if (retryTimer) clearTimeout(retryTimer);
       synth.cancel();
     };
   }, []);
@@ -45,22 +62,24 @@ export const useSpeechSynthesis = () => {
     const normalizedLang = lang.toLowerCase();
     const matchesLang = voices.filter(voice => voice.lang?.toLowerCase().startsWith(normalizedLang));
 
+    const matchesHint = (voice: SpeechSynthesisVoice, hint: string) =>
+      voice.name.toLowerCase().includes(hint) || voice.voiceURI.toLowerCase().includes(hint);
+
     if (preferredVoiceName) {
-      const preferred = matchesLang.find(voice =>
-        voice.name.toLowerCase().includes(preferredVoiceName.toLowerCase())
-      );
+      const preferred = matchesLang.find(voice => matchesHint(voice, preferredVoiceName.toLowerCase()));
       if (preferred) return preferred;
     }
 
-    for (const name of PREFERRED_US_VOICES) {
-      const match = matchesLang.find(voice => voice.name.toLowerCase().includes(name));
+    for (const name of [...APPLE_US_VOICES, ...ANDROID_US_VOICES]) {
+      const match = matchesLang.find(voice => matchesHint(voice, name));
       if (match) return match;
     }
 
-    const enhanced = matchesLang.find(
-      voice => voice.voiceURI.toLowerCase().includes('enhanced') || voice.name.toLowerCase().includes('enhanced')
-    );
-    return enhanced ?? matchesLang[0] ?? voices[0];
+    const enhanced = matchesLang.find(voice => ENHANCED_HINTS.some(hint => matchesHint(voice, hint)));
+    if (enhanced) return enhanced;
+
+    const localFirst = matchesLang.find(voice => voice.localService);
+    return localFirst ?? matchesLang[0] ?? voices[0];
   }, []);
 
   const speak = useCallback(
