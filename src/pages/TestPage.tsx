@@ -243,12 +243,12 @@ const TestPage = () => {
             <div className="mt-4 flex flex-wrap gap-2">
               <SpeechButton
                 text={questionAudioText}
-                label="Play English question"
-                ariaLabel="Play English question audio"
+                label="Play Test Question"
+                ariaLabel="Play English test question audio"
               />
               <SpeechButton
                 text={answerChoicesAudioText}
-                label="Play answer choices"
+                label="Play Answer Choices"
                 ariaLabel="Play English answer choices audio"
               />
             </div>
