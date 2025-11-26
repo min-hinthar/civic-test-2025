@@ -144,16 +144,16 @@ const StudyGuidePage = () => {
                         categoryColors[question.category] ?? 'from-primary to-primary'
                       )}>{question.category}</p>
                       <div className="space-y-3">
-                        <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
-                        <p className="text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                         <div className="flex flex-wrap gap-2">
                           <SpeechButton
                             text={question.question_en}
-                            label="Play English question"
+                            label="Play Question"
                             ariaLabel={`Play English question audio for ${question.question_en}`}
                             stopPropagation
                           />
                         </div>
+                        <p className="mt-4 text-xl font-semibold text-foreground">{question.question_en}</p>
+                        <p className="text-base text-muted-foreground font-myanmar leading-relaxed">{question.question_my}</p>
                       </div>
                       <p className="text-sm font-semibold text-primary">Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span></p>
                     </div>
@@ -168,7 +168,7 @@ const StudyGuidePage = () => {
                         <p className="text-sm font-semibold uppercase tracking-[0.2em]">Answer - အဖြေ</p>
                         <SpeechButton
                           text={englishAnswersText}
-                          label="Play English answers"
+                          label="Play Answers"
                           ariaLabel={`Play English answers for ${question.question_en}`}
                           stopPropagation
                         />
