@@ -148,7 +148,7 @@ const LandingPage = () => {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link
-                  to="/op-ed"
+                  to={`https://civic-test-2025.vercel.app/op-ed`}
                   className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:shadow-primary/40"
                 >
                   Read the op-ed
