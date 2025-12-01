@@ -1,7 +1,7 @@
 'use client';
 
 import { Link, Navigate } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Languages, Map, Smartphone } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Languages, Map, Shield, Smartphone, Users } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
@@ -25,6 +25,30 @@ const features = [
     description: 'Analytics that reveal strengths and blind spots across all USCIS knowledge areas.',
     descriptionMy:
       'Supabase အချက်အလက်ဖြင့် သင်၏ အားသာချက်၊ အားနည်းချက်များကို အမျိုးအစားအလိုက် လေ့လာနိုင်ပါသည်။',
+    icon: ArrowRight,
+  },
+];
+
+const opEdShareUrl = 'https://civic-test-2025.vercel.app/op-ed';
+const opEdShareText =
+  'Read and share our op-ed on why the TPS story for Burma matters for families, safety, and democracy.';
+const opEdTiles = [
+  {
+    id: 'families',
+    title: 'Protect Burmese families',
+    description: 'Hear personal stories about keeping loved ones safe during TPS renewals.',
+    icon: Users,
+  },
+  {
+    id: 'propaganda',
+    title: 'Debunk propaganda',
+    description: 'See how misinformation spreads and how civic voices can respond.',
+    icon: Shield,
+  },
+  {
+    id: 'next-steps',
+    title: 'Actionable next steps',
+    description: 'Share concrete policy asks with friends, advocates, and lawmakers.',
     icon: ArrowRight,
   },
 ];
@@ -94,6 +118,102 @@ const LandingPage = () => {
         </div>
       </header>
 
+      <section className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-16 text-white">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+            <div className="space-y-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Featured op-ed</p>
+              <h2 className="text-3xl font-bold sm:text-4xl">Why the TPS story for Burma matters</h2>
+              <p className="text-base text-slate-200">
+                Explore our in-depth op-ed about protecting Burmese families, countering propaganda, and keeping the civic
+                process honest. Available in English and မြန်မာ.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {opEdTiles.map(tile => (
+                  <Link
+                    key={tile.id}
+                    to={`/op-ed#${tile.id}`}
+                    className="interactive-tile group rounded-2xl border border-white/15 bg-white/5 p-4 text-left shadow-lg shadow-primary/20 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-primary/40"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="inline-flex rounded-full bg-primary/20 p-2 text-primary">
+                        <tile.icon className="h-5 w-5" />
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-white/60 transition group-hover:translate-x-1" />
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-white">{tile.title}</h3>
+                    <p className="mt-1 text-sm text-white/80">{tile.description}</p>
+                  </Link>
+                ))}
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                  to={`https://civic-test-2025.vercel.app/op-ed`}
+                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:shadow-primary/40"
+                >
+                  Read the op-ed
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+                <div className="text-sm text-slate-200">Share with your community:</div>
+              </div>
+              <div className="flex flex-wrap gap-3" aria-label="Share the op-ed">
+                {[
+                  {
+                    label: 'X / Twitter',
+                    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(opEdShareText)}&url=${encodeURIComponent(opEdShareUrl)}`,
+                    bg: 'bg-white text-slate-900',
+                  },
+                  {
+                    label: 'Facebook',
+                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(opEdShareUrl)}`,
+                    bg: 'bg-[#1877F2] text-white',
+                  },
+                  {
+                    label: 'Instagram',
+                    href: `https://www.instagram.com/?url=${encodeURIComponent(opEdShareUrl)}`,
+                    bg: 'bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white',
+                  },
+                  {
+                    label: 'LinkedIn',
+                    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(opEdShareUrl)}`,
+                    bg: 'bg-[#0A66C2] text-white',
+                  },
+                ].map(button => (
+                  <a
+                    key={button.label}
+                    href={button.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-primary/30 ${button.bg}`}
+                  >
+                    {button.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-primary/20 backdrop-blur">
+              <div className="flex items-center justify-between text-sm text-slate-200">
+                <span className="inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-primary">New</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em]">Op-ed</span>
+              </div>
+              <div className="mt-6 space-y-3">
+                <p className="text-sm uppercase tracking-[0.24em] text-primary">Table of contents</p>
+                <ul className="space-y-2 text-slate-100">
+                  <li>• A brown Burmese kid in a big red state</li>
+                  <li>• TPS framing vs. reality</li>
+                  <li>• Hostages, not citizens</li>
+                  <li>• Vet carefully, protect families</li>
+                  <li>• Scam centre strike force</li>
+                </ul>
+                <p className="text-sm text-slate-300">
+                  Tap the tiles to jump into key sections, then read the full piece and share it with friends, family, and decision makers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-card py-16">
         <div className="mx-auto max-w-6xl px-6">
           <p className="text-center text-sm font-semibold uppercase tracking-[0.3em] text-primary">Everything you need</p>
@@ -141,6 +261,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
     </div>
   );
 };
