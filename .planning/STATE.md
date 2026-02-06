@@ -86,6 +86,10 @@ Recent decisions affecting current work:
 - 03-01: 10-shade blue palette with HSL values for consistent theming
 - 03-01: Animation timing 150-250ms (snappy per user decision)
 - 03-01: Design tokens centralized in src/lib/design-tokens.ts
+- 03-02: Motion spring physics: stiffness 400/damping 17 for Button, 300/20 for Card
+- 03-02: Use HTMLMotionProps from motion/react to avoid type conflicts
+- 03-02: Button minimum height 44px for touch accessibility
+- 03-02: Skeleton shimmer respects prefers-reduced-motion via CSS media query
 
 ### Pending Todos
 
@@ -102,7 +106,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-01-PLAN.md (Design Foundation)
+Stopped at: Completed 03-02-PLAN.md (Core Animated UI Components)
 Resume file: None
 
 ---
