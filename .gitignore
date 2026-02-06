@@ -418,6 +418,9 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Next.js build artifacts
 .next
 
