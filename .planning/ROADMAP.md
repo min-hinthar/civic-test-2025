@@ -13,7 +13,7 @@ This roadmap transforms a functional civics test prep app into a polished, offli
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Code Quality** - Fix critical bugs, add TypeScript strictness, establish testing infrastructure
-- [ ] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
+- [x] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
 - [ ] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
 - [ ] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
 - [ ] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
@@ -56,12 +56,12 @@ Plans:
 **Plans**: 6 plans in 5 waves
 
 Plans:
-- [ ] 02-01-PLAN.md - PWA foundation: manifest, service worker (Serwist), app icons
-- [ ] 02-02-PLAN.md - IndexedDB question caching and online/offline status indicator
-- [ ] 02-03-PLAN.md - Offline sync queue for test results with auto-sync
-- [ ] 02-04-PLAN.md - Install prompt, welcome modal, and notification permission flow
-- [ ] 02-05-PLAN.md - iOS Safari-specific tip about data persistence
-- [ ] 02-06-PLAN.md - Push notification infrastructure and settings
+- [x] 02-01-PLAN.md - PWA foundation: manifest, service worker (Serwist), app icons
+- [x] 02-02-PLAN.md - IndexedDB question caching and online/offline status indicator
+- [x] 02-03-PLAN.md - Offline sync queue for test results with auto-sync
+- [x] 02-04-PLAN.md - Install prompt, welcome modal, and notification permission flow
+- [x] 02-05-PLAN.md - iOS Safari-specific tip about data persistence
+- [x] 02-06-PLAN.md - Push notification infrastructure and settings
 
 ---
 
@@ -184,7 +184,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
-| 2. PWA & Offline | 0/6 | Planned | - |
+| 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
 | 3. UI/UX & Bilingual Polish | 0/9 | Not started | - |
 | 4. Learning - Explanations & Category Progress | 0/6 | Not started | - |
 | 5. Spaced Repetition | 0/7 | Not started | - |
