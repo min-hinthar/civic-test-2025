@@ -25,8 +25,14 @@
   --muted-foreground: 215 18% 35%;
   --accent: 18 92% 70%;
   --accent-foreground: 210 40% 10%;
-  --destructive: 0 72% 45%;
+  /* IMPORTANT: Destructive uses warm gray/orange, NOT red!
+     Per user decision: red is for patriotic decoration only */
+  --destructive: 25 30% 40%;
   --destructive-foreground: 0 0% 100%;
+
+  /* Patriotic red - ONLY for decoration (stars, stripes, banners)
+     NOT for errors or alerts! */
+  --patriotic-red: 0 72% 51%;
   --border: 210 40% 92%;
   --input: 210 40% 92%;
   --ring: 255 80% 60%;
@@ -52,27 +58,17 @@
 }
 
 .dark {
-  --background: 230 35% 7%;
+  /* Base colors - good contrast on dark backgrounds */
+  --background: 222 47% 11%;
   --foreground: 210 40% 98%;
-  --card: 230 35% 9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 230 35% 8%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 266 74% 71%;
-  --primary-foreground: 230 35% 8%;
-  --secondary: 200 45% 18%;
-  --secondary-foreground: 210 40% 96%;
-  --muted: 220 25% 18%;
-  --muted-foreground: 220 18% 70%;
-  --accent: 17 85% 60%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 65% 45%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 26% 22%;
-  --input: 220 26% 22%;
-  --ring: 266 74% 71%;
 
-  /* Dark mode blue shades (adjusted for dark backgrounds) */
+  /* Card and popover surfaces - slightly lighter than background */
+  --card: 222 47% 14%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 14%;
+  --popover-foreground: 210 40% 98%;
+
+  /* Primary blue shades - inverted for dark mode readability */
   --primary-50: 224 71% 15%;
   --primary-100: 224 68% 20%;
   --primary-200: 223 65% 28%;
@@ -84,9 +80,102 @@
   --primary-800: 212 97% 84%;
   --primary-900: 211 100% 92%;
 
-  /* Feedback colors for dark mode */
+  /* Primary uses the 500 shade (brighter in dark mode) */
+  --primary: 217 85% 60%;
+  --primary-foreground: 222 47% 11%;
+
+  --secondary: 200 45% 18%;
+  --secondary-foreground: 210 40% 96%;
+
+  /* Muted - subtle backgrounds */
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  /* Accent */
+  --accent: 217 33% 20%;
+  --accent-foreground: 210 40% 98%;
+
+  /* IMPORTANT: Destructive uses warm gray/orange, NOT red!
+     Per user decision: red is for patriotic decoration only */
+  --destructive: 25 25% 45%;
+  --destructive-foreground: 210 40% 98%;
+
+  /* Success - slightly brighter in dark mode */
   --success: 142 71% 50%;
+  --success-foreground: 222 47% 11%;
+
+  /* Warning (soft orange) - brighter in dark mode */
   --warning: 32 95% 58%;
+  --warning-foreground: 222 47% 11%;
+
+  /* Patriotic red - ONLY for decoration (stars, stripes, banners)
+     NOT for errors or alerts! */
+  --patriotic-red: 0 72% 51%;
+
+  /* Border and input */
+  --border: 217 33% 25%;
+  --input: 217 33% 20%;
+  --ring: 217 85% 60%;
+}
+
+/* ── Dark mode feedback color overrides ── */
+
+.dark .bg-success-50 {
+  background-color: hsl(142 71% 15% / 0.3);
+}
+
+.dark .bg-warning-50 {
+  background-color: hsl(32 95% 20% / 0.3);
+}
+
+.dark .border-success-500 {
+  border-color: hsl(142 71% 50%);
+}
+
+.dark .border-warning-500 {
+  border-color: hsl(32 95% 58%);
+}
+
+/* Destructive uses warm gray/orange, not red */
+.dark .bg-destructive {
+  background-color: hsl(25 25% 45%);
+}
+
+.dark .text-destructive {
+  color: hsl(25 30% 65%);
+}
+
+.dark .border-destructive {
+  border-color: hsl(25 25% 50%);
+}
+
+/* Ensure text remains readable on colored backgrounds in dark mode */
+.dark .bg-primary-500 {
+  background-color: hsl(217 85% 55%);
+}
+
+.dark .text-primary-500 {
+  color: hsl(217 85% 65%);
+}
+
+.dark .shadow-primary-500\/25 {
+  box-shadow: 0 10px 40px -10px hsl(217 85% 60% / 0.25);
+}
+
+/* Card shadows in dark mode - more subtle */
+.dark .shadow-lg {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Skeleton shimmer in dark mode */
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(217 33% 17%) 0%,
+    hsl(217 33% 25%) 50%,
+    hsl(217 33% 17%) 100%
+  );
+  background-size: 200% 100%;
 }
 
 body {
