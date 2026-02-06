@@ -23,6 +23,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
 import OpEdPage from '@/pages/OpEdPage';
+import SettingsPage from '@/pages/SettingsPage';
 
 /**
  * Hook to detect if running on client side.
@@ -93,9 +94,7 @@ function PWAOnboardingFlow() {
 
   return (
     <>
-      {!hideInstallPrompt && !showWelcome && (
-        <InstallPrompt onInstalled={handleInstalled} />
-      )}
+      {!hideInstallPrompt && !showWelcome && <InstallPrompt onInstalled={handleInstalled} />}
       {showWelcome && <WelcomeModal onClose={handleWelcomeClose} />}
       {/* iOS tip - shows after onboarding flow, as a non-blocking bottom banner */}
       {showIOSTip && (
@@ -123,57 +122,65 @@ const AppShell = () => {
           <ToastProvider>
             <AuthProvider>
               <Router>
-              <Head>
-                <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
-                <meta
-                  name="description"
-                  content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
-                />
-              </Head>
-              <ErrorBoundary>
-                <Routes>
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/auth/forgot" element={<PasswordResetPage />} />
-                  <Route path="/auth/update-password" element={<PasswordUpdatePage />} />
-                  <Route path="/op-ed" element={<OpEdPage />} />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <ProtectedRoute>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    }
+                <Head>
+                  <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
+                  <meta
+                    name="description"
+                    content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
                   />
-                  <Route
-                    path="/test"
-                    element={
-                      <ProtectedRoute>
-                        <TestPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/study"
-                    element={
-                      <ProtectedRoute>
-                        <StudyGuidePage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/history"
-                    element={
-                      <ProtectedRoute>
-                        <HistoryPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </ErrorBoundary>
-              <Toaster />
-              <PWAOnboardingFlow />
+                </Head>
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route path="/auth/forgot" element={<PasswordResetPage />} />
+                    <Route path="/auth/update-password" element={<PasswordUpdatePage />} />
+                    <Route path="/op-ed" element={<OpEdPage />} />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/test"
+                      element={
+                        <ProtectedRoute>
+                          <TestPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/study"
+                      element={
+                        <ProtectedRoute>
+                          <StudyGuidePage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/history"
+                      element={
+                        <ProtectedRoute>
+                          <HistoryPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/settings"
+                      element={
+                        <ProtectedRoute>
+                          <SettingsPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </ErrorBoundary>
+                <Toaster />
+                <PWAOnboardingFlow />
               </Router>
             </AuthProvider>
           </ToastProvider>
