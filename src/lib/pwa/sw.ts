@@ -30,3 +30,50 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// Handle push notifications
+self.addEventListener('push', event => {
+  if (!event.data) return;
+
+  try {
+    const data = event.data.json();
+
+    // Bilingual notification per user decision
+    const title = data.title || 'US Civics / US Civics';
+    const options = {
+      body: data.body || '',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/badge-72.png',
+      tag: data.tag || 'study-reminder',
+      data: {
+        url: data.url || '/',
+      },
+      // Vibrate pattern for mobile
+      vibrate: [100, 50, 100],
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (error) {
+    console.error('Push notification error:', error);
+  }
+});
+
+// Handle notification click - open or focus app window
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+
+  const url = event.notification.data?.url || '/';
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      // If app window exists, focus it
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          return (client as WindowClient).focus();
+        }
+      }
+      // Otherwise open new window
+      return self.clients.openWindow(url);
+    })
+  );
+});
