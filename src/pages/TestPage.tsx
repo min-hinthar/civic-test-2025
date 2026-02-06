@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock3, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { civicsQuestions } from '@/constants/civicsQuestions';
@@ -10,19 +11,33 @@ import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
+import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { Progress } from '@/components/ui/Progress';
+import { CircularTimer } from '@/components/test/CircularTimer';
+import { PreTestScreen } from '@/components/test/PreTestScreen';
+import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/AnswerFeedback';
+import { Confetti } from '@/components/celebrations/Confetti';
+import { CountUpScore } from '@/components/celebrations/CountUpScore';
+import { strings } from '@/lib/i18n/strings';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
 const INCORRECT_LIMIT = 9;
+const FEEDBACK_DELAY_MS = 1500;
 
 const TestPage = () => {
   const { saveTestSession } = useAuth();
   const navigate = useNavigate();
+  const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [endReason, setEndReason] = useState<TestEndReason | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
+  const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const hasSavedSessionRef = useRef(false);
   const lockMessage =
     'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
@@ -45,40 +60,20 @@ const TestPage = () => {
   const answeredQuestions = results.length;
   const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
 
-  const formattedTime = useMemo(() => {
-    const minutes = Math.floor(timeLeft / 60)
-      .toString()
-      .padStart(2, '0');
-    const seconds = (timeLeft % 60).toString().padStart(2, '0');
-    return `${minutes}:${seconds}`;
-  }, [timeLeft]);
-
   const correctCount = results.filter(result => result.isCorrect).length;
   const askedCount = results.length;
   const incorrectCount = askedCount - correctCount;
   const completionMessage: Record<TestEndReason, string> = {
     passThreshold:
-      'USCIS interview stops after 12 correct answers 🎉 Great job reaching the passing threshold early 🍾 အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။ 🥳',
+      'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early! အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။',
     failThreshold:
-      'Interview ended after 9 incorrect answers. Review the feedback below before retrying. -  အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
+      'Interview ended after 9 incorrect answers. Review the feedback below before retrying. - အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
     time: 'Time expired before the full set finished.',
     complete: 'You completed all 20 questions.',
   };
 
-  const handleAnswer = useCallback(
-    (answer: Answer) => {
-      if (!currentQuestion || isFinished) return;
-      const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
-      const result: QuestionResult = {
-        questionId: currentQuestion.id,
-        questionText_en: currentQuestion.question_en,
-        questionText_my: currentQuestion.question_my,
-        selectedAnswer: answer,
-        correctAnswer,
-        isCorrect: answer.correct,
-        category: currentQuestion.category,
-      };
-
+  const processResult = useCallback(
+    (result: QuestionResult) => {
       const nextResults = [...results, result];
       const nextCorrect = nextResults.filter(item => item.isCorrect).length;
       const nextIncorrect = nextResults.length - nextCorrect;
@@ -98,11 +93,40 @@ const TestPage = () => {
         setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
       }
     },
-    [currentQuestion, isFinished, questions.length, results]
+    [questions.length, results]
   );
 
+  const handleAnswerSelect = useCallback(
+    (answer: Answer) => {
+      if (!currentQuestion || isFinished || showFeedback) return;
+
+      setSelectedAnswer(answer);
+      setShowFeedback(true);
+
+      const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
+      const result: QuestionResult = {
+        questionId: currentQuestion.id,
+        questionText_en: currentQuestion.question_en,
+        questionText_my: currentQuestion.question_my,
+        selectedAnswer: answer,
+        correctAnswer,
+        isCorrect: answer.correct,
+        category: currentQuestion.category,
+      };
+
+      // Delay before moving to next question to show feedback
+      setTimeout(() => {
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        processResult(result);
+      }, FEEDBACK_DELAY_MS);
+    },
+    [currentQuestion, isFinished, showFeedback, processResult]
+  );
+
+  // Timer countdown
   useEffect(() => {
-    if (isFinished) return;
+    if (isFinished || showPreTest) return;
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -115,17 +139,16 @@ const TestPage = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isFinished]);
+  }, [isFinished, showPreTest]);
 
+  // Navigation lock
   useEffect(() => {
-    if (isFinished) return;
+    if (isFinished || showPreTest) return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
     };
     const handlePopState = () => {
-      // Use replaceState instead of pushState to prevent history stack overflow
-      // pushState would add a new entry on every back button press, causing memory leak
       window.history.replaceState(null, '', window.location.href);
       toast({
         title: 'Please finish the mock test first!',
@@ -135,14 +158,14 @@ const TestPage = () => {
     };
     window.addEventListener('beforeunload', beforeUnload);
     window.addEventListener('popstate', handlePopState);
-    // Push once on mount to create the "locked" entry
     window.history.pushState(null, '', window.location.href);
     return () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFinished, lockMessage]);
+  }, [isFinished, lockMessage, showPreTest]);
 
+  // Save session on finish
   useEffect(() => {
     if (!isFinished || !results.length || hasSavedSessionRef.current) return;
     hasSavedSessionRef.current = true;
@@ -180,18 +203,33 @@ const TestPage = () => {
     persist();
   }, [endReason, isFinished, questions.length, results, saveTestSession, timeLeft]);
 
+  // Scroll to top on finish
   useEffect(() => {
     if (isFinished) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [isFinished]);
 
+  // Pre-test screen
+  if (showPreTest) {
+    return (
+      <div className="page-shell" data-tour="mock-test">
+        <AppNavigation />
+        <PreTestScreen
+          questionCount={20}
+          durationMinutes={20}
+          onReady={() => setShowPreTest(false)}
+        />
+      </div>
+    );
+  }
+
   if (!currentQuestion && !isFinished) {
     return (
-      <div className="page-shell">
+      <div className="page-shell" data-tour="mock-test">
         <AppNavigation locked lockMessage={lockMessage} />
         <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">
-          Preparing your next question…
+          Preparing your next question...
         </div>
       </div>
     );
@@ -209,48 +247,33 @@ const TestPage = () => {
               Question {currentIndex + 1}{' '}
               <span className="text-muted-foreground">/ {questions.length}</span>
             </h1>
-            {/* <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p> */}
           </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 px-4 py-3 text-foreground">
-            <Clock3 className="h-5 w-5 text-primary" />
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Time remaining · <span className="font-myanmar">အချိန်လက်ကျန်</span>
-              </p>
-              <p className="text-2xl font-semibold text-foreground">{formattedTime}</p>
-            </div>
-          </div>
+
+          {/* Circular Timer */}
+          <CircularTimer duration={TEST_DURATION_SECONDS} remainingTime={timeLeft} allowHide />
 
           <div className="w-full rounded-2xl border border-border bg-card/80 p-6 lg:w-64">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
               Test Progress · <span className="font-myanmar">စာမေးပွဲပြီးဆုံးရန်</span>
             </p>
-            <div className="mt-2 flex items-center gap-3">
-              <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
-                <div
-                  className="h-2 rounded-full bg-gradient-to-r from-primary to-accent"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="text-sm font-semibold text-muted-foreground">
-                {progressPercent}%
-              </span>
+            <div className="mt-2">
+              <Progress value={progressPercent} size="sm" />
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
               Answered {answeredQuestions} of {questions.length}
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            <p className="mt-4 text-xs text-muted-foreground">
               <span className="font-myanmar">
                 အဖြေမှန် ၁၂ ခု သို့မဟုတ် အဖြေမှား ၉ ခု ဖြေပြီးလျှင် စာမေးပွဲပြီးဆုံးစေပါမည်။
               </span>
             </p>
-            {/* <p className="text-sm font-semibold text-foreground">{isSavingSession ? `Secure Supabase sync`: 'Syncing…'}</p> */}
-            <p className="mt-4 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-muted-foreground">
               Interview ends early after 12 correct or 9 incorrect answers.
             </p>
           </div>
         </div>
 
+        {/* Question area */}
         <div className="mt-6 flex flex-col gap-6 lg:flex-row">
           <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
             <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
@@ -273,20 +296,40 @@ const TestPage = () => {
           </div>
         </div>
 
+        {/* Answer options with getAnswerOptionClasses */}
         <div className="mt-8 grid gap-4">
           {currentQuestion?.answers.map(answer => (
             <button
               key={answer.text_en}
-              onClick={() => handleAnswer(answer)}
-              className="rounded-2xl border border-border bg-card/80 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-primary interactive-tile"
+              onClick={() => handleAnswerSelect(answer)}
+              disabled={showFeedback}
+              className={clsx(
+                getAnswerOptionClasses(
+                  selectedAnswer === answer,
+                  showFeedback ? answer.correct : null,
+                  showFeedback
+                ),
+                'w-full min-h-[44px] py-3 px-4 text-left space-y-1'
+              )}
             >
-              <p className="font-semibold text-foreground">{answer.text_en}</p>
-              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+              <span className="font-semibold block">{answer.text_en}</span>
+              <span className="font-myanmar text-muted-foreground block text-sm">
                 {answer.text_my}
-              </p>
+              </span>
             </button>
           ))}
         </div>
+
+        {/* Answer feedback */}
+        <div className="mt-4">
+          <AnswerFeedback
+            isCorrect={selectedAnswer?.correct ?? false}
+            show={showFeedback}
+            correctAnswer={currentQuestion?.answers.find(a => a.correct)?.text_en}
+            correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
+          />
+        </div>
+
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Tap an answer to move to the next question.
         </p>
@@ -296,18 +339,29 @@ const TestPage = () => {
 
   const resultView = (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
+      <Confetti
+        fire={showConfetti}
+        intensity={correctCount >= PASS_THRESHOLD ? 'celebration' : 'burst'}
+      />
+
       <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-center py-8">
+          <BilingualHeading
+            text={strings.test.testComplete}
+            level={1}
+            size="2xl"
+            centered
+            className="mb-6"
+          />
+          <CountUpScore
+            score={correctCount}
+            total={askedCount}
+            onComplete={() => setShowConfetti(true)}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">
-              Results · အောင်မြင်မှု
-            </p>
-            <h1 className="text-3xl font-bold text-foreground">
-              You scored {correctCount} / {askedCount}
-              <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
-                မှတ် {correctCount} / {askedCount}
-              </span>
-            </h1>
             <p className="text-muted-foreground">
               Review your answers and retake the mock test anytime.
             </p>
@@ -318,18 +372,19 @@ const TestPage = () => {
             )}
           </div>
           <div className="flex flex-wrap gap-3">
-            <button
+            <BilingualButton
+              label={strings.actions.back}
+              variant="outline"
+              size="sm"
               onClick={() => navigate('/dashboard')}
-              className="rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground"
-            >
-              Back to dashboard
-            </button>
-            <button
+            />
+            <BilingualButton
+              label={strings.actions.tryAgain}
+              variant="primary"
+              size="sm"
+              icon={<Sparkles className="h-4 w-4" />}
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-primary-foreground shadow-xl shadow-primary/40"
-            >
-              <Sparkles className="h-4 w-4" /> Retake test
-            </button>
+            />
           </div>
         </div>
 
@@ -342,16 +397,19 @@ const TestPage = () => {
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
-            <p className="text-2xl font-bold text-emerald-500">{correctCount}</p>
+            <p className="text-2xl font-bold text-success-500">{correctCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
-            <p className="text-2xl font-bold text-red-500">{incorrectCount}</p>
+            <p className="text-2xl font-bold text-warning-500">{incorrectCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
             <p
-              className={`text-2xl font-bold ${correctCount >= PASS_THRESHOLD ? 'text-emerald-500' : 'text-red-500'}`}
+              className={clsx(
+                'text-2xl font-bold',
+                correctCount >= PASS_THRESHOLD ? 'text-success-500' : 'text-warning-500'
+              )}
             >
               {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
             </p>
@@ -405,7 +463,10 @@ const TestPage = () => {
                 </div>
               </div>
               <p
-                className={`mt-3 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}
+                className={clsx(
+                  'mt-3 text-sm font-semibold',
+                  result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                )}
               >
                 {result.isCorrect ? 'Correct · မှန်' : 'Review this answer · ပြန်လည်လေ့လာပါ'}
               </p>
@@ -417,7 +478,7 @@ const TestPage = () => {
   );
 
   return (
-    <div className="page-shell">
+    <div className="page-shell" data-tour="mock-test">
       <AppNavigation locked={!isFinished} lockMessage={lockMessage} />
       {isFinished ? resultView : activeView}
     </div>
