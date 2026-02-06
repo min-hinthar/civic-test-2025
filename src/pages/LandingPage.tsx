@@ -1,9 +1,13 @@
 'use client';
 
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Languages, Map, Shield, Smartphone, Users } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { FadeIn } from '@/components/animations/StaggeredList';
+import { strings } from '@/lib/i18n/strings';
 
 const features = [
   {
@@ -57,6 +61,7 @@ const opEdTiles = [
 
 const LandingPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (user) {
     return <Navigate to="/dashboard" replace />;
@@ -71,33 +76,36 @@ const LandingPage = () => {
           <span className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
             Burmese Language · Mobile ready
           </span>
-          <h1 className="text-4xl font-extrabold leading-tight text-foreground sm:text-5xl">
-            Prepare confidently for the U.S. civics interview — bilingual, modern, and always with
-            you.
-            <span className="mt-3 block text-2xl font-semibold text-muted-foreground font-myanmar">
-              အမေရိကန်နိုင်ငံသားဖြစ်မှုဆိုင်ရာ စမ်းသပ်စစ်ဆေးမေးခွန်းများကို
-              အင်္ဂလိပ်/မြန်မာနှစ်ဘာသာဖြင့် လေ့လာပြင်ဆင်နိုင်ပါပြီ။
-            </span>
-          </h1>
+          <FadeIn>
+            <BilingualHeading
+              text={strings.app.title}
+              level={1}
+              size="2xl"
+              className="mb-4"
+            />
+            <p className="text-muted-foreground text-center lg:text-left max-w-lg mx-auto lg:mx-0 mb-2">
+              {strings.app.tagline.en}
+              <span className="block font-myanmar mt-1">{strings.app.tagline.my}</span>
+            </p>
+          </FadeIn>
           <p className="text-lg text-muted-foreground">
             Civic Test Prep blends immersive flip cards, adaptive timed quizzes, and
             Supabase-powered analytics so every Burmese learner can master the 100+ USCIS questions
-            in English and မြန်မာ.
+            in English and Myanmar.
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Link
-              to="/auth"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent px-8 py-3 text-base font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition hover:-translate-y-0.5"
-            >
-              Create free account
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-            <Link
-              to="/study"
-              className="inline-flex items-center justify-center rounded-full border border-border px-8 py-3 text-base font-semibold text-foreground transition hover:bg-muted/40"
-            >
-              အခမဲ့အကောင့်ဖွင့်ပါ
-            </Link>
+          <div className="flex flex-col gap-4 sm:flex-row justify-center lg:justify-start">
+            <BilingualButton
+              label={strings.actions.startStudying}
+              variant="primary"
+              size="lg"
+              onClick={() => navigate('/study')}
+            />
+            <BilingualButton
+              label={strings.actions.startTest}
+              variant="outline"
+              size="lg"
+              onClick={() => navigate('/test')}
+            />
           </div>
         </div>
         <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">

@@ -6,6 +6,8 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 import AppNavigation from '@/components/AppNavigation';
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
+import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { strings } from '@/lib/i18n/strings';
 
 const AuthPage = () => {
   const { login, register, authError, user, sendPasswordReset } = useAuth();
@@ -58,21 +60,28 @@ const AuthPage = () => {
       <AppNavigation translucent />
       <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 pb-16 pt-10 lg:flex-row">
         <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
+          <BilingualHeading
+            text={strings.nav.signIn}
+            level={1}
+            size="xl"
+            centered
+            className="mb-6"
+          />
           <div className="mb-6 grid grid-cols-3 gap-1 rounded-full bg-muted/50 p-1 text-sm font-semibold">
             <button
-              className={`rounded-full px-3 py-2 ${mode === 'login' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              className={`rounded-full px-3 min-h-[44px] ${mode === 'login' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('login')}
             >
               Sign in
             </button>
             <button
-              className={`rounded-full px-3 py-2 ${mode === 'register' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              className={`rounded-full px-3 min-h-[44px] ${mode === 'register' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('register')}
             >
               Create account
             </button>
             <button
-              className={`rounded-full px-3 py-2 ${mode === 'forgot' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+              className={`rounded-full px-3 min-h-[44px] ${mode === 'forgot' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
               onClick={() => setMode('forgot')}
             >
               Forgot?
@@ -96,7 +105,7 @@ const AuthPage = () => {
                   <span className="font-myanmar text-muted-foreground">အမည်အပြည့်အစုံ</span>
                 </label>
                 <input
-                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
+                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3 min-h-[44px]"
                   value={form.name}
                   onChange={event => setForm({ ...form, name: event.target.value })}
                   required={mode === 'register'}
@@ -108,7 +117,7 @@ const AuthPage = () => {
                 Email · <span className="font-myanmar text-muted-foreground">အီးမေးလ်</span>
               </label>
               <input
-                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
+                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3 min-h-[44px]"
                 type="email"
                 value={form.email}
                 onChange={event => setForm({ ...form, email: event.target.value })}
@@ -131,7 +140,7 @@ const AuthPage = () => {
                   </button>
                 </div>
                 <input
-                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
+                  className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3 min-h-[44px]"
                   type="password"
                   value={form.password}
                   onChange={event => setForm({ ...form, password: event.target.value })}
@@ -148,7 +157,7 @@ const AuthPage = () => {
             {authError && <p className="text-sm text-red-600">{authError}</p>}
             <button
               type="submit"
-              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-xl shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 min-h-[44px] font-semibold text-primary-foreground shadow-xl shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={
                 (mode === 'register' && form.password.length < 12) ||
                 (mode === 'login' && form.password.length < 6)
