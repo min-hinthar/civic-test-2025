@@ -26,6 +26,17 @@ module.exports = {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
+        // Extended primary blue shades (Phase 3)
+        'primary-50': 'hsl(214 100% 97%)',
+        'primary-100': 'hsl(214 95% 93%)',
+        'primary-200': 'hsl(213 97% 87%)',
+        'primary-300': 'hsl(212 96% 78%)',
+        'primary-400': 'hsl(213 94% 68%)',
+        'primary-500': 'hsl(217 91% 60%)',
+        'primary-600': 'hsl(221 83% 53%)',
+        'primary-700': 'hsl(224 76% 48%)',
+        'primary-800': 'hsl(226 71% 40%)',
+        'primary-900': 'hsl(224 64% 33%)',
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
@@ -50,11 +61,31 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // Feedback colors (Phase 3)
+        success: {
+          50: 'hsl(142 76% 95%)',
+          100: 'hsl(141 84% 86%)',
+          500: 'hsl(142 71% 45%)',
+          600: 'hsl(142 76% 36%)',
+        },
+        warning: {
+          50: 'hsl(38 92% 95%)',
+          100: 'hsl(39 96% 89%)',
+          500: 'hsl(32 95% 52%)',
+          600: 'hsl(26 90% 45%)',
+        },
+        patriotic: {
+          500: 'hsl(0 72% 51%)',
+          600: 'hsl(0 74% 42%)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        // Extended radii for bubbly Phase 3 design
+        '3xl': '2rem',
+        '4xl': '2.5rem',
       },
       keyframes: {
         'accordion-down': {
