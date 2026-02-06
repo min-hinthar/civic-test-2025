@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 2 (PWA & Offline) complete, ready for Phase 3
+**Current focus:** Phase 3 (UI/UX & Bilingual Polish) in progress
 
 ## Current Position
 
-Phase: 2 of 7 (PWA & Offline) - COMPLETE
-Plan: 6 of 6 in current phase
-Status: Complete
-Last activity: 2026-02-06 - Phase 2 complete (all 6 plans executed)
+Phase: 3 of 7 (UI/UX & Bilingual Polish)
+Plan: 2 of 9 in current phase
+Status: In progress
+Last activity: 2026-02-06 - Completed 03-02-PLAN.md (Core Animated UI Components)
 
-Progress: [███░░░░░░░] 28% (11 plans / ~40 total estimated)
+Progress: [████░░░░░░] 33% (13 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 13
 - Average duration: 17 min
-- Total execution time: 190 min
+- Total execution time: 216 min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [███░░░░░░░] 28% (11 plans / ~40 total estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
+| 03-ui-ux-bilingual-polish | 2 | 26 min | 13 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (37 min), 02-02 (43 min), 02-04 (7 min), 02-05 (6 min), 02-06 (16 min)
-- Trend: Infrastructure plans take 16-43 min; UI-only plans execute in under 10 min
+- Last 5 plans: 02-04 (7 min), 02-05 (6 min), 02-06 (16 min), 03-01 (18 min), 03-02 (8 min)
+- Trend: UI component plans execute faster than infrastructure (~8-18 min)
 
 *Updated after each plan completion*
 
@@ -81,6 +82,10 @@ Recent decisions affecting current work:
 - 02-06: VAPID keys conditionally initialized (prevents crash when env vars missing)
 - 02-06: Settings page as protected route at /settings
 - 02-06: .env.example exception added to .gitignore
+- 03-01: Self-host Myanmar font via @fontsource for PWA offline support
+- 03-01: 10-shade blue palette with HSL values for consistent theming
+- 03-01: Animation timing 150-250ms (snappy per user decision)
+- 03-01: Design tokens centralized in src/lib/design-tokens.ts
 
 ### Pending Todos
 
@@ -97,7 +102,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Phase 2 (PWA & Offline) complete - all 6 plans executed
+Stopped at: Completed 03-01-PLAN.md (Design Foundation)
 Resume file: None
 
 ---
