@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 2 of 7 (PWA & Offline)
-Plan: 5 of 8 in current phase
+Plan: 6 of 8 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 02-05-PLAN.md (iOS Safari Data Persistence Tip)
+Last activity: 2026-02-06 - Completed 02-06-PLAN.md (Push Notification Infrastructure)
 
-Progress: [██░░░░░░░░] 25% (10 plans / ~40 total estimated)
+Progress: [███░░░░░░░] 28% (11 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 17 min
-- Total execution time: 174 min
+- Total execution time: 190 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
-| 02-pwa-offline | 5 | 125 min | 25 min |
+| 02-pwa-offline | 6 | 141 min | 24 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (32 min), 02-03 (37 min), 02-02 (43 min), 02-04 (7 min), 02-05 (6 min)
-- Trend: Small UI component plans (02-04, 02-05) executing fast
+- Last 5 plans: 02-03 (37 min), 02-02 (43 min), 02-04 (7 min), 02-05 (6 min), 02-06 (16 min)
+- Trend: Infrastructure plans take 16-43 min; UI-only plans execute in under 10 min
 
 *Updated after each plan completion*
 
@@ -76,6 +76,11 @@ Recent decisions affecting current work:
 - 02-04: PWAOnboardingFlow as local AppShell component (not in OfflineContext)
 - 02-05: Lazy useState initializer for iOS tip visibility (avoids setState in effect)
 - 02-05: 2-second delay for iOS tip after welcome modal closes
+- 02-06: Pages Router API routes for push (pages/api/push/*.ts, not App Router)
+- 02-06: ESLint no-undef disabled for TS files (TypeScript compiler handles DOM types)
+- 02-06: VAPID keys conditionally initialized (prevents crash when env vars missing)
+- 02-06: Settings page as protected route at /settings
+- 02-06: .env.example exception added to .gitignore
 
 ### Pending Todos
 
@@ -92,7 +97,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 02-05-PLAN.md (iOS Safari Data Persistence Tip)
+Stopped at: Completed 02-06-PLAN.md (Push Notification Infrastructure)
 Resume file: None
 
 ---
