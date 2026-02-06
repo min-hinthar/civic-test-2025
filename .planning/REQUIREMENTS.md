@@ -58,27 +58,27 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Anxiety-Reducing UX
 
-- [ ] **ANXR-01**: Encouraging microcopy throughout (bilingual) — "You're doing great!" / warm completion messages
-- [ ] **ANXR-02**: Soft feedback for incorrect answers (no harsh red/wrong — use gentle orange with explanation)
+- [ ] **ANXR-01**: Encouraging microcopy throughout (bilingual) - "You're doing great!" / warm completion messages
+- [ ] **ANXR-02**: Soft feedback for incorrect answers (no harsh red/wrong - use gentle orange with explanation)
 - [ ] **ANXR-03**: Progress celebration animations on milestones (streak, category mastered, test passed)
 - [ ] **ANXR-04**: Optional timer display in test mode (user can hide countdown)
 - [ ] **ANXR-05**: "Am I ready?" readiness confidence indicator on dashboard based on study progress
 
-### Learning Features — Explanations
+### Learning Features - Explanations
 
 - [ ] **EXPL-01**: Each question has an explanation field (bilingual) explaining why the answer is correct
 - [ ] **EXPL-02**: Explanations displayed after answering in test mode (review screen)
 - [ ] **EXPL-03**: Explanations displayed on study guide flashcard back
 - [ ] **EXPL-04**: Explanation content sourced from authoritative civics resources
 
-### Learning Features — Category Progress
+### Learning Features - Category Progress
 
 - [ ] **CPRO-01**: Per-category mastery indicator on dashboard (visual progress bar)
 - [ ] **CPRO-02**: Category drill-down showing questions answered, accuracy, and trend
 - [ ] **CPRO-03**: Category-focused practice tests (user selects topic to study)
 - [ ] **CPRO-04**: Weak categories highlighted with study suggestions
 
-### Learning Features — Spaced Repetition
+### Learning Features - Spaced Repetition
 
 - [ ] **SRS-01**: FSRS algorithm (ts-fsrs) integrated for review scheduling
 - [ ] **SRS-02**: Per-question SRS state tracked in Supabase (ease, interval, next review)
@@ -87,7 +87,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **SRS-05**: Dashboard widget showing number of cards due for review today
 - [ ] **SRS-06**: SRS state syncs between devices via Supabase
 
-### Learning Features — Interview Simulation
+### Learning Features - Interview Simulation
 
 - [ ] **INTV-01**: Interview simulation mode that plays questions aloud via TTS
 - [ ] **INTV-02**: User responds verbally (honor system), then reveals correct answer
@@ -98,7 +98,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 - [ ] **SOCL-01**: Study streak tracking (consecutive days studied)
 - [ ] **SOCL-02**: Streak display on dashboard with encouragement messages
-- [ ] **SOCL-03**: Score sharing — generate shareable result card/image
+- [ ] **SOCL-03**: Score sharing - generate shareable result card/image
 - [ ] **SOCL-04**: Leaderboard page showing top scores (opt-in, privacy-first)
 - [ ] **SOCL-05**: User can toggle leaderboard visibility (private by default)
 - [ ] **SOCL-06**: Privacy notice (bilingual) before enabling social features
@@ -114,7 +114,7 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ### Community
 
-- **COMM-01**: Study groups — invite friends to study together
+- **COMM-01**: Study groups - invite friends to study together
 - **COMM-02**: Discussion forum per question
 - **COMM-03**: User-generated study tips
 
@@ -136,7 +136,7 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | Real-time chat | High complexity, not core to test prep |
 | Video content | Storage/bandwidth costs, unnecessary for civics format |
 | AI chatbot tutor | Expensive API costs, risk of incorrect answers for legal context |
-| Paid/premium tier | App stays free — no financial barriers for immigrants |
+| Paid/premium tier | App stays free - no financial barriers for immigrants |
 | Multi-language beyond English/Burmese | Focus on doing two languages well first |
 | Full voice input recognition | Complex, privacy concerns, not needed for study tool |
 
@@ -214,8 +214,8 @@ Deferred to future milestone. Tracked but not in current roadmap.
 **Coverage:**
 - v1 requirements: 55 total
 - Mapped to phases: 55
-- Unmapped: 0 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after initial definition*
+*Last updated: 2026-02-05 after roadmap creation*
