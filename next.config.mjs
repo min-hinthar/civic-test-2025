@@ -1,4 +1,4 @@
-import {withSentryConfig} from '@sentry/nextjs';
+import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -11,9 +11,9 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "mandalay-morning-star",
+  org: 'mandalay-morning-star',
 
-  project: "civic-test-prep-2025",
+  project: 'civic-test-prep-2025',
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,

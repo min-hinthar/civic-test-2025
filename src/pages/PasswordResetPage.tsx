@@ -35,8 +35,8 @@ const PasswordResetPage = () => {
         <div className="rounded-3xl border border-border/60 bg-card/80 p-8 shadow-xl shadow-primary/10 backdrop-blur">
           <h1 className="text-2xl font-semibold text-foreground">Forgot password</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            We will email you a Supabase recovery link that redirects back to this app. Only use links you requested to avoid
-            phishing.
+            We will email you a Supabase recovery link that redirects back to this app. Only use
+            links you requested to avoid phishing.
           </p>
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <div>

@@ -34,12 +34,12 @@ const GoogleOneTapSignIn = () => {
         });
       }
     },
-    [loginWithGoogleIdToken],
+    [loginWithGoogleIdToken]
   );
 
   const shouldAutoPrompt = useMemo(
     () => gsiReady && scriptLoaded && !user && !dismissed,
-    [dismissed, gsiReady, scriptLoaded, user],
+    [dismissed, gsiReady, scriptLoaded, user]
   );
 
   const ensureGoogleInitialized = useCallback(() => {
@@ -106,13 +106,15 @@ const GoogleOneTapSignIn = () => {
       }
       if (!forceManual && !shouldAutoPrompt) return;
       if (user) return;
-      window.google.accounts.id.prompt((notification: google.accounts.id.PromptMomentNotification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          setDismissed(true);
+      window.google.accounts.id.prompt(
+        (notification: google.accounts.id.PromptMomentNotification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            setDismissed(true);
+          }
         }
-      });
+      );
     },
-    [ensureGoogleInitialized, fallbackOAuthRedirect, shouldAutoPrompt, user],
+    [ensureGoogleInitialized, fallbackOAuthRedirect, shouldAutoPrompt, user]
   );
 
   useEffect(() => {
@@ -127,7 +129,12 @@ const GoogleOneTapSignIn = () => {
 
   return (
     <div className="space-y-2">
-      <Script src="https://accounts.google.com/gsi/client" async defer onLoad={() => setScriptLoaded(true)} />
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        async
+        defer
+        onLoad={() => setScriptLoaded(true)}
+      />
       <div className="relative isolate">
         <div
           ref={buttonRef}

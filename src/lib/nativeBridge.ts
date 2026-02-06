@@ -3,18 +3,18 @@
 type BridgePayload = unknown;
 
 export function isWKWebView(): boolean {
-  if (typeof window === "undefined") return false;
+  if (typeof window === 'undefined') return false;
   const hasHandlers = !!window.webkit?.messageHandlers;
   const hasNativeFlag = !!window.__WKWEBVIEW_ENABLED__;
   return hasHandlers || hasNativeFlag;
 }
 
 export function postToNative(handlerName: string, payload: BridgePayload): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   const handler = window.webkit?.messageHandlers?.[handlerName];
   if (!handler) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== 'production') {
       console.warn(`[nativeBridge] Handler "${handlerName}" not available. Falling back.`);
     }
     return;

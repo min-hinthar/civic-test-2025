@@ -8,7 +8,8 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 const features = [
   {
     title: 'Bilingual Mastery • အင်္ဂလိပ်/မြန်မာ',
-    description: 'Every civic question is available in English and Burmese with culturally aware explanations.',
+    description:
+      'Every civic question is available in English and Burmese with culturally aware explanations.',
     descriptionMy:
       'အမေရိကန်နိုင်ငံသားမေးခွန်းတစ်ခုချင်းစီကို အင်္ဂလိပ်/မြန်မာ ဘာသာနှစ်မျိုးဖြင့် ဖတ်ရှုလေ့လာနိုင်ပါသည်။',
     icon: Languages,
@@ -22,7 +23,8 @@ const features = [
   },
   {
     title: 'Category Insights • အမျိုးအစားအလိုက် ထိုးထွင်းသိမြင်မှု',
-    description: 'Analytics that reveal strengths and blind spots across all USCIS knowledge areas.',
+    description:
+      'Analytics that reveal strengths and blind spots across all USCIS knowledge areas.',
     descriptionMy:
       'Supabase အချက်အလက်ဖြင့် သင်၏ အားသာချက်၊ အားနည်းချက်များကို အမျိုးအစားအလိုက် လေ့လာနိုင်ပါသည်။',
     icon: ArrowRight,
@@ -70,13 +72,17 @@ const LandingPage = () => {
             Burmese Language · Mobile ready
           </span>
           <h1 className="text-4xl font-extrabold leading-tight text-foreground sm:text-5xl">
-            Prepare confidently for the U.S. civics interview — bilingual, modern, and always with you.
+            Prepare confidently for the U.S. civics interview — bilingual, modern, and always with
+            you.
             <span className="mt-3 block text-2xl font-semibold text-muted-foreground font-myanmar">
-              အမေရိကန်နိုင်ငံသားဖြစ်မှုဆိုင်ရာ စမ်းသပ်စစ်ဆေးမေးခွန်းများကို အင်္ဂလိပ်/မြန်မာနှစ်ဘာသာဖြင့် လေ့လာပြင်ဆင်နိုင်ပါပြီ။
+              အမေရိကန်နိုင်ငံသားဖြစ်မှုဆိုင်ရာ စမ်းသပ်စစ်ဆေးမေးခွန်းများကို
+              အင်္ဂလိပ်/မြန်မာနှစ်ဘာသာဖြင့် လေ့လာပြင်ဆင်နိုင်ပါပြီ။
             </span>
           </h1>
           <p className="text-lg text-muted-foreground">
-            Civic Test Prep blends immersive flip cards, adaptive timed quizzes, and Supabase-powered analytics so every Burmese learner can master the 100+ USCIS questions in English and မြန်မာ.
+            Civic Test Prep blends immersive flip cards, adaptive timed quizzes, and
+            Supabase-powered analytics so every Burmese learner can master the 100+ USCIS questions
+            in English and မြန်မာ.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row">
             <Link
@@ -95,7 +101,9 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Live Progress Snapshot</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            Live Progress Snapshot
+          </p>
           <div className="mt-6 space-y-4">
             <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
               <p className="text-sm text-white/70">Mock Test Score</p>
@@ -109,7 +117,9 @@ const LandingPage = () => {
                 <p className="text-sm text-muted-foreground">Daily reminders for iOS & Android</p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-lg shadow-sky-100/70">
-                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Categories mastered</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                  Categories mastered
+                </p>
                 <p className="text-2xl font-bold text-foreground">5 / 7</p>
                 <p className="text-sm text-muted-foreground">Real-time category heat map</p>
               </div>
@@ -122,11 +132,15 @@ const LandingPage = () => {
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div className="space-y-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Featured op-ed</p>
-              <h2 className="text-3xl font-bold sm:text-4xl">Why the TPS story for Burma matters</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+                Featured op-ed
+              </p>
+              <h2 className="text-3xl font-bold sm:text-4xl">
+                Why the TPS story for Burma matters
+              </h2>
               <p className="text-base text-slate-200">
-                Explore our in-depth op-ed about protecting Burmese families, countering propaganda, and keeping the civic
-                process honest. Available in English and မြန်မာ.
+                Explore our in-depth op-ed about protecting Burmese families, countering propaganda,
+                and keeping the civic process honest. Available in English and မြန်မာ.
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {opEdTiles.map(tile => (
@@ -193,11 +207,17 @@ const LandingPage = () => {
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-primary/20 backdrop-blur">
               <div className="flex items-center justify-between text-sm text-slate-200">
-                <span className="inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-primary">New</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em]">Op-ed</span>
+                <span className="inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-primary">
+                  New
+                </span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em]">
+                  Op-ed
+                </span>
               </div>
               <div className="mt-6 space-y-3">
-                <p className="text-sm uppercase tracking-[0.24em] text-primary">Table of contents</p>
+                <p className="text-sm uppercase tracking-[0.24em] text-primary">
+                  Table of contents
+                </p>
                 <ul className="space-y-2 text-slate-100">
                   <li>• A brown Burmese kid in a big red state</li>
                   <li>• TPS framing vs. reality</li>
@@ -206,7 +226,8 @@ const LandingPage = () => {
                   <li>• Scam centre strike force</li>
                 </ul>
                 <p className="text-sm text-slate-300">
-                  Tap the tiles to jump into key sections, then read the full piece and share it with friends, family, and decision makers.
+                  Tap the tiles to jump into key sections, then read the full piece and share it
+                  with friends, family, and decision makers.
                 </p>
               </div>
             </div>
@@ -216,10 +237,14 @@ const LandingPage = () => {
 
       <section className="bg-card py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.3em] text-primary">Everything you need</p>
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            Everything you need
+          </p>
           <h2 className="mt-4 text-center text-3xl font-bold text-foreground">
             Your bilingual toolkit
-            <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">အင်္ဂလိပ်·မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း</span>
+            <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">
+              အင်္ဂလိပ်·မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း
+            </span>
           </h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {features.map(feature => (
@@ -233,7 +258,9 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-foreground">{feature.title}</h3>
                 <p className="mt-2 text-muted-foreground">{feature.description}</p>
                 {feature.descriptionMy && (
-                  <p className="mt-1 text-sm text-muted-foreground font-myanmar leading-relaxed">{feature.descriptionMy}</p>
+                  <p className="mt-1 text-sm text-muted-foreground font-myanmar leading-relaxed">
+                    {feature.descriptionMy}
+                  </p>
                 )}
               </div>
             ))}
@@ -245,23 +272,33 @@ const LandingPage = () => {
         <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2">
           <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-sky-500/10 to-indigo-500/10 p-8 shadow-lg animate-soft-bounce">
             <Smartphone className="h-8 w-8 text-primary" />
-            <h3 className="mt-4 text-2xl font-semibold text-foreground">Designed for mobile study</h3>
+            <h3 className="mt-4 text-2xl font-semibold text-foreground">
+              Designed for mobile study
+            </h3>
             <p className="mt-2 text-muted-foreground">
-              Gesture-friendly flip cards, larger tap targets, and breathable Burmese spacing keep the experience smooth on every iOS and Android screen size.
+              Gesture-friendly flip cards, larger tap targets, and breathable Burmese spacing keep
+              the experience smooth on every iOS and Android screen size.
             </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">iOS · Android တွင် နှစ်ဘက်လှည့်ကတ်များဖြင့် အလွယ်တကူလေ့လာသင်ယူနိုင်ပါသည်။</p>
+            <p className="mt-2 text-muted-foreground font-myanmar">
+              iOS · Android တွင် နှစ်ဘက်လှည့်ကတ်များဖြင့် အလွယ်တကူလေ့လာသင်ယူနိုင်ပါသည်။
+            </p>
           </div>
           <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-rose-500/10 to-amber-400/10 p-8 shadow-lg">
             <Map className="h-8 w-8 text-rose-500" />
-            <h3 className="mt-4 text-2xl font-semibold text-foreground">Know exactly what to review</h3>
+            <h3 className="mt-4 text-2xl font-semibold text-foreground">
+              Know exactly what to review
+            </h3>
             <p className="mt-2 text-muted-foreground">
-              Color-coded categories, animated transitions, and Supabase-backed history let you navigate between study, tests, and analytics in a single tap.
+              Color-coded categories, animated transitions, and Supabase-backed history let you
+              navigate between study, tests, and analytics in a single tap.
             </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">အရောင်အလိုက် ကဏ္ဍများအလိုက်၊ Supabase မှ မှတ်တမ်းများကို တစ်ချက်တည်းနှိပ်ရုံဖြင့် အသုံးပြုနိုင်ပါသည်။</p>
+            <p className="mt-2 text-muted-foreground font-myanmar">
+              အရောင်အလိုက် ကဏ္ဍများအလိုက်၊ Supabase မှ မှတ်တမ်းများကို တစ်ချက်တည်းနှိပ်ရုံဖြင့်
+              အသုံးပြုနိုင်ပါသည်။
+            </p>
           </div>
         </div>
       </section>
-
     </div>
   );
 };

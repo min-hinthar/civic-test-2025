@@ -19,10 +19,17 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         await login(form.email, form.password);
-        toast({ title: 'သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ', description: 'Welcome back! ကြိုဆိုပါတယ် 🎉' });
+        toast({
+          title: 'သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ',
+          description: 'Welcome back! ကြိုဆိုပါတယ် 🎉',
+        });
       } else if (mode === 'register') {
         await register(form.name, form.email, form.password);
-        toast({ title: 'အကောင့်အသစ် ဖန်တီးပြီးပါပြီ', description: 'Please click link in email to confirm your account on Civic Test App! သင့်အကောင့်ကို အတည်ပြုရန် email တွင်လင့်ခ်ကိုနှိပ်ပါ။' });
+        toast({
+          title: 'အကောင့်အသစ် ဖန်တီးပြီးပါပြီ',
+          description:
+            'Please click link in email to confirm your account on Civic Test App! သင့်အကောင့်ကို အတည်ပြုရန် email တွင်လင့်ခ်ကိုနှိပ်ပါ။',
+        });
       } else {
         await sendPasswordReset(form.email, `${window.location.origin}/auth/update-password`);
         toast({
@@ -85,7 +92,8 @@ const AuthPage = () => {
             {mode === 'register' && (
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
-                  Full name · <span className="font-myanmar text-muted-foreground">အမည်အပြည့်အစုံ</span>
+                  Full name ·{' '}
+                  <span className="font-myanmar text-muted-foreground">အမည်အပြည့်အစုံ</span>
                 </label>
                 <input
                   className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
@@ -111,9 +119,14 @@ const AuthPage = () => {
               <div>
                 <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                   <label>
-                    Password · <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်စာနံပါတ်</span>
+                    Password ·{' '}
+                    <span className="font-myanmar text-muted-foreground">လျှို့ဝှက်စာနံပါတ်</span>
                   </label>
-                  <button type="button" className="text-xs text-primary" onClick={() => setMode('forgot')}>
+                  <button
+                    type="button"
+                    className="text-xs text-primary"
+                    onClick={() => setMode('forgot')}
+                  >
                     Forgot password?
                   </button>
                 </div>
@@ -147,12 +160,14 @@ const AuthPage = () => {
             </button>
             {mode === 'register' && (
               <p className="text-xs text-muted-foreground">
-                You will receive a Supabase confirmation email. <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>
+                You will receive a Supabase confirmation email.{' '}
+                <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>
               </p>
             )}
             {mode === 'forgot' && (
               <p className="text-xs text-muted-foreground">
-                Password resets redirect you back to this app. <span className="font-myanmar">လေ့လာမှုအတွက် အတည်ပြုလင့်ခ်မှသာ အဝင်ပြောင်းပါ။</span>
+                Password resets redirect you back to this app.{' '}
+                <span className="font-myanmar">လေ့လာမှုအတွက် အတည်ပြုလင့်ခ်မှသာ အဝင်ပြောင်းပါ။</span>
               </p>
             )}
           </form>
@@ -164,10 +179,14 @@ const AuthPage = () => {
           </p>
         </div>
         <div className="flex-1 rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-rose-300/10 to-amber-200/10 p-8 shadow-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">အင်္ဂလိပ်-မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            အင်္ဂလိပ်-မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း
+          </p>
           <h2 className="mt-3 text-3xl font-semibold text-foreground">
             Study in both English and မြန်မာ
-            <span className="block text-lg font-normal text-muted-foreground font-myanmar">လေ့လာသင်ယူ ဖတ်ရလွယ်ကူ</span>
+            <span className="block text-lg font-normal text-muted-foreground font-myanmar">
+              လေ့လာသင်ယူ ဖတ်ရလွယ်ကူ
+            </span>
           </h2>
           <p className="mt-3 text-base text-muted-foreground font-myanmar">
             မြန်မာစာ-အင်္ဂလိပ်စာဖြင့် iOS/Android များတွင်လွယ်လွယ်ကူကူအသုံးပြုနိုင်ပါပြီ။
@@ -175,12 +194,19 @@ const AuthPage = () => {
           <div className="mt-8 space-y-4">
             <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm">
               <p className="text-sm font-semibold text-foreground">One tap navigation</p>
-              <p className="text-sm text-muted-foreground">Dashboard → Test → History without leaving the app shell.</p>
+              <p className="text-sm text-muted-foreground">
+                Dashboard → Test → History without leaving the app shell.
+              </p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm">
               <p className="text-sm font-semibold text-foreground">Progress sync via Supabase</p>
-              <p className="text-sm text-muted-foreground">Mock tests, categories, and accuracy update instantly.</p>
-              <p className="text-sm text-muted-foreground font-myanmar">Supabase နှင့် ချိတ်ဆက်ထားသောကြောင့် မေးခွန်းမှတ်တမ်းများ အချိန်နှင့်တပြေးညီ ပြန်လည်ပြင်ဆင်ပေးနိုင်ပါသည်။</p>
+              <p className="text-sm text-muted-foreground">
+                Mock tests, categories, and accuracy update instantly.
+              </p>
+              <p className="text-sm text-muted-foreground font-myanmar">
+                Supabase နှင့် ချိတ်ဆက်ထားသောကြောင့် မေးခွန်းမှတ်တမ်းများ အချိန်နှင့်တပြေးညီ
+                ပြန်လည်ပြင်ဆင်ပေးနိုင်ပါသည်။
+              </p>
             </div>
           </div>
         </div>

@@ -45,7 +45,10 @@ const PasswordUpdatePage = () => {
     setIsSubmitting(true);
     try {
       await updatePassword(passwords.password);
-      toast({ title: 'Password updated', description: 'Your session stays active with the new password.' });
+      toast({
+        title: 'Password updated',
+        description: 'Your session stays active with the new password.',
+      });
       navigate('/dashboard', { replace: true });
     } catch (error) {
       console.error(error);
@@ -61,22 +64,29 @@ const PasswordUpdatePage = () => {
         <div className="rounded-3xl border border-border/60 bg-card/80 p-8 shadow-xl shadow-primary/10 backdrop-blur">
           <h1 className="text-2xl font-semibold text-foreground">Update your password</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            We use your Supabase recovery session to update credentials without exposing them to third-parties.
+            We use your Supabase recovery session to update credentials without exposing them to
+            third-parties.
           </p>
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">New password (12+ characters)</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                New password (12+ characters)
+              </label>
               <input
                 className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                 type="password"
                 value={passwords.password}
-                onChange={event => setPasswords(prev => ({ ...prev, password: event.target.value }))}
+                onChange={event =>
+                  setPasswords(prev => ({ ...prev, password: event.target.value }))
+                }
                 required
                 minLength={12}
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Confirm new password</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Confirm new password
+              </label>
               <input
                 className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
                 type="password"
