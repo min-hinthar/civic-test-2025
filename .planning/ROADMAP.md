@@ -75,18 +75,18 @@ Plans:
   3. User sees smooth page transitions and button animations throughout
   4. User with incorrect answer sees gentle orange feedback with encouraging message, not harsh red
   5. User can hide the countdown timer during test mode to reduce stress
-**Plans**: TBD
+**Plans**: 9 plans in 4 waves
 
 Plans:
-- [ ] 03-01: Typography and spacing system
-- [ ] 03-02: Noto Sans Myanmar font embedding
-- [ ] 03-03: Mobile-first responsive layouts
-- [ ] 03-04: Page transitions and micro-animations (Motion)
-- [ ] 03-05: Accessible components (Radix UI dialogs, toasts, progress)
-- [ ] 03-06: Bilingual navigation, buttons, and messages
-- [ ] 03-07: Anxiety-reducing design (microcopy, soft feedback, celebrations)
-- [ ] 03-08: Dark mode contrast refinement
-- [ ] 03-09: Loading skeletons and scroll behavior
+- [ ] 03-01-PLAN.md - Design foundation: fonts, color tokens, animation keyframes
+- [ ] 03-02-PLAN.md - Core UI components: Button, Card, Skeleton with animations
+- [ ] 03-03-PLAN.md - Radix accessible components: Dialog, Toast, Progress
+- [ ] 03-04-PLAN.md - Page transitions and staggered list animations
+- [ ] 03-05-PLAN.md - Bilingual text components and centralized strings
+- [ ] 03-06-PLAN.md - Test UX: circular timer, pre-test screen, answer feedback, celebrations
+- [ ] 03-07-PLAN.md - Flashcard 3D flip and onboarding tour
+- [ ] 03-08-PLAN.md - Page integration: apply new components to all pages
+- [ ] 03-09-PLAN.md - Dark mode polish and English-only practice mode
 
 ---
 
@@ -185,7 +185,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 |-------|----------------|--------|-----------|
 | 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
 | 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
-| 3. UI/UX & Bilingual Polish | 0/9 | Not started | - |
+| 3. UI/UX & Bilingual Polish | 0/9 | Planned | - |
 | 4. Learning - Explanations & Category Progress | 0/6 | Not started | - |
 | 5. Spaced Repetition | 0/7 | Not started | - |
 | 6. Interview Simulation | 0/4 | Not started | - |
