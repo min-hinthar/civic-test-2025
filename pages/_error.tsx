@@ -1,7 +1,7 @@
 // pages/_error.tsx
-import * as Sentry from "@sentry/nextjs";
-import Error, { ErrorProps } from "next/error";
-import { NextPageContext } from "next";
+import * as Sentry from '@sentry/nextjs';
+import Error, { ErrorProps } from 'next/error';
+import { NextPageContext } from 'next';
 
 /**
  * Custom error page that integrates with Sentry.

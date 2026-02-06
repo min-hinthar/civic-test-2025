@@ -2,7 +2,15 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip, CartesianGrid, YAxis } from 'recharts';
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  Tooltip,
+  CartesianGrid,
+  YAxis,
+} from 'recharts';
 import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
@@ -38,7 +46,9 @@ const HistoryPage = () => {
     if (!best) return session;
     return session.score > best.score ? session : best;
   }, history[0] ?? null);
-  const passRate = history.length ? Math.round((history.filter(session => session.passed).length / history.length) * 100) : 0;
+  const passRate = history.length
+    ? Math.round((history.filter(session => session.passed).length / history.length) * 100)
+    : 0;
 
   const toggleSession = (id: string) => {
     setExpandedSessionId(prev => (prev === id ? null : id));
@@ -58,12 +68,20 @@ const HistoryPage = () => {
           <p className="text-sm uppercase tracking-[0.3em] text-primary">History · မှတ်တမ်း</p>
           <h1 className="text-3xl font-bold text-foreground">
             Mock test performance
-            <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">စာမေးပွဲစွမ်းဆောင်ရည်စမ်းသပ်မှု</span>
+            <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
+              စာမေးပွဲစွမ်းဆောင်ရည်စမ်းသပ်မှု
+            </span>
           </h1>
-          <p className="text-muted-foreground">Every attempt is securely stored in Supabase so you can review trends anytime.</p>
+          <p className="text-muted-foreground">
+            Every attempt is securely stored in Supabase so you can review trends anytime.
+          </p>
         </header>
 
-        <section id="overview" className="mt-8 grid gap-6 sm:grid-cols-3" aria-labelledby="history-overview">
+        <section
+          id="overview"
+          className="mt-8 grid gap-6 sm:grid-cols-3"
+          aria-labelledby="history-overview"
+        >
           <span id="history-overview" className="sr-only">
             Overview statistics
           </span>
@@ -89,17 +107,42 @@ const HistoryPage = () => {
           </div>
         </section>
 
-        <section id="trend" className="mt-8 glass-panel p-6 shadow-primary/15" aria-labelledby="history-trend">
-          <h2 id="history-trend" className="text-lg font-semibold text-foreground">Score trend · <span className="font-myanmar text-muted-foreground">အမှတ်တိုးတက်မှု</span></h2>
+        <section
+          id="trend"
+          className="mt-8 glass-panel p-6 shadow-primary/15"
+          aria-labelledby="history-trend"
+        >
+          <h2 id="history-trend" className="text-lg font-semibold text-foreground">
+            Score trend ·{' '}
+            <span className="font-myanmar text-muted-foreground">အမှတ်တိုးတက်မှု</span>
+          </h2>
           <div className="mt-6 h-72 w-full">
             {chartData.length ? (
               <ResponsiveContainer>
                 <LineChart data={chartData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
                   <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
-                  <YAxis domain={[0, 100]} tickFormatter={value => `${value}%`} stroke="#94a3b8" fontSize={12} />
-                  <Tooltip formatter={value => `${Number(value).toFixed(0)}%`} contentStyle={{ backgroundColor: 'hsl(var(--card))', borderRadius: '1rem', border: '1px solid hsl(var(--border))' }} />
-                  <Line type="monotone" dataKey="score" stroke="#6366f1" strokeWidth={3} dot={{ r: 4 }} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tickFormatter={value => `${value}%`}
+                    stroke="#94a3b8"
+                    fontSize={12}
+                  />
+                  <Tooltip
+                    formatter={value => `${Number(value).toFixed(0)}%`}
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      borderRadius: '1rem',
+                      border: '1px solid hsl(var(--border))',
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#6366f1"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
@@ -112,8 +155,13 @@ const HistoryPage = () => {
           <div className="flex items-center gap-3">
             <Layers3 className="h-5 w-5 text-primary" />
             <div>
-              <h2 id="history-attempts" className="text-lg font-semibold text-foreground">Attempt log · <span className="font-myanmar text-muted-foreground">မှတ်တမ်းဇယား</span></h2>
-              <p className="text-sm text-muted-foreground">Tap any row to review every question you answered.</p>
+              <h2 id="history-attempts" className="text-lg font-semibold text-foreground">
+                Attempt log ·{' '}
+                <span className="font-myanmar text-muted-foreground">မှတ်တမ်းဇယား</span>
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Tap any row to review every question you answered.
+              </p>
             </div>
           </div>
           {history.map(session => {
@@ -123,10 +171,19 @@ const HistoryPage = () => {
               <div key={sessionId} className="glass-panel p-5 shadow-sm">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{new Date(session.date).toLocaleString()}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {new Date(session.date).toLocaleString()}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      Score {session.score} / {session.totalQuestions} · {Math.round(session.durationSeconds / 60)} mins ·{' '}
-                      <span className={session.passed ? 'text-emerald-500 font-semibold' : 'text-red-500 font-semibold'}>
+                      Score {session.score} / {session.totalQuestions} ·{' '}
+                      {Math.round(session.durationSeconds / 60)} mins ·{' '}
+                      <span
+                        className={
+                          session.passed
+                            ? 'text-emerald-500 font-semibold'
+                            : 'text-red-500 font-semibold'
+                        }
+                      >
                         {session.passed ? 'PASS' : 'REVIEW'}
                       </span>
                     </p>
@@ -138,7 +195,11 @@ const HistoryPage = () => {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40"
                   >
                     {isExpanded ? 'Hide review' : 'Review answers'}
-                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {isExpanded ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
                 {isExpanded && (
@@ -148,8 +209,12 @@ const HistoryPage = () => {
                         key={`${sessionId}-${result.questionId}`}
                         className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
                       >
-                        <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
-                        <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {result.questionText_en}
+                        </p>
+                        <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                          {result.questionText_my}
+                        </p>
                         <div className="mt-2 flex flex-wrap gap-2">
                           <SpeechButton
                             text={result.questionText_en}
@@ -167,15 +232,23 @@ const HistoryPage = () => {
                             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                               Your answer · <span className="font-myanmar">အဖြေ</span>
                             </p>
-                            <p className="text-sm font-semibold text-foreground">{result.selectedAnswer.text_en}</p>
-                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.selectedAnswer.text_my}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                              {result.selectedAnswer.text_en}
+                            </p>
+                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                              {result.selectedAnswer.text_my}
+                            </p>
                           </div>
                           <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
                             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                               Official answer · <span className="font-myanmar">အဖြေမှန်</span>
                             </p>
-                            <p className="text-sm font-semibold text-foreground">{result.correctAnswer.text_en}</p>
-                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                              {result.correctAnswer.text_en}
+                            </p>
+                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                              {result.correctAnswer.text_my}
+                            </p>
                           </div>
                         </div>
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
@@ -183,7 +256,7 @@ const HistoryPage = () => {
                             {result.category}
                           </span>
                           <span className={result.isCorrect ? 'text-emerald-500' : 'text-red-500'}>
-                            {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား' }
+                            {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား'}
                           </span>
                         </div>
                       </div>

@@ -36,16 +36,16 @@ type LanguageContent = {
 };
 
 const englishIntroParagraphs = [
-  "Every Thanksgiving, America does something beautifully strange: it pardons a turkey.", 
-  "This year it was Gobble and Waddle—two ‘Make America Healthy Again’ certified birds who, with full Hollywood optics, were spared and sent off to a comfortable retirement instead of the oven. It’s lighthearted, theatrical, and oddly touching. Surely, a nation that can still make time for a symbolic act of mercy is a nation that hasn’t entirely forgotten its virtues?",
-  "Meanwhile, in the backdrop of that feel-good moment, the Administration announced that Temporary Protected Status (TPS) for Burma (Myanmar) will end, on the grounds that it is now “safe” for Burmese seeking refuge in the United States to go back to where they belong.",
-  "The turkeys got clemency.",
-  "The refugees, a deadline.",
-  "I say that with a little heaviness and a little humor—no offence to the blessed birds or the many Americans who honestly believe TPS has to end sometime. They’re right about one thing: TPS is temporary by design. It should be consistently reviewed and definitely not become a back door for people who do not face imminent danger in Burma or those who might pose a risk to the American people.",
-  "The question is not whether TPS will end.",
-  "It’s how and on whose narrative. ",
-  "Right now, the story being used to justify terminating TPS for Burma sounds suspiciously like it was drafted in Naypyidaw, not in Washington.",
-  "And that is dangerous—for Burmese lives, for American credibility, and for the broader project of making the world a little safer from scam centres, critically dirty minerals, and fashionably trending authoritarian strongmen.",
+  'Every Thanksgiving, America does something beautifully strange: it pardons a turkey.',
+  'This year it was Gobble and Waddle—two ‘Make America Healthy Again’ certified birds who, with full Hollywood optics, were spared and sent off to a comfortable retirement instead of the oven. It’s lighthearted, theatrical, and oddly touching. Surely, a nation that can still make time for a symbolic act of mercy is a nation that hasn’t entirely forgotten its virtues?',
+  'Meanwhile, in the backdrop of that feel-good moment, the Administration announced that Temporary Protected Status (TPS) for Burma (Myanmar) will end, on the grounds that it is now “safe” for Burmese seeking refuge in the United States to go back to where they belong.',
+  'The turkeys got clemency.',
+  'The refugees, a deadline.',
+  'I say that with a little heaviness and a little humor—no offence to the blessed birds or the many Americans who honestly believe TPS has to end sometime. They’re right about one thing: TPS is temporary by design. It should be consistently reviewed and definitely not become a back door for people who do not face imminent danger in Burma or those who might pose a risk to the American people.',
+  'The question is not whether TPS will end.',
+  'It’s how and on whose narrative. ',
+  'Right now, the story being used to justify terminating TPS for Burma sounds suspiciously like it was drafted in Naypyidaw, not in Washington.',
+  'And that is dangerous—for Burmese lives, for American credibility, and for the broader project of making the world a little safer from scam centres, critically dirty minerals, and fashionably trending authoritarian strongmen.',
 ];
 
 const englishSections: Section[] = [
@@ -68,15 +68,14 @@ const englishSections: Section[] = [
       'deeply proud, but also deeply generous.',
       'So when conservatives say, “TPS can’t be forever; we need firm borders and serious vetting,” I don’t hear cruelty. I hear people who have seen too much chaos and simply don’t want to be caught off-guard again.',
     ],
-    closing:
-      'The irony is: we feel exactly the same way.',
+    closing: 'The irony is: we feel exactly the same way.',
   },
   {
     title: 'TPS is temporary—but the framing must reflect contemporary reality',
     paragraphs: [
       'By law and by logic, TPS is temporary. It’s meant for “extraordinary and temporary conditions”—a war, a disaster—that make safe return impossible. When those conditions truly change, TPS should be revised outright.',
       'If DHS had calmly said: ',
-      ],
+    ],
     bullet: [
       '“Burma remains extremely dangerous, but TPS was never designed as a permanent solution. We’re ending it while simultaneously working with Congress on a path for long-resident Burmese TPS holders to adjust, and we’re ramping up pressure on the junta,” ',
     ],
@@ -84,7 +83,7 @@ const englishSections: Section[] = [
       '... we would still be pretty bummed out, but hey, at least the story would be Midwest honesty!',
       'Instead, the official justification leans on phrases like “notable progress in governance and stability,” the lifting of the state of emergency, planned “free and fair elections,” and ceasefires—as if Burma were staggering toward normalcy.',
       'That framing would be questionable even if Burma stood alone.',
-      'But TPS wasn’t just ended for Burma. It was terminated for a big cluster of countries at once—nearly twenty designations—under a general offensive to tighten humanitarian protections and “return TPS to its original, temporary purpose.” Ending multiple programs is a political choice; how you frame each one is a moral and strategic one.', 
+      'But TPS wasn’t just ended for Burma. It was terminated for a big cluster of countries at once—nearly twenty designations—under a general offensive to tighten humanitarian protections and “return TPS to its original, temporary purpose.” Ending multiple programs is a political choice; how you frame each one is a moral and strategic one.',
       'In Burma’s case, the sequence and the narrative are a ‘Jet2 holiday’ gift to the generals. Seriously, how can anything beat that?',
       'If you were trying to design a propaganda win for the junta, you really couldn’t do much better than:',
     ],
@@ -95,15 +94,15 @@ const englishSections: Section[] = [
       'The junta then goes on TV and says, “Even America says we are stabilizing. Come one, come all, welcome home to cast your votes. We promise we’ll be kind this time!”',
     ],
     paragraphs2: [
-      'Honestly, the junta’s Return-on-Investment with DCI Group on their lobbying and PR operation is almost impressive in a dark way. If you are a dictator shopping around for a contractor, the ability to get your talking points echoed almost verbatim in the U.S. Federal Register notice must look like a five-star Yelp review!', 
-      '⭐⭐⭐⭐⭐' 
+      'Honestly, the junta’s Return-on-Investment with DCI Group on their lobbying and PR operation is almost impressive in a dark way. If you are a dictator shopping around for a contractor, the ability to get your talking points echoed almost verbatim in the U.S. Federal Register notice must look like a five-star Yelp review!',
+      '⭐⭐⭐⭐⭐',
     ],
-    closing: 'That is the problem—not just that TPS is ending, but that the narrative of its termination is being hijacked by a thuggish regime that only treats its population as hostages.' 
+    closing:
+      'That is the problem—not just that TPS is ending, but that the narrative of its termination is being hijacked by a thuggish regime that only treats its population as hostages.',
   },
   {
     title: 'The junta’s “improvements”: hostages, not citizens',
-    intro:
-      'The Burmese military has indeed made some loud gestures lately:',
+    intro: 'The Burmese military has indeed made some loud gestures lately:',
     bullet: [
       'It ended the formal state of emergency.',
       'It announced elections.',
@@ -128,13 +127,13 @@ const englishSections: Section[] = [
       '“Washington agrees conditions have improved. Those who come back now but cause trouble? Clearly, they are criminals, not victims.”',
     ],
     closing:
-      'Even ASEAN—who normally specialize in understatement—ain’t buying it. When countries that only communicate in non-interference language, and quite frankly many of whom not exactly human-rights crusaders, start quietly conceding that the polls are a sham and that Aung San Suu Kyi’s continued detention makes any “transition” illegitimate, Washington should listen.',    
+      'Even ASEAN—who normally specialize in understatement—ain’t buying it. When countries that only communicate in non-interference language, and quite frankly many of whom not exactly human-rights crusaders, start quietly conceding that the polls are a sham and that Aung San Suu Kyi’s continued detention makes any “transition” illegitimate, Washington should listen.',
   },
   {
     title: 'Congress gets it. DHS should catch up.',
     paragraphs: [
       'If you want to see what a more realistic American position looks like, watch the most recent House Foreign Affairs Committee joint hearing: “No Exit Strategy: Burma’s Endless Crisis and America’s Limited Options.” It brought together the East Asia & Pacific and South & Central Asia subcommittees—Republican and Democrat members alike—and the message was remarkably aligned.',
-      'In resolute bi-partisan spirit, members:',  
+      'In resolute bi-partisan spirit, members:',
     ],
     bullet: [
       'Called the upcoming election a “sham” and “theatre”, not a democratization milestone.',
@@ -153,11 +152,12 @@ const englishSections: Section[] = [
     paragraphs2: [
       'That small narrative shift would deny the junta a propaganda trophy while still allowing DHS to pursue its immigration agenda.',
     ],
-    closing: 'It costs nothing, but gains a great deal in moral clarity.'
+    closing: 'It costs nothing, but gains a great deal in moral clarity.',
   },
   {
     title: 'Yes, vet carefully. But don’t mow down the entire orchard.',
-    intro: 'There is another concern underlying the TPS debate that deserves to be taken seriously: security.',
+    intro:
+      'There is another concern underlying the TPS debate that deserves to be taken seriously: security.',
     paragraphs: [
       'Stories of violent crimes or terrorism by people with foreign ties hit a nerve, and rightly so. When Americans see a headline about an asylum seeker involved in a brutal shooting—or about sanctioned regime affiliates trying to sneak in to launder money and reputation—the instinct to say “enough” is understandable.',
       'As refugees, we do not ask you to ignore that instinct. On the contrary, we too share it.',
@@ -183,7 +183,7 @@ const englishSections: Section[] = [
       'That is real leadership. Scam compounds have tortured trafficked workers and stripped victims—many in the U.S.—of billions of dollars. Going after them is not charity; it is a vital national-security and economic priority.',
       'But there is a crucial next step: choose the right friends!',
       'If Washington leans primarily on the junta for “cooperation,” it will only get:',
-      ],
+    ],
     bullet: [
       'choreographed raids and photo-ops,',
       'low-level scapegoats,',
@@ -200,14 +200,15 @@ const englishSections: Section[] = [
     paragraphs2: [
       'Imagine if a portion of the billions in confiscated crypto assets linked to scam operations were held as a kind of strategic crypto reserve for justice—used to compensate victims, support rehabilitation for trafficked workers, and, yes, help fund the rebuilding of a democratic Burma one day.',
     ],
-    closing: 'That would be real realpolitik: turning stolen value into leverage for accountability, not handing it back to the same people who built the scam empires.'
+    closing:
+      'That would be real realpolitik: turning stolen value into leverage for accountability, not handing it back to the same people who built the scam empires.',
   },
   {
     title: 'Rare earths: cut the criminal middleman, not corners',
     intro: 'Then there is the quieter, dirtier issue: rare earths and critical minerals.',
     paragraphs: [
       'Burma’s north is rich in heavy rare earth elements needed for electric vehicles, wind turbines, F-22s, and advanced microprocessors. Today, much of that extraction is:',
-      ],
+    ],
     bullet: [
       'environmentally devastating,',
       'controlled by militias, cronies, or foreign brokers,',
@@ -243,7 +244,8 @@ const englishSections: Section[] = [
       'The crisis is not endless by nature; it has been prolonged by deliberate choices. And that means different choices—by the people of Burma, by ASEAN, and crucially by the United States—can shorten it.',
   },
   {
-    title: 'If President Trump ends Burma’s nightmare, 60 million Burmese has your back for the Nobel',
+    title:
+      'If President Trump ends Burma’s nightmare, 60 million Burmese has your back for the Nobel',
     paragraphs: [
       'I do not write this to throw shade at the administration. I write as someone who knows that this administration has leverage that others did not. It can:',
     ],
@@ -252,7 +254,6 @@ const englishSections: Section[] = [
       'toughen Scam Centre Strike Force operations while partnering with legitimate local actors;',
       'reframe TPS termination in a way that denies propaganda value to the junta;',
       'and push allied economies and businesses to treat junta-linked critical minerals and scam transactions as radioactive, not “emerging market opportunities.”',
-      
     ],
     paragraphs1: [
       'If it did those things—if it used American prowess to shorten, rather than simply manage, Burma’s endless crisis—it would not just be making America safer. It would be doing something truly historic.',
@@ -282,9 +283,8 @@ const englishSections: Section[] = [
       'The Burma crisis has lasted my entire life—and that of my father’s and grandfather’s—across three generations and counting. Naturally, it has often felt endless. But “endless” is a description, not a destiny.',
       'With enough strength, wisdom, and yes, a little Midwestern kindness, it can end in our generation.',
     ],
-    closing:
-      'Maybe even under this administration.',
-    },
+    closing: 'Maybe even under this administration.',
+  },
 ];
 
 const burmeseIntroParagraphs = [
@@ -316,14 +316,16 @@ const burmeseSections: Section[] = [
     paragraphs2: [
       'Facebook ပေါ်က သတင်းတွေကိုပဲ ဖတ်ကြည့်ရင်တော့ ဒီအကြောက်တရားတွေကို "လူမျိုးခြားကြောက်ရောဂါ (Xenophobia)" လို့ ထင်စရာ ရှိပါတယ်။ ဒါပေမဲ့ Wooster မြို့က ထမင်းစားပွဲမှာ အတူထိုင်ပြီး နားထောင်ကြည့်လိုက်ရင်တော့ ဒါတွေဟာ ရုပ်ဖျက်ထားတဲ့ ဝမ်းနည်းပူဆွေးမှု (Grief in disguise) တွေ ဖြစ်ကြောင်း သိလာရပါတယ်။ လုံခြုံမှုတွေ ပျောက်ဆုံးသွားလို့၊ ဂုဏ်သိက္ခာတွေ ပျောက်ဆုံးသွားလို့၊ သူတို့ သဘောဆန္ဒမပါဘဲ ပြောင်းလဲသွားတဲ့ ကမ္ဘာကြီးအတွက် ဝမ်းနည်းနေကြတာပါ။ ',
       'အဲဒီ Midwestern သားတွေကပဲ ကျွန်တော်တို့လို အသားညိုညို ကလေးတွေ မိုးထဲလေထဲ လမ်းလျှောက်နေတာတွေ့ရင် Walmart သော်လိုရာခရီးသို့ ကားကြုံပို့ပေးတတ်ကြပါတယ်။ Thanksgiving ပွဲတွေ၊ တနင်္လာနေ့ည ဘောလုံးပွဲတွေမှာ မိသားစုဝင်လို ခေါ်ကျွေးတတ်ကြပါတယ်။ ကမ္ဘာ့ဟိုဘက်ခြမ်း မိုင် ၈၀၀၀ အကွာမှာ အခြေအနေဆိုးနေတယ်လို့ TV မှာ တွေ့ရင် ကျွန်တော့်မိသားစု အဆင်ပြေရဲ့လားဆိုပြီး မေးမြန်းပေးကြပါတယ်။ မြန်မာ့နိုင်ငံရေးအကြောင်းစုံ နိုင်ငံရေးသိပ္ပံကျောင်းသားလေးကျွန်တော့်ကို လပတ်စာမေးပွဲစစ်နေသလိုပင် မေးခွန်းတွေထုတ်ပြီးရင်တော့ ကန်စွန်းဥဟင်း (Sweet potato casserole) တစ်ပန်းကန်နဲ့ Pecan သီးတွေပါတဲ့ ရွှေဖရုံသီးမုန့် (Pumpkin Pie) တစ်စိတ်ပို ထပ်ထည့်ပေးတတ်ပါတယ်။',
-      'သူတို့ရဲ့ ကိုယ်ကျင့်တရား စံနှုန်းဟာ ရိုးရှင်းပြီး သမ္မာကျမ်းစာကြေညှက်ပါပေတယ် - "အိမ်နီးချင်းကို ချစ်ပါ၊ ကောင်းသော အမှုတော်ကို ဆောင်ပါ၊ မကောင်းမှု ဒုစရိုက်ကို တားဆီးနိုင်တဲ့ အင်အားရှိလျက်နဲ့ လစ်လျူမရှုပါနဲ့။"', 
+      'သူတို့ရဲ့ ကိုယ်ကျင့်တရား စံနှုန်းဟာ ရိုးရှင်းပြီး သမ္မာကျမ်းစာကြေညှက်ပါပေတယ် - "အိမ်နီးချင်းကို ချစ်ပါ၊ ကောင်းသော အမှုတော်ကို ဆောင်ပါ၊ မကောင်းမှု ဒုစရိုက်ကို တားဆီးနိုင်တဲ့ အင်အားရှိလျက်နဲ့ လစ်လျူမရှုပါနဲ့။"',
       'ဒါဟာ ကျွန်တော်သိခဲ့ရတဲ့ အမေရိကပါပဲ - ',
       'အလွန် ဂုဏ်ယူတတ်သလို၊ အလွန်လည်း လူသားဆန်တတ်တဲ့ နိုင်ငံပါ။',
     ],
-    closing: 'ဒါကြောင့် ရှေးရိုးစွဲဝါဒီ (Conservatives) တွေက "TPS ဆိုတာ ထာဝရ မဖြစ်သင့်ဘူး၊ ခိုင်မာတဲ့ နယ်စပ်နဲ့ စေ့စေ့စပ်စပ် စိစစ်မှုတွေ လိုတယ်" လို့ ပြောရင် ကျွန်တော်က ဒါကို ရက်စက်မှုလို့ မမြင်ပါဘူး။ ဖရိုဖရဲနိုင်မှုတွေ၊ ပျက်ကွက်ခဲ့တဲ့ ကတိတွေ များလွန်းလို့ နောက်ထပ် အလိမ်မခံချင်တော့တဲ့ လူတွေရဲ့ စကားသံလို့ပဲ ကြားပါတယ်။ ရယ်စရာကောင်းတာက... ကျွန်တော်တို့လည်း အဲဒီလိုပဲ ခံစားရလို့ပါပဲ။',
+    closing:
+      'ဒါကြောင့် ရှေးရိုးစွဲဝါဒီ (Conservatives) တွေက "TPS ဆိုတာ ထာဝရ မဖြစ်သင့်ဘူး၊ ခိုင်မာတဲ့ နယ်စပ်နဲ့ စေ့စေ့စပ်စပ် စိစစ်မှုတွေ လိုတယ်" လို့ ပြောရင် ကျွန်တော်က ဒါကို ရက်စက်မှုလို့ မမြင်ပါဘူး။ ဖရိုဖရဲနိုင်မှုတွေ၊ ပျက်ကွက်ခဲ့တဲ့ ကတိတွေ များလွန်းလို့ နောက်ထပ် အလိမ်မခံချင်တော့တဲ့ လူတွေရဲ့ စကားသံလို့ပဲ ကြားပါတယ်။ ရယ်စရာကောင်းတာက... ကျွန်တော်တို့လည်း အဲဒီလိုပဲ ခံစားရလို့ပါပဲ။',
   },
   {
-    title: 'TPS ဆိုတာ ယာယီပါ - ဒါပေမဲ့ "ခေါင်းစဉ်တပ်ပုံ (Framing)" က လက်ရှိအမှန်တရားကို ထင်ဟပ်ရပါမယ်',
+    title:
+      'TPS ဆိုတာ ယာယီပါ - ဒါပေမဲ့ "ခေါင်းစဉ်တပ်ပုံ (Framing)" က လက်ရှိအမှန်တရားကို ထင်ဟပ်ရပါမယ်',
     paragraphs: [
       'ဥပဒေအရရော ယုတ္တိဗေဒအရပါ TPS ဆိုတာ ယာယီ (Temporary) ပါ။ စစ်ပွဲတွေ၊ သဘာဝဘေးတွေလို "ထူးခြားပြီး ယာယီအခြေအနေတွေ" ကြောင့် နေရပ်ပြန်ဖို့ မဖြစ်နိုင်တဲ့အခါ ပေးထားတဲ့ အရာပါ။ အဲဒီအခြေအနေတွေ တကယ်ပြောင်းလဲသွားရင် TPS ကို ပြန်လည်သုံးသပ်သင့်ပါတယ်။',
       'အကယ်၍ အမိမြေလုံခြုံရေးဌာန (DHS) ကသာ အခုလို တည်ငြိမ်စွာ ပြောခဲ့မယ်ဆိုရင် -',
@@ -336,7 +338,7 @@ const burmeseSections: Section[] = [
       'ဒါပေမဲ့ လက်တွေ့မှာတော့ တရားဝင် အကြောင်းပြချက်တွေက "အုပ်ချုပ်ရေးနှင့် တည်ငြိမ်မှုတွင် သိသာထင်ရှားသော တိုးတက်မှုများ"၊ အရေးပေါ်အခြေအနေ ရုပ်သိမ်းခြင်း၊ "လွတ်လပ်ပြီး တရားမျှတသော ရွေးကောက်ပွဲများ"၊ အပစ်အခတ်ရပ်စဲရေးများ စတဲ့ စကားလုံးတွေကို မှီခိုနေပါတယ်။ မြန်မာပြည်က ပုံမှန်အခြေအနေဆီ တရွေ့ရွေ့သွားနေသယောင် ပြောဆိုနေပါတယ်။',
       'ဒီလို ခေါင်းစဉ်တပ်တာ (Framing) ဟာ မြန်မာပြည် တစ်နိုင်ငံတည်း ဆိုရင်တောင် မေးခွန်းထုတ်စရာ ဖြစ်နေပါပြီ။',
       'ဒါပေမဲ့ TPS ဟာ မြန်မာပြည် တစ်နိုင်ငံတည်းအတွက် ရပ်စဲခံရတာ မဟုတ်ပါဘူး။ လူသားချင်းစာနာမှုဆိုင်ရာ အကာအကွယ်တွေကို တင်းကျပ်ပြီး "TPS ကို မူလရည်ရွယ်ချက်အတိုင်း ယာယီအဖြစ် ပြန်ရောက်စေရေး" ဆိုတဲ့ မူဝါဒအောက်မှာ နိုင်ငံ ၂၀ နီးပါးအတွက် တပြိုင်နက်တည်း ရပ်စဲခံရတာ ဖြစ်ပါတယ်။ အစီအစဉ်အများအပြားကို ရပ်စဲတာက နိုင်ငံရေး ရွေးချယ်မှု (Political Choice) ပါ။ ဒါပေမဲ့ တစ်ခုချင်းစီကို ဘယ်လို ခေါင်းစဉ်တပ်မလဲ ဆိုတာကတော့ ကိုယ်ကျင့်တရားနဲ့ မဟာဗျူဟာဆိုင်ရာ ရွေးချယ်မှု ဖြစ်ပါတယ်။',
-      'မြန်မာ့ကိစ္စမှာတော့ ဒီအဖြစ်အပျက် အစီအစဉ်နဲ့ ဇာတ်လမ်းဟာ ဗိုလ်ချုပ်တွေအတွက် \'Jet2 holiday\' ခရီးစဉ် လက်ဆောင်ရသလို ထီပေါက်ခြင်းပါပဲ။ တကယ်ပါ... ဒီထက်ကောင်းတာ ဘာရှိဦးမှာလဲ။',
+      "မြန်မာ့ကိစ္စမှာတော့ ဒီအဖြစ်အပျက် အစီအစဉ်နဲ့ ဇာတ်လမ်းဟာ ဗိုလ်ချုပ်တွေအတွက် 'Jet2 holiday' ခရီးစဉ် လက်ဆောင်ရသလို ထီပေါက်ခြင်းပါပဲ။ တကယ်ပါ... ဒီထက်ကောင်းတာ ဘာရှိဦးမှာလဲ။",
       'အကယ်၍ ခင်ဗျားသာ စစ်ကောင်စီအတွက် ဝါဒဖြန့်ချိရေး အောင်ပွဲတစ်ခု ဖန်တီးပေးချင်တယ် ဆိုရင်တောင် ဒီထက်ပိုကောင်းအောင် လုပ်ပေးနိုင်မှာ မဟုတ်ပါဘူး -',
     ],
     bullets: [
@@ -351,11 +353,13 @@ const burmeseSections: Section[] = [
       '- ဒါဟာလဲ တိုက်ဆိုင်မှုတစ်ခုသက်သက်ပါပဲလို့ ထင်ကောင်းထင်နိုင်ပါသေးတယ် - ',
       ' သို့ပေသိ TPS ရပ်စဲလိုက်တာ သက်သက် မဟုတ်ဘဲ၊ ရပ်စဲဖို့ အကြောင်းပြချက်ပေးပုံက ပြည်သူလူထုကို ဓားစာခံလို ဆက်ဆံသက်မှတ်နေဆဲဖြစ်တဲ့ လူမိုက်ဓားပြအစိုးရတစ်ရပ်က ဇတ်လမ်းဇတ်အိမ် (narrative) ပြန်ပေးဆွဲ (hijack) သွားခြင်းပါပဲ။',
     ],
-    closing: 'ကျွန်တော်တို့ နိုင်ငံရေးသိပ္ပံပညာရပ်ဝန်းမှာ‌တော့ "နိုင်ငံရေးမှာ တိုက်ဆိုင်မှုဆိုတာ မရှိဘူး" ဆိုတာကိုပဲအခြေခံပြီး ဖြစ်ပျက်မှုများကိုကြည့်မြင်တက်အောင် သင်ကြားလာရတော့လဲ တစ်ခြားသူအမြင်မှာတော့ "ဒီကောင်တွေက အဆိုးမြင်ဝါဒီသမားတွေပါကွာ" လို့ပြောရင်လဲ ခံရတော့မှာပါပဲ။',
+    closing:
+      'ကျွန်တော်တို့ နိုင်ငံရေးသိပ္ပံပညာရပ်ဝန်းမှာ‌တော့ "နိုင်ငံရေးမှာ တိုက်ဆိုင်မှုဆိုတာ မရှိဘူး" ဆိုတာကိုပဲအခြေခံပြီး ဖြစ်ပျက်မှုများကိုကြည့်မြင်တက်အောင် သင်ကြားလာရတော့လဲ တစ်ခြားသူအမြင်မှာတော့ "ဒီကောင်တွေက အဆိုးမြင်ဝါဒီသမားတွေပါကွာ" လို့ပြောရင်လဲ ခံရတော့မှာပါပဲ။',
   },
   {
     title: 'စစ်ကောင်စီ၏ "တိုးတက်မှုများ" - နိုင်ငံသားများ မဟုတ်၊ ဓားစာခံများသာ',
-    intro: 'မြန်မာစစ်တပ်ဟာ မကြာသေးမီက အသံကျယ်ကျယ်ထွက်တဲ့ ဟန်ပြလုပ်ရပ်တချို့ လုပ်ခဲ့ပါတယ် - ဒါပေမဲ့ အခြေခံအချက်တွေက မပြောင်းလဲပါဘူး -',
+    intro:
+      'မြန်မာစစ်တပ်ဟာ မကြာသေးမီက အသံကျယ်ကျယ်ထွက်တဲ့ ဟန်ပြလုပ်ရပ်တချို့ လုပ်ခဲ့ပါတယ် - ဒါပေမဲ့ အခြေခံအချက်တွေက မပြောင်းလဲပါဘူး -',
     bullet: [
       'တရားဝင် အရေးပေါ်အခြေအနေကို ရုပ်သိမ်းလိုက်တယ်။',
       'ရွေးကောက်ပွဲ ကြေညာတယ်။',
@@ -374,35 +378,38 @@ const burmeseSections: Section[] = [
     ],
     paragraphs2: [
       'မန္တလေးကနေ မော်လမြိုင်အထိ စစ်ကောင်စီ လက်အောက်မှာ နေရသူတိုင်း အခြေအနေကို သိကြပါတယ် -',
-      'ခင်ဗျားဟာ မလွတ်လပ်မချင်း လွတ်လပ်နေတာပါ (You are free until you are not)။ "လွတ်လာသူ" ဘယ်သူမဆို Facebook ပို့စ်တစ်ခုကြောင့်၊ ကောလဟာလတစ်ခုကြောင့် (သို့) ဘာအကြောင်းပြချက်မှ မရှိဘဲ ပြန်ဖမ်းခံရနိုင်ပါတယ်။ ရွေးကောက်ပွဲအကြောင်း၊ စစ်ပွဲအကြောင်း၊ စီးပွားရေးအကြောင်း ရိုးရိုးသားသား ပြောမိသူတိုင်း ညသန်းခေါင် တံခါးလာခေါက်ခံရမယ့် အန္တရာယ် ရှိပါတယ်။ အဲဒီအထဲမှာ ပြန်ပို့ခံရတဲ့ သူတွေလည်း ပါပါတယ်။ ဒါကြောင့် DHS က မြန်မာပြည်ဟာ လူအများအပြား နေရပ်ပြန်ဖို့ လုံခြုံနေပြီလို့ ပြောလိုက်တာဟာ ကိုယ်ကျင့်တရားအရ မှားယွင်းရုံတင် မကပါဘူး၊ လက်တွေ့မှာလည်း အန္တရာယ် များပါတယ်။ စစ်ကောင်စီလက်ထဲကို "ဓားစာခံစာရင်း" တစ်ခု ထည့်ပေးလိုက်သလို ဖြစ်နေပြီး၊ သူတို့ ပြောချင်တဲ့ စကားအတွက် အခွင့်အရေး ပေးလိုက်သလို ဖြစ်နေပါတယ် ________________', 
+      'ခင်ဗျားဟာ မလွတ်လပ်မချင်း လွတ်လပ်နေတာပါ (You are free until you are not)။ "လွတ်လာသူ" ဘယ်သူမဆို Facebook ပို့စ်တစ်ခုကြောင့်၊ ကောလဟာလတစ်ခုကြောင့် (သို့) ဘာအကြောင်းပြချက်မှ မရှိဘဲ ပြန်ဖမ်းခံရနိုင်ပါတယ်။ ရွေးကောက်ပွဲအကြောင်း၊ စစ်ပွဲအကြောင်း၊ စီးပွားရေးအကြောင်း ရိုးရိုးသားသား ပြောမိသူတိုင်း ညသန်းခေါင် တံခါးလာခေါက်ခံရမယ့် အန္တရာယ် ရှိပါတယ်။ အဲဒီအထဲမှာ ပြန်ပို့ခံရတဲ့ သူတွေလည်း ပါပါတယ်။ ဒါကြောင့် DHS က မြန်မာပြည်ဟာ လူအများအပြား နေရပ်ပြန်ဖို့ လုံခြုံနေပြီလို့ ပြောလိုက်တာဟာ ကိုယ်ကျင့်တရားအရ မှားယွင်းရုံတင် မကပါဘူး၊ လက်တွေ့မှာလည်း အန္တရာယ် များပါတယ်။ စစ်ကောင်စီလက်ထဲကို "ဓားစာခံစာရင်း" တစ်ခု ထည့်ပေးလိုက်သလို ဖြစ်နေပြီး၊ သူတို့ ပြောချင်တဲ့ စကားအတွက် အခွင့်အရေး ပေးလိုက်သလို ဖြစ်နေပါတယ် ________________',
       '"ဝါရှင်တန်ကတောင် အခြေအနေ တိုးတက်နေပြီလို့ လက်ခံတယ်။ ဒါကြောင့် အခု ပြန်လာပြီး ပြဿနာရှာတဲ့ ကောင်တွေကတော့ ရှင်းပါတယ်... သားကောင်တွေ မဟုတ်ဘူး၊ ရာဇဝတ်ကောင်တွေပဲ" ဆိုပြီး ပြောလာမှာပါ။',
     ],
-    closing: 'ပုံမှန်အားဖြင့် သံခင်းတမန်ခင်း ပြောဆိုတတ်တဲ့ အာဆီယံ သံတမန်တွေတောင် စစ်ကောင်စီရဲ့ ရိုးသားမှုကို မယုံကြပါဘူး။ ပြည်တွင်းရေး ဝင်မစွက်ဖက်ရေး မူဝါဒကို ကိုင်စွဲတဲ့ နိုင်ငံတွေ (ပွင့်ပွင့်လင်းလင်း ပြောရရင် လူ့အခွင့်အရေး ချန်ပီယံ မဟုတ်တဲ့ နိုင်ငံတွေ) ကတောင် ဒီရွေးကောက်ပွဲဟာ အတုအယောင် ဖြစ်တယ်၊ ဒေါ်အောင်ဆန်းစုကြည်ကို ဆက်ဖမ်းထားသရွေ့ ဘယ်လို "အကူးအပြောင်း" မှ တရားမဝင်နိုင်ဘူးလို့ တိတ်တဆိတ် ဝန်ခံနေကြပြီ ဆိုရင်... ဝါရှင်တန်အနေနဲ့ နားထောင်သင့်ပါပြီ။ ________________',
+    closing:
+      'ပုံမှန်အားဖြင့် သံခင်းတမန်ခင်း ပြောဆိုတတ်တဲ့ အာဆီယံ သံတမန်တွေတောင် စစ်ကောင်စီရဲ့ ရိုးသားမှုကို မယုံကြပါဘူး။ ပြည်တွင်းရေး ဝင်မစွက်ဖက်ရေး မူဝါဒကို ကိုင်စွဲတဲ့ နိုင်ငံတွေ (ပွင့်ပွင့်လင်းလင်း ပြောရရင် လူ့အခွင့်အရေး ချန်ပီယံ မဟုတ်တဲ့ နိုင်ငံတွေ) ကတောင် ဒီရွေးကောက်ပွဲဟာ အတုအယောင် ဖြစ်တယ်၊ ဒေါ်အောင်ဆန်းစုကြည်ကို ဆက်ဖမ်းထားသရွေ့ ဘယ်လို "အကူးအပြောင်း" မှ တရားမဝင်နိုင်ဘူးလို့ တိတ်တဆိတ် ဝန်ခံနေကြပြီ ဆိုရင်... ဝါရှင်တန်အနေနဲ့ နားထောင်သင့်ပါပြီ။ ________________',
   },
   {
     title: 'လွှတ်တော် (Congress) က သဘောပေါက်ပါတယ်၊ DHS လည်း အမီလိုက်သင့်ပါပြီ',
     paragraphs: [
       'အမေရိကန်ရဲ့ လက်တွေ့ကျတဲ့ သဘောထား ဘယ်လိုရှိသင့်သလဲ သိချင်ရင် မကြာသေးမီက ပြုလုပ်ခဲ့တဲ့ အောက်လွှတ်တော် နိုင်ငံခြားရေးရာ ကော်မတီရဲ့ ပူးတွဲကြားနာပွဲ ကို ကြည့်ပါ။ ခေါင်းစဉ်က "ထွက်ပေါက်မရှိသော မဟာဗျူဟာ - မြန်မာ့အဆုံးမဲ့ အကျပ်အတည်းနှင့် အမေရိကန်၏ အကန့်အသတ်ရှိသော ရွေးချယ်စရာများ" ဖြစ်ပါတယ်။ ပါတီနှစ်ရပ်လုံး (ရီပတ်ဘလစ်ကန်နဲ့ ဒီမိုကရက်) က အမတ်တွေ ပါဝင်ပြီး သဘောထားတွေ ထူးခြားစွာ တူညီနေကြပါတယ် -',
-      ],
+    ],
     bullet: [
       '* လာမယ့် ရွေးကောက်ပွဲကို ဒီမိုကရေစီ မှတ်တိုင်မဟုတ်ဘဲ "အတုအယောင် (Sham)" နဲ့ "ပြဇာတ်" သာ ဖြစ်ကြောင်း ပြောကြားခဲ့ကြပါတယ်။',
       '* ဒေါ်အောင်ဆန်းစုကြည်နဲ့ အဓိကခေါင်းဆောင်တွေ ထောင်ထဲရှိနေသရွေ့၊ ပြည်သူအများအပြား ဗုံးကြဲခံနေရသရွေ့ ဘယ်ရွေးကောက်ပွဲမှ ယုံကြည်လက်ခံနိုင်ဖွယ် မရှိကြောင်း အလေးပေး ပြောကြားခဲ့ကြပါတယ်။',
       '* စစ်ကောင်စီရဲ့ အစီအစဉ်ကို လူသိရှင်ကြား ရှုတ်ချဖို့ နဲ့ ပိတ်ဆို့မှု၊ သံတမန်ရေး၊ ဒီမိုကရေစီ ထောက်ခံမှုတွေကို မဟာဗျူဟာကျကျ ပေါင်းစပ်ဖို့ မြန်မာနိုင်ငံဆိုင်ရာ အထူးကိုယ်စားလှယ် ခန့်အပ်ဖို့ အစိုးရကို တိုက်တွန်းခဲ့ကြပါတယ်။',
     ],
-    paragraphs1:[
+    paragraphs1: [
       'ဒါဟာ "တက်ကြွလှုပ်ရှားသူတွေနဲ့ အစိုးရကြား" ထိပ်တိုက်တွေ့မှုဖြစ်နေတာ မဟုတ်ပါဘူး။ "လွှတ်တော် (Congress) နဲ့ အစိုးရကြား" မှားယွင်းနေသော ဇာတ်လမ်း (Bad Narrative) တစ်ပုဒ်ကိုပြန်လည် အဖတ်ဆယ်ကြရဖို့ပါ။',
       'DHS အနေနဲ့ မူဝါဒကို ချက်ချင်း ပြောင်းစရာ မလိုပါဘူး၊ အသုံးအနှုန်း (Language) ကို ပြောင်းလိုက်ရုံပါပဲ။ အောက်ပါအတိုင်း ပြင်ဆင်ပြောဆိုနိုင်ပါတယ် -',
     ],
     bullets: [
       '* မြန်မာပြည်ဟာ အလွန်အမင်း မလုံခြုံသေးပါဘူး။',
       '* TPS ရပ်စဲတာဟာ မူဝါဒ အပြောင်းအလဲရဲ့ အစိတ်အပိုင်း တစ်ခုသာ ဖြစ်ပြီး၊ စစ်ကောင်စီက လွတ်လပ်မှုနဲ့ တည်ငြိမ်မှုကို ပြန်လည် ဖော်ဆောင်ပေးနိုင်လို့ မဟုတ်ပါဘူး။',
-      '* အမေရိကန် ပြည်ထောင်စုအနေနဲ့ ကွန်ဂရက်လွှတ်တော်၊ တခြား ဒီမိုကရေစီ နိုင်ငံတွေနဲ့အတူ ရပ်တည်ပြီး စစ်ကောင်စီရဲ့ အတုအယောင် ရွေးကောက်ပွဲကို ငြင်းပယ်ကြောင်း၊ ဒေါ်အောင်ဆန်းစုကြည်နဲ့ နိုင်ငံရေး အကျဉ်းသားအားလုံး လွှတ်ပေးဖို့ တောင်းဆိုကြောင်း ပြောနိုင်ပါတယ်။', 
+      '* အမေရိကန် ပြည်ထောင်စုအနေနဲ့ ကွန်ဂရက်လွှတ်တော်၊ တခြား ဒီမိုကရေစီ နိုင်ငံတွေနဲ့အတူ ရပ်တည်ပြီး စစ်ကောင်စီရဲ့ အတုအယောင် ရွေးကောက်ပွဲကို ငြင်းပယ်ကြောင်း၊ ဒေါ်အောင်ဆန်းစုကြည်နဲ့ နိုင်ငံရေး အကျဉ်းသားအားလုံး လွှတ်ပေးဖို့ တောင်းဆိုကြောင်း ပြောနိုင်ပါတယ်။',
     ],
-    closing: 'အဲဒီလို ဇာတ်လမ်း အပြောင်းအလဲလေး လုပ်လိုက်ရုံနဲ့ DHS ဟာ သူ့ရဲ့ လူဝင်မှုကြီးကြပ်ရေး အစီအစဉ်ကို ဆက်လုပ်နိုင်သလို၊ တချိန်တည်းမှာပဲ စစ်ကောင်စီရဲ့ ဝါဒဖြန့်ချိရေး အောင်ပွဲကို တားဆီးနိုင် ပါလိမ့်မယ်။ ဥပဒေအရ ဘာမှ ကုန်ကျစရိတ် မရှိဘဲ၊ ကိုယ်ကျင့်တရားဆိုင်ရာ ရှင်းလင်းပြတ်သားမှု (Moral Clarity) ကို အများကြီး ရရှိစေမယ့် နည်းလမ်းပါ။',
+    closing:
+      'အဲဒီလို ဇာတ်လမ်း အပြောင်းအလဲလေး လုပ်လိုက်ရုံနဲ့ DHS ဟာ သူ့ရဲ့ လူဝင်မှုကြီးကြပ်ရေး အစီအစဉ်ကို ဆက်လုပ်နိုင်သလို၊ တချိန်တည်းမှာပဲ စစ်ကောင်စီရဲ့ ဝါဒဖြန့်ချိရေး အောင်ပွဲကို တားဆီးနိုင် ပါလိမ့်မယ်။ ဥပဒေအရ ဘာမှ ကုန်ကျစရိတ် မရှိဘဲ၊ ကိုယ်ကျင့်တရားဆိုင်ရာ ရှင်းလင်းပြတ်သားမှု (Moral Clarity) ကို အများကြီး ရရှိစေမယ့် နည်းလမ်းပါ။',
   },
   {
     title: 'သေချာ စိစစ်ပါ၊ ဒါပေမဲ့ ဥယျာဉ်တစ်ခုလုံးကိုတော့ ခုတ်မလှဲပါနဲ့',
-    intro: 'TPS ဆွေးနွေးပွဲတွေမှာ လေးလေးနက်နက် ထည့်သွင်းစဉ်းစားရမယ့် နောက်ထပ် စိုးရိမ်ပူပန်မှု တစ်ခုကတော့ လုံခြုံရေး (Security) ပါ။',
+    intro:
+      'TPS ဆွေးနွေးပွဲတွေမှာ လေးလေးနက်နက် ထည့်သွင်းစဉ်းစားရမယ့် နောက်ထပ် စိုးရိမ်ပူပန်မှု တစ်ခုကတော့ လုံခြုံရေး (Security) ပါ။',
     paragraphs: [
       'နိုင်ငံခြား အဆက်အသွယ်ရှိသူတွေရဲ့ အကြမ်းဖက်မှု (သို့) အကြမ်းဖက်ဝါဒ သတင်းတွေတိုင်းဟာ အမေရိကန်လူထုရဲ့ စိတ်ကို ထိခိုက်စေပါတယ်။ ခိုလှုံခွင့်တောင်းခံသူ တစ်ယောက်က ပစ်ခတ်မှု ကျူးလွန်တယ် ဆိုတဲ့ ခေါင်းစဉ်မျိုး (သို့) ပိတ်ဆို့ခံထားရတဲ့ အစိုးရနဲ့ ပတ်သက်သူတွေက ငွေကြေးခဝါချဖို့ ဝင်ရောက်လာတယ် ဆိုတဲ့ သတင်းမျိုး မြင်ရတဲ့အခါ အမေရိကန်တွေက "တော်ပါတော့" လို့ ပြောချင်ကြတာ နားလည်ပေးလို့ ရပါတယ်။',
       'ရွှေ့ပြောင်းခိုလှုံသူ တစ်ယောက်အနေနဲ့ အဲဒီလို ပြောချင်တဲ့ စိတ်ဆန္ဒကို လစ်လျူရှုဖို့ ကျွန်တော် မတိုက်တွန်းပါဘူး။ အမှန်အတိုင်းဝန်ခံရင် ကျွန်တော်တို့ရဲ့ စိတ်ဆန္ဒဟာလဲ အတူတူပါပဲ။',
@@ -417,11 +424,14 @@ const burmeseSections: Section[] = [
     paragraphs2: [
       'စစ်ကောင်စီလက်က ထွက်ပြေးလာတဲ့ ကျွန်တော်တို့ အများစုကလည်း အဲဒါကိုပဲ လိုလား ပါတယ်။ ရာဇဝတ်ကောင် တစ်သိုက်ဆီကနေ အသက်လု ထွက်ပြေးလာပြီးမှ၊ ဒီမှာ သူတို့ထက် နည်းနည်း ပိုယဉ်ကျေးတဲ့၊ ဝတ်ကောင်းစားလှ ဝတ်ထားတဲ့ ရာဇဝတ်ကောင် နောက်တစ်သိုက်ရဲ့ လက်အောက်မှာ မနေချင်ပါဘူး။',
     ],
-    closing: 'နယ်စပ်လုံခြုံရေးနဲ့ ရွှေ့ပြောင်းခိုလှုံသူ ကာကွယ်စောင့်ရှောက်ရေး ဆိုတာ ဆန့်ကျင်ဘက်တွေ မဟုတ်ပါဘူး။ ဥပဒေ စိုးမိုးပြီး၊ အားနည်းသူတွေကို အမြတ်မထုတ်ဘဲ ကာကွယ်ပေးတဲ့ လူ့ဘောင်အဖွဲ့အစည်း တစ်ခုကို တည်ဆောက်ခြင်း ဆိုတဲ့ စီမံကိန်းကြီး တစ်ခုတည်းရဲ့ အစိတ်အပိုင်း နှစ်ခုသာ ဖြစ်ပါတယ်။ ________________',
+    closing:
+      'နယ်စပ်လုံခြုံရေးနဲ့ ရွှေ့ပြောင်းခိုလှုံသူ ကာကွယ်စောင့်ရှောက်ရေး ဆိုတာ ဆန့်ကျင်ဘက်တွေ မဟုတ်ပါဘူး။ ဥပဒေ စိုးမိုးပြီး၊ အားနည်းသူတွေကို အမြတ်မထုတ်ဘဲ ကာကွယ်ပေးတဲ့ လူ့ဘောင်အဖွဲ့အစည်း တစ်ခုကို တည်ဆောက်ခြင်း ဆိုတဲ့ စီမံကိန်းကြီး တစ်ခုတည်းရဲ့ အစိတ်အပိုင်း နှစ်ခုသာ ဖြစ်ပါတယ်။ ________________',
   },
   {
-    title: 'Scam Centre Strike Force: ကောင်းမွန်တဲ့ အစပျိုးမှုပါ၊ အခု မိတ်ဖက်အမှန်ကို ရွေးချယ်ဖို့ လိုပါတယ်',
-    intro: 'ဒီနေရာမှာတော့ သမ္မတထရမ့်အစိုးရဟာ မှန်ကန်တဲ့ ဦးတည်ချက်အတိုင်း ရွေ့လျားနေပါတယ်။ မြန်မာနိုင်ငံ အပါအဝင် အရှေ့တောင်အာရှက ကျားဖြန့် အခြေစိုက်စခန်းတွေကို ပစ်မှတ်ထားမယ့် Scam Centre Strike Force ဖွဲ့စည်းလိုက်ခြင်းဟာ မဟာဗျူဟာမြှောက်တဲ့ အရွှေ့ကြီးတစ်ခုပါ။',
+    title:
+      'Scam Centre Strike Force: ကောင်းမွန်တဲ့ အစပျိုးမှုပါ၊ အခု မိတ်ဖက်အမှန်ကို ရွေးချယ်ဖို့ လိုပါတယ်',
+    intro:
+      'ဒီနေရာမှာတော့ သမ္မတထရမ့်အစိုးရဟာ မှန်ကန်တဲ့ ဦးတည်ချက်အတိုင်း ရွေ့လျားနေပါတယ်။ မြန်မာနိုင်ငံ အပါအဝင် အရှေ့တောင်အာရှက ကျားဖြန့် အခြေစိုက်စခန်းတွေကို ပစ်မှတ်ထားမယ့် Scam Centre Strike Force ဖွဲ့စည်းလိုက်ခြင်းဟာ မဟာဗျူဟာမြှောက်တဲ့ အရွှေ့ကြီးတစ်ခုပါ။',
     paragraphs: [
       'ဒါဟာ စစ်မှန်တဲ့ ခေါင်းဆောင်မှုပါပဲ။ ကျားဖြန့်စခန်းတွေဟာ လူကုန်ကူးခံရသူတွေကို နှိပ်စက်ပြီး၊ သားကောင်တွေ (အမေရိကန် ပြည်သူတွေ အပါအဝင်) ဆီကနေ ဒေါ်လာ ဘီလီယံပေါင်းများစွာ လိမ်ယူနေတာပါ။ သူတို့ကို နှိမ်နင်းတာဟာ အလှူဒါန မဟုတ်ပါဘူး။ အရေးကြီးတဲ့ အမျိုးသားလုံခြုံရေးနဲ့ စီးပွားရေး ဦးစားပေး လုပ်ငန်းစဉ် ဖြစ်ပါတယ်။',
       'ဒါပေမဲ့ အရေးကြီးတဲ့ နောက်တဆင့် ကျန်ပါသေးတယ် - မှန်ကန်တဲ့ မိတ်ဆွေကို ရွေးချယ်ဖို့ပါ။',
@@ -443,11 +453,13 @@ const burmeseSections: Section[] = [
     paragraphs2: [
       'အကယ်၍သာ ... ကျားဖြန့်လုပ်ငန်းတွေဆီကနေ သိမ်းဆည်းရမိတဲ့ Crypto ပိုင်ဆိုင်မှု ဘီလီယံပေါင်းများစွာထဲက တစိတ်တပိုင်းကို တရားမျှတမှုအတွက် မဟာဗျူဟာမြောက် Crypto ရန်ပုံငွေ (Strategic Crypto Reserve for Justice) အဖြစ် ထားရှိပြီး၊ သားကောင်တွေကို လျော်ကြေးပေးတာ၊ လူကုန်ကူးခံရသူတွေကို ပြန်လည်ထူထောင်ပေးတာ၊ ပြီးတော့ တနေ့ကျရင် ဒီမိုကရေစီ မြန်မာနိုင်ငံကို ပြန်လည်တည်ဆောက်ရာမှာ ကူညီပေးတာတွေ လုပ်နိုင်ရင် ဘယ်လောက် ကောင်းလိုက်မလဲ။',
     ],
-    closing: 'ခိုးရာပါ ပစ္စည်းတွေကို တာဝန်ခံမှု ရှိစေမယ့် လက်နက်အဖြစ် ပြောင်းလဲလိုက်တာပါမျိုးမှ တကယ့် "လက်တွေ့နိုင်ငံရေး (Realpolitik)" ပါ၊  ကျားဖြန့် အင်ပါယာကို တည်ထောင်ခဲ့တဲ့ သူတွေလက်ထဲ ပြန်ထည့်ပေးလိုက်တာမျိုး မဖြစ်သင့်ပါ။ ________________',
+    closing:
+      'ခိုးရာပါ ပစ္စည်းတွေကို တာဝန်ခံမှု ရှိစေမယ့် လက်နက်အဖြစ် ပြောင်းလဲလိုက်တာပါမျိုးမှ တကယ့် "လက်တွေ့နိုင်ငံရေး (Realpolitik)" ပါ၊  ကျားဖြန့် အင်ပါယာကို တည်ထောင်ခဲ့တဲ့ သူတွေလက်ထဲ ပြန်ထည့်ပေးလိုက်တာမျိုး မဖြစ်သင့်ပါ။ ________________',
   },
   {
     title: 'ရှားပါးမြေသား - ရာဇဝတ်ကောင် ပွဲစားတွေကို ဖြတ်ထုတ်ပါ',
-    intro: 'နောက်ထပ် တိတ်ဆိတ်ပြီး ညစ်ပတ်နေတဲ့ ကိစ္စတစ်ခုကတော့ - ရှားပါးမြေသား (Rare Earths) နဲ့ အရေးပါတဲ့ သတ္တုတွင်းထွက်များ ပါပဲ။',
+    intro:
+      'နောက်ထပ် တိတ်ဆိတ်ပြီး ညစ်ပတ်နေတဲ့ ကိစ္စတစ်ခုကတော့ - ရှားပါးမြေသား (Rare Earths) နဲ့ အရေးပါတဲ့ သတ္တုတွင်းထွက်များ ပါပဲ။',
     paragraphs: [
       'မြန်မာပြည် မြောက်ပိုင်းမှာ လျှပ်စစ်ကားတွေ၊ လေအားလျှပ်စစ် တာဘိုင်တွေ၊ F-22 လေယာဉ်တွေနဲ့ အဆင့်မြင့် မိုက်ခရိုပရိုဆက်ဆာတွေအတွက် လိုအပ်တဲ့ ရှားပါးမြေသားတွေ အများအပြား ရှိပါတယ်။ ဒီနေ့ခေတ်မှာ အဲဒီ ထုတ်လုပ်မှု အများစုဟာ -',
     ],
@@ -466,14 +478,14 @@ const burmeseSections: Section[] = [
       'သဘာဝပတ်ဝန်းကျင်နဲ့ အလုပ်သမား စံနှုန်းတွေကို လိုက်နာနိုင်တဲ့ မဟာမိတ် စီးပွားရေး နိုင်ငံတွေ (မလေးရှား၊ ထိုင်း၊ ဂျပန်၊ တောင်ကိုရီးယား၊ ဩစတြေးလျ) နဲ့ သန့်စင်ရေး (Refining) ပူးပေါင်းဆောင်ရွက်မှုတွေ တည်ဆောက်ပါ။',
       'စစ်ကောင်စီ ဆက်စပ် ရှားပါးမြေသား တင်ပို့မှုတွေကို အပေးအယူ ပစ္စည်းအဖြစ် မသတ်မှတ်ဘဲ အန္တရာယ်များပြီး ပိတ်ဆို့သင့်တဲ့ အရာအဖြစ် သတ်မှတ်ပါ။',
     ],
-    paragraphs2: [
-
-    ],
-    closing: 'နောက်တစ်ကြိမ် ပြောပါရစေ - ရွေးချယ်စရာက "စင်ကြယ်ခြင်း" နဲ့ "လက်တွေ့ကျခြင်း" ကြားမှာ မဟုတ်ပါဘူး။ "ရာဇဝတ်ကောင်တွေရဲ့ ထိန်းချုပ်မှုကို ပိုခိုင်မာစေတဲ့ ရေတိုသဘောတူညီချက်များ" နဲ့ "မှီခိုအားထားရမှုနဲ့ မတည်ငြိမ်မှုတွေကို လျှော့ချပေးမယ့် ရေရှည် အစီအစဉ်များ" ကြားက ရွေးချယ်စရာသာ ဖြစ်ပါတယ်။ ________________',
+    paragraphs2: [],
+    closing:
+      'နောက်တစ်ကြိမ် ပြောပါရစေ - ရွေးချယ်စရာက "စင်ကြယ်ခြင်း" နဲ့ "လက်တွေ့ကျခြင်း" ကြားမှာ မဟုတ်ပါဘူး။ "ရာဇဝတ်ကောင်တွေရဲ့ ထိန်းချုပ်မှုကို ပိုခိုင်မာစေတဲ့ ရေတိုသဘောတူညီချက်များ" နဲ့ "မှီခိုအားထားရမှုနဲ့ မတည်ငြိမ်မှုတွေကို လျှော့ချပေးမယ့် ရေရှည် အစီအစဉ်များ" ကြားက ရွေးချယ်စရာသာ ဖြစ်ပါတယ်။ ________________',
   },
   {
     title: '"အဆုံးမဲ့ အကျပ်အတည်း" ဟာ "မျှော်လင့်ချက်မဲ့ အကျပ်အတည်း" မဟုတ်ပါ',
-    intro: 'လွှတ်တော်ကြားနာပွဲ ခေါင်းစဉ်ဖြစ်တဲ့ "ထွက်ပေါက်မရှိသော မဟာဗျူဟာ - မြန်မာ့အဆုံးမဲ့ အကျပ်အတည်းနှင့် အမေရိကန်၏ အကန့်အသတ်ရှိသော ရွေးချယ်စရာများ" ဆိုတာ အဝေးကကြည့်ရင်တော့ မှန်သလို ရှိပါတယ်။ ဝေးလံတဲ့ နေရာက ဖြေရှင်းရခက်တဲ့ ပဋိပက္ခတစ်ခု လိုပေါ့။',
+    intro:
+      'လွှတ်တော်ကြားနာပွဲ ခေါင်းစဉ်ဖြစ်တဲ့ "ထွက်ပေါက်မရှိသော မဟာဗျူဟာ - မြန်မာ့အဆုံးမဲ့ အကျပ်အတည်းနှင့် အမေရိကန်၏ အကန့်အသတ်ရှိသော ရွေးချယ်စရာများ" ဆိုတာ အဝေးကကြည့်ရင်တော့ မှန်သလို ရှိပါတယ်။ ဝေးလံတဲ့ နေရာက ဖြေရှင်းရခက်တဲ့ ပဋိပက္ခတစ်ခု လိုပေါ့။',
     paragraphs: [
       'ဒါပေမဲ့ "အဆုံးမဲ့ (Endless)" ဆိုတာ စစ်ကောင်စီရဲ့ စီမံကိန်း သာ ဖြစ်ပြီး၊ ကျွန်တော်တို့ရဲ့ ကံကြမ္မာ မဟုတ်ပါဘူး။',
       'ကျွန်တော်တို့မျိုးဆက်ဟာ စစ်အာဏာရှင် လက်အောက်မှာ ကြီးပြင်းခဲ့ရသူများပါ။ "အဆုံးမဲ့ အကျပ်အတည်း" ဆိုတဲ့ ခေါင်းစဉ်ကိုက စစ်တပ်ကိုယ်တိုင်ကပဲ အရင်ကတည်းက သုံးခဲ့တာကို ကျွန်တော်တို့တစ်သက်လုံး ကြားလာရတာပါပဲ။ "ဒီနိုင်ငံက ဘာမှ လုပ်လို့မရတော့ဘူး၊ တိုင်းပြည်က အရမ်း ကွဲပြားလွန်းတယ်၊ ပြည်သူတွေက စိတ်လိုက်မာန်ပါ များလွန်းတယ်၊ တပ်မတော်ရဲ့ စည်းကမ်းရှိတဲ့ ဒီမိုကရေစီကို လက်ခံတာက ပိုကောင်းတယ်" ဆိုပြီး သူတို့ ပြောလေ့ရှိပါတယ်။',
@@ -485,17 +497,19 @@ const burmeseSections: Section[] = [
       'စိုးမိုးနည်မြေများမှာ ဗုံးဒဏ်တွေအောက်မှာပဲ ဒေသခံတွေက ကျောင်းတွေ၊ ဆေးပေးခန်းတွေ၊ တရားစီရင်ရေး စနစ်တွေကို တည်ဆောက်နေကြပါပြီ။',
       'NUG ဟာ မစုံလင်သေးပေမယ့် ဗမာနဲ့ တိုင်းရင်းသား ခေါင်းဆောင်မှုတွေကို စုစည်းဖို့ ရှားပါးတဲ့ နိုင်ငံတည်ဆောက်ရေး ကြိုးပမ်းမှုတစ်ခု ဖြစ်ပါတယ်။',
     ],
-    closing: 'ဒီအကျပ်အတည်းဟာ သဘာဝအရ "အဆုံးမဲ့" နေတာ မဟုတ်ပါဘူး။ ရည်ရွယ်ချက်ရှိရှိ ဆွဲဆန့်ထားလို့ ရှည်ကြာနေတာပါ။ အမေရိကန်ပြည်ထောင်စု၊ အာဆီယံ နဲ့ မြန်မာပြည်သူတွေရဲ့ ရွေးချယ်မှုတွေကသာ ဒါကို တိုတောင်းသွားစေနိုင်မှာ ဖြစ်ပါတယ်။ ________________',
+    closing:
+      'ဒီအကျပ်အတည်းဟာ သဘာဝအရ "အဆုံးမဲ့" နေတာ မဟုတ်ပါဘူး။ ရည်ရွယ်ချက်ရှိရှိ ဆွဲဆန့်ထားလို့ ရှည်ကြာနေတာပါ။ အမေရိကန်ပြည်ထောင်စု၊ အာဆီယံ နဲ့ မြန်မာပြည်သူတွေရဲ့ ရွေးချယ်မှုတွေကသာ ဒါကို တိုတောင်းသွားစေနိုင်မှာ ဖြစ်ပါတယ်။ ________________',
   },
   {
-    title: 'အကယ်၍ အမေရိကန်အစိုးရကသာ မြန်မာ့အိပ်မက်ဆိုးကြီးကို အဆုံးသတ်ပေးနိုင်မယ်ဆိုရင်၊ ကမ္ဘာတစ်ဝှမ်းရှိ သန်း ၆၀ သောမြန်မာများသည် သမ္မတထရမ့် နိုဘယ်ဆုရရှိဖို့ကို 2020 ရွှေးကောက်ပွဲကြီးတုန်းကလိုပင် တန်းစီပြီးတော့ကိုထောက်ခံပါလိမ့်မယ်',
-    intro: 'ကျွန်တော် ဒီစာကိုရေးတာ လက်ရှိ အစိုးရကို တိုက်ခိုက်ဖို့ ရေးတာ မဟုတ်ပါဘူး။ ဒီအစိုးရမှာ တခြားသူတွေ မရှိခဲ့တဲ့ "သြဇာအာဏာ (Leverage)" ရှိတယ် ဆိုတာကို သိတဲ့သူ တစ်ယောက်အနေနဲ့ ရေးတာပါ။ ဒီအစိုးရ အနေနဲ့ -',
+    title:
+      'အကယ်၍ အမေရိကန်အစိုးရကသာ မြန်မာ့အိပ်မက်ဆိုးကြီးကို အဆုံးသတ်ပေးနိုင်မယ်ဆိုရင်၊ ကမ္ဘာတစ်ဝှမ်းရှိ သန်း ၆၀ သောမြန်မာများသည် သမ္မတထရမ့် နိုဘယ်ဆုရရှိဖို့ကို 2020 ရွှေးကောက်ပွဲကြီးတုန်းကလိုပင် တန်းစီပြီးတော့ကိုထောက်ခံပါလိမ့်မယ်',
+    intro:
+      'ကျွန်တော် ဒီစာကိုရေးတာ လက်ရှိ အစိုးရကို တိုက်ခိုက်ဖို့ ရေးတာ မဟုတ်ပါဘူး။ ဒီအစိုးရမှာ တခြားသူတွေ မရှိခဲ့တဲ့ "သြဇာအာဏာ (Leverage)" ရှိတယ် ဆိုတာကို သိတဲ့သူ တစ်ယောက်အနေနဲ့ ရေးတာပါ။ ဒီအစိုးရ အနေနဲ့ -',
     bullet: [
       '* အတုအယောင် ရွေးကောက်ပွဲကို ရှုတ်ချဖို့နဲ့ အထူးကိုယ်စားလှယ် ခန့်အပ်ဖို့ တောင်းဆိုထားတဲ့ ကွန်ဂရက်လွှတ်တော်ရဲ့ ပါတီစုံ သဘောထားနဲ့ တသားတည်း ရပ်တည်နိုင်ပါတယ်။',
       '* တရားဝင် ဒေသခံ အင်အားစုတွေနဲ့ လက်တွဲပြီး Scam Centre Strike Force စစ်ဆင်ရေးတွေကို ပိုတင်းကြပ်နိုင်ပါတယ်။',
       '* စစ်ကောင်စီ ဝါဒဖြန့်လို့ မရအောင် TPS ရပ်စဲမှု ခေါင်းစဉ်တပ်ပုံ (Framing) ကို ပြောင်းလဲနိုင်ပါတယ်။',
       '* စစ်ကောင်စီနဲ့ ဆက်စပ်တဲ့ သတ္တုတွင်းထွက်တွေနဲ့ ကျားဖြန့်တွေကို "ထွန်းသစ်စ ဈေးကွက် အခွင့်အလမ်းတွေ" အဖြစ် မဟုတ်ဘဲ ရေဒီယိုသတ္တိကြွ ပစ္စည်းတွေလို (အန္တရာယ်ရှိတဲ့ အရာတွေလို) သဘောထားဖို့ မဟာမိတ်တွေနဲ့ စီးပွားရေးလုပ်ငန်းတွေကို ဖိအားပေးနိုင်ပါတယ်။',
-      
     ],
     paragraphs1: [
       'အကယ်၍သာ ဒီအရာတွေကို လုပ်ဆောင်ခဲ့မယ်ဆိုရင်... အမေရိကန်ရဲ့ အာဏာစွမ်းပကားကို သုံးပြီး မြန်မာ့အဆုံးမဲ့ အကျပ်အတည်းကို ဒီအတိုင်း စီမံခန့်ခွဲနေရုံ (Manage) မဟုတ်ဘဲ တိုတောင်းသွားအောင် (Shorten) လုပ်နိုင်မယ်ဆိုရင်... အမေရိကန်ကို ပိုလုံခြုံစေရုံတင် မကပါဘူး။ သမိုင်းဝင်မယ့် အလုပ်တစ်ခုကို လုပ်လိုက်တာ ဖြစ်ပါလိမ့်မယ်။',
@@ -507,7 +521,8 @@ const burmeseSections: Section[] = [
   },
   {
     title: 'ကျေးဇူးတော်နေ့၊ မည်သူမည်ဝါဖြစ်ခြင်း (Identity) နှင့် သမ္မတ ရေဂင်၏ အမေရိက',
-    intro: 'သမ္မတရဲ့ ကြက်ဆင်တွေကတောင် ကျွန်တော်တို့ထက် ပိုပြီး ဘေးကင်းလုံခြုံမှု ရှိနေတယ်ဆိုတာ မြန်မာ TPS သမားတွေကြားမှာ ရယ်စရာတစ်ခု ဖြစ်နေပေမယ့် ဒါဟာ နာကျင်စရာ အမှန်တရားတစ်ခုပါ။',
+    intro:
+      'သမ္မတရဲ့ ကြက်ဆင်တွေကတောင် ကျွန်တော်တို့ထက် ပိုပြီး ဘေးကင်းလုံခြုံမှု ရှိနေတယ်ဆိုတာ မြန်မာ TPS သမားတွေကြားမှာ ရယ်စရာတစ်ခု ဖြစ်နေပေမယ့် ဒါဟာ နာကျင်စရာ အမှန်တရားတစ်ခုပါ။',
     paragraphs: [
       'ဒါပေမဲ့ ကျွန်တော့်ဘဝကို ပြန်ကြည့်တဲ့အခါ - ရွှေဖရုံသီးမုန့် (Pumpkin Pie) နောက်ဆုံးတစ်စိတ်ကို ဇွတ်ခေါ်ကျွေးခဲ့တဲ့ Wooster က မိသားစုကနေ၊ အခုနောက်ပိုင်း ရောက်လာသူတွေအတွက် စားနပ်ရိက္ခာ လိုက်စုပေးနေတဲ့ မြန်မာ-အမေရိကန် အန်တီကြီးတွေအထိ မြင်ယောင်မိတဲ့အခါ - အစိုးရမှတ်တမ်း (Federal Register) တစ်စောင်တည်းနဲ့ ဒီနိုင်ငံကို အကဲမဖြတ်လိုပါဘူး။',
       'သမ္မတ ရေဂင် ပြောခဲ့တဲ့ အမေရိကန်ကို ကျွန်တော် မြင်နေပါသေးတယ်။ အဲဒါကတော့ "ကမ္ဘာ့ဘယ်ထောင့်ကပဲ လာလာ အမေရိကန် ဖြစ်လာနိုင်တယ်" ဆိုတဲ့ အချက်ပါပဲ။ အဲဒီ အယူအဆဟာ ဘယ်ပါတီ၊ ဘယ် DHS မူဝါဒ၊ ဘယ်လို ပထဝီနိုင်ငံရေး မောပန်းနွမ်းနယ်မှုတွေထက်မဆို ပိုပြီး အားကောင်းပါတယ်။',
@@ -518,7 +533,7 @@ const burmeseSections: Section[] = [
       ' "တည်ငြိမ်မှု" ဆိုတာ ဘာလဲဆိုတာကို အာဏာရှင်တွေ လော်ဘီလုပ်ပြီး အဓိပ္ပာယ်ဖွင့်ခွင့် မပေးတဲ့ အင်အား။',
       ' ကွန်ဂရက် လွှတ်တော်ရဲ့ သတိပေးချက်တွေ၊ မဟာမိတ်တွေနဲ့ စုံစမ်းစစ်ဆေးမှုတွေကို နားထောင်ပြီး၊ စစ်မှန်တဲ့ ပြုပြင်ပြောင်းလဲမှု (Genuine Reform) မရှိဘဲ ဟန်ဆောင်ခြင်း (Performance) သက်သက်ကို ဆုမချတဲ့ ဉာဏ်ပညာ။',
       ' TPS ဆိုတာ ယာယီဖြစ်ပေမယ့်၊ လူ့အသက်ရဲ့ တန်ဖိုးကတော့ ယာယီ မဟုတ်ဘူး ဆိုတာကို သတိရတဲ့ ဉာဏ်ပညာ။',
-      ],
+    ],
     paragraphs2: [
       'အကယ်၍ ဒီနှစ် ကျေးဇူးတော်နေ့ရဲ့ ဇာတ်လမ်းက "ကြက်ဆင်တွေ ကယ်တင်ခံရတယ်၊ ရွှေ့ပြောင်းခိုလှုံသူတွေ ပြည်နှင်ဒဏ် ခံရတယ်၊ ဘာလို့လဲဆိုတော့ စစ်ကောင်စီက အခြေအနေ ကောင်းသွားပြီလို့ ပြောလို့" ဆိုတာလောက်ပဲ ဖြစ်မယ်ဆိုရင်... အမေရိကန်ရဲ့ စမ်းသပ်မှုကြီး (American Experiment) မှာ တစ်ခုခု မှားယွင်းသွားပါပြီ။',
       'အကယ်၍သာ ဇာတ်လမ်းက "ကြက်ဆင်တွေ လွတ်ငြိမ်းခွင့်ရတယ်၊ ရွှေ့ပြောင်းခိုလှုံသူတွေ အသံကို နားထောင်ပေးတယ်၊ စစ်ကောင်စီကို ဖော်ထုတ်တယ်၊ ကျားဖြန့်စခန်းတွေကို ဖြိုခွင်းတယ်၊ ညစ်ပတ်တဲ့ ကုန်သွယ်မှုတွေကို ဖြတ်တောက်တယ်" လို့ ပြောင်းလဲသွားမယ်ဆိုရင်တော့... အမေရိကန်ဟာ သူ့ရဲ့ နယ်စပ်တွေကို ကာကွယ်ရုံထက် ပိုပါလိမ့်မယ်။ သမ္မတ ရေဂင် ယုံကြည်ခဲ့တဲ့ အယူအဆအတိုင်း နောက်တစ်ကြိမ် ပြန်လည် ရှင်သန်လာတာ ဖြစ်ပါလိမ့်မယ်။ "ကမ္ဘာ့ဘယ်ထောင့်က ဘယ်သူမဆို" သူတို့ရဲ့ အနာဂတ်ကို ဒီမှာ ပုံအောရဲကြတာဟာ အမေရိကန်က ပြည့်စုံလွန်းလို့ မဟုတ်ပါဘူး။ အားလုံးကို ပါဝင်ခွင့်ပေးပြီး (Inclusive)၊ မူဝါဒ ခိုင်မာကာ၊ သက်တောင့်သက်သာ ရှိမှုထက် သတ္တိတရားကို ရွေးချယ်နိုင်စွမ်း ရှိသေးလို့ ဖြစ်ပါတယ်။',
@@ -532,18 +547,23 @@ const contentByLanguage: Record<'en' | 'my', LanguageContent> = {
   en: {
     label: 'English',
     headTitle: 'Pardoning Turkeys, Deporting Dreams | Burmese TPS Op-Ed',
-    headDescription: 'A Burmese refugee’s plea for a kinder, wiser American leadership as TPS for Burma sunsets.',
+    headDescription:
+      'A Burmese refugee’s plea for a kinder, wiser American leadership as TPS for Burma sunsets.',
     heroTag: 'Pardoning Turkeys, Deporting Dreams',
     heroTitle: 'A Burmese Refugee’s Plea for a Kinder, Wiser American Leadership',
     heroSubtitle:
       'How a Thanksgiving tradition of mercy collides with the decision to end Temporary Protected Status for Burma—and why the narrative America chooses matters for refugees, democracy, and national security alike.',
     author: 'Min K',
-    authorNote: 'Burmese-American Refugees Advocate. Writing from lived experience across Burma and the American Midwest.',
+    authorNote:
+      'Burmese-American Refugees Advocate. Writing from lived experience across Burma and the American Midwest.',
     thesis: 'Peace through strength, wisdom, and kindess',
-    thesisNote: 'Ending TPS without honest framing risks handing the junta propaganda and real human lives.',
+    thesisNote:
+      'Ending TPS without honest framing risks handing the junta propaganda and real human lives.',
     readTime: '12 minutes',
-    docLink: 'https://docs.google.com/document/d/1EeBxEaGfnpwbr6mmQ-ZVkB-yrvlOEO-9D0e85Ao4gQs/edit?usp=sharing',
-    tweetText: 'Pardoning Turkeys, Deporting Dreams – a Burmese refugee’s plea for kinder, wiser leadership on TPS for Burma.',
+    docLink:
+      'https://docs.google.com/document/d/1EeBxEaGfnpwbr6mmQ-ZVkB-yrvlOEO-9D0e85Ao4gQs/edit?usp=sharing',
+    tweetText:
+      'Pardoning Turkeys, Deporting Dreams – a Burmese refugee’s plea for kinder, wiser leadership on TPS for Burma.',
     introParagraphs: englishIntroParagraphs,
     sections: englishSections,
     shareHeadline: 'Help keep Burmese families safe and heard',
@@ -552,24 +572,31 @@ const contentByLanguage: Record<'en' | 'my', LanguageContent> = {
   },
   my: {
     label: 'မြန်မာဘာသာ',
-    headTitle: 'ကြက်ဆင်များကို လွတ်ငြိမ်းခွင့်ပေးသော်လည်း အိပ်မက်များကို ပြည်နှင်ဒဏ်ခတ်ခြင်း | မြန်မာ TPS ဆောင်းပါး',
+    headTitle:
+      'ကြက်ဆင်များကို လွတ်ငြိမ်းခွင့်ပေးသော်လည်း အိပ်မက်များကို ပြည်နှင်ဒဏ်ခတ်ခြင်း | မြန်မာ TPS ဆောင်းပါး',
     headDescription:
       'ကျေးဇူးတော်ချီးမွမ်းပွဲ (Thanksgiving) ၏ သနားညှာတာမှု အစဉ်အလာတစ်ခုနှင့် မြန်မာနိုင်ငံအတွက် ယာယီအကာအကွယ်ပေးထားမှု (TPS) ရပ်စဲမည့် ဆုံးဖြတ်ချက်တို့ မည်သို့ ထိပ်တိုက်တွေ့နေသနည်း — ထို့အပြင် အမေရိကန်က ရွေးချယ်လိုက်သည့် ဇာတ်လမ်းပုံဖော်မှု (Narrative) သည် ဒုက္ခသည်များ၊ ဒီမိုကရေစီရေးနှင့် အမျိုးသားလုံခြုံရေးတို့အတွက်ပါ အဘယ်ကြောင့် အရေးပါနေသနည်း။',
-    heroTag: 'ပိုမိုကြင်နာ၍ ဉာဏ်ပညာပြည့်ဝသော အမေရိကန် ခေါင်းဆောင်မှုတစ်ခုအတွက် မြန်မာရွှေ့ပြောင်းခိုလှုံသူတစ်ဦး၏ အကြံပြုရှောက်ထားချက်',
-    heroTitle: 'ကြက်ဆင်များကိုလွတ်ငြိမ်းခွင့်ပေးသော်လည်း ရွှေ့ပြောင်းခိုလှုံသူများကိုပြည်နှင်ဒဏ်ခတ်ခြင်း',
+    heroTag:
+      'ပိုမိုကြင်နာ၍ ဉာဏ်ပညာပြည့်ဝသော အမေရိကန် ခေါင်းဆောင်မှုတစ်ခုအတွက် မြန်မာရွှေ့ပြောင်းခိုလှုံသူတစ်ဦး၏ အကြံပြုရှောက်ထားချက်',
+    heroTitle:
+      'ကြက်ဆင်များကိုလွတ်ငြိမ်းခွင့်ပေးသော်လည်း ရွှေ့ပြောင်းခိုလှုံသူများကိုပြည်နှင်ဒဏ်ခတ်ခြင်း',
     heroSubtitle:
       'ကျေးဇူးတော်ချီးမွမ်းပွဲ (Thanksgiving) ၏ သနားညှာတာမှု အစဉ်အလာတစ်ခုနှင့် မြန်မာနိုင်ငံအတွက် ယာယီအကာအကွယ်ပေးထားမှု (TPS) ရပ်စဲမည့် ဆုံးဖြတ်ချက်တို့ မည်သို့ ထိပ်တိုက်တွေ့နေသနည်း — ထို့အပြင် အမေရိကန်က ရွေးချယ်လိုက်သည့် ဇာတ်လမ်းပုံဖော်မှု (Narrative) သည် ဒုက္ခသည်များ၊ ဒီမိုကရေစီရေးနှင့် အမျိုးသားလုံခြုံရေးတို့အတွက်ပါ အဘယ်ကြောင့် အရေးပါနေသနည်း။',
     author: ' Min K ',
-    authorNote: 'မြန်မာ-အမေရိကန် ရွှေ့ပြောင်းခိုလှုံသူအခွင့်အရေး လှုပ်ရှားဆောင်ရွက်သူ။ မြန်မာနိုင်ငံနှင့် အမေရိကန် (Midwest) တို့တွင် ဖြတ်သန်းခဲ့ရသည့် ကိုယ်တွေ့ဘဝ အတွေ့အကြုံများကို အခြေခံ၍ ရေးသားပါသည်။',
+    authorNote:
+      'မြန်မာ-အမေရိကန် ရွှေ့ပြောင်းခိုလှုံသူအခွင့်အရေး လှုပ်ရှားဆောင်ရွက်သူ။ မြန်မာနိုင်ငံနှင့် အမေရိကန် (Midwest) တို့တွင် ဖြတ်သန်းခဲ့ရသည့် ကိုယ်တွေ့ဘဝ အတွေ့အကြုံများကို အခြေခံ၍ ရေးသားပါသည်။',
     thesis: 'အင်အား၊ ပညာဉာဏ်နှင့် ကြင်နာမှုတို့မှတဆင့် ငြိမ်းချမ်းရေး',
-    thesisNote: 'ရိုးသားမှန်ကန်သော ပုံဖော်မှုမပါဘဲ TPS ကို ရပ်စဲလိုက်ခြင်းသည် စစ်ကောင်စီလက်ထဲသို့ ဝါဒဖြန့်ချိရေး အခွင့်အလမ်းနှင့် လူသားတို့၏ အသက်များကို ထိုးအပ်လိုက်သလို ဖြစ်စေနိုင်သည့် အန္တရာယ်ရှိပါသည်။',
+    thesisNote:
+      'ရိုးသားမှန်ကန်သော ပုံဖော်မှုမပါဘဲ TPS ကို ရပ်စဲလိုက်ခြင်းသည် စစ်ကောင်စီလက်ထဲသို့ ဝါဒဖြန့်ချိရေး အခွင့်အလမ်းနှင့် လူသားတို့၏ အသက်များကို ထိုးအပ်လိုက်သလို ဖြစ်စေနိုင်သည့် အန္တရာယ်ရှိပါသည်။',
     readTime: '၁၂ မိနစ်',
-    docLink: 'https://docs.google.com/document/d/1XJUT7r_08mB0SIlFu8fPCJqHvnSzVpNFRcmcPYSwyM4/edit?usp=sharing',
+    docLink:
+      'https://docs.google.com/document/d/1XJUT7r_08mB0SIlFu8fPCJqHvnSzVpNFRcmcPYSwyM4/edit?usp=sharing',
     tweetText:
       'မြန်မာမိသားစုများ ဘေးကင်းလုံခြုံစေရန်နှင့် သူတို့၏အသံကို ကမ္ဘာက ကြားသိစေရန် ဝိုင်းဝန်းကူညီပေးကြပါ',
     introParagraphs: burmeseIntroParagraphs,
     sections: burmeseSections,
-    shareHeadline: 'မြန်မာမိသားစုများ ဘေးကင်းလုံခြုံစေရန်နှင့် သူတို့၏အသံများကို ကမ္ဘာက ကြားသိစေရန် ဝိုင်းဝန်းကူညီပေးကြပါ',
+    shareHeadline:
+      'မြန်မာမိသားစုများ ဘေးကင်းလုံခြုံစေရန်နှင့် သူတို့၏အသံများကို ကမ္ဘာက ကြားသိစေရန် ဝိုင်းဝန်းကူညီပေးကြပါ',
     shareBody:
       'ဤဆောင်းပါးပါ သဘောထားအမြင်များကို သင် လက်ခံသဘောတူပါက၊ မူဝါဒချမှတ်သူများ၊ သတင်းမီဒီယာများနှင့် လူထုခေါင်းဆောင်များထံ ရောက်ရှိစေရန် ကျေးဇူးပြု၍ မျှဝေပေးပါ။ TPS နှင့်ပတ်သက်၍ အမေရိကန်က ပြောပြမည့် ဇာတ်လမ်းသည် လူသားတို့၏ ဘဝအစစ်အမှန်များနှင့် မြန်မာ့ဒီမိုကရေစီ အနာဂတ်ကို ပုံဖော်ရာရောက်ပါလိမ့်မည်။',
   },
@@ -597,7 +624,7 @@ const OpEdPage = () => {
                 Op-Ed Feature
               </div>
               <div className="flex gap-2 rounded-full border border-white/10 bg-white/5 p-1 text-xs font-semibold text-indigo-100 backdrop-blur">
-                {languageOrder.map((lang) => (
+                {languageOrder.map(lang => (
                   <button
                     key={lang}
                     type="button"
@@ -610,11 +637,17 @@ const OpEdPage = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-200">{content.heroTag}</p>
-              <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">{content.heroTitle}</h1>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-200">
+                {content.heroTag}
+              </p>
+              <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+                {content.heroTitle}
+              </h1>
               <p className="max-w-3xl text-lg text-slate-200 sm:text-xl">{content.heroSubtitle}</p>
               <div className="flex flex-wrap items-center gap-4 text-sm text-indigo-100/80">
-                <span className="rounded-full bg-indigo-500/20 px-3 py-1 font-semibold text-indigo-100">Opinion</span>
+                <span className="rounded-full bg-indigo-500/20 px-3 py-1 font-semibold text-indigo-100">
+                  Opinion
+                </span>
                 <span className="rounded-full bg-white/10 px-3 py-1">November 2025</span>
                 <Link
                   href={content.docLink}
@@ -623,27 +656,48 @@ const OpEdPage = () => {
                   rel="noreferrer"
                 >
                   {language === 'en' ? 'Download PDF' : 'PDF ဒေါင်းလုပ်ယူရန်'}
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M14.25 9.75h6m0 0v-6m0 6L12 3 3.75 11.25M9.75 14.25h-6m0 0v6m0-6L12 21l8.25-8.25" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.8}
+                      d="M14.25 9.75h6m0 0v-6m0 6L12 3 3.75 11.25M9.75 14.25h-6m0 0v6m0-6L12 21l8.25-8.25"
+                    />
                   </svg>
                 </Link>
               </div>
             </div>
             <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur sm:grid-cols-3 sm:gap-6">
               <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">{language === 'en' ? 'Author' : 'ရေးသူ'}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">
+                  {language === 'en' ? 'Author' : 'ရေးသူ'}
+                </p>
                 <p className="text-base font-semibold text-white">{content.author}</p>
                 <p className="text-sm text-slate-200">{content.authorNote}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">{language === 'en' ? 'Thesis' : 'အဓိကအကြောင်းအရာ'}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">
+                  {language === 'en' ? 'Thesis' : 'အဓိကအကြောင်းအရာ'}
+                </p>
                 <p className="text-base font-semibold text-white">{content.thesis}</p>
                 <p className="text-sm text-slate-200">{content.thesisNote}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">{language === 'en' ? 'Read time' : 'ဖတ်ရှုချိန်'}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">
+                  {language === 'en' ? 'Read time' : 'ဖတ်ရှုချိန်'}
+                </p>
                 <p className="text-base font-semibold text-white">{content.readTime}</p>
-                <p className="text-sm text-slate-200">{language === 'en' ? 'Structured for policy staff, advocates, and concerned Americans.' : 'မူဝါဒရေးရာ တာဝန်ရှိသူများ၊ အရေးဆို တက်ကြွလှုပ်ရှားသူများနှင့် စိုးရိမ်ပူပန်သူ အမေရိကန်ပြည်သူများအတွက် ရည်ရွယ် ပြုစုထားပါသည်။'}</p>
+                <p className="text-sm text-slate-200">
+                  {language === 'en'
+                    ? 'Structured for policy staff, advocates, and concerned Americans.'
+                    : 'မူဝါဒရေးရာ တာဝန်ရှိသူများ၊ အရေးဆို တက်ကြွလှုပ်ရှားသူများနှင့် စိုးရိမ်ပူပန်သူ အမေရိကန်ပြည်သူများအတွက် ရည်ရွယ် ပြုစုထားပါသည်။'}
+                </p>
               </div>
             </div>
           </header>
@@ -653,34 +707,41 @@ const OpEdPage = () => {
           <div className="mx-auto max-w-5xl space-y-14 px-6 pb-20 sm:px-10">
             <section className="rounded-3xl border border-white/10 bg-white/5 px-6 py-8 shadow-2xl shadow-indigo-500/10 backdrop-blur-sm sm:px-10 sm:py-12">
               <div className="space-y-5 text-lg leading-relaxed text-slate-100">
-                {content.introParagraphs.map((paragraph) => (
+                {content.introParagraphs.map(paragraph => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
             </section>
 
-            {content.sections.map((section) => (
-              <article key={section.title} className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-2xl shadow-slate-900/40 ring-1 ring-white/5 backdrop-blur sm:p-10">
+            {content.sections.map(section => (
+              <article
+                key={section.title}
+                className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-2xl shadow-slate-900/40 ring-1 ring-white/5 backdrop-blur sm:p-10"
+              >
                 <div className="flex items-start gap-3">
                   <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/30 text-sm font-semibold text-indigo-100">
                     ●
                   </span>
                   <div className="space-y-4">
                     <header className="space-y-2">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">{language === 'en' ? 'Section' : 'အပိုင်း'}</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-200">
+                        {language === 'en' ? 'Section' : 'အပိုင်း'}
+                      </p>
                       <h2 className="text-2xl font-bold text-white sm:text-3xl">{section.title}</h2>
                     </header>
-                    {section.intro && <p className="text-lg leading-relaxed text-slate-100">{section.intro}</p>}
+                    {section.intro && (
+                      <p className="text-lg leading-relaxed text-slate-100">{section.intro}</p>
+                    )}
                     {section.paragraphs && (
                       <div className="space-y-4 text-lg leading-relaxed text-slate-100">
-                        {section.paragraphs.map((paragraph) => (
+                        {section.paragraphs.map(paragraph => (
                           <p key={paragraph}>{paragraph}</p>
                         ))}
                       </div>
                     )}
                     {section.bullet && (
                       <ul className="mt-2 space-y-3 rounded-2xl border border-indigo-200/10 bg-indigo-500/5 p-4 text-base text-indigo-50">
-                        {section.bullet.map((bullet) => (
+                        {section.bullet.map(bullet => (
                           <li key={bullet} className="flex gap-3 leading-relaxed">
                             <span className="mt-1 h-2 w-2 rounded-full bg-indigo-300" aria-hidden />
                             <span>{bullet}</span>
@@ -690,14 +751,14 @@ const OpEdPage = () => {
                     )}
                     {section.paragraphs1 && (
                       <div className="space-y-4 text-lg leading-relaxed text-slate-100">
-                        {section.paragraphs1.map((paragraph) => (
+                        {section.paragraphs1.map(paragraph => (
                           <p key={paragraph}>{paragraph}</p>
                         ))}
                       </div>
                     )}
                     {section.bullets && (
                       <ul className="mt-2 space-y-3 rounded-2xl border border-indigo-200/10 bg-indigo-500/5 p-4 text-base text-indigo-50">
-                        {section.bullets.map((bullet) => (
+                        {section.bullets.map(bullet => (
                           <li key={bullet} className="flex gap-3 leading-relaxed">
                             <span className="mt-1 h-2 w-2 rounded-full bg-indigo-300" aria-hidden />
                             <span>{bullet}</span>
@@ -707,12 +768,14 @@ const OpEdPage = () => {
                     )}
                     {section.paragraphs2 && (
                       <div className="space-y-4 text-lg leading-relaxed text-slate-100">
-                        {section.paragraphs2.map((paragraph) => (
+                        {section.paragraphs2.map(paragraph => (
                           <p key={paragraph}>{paragraph}</p>
                         ))}
                       </div>
                     )}
-                    {section.closing && <p className="text-lg leading-relaxed text-slate-100">{section.closing}</p>}
+                    {section.closing && (
+                      <p className="text-lg leading-relaxed text-slate-100">{section.closing}</p>
+                    )}
                   </div>
                 </div>
               </article>
@@ -722,7 +785,9 @@ const OpEdPage = () => {
               <div className="h-full rounded-3xl bg-slate-950/80 p-8 sm:p-10">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                   <div className="space-y-3 text-white">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-100">{language === 'en' ? 'Share the op-ed' : 'ဆောင်းပါးကို မျှဝေပါ'}</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-100">
+                      {language === 'en' ? 'Share the op-ed' : 'ဆောင်းပါးကို မျှဝေပါ'}
+                    </p>
                     <h3 className="text-2xl font-bold sm:text-3xl">{content.shareHeadline}</h3>
                     <p className="max-w-2xl text-base text-indigo-50">{content.shareBody}</p>
                   </div>
@@ -734,8 +799,19 @@ const OpEdPage = () => {
                       className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-slate-900 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-white/30"
                     >
                       {language === 'en' ? 'Open Google Doc' : 'Google Doc ကိုဖွင့်ကြည့်ရန်'}
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M14.25 9.75h6m0 0v-6m0 6L12 3 3.75 11.25" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.8}
+                          d="M14.25 9.75h6m0 0v-6m0 6L12 3 3.75 11.25"
+                        />
                       </svg>
                     </Link>
                     <Link
@@ -743,7 +819,12 @@ const OpEdPage = () => {
                       className="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-3 text-white transition hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
                     >
                       {language === 'en' ? 'Share on (Twitter)' : 'X/Twitter မှာ မျှဝေပါ'}
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
                         <path d="M18.244 3h3.308l-7.227 8.26L22.5 21h-5.906l-4.622-5.826L6.6 21H3.29l7.72-8.82L1.5 3h6.094l4.157 5.27L18.244 3zm-1.162 16.17h1.833L7.026 4.744H5.07l12.012 14.426z" />
                       </svg>
                     </Link>
