@@ -12,26 +12,26 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 Phase: 2 of 7 (PWA & Offline)
 Plan: 3 of 8 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 02-03-PLAN.md (Offline Sync Queue)
+Last activity: 2026-02-06 - Completed 02-02-PLAN.md (IndexedDB Question Caching)
 
-Progress: [██░░░░░░░░] 18% (7 plans / ~40 total estimated)
+Progress: [██░░░░░░░░] 20% (8 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 17 min
-- Total execution time: 118 min
+- Total plans completed: 8
+- Average duration: 20 min
+- Total execution time: 161 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
-| 02-pwa-offline | 2 | 69 min | 35 min |
+| 02-pwa-offline | 3 | 112 min | 37 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (7 min), 01-03 (8 min), 01-04 (14 min), 02-01 (32 min), 02-03 (37 min)
+- Last 5 plans: 01-03 (8 min), 01-04 (14 min), 02-01 (32 min), 02-03 (37 min), 02-02 (43 min)
 - Trend: PWA plans longer due to build verification and parallel coordination
 
 *Updated after each plan completion*
@@ -66,6 +66,10 @@ Recent decisions affecting current work:
 - 02-03: Sync queue stores in IndexedDB syncQueueStore, syncs to Supabase
 - 02-03: SyncStatusIndicator hidden when no pending items
 - 02-03: Bilingual toast for sync completion (English + Burmese)
+- 02-02: OfflineContext merges question caching with sync queue functionality
+- 02-02: useOnlineStatus uses useSyncExternalStore for SSR-safe browser API access
+- 02-02: OnlineStatusIndicator is icon-only (green=online, orange=offline)
+- 02-02: OfflineProvider placed outside ThemeProvider in provider hierarchy
 
 ### Pending Todos
 
@@ -82,7 +86,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 02-03-PLAN.md (Offline Sync Queue)
+Stopped at: Completed 02-02-PLAN.md (IndexedDB Question Caching)
 Resume file: None
 
 ---
