@@ -28,6 +28,10 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        google: 'readonly',
+        React: 'readonly',
+        SpeechSynthesis: 'readonly',
+        SpeechSynthesisVoice: 'readonly',
       },
     },
     rules: {
