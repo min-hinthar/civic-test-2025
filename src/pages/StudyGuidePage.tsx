@@ -38,7 +38,7 @@ const StudyGuidePage = () => {
   );
 
   const [category, setCategory] = useState<string>(() => getValidCategory(searchParams));
-  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+  const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const nextCategory = getValidCategory(searchParams);
@@ -54,7 +54,7 @@ const StudyGuidePage = () => {
     }
   }, [location.hash]);
 
-  const toggleCard = useCallback((id: number) => {
+  const toggleCard = useCallback((id: string) => {
     setFlippedCards(prev => ({
       ...prev,
       [id]: !prev[id],
