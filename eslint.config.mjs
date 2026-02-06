@@ -41,6 +41,9 @@ export default [
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      // Disable no-undef for TS files - TypeScript compiler handles this better
+      // and knows about DOM types like NotificationPermission, WindowClient, etc.
+      'no-undef': 'off',
     },
   },
   prettier,
