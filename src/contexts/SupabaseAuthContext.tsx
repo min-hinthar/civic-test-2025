@@ -1,8 +1,17 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { PostgrestError, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
+import { createSaveSessionGuard } from '@/lib/saveSession';
 import type {
   QuestionResult,
   TestEndReason,
@@ -35,27 +44,29 @@ const isEndReason = (value: unknown): value is TestEndReason =>
   typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
 
 const mapResponses = (test: MockTestRow): TestSession => {
-  const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: MockTestResponseRow): QuestionResult => ({
-    questionId: response.question_id,
-    questionText_en: response.question_en,
-    questionText_my: response.question_my,
-    selectedAnswer: {
-      text_en: response.selected_answer_en,
-      text_my: response.selected_answer_my,
-      correct: Boolean(response.is_correct),
-    },
-    correctAnswer: {
-      text_en: response.correct_answer_en,
-      text_my: response.correct_answer_my,
-      correct: true,
-    },
-    isCorrect: response.is_correct,
-    category: response.category,
-  }));
+  const results: QuestionResult[] = (test.mock_test_responses ?? []).map(
+    (response: MockTestResponseRow): QuestionResult => ({
+      questionId: response.question_id,
+      questionText_en: response.question_en,
+      questionText_my: response.question_my,
+      selectedAnswer: {
+        text_en: response.selected_answer_en,
+        text_my: response.selected_answer_my,
+        correct: Boolean(response.is_correct),
+      },
+      correctAnswer: {
+        text_en: response.correct_answer_en,
+        text_my: response.correct_answer_my,
+        correct: true,
+      },
+      isCorrect: response.is_correct,
+      category: response.category,
+    })
+  );
 
   const derivedScore = results.length
     ? results.filter(result => result.isCorrect).length
-    : test.score ?? 0;
+    : (test.score ?? 0);
   const totalQuestions = test.total_questions ?? (results.length || 20);
   const derivedIncorrect = test.incorrect_count ?? Math.max(totalQuestions - derivedScore, 0);
   const normalizedReason = isEndReason(test.end_reason) ? test.end_reason : 'complete';
@@ -79,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
+  const saveGuardRef = useRef(createSaveSessionGuard());
 
   const syncProfile = useCallback(
     async (payload: { id: string; email: string; full_name: string }) => {
@@ -90,40 +102,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
-  const hydrateFromSupabase = useCallback(
-    async (session: Session | null) => {
-      if (!session?.user) {
-        setUser(null);
-        setIsLoading(false);
-        return;
-      }
-      const authUser: SupabaseUser = session.user;
-      const [{ data: profileData }, { data: testsData }] = await Promise.all([
-        supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
-        supabase
-          .from('mock_tests')
-          .select(
-            `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
+  const hydrateFromSupabase = useCallback(async (session: Session | null) => {
+    if (!session?.user) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+    const authUser: SupabaseUser = session.user;
+    const [{ data: profileData }, { data: testsData }] = await Promise.all([
+      supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
+      supabase
+        .from('mock_tests')
+        .select(
+          `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
               question_id, question_en, question_my, category, selected_answer_en, selected_answer_my,
               correct_answer_en, correct_answer_my, is_correct
             )`
-          )
-          .eq('user_id', authUser.id)
-          .order('completed_at', { ascending: false }),
-      ]);
+        )
+        .eq('user_id', authUser.id)
+        .order('completed_at', { ascending: false }),
+    ]);
 
-      const history: TestSession[] = ((testsData ?? []) as MockTestRow[]).map(mapResponses);
+    const history: TestSession[] = ((testsData ?? []) as MockTestRow[]).map(mapResponses);
 
-      setUser({
-        id: authUser.id,
-        email: authUser.email ?? '',
-        name: profileData?.full_name ?? authUser.email ?? 'Learner',
-        testHistory: history,
-      });
-      setIsLoading(false);
-    },
-    []
-  );
+    setUser({
+      id: authUser.id,
+      email: authUser.email ?? '',
+      name: profileData?.full_name ?? authUser.email ?? 'Learner',
+      testHistory: history,
+    });
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -194,7 +203,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await syncProfile({
           id: data.user.id,
           email: data.user.email ?? '',
-          full_name: (data.user.user_metadata as UserMetadata)?.full_name ?? data.user.email ?? 'Learner',
+          full_name:
+            (data.user.user_metadata as UserMetadata)?.full_name ?? data.user.email ?? 'Learner',
         });
         const { data: sessionData } = await supabase.auth.getSession();
         if (sessionData.session) {
@@ -216,16 +226,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const updatePassword = useCallback(async (newPassword: string) => {
-    setAuthError(null);
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) {
-      setAuthError(error.message);
-      throw error;
-    }
-    const { data } = await supabase.auth.getSession();
-    await hydrateFromSupabase(data.session ?? null);
-  }, [hydrateFromSupabase]);
+  const updatePassword = useCallback(
+    async (newPassword: string) => {
+      setAuthError(null);
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        setAuthError(error.message);
+        throw error;
+      }
+      const { data } = await supabase.auth.getSession();
+      await hydrateFromSupabase(data.session ?? null);
+    },
+    [hydrateFromSupabase]
+  );
 
   const logout = useCallback(async () => {
     await supabase.auth.signOut();
@@ -237,64 +250,78 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!user) {
         throw new Error('User must be signed in to save a mock test');
       }
-      setIsSavingSession(true);
-      try {
-        await syncProfile({ id: user.id, email: user.email, full_name: user.name });
 
-        const { data, error } = await supabase
-          .from('mock_tests')
-          .insert({
-            user_id: user.id,
-            completed_at: session.date,
-            score: session.score,
-            total_questions: session.totalQuestions,
-            duration_seconds: session.durationSeconds,
-            incorrect_count: session.incorrectCount,
-            end_reason: session.endReason,
-            passed: session.passed,
-          })
-          .select('id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed')
-          .single();
+      const guard = saveGuardRef.current;
 
-        if (error || !data?.id) {
-          throw error ?? new Error('Unable to persist mock test');
+      await guard.save(async () => {
+        setIsSavingSession(true);
+        try {
+          await syncProfile({ id: user.id, email: user.email, full_name: user.name });
+
+          const { data, error } = await supabase
+            .from('mock_tests')
+            .insert({
+              user_id: user.id,
+              completed_at: session.date,
+              score: session.score,
+              total_questions: session.totalQuestions,
+              duration_seconds: session.durationSeconds,
+              incorrect_count: session.incorrectCount,
+              end_reason: session.endReason,
+              passed: session.passed,
+            })
+            .select(
+              'id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed'
+            )
+            .single();
+
+          if (error || !data?.id) {
+            throw error ?? new Error('Unable to persist mock test');
+          }
+
+          const responsesPayload = session.results.map(result => ({
+            mock_test_id: data.id,
+            question_id: result.questionId,
+            question_en: result.questionText_en,
+            question_my: result.questionText_my,
+            category: result.category,
+            selected_answer_en: result.selectedAnswer.text_en,
+            selected_answer_my: result.selectedAnswer.text_my,
+            correct_answer_en: result.correctAnswer.text_en,
+            correct_answer_my: result.correctAnswer.text_my,
+            is_correct: result.isCorrect,
+          }));
+
+          if (responsesPayload.length) {
+            const { error: responsesError } = await supabase
+              .from('mock_test_responses')
+              .insert(responsesPayload);
+            if (responsesError) throw responsesError;
+          }
+
+          const persistedSession: TestSession = {
+            ...session,
+            id: data.id,
+            date: data.completed_at ?? session.date,
+            incorrectCount: data.incorrect_count ?? session.incorrectCount,
+            endReason: isEndReason(data.end_reason) ? data.end_reason : session.endReason,
+            passed: typeof data.passed === 'boolean' ? data.passed : session.passed,
+          };
+
+          setUser(prev =>
+            prev ? { ...prev, testHistory: [persistedSession, ...prev.testHistory] } : prev
+          );
+          await hydrateFromSupabase((await supabase.auth.getSession()).data.session ?? null);
+        } catch (error) {
+          console.error('Failed to save mock test session', error);
+          throw error;
+        } finally {
+          setIsSavingSession(false);
         }
+      });
 
-        const responsesPayload = session.results.map(result => ({
-          mock_test_id: data.id,
-          question_id: result.questionId,
-          question_en: result.questionText_en,
-          question_my: result.questionText_my,
-          category: result.category,
-          selected_answer_en: result.selectedAnswer.text_en,
-          selected_answer_my: result.selectedAnswer.text_my,
-          correct_answer_en: result.correctAnswer.text_en,
-          correct_answer_my: result.correctAnswer.text_my,
-          is_correct: result.isCorrect,
-        }));
-
-        if (responsesPayload.length) {
-          const { error: responsesError } = await supabase.from('mock_test_responses').insert(responsesPayload);
-          if (responsesError) throw responsesError;
-        }
-
-        const persistedSession: TestSession = {
-          ...session,
-          id: data.id,
-          date: data.completed_at ?? session.date,
-          incorrectCount: data.incorrect_count ?? session.incorrectCount,
-          endReason: isEndReason(data.end_reason) ? data.end_reason : session.endReason,
-          passed: typeof data.passed === 'boolean' ? data.passed : session.passed,
-        };
-
-        setUser(prev => (prev ? { ...prev, testHistory: [persistedSession, ...prev.testHistory] } : prev));
-        await hydrateFromSupabase((await supabase.auth.getSession()).data.session ?? null);
-      } catch (error) {
-        console.error('Failed to save mock test session', error);
-        throw error;
-      } finally {
-        setIsSavingSession(false);
-      }
+      // Reset guard for next test
+      guard.reset();
     },
     [hydrateFromSupabase, syncProfile, user]
   );
