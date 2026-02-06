@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 3 of 7 (UI/UX & Bilingual Polish)
-Plan: 4 of 9 in current phase
+Plan: 5 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 03-04-PLAN.md (Page Transitions & List Animations)
+Last activity: 2026-02-06 - Completed 03-07-PLAN.md (Flashcards & Onboarding)
 
-Progress: [████░░░░░░] 35% (14 plans / ~40 total estimated)
+Progress: [████░░░░░░] 38% (15 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 17 min
-- Total execution time: 237 min
+- Total plans completed: 15
+- Average duration: 16 min
+- Total execution time: 247 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [████░░░░░░] 35% (14 plans / ~40 total estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
-| 03-ui-ux-bilingual-polish | 3 | 47 min | 16 min |
+| 03-ui-ux-bilingual-polish | 4 | 57 min | 14 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-05 (6 min), 02-06 (16 min), 03-01 (18 min), 03-02 (8 min), 03-04 (21 min)
+- Last 5 plans: 02-06 (16 min), 03-01 (18 min), 03-02 (8 min), 03-04 (21 min), 03-07 (10 min)
 - Trend: UI component plans executing in 8-21 min range
 
 *Updated after each plan completion*
@@ -98,6 +98,11 @@ Recent decisions affecting current work:
 - 03-04: Stagger items with 80ms gap and 100ms initial delay
 - 03-04: Use Next.js router.pathname as AnimatePresence key
 - 03-04: PageTransition wraps page Component in _app.tsx
+- 03-07: SVG feTurbulence for paper texture overlay (no external images)
+- 03-07: 50px threshold + 500 velocity for swipe detection
+- 03-07: studyAnswers array used for flashcard answers
+- 03-07: Onboarding persists to localStorage key 'civic-test-onboarding-complete'
+- 03-07: Tour targets via data-tour attributes on elements
 
 ### Pending Todos
 
@@ -114,7 +119,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-04-PLAN.md (Page Transitions & List Animations)
+Stopped at: Completed 03-07-PLAN.md (Flashcards & Onboarding)
 Resume file: None
 
 ---

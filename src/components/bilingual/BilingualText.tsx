@@ -1,0 +1,92 @@
+'use client';
+
+import clsx from 'clsx';
+import { BilingualString } from '@/lib/i18n/strings';
+
+export interface BilingualTextProps {
+  /** Text content with en and my keys */
+  text: BilingualString;
+  /** Size variant */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  /** Make Burmese text same size as English (for buttons) */
+  equalSize?: boolean;
+  /** Center align text */
+  centered?: boolean;
+  /** Additional class names */
+  className?: string;
+}
+
+// Size mappings for English (primary) text
+const enSizes = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+};
+
+// Size mappings for Burmese (secondary) text - slightly smaller by default
+const mySizes = {
+  xs: 'text-xs',
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-base',
+  xl: 'text-lg',
+};
+
+/**
+ * Stacked bilingual text component.
+ *
+ * Features:
+ * - English on top, Burmese below (per user decision)
+ * - Burmese is subtly lighter color/weight (present but secondary)
+ * - Configurable sizes with smart defaults
+ *
+ * Usage:
+ * ```tsx
+ * <BilingualText text={strings.nav.dashboard} />
+ * <BilingualText text={{ en: 'Hello', my: 'မင်္ဂလာပါ' }} size="lg" />
+ * ```
+ */
+export function BilingualText({
+  text,
+  size = 'md',
+  equalSize = false,
+  centered = false,
+  className,
+}: BilingualTextProps) {
+  return (
+    <span className={clsx('flex flex-col', centered && 'items-center text-center', className)}>
+      <span className={clsx('font-semibold text-foreground', enSizes[size])}>{text.en}</span>
+      <span
+        className={clsx(
+          'font-myanmar text-muted-foreground',
+          equalSize ? enSizes[size] : mySizes[size]
+        )}
+      >
+        {text.my}
+      </span>
+    </span>
+  );
+}
+
+/**
+ * Inline bilingual text (side by side with separator)
+ */
+export function BilingualTextInline({
+  text,
+  separator = ' · ',
+  className,
+}: {
+  text: BilingualString;
+  separator?: string;
+  className?: string;
+}) {
+  return (
+    <span className={className}>
+      <span className="text-foreground">{text.en}</span>
+      <span className="text-muted-foreground">{separator}</span>
+      <span className="font-myanmar text-muted-foreground">{text.my}</span>
+    </span>
+  );
+}
