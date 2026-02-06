@@ -8,6 +8,8 @@ import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
 import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
+import { strings } from '@/lib/i18n/strings';
+import { BilingualText } from '@/components/bilingual/BilingualText';
 
 interface AppNavigationProps {
   translucent?: boolean;
@@ -16,10 +18,10 @@ interface AppNavigationProps {
 }
 
 const navLinks = [
-  { href: '/dashboard', labelEn: 'Dashboard', labelMy: 'ဒက်ရှ်ဘုတ်' },
-  { href: '/study', labelEn: 'Study Guide', labelMy: 'လေ့လာမှုအညွှန်း' },
-  { href: '/test', labelEn: 'Mock Test', labelMy: 'စမ်းသပ်စာမေးပွဲ' },
-  { href: '/history', labelEn: 'Test History', labelMy: 'စာမေးပွဲမှတ်တမ်း' },
+  { href: '/dashboard', label: strings.nav.dashboard },
+  { href: '/study', label: strings.nav.studyGuide },
+  { href: '/test', label: strings.nav.mockTest },
+  { href: '/history', label: strings.nav.testHistory },
 ];
 
 const AppNavigation = ({
@@ -82,17 +84,14 @@ const AppNavigation = ({
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-2xl px-4 py-2 text-left text-sm font-semibold transition ${
+                className={`rounded-full px-4 py-2 text-left transition ${
                   isActive
-                    ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30'
+                    ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                     : 'text-muted-foreground hover:bg-muted/40'
                 }`}
                 aria-disabled={locked && link.href !== '/test'}
               >
-                <span>{link.labelEn}</span>
-                <span className="block text-xs font-normal text-muted-foreground font-myanmar">
-                  {link.labelMy}
-                </span>
+                <BilingualText text={link.label} size="sm" equalSize />
               </Link>
             );
           })}
@@ -110,24 +109,24 @@ const AppNavigation = ({
                 }
                 logout().then(() => navigate('/'));
               }}
-              className={`hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition md:inline-flex ${
+              className={`hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-foreground transition md:inline-flex ${
                 locked ? 'cursor-not-allowed opacity-60' : 'hover:bg-muted/40'
               }`}
               aria-disabled={locked}
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+              <BilingualText text={strings.nav.signOut} size="sm" />
             </button>
           ) : (
             <Link
               to="/auth"
               onClick={event => locked && handleGuardedNavigation(event)}
-              className={`hidden rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition md:inline-flex ${
+              className={`hidden rounded-full border border-border px-4 py-2 text-foreground transition md:inline-flex ${
                 locked ? 'cursor-not-allowed opacity-60' : 'hover:bg-muted/40'
               }`}
               aria-disabled={locked}
             >
-              Sign In
+              <BilingualText text={strings.nav.signIn} size="sm" />
             </Link>
           )}
           <button
@@ -152,22 +151,19 @@ const AppNavigation = ({
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-2xl px-4 py-3 text-left text-sm font-semibold ${
+                className={`rounded-full px-4 py-3 text-left ${
                   location.pathname === link.href
-                    ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground shadow'
+                    ? 'bg-primary-500 text-white shadow'
                     : 'bg-card/80 text-foreground shadow-sm'
                 } ${locked && link.href !== '/test' ? 'cursor-not-allowed opacity-60' : ''}`}
                 aria-disabled={locked && link.href !== '/test'}
               >
-                <span>{link.labelEn}</span>
-                <span className="block text-xs font-normal text-muted-foreground font-myanmar">
-                  {link.labelMy}
-                </span>
+                <BilingualText text={link.label} size="sm" equalSize />
               </Link>
             ))}
             {user ? (
               <button
-                className={`flex items-center justify-center gap-2 rounded-2xl bg-destructive px-4 py-3 text-sm font-semibold text-destructive-foreground ${
+                className={`flex items-center justify-center gap-2 rounded-full bg-destructive px-4 py-3 text-destructive-foreground ${
                   locked ? 'cursor-not-allowed opacity-70' : ''
                 }`}
                 onClick={event => {
@@ -179,18 +175,19 @@ const AppNavigation = ({
                 }}
                 aria-disabled={locked}
               >
-                <LogOut className="h-4 w-4" /> Sign Out
+                <LogOut className="h-4 w-4" />
+                <BilingualText text={strings.nav.signOut} size="sm" />
               </button>
             ) : (
               <Link
                 to="/auth"
                 onClick={event => locked && handleGuardedNavigation(event)}
-                className={`rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-3 text-center text-sm font-semibold text-primary-foreground ${
+                className={`rounded-full bg-primary-500 px-4 py-3 text-center text-white ${
                   locked ? 'cursor-not-allowed opacity-60' : ''
                 }`}
                 aria-disabled={locked}
               >
-                Sign In
+                <BilingualText text={strings.nav.signIn} size="sm" centered />
               </Link>
             )}
           </div>
