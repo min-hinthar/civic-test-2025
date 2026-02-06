@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 2 of 7 (PWA & Offline)
-Plan: 3 of 8 in current phase
+Plan: 4 of 8 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 02-02-PLAN.md (IndexedDB Question Caching)
+Last activity: 2026-02-06 - Completed 02-04-PLAN.md (Install Prompt & Welcome Flow)
 
-Progress: [██░░░░░░░░] 20% (8 plans / ~40 total estimated)
+Progress: [██░░░░░░░░] 22% (9 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 20 min
-- Total execution time: 161 min
+- Total plans completed: 9
+- Average duration: 19 min
+- Total execution time: 168 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
-| 02-pwa-offline | 3 | 112 min | 37 min |
+| 02-pwa-offline | 4 | 119 min | 30 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (8 min), 01-04 (14 min), 02-01 (32 min), 02-03 (37 min), 02-02 (43 min)
-- Trend: PWA plans longer due to build verification and parallel coordination
+- Last 5 plans: 01-04 (14 min), 02-01 (32 min), 02-03 (37 min), 02-02 (43 min), 02-04 (7 min)
+- Trend: 02-04 fast execution due to straightforward UI component creation
 
 *Updated after each plan completion*
 
@@ -70,6 +70,10 @@ Recent decisions affecting current work:
 - 02-02: useOnlineStatus uses useSyncExternalStore for SSR-safe browser API access
 - 02-02: OnlineStatusIndicator is icon-only (green=online, orange=offline)
 - 02-02: OfflineProvider placed outside ThemeProvider in provider hierarchy
+- 02-04: Lazy state initializers for browser API checks (avoid setState in effects)
+- 02-04: 7-day cooldown after user dismisses install prompt
+- 02-04: Notification pre-prompt explains value before native browser dialog
+- 02-04: PWAOnboardingFlow as local AppShell component (not in OfflineContext)
 
 ### Pending Todos
 
@@ -86,7 +90,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 02-02-PLAN.md (IndexedDB Question Caching)
+Stopped at: Completed 02-04-PLAN.md (Install Prompt & Welcome Flow)
 Resume file: None
 
 ---
