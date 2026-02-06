@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import Head from 'next/head';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
@@ -10,6 +10,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { useViewportHeight } from '@/lib/useViewportHeight';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { WelcomeModal } from '@/components/pwa/WelcomeModal';
 import LandingPage from '@/pages/LandingPage';
 import AuthPage from '@/pages/AuthPage';
 import Dashboard from '@/pages/Dashboard';
@@ -33,6 +35,49 @@ function useIsClient(): boolean {
     () => true,
     // Server snapshot - always false on server
     () => false
+  );
+}
+
+/**
+ * PWA Onboarding Flow
+ *
+ * Manages install prompt and welcome modal lifecycle:
+ * 1. First visit: InstallPrompt appears immediately
+ * 2. User installs: InstallPrompt closes, WelcomeModal appears
+ * 3. User dismisses install: prompt hidden for 7 days
+ * 4. Returning installed user (never seen welcome): WelcomeModal appears once
+ */
+function PWAOnboardingFlow() {
+  // Determine initial welcome state: show if installed but never shown welcome
+  const [showWelcome, setShowWelcome] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isInstalled =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as unknown as { standalone?: boolean }).standalone === true ||
+      localStorage.getItem('pwa-installed') === 'true';
+    const welcomeShown = localStorage.getItem('welcome-shown') === 'true';
+    return isInstalled && !welcomeShown;
+  });
+
+  const [hideInstallPrompt, setHideInstallPrompt] = useState(false);
+
+  const handleInstalled = () => {
+    // User just installed - hide install prompt, show welcome
+    setHideInstallPrompt(true);
+    setShowWelcome(true);
+  };
+
+  const handleWelcomeClose = () => {
+    setShowWelcome(false);
+  };
+
+  return (
+    <>
+      {!hideInstallPrompt && !showWelcome && (
+        <InstallPrompt onInstalled={handleInstalled} />
+      )}
+      {showWelcome && <WelcomeModal onClose={handleWelcomeClose} />}
+    </>
   );
 }
 
@@ -102,6 +147,7 @@ const AppShell = () => {
                 </Routes>
               </ErrorBoundary>
               <Toaster />
+              <PWAOnboardingFlow />
               </Router>
             </AuthProvider>
           </ToastProvider>
