@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 2 of 7 (PWA & Offline)
-Plan: 4 of 8 in current phase
+Plan: 5 of 8 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 02-04-PLAN.md (Install Prompt & Welcome Flow)
+Last activity: 2026-02-06 - Completed 02-05-PLAN.md (iOS Safari Data Persistence Tip)
 
-Progress: [██░░░░░░░░] 22% (9 plans / ~40 total estimated)
+Progress: [██░░░░░░░░] 25% (10 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 19 min
-- Total execution time: 168 min
+- Total plans completed: 10
+- Average duration: 17 min
+- Total execution time: 174 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
-| 02-pwa-offline | 4 | 119 min | 30 min |
+| 02-pwa-offline | 5 | 125 min | 25 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-04 (14 min), 02-01 (32 min), 02-03 (37 min), 02-02 (43 min), 02-04 (7 min)
-- Trend: 02-04 fast execution due to straightforward UI component creation
+- Last 5 plans: 02-01 (32 min), 02-03 (37 min), 02-02 (43 min), 02-04 (7 min), 02-05 (6 min)
+- Trend: Small UI component plans (02-04, 02-05) executing fast
 
 *Updated after each plan completion*
 
@@ -74,6 +74,8 @@ Recent decisions affecting current work:
 - 02-04: 7-day cooldown after user dismisses install prompt
 - 02-04: Notification pre-prompt explains value before native browser dialog
 - 02-04: PWAOnboardingFlow as local AppShell component (not in OfflineContext)
+- 02-05: Lazy useState initializer for iOS tip visibility (avoids setState in effect)
+- 02-05: 2-second delay for iOS tip after welcome modal closes
 
 ### Pending Todos
 
@@ -90,7 +92,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 02-04-PLAN.md (Install Prompt & Welcome Flow)
+Stopped at: Completed 02-05-PLAN.md (iOS Safari Data Persistence Tip)
 Resume file: None
 
 ---
