@@ -25,6 +25,7 @@ export const useSpeechSynthesis = () => {
 
     const synth = window.speechSynthesis;
     synthesisRef.current = synth;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: detect browser capability on mount
     setIsSupported(true);
 
     let retryTimer: ReturnType<typeof setTimeout> | null = null;
@@ -60,13 +61,17 @@ export const useSpeechSynthesis = () => {
     if (!voices?.length) return undefined;
 
     const normalizedLang = lang.toLowerCase();
-    const matchesLang = voices.filter(voice => voice.lang?.toLowerCase().startsWith(normalizedLang));
+    const matchesLang = voices.filter(voice =>
+      voice.lang?.toLowerCase().startsWith(normalizedLang)
+    );
 
     const matchesHint = (voice: SpeechSynthesisVoice, hint: string) =>
       voice.name.toLowerCase().includes(hint) || voice.voiceURI.toLowerCase().includes(hint);
 
     if (preferredVoiceName) {
-      const preferred = matchesLang.find(voice => matchesHint(voice, preferredVoiceName.toLowerCase()));
+      const preferred = matchesLang.find(voice =>
+        matchesHint(voice, preferredVoiceName.toLowerCase())
+      );
       if (preferred) return preferred;
     }
 
@@ -75,7 +80,9 @@ export const useSpeechSynthesis = () => {
       if (match) return match;
     }
 
-    const enhanced = matchesLang.find(voice => ENHANCED_HINTS.some(hint => matchesHint(voice, hint)));
+    const enhanced = matchesLang.find(voice =>
+      ENHANCED_HINTS.some(hint => matchesHint(voice, hint))
+    );
     if (enhanced) return enhanced;
 
     const localFirst = matchesLang.find(voice => voice.localService);
@@ -88,7 +95,8 @@ export const useSpeechSynthesis = () => {
       const synth = synthesisRef.current;
       if (!synth) return;
 
-      const normalizedOptions: SpeakOptions = typeof options === 'string' ? { lang: options } : options;
+      const normalizedOptions: SpeakOptions =
+        typeof options === 'string' ? { lang: options } : options;
       const lang = normalizedOptions.lang ?? DEFAULT_LANG;
       const utterance = new SpeechSynthesisUtterance(text);
 

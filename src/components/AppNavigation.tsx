@@ -20,23 +20,33 @@ const navLinks = [
   { href: '/history', labelEn: 'Test History', labelMy: 'စာမေးပွဲမှတ်တမ်း' },
 ];
 
-const AppNavigation = ({ translucent = false, locked = false, lockMessage }: AppNavigationProps) => {
+const AppNavigation = ({
+  translucent = false,
+  locked = false,
+  lockMessage,
+}: AppNavigationProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: close menu on route change
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  const handleGuardedNavigation = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href?: string) => {
+  const handleGuardedNavigation = (
+    event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+    href?: string
+  ) => {
     if (!locked) return;
     if (href && href === '/test') return;
     event.preventDefault();
     toast({
       title: 'Please finish your mock test first!',
-      description: lockMessage ?? 'Complete the mock test before leaving this page. · စမ်းသပ်စာမေးပွဲပြီးမှ ထွက်ပါ',
+      description:
+        lockMessage ??
+        'Complete the mock test before leaving this page. · စမ်းသပ်စာမေးပွဲပြီးမှ ထွက်ပါ',
       variant: 'destructive',
     });
   };
@@ -46,7 +56,9 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
     : 'bg-gradient-to-r from-primary/10 via-background/70 to-accent/10 dark:from-slate-900/70 dark:via-slate-950 dark:to-slate-900 shadow-lg shadow-primary/10';
 
   return (
-    <nav className={`nav-safe-area sticky top-0 z-30 border-b border-border/60 backdrop-blur-xl ${shellClasses}`}>
+    <nav
+      className={`nav-safe-area sticky top-0 z-30 border-b border-border/60 backdrop-blur-xl ${shellClasses}`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-2 sm:px-4 py-3 sm:py-4">
         <Link
           to="/"
@@ -54,7 +66,11 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
           onClick={event => locked && handleGuardedNavigation(event)}
           aria-disabled={locked}
         >
-          U.S Citizenship Civic Test Prep App - <span className="font-myanmar text-sm text-muted-foreground"> အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုးညွှန်း</span>
+          U.S Citizenship Civic Test Prep App -{' '}
+          <span className="font-myanmar text-sm text-muted-foreground">
+            {' '}
+            အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုးညွှန်း
+          </span>
         </Link>
         <div className="hidden items-center gap-2 md:flex">
           {navLinks.map(link => {
@@ -140,7 +156,9 @@ const AppNavigation = ({ translucent = false, locked = false, lockMessage }: App
                 aria-disabled={locked && link.href !== '/test'}
               >
                 <span>{link.labelEn}</span>
-                <span className="block text-xs font-normal text-muted-foreground font-myanmar">{link.labelMy}</span>
+                <span className="block text-xs font-normal text-muted-foreground font-myanmar">
+                  {link.labelMy}
+                </span>
               </Link>
             ))}
             {user ? (

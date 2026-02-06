@@ -1,8 +1,7 @@
 'use client';
 
 import { Link, type To } from 'react-router-dom';
-import { ArrowRight, BookOpenCheck, Clock3, Compass, FileText, History as HistoryIcon } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { ArrowRight, BookOpenCheck } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
@@ -20,82 +19,29 @@ const Dashboard = () => {
   const latestAttempt = history[0];
   const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
   const accuracy = totalQuestionsAnswered
-    ? Math.round((history.reduce((sum, session) => sum + session.score, 0) / totalQuestionsAnswered) * 100)
+    ? Math.round(
+        (history.reduce((sum, session) => sum + session.score, 0) / totalQuestionsAnswered) * 100
+      )
     : 0;
 
-  const categoryBreakdown = history.reduce<Record<string, { correct: number; total: number }>>((acc, session) => {
-    session.results.forEach((result: QuestionResult) => {
-      if (!acc[result.category]) {
-        acc[result.category] = { correct: 0, total: 0 };
-      }
-      acc[result.category].total += 1;
-      if (result.isCorrect) acc[result.category].correct += 1;
-    });
-    return acc;
-  }, {});
+  const categoryBreakdown = history.reduce<Record<string, { correct: number; total: number }>>(
+    (acc, session) => {
+      session.results.forEach((result: QuestionResult) => {
+        if (!acc[result.category]) {
+          acc[result.category] = { correct: 0, total: 0 };
+        }
+        acc[result.category].total += 1;
+        if (result.isCorrect) acc[result.category].correct += 1;
+      });
+      return acc;
+    },
+    {}
+  );
 
   const trackedCategories = Object.keys(categoryBreakdown).length;
-  const masteredCategories = Object.values(categoryBreakdown).filter(stats => stats.total > 0 && stats.correct === stats.total).length;
-
-  const cards: Array<{
-    title: string;
-    titleMy: string;
-    value: string | number;
-    description: string;
-    icon: LucideIcon;
-    to: To;
-  }> = [
-    {
-      title: 'Attempts Completed',
-      titleMy: 'အစမ်းစာမေးပွဲဖြေဆိုမှု အရေအတွက်',
-      value: history.length,
-      description: 'Each mock test draws up to 20 randomized questions.',
-      icon: FileText,
-      to: historyLink('overview'),
-    },
-    {
-      title: 'Average Accuracy',
-      titleMy: 'မှန်ကန်မှုပျမ်းမျှ',
-      value: `${accuracy || 0}%`,
-      description: 'Across every completed mock test.',
-      icon: BookOpenCheck,
-      to: historyLink('trend'),
-    },
-    {
-      title: 'Latest Duration',
-      titleMy: 'နောက်ဆုံးအချိန်',
-      value: latestAttempt ? `${Math.round(latestAttempt.durationSeconds / 60)} mins` : '—',
-      description: latestAttempt ? new Date(latestAttempt.date).toLocaleDateString() : 'No attempts yet',
-      icon: Clock3,
-      to: latestAttempt ? historyLink('attempts') : '/test',
-    },
-  ];
-
-  const quickActions: Array<{
-    to: To;
-    title: string;
-    titleMy: string;
-    description: string;
-    icon: LucideIcon;
-    gradient: string;
-  }> = [
-    {
-      to: historyLink('trend'),
-      title: 'View analytics',
-      titleMy: 'အချက်အလက်ဇယား',
-      description: 'Open your Supabase-synced score trend.',
-      icon: HistoryIcon,
-      gradient: 'from-sky-500/20 via-sky-400/10 to-indigo-500/20',
-    },
-    {
-      to: studyCardsLink(),
-      title: 'Master categories',
-      titleMy: 'ကဏ္ဍလိုက်ကျွမ်းကျင်ရေး',
-      description: 'Jump straight to bilingual flip-cards.',
-      icon: Compass,
-      gradient: 'from-emerald-500/20 via-lime-400/10 to-teal-500/20',
-    },
-  ];
+  const masteredCategories = Object.values(categoryBreakdown).filter(
+    stats => stats.total > 0 && stats.correct === stats.total
+  ).length;
 
   const detailTiles: Array<{
     to: To;
@@ -110,14 +56,18 @@ const Dashboard = () => {
       title: 'Analytics Snapshot',
       titleMy: 'ဆန်းစစ်ချက်',
       stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
-      description: history.length ? 'Based on all completed mock tests.' : 'Complete a mock test to unlock insights.',
+      description: history.length
+        ? 'Based on all completed mock tests.'
+        : 'Complete a mock test to unlock insights.',
       gradient: 'from-sky-500/30 via-indigo-500/20 to-purple-500/10',
     },
     {
       to: studyCardsLink(),
       title: 'Master Categories',
       titleMy: 'ကဏ္ဍအလိုက်ကျွမ်းကျင်မှု',
-      stat: trackedCategories ? `${masteredCategories}/${trackedCategories} mastered` : '0 categories tracked',
+      stat: trackedCategories
+        ? `${masteredCategories}/${trackedCategories} mastered`
+        : '0 categories tracked',
       description: trackedCategories
         ? 'Tap to revisit bilingual flip-cards by category.'
         : 'Review flip-cards to start tracking mastery.',
@@ -127,7 +77,9 @@ const Dashboard = () => {
       to: latestAttempt ? historyLink('attempts') : '/test',
       title: 'Latest Test Summary',
       titleMy: 'နောက်ဆုံးဖြေဆိုခဲ့သည့် စာမေးပွဲအကျဉ်းချုံး',
-      stat: latestAttempt ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}` : 'No attempts yet',
+      stat: latestAttempt
+        ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}`
+        : 'No attempts yet',
       description: latestAttempt
         ? `Finished in ${Math.round(latestAttempt.durationSeconds / 60)} mins on ${new Date(latestAttempt.date).toLocaleDateString()}`
         : 'Start a mock test to save your first report.',
@@ -141,14 +93,19 @@ const Dashboard = () => {
       <div className="mx-auto max-w-6xl px-6 py-10">
         <header className="glass-panel flex flex-col gap-4 p-8 shadow-rose-100/50 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">Dashboard · ဒက်ရှ်ဘုတ်</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary">
+              Dashboard · ဒက်ရှ်ဘုတ်
+            </p>
             <h1 className="text-3xl font-bold text-foreground">
               Welcome back, {user?.name?.split(' ')[0] ?? 'Learner'}!
               <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">
                 မင်္ဂလာပါ၊ အမေရိကန်ပြည်သူ့နီတိ စာသင်ခန်းမှ ကြိုဆိုပါတယ် 🙏🏽
               </span>
             </h1>
-            <p className="text-muted-foreground">Track your bilingual U.S civics study journey, jump into a new mock test, or brush up with flip-cards.</p>
+            <p className="text-muted-foreground">
+              Track your bilingual U.S civics study journey, jump into a new mock test, or brush up
+              with flip-cards.
+            </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -254,9 +211,13 @@ const Dashboard = () => {
         <section id="deep-dive" className="mt-8" aria-labelledby="deep-dive-title">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <h2 id="deep-dive-title" className="text-lg font-semibold text-foreground">
-              Personalized Data Analytics <span className="font-myanmar text-muted-foreground">- ဒေတာပိုင်းခြားစိတ်ဖြာမှု</span>
+              Personalized Data Analytics{' '}
+              <span className="font-myanmar text-muted-foreground">- ဒေတာပိုင်းခြားစိတ်ဖြာမှု</span>
             </h2>
-            <p className="text-sm text-muted-foreground">Each tile opens the relevant section with deeper analytics - သင့်ရဲ့လေ့လာသင်ကြားတိုးတက်မှုများကို ဤနေရာတွင်ကြည့်ရှုနိုင်ပါသည်။</p>
+            <p className="text-sm text-muted-foreground">
+              Each tile opens the relevant section with deeper analytics -
+              သင့်ရဲ့လေ့လာသင်ကြားတိုးတက်မှုများကို ဤနေရာတွင်ကြည့်ရှုနိုင်ပါသည်။
+            </p>
           </div>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             {detailTiles.map(tile => (
@@ -270,20 +231,30 @@ const Dashboard = () => {
                 <p className="text-xs text-muted-foreground font-myanmar">{tile.titleMy}</p>
                 <p className="mt-3 text-2xl font-bold text-foreground">{tile.stat}</p>
                 <p className="text-sm text-muted-foreground">{tile.description}</p>
-                <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">Open details →</span>
+                <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
+                  Open details →
+                </span>
               </Link>
             ))}
           </div>
         </section>
 
-        <section id="category-accuracy" className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg" aria-labelledby="category-accuracy-title">
+        <section
+          id="category-accuracy"
+          className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg"
+          aria-labelledby="category-accuracy-title"
+        >
           <div className="flex items-center justify-between">
             <h2 id="category-accuracy-title" className="text-lg font-semibold text-foreground">
-              Category Accuracy 🎯 <span className="font-myanmar text-muted-foreground"> - ကဏ္ဍအလိုက်တိကျမှန်ကန်မှု</span>
+              Category Accuracy 🎯{' '}
+              <span className="font-myanmar text-muted-foreground">
+                {' '}
+                - ကဏ္ဍအလိုက်တိကျမှန်ကန်မှု
+              </span>
             </h2>
-              <Link to="/history" className="text-sm font-semibold text-primary">
-                View full analytics →
-              </Link>
+            <Link to="/history" className="text-sm font-semibold text-primary">
+              View full analytics →
+            </Link>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 interactive-tile">
             {Object.entries(categoryBreakdown).map(([category, stats]) => {
@@ -298,18 +269,25 @@ const Dashboard = () => {
                   <p className="text-sm font-semibold text-foreground">{category}</p>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
-                      <div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${rate}%` }} />
+                      <div
+                        className="h-2 rounded-full bg-primary transition-all"
+                        style={{ width: `${rate}%` }}
+                      />
                     </div>
                     <span className="text-sm font-semibold text-foreground">{rate}%</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{stats.correct} correct out of {stats.total} questions</p>
+                  <p className="text-xs text-muted-foreground">
+                    {stats.correct} correct out of {stats.total} questions
+                  </p>
                   <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
                     Go to flip-cards →
                   </span>
                 </Link>
               );
             })}
-            {!Object.keys(categoryBreakdown).length && <p className="text-muted-foreground">Complete a mock test to unlock insights.</p>}
+            {!Object.keys(categoryBreakdown).length && (
+              <p className="text-muted-foreground">Complete a mock test to unlock insights.</p>
+            )}
           </div>
         </section>
       </div>

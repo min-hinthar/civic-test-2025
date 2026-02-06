@@ -17,9 +17,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = (typeof window !== 'undefined' && window.localStorage.getItem('civic-theme')) as Theme | null;
+    const stored = (typeof window !== 'undefined' &&
+      window.localStorage.getItem('civic-theme')) as Theme | null;
     const prefersDark =
-      typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: hydrate theme from localStorage on mount
     setTheme(stored ?? (prefersDark ? 'dark' : 'light'));
     setMounted(true);
   }, []);
