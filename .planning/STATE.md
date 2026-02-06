@@ -90,6 +90,10 @@ Recent decisions affecting current work:
 - 03-02: Use HTMLMotionProps from motion/react to avoid type conflicts
 - 03-02: Button minimum height 44px for touch accessibility
 - 03-02: Skeleton shimmer respects prefers-reduced-motion via CSS media query
+- 03-03: Toast positioned at bottom-center with slide-up animation
+- 03-03: Bilingual toast supports titleMy and descriptionMy props for Burmese
+- 03-03: Dialog uses 90vw width on mobile, max-w-lg on desktop
+- 03-03: Progress bar spring animation with stiffness 100, damping 20
 - 03-04: Page transition uses slide (x: 20px) + fade with 200ms tween timing
 - 03-04: Stagger items with 80ms gap and 100ms initial delay
 - 03-04: Use Next.js router.pathname as AnimatePresence key
