@@ -8,8 +8,8 @@ export type Category =
   | 'Civics: Symbols and Holidays';
 
 export interface StudyAnswer {
-    text_en: string;
-    text_my: string;
+  text_en: string;
+  text_my: string;
 }
 
 // For the quiz - one correct, multiple incorrect
@@ -20,7 +20,7 @@ export interface Answer {
 }
 
 export interface Question {
-  id: number;
+  id: string; // Changed from number to string for stable IDs like 'GOV-01'
   question_en: string;
   question_my: string;
   category: Category;
@@ -29,7 +29,7 @@ export interface Question {
 }
 
 export interface QuestionResult {
-  questionId: number;
+  questionId: string; // Changed from number to string for stable IDs
   questionText_en: string;
   questionText_my: string;
   selectedAnswer: Answer;
