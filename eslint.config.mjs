@@ -28,6 +28,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        ...globals.serviceworker,
         google: 'readonly',
         React: 'readonly',
         SpeechSynthesis: 'readonly',

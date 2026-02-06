@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2020", "WebWorker"],
+    "types": ["@serwist/next/typings"]
+  },
+  "include": ["src/lib/pwa/sw.ts"],
+  "exclude": ["node_modules"]
+}
