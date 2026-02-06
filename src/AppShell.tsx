@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { OfflineProvider } from '@/contexts/OfflineContext';
 import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
@@ -46,10 +47,11 @@ const AppShell = () => {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <Router>
+      <OfflineProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <Router>
               <Head>
                 <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
                 <meta
@@ -100,10 +102,11 @@ const AppShell = () => {
                 </Routes>
               </ErrorBoundary>
               <Toaster />
-            </Router>
-          </AuthProvider>
-        </ToastProvider>
-      </ThemeProvider>
+              </Router>
+            </AuthProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </OfflineProvider>
     </ErrorBoundary>
   );
 };
