@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 Phase: 3 of 7 (UI/UX & Bilingual Polish)
 Plan: 5 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-06 - Completed 03-07-PLAN.md (Flashcards & Onboarding)
+Last activity: 2026-02-06 - Completed 03-05-PLAN.md (Bilingual Text Components)
 
-Progress: [████░░░░░░] 38% (15 plans / ~40 total estimated)
+Progress: [████░░░░░░] 40% (16 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
-- Average duration: 16 min
-- Total execution time: 247 min
+- Total plans completed: 16
+- Average duration: 17 min
+- Total execution time: 267 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [████░░░░░░] 38% (15 plans / ~40 total estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
-| 03-ui-ux-bilingual-polish | 4 | 57 min | 14 min |
+| 03-ui-ux-bilingual-polish | 5 | 77 min | 15 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-06 (16 min), 03-01 (18 min), 03-02 (8 min), 03-04 (21 min), 03-07 (10 min)
+- Last 5 plans: 03-01 (18 min), 03-02 (8 min), 03-04 (21 min), 03-07 (10 min), 03-05 (20 min)
 - Trend: UI component plans executing in 8-21 min range
 
 *Updated after each plan completion*
@@ -103,6 +103,10 @@ Recent decisions affecting current work:
 - 03-07: studyAnswers array used for flashcard answers
 - 03-07: Onboarding persists to localStorage key 'civic-test-onboarding-complete'
 - 03-07: Tour targets via data-tour attributes on elements
+- 03-05: EN on top, MY below with text-muted-foreground for subtle hierarchy
+- 03-05: equalSize prop on BilingualText for button contexts
+- 03-05: Centralized strings in src/lib/i18n/strings.ts
+- 03-05: createElement in BilingualHeading for dynamic heading level support
 
 ### Pending Todos
 
@@ -119,7 +123,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-07-PLAN.md (Flashcards & Onboarding)
+Stopped at: Completed 03-05-PLAN.md (Bilingual Text Components)
 Resume file: None
 
 ---
