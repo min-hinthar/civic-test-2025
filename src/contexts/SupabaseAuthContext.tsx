@@ -3,7 +3,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { PostgrestError, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
-import type { QuestionResult, TestEndReason, TestSession, User } from '@/types';
+import type {
+  QuestionResult,
+  TestEndReason,
+  TestSession,
+  User,
+  MockTestRow,
+  MockTestResponseRow,
+  UserMetadata,
+} from '@/types';
 
 interface AuthContextValue {
   user: User | null;
@@ -26,8 +34,8 @@ const END_REASONS: TestEndReason[] = ['passThreshold', 'failThreshold', 'time', 
 const isEndReason = (value: unknown): value is TestEndReason =>
   typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
 
-const mapResponses = (test: any): TestSession => {
-  const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: any): QuestionResult => ({
+const mapResponses = (test: MockTestRow): TestSession => {
+  const results: QuestionResult[] = (test.mock_test_responses ?? []).map((response: MockTestResponseRow): QuestionResult => ({
     questionId: response.question_id,
     questionText_en: response.question_en,
     questionText_my: response.question_my,
@@ -104,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .order('completed_at', { ascending: false }),
       ]);
 
-      const history: TestSession[] = (testsData ?? []).map(mapResponses);
+      const history: TestSession[] = ((testsData ?? []) as MockTestRow[]).map(mapResponses);
 
       setUser({
         id: authUser.id,
@@ -186,7 +194,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await syncProfile({
           id: data.user.id,
           email: data.user.email ?? '',
-          full_name: (data.user.user_metadata as any)?.full_name ?? data.user.email ?? 'Learner',
+          full_name: (data.user.user_metadata as UserMetadata)?.full_name ?? data.user.email ?? 'Learner',
         });
         const { data: sessionData } = await supabase.auth.getSession();
         if (sessionData.session) {

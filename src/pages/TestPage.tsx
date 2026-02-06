@@ -124,7 +124,9 @@ const TestPage = () => {
       event.returnValue = '';
     };
     const handlePopState = () => {
-      window.history.pushState(null, '', window.location.href);
+      // Use replaceState instead of pushState to prevent history stack overflow
+      // pushState would add a new entry on every back button press, causing memory leak
+      window.history.replaceState(null, '', window.location.href);
       toast({
         title: 'Please finish the mock test first!',
         description: lockMessage,
@@ -133,6 +135,7 @@ const TestPage = () => {
     };
     window.addEventListener('beforeunload', beforeUnload);
     window.addEventListener('popstate', handlePopState);
+    // Push once on mount to create the "locked" entry
     window.history.pushState(null, '', window.location.href);
     return () => {
       window.removeEventListener('beforeunload', beforeUnload);

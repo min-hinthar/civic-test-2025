@@ -16,7 +16,7 @@ export interface ProfileRow {
  */
 export interface MockTestResponseRow {
   id?: string;
-  mock_test_id: string;
+  mock_test_id?: string;
   question_id: string;
   question_en: string;
   question_my: string;
@@ -34,7 +34,7 @@ export interface MockTestResponseRow {
  */
 export interface MockTestRow {
   id: string;
-  user_id: string;
+  user_id?: string;
   completed_at: string;
   score: number;
   total_questions: number;
