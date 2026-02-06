@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 1 of 7 (Foundation & Code Quality)
-Plan: 5 of 5 in current phase
+Plan: 2 of 5 in current phase
 Status: In progress
-Last activity: 2026-02-05 - Completed 01-05-PLAN.md (Question File Split)
+Last activity: 2026-02-06 - Completed 01-02-PLAN.md (Critical Bug Fixes)
 
-Progress: [##........] 20%
+Progress: [###.......] 30%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 10 min
-- Total execution time: 20 min
+- Total plans completed: 3
+- Average duration: 9 min
+- Total execution time: 27 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 2 | 20 min | 10 min |
+| 01-foundation | 3 | 27 min | 9 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-05 (15 min)
+- Last 5 plans: 01-01 (5 min), 01-05 (15 min), 01-02 (7 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - 01-01: Typecheck excluded from pre-commit (runs in CI only)
 - 01-05: Question IDs changed from number to string (GOV-P##, HIST-C##, etc.)
 - 01-05: Questions split into 7 category modules for maintainability
+- 01-02: Chi-squared threshold set to 50 for shuffle uniformity test
+- 01-02: Save guard uses state machine (idle/saving/saved/error)
+- 01-02: Navigation lock uses replaceState in popstate handler
 
 ### Pending Todos
 
@@ -57,16 +60,16 @@ None yet.
 ### Blockers/Concerns
 
 From codebase analysis (see .planning/codebase/CONCERNS.md):
-- Biased shuffle algorithm affects test fairness (FNDN-01 will fix)
-- Race condition in test save causes duplicate records (FNDN-02 will fix)
-- history.pushState memory leak during tests (FNDN-03 will fix)
+- ~~Biased shuffle algorithm affects test fairness~~ (FIXED: 01-02)
+- ~~Race condition in test save causes duplicate records~~ (FIXED: 01-02, guard ready for integration)
+- ~~history.pushState memory leak during tests~~ (FIXED: 01-02)
 - React Router + Next.js causes 404 on refresh (PWA-02 will address)
 - iOS Safari 7-day data eviction (PWA-11 will mitigate)
 
 ## Session Continuity
 
-Last session: 2026-02-05
-Stopped at: Completed 01-05-PLAN.md
+Last session: 2026-02-06
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
 
 ---
