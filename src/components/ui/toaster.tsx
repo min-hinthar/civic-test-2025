@@ -1,32 +1,68 @@
 'use client';
 
-import clsx from 'clsx';
-import { useToastStream } from './use-toast';
+import { ReactNode } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { Toast, ToastProvider } from './Toast';
+import { useToast, useToastState, ToastContext } from './use-toast';
 
-const variantStyles: Record<string, string> = {
-  default: 'bg-slate-900 text-white',
-  destructive: 'bg-red-600 text-white',
-};
+/**
+ * Toast context provider - manages toast state.
+ * Place this at the root of your app.
+ */
+export function ToastContextProvider({ children }: { children: ReactNode }) {
+  const toastState = useToastState();
 
-export const Toaster = () => {
-  const { queue } = useToastStream();
+  return <ToastContext.Provider value={toastState}>{children}</ToastContext.Provider>;
+}
+
+function ToasterContent() {
+  const { toasts, dismiss } = useToast();
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex max-w-md flex-col gap-3">
-      {queue.map(toast => (
-        <div
+    <AnimatePresence mode="popLayout">
+      {toasts.map(toast => (
+        <Toast
           key={toast.id}
-          className={clsx(
-            'rounded-lg px-4 py-3 shadow-lg transition-all duration-300',
-            variantStyles[toast.variant ?? 'default']
-          )}
-        >
-          {toast.title && <p className="font-semibold">{toast.title}</p>}
-          {toast.description && <p className="text-sm opacity-90">{toast.description}</p>}
-        </div>
+          id={toast.id}
+          open={true}
+          onOpenChange={open => {
+            if (!open) dismiss(toast.id);
+          }}
+          title={toast.title}
+          titleMy={toast.titleMy}
+          description={toast.description}
+          descriptionMy={toast.descriptionMy}
+          variant={toast.variant}
+          duration={toast.duration}
+        />
       ))}
-    </div>
+    </AnimatePresence>
   );
-};
+}
+
+/**
+ * Toaster component - renders all active toasts.
+ * Must be placed inside ToastContextProvider.
+ */
+export function Toaster() {
+  return (
+    <ToastProvider>
+      <ToasterContent />
+    </ToastProvider>
+  );
+}
+
+/**
+ * Combined provider and toaster for easy setup.
+ * Wrap your app with this.
+ */
+export function ToastSetup({ children }: { children: React.ReactNode }) {
+  return (
+    <ToastContextProvider>
+      {children}
+      <Toaster />
+    </ToastContextProvider>
+  );
+}
 
 export default Toaster;

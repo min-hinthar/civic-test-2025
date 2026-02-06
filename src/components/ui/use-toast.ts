@@ -1,46 +1,70 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState, useCallback, createContext, useContext } from 'react';
+import type { ToastVariant } from './Toast';
 
-export interface ToastPayload {
+export interface ToastMessage {
+  id: string;
   title?: string;
+  titleMy?: string;
   description?: string;
-  variant?: 'default' | 'destructive';
+  descriptionMy?: string;
+  variant?: ToastVariant;
   duration?: number;
 }
 
-interface ToastInstance extends ToastPayload {
-  id: string;
+export interface ToastContextValue {
+  toasts: ToastMessage[];
+  toast: (message: Omit<ToastMessage, 'id'>) => string;
+  dismiss: (id: string) => void;
+  dismissAll: () => void;
 }
 
-const listeners = new Set<(toast: ToastInstance) => void>();
+export const ToastContext = createContext<ToastContextValue | null>(null);
 
-export const toast = (payload: ToastPayload) => {
-  const toastWithId: ToastInstance = {
-    id: crypto.randomUUID(),
-    duration: 4000,
-    ...payload,
-  };
-  listeners.forEach(listener => listener(toastWithId));
-};
+let toastCount = 0;
 
-export const useToastStream = () => {
-  const [queue, setQueue] = useState<ToastInstance[]>([]);
+/**
+ * Hook to manage toast state. Used by ToastContextProvider.
+ */
+export function useToastState() {
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const remove = useCallback((id: string) => {
-    setQueue(prev => prev.filter(toast => toast.id !== id));
+  const toast = useCallback((message: Omit<ToastMessage, 'id'>) => {
+    const id = `toast-${++toastCount}`;
+    setToasts(prev => [...prev, { ...message, id }]);
+    return id;
   }, []);
 
-  useEffect(() => {
-    const handler = (instance: ToastInstance) => {
-      setQueue(prev => [...prev, instance]);
-      setTimeout(() => remove(instance.id), instance.duration);
-    };
-    listeners.add(handler);
-    return () => {
-      listeners.delete(handler);
-    };
-  }, [remove]);
+  const dismiss = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
 
-  return { queue, remove };
+  const dismissAll = useCallback(() => {
+    setToasts([]);
+  }, []);
+
+  return { toasts, toast, dismiss, dismissAll };
+}
+
+/**
+ * Hook to access toast context.
+ */
+export function useToast() {
+  const context = useContext(ToastContext);
+  if (!context) {
+    throw new Error('useToast must be used within ToastContextProvider');
+  }
+  return context;
+}
+
+// Legacy compatibility - export toast function that works with existing code
+// This will be replaced once we integrate the new provider
+export const toast = (_options: {
+  title?: string;
+  description?: string;
+  variant?: 'default' | 'destructive';
+}) => {
+  // Legacy shim - this gets overridden by the context provider
+  console.warn('Toast called outside of ToastContextProvider');
 };
