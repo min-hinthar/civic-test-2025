@@ -53,17 +53,15 @@ Plans:
   3. User can complete a test offline and see results saved after going online
   4. User sees clear online/offline status indicator in the app
   5. User receives study reminder push notifications (if opted in)
-**Plans**: TBD
+**Plans**: 6 plans in 5 waves
 
 Plans:
-- [ ] 02-01: Web manifest and app icons
-- [ ] 02-02: Service worker setup (Serwist, precaching)
-- [ ] 02-03: IndexedDB question caching (idb-keyval)
-- [ ] 02-04: Offline sync queue for test results
-- [ ] 02-05: Install prompt component
-- [ ] 02-06: Online/offline status indicator
-- [ ] 02-07: Push notification infrastructure
-- [ ] 02-08: iOS persistent storage and Safari handling
+- [ ] 02-01-PLAN.md - PWA foundation: manifest, service worker (Serwist), app icons
+- [ ] 02-02-PLAN.md - IndexedDB question caching and online/offline status indicator
+- [ ] 02-03-PLAN.md - Offline sync queue for test results with auto-sync
+- [ ] 02-04-PLAN.md - Install prompt, welcome modal, and notification permission flow
+- [ ] 02-05-PLAN.md - iOS Safari-specific tip about data persistence
+- [ ] 02-06-PLAN.md - Push notification infrastructure and settings
 
 ---
 
@@ -186,7 +184,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
-| 2. PWA & Offline | 0/8 | Not started | - |
+| 2. PWA & Offline | 0/6 | Planned | - |
 | 3. UI/UX & Bilingual Polish | 0/9 | Not started | - |
 | 4. Learning - Explanations & Category Progress | 0/6 | Not started | - |
 | 5. Spaced Repetition | 0/7 | Not started | - |
@@ -196,4 +194,4 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-05*
+*Last updated: 2026-02-06*
