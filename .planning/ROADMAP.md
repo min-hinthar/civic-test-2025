@@ -12,7 +12,7 @@ This roadmap transforms a functional civics test prep app into a polished, offli
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Code Quality** - Fix critical bugs, add TypeScript strictness, establish testing infrastructure
+- [x] **Phase 1: Foundation & Code Quality** - Fix critical bugs, add TypeScript strictness, establish testing infrastructure
 - [ ] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
 - [ ] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
 - [ ] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
@@ -35,11 +35,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 01-01-PLAN.md - Testing infrastructure (Vitest, CI, Husky, ESLint flat config)
-- [ ] 01-02-PLAN.md - Critical bug fixes with TDD (Fisher-Yates shuffle, mutex save, history leak)
-- [ ] 01-03-PLAN.md - TypeScript strictness (eliminate `any` types, Supabase response types)
-- [ ] 01-04-PLAN.md - Error handling hardening (Sentry boundaries, bilingual toasts)
-- [ ] 01-05-PLAN.md - Questions file modularization (split by category, stable IDs)
+- [x] 01-01-PLAN.md - Testing infrastructure (Vitest, CI, Husky, ESLint flat config)
+- [x] 01-02-PLAN.md - Critical bug fixes with TDD (Fisher-Yates shuffle, mutex save, history leak)
+- [x] 01-03-PLAN.md - TypeScript strictness (eliminate `any` types, Supabase response types)
+- [x] 01-04-PLAN.md - Error handling hardening (Sentry boundaries, bilingual toasts)
+- [x] 01-05-PLAN.md - Questions file modularization (split by category, stable IDs)
 
 ---
 
@@ -185,7 +185,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Code Quality | 0/5 | Planned | - |
+| 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
 | 2. PWA & Offline | 0/8 | Not started | - |
 | 3. UI/UX & Bilingual Polish | 0/9 | Not started | - |
 | 4. Learning - Explanations & Category Progress | 0/6 | Not started | - |

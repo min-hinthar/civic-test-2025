@@ -9,16 +9,16 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Foundation & Code Quality
 
-- [ ] **FNDN-01**: Shuffle algorithm uses Fisher-Yates for uniform question distribution
-- [ ] **FNDN-02**: Test session save uses async state machine (idle/saving/saved/error) preventing duplicate submissions
-- [ ] **FNDN-03**: Navigation lock uses replaceState instead of pushState to prevent memory leak
-- [ ] **FNDN-04**: All `any` types replaced with proper TypeScript interfaces
-- [ ] **FNDN-05**: TypeScript strict mode enabled and passing
-- [ ] **FNDN-06**: Sentry error boundaries wired to all page components
-- [ ] **FNDN-07**: Error messages sanitized before logging (no raw DB schema exposure)
-- [ ] **FNDN-08**: Vitest configured with unit tests for shuffle, SM-2/FSRS, and save logic
-- [ ] **FNDN-09**: Playwright configured for E2E tests on auth flow, test-taking, and study guide
-- [ ] **FNDN-10**: Questions file split into per-category modules with aggregating index
+- [x] **FNDN-01**: Shuffle algorithm uses Fisher-Yates for uniform question distribution
+- [x] **FNDN-02**: Test session save uses async state machine (idle/saving/saved/error) preventing duplicate submissions
+- [x] **FNDN-03**: Navigation lock uses replaceState instead of pushState to prevent memory leak
+- [x] **FNDN-04**: All `any` types replaced with proper TypeScript interfaces
+- [x] **FNDN-05**: TypeScript strict mode enabled and passing
+- [x] **FNDN-06**: Sentry error boundaries wired to all page components
+- [x] **FNDN-07**: Error messages sanitized before logging (no raw DB schema exposure)
+- [x] **FNDN-08**: Vitest configured with unit tests for shuffle, SM-2/FSRS, and save logic
+- [x] **FNDN-09**: Playwright configured for E2E tests on auth flow, test-taking, and study guide
+- [x] **FNDN-10**: Questions file split into per-category modules with aggregating index
 
 ### PWA & Offline
 
@@ -144,16 +144,16 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FNDN-01 | Phase 1 | Pending |
-| FNDN-02 | Phase 1 | Pending |
-| FNDN-03 | Phase 1 | Pending |
-| FNDN-04 | Phase 1 | Pending |
-| FNDN-05 | Phase 1 | Pending |
-| FNDN-06 | Phase 1 | Pending |
-| FNDN-07 | Phase 1 | Pending |
-| FNDN-08 | Phase 1 | Pending |
-| FNDN-09 | Phase 1 | Pending |
-| FNDN-10 | Phase 1 | Pending |
+| FNDN-01 | Phase 1 | Complete |
+| FNDN-02 | Phase 1 | Complete |
+| FNDN-03 | Phase 1 | Complete |
+| FNDN-04 | Phase 1 | Complete |
+| FNDN-05 | Phase 1 | Complete |
+| FNDN-06 | Phase 1 | Complete |
+| FNDN-07 | Phase 1 | Complete |
+| FNDN-08 | Phase 1 | Complete |
+| FNDN-09 | Phase 1 | Complete |
+| FNDN-10 | Phase 1 | Complete |
 | PWA-01 | Phase 2 | Pending |
 | PWA-02 | Phase 2 | Pending |
 | PWA-03 | Phase 2 | Pending |
