@@ -1,10 +1,17 @@
 'use client';
 
-import { Link, type To } from 'react-router-dom';
-import { ArrowRight, BookOpenCheck } from 'lucide-react';
+import { Link, useNavigate, type To } from 'react-router-dom';
+import { BookOpenCheck } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
+import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
+import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { ProgressWithLabel } from '@/components/ui/Progress';
+import { StaggeredGrid, FadeIn } from '@/components/animations/StaggeredList';
+import { ReadinessIndicator } from '@/components/dashboard/ReadinessIndicator';
+import { strings } from '@/lib/i18n/strings';
 
 const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
 const studyCardsLink = (category?: string): To => ({
@@ -15,6 +22,7 @@ const studyCardsLink = (category?: string): To => ({
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const history = user?.testHistory ?? [];
   const latestAttempt = history[0];
   const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
@@ -43,227 +51,206 @@ const Dashboard = () => {
     stats => stats.total > 0 && stats.correct === stats.total
   ).length;
 
+  // Compute mastered count (unique correctly answered questions)
+  const masteredCount = Object.values(categoryBreakdown).reduce(
+    (sum, stats) => sum + stats.correct,
+    0
+  );
+
+  // Compute recent accuracy from last 5 tests
+  const recentTests = history.slice(0, 5);
+  const recentAccuracy =
+    recentTests.length > 0
+      ? recentTests.reduce((sum, session) => {
+          const pct = session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
+          return sum + pct;
+        }, 0) / recentTests.length
+      : 0;
+
+  // Compute study streak (consecutive days with test activity)
+  const streakDays = (() => {
+    if (history.length === 0) return 0;
+    const uniqueDays = [...new Set(history.map(s => new Date(s.date).toDateString()))];
+    uniqueDays.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    let streak = 1;
+    for (let i = 1; i < uniqueDays.length; i++) {
+      const prev = new Date(uniqueDays[i - 1]);
+      const curr = new Date(uniqueDays[i]);
+      const diffMs = prev.getTime() - curr.getTime();
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+      if (diffDays === 1) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  })();
+
   const detailTiles: Array<{
     to: To;
     title: string;
     titleMy: string;
     stat: string;
     description: string;
-    gradient: string;
   }> = [
     {
       to: historyLink('trend'),
       title: 'Analytics Snapshot',
-      titleMy: 'ဆန်းစစ်ချက်',
+      titleMy: '\u1006\u1014\u103A\u1038\u1005\u1005\u103A\u1001\u103B\u1000\u103A',
       stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
       description: history.length
         ? 'Based on all completed mock tests.'
         : 'Complete a mock test to unlock insights.',
-      gradient: 'from-sky-500/30 via-indigo-500/20 to-purple-500/10',
     },
     {
       to: studyCardsLink(),
       title: 'Master Categories',
-      titleMy: 'ကဏ္ဍအလိုက်ကျွမ်းကျင်မှု',
+      titleMy: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F',
       stat: trackedCategories
         ? `${masteredCategories}/${trackedCategories} mastered`
         : '0 categories tracked',
       description: trackedCategories
         ? 'Tap to revisit bilingual flip-cards by category.'
         : 'Review flip-cards to start tracking mastery.',
-      gradient: 'from-emerald-500/30 via-lime-500/20 to-teal-500/10',
     },
     {
       to: latestAttempt ? historyLink('attempts') : '/test',
       title: 'Latest Test Summary',
-      titleMy: 'နောက်ဆုံးဖြေဆိုခဲ့သည့် စာမေးပွဲအကျဉ်းချုံး',
+      titleMy: '\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1001\u1032\u1037\u101E\u100A\u103A\u1037 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1000\u103B\u1025\u103A\u1038\u1001\u103B\u102F\u1036\u1038',
       stat: latestAttempt
         ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}`
         : 'No attempts yet',
       description: latestAttempt
         ? `Finished in ${Math.round(latestAttempt.durationSeconds / 60)} mins on ${new Date(latestAttempt.date).toLocaleDateString()}`
         : 'Start a mock test to save your first report.',
-      gradient: 'from-rose-500/30 via-amber-400/20 to-orange-500/10',
     },
   ];
 
   return (
-    <div className="page-shell">
+    <div className="page-shell" data-tour="dashboard">
       <AppNavigation />
       <div className="mx-auto max-w-6xl px-6 py-10">
-        <header className="glass-panel flex flex-col gap-4 p-8 shadow-rose-100/50 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">
-              Dashboard · ဒက်ရှ်ဘုတ်
-            </p>
-            <h1 className="text-3xl font-bold text-foreground">
-              Welcome back, {user?.name?.split(' ')[0] ?? 'Learner'}!
-              <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">
-                မင်္ဂလာပါ၊ အမေရိကန်ပြည်သူ့နီတိ စာသင်ခန်းမှ ကြိုဆိုပါတယ် 🙏🏽
-              </span>
-            </h1>
-            <p className="text-muted-foreground">
+        {/* Welcome header with bilingual heading */}
+        <header className="mb-8">
+          <FadeIn>
+            <BilingualHeading
+              text={{
+                en: `Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`,
+                my: `\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`,
+              }}
+              level={1}
+              size="2xl"
+            />
+            <p className="mt-2 text-muted-foreground">
               Track your bilingual U.S civics study journey, jump into a new mock test, or brush up
               with flip-cards.
             </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/study"
-              className="inline-flex items-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40"
-            >
-              <BookOpenCheck className="h-4 w-4" /> Study Guide
-            </Link>
-            <Link
-              to="/test"
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30"
-            >
-              Start Mock Test
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+          </FadeIn>
         </header>
 
-        {/* <section id="highlights" className="mt-8 grid gap-6 md:grid-cols-3" aria-labelledby="dashboard-highlights">
-          <span id="dashboard-highlights" className="sr-only">
-            Dashboard highlights
-          </span>
-          {cards.map(card => (
-            <Link
-              key={card.title}
-              to={card.to}
-              className="stat-card focus-visible:ring-primary/50 p-6 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2"
-              aria-label={`${card.title} – ${card.titleMy}`}
-            >
-              <card.icon className="h-6 w-6 text-primary" />
-              <p className="mt-4 text-sm text-muted-foreground">{card.title}</p>
-              <p className="text-3xl font-bold text-foreground">{card.value}</p>
-              <p className="text-sm text-muted-foreground">{card.description}</p>
-              <p className="mt-1 text-xs text-muted-foreground font-myanmar">{card.titleMy}</p>
-              <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
-                {typeof card.to === 'string' && card.to === '/test' ? 'Start practicing →' : 'View details →'}
-              </span>
-            </Link>
-          ))}
+        {/* Quick action buttons */}
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row">
+          <BilingualButton
+            label={strings.actions.startStudying}
+            variant="outline"
+            icon={<BookOpenCheck className="h-4 w-4" />}
+            onClick={() => navigate('/study')}
+          />
+          <BilingualButton
+            label={strings.actions.startTest}
+            variant="primary"
+            onClick={() => navigate('/test')}
+          />
+        </div>
+
+        {/* ANXR-05: Readiness confidence indicator */}
+        <section className="mb-8">
+          <ReadinessIndicator
+            correctCount={masteredCount}
+            totalQuestions={100}
+            recentAccuracy={recentAccuracy}
+            streakDays={streakDays}
+            onStartTest={() => navigate('/test')}
+          />
         </section>
 
-        <section id="navigation" className="mt-8 grid gap-6 md:grid-cols-2" aria-labelledby="dashboard-navigation">
-          <h2 id="dashboard-navigation" className="sr-only">
-            Quick navigation
-          </h2>
-          <div className="stat-card p-6">
-            <h2 className="text-lg font-semibold text-foreground">Navigate faster · <span className="font-myanmar text-muted-foreground">လမ်းကြောင်းမည်သို့လဲ</span></h2>
-            <p className="text-sm text-muted-foreground">Quick actions optimized for thumb reach on any phone.</p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {quickActions.map(action => (
-                <Link
-                  key={action.title}
-                  to={action.to}
-                  className={`group flex items-center gap-3 rounded-3xl border border-border/60 bg-gradient-to-br ${action.gradient} px-4 py-4 text-left text-sm font-semibold text-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:shadow-primary/30`}
-                >
-                  <action.icon className="h-5 w-5 text-primary" />
-                  <div>
-                    <p>{action.title}</p>
-                    <p className="text-xs text-muted-foreground font-myanmar">{action.titleMy}</p>
-                    <p className="text-xs text-muted-foreground">{action.description}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <Link
-            to={latestAttempt ? historyLink('attempts') : '/test'}
-            className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-emerald-100/40 to-sky-100/40 p-6 text-left shadow-lg transition hover:-translate-y-1"
-            id="latest-summary"
-            aria-label="Latest summary"
-          >
-            <h2 className="text-lg font-semibold text-foreground">Latest summary · <span className="font-myanmar text-muted-foreground">နောက်ဆုံးရလေ့ကျင့်မှု</span></h2>
-            <p className="text-sm text-muted-foreground">
-              {latestAttempt ? 'Tap to review full analytics.' : 'Tap to launch your very first mock test.'}
-            </p>
-            {latestAttempt && (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl bg-card/70 p-4">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Score</p>
-                  <p className="text-2xl font-bold text-foreground">{latestAttempt.score} / {latestAttempt.totalQuestions}</p>
-                  <p className="text-sm text-muted-foreground">{new Date(latestAttempt.date).toLocaleDateString()}</p>
-                </div>
-                <div className="rounded-2xl bg-card/70 p-4">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Time</p>
-                  <p className="text-2xl font-bold text-foreground">{Math.round(latestAttempt.durationSeconds / 60)} mins</p>
-                  <p className={`text-sm font-semibold ${latestAttempt.passed ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {latestAttempt.passed ? 'Passing pace' : 'Review needed'}
-                  </p>
-                </div>
-              </div>
-            )}
-            {!latestAttempt && (
-              <div className="mt-4 rounded-2xl bg-card/70 p-4 text-sm text-muted-foreground">
-                Start your journey with a bilingual mock test and we will track every result automatically.
-              </div>
-            )}
-            <p className="mt-4 text-sm font-semibold text-primary">
-              {latestAttempt ? 'View full analytics →' : 'Start mock test →'}
-            </p>
-          </Link>
-        </section> */}
+        {/* Overall accuracy */}
+        {history.length > 0 && (
+          <section className="mb-8">
+            <ProgressWithLabel
+              value={accuracy}
+              labelEn="Overall Accuracy"
+              labelMy="\u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F"
+              variant="success"
+              size="lg"
+            />
+          </section>
+        )}
 
-        <section id="deep-dive" className="mt-8" aria-labelledby="deep-dive-title">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 id="deep-dive-title" className="text-lg font-semibold text-foreground">
-              Personalized Data Analytics{' '}
-              <span className="font-myanmar text-muted-foreground">- ဒေတာပိုင်းခြားစိတ်ဖြာမှု</span>
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Each tile opens the relevant section with deeper analytics -
-              သင့်ရဲ့လေ့လာသင်ကြားတိုးတက်မှုများကို ဤနေရာတွင်ကြည့်ရှုနိုင်ပါသည်။
-            </p>
-          </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {detailTiles.map(tile => (
+        {/* Data analytics tiles in staggered grid */}
+        <section id="deep-dive" className="mb-8" aria-labelledby="deep-dive-title">
+          <SectionHeading
+            text={{
+              en: 'Personalized Data Analytics',
+              my: '\u1012\u1031\u1010\u102C\u1015\u102D\u102F\u1004\u103A\u1038\u1001\u103C\u102C\u1038\u1005\u102D\u1010\u103A\u1016\u103C\u102C\u1019\u103E\u102F',
+            }}
+          />
+          <StaggeredGrid columns={3}>
+            {detailTiles.map((tile, index) => (
               <Link
-                key={tile.title}
+                key={index}
                 to={tile.to}
-                className={`interactive-tile ${tile.gradient}`}
-                aria-label={`${tile.title} – ${tile.titleMy}`}
+                className="block min-h-[44px]"
+                aria-label={`${tile.title} \u2013 ${tile.titleMy}`}
               >
-                <p className="text-sm font-semibold text-foreground">{tile.title}</p>
-                <p className="text-xs text-muted-foreground font-myanmar">{tile.titleMy}</p>
-                <p className="mt-3 text-2xl font-bold text-foreground">{tile.stat}</p>
-                <p className="text-sm text-muted-foreground">{tile.description}</p>
-                <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
-                  Open details →
-                </span>
+                <Card interactive elevated>
+                  <CardHeader>
+                    <BilingualHeading
+                      text={{ en: tile.title, my: tile.titleMy }}
+                      level={3}
+                      size="sm"
+                    />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-bold text-foreground">{tile.stat}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{tile.description}</p>
+                  </CardContent>
+                </Card>
               </Link>
             ))}
-          </div>
+          </StaggeredGrid>
         </section>
 
+        {/* Category accuracy breakdown */}
         <section
           id="category-accuracy"
-          className="mt-10 rounded-3xl border border-border/60 bg-card p-6 shadow-lg"
+          className="rounded-3xl border border-border/60 bg-card p-6 shadow-lg"
           aria-labelledby="category-accuracy-title"
         >
-          <div className="flex items-center justify-between">
-            <h2 id="category-accuracy-title" className="text-lg font-semibold text-foreground">
-              Category Accuracy 🎯{' '}
-              <span className="font-myanmar text-muted-foreground">
-                {' '}
-                - ကဏ္ဍအလိုက်တိကျမှန်ကန်မှု
-              </span>
-            </h2>
-            <Link to="/history" className="text-sm font-semibold text-primary">
-              View full analytics →
+          <div className="flex items-center justify-between mb-4">
+            <SectionHeading
+              text={{
+                en: 'Category Accuracy',
+                my: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1010\u102D\u1000\u103B\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F',
+              }}
+              className="mb-0"
+            />
+            <Link
+              to="/history"
+              className="text-sm font-semibold text-primary min-h-[44px] inline-flex items-center"
+            >
+              View full analytics
             </Link>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 interactive-tile">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
             {Object.entries(categoryBreakdown).map(([category, stats]) => {
               const rate = Math.round((stats.correct / stats.total) * 100);
               return (
                 <Link
                   key={category}
                   to={studyCardsLink(category)}
-                  className="group rounded-2xl border border-border/60 p-4 transition hover:-translate-y-0.5 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  className="group rounded-2xl border border-border/60 p-4 min-h-[44px] transition hover:-translate-y-0.5 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   aria-label={`Review ${category}`}
                 >
                   <p className="text-sm font-semibold text-foreground">{category}</p>
@@ -280,7 +267,7 @@ const Dashboard = () => {
                     {stats.correct} correct out of {stats.total} questions
                   </p>
                   <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
-                    Go to flip-cards →
+                    Go to flip-cards
                   </span>
                 </Link>
               );
