@@ -27,8 +27,9 @@ const reasonCopy: Record<TestEndReason, string> = {
 const HistoryPage = () => {
   const { user } = useAuth();
   const location = useLocation();
-  const history = user?.testHistory ?? [];
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
+  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
 
   const chartData = useMemo(
     () =>
