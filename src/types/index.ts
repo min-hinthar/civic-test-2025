@@ -40,6 +40,17 @@ export interface QuestionResult {
 
 export type TestEndReason = 'passThreshold' | 'failThreshold' | 'time' | 'complete';
 
+// Re-export Supabase types for convenience
+export type {
+  ProfileRow,
+  MockTestResponseRow,
+  MockTestRow,
+  GoogleUserMetadata,
+  StandardUserMetadata,
+  UserMetadata,
+} from './supabase';
+export { isGoogleMetadata } from './supabase';
+
 export interface TestSession {
   id?: string;
   date: string;

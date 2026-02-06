@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock3, Sparkles } from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { civicsQuestions } from '@/constants/civicsQuestions';
+import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
@@ -14,34 +15,32 @@ const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
 const INCORRECT_LIMIT = 9;
 
-const shuffle = <T,>(array: T[]) => {
-  return [...array].sort(() => Math.random() - 0.5);
-};
-
 const TestPage = () => {
-  const { saveTestSession, isSavingSession } = useAuth();
+  const { saveTestSession } = useAuth();
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [endReason, setEndReason] = useState<TestEndReason | null>(null);
   const [results, setResults] = useState<QuestionResult[]>([]);
-  const [hasSavedSession, setHasSavedSession] = useState(false);
-  const lockMessage = 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
+  const hasSavedSessionRef = useRef(false);
+  const lockMessage =
+    'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
 
   const questions = useMemo(
     () =>
-      shuffle(civicsQuestions)
+      fisherYatesShuffle(civicsQuestions)
         .slice(0, 20)
         .map(question => ({
           ...question,
-          answers: shuffle(question.answers),
+          answers: fisherYatesShuffle(question.answers),
         })),
     []
   );
   const currentQuestion = !isFinished ? questions[currentIndex] : null;
   const questionAudioText = currentQuestion?.question_en ?? '';
-  const answerChoicesAudioText = currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
+  const answerChoicesAudioText =
+    currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
 
   const answeredQuestions = results.length;
   const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
@@ -58,8 +57,10 @@ const TestPage = () => {
   const askedCount = results.length;
   const incorrectCount = askedCount - correctCount;
   const completionMessage: Record<TestEndReason, string> = {
-    passThreshold: 'USCIS interview stops after 12 correct answers 🎉 Great job reaching the passing threshold early 🍾 အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။ 🥳',
-    failThreshold: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying. -  အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
+    passThreshold:
+      'USCIS interview stops after 12 correct answers 🎉 Great job reaching the passing threshold early 🍾 အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။ 🥳',
+    failThreshold:
+      'Interview ended after 9 incorrect answers. Review the feedback below before retrying. -  အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
     time: 'Time expired before the full set finished.',
     complete: 'You completed all 20 questions.',
   };
@@ -140,7 +141,8 @@ const TestPage = () => {
   }, [isFinished, lockMessage]);
 
   useEffect(() => {
-    if (!isFinished || !results.length || hasSavedSession) return;
+    if (!isFinished || !results.length || hasSavedSessionRef.current) return;
+    hasSavedSessionRef.current = true;
     const correctAnswers = results.filter(result => result.isCorrect).length;
     const incorrectAnswers = results.length - correctAnswers;
     const completedFullSet = results.length === questions.length;
@@ -155,7 +157,6 @@ const TestPage = () => {
       endReason: fallbackReason,
       results,
     };
-    setHasSavedSession(true);
     const persist = async () => {
       try {
         await saveTestSession(session);
@@ -165,7 +166,7 @@ const TestPage = () => {
         });
       } catch (error) {
         console.error(error);
-        setHasSavedSession(false);
+        hasSavedSessionRef.current = false;
         toast({
           title: 'Unable to save test',
           description: 'Please check your connection and try again.',
@@ -174,7 +175,7 @@ const TestPage = () => {
       }
     };
     persist();
-  }, [endReason, hasSavedSession, isFinished, questions.length, results, saveTestSession, timeLeft]);
+  }, [endReason, isFinished, questions.length, results, saveTestSession, timeLeft]);
 
   useEffect(() => {
     if (isFinished) {
@@ -198,9 +199,12 @@ const TestPage = () => {
       <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">Mock Test · စမ်းသပ်စာမေးပွဲ</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary">
+              Mock Test · စမ်းသပ်စာမေးပွဲ
+            </p>
             <h1 className="text-3xl font-bold text-foreground">
-              Question {currentIndex + 1} <span className="text-muted-foreground">/ {questions.length}</span>
+              Question {currentIndex + 1}{' '}
+              <span className="text-muted-foreground">/ {questions.length}</span>
             </h1>
             {/* <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p> */}
           </div>
@@ -220,13 +224,22 @@ const TestPage = () => {
             </p>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
-                <div className="h-2 rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${progressPercent}%` }} />
+                <div
+                  className="h-2 rounded-full bg-gradient-to-r from-primary to-accent"
+                  style={{ width: `${progressPercent}%` }}
+                />
               </div>
-              <span className="text-sm font-semibold text-muted-foreground">{progressPercent}%</span>
+              <span className="text-sm font-semibold text-muted-foreground">
+                {progressPercent}%
+              </span>
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">Answered {answeredQuestions} of {questions.length}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Answered {answeredQuestions} of {questions.length}
+            </p>
             <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              <span className="font-myanmar">အဖြေမှန် ၁၂ ခု သို့မဟုတ် အဖြေမှား ၉ ခု ဖြေပြီးလျှင် စာမေးပွဲပြီးဆုံးစေပါမည်။</span>
+              <span className="font-myanmar">
+                အဖြေမှန် ၁၂ ခု သို့မဟုတ် အဖြေမှား ၉ ခု ဖြေပြီးလျှင် စာမေးပွဲပြီးဆုံးစေပါမည်။
+              </span>
             </p>
             {/* <p className="text-sm font-semibold text-foreground">{isSavingSession ? `Secure Supabase sync`: 'Syncing…'}</p> */}
             <p className="mt-4 text-xs text-muted-foreground">
@@ -239,7 +252,9 @@ const TestPage = () => {
           <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
             <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
             <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
-            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">{currentQuestion?.question_my}</p>
+            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">
+              {currentQuestion?.question_my}
+            </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <SpeechButton
                 text={questionAudioText}
@@ -263,11 +278,15 @@ const TestPage = () => {
               className="rounded-2xl border border-border bg-card/80 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-primary interactive-tile"
             >
               <p className="font-semibold text-foreground">{answer.text_en}</p>
-              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{answer.text_my}</p>
+              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                {answer.text_my}
+              </p>
             </button>
           ))}
         </div>
-        <p className="mt-6 text-center text-sm text-muted-foreground">Tap an answer to move to the next question.</p>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Tap an answer to move to the next question.
+        </p>
       </div>
     </div>
   );
@@ -277,16 +296,22 @@ const TestPage = () => {
       <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">Results · အောင်မြင်မှု</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary">
+              Results · အောင်မြင်မှု
+            </p>
             <h1 className="text-3xl font-bold text-foreground">
               You scored {correctCount} / {askedCount}
               <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
                 မှတ် {correctCount} / {askedCount}
               </span>
             </h1>
-            <p className="text-muted-foreground">Review your answers and retake the mock test anytime.</p>
+            <p className="text-muted-foreground">
+              Review your answers and retake the mock test anytime.
+            </p>
             {endReason && (
-              <p className="mt-2 text-sm font-semibold text-primary">{completionMessage[endReason]}</p>
+              <p className="mt-2 text-sm font-semibold text-primary">
+                {completionMessage[endReason]}
+              </p>
             )}
           </div>
           <div className="flex flex-wrap gap-3">
@@ -308,7 +333,9 @@ const TestPage = () => {
         <div className="mt-8 grid gap-4 sm:grid-cols-4">
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Duration</p>
-            <p className="text-2xl font-bold text-foreground">{Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins</p>
+            <p className="text-2xl font-bold text-foreground">
+              {Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins
+            </p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
@@ -320,7 +347,9 @@ const TestPage = () => {
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
-            <p className={`text-2xl font-bold ${correctCount >= PASS_THRESHOLD ? 'text-emerald-500' : 'text-red-500'}`}>
+            <p
+              className={`text-2xl font-bold ${correctCount >= PASS_THRESHOLD ? 'text-emerald-500' : 'text-red-500'}`}
+            >
               {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
             </p>
           </div>
@@ -328,9 +357,14 @@ const TestPage = () => {
 
         <div className="mt-10 space-y-6">
           {results.map(result => (
-            <div key={result.questionId} className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm">
+            <div
+              key={result.questionId}
+              className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm"
+            >
               <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
-              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.questionText_my}</p>
+              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                {result.questionText_my}
+              </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <SpeechButton
                   text={result.questionText_en}
@@ -348,18 +382,28 @@ const TestPage = () => {
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     Your answer · <span className="font-myanmar">အဖြေ</span>
                   </p>
-                  <p className="text-sm font-semibold text-foreground">{result.selectedAnswer.text_en}</p>
-                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.selectedAnswer.text_my}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {result.selectedAnswer.text_en}
+                  </p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                    {result.selectedAnswer.text_my}
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     Official answer · <span className="font-myanmar">အဖြေမှန်</span>
                   </p>
-                  <p className="text-sm font-semibold text-foreground">{result.correctAnswer.text_en}</p>
-                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">{result.correctAnswer.text_my}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {result.correctAnswer.text_en}
+                  </p>
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                    {result.correctAnswer.text_my}
+                  </p>
                 </div>
               </div>
-              <p className={`mt-3 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
+              <p
+                className={`mt-3 text-sm font-semibold ${result.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}
+              >
                 {result.isCorrect ? 'Correct · မှန်' : 'Review this answer · ပြန်လည်လေ့လာပါ'}
               </p>
             </div>
