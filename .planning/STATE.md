@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 1 complete — ready for Phase 2 or 3
+**Current focus:** Phase 2 (PWA & Offline) in progress
 
 ## Current Position
 
-Phase: 1 of 7 (Foundation & Code Quality) — COMPLETE
-Plan: 5 of 5 in current phase
-Status: Phase complete
-Last activity: 2026-02-05 - Phase 1 verified and complete
+Phase: 2 of 7 (PWA & Offline)
+Plan: 1 of 8 in current phase
+Status: In progress
+Last activity: 2026-02-06 - Completed 02-01-PLAN.md (PWA Foundation)
 
-Progress: [█░░░░░░░░░] 10% (1/7 phases)
+Progress: [██░░░░░░░░] 15% (6 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 10 min
-- Total execution time: 49 min
+- Total plans completed: 6
+- Average duration: 14 min
+- Total execution time: 81 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
+| 02-pwa-offline | 1 | 32 min | 32 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-05 (15 min), 01-02 (7 min), 01-03 (8 min), 01-04 (14 min)
-- Trend: Stable
+- Last 5 plans: 01-05 (15 min), 01-02 (7 min), 01-03 (8 min), 01-04 (14 min), 02-01 (32 min)
+- Trend: 02-01 longer due to build verification overhead
 
 *Updated after each plan completion*
 
@@ -57,6 +58,10 @@ Recent decisions affecting current work:
 - 01-04: Use djb2 hash for user ID anonymization in error reporting
 - 01-04: Error messages use bilingual format { en: string, my: string }
 - 01-04: beforeSend handler strips PII at Sentry event level
+- 02-01: Used static public/manifest.json instead of app/manifest.ts (Pages Router)
+- 02-01: Added serviceworker globals to ESLint for service worker context
+- 02-01: Serwist disabled in development mode to avoid caching issues
+- 02-01: PWA files located in src/lib/pwa/ directory
 
 ### Pending Todos
 
@@ -72,10 +77,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-05
-Stopped at: Phase 1 complete, ready for Phase 2 or 3
+Last session: 2026-02-06
+Stopped at: Completed 02-01-PLAN.md (PWA Foundation)
 Resume file: None
 
 ---
 
 *State initialized: 2026-02-05*
+*Last updated: 2026-02-06*
