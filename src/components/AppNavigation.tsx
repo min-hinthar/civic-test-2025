@@ -4,6 +4,8 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
+import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
 
@@ -96,6 +98,8 @@ const AppNavigation = ({
           })}
         </div>
         <div className="flex items-center gap-2">
+          <OnlineStatusIndicator />
+          <SyncStatusIndicator />
           <ThemeToggle />
           {user ? (
             <button
