@@ -38,3 +38,13 @@ export {
   getDueSRSCards,
   getSRSCardCount,
 } from './srsStore';
+
+// Supabase sync
+export {
+  queueSRSSync,
+  syncPendingSRSReviews,
+  pushSRSCards,
+  pullSRSCards,
+  mergeSRSDecks,
+} from './srsSync';
+export type { PendingSRSSync } from './srsSync';
