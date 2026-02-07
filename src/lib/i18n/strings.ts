@@ -143,6 +143,54 @@ export const strings = {
     },
   },
 
+  // Explanation components
+  explanations: {
+    why: { en: 'Why?', my: 'ဘာကြောင့်လဲ' },
+    memoryTip: { en: 'Memory Tip', my: 'မှတ်ဉာဏ်အကူ' },
+    commonMistake: { en: 'Common Mistake', my: 'အဖြစ်များသောအမှား' },
+    funFact: { en: 'Fun Fact', my: 'စိတ်ဝင်စားစရာ' },
+    seeAlso: { en: 'See also', my: 'ဆက်စပ်မေးခွန်းများ' },
+    source: { en: 'Source', my: 'အရင်းအမြစ်' },
+    showExplanation: { en: 'Show explanation', my: 'ရှင်းလင်းချက်ပြပါ' },
+    hideExplanation: { en: 'Hide explanation', my: 'ရှင်းလင်းချက်ဝှက်ပါ' },
+  },
+
+  // Category progress & mastery
+  progress: {
+    categoryProgress: { en: 'Category Progress', my: 'အမျိုးအစားတိုးတက်မှု' },
+    mastery: { en: 'Mastery', my: 'ကျွမ်းကျင်မှု' },
+    practiceNow: { en: 'Practice Now', my: 'ယခုလေ့ကျင့်ပါ' },
+    reviewInGuide: { en: 'Review in Guide', my: 'အညွှန်းတွင်ပြန်ကြည့်ပါ' },
+    suggestedFocus: { en: 'Suggested Focus', my: 'အကြံပြုအာရုံစိုက်ရာ' },
+    notStarted: { en: 'Not Started', my: 'မစတင်ရသေး' },
+    bronze: { en: 'Bronze', my: 'ကြေးတံဆိပ်' },
+    silver: { en: 'Silver', my: 'ငွေတံဆိပ်' },
+    gold: { en: 'Gold', my: 'ရွှေတံဆိပ်' },
+    questionsCorrect: { en: 'Questions Correct', my: 'မှန်ကန်သောမေးခွန်းများ' },
+    overallReadiness: { en: 'Overall Readiness', my: 'အလုံးစုံအဆင်သင့်ဖြစ်မှု' },
+    masteryTrend: { en: 'Mastery Trend', my: 'ကျွမ်းကျင်မှုလမ်းကြောင်း' },
+  },
+
+  // Practice mode
+  practice: {
+    practiceMode: { en: 'Practice Mode', my: 'လေ့ကျင့်ရေးမုဒ်' },
+    selectCategory: { en: 'Select Category', my: 'အမျိုးအစားရွေးပါ' },
+    questionCount: { en: 'Question Count', my: 'မေးခွန်းအရေအတွက်' },
+    quick: { en: 'Quick', my: 'အမြန်' },
+    standard: { en: 'Standard', my: 'ပုံမှန်' },
+    full: { en: 'Full', my: 'အပြည့်' },
+    startPractice: { en: 'Start Practice', my: 'လေ့ကျင့်မှုစတင်ပါ' },
+    practiceComplete: { en: 'Practice Complete!', my: 'လေ့ကျင့်မှုပြီးပါပြီ!' },
+    masteryUpdate: { en: 'Mastery Updated', my: 'ကျွမ်းကျင်မှုအသစ်ပြင်ဆင်ပြီး' },
+    practiceAllWeak: { en: 'Practice All Weak Areas', my: 'အားနည်းရာအားလုံးလေ့ကျင့်ပါ' },
+    alreadyMastered: { en: 'Already Mastered', my: 'ကျွမ်းကျင်ပြီးသား' },
+    practiceAnyway: { en: 'Practice Anyway', my: 'ဒါပေမယ့်လေ့ကျင့်ပါ' },
+    practiceSessions: { en: 'Practice Sessions', my: 'လေ့ကျင့်မှုအကြိမ်များ' },
+    timer: { en: 'Timer', my: 'အချိန်တိုင်း' },
+    timerOff: { en: 'Timer Off', my: 'အချိန်တိုင်းပိတ်' },
+    timerOn: { en: 'Timer On', my: 'အချိန်တိုင်းဖွင့်' },
+  },
+
   // App meta
   app: {
     title: { en: 'U.S. Citizenship Test Prep', my: 'အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး' },
