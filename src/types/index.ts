@@ -19,6 +19,33 @@ export interface Answer {
   correct: boolean;
 }
 
+/**
+ * Bilingual explanation content for a question.
+ * Helps users understand WHY the answer is correct, not just restate it.
+ */
+export interface Explanation {
+  /** 2-3 sentence explanation in English */
+  brief_en: string;
+  /** Natural Burmese rephrasing (NOT word-for-word translation) */
+  brief_my: string;
+  /** Optional memory aid in English */
+  mnemonic_en?: string;
+  /** Optional memory aid in Burmese (may differ from EN) */
+  mnemonic_my?: string;
+  /** Constitutional reference (only for constitutional questions) */
+  citation?: string;
+  /** Optional cultural connection / fun fact in English */
+  funFact_en?: string;
+  /** Fun fact in Burmese */
+  funFact_my?: string;
+  /** IDs for "See also" section linking related questions */
+  relatedQuestionIds?: string[];
+  /** Why common wrong answers are wrong (English) */
+  commonMistake_en?: string;
+  /** Common mistake explanation in Burmese */
+  commonMistake_my?: string;
+}
+
 export interface Question {
   id: string; // Changed from number to string for stable IDs like 'GOV-01'
   question_en: string;
@@ -26,6 +53,7 @@ export interface Question {
   category: Category;
   studyAnswers: StudyAnswer[]; // For flip cards (all possible correct answers)
   answers: Answer[]; // For quiz (1 correct, 3+ incorrect)
+  explanation?: Explanation; // Optional for gradual rollout safety
 }
 
 export interface QuestionResult {
