@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 3 of 7 (UI/UX & Bilingual Polish)
-Plan: 9 of 9 in current phase
+Plan: 9+1 of 9+1 in current phase (03-08a supplemental)
 Status: Phase complete
-Last activity: 2026-02-06 - Completed 03-09-PLAN.md (Dark Mode & Language Toggle)
+Last activity: 2026-02-06 - Completed 03-08a-PLAN.md (Study, Test, History Page Polish)
 
-Progress: [█████░░░░░] 48% (19 plans / ~40 total estimated)
+Progress: [█████░░░░░] 49% (20 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 19 min
-- Total execution time: 355 min
+- Total execution time: 380 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [█████░░░░░] 48% (19 plans / ~40 total estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
-| 03-ui-ux-bilingual-polish | 8 | 165 min | 21 min |
+| 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-07 (10 min), 03-05 (20 min), 03-06 (31 min), 03-08 (20 min), 03-09 (37 min)
+- Last 5 plans: 03-05 (20 min), 03-06 (31 min), 03-08 (20 min), 03-09 (37 min), 03-08a (25 min)
 - Trend: UI component plans executing in 10-37 min range
 
 *Updated after each plan completion*
@@ -115,6 +115,9 @@ Recent decisions affecting current work:
 - 03-08: ReadinessIndicator weighted score: coverage 50% + accuracy 40% + streak 10%
 - 03-08: Study streak computed from consecutive unique test days in history
 - 03-08: Pre-existing Next.js build failure (sentry-example-page manifest) requires investigation
+- 03-08a: react-router-dom for hash routing (project uses react-router-dom, not next/router)
+- 03-08a: 1500ms feedback delay before question advancement in TestPage
+- 03-08a: warning-500 (orange) replaces red for incorrect/failing throughout pages
 - 03-09: Destructive/error colors use warm gray/orange (hue 25), NOT red - red reserved for patriotic decoration
 - 03-09: LanguageProvider placed inside OfflineProvider, outside ThemeProvider in hierarchy
 - 03-09: LanguageToggleCompact uses dot indicator when in English-only mode
@@ -136,7 +139,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-09-PLAN.md (Dark Mode & Language Toggle) - Phase 3 complete
+Stopped at: Completed 03-08a-PLAN.md (Study, Test, History Page Polish) - Phase 3 fully complete
 Resume file: None
 
 ---
