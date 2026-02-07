@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 3 (UI/UX & Bilingual Polish) in progress
+**Current focus:** Phase 3 (UI/UX & Bilingual Polish) complete
 
 ## Current Position
 
 Phase: 3 of 7 (UI/UX & Bilingual Polish)
-Plan: 8 of 9 in current phase
-Status: In progress
-Last activity: 2026-02-06 - Completed 03-08-PLAN.md (Dashboard, Landing, Auth Page Polish)
+Plan: 9 of 9 in current phase
+Status: Phase complete
+Last activity: 2026-02-06 - Completed 03-09-PLAN.md (Dark Mode & Language Toggle)
 
-Progress: [█████░░░░░] 45% (18 plans / ~40 total estimated)
+Progress: [█████░░░░░] 48% (19 plans / ~40 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
-- Average duration: 18 min
-- Total execution time: 318 min
+- Total plans completed: 19
+- Average duration: 19 min
+- Total execution time: 355 min
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [█████░░░░░] 45% (18 plans / ~40 total estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
-| 03-ui-ux-bilingual-polish | 7 | 128 min | 18 min |
+| 03-ui-ux-bilingual-polish | 8 | 165 min | 21 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-04 (21 min), 03-07 (10 min), 03-05 (20 min), 03-06 (31 min), 03-08 (20 min)
-- Trend: UI component plans executing in 10-31 min range
+- Last 5 plans: 03-07 (10 min), 03-05 (20 min), 03-06 (31 min), 03-08 (20 min), 03-09 (37 min)
+- Trend: UI component plans executing in 10-37 min range
 
 *Updated after each plan completion*
 
@@ -115,6 +115,10 @@ Recent decisions affecting current work:
 - 03-08: ReadinessIndicator weighted score: coverage 50% + accuracy 40% + streak 10%
 - 03-08: Study streak computed from consecutive unique test days in history
 - 03-08: Pre-existing Next.js build failure (sentry-example-page manifest) requires investigation
+- 03-09: Destructive/error colors use warm gray/orange (hue 25), NOT red - red reserved for patriotic decoration
+- 03-09: LanguageProvider placed inside OfflineProvider, outside ThemeProvider in hierarchy
+- 03-09: LanguageToggleCompact uses dot indicator when in English-only mode
+- 03-09: SettingsPage migrated from hardcoded gray colors to design token classes
 
 ### Pending Todos
 
@@ -132,7 +136,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-08-PLAN.md (Dashboard, Landing, Auth Page Polish)
+Stopped at: Completed 03-09-PLAN.md (Dark Mode & Language Toggle) - Phase 3 complete
 Resume file: None
 
 ---
