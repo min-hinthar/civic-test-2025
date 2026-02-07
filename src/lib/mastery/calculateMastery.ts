@@ -19,10 +19,16 @@ import type { StoredAnswer } from './masteryStore';
 /** Weight halves every 14 days */
 export const DECAY_HALF_LIFE_DAYS = 14;
 
+/** Weight multiplier for test session answers */
+export const TEST_WEIGHT = 1.0;
+
+/** Weight multiplier for practice session answers (lower confidence signal) */
+export const PRACTICE_WEIGHT = 0.7;
+
 /** Session type weight multipliers */
 const SESSION_MULTIPLIERS: Record<StoredAnswer['sessionType'], number> = {
-  test: 1.0,
-  practice: 0.7,
+  test: TEST_WEIGHT,
+  practice: PRACTICE_WEIGHT,
 };
 
 /** Milliseconds in one day */
@@ -56,9 +62,10 @@ export function calculateCategoryMastery(
   answers: StoredAnswer[],
   questionIds: string[]
 ): number {
-  // Filter to only answers for questions in this category
+  // Use Set for O(1) lookups when filtering answers by category
+  const questionIdSet = new Set(questionIds);
   const categoryAnswers = answers.filter(a =>
-    questionIds.includes(a.questionId)
+    questionIdSet.has(a.questionId)
   );
 
   if (categoryAnswers.length === 0) {
