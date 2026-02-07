@@ -262,24 +262,30 @@ describe('detectStaleCategories', () => {
       { questionId: 'HIST-C01', isCorrect: true, timestamp: twoDaysAgo, sessionType: 'test' },
     ];
 
-    const stale = detectStaleCategories(
-      history,
-      ['American Government', 'American History', 'Integrated Civics'],
-      7
-    );
+    const categoryMap = {
+      'American Government': ['GOV-P01', 'GOV-P02'],
+      'American History': ['HIST-C01', 'HIST-C02'],
+      'Integrated Civics': ['CIV-S01'],
+    };
+
+    const stale = detectStaleCategories(history, categoryMap, 7);
 
     // American Government last practiced 8 days ago (stale)
     // Integrated Civics never practiced (stale)
     // American History practiced 2 days ago (not stale)
     expect(stale.length).toBeGreaterThanOrEqual(2);
+    const staleIds = stale.map(s => s.categoryId);
+    expect(staleIds).toContain('American Government');
+    expect(staleIds).toContain('Integrated Civics');
+    expect(staleIds).not.toContain('American History');
   });
 
   it('returns categories never practiced', () => {
-    const stale = detectStaleCategories(
-      [],
-      ['American Government', 'American History'],
-      7
-    );
+    const categoryMap = {
+      'American Government': ['GOV-P01'],
+      'American History': ['HIST-C01'],
+    };
+    const stale = detectStaleCategories([], categoryMap, 7);
     expect(stale).toHaveLength(2);
     expect(stale[0].lastPracticed).toBeNull();
     expect(stale[0].daysSincePractice).toBeNull();
@@ -290,7 +296,10 @@ describe('detectStaleCategories', () => {
     const history: StoredAnswer[] = [
       { questionId: 'GOV-P01', isCorrect: true, timestamp: sixDaysAgo, sessionType: 'test' },
     ];
-    const stale = detectStaleCategories(history, ['American Government']);
+    const categoryMap = {
+      'American Government': ['GOV-P01', 'GOV-P02'],
+    };
+    const stale = detectStaleCategories(history, categoryMap);
     // 6 days ago is within 7-day window
     expect(stale).toHaveLength(0);
   });

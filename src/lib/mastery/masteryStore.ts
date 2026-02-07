@@ -3,7 +3,13 @@
  *
  * Uses idb-keyval with a dedicated store for persisting answer history
  * across sessions. This is the persistence layer for the mastery system.
+ *
+ * Storage key: 'answer-history' in the 'civic-prep-mastery' database.
+ * All answers are stored as a single array for simplicity and
+ * efficient retrieval (typical size: hundreds, not thousands).
  */
+
+import { createStore, get, set } from 'idb-keyval';
 
 /** A single stored answer record */
 export interface StoredAnswer {
@@ -13,20 +19,51 @@ export interface StoredAnswer {
   sessionType: 'test' | 'practice';
 }
 
-// Stub implementations - will be implemented in GREEN phase
+/** IndexedDB store dedicated to mastery data */
+const masteryDb = createStore('civic-prep-mastery', 'answer-history');
 
-export async function recordAnswer(_answer: Omit<StoredAnswer, 'timestamp'>): Promise<void> {
-  throw new Error('Not implemented');
+/** Key used to store the answer history array */
+const HISTORY_KEY = 'answers';
+
+/**
+ * Record a new answer to the history.
+ * Automatically adds a timestamp at the time of recording.
+ */
+export async function recordAnswer(
+  answer: Omit<StoredAnswer, 'timestamp'>
+): Promise<void> {
+  const history = (await get<StoredAnswer[]>(HISTORY_KEY, masteryDb)) ?? [];
+  const storedAnswer: StoredAnswer = {
+    ...answer,
+    timestamp: Date.now(),
+  };
+  history.push(storedAnswer);
+  await set(HISTORY_KEY, history, masteryDb);
 }
 
+/**
+ * Get the full answer history.
+ * Returns an empty array if no history exists.
+ */
 export async function getAnswerHistory(): Promise<StoredAnswer[]> {
-  throw new Error('Not implemented');
+  return (await get<StoredAnswer[]>(HISTORY_KEY, masteryDb)) ?? [];
 }
 
-export async function getQuestionHistory(_questionId: string): Promise<StoredAnswer[]> {
-  throw new Error('Not implemented');
+/**
+ * Get answer history for a specific question.
+ * Filters the full history by questionId.
+ */
+export async function getQuestionHistory(
+  questionId: string
+): Promise<StoredAnswer[]> {
+  const history = await getAnswerHistory();
+  return history.filter(a => a.questionId === questionId);
 }
 
+/**
+ * Clear all answer history.
+ * Used for testing and user-initiated data reset.
+ */
 export async function clearAnswerHistory(): Promise<void> {
-  throw new Error('Not implemented');
+  await set(HISTORY_KEY, [], masteryDb);
 }
