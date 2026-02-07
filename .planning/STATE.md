@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 7 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06, 05-08)
+Plan: 8 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06, 05-07, 05-08)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-08-PLAN.md (Dashboard SRS Widget)
+Last activity: 2026-02-07 - Completed 05-07-PLAN.md (Review Session Flow)
 
-Progress: [█████████░] 90% (37 plans / ~41 total estimated)
+Progress: [█████████░] 93% (38 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -183,6 +183,10 @@ Recent decisions affecting current work:
 - 05-06: SWIPE_THRESHOLD=80 (higher than 50) for intentional rating vs accidental navigation
 - 05-06: SessionSetup size options dynamically built based on totalDue count
 - 05-06: Burmese numerals inline in SessionSetup (avoids coupling to fsrsEngine)
+- 05-07: Reset isFlipped in handleRate callback (not useEffect) to satisfy React Compiler ESLint
+- 05-07: Keyboard shortcuts gated on flip state (must see answer before rating)
+- 05-07: SessionSummary groups hard cards by USCIS main category for weak nudge
+- 05-07: Rating feedback shows 1.5s colored overlay before advancing to next card
 - 05-08: ReviewHeatmap uses pure CSS Grid + Tailwind (no external chart library)
 - 05-08: Heatmap 60 days desktop / 30 days mobile via responsive hidden/block classes
 - 05-08: SRSWidget navigates to /study#deck on compact tap
@@ -204,7 +208,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-08-PLAN.md (Dashboard SRS Widget). Wave 4 plans continuing.
+Stopped at: Completed 05-07-PLAN.md (Review Session Flow). Wave 4 complete. Only 05-09 remains.
 Resume file: None
 
 ---
