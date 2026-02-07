@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { Link, useNavigate, type To } from 'react-router-dom';
-import { BookOpenCheck } from 'lucide-react';
+import { BookOpenCheck, ChevronDown } from 'lucide-react';
+import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
@@ -11,6 +13,10 @@ import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { ProgressWithLabel } from '@/components/ui/Progress';
 import { StaggeredGrid, FadeIn } from '@/components/animations/StaggeredList';
 import { ReadinessIndicator } from '@/components/dashboard/ReadinessIndicator';
+import { CategoryGrid } from '@/components/progress/CategoryGrid';
+import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
+import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { strings } from '@/lib/i18n/strings';
 
 const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
@@ -20,9 +26,40 @@ const studyCardsLink = (category?: string): To => ({
   hash: '#cards',
 });
 
+/** localStorage key for category progress collapse state */
+const COLLAPSE_KEY = 'civic-prep-dashboard-category-collapsed';
+
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Category mastery data
+  const { categoryMasteries, subCategoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
+  const { currentMilestone, dismissMilestone } = useMasteryMilestones(categoryMasteries);
+
+  // Collapsible category progress section
+  const [isCategoryCollapsed, setIsCategoryCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(COLLAPSE_KEY) === 'true';
+  });
+
+  const toggleCategoryCollapse = () => {
+    setIsCategoryCollapsed(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem(COLLAPSE_KEY, String(next));
+      } catch {
+        // localStorage not available
+      }
+      return next;
+    });
+  };
+
+  // Compute average mastery for collapsed summary
+  const categoryValues = Object.values(categoryMasteries);
+  const avgMastery = categoryValues.length > 0
+    ? Math.round(categoryValues.reduce((s, v) => s + v, 0) / categoryValues.length)
+    : 0;
   const history = user?.testHistory ?? [];
   const latestAttempt = history[0];
   const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
@@ -175,6 +212,73 @@ const Dashboard = () => {
           />
         </section>
 
+        {/* Category Progress - collapsible section */}
+        <section className="mb-8">
+          <FadeIn delay={100}>
+            <div
+              className="rounded-3xl border border-border/60 bg-card shadow-sm overflow-hidden"
+            >
+              {/* Collapsible header */}
+              <button
+                type="button"
+                className="flex w-full items-center justify-between p-5 text-left min-h-[44px] hover:bg-muted/20 transition-colors"
+                onClick={toggleCategoryCollapse}
+                aria-expanded={!isCategoryCollapsed}
+              >
+                <SectionHeading
+                  text={strings.progress.categoryProgress}
+                  className="mb-0"
+                />
+                <div className="flex items-center gap-3">
+                  {isCategoryCollapsed && (
+                    <span className="text-sm text-muted-foreground tabular-nums">
+                      {categoryValues.length} categories, {avgMastery}% avg
+                    </span>
+                  )}
+                  <ChevronDown
+                    className={clsx(
+                      'h-5 w-5 text-muted-foreground transition-transform',
+                      !isCategoryCollapsed && 'rotate-180'
+                    )}
+                  />
+                </div>
+              </button>
+
+              {/* Expanded content */}
+              {!isCategoryCollapsed && (
+                <div className="px-5 pb-5">
+                  {masteryLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent" />
+                    </div>
+                  ) : (
+                    <>
+                      <CategoryGrid
+                        categoryMasteries={categoryMasteries}
+                        subCategoryMasteries={subCategoryMasteries}
+                        onCategoryClick={() => navigate('/progress')}
+                      />
+
+                      {/* View Full Progress link */}
+                      <div className="mt-4 flex justify-center">
+                        <BilingualButton
+                          label={{
+                            en: 'View Full Progress',
+                            my: '\u1021\u1015\u103C\u100A\u103A\u1037\u1021\u1005\u102F\u1036\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B',
+                          }}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate('/progress')}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </FadeIn>
+        </section>
+
         {/* Overall accuracy */}
         {history.length > 0 && (
           <section className="mb-8">
@@ -277,6 +381,12 @@ const Dashboard = () => {
             )}
           </div>
         </section>
+
+        {/* Milestone celebration modal */}
+        <MasteryMilestone
+          milestone={currentMilestone}
+          onDismiss={dismissMilestone}
+        />
       </div>
     </div>
   );
