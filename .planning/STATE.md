@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 4 of 7 (Learning - Explanations & Category Progress) - In progress
-Plan: 7 of 9 complete
+Plan: 8 of 9 complete
 Status: In progress
-Last activity: 2026-02-07 - Completed 04-07-PLAN.md (Progress page & dashboard category section)
+Last activity: 2026-02-07 - Completed 04-08-PLAN.md (Category practice mode)
 
-Progress: [██████░░░░] 68% (28 plans / ~41 total estimated)
+Progress: [███████░░░] 70% (29 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28 (10 plans + 1 gap-fix + 7 phase 4)
+- Total plans completed: 29 (10 plans + 1 gap-fix + 8 phase 4)
 - Average duration: 16 min
-- Total execution time: 447 min
+- Total execution time: 454 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [██████░░░░] 68% (28 plans / ~41 total estimated)
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
 | 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
-| 04-learning-explanations | 7 | 52 min | 7 min |
+| 04-learning-explanations | 8 | 59 min | 7 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-03 (5 min), 04-04 (7 min), 04-05 (7 min), 04-06 (8 min), 04-07 (5 min)
+- Last 5 plans: 04-04 (7 min), 04-05 (7 min), 04-06 (8 min), 04-07 (5 min), 04-08 (7 min)
 - Trend: Component plans 5-8 min, integration plans 5-7 min, well-established patterns
 
 *Updated after each plan completion*
@@ -154,6 +154,10 @@ Recent decisions affecting current work:
 - 04-07: Two-level expandable pattern in ProgressPage (category -> sub-category -> question rows)
 - 04-07: Trend chart from testHistory (date-grouped sessions) rather than IndexedDB answer history
 - 04-07: Dashboard CategoryGrid onCategoryClick navigates to /progress
+- 04-08: State machine pattern for PracticePage: config->session->results phases
+- 04-08: Previous mastery captured via useRef before session starts for animated ring
+- 04-08: Mini CategoryRings on PreTestScreen for at-a-glance category status
+- 04-08: Weak questions: accuracy < 60% threshold, unanswered treated as accuracy 0
 
 ### Pending Todos
 
@@ -171,7 +175,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 04-07-PLAN.md (Progress page & dashboard category section). Ready for 04-08.
+Stopped at: Completed 04-08-PLAN.md (Category practice mode). Ready for 04-09.
 Resume file: None
 
 ---
