@@ -13,6 +13,7 @@ import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { FlashcardStack } from '@/components/study/FlashcardStack';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
+import { CategoryHeaderBadge, QuestionAccuracyDot } from '@/components/nudges/StudyGuideHighlight';
 import { strings } from '@/lib/i18n/strings';
 
 const categoryColors: Record<string, string> = {
@@ -176,7 +177,10 @@ const StudyGuidePage = () => {
             </button>
           </div>
 
-          <h2 className="text-xl font-bold text-foreground mb-2">{selectedCategory}</h2>
+          <div className="flex items-center gap-3 mb-2">
+            <h2 className="text-xl font-bold text-foreground">{selectedCategory}</h2>
+            <CategoryHeaderBadge category={selectedCategory} />
+          </div>
           <p className="text-sm text-muted-foreground mb-6">
             {categoryQuestions.length} questions in this category
           </p>
@@ -223,14 +227,17 @@ const StudyGuidePage = () => {
                       )}
                     >
                       <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
-                        <p
-                          className={clsx(
-                            'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80',
-                            categoryColors[question.category] ?? 'from-primary to-primary'
-                          )}
-                        >
-                          {question.category}
-                        </p>
+                        <div className="flex items-center justify-between gap-2">
+                          <p
+                            className={clsx(
+                              'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
+                              categoryColors[question.category] ?? 'from-primary to-primary'
+                            )}
+                          >
+                            {question.category}
+                          </p>
+                          <QuestionAccuracyDot questionId={question.id} />
+                        </div>
                         <div className="space-y-3">
                           <div className="flex flex-wrap gap-2">
                             <SpeechButton
@@ -333,7 +340,10 @@ const StudyGuidePage = () => {
                 onClick={() => handleCategorySelect(cat)}
                 className="min-h-[44px] p-4"
               >
-                <h3 className="font-semibold">{cat}</h3>
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-semibold">{cat}</h3>
+                  <CategoryHeaderBadge category={cat} />
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {questionsPerCategory[cat]} questions / မေးခွန်း
                 </p>
@@ -421,14 +431,17 @@ const StudyGuidePage = () => {
                     )}
                   >
                     <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
-                      <p
-                        className={clsx(
-                          'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80',
-                          categoryColors[question.category] ?? 'from-primary to-primary'
-                        )}
-                      >
-                        {question.category}
-                      </p>
+                      <div className="flex items-center justify-between gap-2">
+                        <p
+                          className={clsx(
+                            'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
+                            categoryColors[question.category] ?? 'from-primary to-primary'
+                          )}
+                        >
+                          {question.category}
+                        </p>
+                        <QuestionAccuracyDot questionId={question.id} />
+                      </div>
                       <div className="space-y-3">
                         <div className="flex flex-wrap gap-2">
                           <SpeechButton

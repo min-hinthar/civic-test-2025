@@ -22,6 +22,9 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem, FadeIn } from '@/components/animations/StaggeredList';
 import { Progress } from '@/components/ui/Progress';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getAnswerHistory } from '@/lib/mastery/masteryStore';
+import type { StoredAnswer } from '@/lib/mastery';
 import { strings } from '@/lib/i18n/strings';
 
 const reasonCopy: Record<TestEndReason, string> = {
@@ -31,13 +34,84 @@ const reasonCopy: Record<TestEndReason, string> = {
   complete: 'Completed all 20 questions',
 };
 
+/** Practice session derived from answer history */
+interface PracticeSessionGroup {
+  id: string;
+  date: string;
+  category: string;
+  correctCount: number;
+  totalCount: number;
+  answers: StoredAnswer[];
+}
+
 const HistoryPage = () => {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { showBurmese } = useLanguage();
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'tests' | 'practice'>('tests');
+  const [practiceAnswers, setPracticeAnswers] = useState<StoredAnswer[]>([]);
 
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+
+  // Load practice session data from answer history
+  useEffect(() => {
+    let cancelled = false;
+    getAnswerHistory().then(answers => {
+      if (!cancelled) {
+        setPracticeAnswers(answers.filter(a => a.sessionType === 'practice'));
+      }
+    }).catch(() => {
+      // IndexedDB not available
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Group practice answers into sessions (5-minute windows)
+  const practiceSessions = useMemo<PracticeSessionGroup[]>(() => {
+    if (practiceAnswers.length === 0) return [];
+
+    const sorted = [...practiceAnswers].sort((a, b) => a.timestamp - b.timestamp);
+    const SESSION_GAP_MS = 5 * 60 * 1000; // 5 minutes between sessions
+
+    const groups: PracticeSessionGroup[] = [];
+    let currentGroup: StoredAnswer[] = [sorted[0]];
+
+    for (let i = 1; i < sorted.length; i++) {
+      const gap = sorted[i].timestamp - sorted[i - 1].timestamp;
+      if (gap > SESSION_GAP_MS) {
+        // New session
+        groups.push(buildSessionGroup(currentGroup));
+        currentGroup = [sorted[i]];
+      } else {
+        currentGroup.push(sorted[i]);
+      }
+    }
+    if (currentGroup.length > 0) {
+      groups.push(buildSessionGroup(currentGroup));
+    }
+
+    // Sort most recent first
+    return groups.reverse();
+  }, [practiceAnswers]);
+
+  function buildSessionGroup(answers: StoredAnswer[]): PracticeSessionGroup {
+    const firstTimestamp = answers[0].timestamp;
+    const categories = new Set(answers.map(a => a.questionId.split('-')[0]));
+    const categoryLabel = categories.size === 1
+      ? `Category: ${[...categories][0]}`
+      : `${categories.size} categories`;
+
+    return {
+      id: `practice-${firstTimestamp}`,
+      date: new Date(firstTimestamp).toISOString(),
+      category: categoryLabel,
+      correctCount: answers.filter(a => a.isCorrect).length,
+      totalCount: answers.length,
+      answers,
+    };
+  }
 
   const chartData = useMemo(
     () =>
@@ -75,13 +149,174 @@ const HistoryPage = () => {
       <div className="mx-auto max-w-6xl px-4 py-10">
         <PageTitle text={strings.nav.testHistory} />
 
-        <p className="text-muted-foreground mb-8">
+        <p className="text-muted-foreground mb-6">
           Every attempt is securely stored so you can review trends anytime.
           <span className="block font-myanmar mt-1">
             ကြိုးစားမှုတိုင်းကို လုံခြုံစွာ သိမ်းဆည်းထားပါသည်။
           </span>
         </p>
 
+        {/* Tab navigation */}
+        <div className="mb-8 flex rounded-lg border border-border bg-muted/30 p-0.5 w-fit">
+          <button
+            onClick={() => setActiveTab('tests')}
+            className={clsx(
+              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
+              activeTab === 'tests'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            {strings.nav.mockTest.en}
+            {showBurmese && (
+              <span className="ml-1 font-myanmar text-xs">{strings.nav.mockTest.my}</span>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('practice')}
+            className={clsx(
+              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
+              activeTab === 'practice'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            {strings.practice.practiceSessions.en}
+            {showBurmese && (
+              <span className="ml-1 font-myanmar text-xs">{strings.practice.practiceSessions.my}</span>
+            )}
+          </button>
+        </div>
+
+        {/* Practice Sessions Tab */}
+        {activeTab === 'practice' && (
+          <section className="space-y-6" aria-label="Practice Sessions">
+            {practiceSessions.length > 0 ? (
+              <StaggeredList className="space-y-4">
+                {practiceSessions.map(session => {
+                  const isExpanded = expandedSessionId === session.id;
+                  const scorePercent = session.totalCount > 0
+                    ? Math.round((session.correctCount / session.totalCount) * 100)
+                    : 0;
+
+                  return (
+                    <StaggeredItem key={session.id}>
+                      <Card
+                        interactive
+                        onClick={() => toggleSession(session.id)}
+                        className="min-h-[44px]"
+                      >
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-foreground">
+                              {new Date(session.date).toLocaleString()}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {session.category} · {session.totalCount} questions
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <span className={clsx(
+                                'text-2xl font-bold',
+                                scorePercent >= 60 ? 'text-success-500' : 'text-warning-500'
+                              )}>
+                                {scorePercent}%
+                              </span>
+                              <span className="block text-sm text-muted-foreground">
+                                {session.correctCount}/{session.totalCount} correct
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                              aria-label={isExpanded ? 'Hide details' : 'Show details'}
+                            >
+                              {isExpanded ? 'Hide' : 'Details'}
+                              {isExpanded ? (
+                                <ChevronUp className="h-4 w-4" />
+                              ) : (
+                                <ChevronDown className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <Progress
+                            value={scorePercent}
+                            variant={scorePercent >= 60 ? 'success' : 'warning'}
+                            size="sm"
+                          />
+                        </div>
+
+                        {isExpanded && (
+                          <div className="mt-4 max-h-72 space-y-2 overflow-y-auto pr-1">
+                            {session.answers.map((answer, idx) => (
+                              <div
+                                key={`${session.id}-${idx}`}
+                                className={clsx(
+                                  'rounded-xl border p-3 text-sm',
+                                  answer.isCorrect
+                                    ? 'border-success-500/20 bg-success-50/50 dark:bg-success-500/5'
+                                    : 'border-warning-500/20 bg-warning-50/50 dark:bg-warning-500/5'
+                                )}
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-muted-foreground font-mono text-xs">
+                                    {answer.questionId}
+                                  </span>
+                                  <span className={clsx(
+                                    'text-xs font-semibold',
+                                    answer.isCorrect ? 'text-success-500' : 'text-warning-500'
+                                  )}>
+                                    {answer.isCorrect ? 'Correct' : 'Incorrect'}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </Card>
+                    </StaggeredItem>
+                  );
+                })}
+              </StaggeredList>
+            ) : (
+              <FadeIn>
+                <div className="text-center py-12">
+                  <BilingualHeading
+                    text={{
+                      en: 'No practice sessions yet',
+                      my: 'လေ့ကျင့်မှုအကြိမ်များ မရှိသေးပါ',
+                    }}
+                    level={2}
+                    size="lg"
+                    centered
+                    className="mb-2"
+                  />
+                  <p className="text-muted-foreground mb-6">
+                    Start a practice session to track your progress here!
+                    {showBurmese && (
+                      <span className="block font-myanmar mt-1">
+                        ဒီမှာတိုးတက်မှုခြေရာခံဖို့ လေ့ကျင့်မှုစတင်ပါ!
+                      </span>
+                    )}
+                  </p>
+                  <BilingualButton
+                    label={strings.practice.startPractice}
+                    variant="primary"
+                    onClick={() => navigate('/practice')}
+                  />
+                </div>
+              </FadeIn>
+            )}
+          </section>
+        )}
+
+        {/* Tests Tab Content */}
+        {activeTab === 'tests' && (
+          <>
         {/* Overview statistics */}
         <section
           id="overview"
@@ -345,6 +580,8 @@ const HistoryPage = () => {
             </FadeIn>
           )}
         </section>
+          </>
+        )}
       </div>
     </div>
   );
