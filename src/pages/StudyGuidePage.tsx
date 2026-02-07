@@ -12,6 +12,7 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { FlashcardStack } from '@/components/study/FlashcardStack';
+import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { strings } from '@/lib/i18n/strings';
 
 const categoryColors: Record<string, string> = {
@@ -283,6 +284,19 @@ const StudyGuidePage = () => {
                             </li>
                           ))}
                         </ul>
+                        {question.explanation && (
+                          <div
+                            className="mt-3"
+                            onClick={e => e.stopPropagation()}
+                            onKeyDown={e => e.stopPropagation()}
+                          >
+                            <ExplanationCard
+                              explanation={question.explanation}
+                              allQuestions={civicsQuestions}
+                              className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -468,6 +482,19 @@ const StudyGuidePage = () => {
                           </li>
                         ))}
                       </ul>
+                      {question.explanation && (
+                        <div
+                          className="mt-3"
+                          onClick={e => e.stopPropagation()}
+                          onKeyDown={e => e.stopPropagation()}
+                        >
+                          <ExplanationCard
+                            explanation={question.explanation}
+                            allQuestions={civicsQuestions}
+                            className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
