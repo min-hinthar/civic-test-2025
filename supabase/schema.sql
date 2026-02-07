@@ -93,3 +93,42 @@ create policy "Users can insert their own responses" on public.mock_test_respons
   for insert with check (auth.uid() = (select user_id from public.mock_tests where id = mock_test_id));
 
 create index if not exists mock_test_responses_category_idx on public.mock_test_responses (category);
+
+-- SRS (Spaced Repetition) card state per user per question
+create table if not exists public.srs_cards (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  question_id text not null,
+  -- FSRS Card state fields
+  due timestamptz not null default now(),
+  stability float8 not null default 0,
+  difficulty float8 not null default 0,
+  scheduled_days integer not null default 0,
+  learning_steps integer not null default 0,
+  reps integer not null default 0,
+  lapses integer not null default 0,
+  state smallint not null default 0,  -- 0=New, 1=Learning, 2=Review, 3=Relearning
+  last_review timestamptz,
+  -- Metadata
+  added_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  -- Prevent duplicate cards per user
+  unique (user_id, question_id)
+);
+
+alter table public.srs_cards enable row level security;
+
+create policy "Users can read their own SRS cards"
+  on public.srs_cards for select using (auth.uid() = user_id);
+create policy "Users can insert their own SRS cards"
+  on public.srs_cards for insert with check (auth.uid() = user_id);
+create policy "Users can update their own SRS cards"
+  on public.srs_cards for update using (auth.uid() = user_id);
+create policy "Users can delete their own SRS cards"
+  on public.srs_cards for delete using (auth.uid() = user_id);
+
+-- Index for due-card queries
+create index if not exists srs_cards_due_idx
+  on public.srs_cards (user_id, due);
+create index if not exists srs_cards_question_idx
+  on public.srs_cards (user_id, question_id);
