@@ -80,6 +80,12 @@ export const strings = {
     passed: { en: 'Passed', my: 'အောင်မြင်' },
     needsWork: { en: 'Keep Practicing', my: 'ဆက်လေ့ကျင့်ပါ' },
     passThreshold: { en: '6 out of 10 to pass', my: 'အောင်ရန် ၁၀ ခုမှ ၆ ခုလို' },
+    incorrectOnly: { en: 'Incorrect Only', my: 'မှားသောမေးခွန်းများသာ' },
+    showAll: { en: 'Show All', my: 'အားလုံးပြပါ' },
+    showing: { en: 'Showing', my: 'ပြသနေသည်' },
+    ofQuestions: { en: 'of', my: 'မှ' },
+    questions: { en: 'questions', my: 'မေးခွန်းများ' },
+    reviewAnswer: { en: 'Review this answer', my: 'ပြန်လည်လေ့လာပါ' },
   },
 
   // Encouragement messages (rotating variety)

@@ -20,8 +20,10 @@ import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/Answer
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { WhyButton } from '@/components/explanations/WhyButton';
+import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { strings } from '@/lib/i18n/strings';
+import { Filter } from 'lucide-react';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
@@ -41,6 +43,7 @@ const TestPage = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [explanationExpanded, setExplanationExpanded] = useState(false);
+  const [showAllResults, setShowAllResults] = useState(false);
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingResultRef = useRef<QuestionResult | null>(null);
   const hasSavedSessionRef = useRef(false);
@@ -56,6 +59,11 @@ const TestPage = () => {
           answers: fisherYatesShuffle(question.answers),
         })),
     []
+  );
+  // Map questionId -> Question for explanation lookup in review screen
+  const questionsById = useMemo(
+    () => new Map(questions.map(q => [q.id, q])),
+    [questions]
   );
   const currentQuestion = !isFinished ? questions[currentIndex] : null;
   const questionAudioText = currentQuestion?.question_en ?? '';
@@ -481,62 +489,128 @@ const TestPage = () => {
           </div>
         </div>
 
-        <div className="mt-10 space-y-6">
-          {results.map(result => (
-            <div
-              key={result.questionId}
-              className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm"
-            >
-              <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
-              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                {result.questionText_my}
-              </p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <SpeechButton
-                  text={result.questionText_en}
-                  label="Play English question"
-                  ariaLabel={`Play English question audio for ${result.questionText_en}`}
-                />
-                <SpeechButton
-                  text={result.correctAnswer.text_en}
-                  label="Play official answer"
-                  ariaLabel={`Play English official answer for ${result.questionText_en}`}
-                />
-              </div>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    Your answer · <span className="font-myanmar">အဖြေ</span>
-                  </p>
-                  <p className="text-sm font-semibold text-foreground">
-                    {result.selectedAnswer.text_en}
-                  </p>
-                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                    {result.selectedAnswer.text_my}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    Official answer · <span className="font-myanmar">အဖြေမှန်</span>
-                  </p>
-                  <p className="text-sm font-semibold text-foreground">
-                    {result.correctAnswer.text_en}
-                  </p>
-                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                    {result.correctAnswer.text_my}
-                  </p>
-                </div>
-              </div>
-              <p
+        {/* Filter toggle */}
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <div className="flex rounded-lg border border-border bg-muted/30 p-0.5">
+              <button
+                onClick={() => setShowAllResults(false)}
                 className={clsx(
-                  'mt-3 text-sm font-semibold',
-                  result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-colors',
+                  !showAllResults
+                    ? 'bg-card text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                {result.isCorrect ? 'Correct · မှန်' : 'Review this answer · ပြန်လည်လေ့လာပါ'}
-              </p>
+                {strings.test.incorrectOnly.en}
+                <span className="ml-1 font-myanmar">{strings.test.incorrectOnly.my}</span>
+              </button>
+              <button
+                onClick={() => setShowAllResults(true)}
+                className={clsx(
+                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-colors',
+                  showAllResults
+                    ? 'bg-card text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {strings.test.showAll.en}
+                <span className="ml-1 font-myanmar">{strings.test.showAll.my}</span>
+              </button>
             </div>
-          ))}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {strings.test.showing.en}{' '}
+            {showAllResults ? results.length : results.filter(r => !r.isCorrect).length}{' '}
+            {strings.test.ofQuestions.en} {results.length}{' '}
+            {strings.test.questions.en}
+          </p>
+        </div>
+
+        {/* Result cards */}
+        <div className="mt-4 space-y-6">
+          {(showAllResults ? results : results.filter(r => !r.isCorrect)).map(result => {
+            const questionData = questionsById.get(result.questionId);
+            const explanation = questionData?.explanation;
+
+            return (
+              <div
+                key={result.questionId}
+                className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm"
+              >
+                <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
+                <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                  {result.questionText_my}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <SpeechButton
+                    text={result.questionText_en}
+                    label="Play English question"
+                    ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                  />
+                  <SpeechButton
+                    text={result.correctAnswer.text_en}
+                    label="Play official answer"
+                    ariaLabel={`Play English official answer for ${result.questionText_en}`}
+                  />
+                </div>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div
+                    className={clsx(
+                      'rounded-2xl border p-3',
+                      result.isCorrect
+                        ? 'border-success-500/30 bg-success-50 dark:bg-success-500/10'
+                        : 'border-warning-500/30 bg-warning-50 dark:bg-warning-500/10'
+                    )}
+                  >
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      {strings.test.yourAnswer.en} · <span className="font-myanmar">{strings.test.yourAnswer.my}</span>
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {result.selectedAnswer.text_en}
+                    </p>
+                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                      {result.selectedAnswer.text_my}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      {strings.test.correctAnswer.en} · <span className="font-myanmar">{strings.test.correctAnswer.my}</span>
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {result.correctAnswer.text_en}
+                    </p>
+                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                      {result.correctAnswer.text_my}
+                    </p>
+                  </div>
+                </div>
+                <p
+                  className={clsx(
+                    'mt-3 text-sm font-semibold',
+                    result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                  )}
+                >
+                  {result.isCorrect
+                    ? `${strings.test.correct.en} · ${strings.test.correct.my}`
+                    : `${strings.test.reviewAnswer.en} · ${strings.test.reviewAnswer.my}`}
+                </p>
+
+                {/* Explanation card for review */}
+                {explanation && (
+                  <div className="mt-3">
+                    <ExplanationCard
+                      explanation={explanation}
+                      isCorrect={result.isCorrect}
+                      defaultExpanded={!result.isCorrect}
+                      allQuestions={questions}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
