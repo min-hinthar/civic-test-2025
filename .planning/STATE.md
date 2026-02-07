@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 2 of 9 complete (05-01 and 05-02)
+Plan: 3 of 9 complete (05-01, 05-02, 05-03)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-01-PLAN.md (FSRS engine & SRS store)
+Last activity: 2026-02-07 - Completed 05-03-PLAN.md (SRS context & hooks)
 
-Progress: [████████░░] 78% (32 plans / ~41 total estimated)
+Progress: [████████░░] 80% (33 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -167,6 +167,11 @@ Recent decisions affecting current work:
 - 05-01: Dedicated IndexedDB store 'civic-prep-srs' separate from mastery data
 - 05-01: Burmese numerals in getNextReviewText for bilingual display
 - 05-01: elapsed_days=0 in rowToCard (deprecated field, required for type compat)
+- 05-03: SRSProvider placed inside AuthProvider wrapping Router (needs useAuth for sync)
+- 05-03: No eslint-disable comments needed for setState in effects (React Compiler does not flag)
+- 05-03: Review streak computed separately from study streak using SRS lastReviewedAt dates
+- 05-03: Category breakdown uses USCIS main categories (3 groups) not sub-categories (7)
+- 05-03: Module-level questionsById Map in useSRSWidget for O(1) lookup
 
 ### Pending Todos
 
@@ -184,7 +189,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-01-PLAN.md (FSRS engine & SRS store) and 05-02-PLAN.md (Supabase schema & sync layer). Phase 5 in progress.
+Stopped at: Completed 05-03-PLAN.md (SRS context & hooks). Wave 2 plan 1 done, 05-04 through 05-09 remain.
 Resume file: None
 
 ---
