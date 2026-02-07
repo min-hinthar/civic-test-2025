@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 4 complete, ready for Phase 5
+**Current focus:** Phase 5 - Spaced Repetition (in progress)
 
 ## Current Position
 
-Phase: 4 of 7 (Learning - Explanations & Category Progress) - Complete
-Plan: 9 of 9 complete
-Status: Phase complete
-Last activity: 2026-02-07 - Completed 04-09-PLAN.md (Weak area nudges, study guide highlighting, practice history)
+Phase: 5 of 7 (Spaced Repetition)
+Plan: 2 of 9 in progress (05-01 and 05-02 complete)
+Status: In progress
+Last activity: 2026-02-07 - Completed 05-02-PLAN.md (Supabase schema & sync layer)
 
-Progress: [████████░░] 73% (30 plans / ~41 total estimated)
+Progress: [████████░░] 78% (32 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -179,7 +179,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 04-09-PLAN.md (Weak area nudges, study guide highlighting, practice history). Phase 4 complete.
+Stopped at: Completed 05-02-PLAN.md (Supabase schema & sync layer). Phase 5 in progress.
 Resume file: None
 
 ---
