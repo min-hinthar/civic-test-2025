@@ -126,16 +126,18 @@ Plans:
   3. User's review schedule persists across devices (Supabase sync)
   4. User's review schedule works offline (IndexedDB cache)
   5. User sees questions they struggle with more frequently than easy ones
-**Plans**: TBD
+**Plans**: 9 plans in 5 waves
 
 Plans:
-- [ ] 05-01: ts-fsrs integration and SRS data model
-- [ ] 05-02: Supabase srs_cards table with RLS
-- [ ] 05-03: SRS IndexedDB cache layer
-- [ ] 05-04: SRSProvider context and hooks
-- [ ] 05-05: Due cards study mode UI
-- [ ] 05-06: Dashboard SRS widget
-- [ ] 05-07: Cross-device sync conflict resolution
+- [ ] 05-01-PLAN.md — FSRS engine wrapper, SRS types, and IndexedDB card store
+- [ ] 05-02-PLAN.md — Supabase srs_cards table and sync layer with offline queue
+- [ ] 05-03-PLAN.md — SRSContext provider and specialized hooks (deck, review, widget)
+- [ ] 05-04-PLAN.md — AddToDeckButton integration into study guide and test review
+- [ ] 05-05-PLAN.md — DeckManager page and Study Guide tab routing
+- [ ] 05-06-PLAN.md — ReviewCard with swipe-to-rate, RatingButtons, and SessionSetup
+- [ ] 05-07-PLAN.md — ReviewSession orchestrator and session summary
+- [ ] 05-08-PLAN.md — Dashboard SRS widget and review heatmap
+- [ ] 05-09-PLAN.md — Navigation badge, push notifications, and settings
 
 ---
 
@@ -191,7 +193,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
 | 3. UI/UX & Bilingual Polish | 10/10 | Complete | 2026-02-07 |
 | 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
-| 5. Spaced Repetition | 0/7 | Not started | - |
+| 5. Spaced Repetition | 0/9 | Not started | - |
 | 6. Interview Simulation | 0/4 | Not started | - |
 | 7. Social Features | 0/5 | Not started | - |
 
