@@ -4,6 +4,7 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
 import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
 import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -99,7 +100,10 @@ const AppNavigation = ({
         <div className="flex items-center gap-2">
           <OnlineStatusIndicator />
           <SyncStatusIndicator />
-          <ThemeToggle />
+          <LanguageToggleCompact />
+          <div data-tour="theme-toggle">
+            <ThemeToggle />
+          </div>
           {user ? (
             <button
               onClick={event => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,10 +12,17 @@ import {
   YAxis,
 } from 'recharts';
 import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
+import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { TestEndReason } from '@/types';
+import { BilingualHeading, PageTitle } from '@/components/bilingual/BilingualHeading';
+import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { Card } from '@/components/ui/Card';
+import { StaggeredList, StaggeredItem, FadeIn } from '@/components/animations/StaggeredList';
+import { Progress } from '@/components/ui/Progress';
+import { strings } from '@/lib/i18n/strings';
 
 const reasonCopy: Record<TestEndReason, string> = {
   passThreshold: 'Ended early after 12 correct answers',
@@ -27,6 +34,7 @@ const reasonCopy: Record<TestEndReason, string> = {
 const HistoryPage = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
@@ -62,52 +70,56 @@ const HistoryPage = () => {
   }, [location.hash]);
 
   return (
-    <div className="page-shell">
+    <div className="page-shell" data-tour="test-history">
       <AppNavigation />
       <div className="mx-auto max-w-6xl px-4 py-10">
-        <header className="glass-panel p-6 shadow-primary/20">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary">History · မှတ်တမ်း</p>
-          <h1 className="text-3xl font-bold text-foreground">
-            Mock test performance
-            <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
-              စာမေးပွဲစွမ်းဆောင်ရည်စမ်းသပ်မှု
-            </span>
-          </h1>
-          <p className="text-muted-foreground">
-            Every attempt is securely stored in Supabase so you can review trends anytime.
-          </p>
-        </header>
+        <PageTitle text={strings.nav.testHistory} />
 
+        <p className="text-muted-foreground mb-8">
+          Every attempt is securely stored so you can review trends anytime.
+          <span className="block font-myanmar mt-1">
+            ကြိုးစားမှုတိုင်းကို လုံခြုံစွာ သိမ်းဆည်းထားပါသည်။
+          </span>
+        </p>
+
+        {/* Overview statistics */}
         <section
           id="overview"
-          className="mt-8 grid gap-6 sm:grid-cols-3"
+          className="grid gap-6 sm:grid-cols-3"
           aria-labelledby="history-overview"
         >
           <span id="history-overview" className="sr-only">
             Overview statistics
           </span>
-          <div className="stat-card p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Attempts</p>
-            <p className="text-3xl font-bold text-foreground">{history.length}</p>
-            <p className="text-sm text-muted-foreground">Total Supabase-synced tests</p>
-            <p className="text-xs text-muted-foreground font-myanmar">စာမေးပွဲ စုစုပေါင်း</p>
-          </div>
-          <div className="stat-card p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Best score</p>
-            <p className="text-3xl font-bold text-foreground">
-              {bestSession ? `${bestSession.score} / ${bestSession.totalQuestions}` : '—'}
-            </p>
-            <p className="text-sm text-muted-foreground">Keep chasing perfection</p>
-            <p className="text-xs text-muted-foreground font-myanmar">အကောင်းဆုံးအမှတ်</p>
-          </div>
-          <div className="stat-card p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Pass rate</p>
-            <p className="text-3xl font-bold text-foreground">{passRate}%</p>
-            <p className="text-sm text-muted-foreground">60%+ earns a pass</p>
-            <p className="text-xs text-muted-foreground font-myanmar">အောင်မြင်နှုန်း</p>
-          </div>
+          <FadeIn>
+            <Card className="p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Attempts</p>
+              <p className="text-3xl font-bold text-foreground">{history.length}</p>
+              <p className="text-sm text-muted-foreground">Total synced tests</p>
+              <p className="text-xs text-muted-foreground font-myanmar">စာမေးပွဲ စုစုပေါင်း</p>
+            </Card>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <Card className="p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Best score</p>
+              <p className="text-3xl font-bold text-foreground">
+                {bestSession ? `${bestSession.score} / ${bestSession.totalQuestions}` : '-'}
+              </p>
+              <p className="text-sm text-muted-foreground">Keep chasing perfection</p>
+              <p className="text-xs text-muted-foreground font-myanmar">အကောင်းဆုံးအမှတ်</p>
+            </Card>
+          </FadeIn>
+          <FadeIn delay={200}>
+            <Card className="p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Pass rate</p>
+              <p className="text-3xl font-bold text-foreground">{passRate}%</p>
+              <p className="text-sm text-muted-foreground">60%+ earns a pass</p>
+              <p className="text-xs text-muted-foreground font-myanmar">အောင်မြင်နှုန်း</p>
+            </Card>
+          </FadeIn>
         </section>
 
+        {/* Score trend chart */}
         <section
           id="trend"
           className="mt-8 glass-panel p-6 shadow-primary/15"
@@ -152,6 +164,7 @@ const HistoryPage = () => {
           </div>
         </section>
 
+        {/* Attempt log with staggered list */}
         <section id="attempts" className="mt-8 space-y-6" aria-labelledby="history-attempts">
           <div className="flex items-center gap-3">
             <Layers3 className="h-5 w-5 text-primary" />
@@ -165,112 +178,171 @@ const HistoryPage = () => {
               </p>
             </div>
           </div>
-          {history.map(session => {
-            const sessionId = session.id ?? session.date;
-            const isExpanded = expandedSessionId === sessionId;
-            return (
-              <div key={sessionId} className="glass-panel p-5 shadow-sm">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      {new Date(session.date).toLocaleString()}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Score {session.score} / {session.totalQuestions} ·{' '}
-                      {Math.round(session.durationSeconds / 60)} mins ·{' '}
-                      <span
-                        className={
-                          session.passed
-                            ? 'text-emerald-500 font-semibold'
-                            : 'text-red-500 font-semibold'
-                        }
-                      >
-                        {session.passed ? 'PASS' : 'REVIEW'}
-                      </span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">{reasonCopy[session.endReason]}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleSession(sessionId)}
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40"
-                  >
-                    {isExpanded ? 'Hide review' : 'Review answers'}
-                    {isExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                {isExpanded && (
-                  <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
-                    {session.results.map(result => (
-                      <div
-                        key={`${sessionId}-${result.questionId}`}
-                        className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
-                      >
-                        <p className="text-sm font-semibold text-foreground">
-                          {result.questionText_en}
-                        </p>
-                        <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                          {result.questionText_my}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <SpeechButton
-                            text={result.questionText_en}
-                            label="Play English question"
-                            ariaLabel={`Play English question audio for ${result.questionText_en}`}
-                          />
-                          <SpeechButton
-                            text={result.correctAnswer.text_en}
-                            label="Play official answer"
-                            ariaLabel={`Play official English answer for ${result.questionText_en}`}
-                          />
+
+          {history.length > 0 && (
+            <StaggeredList className="space-y-4">
+              {history.map(session => {
+                const sessionId = session.id ?? session.date;
+                const isExpanded = expandedSessionId === sessionId;
+                const scorePercent = Math.round((session.score / session.totalQuestions) * 100);
+
+                return (
+                  <StaggeredItem key={sessionId}>
+                    <Card
+                      interactive
+                      onClick={() => toggleSession(sessionId)}
+                      className="min-h-[44px]"
+                    >
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-foreground">
+                            {new Date(session.date).toLocaleString()}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Score {session.score} / {session.totalQuestions} ·{' '}
+                            {Math.round(session.durationSeconds / 60)} mins
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {reasonCopy[session.endReason]}
+                          </p>
                         </div>
-                        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                          <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                              Your answer · <span className="font-myanmar">အဖြေ</span>
-                            </p>
-                            <p className="text-sm font-semibold text-foreground">
-                              {result.selectedAnswer.text_en}
-                            </p>
-                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                              {result.selectedAnswer.text_my}
-                            </p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <span
+                              className={clsx(
+                                'text-2xl font-bold',
+                                session.passed ? 'text-success-500' : 'text-warning-500'
+                              )}
+                            >
+                              {scorePercent}%
+                            </span>
+                            <span className="block text-sm text-muted-foreground">
+                              {session.passed ? 'Passed / အောင်' : 'Keep trying / ဆက်ကြိုးစားပါ'}
+                            </span>
                           </div>
-                          <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                              Official answer · <span className="font-myanmar">အဖြေမှန်</span>
-                            </p>
-                            <p className="text-sm font-semibold text-foreground">
-                              {result.correctAnswer.text_en}
-                            </p>
-                            <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                              {result.correctAnswer.text_my}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
-                          <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
-                            {result.category}
-                          </span>
-                          <span className={result.isCorrect ? 'text-emerald-500' : 'text-red-500'}>
-                            {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား'}
-                          </span>
+                          <button
+                            type="button"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                            aria-label={isExpanded ? 'Hide review' : 'Review answers'}
+                          >
+                            {isExpanded ? 'Hide' : 'Review'}
+                            {isExpanded ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" />
+                            )}
+                          </button>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+
+                      {/* Score progress bar */}
+                      <div className="mt-3">
+                        <Progress
+                          value={scorePercent}
+                          variant={session.passed ? 'success' : 'warning'}
+                          size="sm"
+                        />
+                      </div>
+
+                      {isExpanded && (
+                        <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
+                          {session.results.map(result => (
+                            <div
+                              key={`${sessionId}-${result.questionId}`}
+                              className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
+                            >
+                              <p className="text-sm font-semibold text-foreground">
+                                {result.questionText_en}
+                              </p>
+                              <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                {result.questionText_my}
+                              </p>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                <SpeechButton
+                                  text={result.questionText_en}
+                                  label="Play English question"
+                                  ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                                />
+                                <SpeechButton
+                                  text={result.correctAnswer.text_en}
+                                  label="Play official answer"
+                                  ariaLabel={`Play official English answer for ${result.questionText_en}`}
+                                />
+                              </div>
+                              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                                    Your answer · <span className="font-myanmar">အဖြေ</span>
+                                  </p>
+                                  <p className="text-sm font-semibold text-foreground">
+                                    {result.selectedAnswer.text_en}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                    {result.selectedAnswer.text_my}
+                                  </p>
+                                </div>
+                                <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                                    Official answer · <span className="font-myanmar">အဖြေမှန်</span>
+                                  </p>
+                                  <p className="text-sm font-semibold text-foreground">
+                                    {result.correctAnswer.text_en}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                    {result.correctAnswer.text_my}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
+                                <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                                  {result.category}
+                                </span>
+                                <span
+                                  className={
+                                    result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                                  }
+                                >
+                                  {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား'}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </Card>
+                  </StaggeredItem>
+                );
+              })}
+            </StaggeredList>
+          )}
+
+          {/* Empty state with encouraging bilingual message */}
           {!history.length && (
-            <div className="glass-panel p-6 text-center text-muted-foreground">
-              No attempts yet. Take your first practice test!
-            </div>
+            <FadeIn>
+              <div className="text-center py-12">
+                <BilingualHeading
+                  text={{
+                    en: "You haven't taken any tests yet",
+                    my: 'သင်မည်သည့်စာမေးပွဲမှမဖြေဆိုရသေးပါ',
+                  }}
+                  level={2}
+                  size="lg"
+                  centered
+                  className="mb-2"
+                />
+                <p className="text-muted-foreground mb-6">
+                  Take your first practice test to start tracking progress!
+                  <span className="block font-myanmar mt-1">
+                    တိုးတက်မှုခြေရာခံဖို့ ပထမဆုံးစာမေးပွဲဖြေပါ!
+                  </span>
+                </p>
+                <BilingualButton
+                  label={strings.actions.startTest}
+                  variant="primary"
+                  onClick={() => navigate('/test')}
+                />
+              </div>
+            </FadeIn>
           )}
         </section>
       </div>
