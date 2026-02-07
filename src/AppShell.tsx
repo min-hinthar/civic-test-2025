@@ -25,6 +25,7 @@ import PasswordResetPage from '@/pages/PasswordResetPage';
 import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
 import OpEdPage from '@/pages/OpEdPage';
 import SettingsPage from '@/pages/SettingsPage';
+import ProgressPage from '@/pages/ProgressPage';
 
 /**
  * Hook to detect if running on client side.
@@ -168,6 +169,14 @@ const AppShell = () => {
                           element={
                             <ProtectedRoute>
                               <HistoryPage />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/progress"
+                          element={
+                            <ProtectedRoute>
+                              <ProgressPage />
                             </ProtectedRoute>
                           }
                         />
