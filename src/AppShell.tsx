@@ -7,7 +7,6 @@ import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { OfflineProvider } from '@/contexts/OfflineContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { PageTransition } from '@/components/animations/PageTransition';
@@ -184,7 +183,6 @@ const AppShell = () => {
                       </Routes>
                     </PageTransition>
                   </ErrorBoundary>
-                  <Toaster />
                   <PWAOnboardingFlow />
                 </Router>
               </AuthProvider>
