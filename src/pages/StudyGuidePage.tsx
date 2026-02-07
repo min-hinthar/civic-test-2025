@@ -16,6 +16,7 @@ import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { CategoryHeaderBadge, QuestionAccuracyDot } from '@/components/nudges/StudyGuideHighlight';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { DeckManager } from '@/components/srs/DeckManager';
+import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
 import { strings } from '@/lib/i18n/strings';
 
@@ -52,9 +53,10 @@ const StudyGuidePage = () => {
   // SRS deck state for due count badge
   const { dueCount } = useSRS();
 
-  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck
+  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review
   const hash = location.hash;
   const isDeckView = hash === '#deck';
+  const isReviewView = hash === '#review';
   const isCardsView = hash === '#cards' || hash.startsWith('#cards-');
   const selectedCategory = hash.startsWith('#category-')
     ? decodeURIComponent(hash.replace('#category-', ''))
@@ -137,6 +139,19 @@ const StudyGuidePage = () => {
   }, [category]);
 
   const categories = useMemo(() => ['all', ...questionCategories], [questionCategories]);
+
+  // Review session view
+  if (isReviewView) {
+    return (
+      <div className="page-shell" data-tour="study-guide">
+        <AppNavigation />
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <PageTitle text={strings.study.studyGuide} />
+          <ReviewSession onExit={() => navigate('/study#deck')} />
+        </div>
+      </div>
+    );
+  }
 
   // Deck management view
   if (isDeckView) {
