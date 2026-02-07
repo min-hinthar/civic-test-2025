@@ -19,6 +19,8 @@ export interface WhyButtonProps {
   compact?: boolean;
   /** All questions (passed through to ExplanationCard for RelatedQuestions) */
   allQuestions?: Question[];
+  /** Callback when expand/collapse state changes */
+  onExpandChange?: (expanded: boolean) => void;
   /** Additional class names */
   className?: string;
 }
@@ -42,6 +44,7 @@ export function WhyButton({
   isCorrect,
   compact = false,
   allQuestions = [],
+  onExpandChange,
   className,
 }: WhyButtonProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -58,7 +61,13 @@ export function WhyButton({
       {/* Trigger header */}
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={() => {
+          setIsExpanded((prev) => {
+            const next = !prev;
+            onExpandChange?.(next);
+            return next;
+          });
+        }}
         className={clsx(
           'flex w-full items-center gap-2.5 px-4 text-left',
           'min-h-[44px] py-2.5',

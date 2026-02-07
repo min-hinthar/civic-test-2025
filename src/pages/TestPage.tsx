@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
@@ -19,6 +19,8 @@ import { PreTestScreen } from '@/components/test/PreTestScreen';
 import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/AnswerFeedback';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
+import { WhyButton } from '@/components/explanations/WhyButton';
+import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { strings } from '@/lib/i18n/strings';
 
 const TEST_DURATION_SECONDS = 20 * 60;
@@ -38,6 +40,9 @@ const TestPage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [explanationExpanded, setExplanationExpanded] = useState(false);
+  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingResultRef = useRef<QuestionResult | null>(null);
   const hasSavedSessionRef = useRef(false);
   const lockMessage =
     'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
@@ -96,12 +101,23 @@ const TestPage = () => {
     [questions.length, results]
   );
 
+  const advanceToNext = useCallback(() => {
+    const result = pendingResultRef.current;
+    if (!result) return;
+    pendingResultRef.current = null;
+    setShowFeedback(false);
+    setSelectedAnswer(null);
+    setExplanationExpanded(false);
+    processResult(result);
+  }, [processResult]);
+
   const handleAnswerSelect = useCallback(
     (answer: Answer) => {
       if (!currentQuestion || isFinished || showFeedback) return;
 
       setSelectedAnswer(answer);
       setShowFeedback(true);
+      setExplanationExpanded(false);
 
       const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
       const result: QuestionResult = {
@@ -114,14 +130,34 @@ const TestPage = () => {
         category: currentQuestion.category,
       };
 
+      pendingResultRef.current = result;
+
+      // Fire-and-forget: record answer to mastery store
+      recordAnswer({
+        questionId: currentQuestion.id,
+        isCorrect: answer.correct,
+        sessionType: 'test',
+      });
+
       // Delay before moving to next question to show feedback
-      setTimeout(() => {
-        setShowFeedback(false);
-        setSelectedAnswer(null);
-        processResult(result);
+      feedbackTimeoutRef.current = setTimeout(() => {
+        feedbackTimeoutRef.current = null;
+        advanceToNext();
       }, FEEDBACK_DELAY_MS);
     },
-    [currentQuestion, isFinished, showFeedback, processResult]
+    [currentQuestion, isFinished, showFeedback, advanceToNext]
+  );
+
+  const handleExplanationExpandChange = useCallback(
+    (expanded: boolean) => {
+      setExplanationExpanded(expanded);
+      if (expanded && feedbackTimeoutRef.current) {
+        // Pause auto-advance when user expands explanation
+        clearTimeout(feedbackTimeoutRef.current);
+        feedbackTimeoutRef.current = null;
+      }
+    },
+    []
   );
 
   // Timer countdown
@@ -329,6 +365,35 @@ const TestPage = () => {
             correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
           />
         </div>
+
+        {/* WhyButton inline explanation (only when feedback shown and explanation exists) */}
+        {showFeedback && currentQuestion?.explanation && (
+          <div className="mt-3">
+            <WhyButton
+              explanation={currentQuestion.explanation}
+              isCorrect={selectedAnswer?.correct}
+              compact
+              onExpandChange={handleExplanationExpandChange}
+            />
+            {/* Show "Next" button when explanation is expanded (auto-advance paused) */}
+            {explanationExpanded && (
+              <button
+                onClick={advanceToNext}
+                className={clsx(
+                  'mt-3 flex w-full items-center justify-center gap-2',
+                  'min-h-[44px] rounded-xl border border-primary-500/30 bg-primary-50 px-4 py-2.5',
+                  'text-sm font-semibold text-primary-600',
+                  'transition-colors duration-150 hover:bg-primary-100',
+                  'dark:bg-primary-500/10 dark:text-primary-400 dark:hover:bg-primary-500/20'
+                )}
+              >
+                {strings.actions.next.en}
+                <span className="font-myanmar text-xs">{strings.actions.next.my}</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Tap an answer to move to the next question.
