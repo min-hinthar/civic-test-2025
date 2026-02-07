@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 3 of 9 complete (05-01, 05-02, 05-03)
+Plan: 4 of 9 complete (05-01, 05-02, 05-03, 05-05)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-03-PLAN.md (SRS context & hooks)
+Last activity: 2026-02-07 - Completed 05-05-PLAN.md (DeckManager + #deck hash route)
 
-Progress: [████████░░] 80% (33 plans / ~41 total estimated)
+Progress: [████████░░] 83% (34 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -172,6 +172,10 @@ Recent decisions affecting current work:
 - 05-03: Review streak computed separately from study streak using SRS lastReviewedAt dates
 - 05-03: Category breakdown uses USCIS main categories (3 groups) not sub-categories (7)
 - 05-03: Module-level questionsById Map in useSRSWidget for O(1) lookup
+- 05-05: DeckManager as sub-view via #deck hash route (not separate page)
+- 05-05: Sort order: Due first, then New, then Done for actionable card priority
+- 05-05: Due count badge uses absolute positioning overlay on BilingualButton wrapper
+- 05-05: onStartReview navigates to #review (placeholder for plan 05-06)
 
 ### Pending Todos
 
@@ -189,7 +193,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-03-PLAN.md (SRS context & hooks). Wave 2 plan 1 done, 05-04 through 05-09 remain.
+Stopped at: Completed 05-05-PLAN.md (DeckManager + #deck hash route). Wave 3 plans in progress.
 Resume file: None
 
 ---
