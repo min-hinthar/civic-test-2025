@@ -1,11 +1,28 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { BookOpen } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { CategoryRing } from '@/components/progress/CategoryRing';
 import { strings } from '@/lib/i18n/strings';
+import {
+  USCIS_CATEGORIES,
+  USCIS_CATEGORY_NAMES,
+  CATEGORY_COLORS,
+} from '@/lib/mastery';
+import type { USCISCategory } from '@/lib/mastery';
 import { clsx } from 'clsx';
+
+const miniRingColors: Record<string, string> = {
+  blue: 'text-blue-500',
+  amber: 'text-amber-500',
+  emerald: 'text-emerald-500',
+};
 
 interface PreTestScreenProps {
   questionCount: number;
@@ -28,6 +45,9 @@ interface PreTestScreenProps {
  */
 export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTestScreenProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { showBurmese } = useLanguage();
+  const { categoryMasteries } = useCategoryMastery();
+  const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
@@ -101,6 +121,43 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
         {strings.test.passThreshold.en}
         <span className="block font-myanmar">{strings.test.passThreshold.my}</span>
       </p>
+
+      {/* Practice by Category section */}
+      <div className="mt-10 w-full max-w-md">
+        <div className="border-t border-border/40 pt-6">
+          <Link
+            to="/practice"
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary-400 hover:bg-primary-50/30 dark:hover:bg-primary-500/5"
+          >
+            <BookOpen className="h-5 w-5 shrink-0 text-primary-500" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">
+                Practice by Category
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground">
+                  အမျိုးအစားအလိုက် လေ့ကျင့်ပါ
+                </p>
+              )}
+            </div>
+            <div className="flex gap-1.5">
+              {categories.map(cat => {
+                const color = CATEGORY_COLORS[cat];
+                const mastery = categoryMasteries[cat] ?? 0;
+                return (
+                  <CategoryRing
+                    key={cat}
+                    percentage={mastery}
+                    color={miniRingColors[color]}
+                    size={28}
+                    strokeWidth={3}
+                  />
+                );
+              })}
+            </div>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
