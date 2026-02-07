@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 2 of 9 in progress (05-01 and 05-02 complete)
+Plan: 2 of 9 complete (05-01 and 05-02)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-02-PLAN.md (Supabase schema & sync layer)
+Last activity: 2026-02-07 - Completed 05-01-PLAN.md (FSRS engine & SRS store)
 
 Progress: [████████░░] 78% (32 plans / ~41 total estimated)
 
@@ -162,6 +162,11 @@ Recent decisions affecting current work:
 - 04-09: Practice session grouping by 5-minute timestamp gaps (no explicit session IDs)
 - 04-09: QuestionAccuracyDot based on most recent answer for simple signal
 - 04-09: Unattempted categories get primary (blue) styling, weak get warning (orange)
+- 05-01: FSRS module-level singleton (not per-component) for performance
+- 05-01: Binary grading: Easy->Rating.Good, Hard->Rating.Again (NOT Rating.Hard)
+- 05-01: Dedicated IndexedDB store 'civic-prep-srs' separate from mastery data
+- 05-01: Burmese numerals in getNextReviewText for bilingual display
+- 05-01: elapsed_days=0 in rowToCard (deprecated field, required for type compat)
 
 ### Pending Todos
 
@@ -179,7 +184,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-02-PLAN.md (Supabase schema & sync layer). Phase 5 in progress.
+Stopped at: Completed 05-01-PLAN.md (FSRS engine & SRS store) and 05-02-PLAN.md (Supabase schema & sync layer). Phase 5 in progress.
 Resume file: None
 
 ---
