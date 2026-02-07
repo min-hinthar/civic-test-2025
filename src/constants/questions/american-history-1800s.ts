@@ -27,6 +27,17 @@ export const history1800sQuestions: Question[] = [
       { text_en: 'Florida', text_my: 'ဖလော်ရီဒါ', correct: false },
       { text_en: 'California', text_my: 'ကယ်လီဖိုးနီးယား', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'In 1803, President Thomas Jefferson purchased the Louisiana Territory from France for $15 million. This "Louisiana Purchase" doubled the size of the United States and opened the West for expansion.',
+      brief_my:
+        '၁၈၀၃ ခုနှစ်တွင် သမ္မတ သောမတ်စ် ဂျက်ဖာဆင်သည် လူးဝစ်စီယားနားနယ်မြေကို ပြင်သစ်ထံမှ ဒေါ်လာ ၁၅ သန်းဖြင့် ဝယ်ယူခဲ့သည်။ ဤ "လူးဝစ်စီယားနားဝယ်ယူမှု" က အမေရိကန်ပြည်ထောင်စု၏ အကျယ်အဝန်းကို နှစ်ဆ တိုးစေခဲ့သည်။',
+      funFact_en:
+        'The Louisiana Purchase cost about 4 cents per acre — one of the greatest real estate deals in history! It covered 828,000 square miles.',
+      funFact_my:
+        'လူးဝစ်စီယားနားဝယ်ယူမှုသည် ဧက တစ်ဧကလျှင် ၄ စင့်ခန့် ကုန်ကျခဲ့သည် — သမိုင်းတွင် အကြီးမားဆုံး အိမ်ခြံမြေ သဘောတူညီချက်များထဲမှ တစ်ခု!',
+      relatedQuestionIds: ['HIST-C05'],
+    },
   },
   {
     id: 'HIST-102',
@@ -46,6 +57,17 @@ export const history1800sQuestions: Question[] = [
       { text_en: 'World War I', text_my: 'ပထမကမ္ဘာစစ်', correct: false },
       { text_en: 'Korean War', text_my: 'ကိုရီးယားစစ်ပွဲ', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'The U.S. fought four major wars in the 1800s: the War of 1812, the Mexican-American War, the Civil War, and the Spanish-American War. The Civil War (1861-1865) was the deadliest, fought between the North and South.',
+      brief_my:
+        'အမေရိကန်သည် ၁၈၀၀ ပြည့်နှစ်များတွင် အဓိကစစ်ပွဲ ၄ ခု တိုက်ခိုက်ခဲ့သည် — ၁၈၁၂ စစ်ပွဲ၊ မက္ကဆီကန်-အမေရိကန်စစ်ပွဲ၊ ပြည်တွင်းစစ်နှင့် စပိန်-အမေရိကန်စစ်ပွဲ။ ပြည်တွင်းစစ် (၁၈၆၁-၁၈၆၅) သည် အသက်ဆုံးရှုံးမှု အများဆုံးဖြစ်သည်။',
+      commonMistake_en:
+        'The Revolutionary War (1775-1783) was in the 1700s, not the 1800s. World War I (1914-1918) was in the 1900s.',
+      commonMistake_my:
+        'တော်လှန်ရေးစစ်ပွဲ (၁၇၇၅-၁၇၈၃) သည် ၁၇၀၀ ပြည့်နှစ်များတွင် ဖြစ်သည်၊ ၁၈၀၀ ပြည့်နှစ်များ မဟုတ်ပါ။ ပထမကမ္ဘာစစ် (၁၉၁၄-၁၉၁၈) သည် ၁၉၀၀ ပြည့်နှစ်များတွင် ဖြစ်သည်။',
+      relatedQuestionIds: ['HIST-103', 'HIST-R01'],
+    },
   },
   {
     id: 'HIST-103',
@@ -66,6 +88,17 @@ export const history1800sQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Civil War (1861-1865) was fought between the Northern states (the Union) and the Southern states (the Confederacy). It is also called the War Between the States. It remains the deadliest war in American history.',
+      brief_my:
+        'ပြည်တွင်းစစ် (၁၈၆၁-၁၈၆၅) သည် မြောက်ပိုင်းပြည်နယ်များ (ပြည်ထောင်စု) နှင့် တောင်ပိုင်းပြည်နယ်များ (ကွန်ဖက်ဒရေးရှင်း) ကြားတိုက်ခိုက်ခဲ့သည်။ အမေရိကန်သမိုင်းတွင် အသက်ဆုံးရှုံးမှု အများဆုံးစစ်ပွဲ ဖြစ်သည်။',
+      funFact_en:
+        'About 620,000 soldiers died in the Civil War — more American deaths than in World War I, World War II, and the Vietnam War combined.',
+      funFact_my:
+        'ပြည်တွင်းစစ်တွင် စစ်သား ၆၂၀,၀၀၀ ခန့် ကျဆုံးခဲ့သည် — ပထမကမ္ဘာစစ်၊ ဒုတိယကမ္ဘာစစ်နှင့် ဗီယက်နမ်စစ်ပွဲ ပေါင်းထားသည်ထက် ပို၍ များသည်။',
+      relatedQuestionIds: ['HIST-102', 'HIST-104', 'HIST-105'],
+    },
   },
   {
     id: 'HIST-104',
@@ -87,6 +120,13 @@ export const history1800sQuestions: Question[] = [
       { text_en: 'the price of tea', text_my: 'လက်ဖက်ရည်စျေးနှုန်း', correct: false },
       { text_en: 'oil disputes', text_my: 'ရေနံအငြင်းပွားမှုများ', correct: false },
     ],
+    explanation: {
+      brief_en:
+        "Slavery was the primary cause of the Civil War. The North wanted to stop slavery from spreading, while the South relied on enslaved labor for its economy. States' rights and economic differences also played roles.",
+      brief_my:
+        'ကျွန်စနစ်သည် ပြည်တွင်းစစ်၏ အဓိကအကြောင်းရင်း ဖြစ်သည်။ မြောက်ပိုင်းက ကျွန်စနစ်ပြန့်ပွားမှုကို ရပ်တန့်လိုပြီး တောင်ပိုင်းက ၎င်းတို့၏ စီးပွားရေးအတွက် ကျွန်လုပ်အားကို မှီခိုခဲ့သည်။',
+      relatedQuestionIds: ['HIST-103', 'HIST-105', 'HIST-106', 'HIST-C03'],
+    },
   },
   {
     id: 'HIST-105',
@@ -129,6 +169,21 @@ export const history1800sQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        "Abraham Lincoln freed the slaves through the Emancipation Proclamation, preserved the Union by winning the Civil War, and led the country through its most difficult period. He is widely considered one of America's greatest presidents.",
+      brief_my:
+        'အာဗြဟံ လင်ကွန်းသည် လွတ်မြောက်ရေးကြေညာချက်ဖြင့် ကျွန်များကို လွတ်မြောက်စေခဲ့ပြီး ပြည်တွင်းစစ်ကို အနိုင်ရကာ ပြည်ထောင်စုကို ထိန်းသိမ်းခဲ့သည်။ အမေရိက၏ အကြီးမြတ်ဆုံးသမ္မတများထဲမှ တစ်ဦးအဖြစ် လူသိများသည်။',
+      funFact_en:
+        'Lincoln taught himself law by reading books — he never went to law school. He is on both the penny and the $5 bill.',
+      funFact_my:
+        'လင်ကွန်းသည် စာအုပ်ဖတ်၍ ဥပဒေကို ကိုယ်တိုင်သင်ယူခဲ့သည် — ဥပဒေကျောင်းကို တက်ခဲ့ဖူးခြင်း မရှိပါ။ ပဲနီအပြားနှင့် ဒေါ်လာ ၅ ငွေစက္ကူတွင် သူ့ပုံပါသည်။',
+      commonMistake_en:
+        "Jefferson wrote the Declaration of Independence, not Lincoln. Franklin was the first Postmaster General. Lincoln's key achievements were about the Civil War and ending slavery.",
+      commonMistake_my:
+        'ဂျက်ဖာဆင်က လွတ်လပ်ရေးကြေညာစာတမ်းကို ရေးသားခဲ့သည်၊ လင်ကွန်းမဟုတ်ပါ။ ဖရန်ကလင်က ပထမဆုံးစာတိုက်ဦးစီးချုပ် ဖြစ်ခဲ့သည်။ လင်ကွန်း၏ အဓိကအောင်မြင်မှုများသည် ပြည်တွင်းစစ်နှင့် ကျွန်စနစ်အဆုံးသတ်ခြင်း ဖြစ်သည်။',
+      relatedQuestionIds: ['HIST-103', 'HIST-104', 'HIST-106'],
+    },
   },
   {
     id: 'HIST-106',
@@ -172,6 +227,18 @@ export const history1800sQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Emancipation Proclamation, issued by President Lincoln in 1863, declared that enslaved people in Confederate states were free. It did not immediately free all slaves, but it changed the purpose of the Civil War to include ending slavery.',
+      brief_my:
+        'သမ္မတလင်ကွန်းက ၁၈၆၃ ခုနှစ်တွင် ထုတ်ပြန်ခဲ့သော လွတ်မြောက်ရေးကြေညာချက်သည် ကွန်ဖက်ဒရေးရှင်းပြည်နယ်များရှိ ကျွန်များကို လွတ်မြောက်စေကြောင်း ကြေညာခဲ့သည်။ ကျွန်အားလုံးကို ချက်ချင်းမလွတ်မြောက်စေသော်လည်း ပြည်တွင်းစစ်၏ ရည်ရွယ်ချက်ကို ကျွန်စနစ်အဆုံးသတ်ခြင်း ပါဝင်အောင် ပြောင်းလဲစေခဲ့သည်။',
+      citation: '13th Amendment (formally abolished slavery in 1865)',
+      commonMistake_en:
+        'The Emancipation Proclamation did not end the Civil War — the war continued until 1865. It also did not give women the right to vote; that came with the 19th Amendment in 1920.',
+      commonMistake_my:
+        'လွတ်မြောက်ရေးကြေညာချက်သည် ပြည်တွင်းစစ်ကို အဆုံးမသတ်ခဲ့ပါ — စစ်ပွဲသည် ၁၈၆၅ အထိ ဆက်လက်ဖြစ်ပွားခဲ့သည်။ အမျိုးသမီးများကို မဲပေးခွင့်လည်း မပေးခဲ့ပါ — ၎င်းသည် ၁၉၂၀ ခုနှစ် ၁၉ ကြိမ်မြောက် ပြင်ဆင်ချက်ဖြင့် လာခဲ့သည်။',
+      relatedQuestionIds: ['HIST-105', 'HIST-104', 'HIST-C03'],
+    },
   },
   {
     id: 'HIST-107',
@@ -210,5 +277,16 @@ export const history1800sQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        "Susan B. Anthony was a leader in the women's rights and civil rights movements. She fought tirelessly for women's right to vote, which was finally achieved with the 19th Amendment in 1920 — 14 years after her death.",
+      brief_my:
+        'ဆူဇန် ဘီ အန်သိုနီသည် အမျိုးသမီးအခွင့်အရေးနှင့် ပြည်သူ့အခွင့်အရေး လှုပ်ရှားမှုများ၏ ခေါင်းဆောင် ဖြစ်ခဲ့သည်။ အမျိုးသမီးမဲပေးခွင့်အတွက် မနားမနေ တိုက်ပွဲဝင်ခဲ့ပြီး ၁၉၂၀ ခုနှစ် ၁၉ ကြိမ်မြောက် ပြင်ဆင်ချက်ဖြင့် အောင်မြင်ခဲ့သည်။',
+      funFact_en:
+        'In 1872, Anthony was arrested for voting illegally as a woman. She was fined $100 but refused to pay. She appears on the U.S. dollar coin.',
+      funFact_my:
+        '၁၈၇၂ ခုနှစ်တွင် အန်သိုနီသည် အမျိုးသမီးအဖြစ် တရားမဝင်မဲပေးမှုဖြင့် ဖမ်းဆီးခံရသည်။ ဒေါ်လာ ၁၀၀ ဒဏ်ရိုက်ခံရသော်လည်း ပေးဆောင်ရန် ငြင်းဆန်ခဲ့သည်။ အမေရိကန်ဒေါ်လာ ဒင်္ဂါးပြားတွင် သူမ၏ ပုံပါသည်။',
+      relatedQuestionIds: ['HIST-R07', 'RR-01'],
+    },
   },
 ];
