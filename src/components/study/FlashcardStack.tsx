@@ -161,6 +161,8 @@ export function FlashcardStack({
               answerEn={answer.en}
               answerMy={answer.my}
               category={currentQuestion.category}
+              explanation={currentQuestion.explanation}
+              allQuestions={questions}
             />
           </motion.div>
         </AnimatePresence>

@@ -5,6 +5,8 @@ import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { ExplanationCard } from '@/components/explanations/ExplanationCard';
+import type { Explanation, Question } from '@/types';
 
 interface Flashcard3DProps {
   /** Question text (front of card) */
@@ -15,6 +17,10 @@ interface Flashcard3DProps {
   answerMy: string;
   /** Category for gradient styling */
   category?: string;
+  /** Optional explanation to show on back of card */
+  explanation?: Explanation;
+  /** All questions for RelatedQuestions lookup */
+  allQuestions?: Question[];
   /** Called when card is flipped */
   onFlip?: (isFlipped: boolean) => void;
   /** Additional class names */
@@ -60,6 +66,8 @@ export function Flashcard3D({
   answerEn,
   answerMy,
   category,
+  explanation,
+  allQuestions = [],
   onFlip,
   className,
 }: Flashcard3DProps) {
@@ -186,20 +194,38 @@ export function Flashcard3D({
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success-500/10 to-emerald-500/10" />
           {paperTexture}
 
-          <div className="relative z-10 flex-1 flex flex-col">
+          <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
             {/* Answer label */}
             <div className="text-sm font-medium text-success-500 mb-2">Answer / အဖြေ</div>
 
-            {/* Answer text */}
-            <div className="flex-1 flex flex-col justify-center">
-              <p className="text-xl font-bold text-foreground leading-relaxed">{answerEn}</p>
-              <p className="mt-3 text-lg font-myanmar text-muted-foreground leading-relaxed">
-                {answerMy}
-              </p>
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto min-h-0">
+              {/* Answer text */}
+              <div>
+                <p className="text-xl font-bold text-foreground leading-relaxed">{answerEn}</p>
+                <p className="mt-3 text-lg font-myanmar text-muted-foreground leading-relaxed">
+                  {answerMy}
+                </p>
+              </div>
+
+              {/* Explanation card */}
+              {explanation && (
+                <div
+                  className="mt-3"
+                  onClick={(e: MouseEvent) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                >
+                  <ExplanationCard
+                    explanation={explanation}
+                    allQuestions={allQuestions}
+                    className="text-sm"
+                  />
+                </div>
+              )}
             </div>
 
             {/* TTS and flip hint */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mt-4 shrink-0">
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={answerEn}
