@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 4 in progress - Learning, Explanations & Category Progress
+**Current focus:** Phase 4 complete - Learning, Explanations & Category Progress
 
 ## Current Position
 
-Phase: 4 of 7 (Learning - Explanations & Category Progress) - In progress
-Plan: 8 of 9 complete
-Status: In progress
-Last activity: 2026-02-07 - Completed 04-08-PLAN.md (Category practice mode)
+Phase: 4 of 7 (Learning - Explanations & Category Progress) - Complete
+Plan: 9 of 9 complete
+Status: Phase complete
+Last activity: 2026-02-07 - Completed 04-09-PLAN.md (Weak area nudges, study guide highlighting, practice history)
 
-Progress: [███████░░░] 70% (29 plans / ~41 total estimated)
+Progress: [████████░░] 73% (30 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 29 (10 plans + 1 gap-fix + 8 phase 4)
+- Total plans completed: 30 (10 plans + 1 gap-fix + 9 phase 4)
 - Average duration: 16 min
-- Total execution time: 454 min
+- Total execution time: 467 min
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [███████░░░] 70% (29 plans / ~41 total estimated)
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
 | 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
-| 04-learning-explanations | 8 | 59 min | 7 min |
+| 04-learning-explanations | 9 | 72 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-04 (7 min), 04-05 (7 min), 04-06 (8 min), 04-07 (5 min), 04-08 (7 min)
-- Trend: Component plans 5-8 min, integration plans 5-7 min, well-established patterns
+- Last 5 plans: 04-05 (7 min), 04-06 (8 min), 04-07 (5 min), 04-08 (7 min), 04-09 (13 min)
+- Trend: Integration/culmination plans slightly longer due to multiple page integrations
 
 *Updated after each plan completion*
 
@@ -158,6 +158,10 @@ Recent decisions affecting current work:
 - 04-08: Previous mastery captured via useRef before session starts for animated ring
 - 04-08: Mini CategoryRings on PreTestScreen for at-a-glance category status
 - 04-08: Weak questions: accuracy < 60% threshold, unanswered treated as accuracy 0
+- 04-09: Deterministic hash-based message selection for consistent nudge display per category
+- 04-09: Practice session grouping by 5-minute timestamp gaps (no explicit session IDs)
+- 04-09: QuestionAccuracyDot based on most recent answer for simple signal
+- 04-09: Unattempted categories get primary (blue) styling, weak get warning (orange)
 
 ### Pending Todos
 
@@ -175,7 +179,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 04-08-PLAN.md (Category practice mode). Ready for 04-09.
+Stopped at: Completed 04-09-PLAN.md (Weak area nudges, study guide highlighting, practice history). Phase 4 complete.
 Resume file: None
 
 ---
