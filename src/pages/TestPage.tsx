@@ -22,6 +22,7 @@ import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { WhyButton } from '@/components/explanations/WhyButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
+import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
@@ -585,7 +586,7 @@ const TestPage = () => {
                 <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
                   {result.questionText_my}
                 </p>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-2 flex flex-wrap items-center gap-2">
                   <SpeechButton
                     text={result.questionText_en}
                     label="Play English question"
@@ -596,6 +597,7 @@ const TestPage = () => {
                     label="Play official answer"
                     ariaLabel={`Play English official answer for ${result.questionText_en}`}
                   />
+                  <AddToDeckButton questionId={result.questionId} compact />
                 </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div
