@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Code Quality** - Fix critical bugs, add TypeScript strictness, establish testing infrastructure
 - [x] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
-- [ ] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
+- [x] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
 - [ ] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
 - [ ] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [ ] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
@@ -78,16 +78,16 @@ Plans:
 **Plans**: 10 plans in 4 waves
 
 Plans:
-- [ ] 03-01-PLAN.md - Design foundation: fonts, color tokens, animation keyframes
-- [ ] 03-02-PLAN.md - Core UI components: Button, Card, Skeleton with animations
-- [ ] 03-03-PLAN.md - Radix accessible components: Dialog, Toast, Progress
-- [ ] 03-04-PLAN.md - Page transitions and staggered list animations
-- [ ] 03-05-PLAN.md - Bilingual text components and centralized strings
-- [ ] 03-06-PLAN.md - Test UX: circular timer, pre-test screen, answer feedback, celebrations
-- [ ] 03-07-PLAN.md - Flashcard 3D flip and onboarding tour
-- [ ] 03-08-PLAN.md - Dashboard, Landing, Auth page integration with readiness indicator (ANXR-05)
-- [ ] 03-08a-PLAN.md - StudyGuide, Test, History page integration
-- [ ] 03-09-PLAN.md - Dark mode polish and English-only practice mode
+- [x] 03-01-PLAN.md - Design foundation: fonts, color tokens, animation keyframes
+- [x] 03-02-PLAN.md - Core UI components: Button, Card, Skeleton with animations
+- [x] 03-03-PLAN.md - Radix accessible components: Dialog, Toast, Progress
+- [x] 03-04-PLAN.md - Page transitions and staggered list animations
+- [x] 03-05-PLAN.md - Bilingual text components and centralized strings
+- [x] 03-06-PLAN.md - Test UX: circular timer, pre-test screen, answer feedback, celebrations
+- [x] 03-07-PLAN.md - Flashcard 3D flip and onboarding tour
+- [x] 03-08-PLAN.md - Dashboard, Landing, Auth page integration with readiness indicator (ANXR-05)
+- [x] 03-08a-PLAN.md - StudyGuide, Test, History page integration
+- [x] 03-09-PLAN.md - Dark mode polish and English-only practice mode
 
 ---
 
@@ -186,7 +186,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 |-------|----------------|--------|-----------|
 | 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
 | 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
-| 3. UI/UX & Bilingual Polish | 0/10 | Planned | - |
+| 3. UI/UX & Bilingual Polish | 10/10 | Complete | 2026-02-07 |
 | 4. Learning - Explanations & Category Progress | 0/6 | Not started | - |
 | 5. Spaced Repetition | 0/7 | Not started | - |
 | 6. Interview Simulation | 0/4 | Not started | - |
@@ -195,4 +195,4 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-06*
+*Last updated: 2026-02-07*

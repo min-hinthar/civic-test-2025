@@ -22,47 +22,47 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### PWA & Offline
 
-- [ ] **PWA-01**: Web app manifest with app name, icons (192px, 512px), theme color, display standalone
-- [ ] **PWA-02**: Service worker registered via Serwist with precaching for app shell
-- [ ] **PWA-03**: Offline fallback page shown when network unavailable and content not cached
-- [ ] **PWA-04**: Install prompt component guides users to add app to home screen
-- [ ] **PWA-05**: Questions cached in IndexedDB via idb-keyval for offline study
-- [ ] **PWA-06**: Study guide works fully offline using cached question data
-- [ ] **PWA-07**: Test results queued in IndexedDB when offline, synced to Supabase when online
-- [ ] **PWA-08**: Online/offline status indicator visible to user
-- [ ] **PWA-09**: Push notification subscription flow (opt-in, bilingual prompt)
-- [ ] **PWA-10**: Study reminder push notifications (configurable frequency)
-- [ ] **PWA-11**: Persistent storage requested on iOS to mitigate 7-day eviction
+- [x] **PWA-01**: Web app manifest with app name, icons (192px, 512px), theme color, display standalone
+- [x] **PWA-02**: Service worker registered via Serwist with precaching for app shell
+- [x] **PWA-03**: Offline fallback page shown when network unavailable and content not cached
+- [x] **PWA-04**: Install prompt component guides users to add app to home screen
+- [x] **PWA-05**: Questions cached in IndexedDB via idb-keyval for offline study
+- [x] **PWA-06**: Study guide works fully offline using cached question data
+- [x] **PWA-07**: Test results queued in IndexedDB when offline, synced to Supabase when online
+- [x] **PWA-08**: Online/offline status indicator visible to user
+- [x] **PWA-09**: Push notification subscription flow (opt-in, bilingual prompt)
+- [x] **PWA-10**: Study reminder push notifications (configurable frequency)
+- [x] **PWA-11**: Persistent storage requested on iOS to mitigate 7-day eviction
 
 ### UI/UX Polish
 
-- [ ] **UIUX-01**: Consistent spacing, typography, and component sizing across all pages
-- [ ] **UIUX-02**: Page transitions using Motion (enter/exit animations)
-- [ ] **UIUX-03**: Micro-animations on all interactive elements (buttons, cards, modals, toggles)
-- [ ] **UIUX-04**: Mobile-first responsive layouts for all pages (landing, auth, dashboard, test, study, history)
-- [ ] **UIUX-05**: Touch-friendly tap targets (minimum 44x44px per WCAG)
-- [ ] **UIUX-06**: Radix UI primitives for dialogs, toasts, and progress bars (accessible, keyboard-navigable)
-- [ ] **UIUX-07**: Loading skeletons for async content instead of blank screens
-- [ ] **UIUX-08**: Smooth scroll behavior and native-feeling navigation
-- [ ] **UIUX-09**: Dark mode refined with proper contrast ratios for both English and Burmese text
+- [x] **UIUX-01**: Consistent spacing, typography, and component sizing across all pages
+- [x] **UIUX-02**: Page transitions using Motion (enter/exit animations)
+- [x] **UIUX-03**: Micro-animations on all interactive elements (buttons, cards, modals, toggles)
+- [x] **UIUX-04**: Mobile-first responsive layouts for all pages (landing, auth, dashboard, test, study, history)
+- [x] **UIUX-05**: Touch-friendly tap targets (minimum 44x44px per WCAG)
+- [x] **UIUX-06**: Radix UI primitives for dialogs, toasts, and progress bars (accessible, keyboard-navigable)
+- [x] **UIUX-07**: Loading skeletons for async content instead of blank screens
+- [x] **UIUX-08**: Smooth scroll behavior and native-feeling navigation
+- [x] **UIUX-09**: Dark mode refined with proper contrast ratios for both English and Burmese text
 
 ### Bilingual Expansion
 
-- [ ] **BILN-01**: All navigation labels displayed in both English and Burmese
-- [ ] **BILN-02**: All button text displayed in both English and Burmese
-- [ ] **BILN-03**: All toast/notification messages displayed in both languages
-- [ ] **BILN-04**: All error messages displayed in both languages
-- [ ] **BILN-05**: Dashboard headings and metric labels in both languages
-- [ ] **BILN-06**: Noto Sans Myanmar font embedded (not reliant on system fonts)
-- [ ] **BILN-07**: Burmese text renders correctly across iOS, Android, and desktop browsers
+- [x] **BILN-01**: All navigation labels displayed in both English and Burmese
+- [x] **BILN-02**: All button text displayed in both English and Burmese
+- [x] **BILN-03**: All toast/notification messages displayed in both languages
+- [x] **BILN-04**: All error messages displayed in both languages
+- [x] **BILN-05**: Dashboard headings and metric labels in both languages
+- [x] **BILN-06**: Noto Sans Myanmar font embedded (not reliant on system fonts)
+- [x] **BILN-07**: Burmese text renders correctly across iOS, Android, and desktop browsers
 
 ### Anxiety-Reducing UX
 
-- [ ] **ANXR-01**: Encouraging microcopy throughout (bilingual) - "You're doing great!" / warm completion messages
-- [ ] **ANXR-02**: Soft feedback for incorrect answers (no harsh red/wrong - use gentle orange with explanation)
-- [ ] **ANXR-03**: Progress celebration animations on milestones (streak, category mastered, test passed)
-- [ ] **ANXR-04**: Optional timer display in test mode (user can hide countdown)
-- [ ] **ANXR-05**: "Am I ready?" readiness confidence indicator on dashboard based on study progress
+- [x] **ANXR-01**: Encouraging microcopy throughout (bilingual) - "You're doing great!" / warm completion messages
+- [x] **ANXR-02**: Soft feedback for incorrect answers (no harsh red/wrong - use gentle orange with explanation)
+- [x] **ANXR-03**: Progress celebration animations on milestones (streak, category mastered, test passed)
+- [x] **ANXR-04**: Optional timer display in test mode (user can hide countdown)
+- [x] **ANXR-05**: "Am I ready?" readiness confidence indicator on dashboard based on study progress
 
 ### Learning Features - Explanations
 
@@ -154,38 +154,38 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | FNDN-08 | Phase 1 | Complete |
 | FNDN-09 | Phase 1 | Complete |
 | FNDN-10 | Phase 1 | Complete |
-| PWA-01 | Phase 2 | Pending |
-| PWA-02 | Phase 2 | Pending |
-| PWA-03 | Phase 2 | Pending |
-| PWA-04 | Phase 2 | Pending |
-| PWA-05 | Phase 2 | Pending |
-| PWA-06 | Phase 2 | Pending |
-| PWA-07 | Phase 2 | Pending |
-| PWA-08 | Phase 2 | Pending |
-| PWA-09 | Phase 2 | Pending |
-| PWA-10 | Phase 2 | Pending |
-| PWA-11 | Phase 2 | Pending |
-| UIUX-01 | Phase 3 | Pending |
-| UIUX-02 | Phase 3 | Pending |
-| UIUX-03 | Phase 3 | Pending |
-| UIUX-04 | Phase 3 | Pending |
-| UIUX-05 | Phase 3 | Pending |
-| UIUX-06 | Phase 3 | Pending |
-| UIUX-07 | Phase 3 | Pending |
-| UIUX-08 | Phase 3 | Pending |
-| UIUX-09 | Phase 3 | Pending |
-| BILN-01 | Phase 3 | Pending |
-| BILN-02 | Phase 3 | Pending |
-| BILN-03 | Phase 3 | Pending |
-| BILN-04 | Phase 3 | Pending |
-| BILN-05 | Phase 3 | Pending |
-| BILN-06 | Phase 3 | Pending |
-| BILN-07 | Phase 3 | Pending |
-| ANXR-01 | Phase 3 | Pending |
-| ANXR-02 | Phase 3 | Pending |
-| ANXR-03 | Phase 3 | Pending |
-| ANXR-04 | Phase 3 | Pending |
-| ANXR-05 | Phase 3 | Pending |
+| PWA-01 | Phase 2 | Complete |
+| PWA-02 | Phase 2 | Complete |
+| PWA-03 | Phase 2 | Complete |
+| PWA-04 | Phase 2 | Complete |
+| PWA-05 | Phase 2 | Complete |
+| PWA-06 | Phase 2 | Complete |
+| PWA-07 | Phase 2 | Complete |
+| PWA-08 | Phase 2 | Complete |
+| PWA-09 | Phase 2 | Complete |
+| PWA-10 | Phase 2 | Complete |
+| PWA-11 | Phase 2 | Complete |
+| UIUX-01 | Phase 3 | Complete |
+| UIUX-02 | Phase 3 | Complete |
+| UIUX-03 | Phase 3 | Complete |
+| UIUX-04 | Phase 3 | Complete |
+| UIUX-05 | Phase 3 | Complete |
+| UIUX-06 | Phase 3 | Complete |
+| UIUX-07 | Phase 3 | Complete |
+| UIUX-08 | Phase 3 | Complete |
+| UIUX-09 | Phase 3 | Complete |
+| BILN-01 | Phase 3 | Complete |
+| BILN-02 | Phase 3 | Complete |
+| BILN-03 | Phase 3 | Complete |
+| BILN-04 | Phase 3 | Complete |
+| BILN-05 | Phase 3 | Complete |
+| BILN-06 | Phase 3 | Complete |
+| BILN-07 | Phase 3 | Complete |
+| ANXR-01 | Phase 3 | Complete |
+| ANXR-02 | Phase 3 | Complete |
+| ANXR-03 | Phase 3 | Complete |
+| ANXR-04 | Phase 3 | Complete |
+| ANXR-05 | Phase 3 | Complete |
 | EXPL-01 | Phase 4 | Pending |
 | EXPL-02 | Phase 4 | Pending |
 | EXPL-03 | Phase 4 | Pending |
@@ -218,4 +218,4 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after roadmap creation*
+*Last updated: 2026-02-07 after Phase 3 completion*

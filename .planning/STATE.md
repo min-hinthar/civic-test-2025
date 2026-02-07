@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 3 (UI/UX & Bilingual Polish) complete
+**Current focus:** Phase 3 complete, ready for Phase 4
 
 ## Current Position
 
-Phase: 3 of 7 (UI/UX & Bilingual Polish)
-Plan: 9+1 of 9+1 in current phase (03-08a supplemental)
-Status: Phase complete
-Last activity: 2026-02-06 - Completed 03-08a-PLAN.md (Study, Test, History Page Polish)
+Phase: 3 of 7 (UI/UX & Bilingual Polish) - COMPLETE
+Plan: All 10 plans complete + verification gap fixes
+Status: Phase verified and complete
+Last activity: 2026-02-07 - Phase 3 verified, 3 gaps fixed (language toggle wiring, page transitions, red removal)
 
-Progress: [█████░░░░░] 49% (20 plans / ~41 total estimated)
+Progress: [█████░░░░░] 51% (21 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 21 (10 plans + 1 gap-fix)
 - Average duration: 19 min
-- Total execution time: 380 min
+- Total execution time: 390 min
 
 **By Phase:**
 
@@ -96,8 +96,8 @@ Recent decisions affecting current work:
 - 03-03: Progress bar spring animation with stiffness 100, damping 20
 - 03-04: Page transition uses slide (x: 20px) + fade with 200ms tween timing
 - 03-04: Stagger items with 80ms gap and 100ms initial delay
-- 03-04: Use Next.js router.pathname as AnimatePresence key
-- 03-04: PageTransition wraps page Component in _app.tsx
+- 03-04: Use react-router-dom location.pathname as AnimatePresence key
+- 03-04: PageTransition wraps Routes in AppShell.tsx with location cloning
 - 03-07: SVG feTurbulence for paper texture overlay (no external images)
 - 03-07: 50px threshold + 500 velocity for swipe detection
 - 03-07: studyAnswers array used for flashcard answers
@@ -122,6 +122,9 @@ Recent decisions affecting current work:
 - 03-09: LanguageProvider placed inside OfflineProvider, outside ThemeProvider in hierarchy
 - 03-09: LanguageToggleCompact uses dot indicator when in English-only mode
 - 03-09: SettingsPage migrated from hardcoded gray colors to design token classes
+- Verification fix: BilingualText/Button/Heading now check useLanguage().showBurmese
+- Verification fix: PageTransition rewritten for react-router-dom (was orphaned with next/router)
+- Verification fix: All text-red-600/bg-red-600 replaced with text-destructive/warning tokens
 
 ### Pending Todos
 
@@ -138,11 +141,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-06
-Stopped at: Completed 03-08a-PLAN.md (Study, Test, History Page Polish) - Phase 3 fully complete
+Last session: 2026-02-07
+Stopped at: Phase 3 verified and complete. Ready for Phase 4 (Learning - Explanations & Category Progress).
 Resume file: None
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-06*
+*Last updated: 2026-02-07*
