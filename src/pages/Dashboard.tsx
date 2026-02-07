@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, type To } from 'react-router-dom';
 import { BookOpenCheck, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
@@ -15,8 +15,11 @@ import { StaggeredGrid, FadeIn } from '@/components/animations/StaggeredList';
 import { ReadinessIndicator } from '@/components/dashboard/ReadinessIndicator';
 import { CategoryGrid } from '@/components/progress/CategoryGrid';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
+import { SuggestedFocus } from '@/components/nudges/SuggestedFocus';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
+import { getAnswerHistory } from '@/lib/mastery';
+import type { StoredAnswer } from '@/lib/mastery';
 import { strings } from '@/lib/i18n/strings';
 
 const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
@@ -36,6 +39,18 @@ const Dashboard = () => {
   // Category mastery data
   const { categoryMasteries, subCategoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
   const { currentMilestone, dismissMilestone } = useMasteryMilestones(categoryMasteries);
+
+  // Answer history for SuggestedFocus stale detection
+  const [answerHistory, setAnswerHistory] = useState<StoredAnswer[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    getAnswerHistory().then(history => {
+      if (!cancelled) setAnswerHistory(history);
+    }).catch(() => {
+      // IndexedDB not available
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   // Collapsible category progress section
   const [isCategoryCollapsed, setIsCategoryCollapsed] = useState(() => {
@@ -278,6 +293,14 @@ const Dashboard = () => {
             </div>
           </FadeIn>
         </section>
+
+        {/* Suggested Focus - weak area nudges */}
+        {!masteryLoading && (
+          <SuggestedFocus
+            categoryMasteries={categoryMasteries}
+            answerHistory={answerHistory}
+          />
+        )}
 
         {/* Overall accuracy */}
         {history.length > 0 && (

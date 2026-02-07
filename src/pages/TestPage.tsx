@@ -11,7 +11,7 @@ import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
-import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Progress } from '@/components/ui/Progress';
 import { CircularTimer } from '@/components/test/CircularTimer';
@@ -21,8 +21,14 @@ import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { WhyButton } from '@/components/explanations/WhyButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
+import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
+import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
+import type { USCISCategory, CategoryMasteryEntry } from '@/lib/mastery';
+import { allQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
+import { FadeIn } from '@/components/animations/StaggeredList';
 import { Filter } from 'lucide-react';
 
 const TEST_DURATION_SECONDS = 20 * 60;
@@ -33,6 +39,7 @@ const FEEDBACK_DELAY_MS = 1500;
 const TestPage = () => {
   const { saveTestSession } = useAuth();
   const navigate = useNavigate();
+  const { categoryMasteries } = useCategoryMastery();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -527,6 +534,41 @@ const TestPage = () => {
             {strings.test.questions.en}
           </p>
         </div>
+
+        {/* Post-test weak area nudge */}
+        {(() => {
+          const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
+          const entries: CategoryMasteryEntry[] = categories.map(cat => ({
+            categoryId: cat,
+            mastery: categoryMasteries[cat] ?? 0,
+            questionCount: getCategoryQuestionIds(cat, allQuestions).length,
+          }));
+          const weak = detectWeakAreas(entries, 60).slice(0, 2);
+          if (weak.length === 0) return null;
+
+          return (
+            <FadeIn delay={400}>
+              <div className="mt-6 rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <SectionHeading
+                  text={{ en: 'Based on this test, consider reviewing:', my: 'ဒီစာမေးပွဲအပေါ်အခြေခံ၍ ပြန်လည်လေ့လာရန်:' }}
+                  className="mb-3"
+                />
+                <div className="space-y-3">
+                  {weak.map(w => (
+                    <WeakAreaNudge
+                      key={w.categoryId}
+                      category={w.categoryId}
+                      mastery={w.mastery}
+                      isUnattempted={w.mastery === 0}
+                      onPractice={() => navigate(`/practice?category=${encodeURIComponent(w.categoryId)}`)}
+                      onReview={() => navigate(`/study#category-${encodeURIComponent(w.categoryId)}`)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+          );
+        })()}
 
         {/* Result cards */}
         <div className="mt-4 space-y-6">

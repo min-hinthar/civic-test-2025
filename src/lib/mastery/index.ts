@@ -49,3 +49,11 @@ export type {
   CategoryName,
   USCISCategoryDef,
 } from './categoryMapping';
+
+// Nudge messages (from 04-09)
+export {
+  getEncouragingMessage,
+  getNudgeMessage,
+  getLevelUpMessage,
+  getUnattemptedMessage,
+} from './nudgeMessages';
