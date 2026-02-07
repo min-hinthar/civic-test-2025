@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 3 complete, ready for Phase 4
+**Current focus:** Phase 4 in progress - Learning, Explanations & Category Progress
 
 ## Current Position
 
-Phase: 3 of 7 (UI/UX & Bilingual Polish) - COMPLETE
-Plan: All 10 plans complete + verification gap fixes
-Status: Phase verified and complete
-Last activity: 2026-02-07 - Phase 3 verified, 3 gaps fixed (language toggle wiring, page transitions, red removal)
+Phase: 4 of 7 (Learning - Explanations & Category Progress) - In progress
+Plan: 1 of 9 complete
+Status: In progress
+Last activity: 2026-02-07 - Completed 04-01-PLAN.md (Explanation data & USCIS category mapping)
 
-Progress: [█████░░░░░] 51% (21 plans / ~41 total estimated)
+Progress: [█████░░░░░] 54% (22 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21 (10 plans + 1 gap-fix)
-- Average duration: 19 min
-- Total execution time: 390 min
+- Total plans completed: 22 (10 plans + 1 gap-fix + 1 phase 4)
+- Average duration: 18 min
+- Total execution time: 405 min
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [█████░░░░░] 51% (21 plans / ~41 total estimated)
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
 | 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
+| 04-learning-explanations | 1 | 15 min | 15 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-05 (20 min), 03-06 (31 min), 03-08 (20 min), 03-09 (37 min), 03-08a (25 min)
-- Trend: UI component plans executing in 10-37 min range
+- Last 5 plans: 03-08 (20 min), 03-09 (37 min), 03-08a (25 min), 03-verify (10 min), 04-01 (15 min)
+- Trend: Data-focused plans executing faster than UI plans
 
 *Updated after each plan completion*
 
@@ -125,6 +126,11 @@ Recent decisions affecting current work:
 - Verification fix: BilingualText/Button/Heading now check useLanguage().showBurmese
 - Verification fix: PageTransition rewritten for react-router-dom (was orphaned with next/router)
 - Verification fix: All text-red-600/bg-red-600 replaced with text-destructive/warning tokens
+- 04-01: Explanations colocated with questions for single-cache-unit offline support
+- 04-01: Emerald (not green) for Integrated Civics to avoid clash with success-500 semantic color
+- 04-01: Optional explanation field on Question interface for gradual rollout safety
+- 04-01: Citation field only on constitutional questions (Articles/Amendments)
+- 04-01: SUB_CATEGORY_NAMES with shorter bilingual display names
 
 ### Pending Todos
 
@@ -142,7 +148,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Phase 3 verified and complete. Ready for Phase 4 (Learning - Explanations & Category Progress).
+Stopped at: Completed 04-01-PLAN.md (Explanation data & USCIS category mapping). Ready for 04-02.
 Resume file: None
 
 ---
