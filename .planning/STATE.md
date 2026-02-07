@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 5 - Spaced Repetition (in progress)
+**Current focus:** Phase 5 - Spaced Repetition (COMPLETE)
 
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 8 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06, 05-07, 05-08)
-Status: In progress
-Last activity: 2026-02-07 - Completed 05-07-PLAN.md (Review Session Flow)
+Plan: 9 of 9 complete (05-01 through 05-09)
+Status: Phase complete
+Last activity: 2026-02-07 - Completed 05-09-PLAN.md (Navigation Badge, Push Notifications & Settings)
 
-Progress: [█████████░] 93% (38 plans / ~41 total estimated)
+Progress: [██████████] 95% (39 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -191,6 +191,9 @@ Recent decisions affecting current work:
 - 05-08: Heatmap 60 days desktop / 30 days mobile via responsive hidden/block classes
 - 05-08: SRSWidget navigates to /study#deck on compact tap
 - 05-08: Widget placed after ReadinessIndicator, before CategoryGrid in dashboard
+- 05-09: x-api-key header auth for SRS cron endpoint (distinct from Bearer token on other push endpoints)
+- 05-09: Reminder time stored in localStorage (client-side preference, not synced to server)
+- 05-09: Warning banner guides users to enable push before setting reminder time
 
 ### Pending Todos
 
@@ -208,7 +211,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-07-PLAN.md (Review Session Flow). Wave 4 complete. Only 05-09 remains.
+Stopped at: Completed 05-09-PLAN.md (Navigation Badge, Push Notifications & Settings). Phase 5 complete.
 Resume file: None
 
 ---
