@@ -54,6 +54,14 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Four amendments expanded voting rights: the 15th (any race can vote), 19th (women can vote), 24th (no poll tax required), and 26th (age 18 and older). Each one removed a barrier to voting.',
+      brief_my:
+        'ပြင်ဆင်ချက် ၄ ခုသည် မဲပေးခွင့်ကို ချဲ့ထွင်ခဲ့သည် — ၁၅ ကြိမ်မြောက် (မည်သည့်လူမျိုးမဆို)၊ ၁၉ ကြိမ်မြောက် (အမျိုးသမီးများ)၊ ၂၄ ကြိမ်မြောက် (မဲခွန်မလိုအပ်) နှင့် ၂၆ ကြိမ်မြောက် (အသက် ၁၈ နှစ်နှင့်အထက်)။ တစ်ခုစီက မဲပေးရာတွင် အတားအဆီးတစ်ခုကို ဖယ်ရှားခဲ့သည်။',
+      citation: '15th, 19th, 24th, 26th Amendments',
+      relatedQuestionIds: ['RR-07', 'HIST-107'],
+    },
   },
   {
     id: 'RR-02',
@@ -80,6 +88,17 @@ export const rightsResponsibilitiesQuestions: Question[] = [
       { text_en: 'obey the law', text_my: 'ဥပဒေကို လိုက်နာရန်', correct: false },
       { text_en: 'attend school', text_my: 'ကျောင်းတက်ရန်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Two responsibilities belong only to citizens: voting in federal elections and serving on a jury. Paying taxes and obeying the law are responsibilities for everyone living in the U.S., not just citizens.',
+      brief_my:
+        'တာဝန်နှစ်ခုသည် နိုင်ငံသားများအတွက်သာ ဖြစ်သည် — ဖက်ဒရယ်ရွေးကောက်ပွဲတွင် မဲပေးခြင်းနှင့် ဂျူရီလူကြီးအဖြစ် တာဝန်ထမ်းဆောင်ခြင်း။ အခွန်ပေးဆောင်ခြင်းနှင့် ဥပဒေလိုက်နာခြင်းတို့သည် နိုင်ငံသားများအတွက်သာ မဟုတ်ဘဲ အမေရိကန်တွင် နေထိုင်သူတိုင်း၏ တာဝန်ဖြစ်သည်။',
+      commonMistake_en:
+        'Paying taxes and obeying the law are for everyone in the U.S., not just citizens. Only voting and jury duty are citizen-only responsibilities.',
+      commonMistake_my:
+        'အခွန်ပေးဆောင်ခြင်းနှင့် ဥပဒေလိုက်နာခြင်းတို့သည် နိုင်ငံသားများအတွက်သာ မဟုတ်ဘဲ အမေရိကန်ရှိ လူတိုင်းအတွက် ဖြစ်သည်။ မဲပေးခြင်းနှင့် ဂျူရီတာဝန်သာ နိုင်ငံသားသီးသန့် တာဝန်ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-03', 'RR-08'],
+    },
   },
   {
     id: 'RR-03',
@@ -118,6 +137,17 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Only citizens can vote in federal elections and run for federal office. Rights like free speech and freedom of religion belong to everyone in the U.S., whether citizen or not.',
+      brief_my:
+        'ဖက်ဒရယ်ရွေးကောက်ပွဲတွင် မဲပေးခြင်းနှင့် ဖက်ဒရယ်ရုံးအတွက် အရွေးခံခြင်းတို့ကို နိုင်ငံသားများသာ လုပ်နိုင်သည်။ ပြောဆိုခွင့်နှင့် ဘာသာရေးလွတ်လပ်ခွင့်ကဲ့သို့ အခွင့်အရေးများသည် နိုင်ငံသားဖြစ်ဖြစ် မဖြစ်ဖြစ် အမေရိကန်ရှိ လူတိုင်းအတွက် ဖြစ်သည်။',
+      commonMistake_en:
+        'Freedom of speech and religion are for EVERYONE in the U.S., not just citizens. Voting and running for office are citizen-only rights.',
+      commonMistake_my:
+        'ပြောဆိုခွင့်နှင့် ဘာသာရေးလွတ်လပ်ခွင့်တို့သည် နိုင်ငံသားများအတွက်သာ မဟုတ်ဘဲ အမေရိကန်ရှိ လူတိုင်းအတွက် ဖြစ်သည်။ မဲပေးခြင်းနှင့် ရုံးအတွက်အရွေးခံခြင်းသာ နိုင်ငံသားသီးသန့် အခွင့်အရေး ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-02', 'RR-04'],
+    },
   },
   {
     id: 'RR-04',
@@ -160,6 +190,14 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Everyone living in the U.S. has these rights, whether they are a citizen or not: freedom of expression, speech, assembly, religion, the right to petition the government, and the right to bear arms.',
+      brief_my:
+        'အမေရိကန်တွင် နေထိုင်သူတိုင်းသည် နိုင်ငံသားဖြစ်ဖြစ် မဖြစ်ဖြစ် ဒီအခွင့်အရေးများ ရှိသည် — ထုတ်ဖော်ပြောဆိုခွင့်၊ ပြောဆိုခွင့်၊ စည်းဝေးခွင့်၊ ဘာသာရေး၊ အစိုးရကို အသနားခံစာတင်ခွင့်နှင့် လက်နက်ကိုင်ဆောင်ခွင့်တို့ ဖြစ်သည်။',
+      citation: '1st and 2nd Amendments',
+      relatedQuestionIds: ['RR-03', 'GOV-P06'],
+    },
   },
   {
     id: 'RR-05',
@@ -180,6 +218,13 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'When saying the Pledge of Allegiance, we show loyalty to the United States and its flag. The pledge is a promise of loyalty to the country and what it stands for — "one nation, under God, indivisible, with liberty and justice for all."',
+      brief_my:
+        'သစ္စာဆိုသည့်အခါ ကျွန်ုပ်တို့သည် အမေရိကန်ပြည်ထောင်စုနှင့် ၎င်း၏အလံအပေါ် သစ္စာစောင့်သိကြောင်း ပြသသည်။ ၎င်းသည် နိုင်ငံနှင့် ၎င်း၏ ကိုယ်စားပြုသော အရာများအပေါ် သစ္စာဆိုခြင်း ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-06', 'SYM-09', 'SYM-10'],
+    },
   },
   {
     id: 'RR-06',
@@ -234,6 +279,17 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Oath of Allegiance includes several promises: give up loyalty to other countries, defend the Constitution, obey U.S. laws, serve in the military if needed, and do important work for the nation if needed.',
+      brief_my:
+        'သစ္စာဆိုသည့် ကတိတွင် ကတိများစွာ ပါဝင်သည် — အခြားနိုင်ငံများအပေါ် သစ္စာကို စွန့်လွှတ်ခြင်း၊ ဖွဲ့စည်းပုံကို ကာကွယ်ခြင်း၊ အမေရိကန်ဥပဒေများ လိုက်နာခြင်း၊ လိုအပ်ပါက စစ်တပ်တွင် တာဝန်ထမ်းဆောင်ခြင်းနှင့် နိုင်ငံအတွက် အရေးကြီးသော အလုပ်လုပ်ခြင်း။',
+      commonMistake_en:
+        'You do NOT have to speak only English or vote in every election. You CAN travel to other countries. The oath is about loyalty and following the law.',
+      commonMistake_my:
+        'အင်္ဂလိပ်ဘာသာသာ ပြောရန် သို့မဟုတ် ရွေးကောက်ပွဲတိုင်းတွင် မဲပေးရန် မလိုပါ။ အခြားနိုင်ငံများသို့ သွားရောက်နိုင်ပါသည်။ ကတိသည် သစ္စာစောင့်သိမှုနှင့် ဥပဒေလိုက်နာမှုအကြောင်း ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-05'],
+    },
   },
   {
     id: 'RR-07',
@@ -268,6 +324,14 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'You must be at least 18 years old to vote. The 26th Amendment (1971) lowered the voting age from 21 to 18. This was partly because 18-year-olds could be drafted to fight in the Vietnam War but could not vote.',
+      brief_my:
+        'မဲပေးရန် အနည်းဆုံး အသက် ၁၈ နှစ် ရှိရမည်။ ၂၆ ကြိမ်မြောက် ပြင်ဆင်ချက် (၁၉၇၁) သည် မဲပေးအသက်ကို ၂၁ မှ ၁၈ သို့ လျှော့ချခဲ့သည်။ အသက် ၁၈ နှစ်သားများ ဗီယက်နမ်စစ်ပွဲတွင် စစ်မှုထမ်းခံရသော်လည်း မဲပေးခွင့်မရှိသောကြောင့် ဖြစ်သည်။',
+      citation: '26th Amendment',
+      relatedQuestionIds: ['RR-01', 'RR-10'],
+    },
   },
   {
     id: 'RR-08',
@@ -328,6 +392,13 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'There are many ways to participate in democracy beyond voting: join a political party, help with a campaign, join a civic or community group, contact your elected officials, run for office, or write to a newspaper.',
+      brief_my:
+        'မဲပေးခြင်းအပြင် ဒီမိုကရေစီတွင် ပါဝင်ရန် နည်းလမ်းများစွာ ရှိသည် — နိုင်ငံရေးပါတီ ပါဝင်ခြင်း၊ လှုံ့ဆော်ရေးတွင် ကူညီခြင်း၊ ပြည်သူ့အဖွဲ့အစည်း ပါဝင်ခြင်း၊ ရွေးကောက်ခံ အရာရှိများကို ဆက်သွယ်ခြင်း သို့မဟုတ် ရုံးအတွက် အရွေးခံခြင်းတို့ ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-02', 'RR-03'],
+    },
   },
   {
     id: 'RR-09',
@@ -341,6 +412,15 @@ export const rightsResponsibilitiesQuestions: Question[] = [
       { text_en: 'December 31', text_my: 'ဒီဇင်ဘာ ၃၁', correct: false },
       { text_en: 'July 4', text_my: 'ဇူလိုင် ၄', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'April 15 is "Tax Day" — the deadline to file your federal income tax return. Everyone who earns income in the U.S. must pay federal taxes, whether they are a citizen or not.',
+      brief_my:
+        'ဧပြီ ၁၅ သည် "အခွန်နေ့" ဖြစ်သည် — ဖက်ဒရယ်ဝင်ငွေခွန် ပုံစံကို တင်ရန် နောက်ဆုံးရက် ဖြစ်သည်။ အမေရိကန်တွင် ဝင်ငွေရှာသူတိုင်း နိုင်ငံသားဖြစ်ဖြစ် မဖြစ်ဖြစ် ဖက်ဒရယ်အခွန် ပေးဆောင်ရမည်။',
+      mnemonic_en: 'April 15 = Tax Day. Just remember: taxes in April!',
+      mnemonic_my: 'ဧပြီ ၁၅ = အခွန်နေ့။ ဧပြီလမှာ အခွန်! ဟု မှတ်ထားပါ။',
+      relatedQuestionIds: ['RR-02'],
+    },
   },
   {
     id: 'RR-10',
@@ -379,5 +459,12 @@ export const rightsResponsibilitiesQuestions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'All men living in the U.S. must register for the Selective Service between ages 18 and 26. This is a requirement for both citizens and non-citizens. Women are not currently required to register.',
+      brief_my:
+        'အမေရိကန်တွင် နေထိုင်သော အမျိုးသားအားလုံးသည် အသက် ၁၈ နှစ်နှင့် ၂၆ နှစ်ကြား Selective Service အတွက် မှတ်ပုံတင်ရမည်။ နိုင်ငံသားနှင့် နိုင်ငံသားမဟုတ်သူ နှစ်မျိုးလုံးအတွက် လိုအပ်ချက် ဖြစ်သည်။',
+      relatedQuestionIds: ['RR-07'],
+    },
   },
 ];
