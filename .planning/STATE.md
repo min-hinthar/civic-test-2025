@@ -131,6 +131,10 @@ Recent decisions affecting current work:
 - 04-01: Optional explanation field on Question interface for gradual rollout safety
 - 04-01: Citation field only on constitutional questions (Articles/Amendments)
 - 04-01: SUB_CATEGORY_NAMES with shorter bilingual display names
+- 04-02: detectStaleCategories uses Record<string, string[]> mapping for category-question association
+- 04-02: Exported TEST_WEIGHT (1.0) and PRACTICE_WEIGHT (0.7) as named constants
+- 04-02: Set-based questionId lookup in calculateCategoryMastery for O(1) performance
+- 04-02: Barrel export index.ts at @/lib/mastery re-exports all mastery module features
 - 04-03: WhyButton wraps ExplanationCard with border-0 rounded-none for seamless embedding
 - 04-03: RelatedQuestions filters out missing question IDs gracefully
 - 04-03: ExplanationCard accepts allQuestions prop for RelatedQuestions ID lookup
