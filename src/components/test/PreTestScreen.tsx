@@ -10,11 +10,7 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { strings } from '@/lib/i18n/strings';
-import {
-  USCIS_CATEGORIES,
-  USCIS_CATEGORY_NAMES,
-  CATEGORY_COLORS,
-} from '@/lib/mastery';
+import { USCIS_CATEGORIES, CATEGORY_COLORS } from '@/lib/mastery';
 import type { USCISCategory } from '@/lib/mastery';
 import { clsx } from 'clsx';
 
@@ -131,9 +127,7 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
           >
             <BookOpen className="h-5 w-5 shrink-0 text-primary-500" />
             <div className="flex-1">
-              <p className="text-sm font-semibold text-foreground">
-                Practice by Category
-              </p>
+              <p className="text-sm font-semibold text-foreground">Practice by Category</p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground">
                   အမျိုးအစားအလိုက် လေ့ကျင့်ပါ

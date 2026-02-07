@@ -75,7 +75,9 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
   const { showBurmese } = useLanguage();
   const { categoryMasteries, subCategoryMasteries, isLoading } = useCategoryMastery();
 
-  const [selectedCategory, setSelectedCategory] = useState<USCISCategory | Category | 'weak' | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<
+    USCISCategory | Category | 'weak' | null
+  >(null);
   const [expandedCategory, setExpandedCategory] = useState<USCISCategory | null>(null);
   const [countOption, setCountOption] = useState<CountOption>(10);
   const [timerEnabled, setTimerEnabled] = useState(false);
@@ -93,7 +95,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
       }
     }
     return counts;
-  }, []);
+  }, [categories]);
 
   // Find weakest category for mastered suggestion
   const weakestCategory = useMemo(() => {
@@ -107,19 +109,22 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
       }
     }
     return lowest;
-  }, [categoryMasteries]);
+  }, [categories, categoryMasteries]);
 
-  const selectedMastery = selectedCategory && selectedCategory !== 'weak'
-    ? (categoryMasteries[selectedCategory] ?? subCategoryMasteries[selectedCategory] ?? 0)
-    : 0;
+  const selectedMastery =
+    selectedCategory && selectedCategory !== 'weak'
+      ? (categoryMasteries[selectedCategory] ?? subCategoryMasteries[selectedCategory] ?? 0)
+      : 0;
 
   const isMastered = selectedMastery >= 100;
 
-  const selectedQuestionCount = selectedCategory && selectedCategory !== 'weak'
-    ? (questionCounts[selectedCategory] ?? 0)
-    : allQuestions.length;
+  const selectedQuestionCount =
+    selectedCategory && selectedCategory !== 'weak'
+      ? (questionCounts[selectedCategory] ?? 0)
+      : allQuestions.length;
 
-  const actualCount = countOption === 'full' ? selectedQuestionCount : Math.min(countOption, selectedQuestionCount);
+  const actualCount =
+    countOption === 'full' ? selectedQuestionCount : Math.min(countOption, selectedQuestionCount);
 
   const getCategoryDisplayName = (cat: USCISCategory | Category | 'weak'): CategoryName => {
     if (cat === 'weak') return strings.practice.practiceAllWeak;
@@ -143,11 +148,10 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
   };
 
   const toggleExpanded = (cat: USCISCategory) => {
-    setExpandedCategory(prev => prev === cat ? null : cat);
+    setExpandedCategory(prev => (prev === cat ? null : cat));
   };
 
-  const staggerDelay = (index: number) =>
-    shouldReduceMotion ? 0 : 0.08 * index + 0.1;
+  const staggerDelay = (index: number) => (shouldReduceMotion ? 0 : 0.08 * index + 0.1);
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-16 pt-8">
@@ -182,9 +186,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
           <Target className="h-6 w-6 text-primary-500" />
         </div>
         <div className="flex-1">
-          <p className="font-semibold text-foreground">
-            {strings.practice.practiceAllWeak.en}
-          </p>
+          <p className="font-semibold text-foreground">{strings.practice.practiceAllWeak.en}</p>
           {showBurmese && (
             <p className="font-myanmar text-sm text-muted-foreground">
               {strings.practice.practiceAllWeak.my}
@@ -238,13 +240,11 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                       {USCIS_CATEGORY_NAMES[cat].my}
                     </p>
                   )}
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {qCount} questions
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{qCount} questions</p>
                 </div>
                 <button
                   type="button"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     toggleExpanded(cat);
                   }}
@@ -285,7 +285,9 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                           size={40}
                           strokeWidth={4}
                         >
-                          <span className="text-[10px] font-bold text-foreground">{subMastery}%</span>
+                          <span className="text-[10px] font-bold text-foreground">
+                            {subMastery}%
+                          </span>
                         </CategoryRing>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-foreground truncate">
@@ -296,9 +298,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                               {SUB_CATEGORY_NAMES[sub].my}
                             </p>
                           )}
-                          <p className="text-xs text-muted-foreground">
-                            {subCount} questions
-                          </p>
+                          <p className="text-xs text-muted-foreground">{subCount} questions</p>
                         </div>
                       </button>
                     );
@@ -329,9 +329,11 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             {([5, 10, 'full'] as CountOption[]).map(option => {
               const isActive = countOption === option;
               const label =
-                option === 5 ? strings.practice.quick
-                : option === 10 ? strings.practice.standard
-                : strings.practice.full;
+                option === 5
+                  ? strings.practice.quick
+                  : option === 10
+                    ? strings.practice.standard
+                    : strings.practice.full;
               const displayCount = option === 'full' ? selectedQuestionCount : option;
 
               return (
@@ -369,9 +371,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
           <div className="flex items-center gap-3">
             <Timer className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-foreground">
-                {strings.practice.timer.en}
-              </p>
+              <p className="text-sm font-medium text-foreground">{strings.practice.timer.en}</p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground">
                   {strings.practice.timer.my}
@@ -392,7 +392,11 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             <motion.span
               className="inline-block h-5 w-5 rounded-full bg-white shadow-sm"
               animate={{ x: timerEnabled ? 22 : 2 }}
-              transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 30 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { type: 'spring', stiffness: 500, damping: 30 }
+              }
             />
           </button>
           <span className="text-xs text-muted-foreground ml-2">
@@ -429,10 +433,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                 </button>{' '}
                 instead?
               </p>
-              <button
-                onClick={handleStart}
-                className="mt-2 text-xs font-semibold text-primary-500"
-              >
+              <button onClick={handleStart} className="mt-2 text-xs font-semibold text-primary-500">
                 {strings.practice.practiceAnyway.en}
                 {showBurmese && (
                   <span className="ml-1 font-myanmar">{strings.practice.practiceAnyway.my}</span>
@@ -461,7 +462,8 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
           />
           {selectedCategory !== 'weak' && (
             <p className="mt-2 text-center text-xs text-muted-foreground">
-              {getCategoryDisplayName(selectedCategory).en} ({selectedMastery}%) - {actualCount} questions
+              {getCategoryDisplayName(selectedCategory).en} ({selectedMastery}%) - {actualCount}{' '}
+              questions
             </p>
           )}
         </motion.div>

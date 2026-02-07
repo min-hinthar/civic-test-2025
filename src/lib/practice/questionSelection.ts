@@ -11,7 +11,6 @@
 import { getAnswerHistory, calculateQuestionAccuracy } from '@/lib/mastery';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Question } from '@/types';
-import type { StoredAnswer } from '@/lib/mastery';
 
 export interface SelectPracticeQuestionsOptions {
   /** Pool of questions to select from */
@@ -102,9 +101,7 @@ export async function getWeakQuestions(
  * Compute per-question accuracy scores for display purposes.
  * Returns a map of questionId -> accuracy percentage (0-100).
  */
-export async function getQuestionAccuracies(
-  questions: Question[]
-): Promise<Map<string, number>> {
+export async function getQuestionAccuracies(questions: Question[]): Promise<Map<string, number>> {
   const history = await getAnswerHistory();
   const map = new Map<string, number>();
 

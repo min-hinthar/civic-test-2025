@@ -37,19 +37,27 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   // Category mastery data
-  const { categoryMasteries, subCategoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
+  const {
+    categoryMasteries,
+    subCategoryMasteries,
+    isLoading: masteryLoading,
+  } = useCategoryMastery();
   const { currentMilestone, dismissMilestone } = useMasteryMilestones(categoryMasteries);
 
   // Answer history for SuggestedFocus stale detection
   const [answerHistory, setAnswerHistory] = useState<StoredAnswer[]>([]);
   useEffect(() => {
     let cancelled = false;
-    getAnswerHistory().then(history => {
-      if (!cancelled) setAnswerHistory(history);
-    }).catch(() => {
-      // IndexedDB not available
-    });
-    return () => { cancelled = true; };
+    getAnswerHistory()
+      .then(history => {
+        if (!cancelled) setAnswerHistory(history);
+      })
+      .catch(() => {
+        // IndexedDB not available
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Collapsible category progress section
@@ -72,9 +80,10 @@ const Dashboard = () => {
 
   // Compute average mastery for collapsed summary
   const categoryValues = Object.values(categoryMasteries);
-  const avgMastery = categoryValues.length > 0
-    ? Math.round(categoryValues.reduce((s, v) => s + v, 0) / categoryValues.length)
-    : 0;
+  const avgMastery =
+    categoryValues.length > 0
+      ? Math.round(categoryValues.reduce((s, v) => s + v, 0) / categoryValues.length)
+      : 0;
   const history = user?.testHistory ?? [];
   const latestAttempt = history[0];
   const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
@@ -114,7 +123,8 @@ const Dashboard = () => {
   const recentAccuracy =
     recentTests.length > 0
       ? recentTests.reduce((sum, session) => {
-          const pct = session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
+          const pct =
+            session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
           return sum + pct;
         }, 0) / recentTests.length
       : 0;
@@ -158,7 +168,8 @@ const Dashboard = () => {
     {
       to: studyCardsLink(),
       title: 'Master Categories',
-      titleMy: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F',
+      titleMy:
+        '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F',
       stat: trackedCategories
         ? `${masteredCategories}/${trackedCategories} mastered`
         : '0 categories tracked',
@@ -169,7 +180,8 @@ const Dashboard = () => {
     {
       to: latestAttempt ? historyLink('attempts') : '/test',
       title: 'Latest Test Summary',
-      titleMy: '\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1001\u1032\u1037\u101E\u100A\u103A\u1037 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1000\u103B\u1025\u103A\u1038\u1001\u103B\u102F\u1036\u1038',
+      titleMy:
+        '\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1001\u1032\u1037\u101E\u100A\u103A\u1037 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1000\u103B\u1025\u103A\u1038\u1001\u103B\u102F\u1036\u1038',
       stat: latestAttempt
         ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}`
         : 'No attempts yet',
@@ -230,9 +242,7 @@ const Dashboard = () => {
         {/* Category Progress - collapsible section */}
         <section className="mb-8">
           <FadeIn delay={100}>
-            <div
-              className="rounded-3xl border border-border/60 bg-card shadow-sm overflow-hidden"
-            >
+            <div className="rounded-3xl border border-border/60 bg-card shadow-sm overflow-hidden">
               {/* Collapsible header */}
               <button
                 type="button"
@@ -240,10 +250,7 @@ const Dashboard = () => {
                 onClick={toggleCategoryCollapse}
                 aria-expanded={!isCategoryCollapsed}
               >
-                <SectionHeading
-                  text={strings.progress.categoryProgress}
-                  className="mb-0"
-                />
+                <SectionHeading text={strings.progress.categoryProgress} className="mb-0" />
                 <div className="flex items-center gap-3">
                   {isCategoryCollapsed && (
                     <span className="text-sm text-muted-foreground tabular-nums">
@@ -296,10 +303,7 @@ const Dashboard = () => {
 
         {/* Suggested Focus - weak area nudges */}
         {!masteryLoading && (
-          <SuggestedFocus
-            categoryMasteries={categoryMasteries}
-            answerHistory={answerHistory}
-          />
+          <SuggestedFocus categoryMasteries={categoryMasteries} answerHistory={answerHistory} />
         )}
 
         {/* Overall accuracy */}
@@ -406,10 +410,7 @@ const Dashboard = () => {
         </section>
 
         {/* Milestone celebration modal */}
-        <MasteryMilestone
-          milestone={currentMilestone}
-          onDismiss={dismissMilestone}
-        />
+        <MasteryMilestone milestone={currentMilestone} onDismiss={dismissMilestone} />
       </div>
     </div>
   );

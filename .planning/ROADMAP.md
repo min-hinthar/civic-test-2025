@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Code Quality** - Fix critical bugs, add TypeScript strictness, establish testing infrastructure
 - [x] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
 - [x] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
-- [ ] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
+- [x] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
 - [ ] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [ ] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [ ] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
@@ -104,15 +104,15 @@ Plans:
 **Plans**: 9 plans in 5 waves
 
 Plans:
-- [ ] 04-01-PLAN.md — Explanation types, USCIS category mapping, and bilingual content for all 100 questions
-- [ ] 04-02-PLAN.md — Mastery calculation engine with TDD (recency-weighted, IndexedDB storage, weak detection)
-- [ ] 04-03-PLAN.md — Explanation UI components (ExplanationCard, WhyButton, RelatedQuestions)
-- [ ] 04-04-PLAN.md — Test mode explanation integration (inline hints + enhanced review screen)
-- [ ] 04-05-PLAN.md — Study guide flashcard explanations (expandable below answer)
-- [ ] 04-06-PLAN.md — Progress visualization components and milestone celebration system
-- [ ] 04-07-PLAN.md — Progress page and dashboard category progress section
-- [ ] 04-08-PLAN.md — Category practice mode (config, session, results with animated mastery update)
-- [ ] 04-09-PLAN.md — Weak area nudges, study guide highlighting, history practice tab, push notifications
+- [x] 04-01-PLAN.md — Explanation types, USCIS category mapping, and bilingual content for all 100 questions
+- [x] 04-02-PLAN.md — Mastery calculation engine with TDD (recency-weighted, IndexedDB storage, weak detection)
+- [x] 04-03-PLAN.md — Explanation UI components (ExplanationCard, WhyButton, RelatedQuestions)
+- [x] 04-04-PLAN.md — Test mode explanation integration (inline hints + enhanced review screen)
+- [x] 04-05-PLAN.md — Study guide flashcard explanations (expandable below answer)
+- [x] 04-06-PLAN.md — Progress visualization components and milestone celebration system
+- [x] 04-07-PLAN.md — Progress page and dashboard category progress section
+- [x] 04-08-PLAN.md — Category practice mode (config, session, results with animated mastery update)
+- [x] 04-09-PLAN.md — Weak area nudges, study guide highlighting, history practice tab, push notifications
 
 ---
 
@@ -190,7 +190,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 1. Foundation & Code Quality | 5/5 | Complete | 2026-02-05 |
 | 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
 | 3. UI/UX & Bilingual Polish | 10/10 | Complete | 2026-02-07 |
-| 4. Learning - Explanations & Category Progress | 0/9 | Not started | - |
+| 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
 | 5. Spaced Repetition | 0/7 | Not started | - |
 | 6. Interview Simulation | 0/4 | Not started | - |
 | 7. Social Features | 0/5 | Not started | - |

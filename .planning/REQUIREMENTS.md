@@ -66,17 +66,17 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Learning Features - Explanations
 
-- [ ] **EXPL-01**: Each question has an explanation field (bilingual) explaining why the answer is correct
-- [ ] **EXPL-02**: Explanations displayed after answering in test mode (review screen)
-- [ ] **EXPL-03**: Explanations displayed on study guide flashcard back
-- [ ] **EXPL-04**: Explanation content sourced from authoritative civics resources
+- [x] **EXPL-01**: Each question has an explanation field (bilingual) explaining why the answer is correct
+- [x] **EXPL-02**: Explanations displayed after answering in test mode (review screen)
+- [x] **EXPL-03**: Explanations displayed on study guide flashcard back
+- [x] **EXPL-04**: Explanation content sourced from authoritative civics resources
 
 ### Learning Features - Category Progress
 
-- [ ] **CPRO-01**: Per-category mastery indicator on dashboard (visual progress bar)
-- [ ] **CPRO-02**: Category drill-down showing questions answered, accuracy, and trend
-- [ ] **CPRO-03**: Category-focused practice tests (user selects topic to study)
-- [ ] **CPRO-04**: Weak categories highlighted with study suggestions
+- [x] **CPRO-01**: Per-category mastery indicator on dashboard (visual progress bar)
+- [x] **CPRO-02**: Category drill-down showing questions answered, accuracy, and trend
+- [x] **CPRO-03**: Category-focused practice tests (user selects topic to study)
+- [x] **CPRO-04**: Weak categories highlighted with study suggestions
 
 ### Learning Features - Spaced Repetition
 

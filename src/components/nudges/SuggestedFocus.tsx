@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lightbulb, Zap } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -46,10 +46,7 @@ export interface SuggestedFocusProps {
  * Prioritizes stale categories (not practiced recently) even if they
  * aren't the absolute weakest by mastery percentage.
  */
-export function SuggestedFocus({
-  categoryMasteries,
-  answerHistory,
-}: SuggestedFocusProps) {
+export function SuggestedFocus({ categoryMasteries, answerHistory }: SuggestedFocusProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const [encouragement] = useState(() => getEncouragingMessage());
@@ -88,9 +85,7 @@ export function SuggestedFocus({
   // Find unattempted categories (mastery = 0 and no answers)
   const unattemptedIds = useMemo(() => {
     const staleNeverPracticed = new Set(
-      staleCategories
-        .filter(s => s.lastPracticed === null)
-        .map(s => s.categoryId)
+      staleCategories.filter(s => s.lastPracticed === null).map(s => s.categoryId)
     );
     return staleNeverPracticed;
   }, [staleCategories]);
@@ -189,21 +184,14 @@ export function SuggestedFocus({
           {/* Section header */}
           <div className="flex items-center gap-2 p-5 pb-0">
             <Lightbulb className="h-5 w-5 text-primary-500 shrink-0" />
-            <SectionHeading
-              text={strings.progress.suggestedFocus}
-              className="mb-0"
-            />
+            <SectionHeading text={strings.progress.suggestedFocus} className="mb-0" />
           </div>
 
           {/* Encouraging message */}
           <div className="px-5 pt-2 pb-1">
-            <p className="text-sm text-muted-foreground">
-              {encouragement.en}
-            </p>
+            <p className="text-sm text-muted-foreground">{encouragement.en}</p>
             {showBurmese && (
-              <p className="text-xs text-muted-foreground font-myanmar">
-                {encouragement.my}
-              </p>
+              <p className="text-xs text-muted-foreground font-myanmar">{encouragement.my}</p>
             )}
           </div>
 

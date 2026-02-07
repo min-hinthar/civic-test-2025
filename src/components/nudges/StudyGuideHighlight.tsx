@@ -3,10 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { MasteryBadge } from '@/components/progress/MasteryBadge';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { getAnswerHistory } from '@/lib/mastery/masteryStore';
-import { calculateQuestionAccuracy } from '@/lib/mastery/calculateMastery';
 import type { StoredAnswer } from '@/lib/mastery';
 
 export interface CategoryHeaderBadgeProps {
@@ -22,7 +20,6 @@ export interface CategoryHeaderBadgeProps {
  */
 export function CategoryHeaderBadge({ category }: CategoryHeaderBadgeProps) {
   const { categoryMasteries } = useCategoryMastery();
-  const { showBurmese } = useLanguage();
   const mastery = categoryMasteries[category] ?? 0;
 
   // Don't show anything if no data yet
@@ -33,9 +30,7 @@ export function CategoryHeaderBadge({ category }: CategoryHeaderBadgeProps) {
   return (
     <div className="inline-flex items-center gap-1.5">
       <MasteryBadge mastery={mastery} size="sm" />
-      <span className="text-xs font-semibold tabular-nums text-muted-foreground">
-        {mastery}%
-      </span>
+      <span className="text-xs font-semibold tabular-nums text-muted-foreground">{mastery}%</span>
     </div>
   );
 }
@@ -59,12 +54,16 @@ export function QuestionAccuracyDot({ questionId }: QuestionAccuracyDotProps) {
 
   useEffect(() => {
     let cancelled = false;
-    getAnswerHistory().then(history => {
-      if (!cancelled) setAnswers(history);
-    }).catch(() => {
-      // IndexedDB not available
-    });
-    return () => { cancelled = true; };
+    getAnswerHistory()
+      .then(history => {
+        if (!cancelled) setAnswers(history);
+      })
+      .catch(() => {
+        // IndexedDB not available
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Find the most recent answer for this question
@@ -83,11 +82,11 @@ export function QuestionAccuracyDot({ questionId }: QuestionAccuracyDotProps) {
     <span
       className={clsx(
         'inline-block h-2.5 w-2.5 rounded-full shrink-0',
-        status === 'correct'
-          ? 'bg-success-500'
-          : 'bg-warning-500'
+        status === 'correct' ? 'bg-success-500' : 'bg-warning-500'
       )}
-      title={status === 'correct' ? 'Previously answered correctly' : 'Previously answered incorrectly'}
+      title={
+        status === 'correct' ? 'Previously answered correctly' : 'Previously answered incorrectly'
+      }
       aria-label={status === 'correct' ? 'Correct' : 'Needs review'}
     />
   );

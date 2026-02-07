@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 4 complete - Learning, Explanations & Category Progress
+**Current focus:** Phase 4 complete, ready for Phase 5
 
 ## Current Position
 

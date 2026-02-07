@@ -77,10 +77,7 @@ function buildTrendData(
   if (!history || history.length < 2) return [];
 
   // Group results by date
-  const byDate = new Map<
-    string,
-    Record<string, { correct: number; total: number }>
-  >();
+  const byDate = new Map<string, Record<string, { correct: number; total: number }>>();
 
   // Process in chronological order
   const sorted = [...history].reverse();
@@ -122,10 +119,7 @@ function buildTrendData(
 /** Find the main USCIS category for a sub-category string */
 function findMainCategory(subCategory: string): USCISCategory | null {
   for (const [mainCat, def] of Object.entries(USCIS_CATEGORIES)) {
-    if (
-      def.subCategories.includes(subCategory as never) ||
-      mainCat === subCategory
-    ) {
+    if (def.subCategories.includes(subCategory as never) || mainCat === subCategory) {
       return mainCat as USCISCategory;
     }
   }
@@ -136,12 +130,8 @@ const ProgressPage = () => {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const { user } = useAuth();
-  const {
-    categoryMasteries,
-    subCategoryMasteries,
-    overallMastery,
-    isLoading,
-  } = useCategoryMastery();
+  const { categoryMasteries, subCategoryMasteries, overallMastery, isLoading } =
+    useCategoryMastery();
 
   // Track which categories are expanded
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
@@ -155,10 +145,12 @@ const ProgressPage = () => {
     getAnswerHistory().then(history => {
       if (!cancelled) setAnswers(history);
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const history = user?.testHistory ?? [];
+  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
 
   // Count questions practiced
   const practicedQuestionIds = useMemo(() => {
@@ -220,7 +212,8 @@ const ProgressPage = () => {
             Back to Dashboard
             {showBurmese && (
               <span className="font-myanmar ml-1 text-muted-foreground">
-                / \u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037
+                /
+                \u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037
               </span>
             )}
           </span>
@@ -256,7 +249,9 @@ const ProgressPage = () => {
                   {practicedQuestionIds.size} of 100 questions practiced
                   {showBurmese && (
                     <span className="block font-myanmar mt-0.5">
-                      {'\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038'} {practicedQuestionIds.size} / 100 {'\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038'}
+                      {'\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038'}{' '}
+                      {practicedQuestionIds.size} / 100{' '}
+                      {'\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038'}
                     </span>
                   )}
                 </p>
@@ -265,9 +260,7 @@ const ProgressPage = () => {
 
             {/* Category cards */}
             <section className="mb-10">
-              <SectionHeading
-                text={strings.progress.categoryProgress}
-              />
+              <SectionHeading text={strings.progress.categoryProgress} />
 
               <StaggeredList className="space-y-4">
                 {categories.map(category => {
@@ -330,7 +323,10 @@ const ProgressPage = () => {
                                 const subMastery = subCategoryMasteries[subCategory] ?? 0;
                                 const subName = SUB_CATEGORY_NAMES[subCategory];
                                 const isSubExpanded = expandedSubCategories.has(subCategory);
-                                const subQuestionIds = getCategoryQuestionIds(subCategory, allQuestions);
+                                const subQuestionIds = getCategoryQuestionIds(
+                                  subCategory,
+                                  allQuestions
+                                );
 
                                 return (
                                   <div key={subCategory}>
@@ -373,7 +369,10 @@ const ProgressPage = () => {
                                         )}
                                       >
                                         <div
-                                          className={clsx('h-full rounded-full transition-all', barColors.bg)}
+                                          className={clsx(
+                                            'h-full rounded-full transition-all',
+                                            barColors.bg
+                                          )}
                                           style={{ width: `${subMastery}%` }}
                                         />
                                       </div>
@@ -438,7 +437,9 @@ const ProgressPage = () => {
                                   size="sm"
                                   fullWidth
                                   onClick={() =>
-                                    navigate(`/study?category=${encodeURIComponent(category)}#cards`)
+                                    navigate(
+                                      `/study?category=${encodeURIComponent(category)}#cards`
+                                    )
                                   }
                                 />
                               </div>
@@ -458,10 +459,7 @@ const ProgressPage = () => {
                 <section className="mb-10">
                   <div className="flex items-center gap-2 mb-4">
                     <TrendingUp className="h-5 w-5 text-primary" />
-                    <SectionHeading
-                      text={strings.progress.masteryTrend}
-                      className="mb-0"
-                    />
+                    <SectionHeading text={strings.progress.masteryTrend} className="mb-0" />
                   </div>
 
                   <Card>
@@ -472,16 +470,8 @@ const ProgressPage = () => {
                             data={trendData}
                             margin={{ left: 0, right: 10, top: 10, bottom: 0 }}
                           >
-                            <CartesianGrid
-                              strokeDasharray="3 3"
-                              stroke="#94a3b8"
-                              opacity={0.3}
-                            />
-                            <XAxis
-                              dataKey="date"
-                              stroke="#94a3b8"
-                              fontSize={12}
-                            />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
+                            <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
                             <YAxis
                               domain={[0, 100]}
                               tickFormatter={value => `${value}%`}
@@ -530,7 +520,9 @@ const ProgressPage = () => {
                     Complete at least 2 tests to see your mastery trend chart.
                     {showBurmese && (
                       <span className="block font-myanmar mt-0.5">
-                        {'\u101C\u1019\u103A\u1038\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1001\u103B\u1000\u103A\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1021\u1014\u100A\u103A\u1038\u1006\u102F\u1036\u1038 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \'2\' \u1001\u102F \u1016\u103C\u1031\u1006\u102D\u102F\u1015\u102B\u104B'}
+                        {
+                          "\u101C\u1019\u103A\u1038\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1001\u103B\u1000\u103A\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1021\u1014\u100A\u103A\u1038\u1006\u102F\u1036\u1038 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 '2' \u1001\u102F \u1016\u103C\u1031\u1006\u102D\u102F\u1015\u102B\u104B"
+                        }
                       </span>
                     )}
                   </p>

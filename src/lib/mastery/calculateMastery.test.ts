@@ -11,11 +11,7 @@ import {
   calculateOverallMastery,
   DECAY_HALF_LIFE_DAYS,
 } from './calculateMastery';
-import {
-  detectWeakAreas,
-  detectStaleCategories,
-  getNextMilestone,
-} from './weakAreaDetection';
+import { detectWeakAreas, detectStaleCategories, getNextMilestone } from './weakAreaDetection';
 import type { StoredAnswer } from './masteryStore';
 
 // Helper to create a StoredAnswer
@@ -55,19 +51,13 @@ describe('calculateCategoryMastery', () => {
   });
 
   it('returns 50 for 50/50 split today', () => {
-    const answers = [
-      makeAnswer('GOV-P01', true),
-      makeAnswer('GOV-P02', false),
-    ];
+    const answers = [makeAnswer('GOV-P01', true), makeAnswer('GOV-P02', false)];
     expect(calculateCategoryMastery(answers, ['GOV-P01', 'GOV-P02'])).toBe(50);
   });
 
   it('applies exponential decay - old correct answers weigh less', () => {
     // One correct answer from 30 days ago vs one incorrect today
-    const answers = [
-      makeAnswer('GOV-P01', true, 30),
-      makeAnswer('GOV-P01', false, 0),
-    ];
+    const answers = [makeAnswer('GOV-P01', true, 30), makeAnswer('GOV-P01', false, 0)];
     const mastery = calculateCategoryMastery(answers, ['GOV-P01']);
     // The old correct answer should be heavily decayed, so mastery should be low
     expect(mastery).toBeLessThan(30);
@@ -86,15 +76,11 @@ describe('calculateCategoryMastery', () => {
     expect(DECAY_HALF_LIFE_DAYS).toBe(14);
 
     // Answer from exactly 14 days ago should have half the weight of a today answer
-    const answers14DaysAgo = [makeAnswer('GOV-P01', true, 14)];
-    const answersToday = [makeAnswer('GOV-P01', true, 0)];
-
-    // Both should return 100 (single correct answer), but the weight differs internally
-    // The mastery of a single correct answer is always 100 regardless of age
-    // What matters is when there's a MIX of old and new
+    // Single correct answers always return 100% regardless of age.
+    // What matters is when there's a MIX of old and new:
     const mixedAnswers = [
-      makeAnswer('GOV-P01', true, 14),  // half weight correct
-      makeAnswer('GOV-P01', false, 0),  // full weight incorrect
+      makeAnswer('GOV-P01', true, 14), // half weight correct
+      makeAnswer('GOV-P01', false, 0), // full weight incorrect
     ];
     const mastery = calculateCategoryMastery(mixedAnswers, ['GOV-P01']);
     // weight_correct = 0.5, weight_incorrect = 1.0
@@ -114,10 +100,6 @@ describe('calculateCategoryMastery', () => {
   });
 
   it('test answers weigh more than practice answers', () => {
-    // Same answer, one via test, one via practice
-    const testAnswer = [makeAnswer('GOV-P01', true, 0, 'test')];
-    const practiceAnswer = [makeAnswer('GOV-P01', true, 0, 'practice')];
-
     // Both single correct answers = 100, but test mixed in should carry more weight
     const mixedWithTest = [
       makeAnswer('GOV-P01', true, 0, 'test'),
@@ -147,7 +129,7 @@ describe('calculateCategoryMastery', () => {
   it('handles multiple answers for the same question', () => {
     const answers = [
       makeAnswer('GOV-P01', false, 5), // got it wrong 5 days ago
-      makeAnswer('GOV-P01', true, 0),  // got it right today
+      makeAnswer('GOV-P01', true, 0), // got it right today
     ];
     const mastery = calculateCategoryMastery(answers, ['GOV-P01']);
     // Recent correct should outweigh older incorrect
@@ -172,10 +154,7 @@ describe('calculateQuestionAccuracy', () => {
   });
 
   it('only counts answers for the specified question', () => {
-    const answers = [
-      makeAnswer('GOV-P01', true),
-      makeAnswer('GOV-P02', false),
-    ];
+    const answers = [makeAnswer('GOV-P01', true), makeAnswer('GOV-P02', false)];
     const result = calculateQuestionAccuracy(answers, 'GOV-P01');
     expect(result).toEqual({ correct: 1, total: 1, accuracy: 100 });
   });
@@ -197,16 +176,14 @@ describe('calculateOverallMastery', () => {
   it('weights categories by question count', () => {
     const categories = [
       { categoryId: 'cat1', mastery: 100, questionCount: 30 }, // big category, fully mastered
-      { categoryId: 'cat2', mastery: 0, questionCount: 10 },   // small category, not mastered
+      { categoryId: 'cat2', mastery: 0, questionCount: 10 }, // small category, not mastered
     ];
     // Weighted: (100*30 + 0*10) / (30+10) = 75
     expect(calculateOverallMastery(categories)).toBe(75);
   });
 
   it('handles single category', () => {
-    const categories = [
-      { categoryId: 'cat1', mastery: 80, questionCount: 5 },
-    ];
+    const categories = [{ categoryId: 'cat1', mastery: 80, questionCount: 5 }];
     expect(calculateOverallMastery(categories)).toBe(80);
   });
 });
