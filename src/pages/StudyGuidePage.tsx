@@ -14,6 +14,9 @@ import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredL
 import { FlashcardStack } from '@/components/study/FlashcardStack';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { CategoryHeaderBadge, QuestionAccuracyDot } from '@/components/nudges/StudyGuideHighlight';
+import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
+import { DeckManager } from '@/components/srs/DeckManager';
+import { useSRS } from '@/contexts/SRSContext';
 import { strings } from '@/lib/i18n/strings';
 
 const categoryColors: Record<string, string> = {
@@ -46,8 +49,12 @@ const StudyGuidePage = () => {
     return counts;
   }, [questionCategories]);
 
-  // Parse hash for view state: #cards, #cards-{category}, #category-{name}
+  // SRS deck state for due count badge
+  const { dueCount } = useSRS();
+
+  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck
   const hash = location.hash;
+  const isDeckView = hash === '#deck';
   const isCardsView = hash === '#cards' || hash.startsWith('#cards-');
   const selectedCategory = hash.startsWith('#category-')
     ? decodeURIComponent(hash.replace('#category-', ''))
@@ -130,6 +137,22 @@ const StudyGuidePage = () => {
   }, [category]);
 
   const categories = useMemo(() => ['all', ...questionCategories], [questionCategories]);
+
+  // Deck management view
+  if (isDeckView) {
+    return (
+      <div className="page-shell" data-tour="study-guide">
+        <AppNavigation />
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <PageTitle text={strings.study.studyGuide} />
+          <DeckManager
+            onStartReview={() => navigate('/study#review')}
+            onBack={handleBackToCategories}
+          />
+        </div>
+      </div>
+    );
+  }
 
   // Cards view with FlashcardStack
   if (isCardsView) {
@@ -236,6 +259,7 @@ const StudyGuidePage = () => {
                           >
                             {question.category}
                           </p>
+                          <AddToDeckButton questionId={question.id} compact stopPropagation />
                           <QuestionAccuracyDot questionId={question.id} />
                         </div>
                         <div className="space-y-3">
@@ -352,13 +376,25 @@ const StudyGuidePage = () => {
           ))}
         </StaggeredList>
 
-        {/* View all flashcards button */}
-        <div className="mt-6 text-center">
+        {/* Action buttons: flashcards + review deck */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <BilingualButton
             label={{ en: 'View All Flashcards', my: 'ကတ်များအားလုံးကြည့်ပါ' }}
             variant="secondary"
             onClick={() => handleShowCards()}
           />
+          <span className="relative inline-flex">
+            <BilingualButton
+              label={{ en: 'Review Deck', my: 'ပြန်လည်သုံးသပ်ကတ်များ' }}
+              variant="outline"
+              onClick={() => navigate('/study#deck')}
+            />
+            {dueCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning-500 text-white text-xs font-bold shadow-sm">
+                {dueCount}
+              </span>
+            )}
+          </span>
         </div>
 
         {/* Divider */}
@@ -440,6 +476,7 @@ const StudyGuidePage = () => {
                         >
                           {question.category}
                         </p>
+                        <AddToDeckButton questionId={question.id} compact stopPropagation />
                         <QuestionAccuracyDot questionId={question.id} />
                       </div>
                       <div className="space-y-3">
