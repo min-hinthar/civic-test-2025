@@ -9,16 +9,32 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Settings } from 'lucide-react';
+import { ArrowLeft, Bell, Clock, Settings } from 'lucide-react';
 import { NotificationSettings } from '@/components/pwa/NotificationSettings';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { Card, CardContent } from '@/components/ui/Card';
 
+const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
+
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const { user } = useAuth();
+  const { isSubscribed } = usePushNotifications(user?.id ?? null);
+  const [reminderTime, setReminderTime] = React.useState(() => {
+    if (typeof window === 'undefined') return '09:00';
+    return localStorage.getItem(SRS_REMINDER_TIME_KEY) ?? '09:00';
+  });
+
+  const handleReminderTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setReminderTime(value);
+    localStorage.setItem(SRS_REMINDER_TIME_KEY, value);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,7 +106,7 @@ export default function SettingsPage() {
         </section>
 
         {/* Notifications */}
-        <section className="mb-6">
+        <section className="mb-8">
           <SectionHeading
             text={{
               en: 'Notifications',
@@ -98,6 +114,62 @@ export default function SettingsPage() {
             }}
           />
           <NotificationSettings />
+        </section>
+
+        {/* Review Reminders */}
+        <section className="mb-6">
+          <SectionHeading
+            text={{
+              en: 'Review Reminders',
+              my: '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A',
+            }}
+          />
+          <Card>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Clock className="h-5 w-5 text-primary" />
+                <div>
+                  <p className="font-medium text-foreground">
+                    Preferred Reminder Time
+                  </p>
+                  {showBurmese && (
+                    <p className="font-myanmar text-sm text-muted-foreground">
+                      {'\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1021\u1001\u103B\u102D\u1014\u103A'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <label htmlFor="srs-reminder-time" className="text-sm text-muted-foreground">
+                  Time / <span className="font-myanmar">{'\u1021\u1001\u103B\u102D\u1014\u103A'}</span>:
+                </label>
+                <input
+                  type="time"
+                  id="srs-reminder-time"
+                  value={reminderTime}
+                  onChange={handleReminderTimeChange}
+                  className="rounded-md border border-border bg-card px-3 py-1.5 text-sm text-foreground"
+                />
+              </div>
+
+              {!isSubscribed && (
+                <div className="rounded-md border border-warning-200 bg-warning-50 px-3 py-2 dark:border-warning-800 dark:bg-warning-900/20">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-warning-500" />
+                    <p className="text-sm text-warning-700 dark:text-warning-300">
+                      Enable push notifications above to receive review reminders.
+                    </p>
+                  </div>
+                  {showBurmese && (
+                    <p className="font-myanmar text-sm text-warning-600 dark:text-warning-400 mt-1 ml-6">
+                      {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u101B\u101B\u103E\u102D\u101B\u1014\u103A \u1021\u1011\u1000\u103A\u1015\u102B\u101B\u103E\u102D push notification \u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1015\u102B\u104B'}
+                    </p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </section>
       </main>
     </div>

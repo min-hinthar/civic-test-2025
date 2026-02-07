@@ -78,6 +78,25 @@ export async function unsubscribeFromPush(userId: string): Promise<boolean> {
   }
 }
 
+/**
+ * Format an SRS reminder notification payload.
+ * Used for local notification display and service worker message formatting.
+ */
+export function formatSRSReminderNotification(dueCount: number): {
+  title: string;
+  body: string;
+  tag: string;
+  url: string;
+} {
+  return {
+    title:
+      'Cards Due for Review! / \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101B\u1014\u103A \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u101B\u103E\u102D\u1015\u102B\u1010\u101A\u103A!',
+    body: `You have ${dueCount} card${dueCount === 1 ? '' : 's'} ready to review. / \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101B\u1014\u103A \u1000\u1010\u103A ${dueCount} \u1001\u102F\u101B\u103E\u102D\u101E\u100A\u103A\u104B`,
+    tag: 'srs-reminder',
+    url: '/study#review',
+  };
+}
+
 export async function getSubscriptionStatus(): Promise<{
   subscribed: boolean;
   permission: NotificationPermission;
