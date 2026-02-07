@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 6 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06)
+Plan: 7 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06, 05-08)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-06-PLAN.md (Review UI Atoms)
+Last activity: 2026-02-07 - Completed 05-08-PLAN.md (Dashboard SRS Widget)
 
-Progress: [█████████░] 88% (36 plans / ~41 total estimated)
+Progress: [█████████░] 90% (37 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -183,6 +183,10 @@ Recent decisions affecting current work:
 - 05-06: SWIPE_THRESHOLD=80 (higher than 50) for intentional rating vs accidental navigation
 - 05-06: SessionSetup size options dynamically built based on totalDue count
 - 05-06: Burmese numerals inline in SessionSetup (avoids coupling to fsrsEngine)
+- 05-08: ReviewHeatmap uses pure CSS Grid + Tailwind (no external chart library)
+- 05-08: Heatmap 60 days desktop / 30 days mobile via responsive hidden/block classes
+- 05-08: SRSWidget navigates to /study#deck on compact tap
+- 05-08: Widget placed after ReadinessIndicator, before CategoryGrid in dashboard
 
 ### Pending Todos
 
@@ -200,7 +204,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-06-PLAN.md (Review UI Atoms). Wave 3 plans continuing.
+Stopped at: Completed 05-08-PLAN.md (Dashboard SRS Widget). Wave 4 plans continuing.
 Resume file: None
 
 ---
