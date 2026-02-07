@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 4 of 7 (Learning - Explanations & Category Progress) - In progress
-Plan: 3 of 9 complete
+Plan: 5 of 9 complete
 Status: In progress
-Last activity: 2026-02-07 - Completed 04-03-PLAN.md (Explanation UI components)
+Last activity: 2026-02-07 - Completed 04-05-PLAN.md (Flashcard explanation integration)
 
-Progress: [██████░░░░] 59% (24 plans / ~41 total estimated)
+Progress: [██████░░░░] 63% (26 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24 (10 plans + 1 gap-fix + 3 phase 4)
+- Total plans completed: 25 (10 plans + 1 gap-fix + 4 phase 4)
 - Average duration: 17 min
-- Total execution time: 420 min
+- Total execution time: 427 min
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [██████░░░░] 59% (24 plans / ~41 total estimated)
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
 | 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
-| 04-learning-explanations | 3 | 25 min | 8 min |
+| 04-learning-explanations | 4 | 32 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-08a (25 min), 03-verify (10 min), 04-01 (15 min), 04-02 (5 min), 04-03 (5 min)
-- Trend: Component-focused plans executing very fast due to established patterns
+- Last 5 plans: 03-verify (10 min), 04-01 (15 min), 04-02 (5 min), 04-03 (5 min), 04-04 (7 min)
+- Trend: Integration plans slightly longer than pure component plans but still fast
 
 *Updated after each plan completion*
 
@@ -138,6 +138,11 @@ Recent decisions affecting current work:
 - 04-03: WhyButton wraps ExplanationCard with border-0 rounded-none for seamless embedding
 - 04-03: RelatedQuestions filters out missing question IDs gracefully
 - 04-03: ExplanationCard accepts allQuestions prop for RelatedQuestions ID lookup
+- 04-04: WhyButton compact mode in test for smaller footprint during timed flow
+- 04-04: Ref-based timeout pattern (feedbackTimeoutRef + pendingResultRef) for pauseable auto-advance
+- 04-04: Review screen defaults to incorrect-only filter for focused learning
+- 04-04: questionsById Map for O(1) explanation lookup in review (avoids extending QuestionResult)
+- 04-04: onExpandChange callback on WhyButton for parent integration
 
 ### Pending Todos
 
@@ -155,7 +160,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 04-03-PLAN.md (Explanation UI components). Ready for 04-04.
+Stopped at: Completed 04-04-PLAN.md (Test mode explanation integration). Ready for 04-05.
 Resume file: None
 
 ---
