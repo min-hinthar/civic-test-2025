@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 4 of 7 (Learning - Explanations & Category Progress) - In progress
-Plan: 1 of 9 complete
+Plan: 3 of 9 complete
 Status: In progress
-Last activity: 2026-02-07 - Completed 04-01-PLAN.md (Explanation data & USCIS category mapping)
+Last activity: 2026-02-07 - Completed 04-03-PLAN.md (Explanation UI components)
 
-Progress: [█████░░░░░] 54% (22 plans / ~41 total estimated)
+Progress: [██████░░░░] 59% (24 plans / ~41 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22 (10 plans + 1 gap-fix + 1 phase 4)
-- Average duration: 18 min
-- Total execution time: 405 min
+- Total plans completed: 24 (10 plans + 1 gap-fix + 3 phase 4)
+- Average duration: 17 min
+- Total execution time: 420 min
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [█████░░░░░] 54% (22 plans / ~41 total estimated)
 | 01-foundation | 5 | 49 min | 10 min |
 | 02-pwa-offline | 6 | 141 min | 24 min |
 | 03-ui-ux-bilingual-polish | 9+1 | 190 min | 19 min |
-| 04-learning-explanations | 1 | 15 min | 15 min |
+| 04-learning-explanations | 3 | 25 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-08 (20 min), 03-09 (37 min), 03-08a (25 min), 03-verify (10 min), 04-01 (15 min)
-- Trend: Data-focused plans executing faster than UI plans
+- Last 5 plans: 03-08a (25 min), 03-verify (10 min), 04-01 (15 min), 04-02 (5 min), 04-03 (5 min)
+- Trend: Component-focused plans executing very fast due to established patterns
 
 *Updated after each plan completion*
 
@@ -131,6 +131,9 @@ Recent decisions affecting current work:
 - 04-01: Optional explanation field on Question interface for gradual rollout safety
 - 04-01: Citation field only on constitutional questions (Articles/Amendments)
 - 04-01: SUB_CATEGORY_NAMES with shorter bilingual display names
+- 04-03: WhyButton wraps ExplanationCard with border-0 rounded-none for seamless embedding
+- 04-03: RelatedQuestions filters out missing question IDs gracefully
+- 04-03: ExplanationCard accepts allQuestions prop for RelatedQuestions ID lookup
 
 ### Pending Todos
 
@@ -148,7 +151,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 04-01-PLAN.md (Explanation data & USCIS category mapping). Ready for 04-02.
+Stopped at: Completed 04-03-PLAN.md (Explanation UI components). Ready for 04-04.
 Resume file: None
 
 ---
