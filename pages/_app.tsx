@@ -6,14 +6,9 @@ import '@fontsource/noto-sans-myanmar/500.css';
 import '@fontsource/noto-sans-myanmar/700.css';
 
 import '../src/styles/globals.css';
-import { PageTransition } from '@/components/animations/PageTransition';
 
 const CivicPrepApp = ({ Component, pageProps }: AppProps) => {
-  return (
-    <PageTransition>
-      <Component {...pageProps} />
-    </PageTransition>
-  );
+  return <Component {...pageProps} />;
 };
 
 export default CivicPrepApp;
