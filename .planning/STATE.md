@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 5 of 7 (Spaced Repetition)
-Plan: 5 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05)
+Plan: 6 of 9 complete (05-01, 05-02, 05-03, 05-04, 05-05, 05-06)
 Status: In progress
-Last activity: 2026-02-07 - Completed 05-04-PLAN.md (Add-to-Deck Button & Touchpoints)
+Last activity: 2026-02-07 - Completed 05-06-PLAN.md (Review UI Atoms)
 
-Progress: [████████░░] 85% (35 plans / ~41 total estimated)
+Progress: [█████████░] 88% (36 plans / ~41 total estimated)
 
 ## Performance Metrics
 
@@ -179,6 +179,10 @@ Recent decisions affecting current work:
 - 05-05: Sort order: Due first, then New, then Done for actionable card priority
 - 05-05: Due count badge uses absolute positioning overlay on BilingualButton wrapper
 - 05-05: onStartReview navigates to #review (placeholder for plan 05-06)
+- 05-06: Flashcard3D used uncontrolled; ReviewCard passes onFlip callback, parent tracks state
+- 05-06: SWIPE_THRESHOLD=80 (higher than 50) for intentional rating vs accidental navigation
+- 05-06: SessionSetup size options dynamically built based on totalDue count
+- 05-06: Burmese numerals inline in SessionSetup (avoids coupling to fsrsEngine)
 
 ### Pending Todos
 
@@ -196,7 +200,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 05-04-PLAN.md (Add-to-Deck Button & Touchpoints). Wave 3 plans in progress.
+Stopped at: Completed 05-06-PLAN.md (Review UI Atoms). Wave 3 plans continuing.
 Resume file: None
 
 ---
