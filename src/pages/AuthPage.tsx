@@ -154,7 +154,7 @@ const AuthPage = () => {
                 </p>
               </div>
             )}
-            {authError && <p className="text-sm text-red-600">{authError}</p>}
+            {authError && <p className="text-sm text-destructive">{authError}</p>}
             <button
               type="submit"
               className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 min-h-[44px] font-semibold text-primary-foreground shadow-xl shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-70"

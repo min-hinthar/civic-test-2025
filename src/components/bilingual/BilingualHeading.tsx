@@ -3,6 +3,7 @@
 import { ReactNode, createElement } from 'react';
 import clsx from 'clsx';
 import { BilingualString } from '@/lib/i18n/strings';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface BilingualHeadingProps {
   /** Heading text with en and my keys */
@@ -50,15 +51,18 @@ export function BilingualHeading({
 }: BilingualHeadingProps) {
   const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   const styles = sizeClasses[size];
+  const { showBurmese } = useLanguage();
 
   return createElement(
     Tag,
     { className: clsx('flex flex-col', centered && 'items-center text-center', className) },
     <>
       <span className={clsx('text-foreground', styles.en)}>{text.en}</span>
-      <span className={clsx('font-myanmar text-muted-foreground mt-0.5', styles.my)}>
-        {text.my}
-      </span>
+      {showBurmese && (
+        <span className={clsx('font-myanmar text-muted-foreground mt-0.5', styles.my)}>
+          {text.my}
+        </span>
+      )}
       {children}
     </>
   );

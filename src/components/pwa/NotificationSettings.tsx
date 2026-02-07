@@ -88,15 +88,15 @@ export function NotificationSettings() {
   // If user has blocked notifications in browser settings
   if (permission === 'denied') {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+      <div className="rounded-lg border border-warning-200 bg-warning-50 p-4 dark:border-warning-800 dark:bg-warning-900/20">
         <div className="flex items-center gap-2">
-          <BellOff className="h-5 w-5 text-red-500" />
-          <p className="font-medium text-red-800 dark:text-red-200">Notifications blocked</p>
+          <BellOff className="h-5 w-5 text-warning-500" />
+          <p className="font-medium text-warning-800 dark:text-warning-200">Notifications blocked</p>
         </div>
-        <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+        <p className="mt-1 text-sm text-warning-700 dark:text-warning-300">
           To enable notifications, update your browser settings.
         </p>
-        <p className="font-myanmar text-sm text-red-600 dark:text-red-400">
+        <p className="font-myanmar text-sm text-warning-600 dark:text-warning-400">
           {
             '\u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038 \u1015\u102D\u1010\u103A\u1011\u102C\u1038\u1015\u102B\u101E\u100A\u103A\u104B \u1018\u101B\u1031\u102C\u1004\u103A\u1007\u102C \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103E \u1015\u103C\u1004\u103A\u1006\u1004\u103A\u1015\u102B\u104B'
           }

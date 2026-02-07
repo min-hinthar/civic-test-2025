@@ -96,7 +96,7 @@ const PasswordUpdatePage = () => {
                 minLength={12}
               />
             </div>
-            {authError && <p className="text-sm text-red-600">{authError}</p>}
+            {authError && <p className="text-sm text-destructive">{authError}</p>}
             <button
               type="submit"
               disabled={isSubmitting || isLoading || !user}

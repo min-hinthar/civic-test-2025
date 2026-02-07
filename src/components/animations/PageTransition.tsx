@@ -1,8 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, cloneElement, isValidElement } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // Page transition variants - slide + fade per user decision
@@ -42,35 +42,37 @@ interface PageTransitionProps {
 /**
  * Page transition wrapper with slide+fade animation.
  *
- * Features:
- * - Slide + fade combo between pages (modern app feel)
- * - Uses Next.js router pathname as key for proper exit animations
- * - mode="wait" ensures old page exits before new enters
- * - Respects prefers-reduced-motion
+ * Wraps a <Routes> component and provides animated page transitions.
+ * Passes location to the Routes child for proper exit animation support.
  *
- * Usage (in pages/_app.tsx):
+ * Usage:
  * ```tsx
  * <PageTransition>
- *   <Component {...pageProps} />
+ *   <Routes>
+ *     <Route path="/" element={<Home />} />
+ *   </Routes>
  * </PageTransition>
  * ```
  */
 export function PageTransition({ children }: PageTransitionProps) {
-  const router = useRouter();
+  const location = useLocation();
   const shouldReduceMotion = useReducedMotion();
+
+  // Pass location prop to Routes child for exit animation support
+  const routesWithLocation =
+    isValidElement(children) ? cloneElement(children, { location } as Record<string, unknown>) : children;
 
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
-        key={router.pathname}
+        key={location.pathname}
         variants={shouldReduceMotion ? reducedMotionVariants : pageVariants}
         initial="initial"
         animate="enter"
         exit="exit"
         transition={shouldReduceMotion ? { duration: 0 } : pageTransition}
-        className="min-h-screen"
       >
-        {children}
+        {routesWithLocation}
       </motion.div>
     </AnimatePresence>
   );

@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { BilingualString } from '@/lib/i18n/strings';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface BilingualTextProps {
   /** Text content with en and my keys */
@@ -55,17 +56,21 @@ export function BilingualText({
   centered = false,
   className,
 }: BilingualTextProps) {
+  const { showBurmese } = useLanguage();
+
   return (
     <span className={clsx('flex flex-col', centered && 'items-center text-center', className)}>
       <span className={clsx('font-semibold text-foreground', enSizes[size])}>{text.en}</span>
-      <span
-        className={clsx(
-          'font-myanmar text-muted-foreground',
-          equalSize ? enSizes[size] : mySizes[size]
-        )}
-      >
-        {text.my}
-      </span>
+      {showBurmese && (
+        <span
+          className={clsx(
+            'font-myanmar text-muted-foreground',
+            equalSize ? enSizes[size] : mySizes[size]
+          )}
+        >
+          {text.my}
+        </span>
+      )}
     </span>
   );
 }
@@ -82,11 +87,17 @@ export function BilingualTextInline({
   separator?: string;
   className?: string;
 }) {
+  const { showBurmese } = useLanguage();
+
   return (
     <span className={className}>
       <span className="text-foreground">{text.en}</span>
-      <span className="text-muted-foreground">{separator}</span>
-      <span className="font-myanmar text-muted-foreground">{text.my}</span>
+      {showBurmese && (
+        <>
+          <span className="text-muted-foreground">{separator}</span>
+          <span className="font-myanmar text-muted-foreground">{text.my}</span>
+        </>
+      )}
     </span>
   );
 }

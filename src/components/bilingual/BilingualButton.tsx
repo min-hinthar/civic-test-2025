@@ -5,6 +5,7 @@ import { motion, type HTMLMotionProps } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import clsx from 'clsx';
 import { BilingualString } from '@/lib/i18n/strings';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Spring physics for tactile feedback
 const springTransition = {
@@ -71,6 +72,7 @@ export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProp
     ref
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const { showBurmese } = useLanguage();
     const isDisabled = disabled || loading;
 
     const motionVariants = {
@@ -129,9 +131,11 @@ export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProp
           <>
             {icon && <span className="mb-0.5">{icon}</span>}
             <span className="font-semibold leading-tight">{label.en}</span>
-            <span className="text-sm font-normal font-myanmar opacity-80 leading-tight">
-              {label.my}
-            </span>
+            {showBurmese && (
+              <span className="text-sm font-normal font-myanmar opacity-80 leading-tight">
+                {label.my}
+              </span>
+            )}
           </>
         )}
       </motion.button>
