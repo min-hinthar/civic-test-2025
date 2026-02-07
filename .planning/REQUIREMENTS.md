@@ -80,12 +80,12 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Learning Features - Spaced Repetition
 
-- [ ] **SRS-01**: FSRS algorithm (ts-fsrs) integrated for review scheduling
-- [ ] **SRS-02**: Per-question SRS state tracked in Supabase (ease, interval, next review)
-- [ ] **SRS-03**: SRS state cached in IndexedDB for offline study sessions
-- [ ] **SRS-04**: "Due for review" study mode showing overdue cards first
-- [ ] **SRS-05**: Dashboard widget showing number of cards due for review today
-- [ ] **SRS-06**: SRS state syncs between devices via Supabase
+- [x] **SRS-01**: FSRS algorithm (ts-fsrs) integrated for review scheduling
+- [x] **SRS-02**: Per-question SRS state tracked in Supabase (ease, interval, next review)
+- [x] **SRS-03**: SRS state cached in IndexedDB for offline study sessions
+- [x] **SRS-04**: "Due for review" study mode showing overdue cards first
+- [x] **SRS-05**: Dashboard widget showing number of cards due for review today
+- [x] **SRS-06**: SRS state syncs between devices via Supabase
 
 ### Learning Features - Interview Simulation
 
@@ -186,20 +186,20 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | ANXR-03 | Phase 3 | Complete |
 | ANXR-04 | Phase 3 | Complete |
 | ANXR-05 | Phase 3 | Complete |
-| EXPL-01 | Phase 4 | Pending |
-| EXPL-02 | Phase 4 | Pending |
-| EXPL-03 | Phase 4 | Pending |
-| EXPL-04 | Phase 4 | Pending |
-| CPRO-01 | Phase 4 | Pending |
-| CPRO-02 | Phase 4 | Pending |
-| CPRO-03 | Phase 4 | Pending |
-| CPRO-04 | Phase 4 | Pending |
-| SRS-01 | Phase 5 | Pending |
-| SRS-02 | Phase 5 | Pending |
-| SRS-03 | Phase 5 | Pending |
-| SRS-04 | Phase 5 | Pending |
-| SRS-05 | Phase 5 | Pending |
-| SRS-06 | Phase 5 | Pending |
+| EXPL-01 | Phase 4 | Complete |
+| EXPL-02 | Phase 4 | Complete |
+| EXPL-03 | Phase 4 | Complete |
+| EXPL-04 | Phase 4 | Complete |
+| CPRO-01 | Phase 4 | Complete |
+| CPRO-02 | Phase 4 | Complete |
+| CPRO-03 | Phase 4 | Complete |
+| CPRO-04 | Phase 4 | Complete |
+| SRS-01 | Phase 5 | Complete |
+| SRS-02 | Phase 5 | Complete |
+| SRS-03 | Phase 5 | Complete |
+| SRS-04 | Phase 5 | Complete |
+| SRS-05 | Phase 5 | Complete |
+| SRS-06 | Phase 5 | Complete |
 | INTV-01 | Phase 6 | Pending |
 | INTV-02 | Phase 6 | Pending |
 | INTV-03 | Phase 6 | Pending |
@@ -218,4 +218,4 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 3 completion*
+*Last updated: 2026-02-07 after Phase 5 completion*

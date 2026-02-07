@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: PWA & Offline** - Service worker, installability, offline study, sync queue, push notifications
 - [x] **Phase 3: UI/UX & Bilingual Polish** - Visual refinement, animations, accessibility, complete bilingual coverage, anxiety-reducing design
 - [x] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
-- [ ] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
+- [x] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [ ] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [ ] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
 
@@ -129,15 +129,15 @@ Plans:
 **Plans**: 9 plans in 5 waves
 
 Plans:
-- [ ] 05-01-PLAN.md — FSRS engine wrapper, SRS types, and IndexedDB card store
-- [ ] 05-02-PLAN.md — Supabase srs_cards table and sync layer with offline queue
-- [ ] 05-03-PLAN.md — SRSContext provider and specialized hooks (deck, review, widget)
-- [ ] 05-04-PLAN.md — AddToDeckButton integration into study guide and test review
-- [ ] 05-05-PLAN.md — DeckManager page and Study Guide tab routing
-- [ ] 05-06-PLAN.md — ReviewCard with swipe-to-rate, RatingButtons, and SessionSetup
-- [ ] 05-07-PLAN.md — ReviewSession orchestrator and session summary
-- [ ] 05-08-PLAN.md — Dashboard SRS widget and review heatmap
-- [ ] 05-09-PLAN.md — Navigation badge, push notifications, and settings
+- [x] 05-01-PLAN.md — FSRS engine wrapper, SRS types, and IndexedDB card store
+- [x] 05-02-PLAN.md — Supabase srs_cards table and sync layer with offline queue
+- [x] 05-03-PLAN.md — SRSContext provider and specialized hooks (deck, review, widget)
+- [x] 05-04-PLAN.md — AddToDeckButton integration into study guide and test review
+- [x] 05-05-PLAN.md — DeckManager page and Study Guide tab routing
+- [x] 05-06-PLAN.md — ReviewCard with swipe-to-rate, RatingButtons, and SessionSetup
+- [x] 05-07-PLAN.md — ReviewSession orchestrator and session summary
+- [x] 05-08-PLAN.md — Dashboard SRS widget and review heatmap
+- [x] 05-09-PLAN.md — Navigation badge, push notifications, and settings
 
 ---
 
@@ -193,11 +193,11 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 2. PWA & Offline | 6/6 | Complete | 2026-02-06 |
 | 3. UI/UX & Bilingual Polish | 10/10 | Complete | 2026-02-07 |
 | 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
-| 5. Spaced Repetition | 0/9 | Not started | - |
+| 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 0/4 | Not started | - |
 | 7. Social Features | 0/5 | Not started | - |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-07*
+*Last updated: 2026-02-07 after Phase 5 completion*
