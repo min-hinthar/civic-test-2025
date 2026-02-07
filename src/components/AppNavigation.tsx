@@ -8,6 +8,7 @@ import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
 import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
 import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useSRS } from '@/contexts/SRSContext';
 import { toast } from '@/components/ui/use-toast';
 import { strings } from '@/lib/i18n/strings';
 import { BilingualText } from '@/components/bilingual/BilingualText';
@@ -31,6 +32,7 @@ const AppNavigation = ({
   lockMessage,
 }: AppNavigationProps) => {
   const { user, logout } = useAuth();
+  const { dueCount } = useSRS();
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +87,7 @@ const AppNavigation = ({
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-full px-4 py-2 text-left transition ${
+                className={`rounded-full px-4 py-2 text-left transition flex items-center ${
                   isActive
                     ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                     : 'text-muted-foreground hover:bg-muted/40'
@@ -93,6 +95,11 @@ const AppNavigation = ({
                 aria-disabled={locked && link.href !== '/test'}
               >
                 <BilingualText text={link.label} size="sm" equalSize />
+                {link.href === '/study' && dueCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5">
+                    {dueCount > 99 ? '99+' : dueCount}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -155,7 +162,7 @@ const AppNavigation = ({
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-full px-4 py-3 text-left ${
+                className={`rounded-full px-4 py-3 text-left flex items-center ${
                   location.pathname === link.href
                     ? 'bg-primary-500 text-white shadow'
                     : 'bg-card/80 text-foreground shadow-sm'
@@ -163,6 +170,11 @@ const AppNavigation = ({
                 aria-disabled={locked && link.href !== '/test'}
               >
                 <BilingualText text={link.label} size="sm" equalSize />
+                {link.href === '/study' && dueCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5">
+                    {dueCount > 99 ? '99+' : dueCount}
+                  </span>
+                )}
               </Link>
             ))}
             {user ? (
