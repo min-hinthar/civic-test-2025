@@ -17,6 +17,7 @@ import { CategoryGrid } from '@/components/progress/CategoryGrid';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { SuggestedFocus } from '@/components/nudges/SuggestedFocus';
 import { SRSWidget } from '@/components/srs/SRSWidget';
+import { InterviewDashboardWidget } from '@/components/interview/InterviewDashboardWidget';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { getAnswerHistory } from '@/lib/mastery';
@@ -244,6 +245,13 @@ const Dashboard = () => {
         <section className="mb-8">
           <FadeIn delay={50}>
             <SRSWidget />
+          </FadeIn>
+        </section>
+
+        {/* Interview Simulation Widget */}
+        <section className="mb-8">
+          <FadeIn delay={75}>
+            <InterviewDashboardWidget />
           </FadeIn>
         </section>
 

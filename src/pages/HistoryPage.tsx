@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   ResponsiveContainer,
@@ -16,7 +16,8 @@ import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import type { TestEndReason } from '@/types';
+import type { TestEndReason, InterviewSession } from '@/types';
+import { getInterviewHistory } from '@/lib/interview';
 import { BilingualHeading, PageTitle } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
@@ -50,8 +51,25 @@ const HistoryPage = () => {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'tests' | 'practice'>('tests');
+
+  // Derive active tab from URL hash (tab-specific hashes) or use user-selected override
+  const tabFromHash: 'tests' | 'practice' | 'interview' | null = useMemo(() => {
+    const hash = location.hash.replace('#', '');
+    if (hash === 'interview') return 'interview';
+    if (hash === 'practice') return 'practice';
+    if (hash === 'tests') return 'tests';
+    return null;
+  }, [location.hash]);
+
+  const [userSelectedTab, setUserSelectedTab] = useState<'tests' | 'practice' | 'interview' | null>(null);
+  const activeTab = userSelectedTab ?? tabFromHash ?? 'tests';
+
+  const setActiveTab = useCallback((tab: 'tests' | 'practice' | 'interview') => {
+    setUserSelectedTab(tab);
+  }, []);
+
   const [practiceAnswers, setPracticeAnswers] = useState<StoredAnswer[]>([]);
+  const [interviewSessions, setInterviewSessions] = useState<InterviewSession[]>([]);
 
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
 
@@ -62,6 +80,23 @@ const HistoryPage = () => {
       .then(answers => {
         if (!cancelled) {
           setPracticeAnswers(answers.filter(a => a.sessionType === 'practice'));
+        }
+      })
+      .catch(() => {
+        // IndexedDB not available
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Load interview session data from IndexedDB
+  useEffect(() => {
+    let cancelled = false;
+    getInterviewHistory()
+      .then(sessions => {
+        if (!cancelled) {
+          setInterviewSessions(sessions);
         }
       })
       .catch(() => {
@@ -139,7 +174,10 @@ const HistoryPage = () => {
 
   useEffect(() => {
     if (!location.hash) return;
-    const target = document.getElementById(location.hash.replace('#', ''));
+    const hash = location.hash.replace('#', '');
+    // Tab hashes are handled by tabFromHash derivation, skip scrolling for them
+    if (hash === 'interview' || hash === 'practice' || hash === 'tests') return;
+    const target = document.getElementById(hash);
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [location.hash]);
 
@@ -185,6 +223,22 @@ const HistoryPage = () => {
             {showBurmese && (
               <span className="ml-1 font-myanmar text-xs">
                 {strings.practice.practiceSessions.my}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('interview')}
+            className={clsx(
+              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
+              activeTab === 'interview'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            {strings.interview.interviewHistory.en}
+            {showBurmese && (
+              <span className="ml-1 font-myanmar text-xs">
+                {strings.interview.interviewHistory.my}
               </span>
             )}
           </button>
@@ -314,6 +368,188 @@ const HistoryPage = () => {
                     label={strings.practice.startPractice}
                     variant="primary"
                     onClick={() => navigate('/practice')}
+                  />
+                </div>
+              </FadeIn>
+            )}
+          </section>
+        )}
+
+        {/* Interview Sessions Tab */}
+        {activeTab === 'interview' && (
+          <section className="space-y-6" aria-label="Interview Sessions">
+            {interviewSessions.length > 0 ? (
+              <StaggeredList className="space-y-4">
+                {interviewSessions.map((session, idx) => {
+                  const sessionId = session.id ?? `interview-${idx}`;
+                  const isExpanded = expandedSessionId === sessionId;
+                  const scorePercent =
+                    session.totalQuestions > 0
+                      ? Math.round((session.score / session.totalQuestions) * 100)
+                      : 0;
+
+                  const endReasonCopy: Record<string, string> = {
+                    passThreshold: 'Ended early after passing threshold',
+                    failThreshold: 'Stopped after too many incorrect answers',
+                    complete: 'Completed all questions',
+                    quit: 'Ended by user',
+                  };
+
+                  return (
+                    <StaggeredItem key={sessionId}>
+                      <Card
+                        interactive
+                        onClick={() => toggleSession(sessionId)}
+                        className="min-h-[44px]"
+                      >
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-semibold text-foreground">
+                                {new Date(session.date).toLocaleString()}
+                              </p>
+                              <span
+                                className={clsx(
+                                  'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold',
+                                  session.mode === 'realistic'
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'bg-muted text-muted-foreground'
+                                )}
+                              >
+                                {session.mode === 'realistic'
+                                  ? (showBurmese ? strings.interview.realisticMode.my : 'Realistic')
+                                  : (showBurmese ? strings.interview.practiceMode.my : 'Practice')}
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Score {session.score} / {session.totalQuestions} ·{' '}
+                              {Math.round(session.durationSeconds / 60)} mins
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {endReasonCopy[session.endReason] ?? session.endReason}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <span
+                                className={clsx(
+                                  'text-2xl font-bold',
+                                  session.passed ? 'text-success-500' : 'text-warning-500'
+                                )}
+                              >
+                                {scorePercent}%
+                              </span>
+                              <span className="block text-sm text-muted-foreground">
+                                {session.passed
+                                  ? (showBurmese ? `${strings.interview.passed.my}` : 'Passed')
+                                  : (showBurmese ? `${strings.interview.failed.my}` : 'Keep trying')}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                              aria-label={isExpanded ? 'Hide details' : 'Show details'}
+                            >
+                              {isExpanded ? 'Hide' : 'Details'}
+                              {isExpanded ? (
+                                <ChevronUp className="h-4 w-4" />
+                              ) : (
+                                <ChevronDown className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <Progress
+                            value={scorePercent}
+                            variant={session.passed ? 'success' : 'warning'}
+                            size="sm"
+                          />
+                        </div>
+
+                        {isExpanded && session.results.length > 0 && (
+                          <div className="mt-4 max-h-72 space-y-2 overflow-y-auto pr-1">
+                            {session.results.map((result, rIdx) => (
+                              <div
+                                key={`${sessionId}-${rIdx}`}
+                                className={clsx(
+                                  'rounded-xl border p-3 text-sm',
+                                  result.selfGrade === 'correct'
+                                    ? 'border-success-500/20 bg-success-50/50 dark:bg-success-500/5'
+                                    : 'border-warning-500/20 bg-warning-50/50 dark:bg-warning-500/5'
+                                )}
+                              >
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <span className="text-muted-foreground font-mono text-xs">
+                                    {result.questionId}
+                                  </span>
+                                  <span
+                                    className={clsx(
+                                      'text-xs font-semibold',
+                                      result.selfGrade === 'correct'
+                                        ? 'text-success-500'
+                                        : 'text-warning-500'
+                                    )}
+                                  >
+                                    {result.selfGrade === 'correct'
+                                      ? (showBurmese ? strings.interview.correct.my : 'Correct')
+                                      : (showBurmese ? strings.interview.incorrect.my : 'Incorrect')}
+                                  </span>
+                                </div>
+                                <p className="text-sm font-medium text-foreground">
+                                  {result.questionText_en}
+                                </p>
+                                {showBurmese && (
+                                  <p className="text-xs text-muted-foreground font-myanmar mt-0.5">
+                                    {result.questionText_my}
+                                  </p>
+                                )}
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {result.correctAnswers.map(a => a.text_en).join(' / ')}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {isExpanded && session.results.length === 0 && (
+                          <p className="mt-4 text-xs text-muted-foreground italic">
+                            {showBurmese
+                              ? '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u104D'
+                              : 'Detailed question results not available for synced sessions.'}
+                          </p>
+                        )}
+                      </Card>
+                    </StaggeredItem>
+                  );
+                })}
+              </StaggeredList>
+            ) : (
+              <FadeIn>
+                <div className="text-center py-12">
+                  <BilingualHeading
+                    text={{
+                      en: 'No interview sessions yet',
+                      my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103B\u102C\u1038 \u1019\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B',
+                    }}
+                    level={2}
+                    size="lg"
+                    centered
+                    className="mb-2"
+                  />
+                  <p className="text-muted-foreground mb-6">
+                    Try a mock interview to practice for your USCIS appointment!
+                    {showBurmese && (
+                      <span className="block font-myanmar mt-1">
+                        USCIS \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1021\u1010\u103D\u1000\u103A \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1019\u103E\u102F\u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B!
+                      </span>
+                    )}
+                  </p>
+                  <BilingualButton
+                    label={strings.interview.startInterview}
+                    variant="primary"
+                    onClick={() => navigate('/interview')}
                   />
                 </div>
               </FadeIn>
