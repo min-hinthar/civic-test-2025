@@ -19,39 +19,19 @@ import { DeckManager } from '@/components/srs/DeckManager';
 import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
 import { recordStudyActivity } from '@/lib/social';
-import { getUSCISCategory, CATEGORY_COLORS } from '@/lib/mastery';
+import { getSubCategoryColors } from '@/lib/mastery';
 import type { Category } from '@/types';
 
-/** USCIS main category color for sub-category flip cards */
+/** USCIS main category color for sub-category flip card back gradients */
 const CATEGORY_COLORS_MAP: Record<string, string> = {
-  'Principles of American Democracy': 'from-rose-500 to-pink-500',
-  'System of Government': 'from-blue-500 to-cyan-500',
-  'Rights and Responsibilities': 'from-emerald-500 to-lime-500',
+  'Principles of American Democracy': 'from-blue-500 to-blue-600',
+  'System of Government': 'from-blue-600 to-indigo-600',
+  'Rights and Responsibilities': 'from-sky-500 to-blue-500',
   'American History: Colonial Period and Independence': 'from-amber-500 to-orange-500',
-  'American History: 1800s': 'from-fuchsia-500 to-purple-500',
+  'American History: 1800s': 'from-orange-500 to-orange-600',
   'Recent American History and Other Important Historical Information':
-    'from-sky-500 to-indigo-500',
-  'Civics: Symbols and Holidays': 'from-slate-500 to-stone-500',
-};
-
-/** Get the USCIS main category header strip color for a sub-category */
-function getCategoryStripColor(cat: Category): 'blue' | 'amber' | 'emerald' {
-  const mainCat = getUSCISCategory(cat);
-  return CATEGORY_COLORS[mainCat] as 'blue' | 'amber' | 'emerald';
-}
-
-/** Category strip background classes for card header strips */
-const STRIP_BG: Record<string, string> = {
-  blue: 'bg-blue-500',
-  amber: 'bg-amber-500',
-  emerald: 'bg-emerald-500',
-};
-
-/** Category card border-left accent colors */
-const STRIP_BORDER: Record<string, string> = {
-  blue: 'border-l-blue-500',
-  amber: 'border-l-amber-500',
-  emerald: 'border-l-emerald-500',
+    'from-amber-600 to-amber-700',
+  'Civics: Symbols and Holidays': 'from-emerald-500 to-teal-500',
 };
 
 /** Tab definitions for the study guide */
@@ -302,7 +282,7 @@ const StudyGuidePage = () => {
   // Category selection view with hash routing
   if (selectedCategory && questionCategories.includes(selectedCategory)) {
     const categoryQuestions = civicsQuestions.filter(q => q.category === selectedCategory);
-    const stripColor = getCategoryStripColor(selectedCategory as Category);
+    const subColors = getSubCategoryColors(selectedCategory as Category);
 
     return (
       <div className="page-shell" data-tour="study-guide">
@@ -333,7 +313,7 @@ const StudyGuidePage = () => {
               'shadow-[0_4px_0_0_rgba(0,0,0,0.06)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.2)]'
             )}
           >
-            <div className={clsx('h-[5px]', STRIP_BG[stripColor])} />
+            <div className={clsx('h-[5px]', subColors.stripBg)} />
             <div className="p-5">
               <div className="flex items-center gap-3 mb-1">
                 <h2 className="text-xl font-extrabold text-foreground">{selectedCategory}</h2>
@@ -393,7 +373,7 @@ const StudyGuidePage = () => {
                     >
                       <div className="flip-card-face flip-card-front flex h-full flex-col rounded-2xl">
                         {/* Category color strip */}
-                        <div className={clsx('h-[5px] w-full shrink-0', STRIP_BG[stripColor])} />
+                        <div className={clsx('h-[5px] w-full shrink-0', subColors.stripBg)} />
                         <div className="flex-1 flex flex-col justify-between p-6">
                           <div className="flex items-center justify-between gap-2">
                             <p
@@ -437,10 +417,7 @@ const StudyGuidePage = () => {
                       >
                         {/* Category color strip on back */}
                         <div
-                          className={clsx(
-                            'h-[5px] w-full shrink-0 opacity-50',
-                            STRIP_BG[stripColor]
-                          )}
+                          className={clsx('h-[5px] w-full shrink-0 opacity-50', subColors.stripBg)}
                         />
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
@@ -520,7 +497,7 @@ const StudyGuidePage = () => {
         {/* Category grid with staggered animation and color accents */}
         <StaggeredList className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {questionCategories.map(cat => {
-            const stripColor = getCategoryStripColor(cat as Category);
+            const catColors = getSubCategoryColors(cat as Category);
             return (
               <StaggeredItem key={cat}>
                 <Card
@@ -528,7 +505,7 @@ const StudyGuidePage = () => {
                   onClick={() => handleCategorySelect(cat)}
                   className={clsx(
                     'min-h-[44px] p-0 overflow-hidden border-l-4',
-                    STRIP_BORDER[stripColor]
+                    catColors.borderAccent
                   )}
                 >
                   <div className="p-4">
@@ -634,7 +611,7 @@ const StudyGuidePage = () => {
               const englishAnswersText = question.studyAnswers
                 .map(answer => answer.text_en)
                 .join('. ');
-              const qStripColor = getCategoryStripColor(question.category);
+              const qColors = getSubCategoryColors(question.category);
 
               const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -664,7 +641,7 @@ const StudyGuidePage = () => {
                     >
                       <div className="flip-card-face flip-card-front flex h-full flex-col rounded-2xl">
                         {/* Category color header strip */}
-                        <div className={clsx('h-[5px] w-full shrink-0', STRIP_BG[qStripColor])} />
+                        <div className={clsx('h-[5px] w-full shrink-0', qColors.stripBg)} />
                         <div className="flex-1 flex flex-col justify-between p-6">
                           <div className="flex items-center justify-between gap-2">
                             <p
@@ -708,10 +685,7 @@ const StudyGuidePage = () => {
                       >
                         {/* Category color strip on back */}
                         <div
-                          className={clsx(
-                            'h-[5px] w-full shrink-0 opacity-50',
-                            STRIP_BG[qStripColor]
-                          )}
+                          className={clsx('h-[5px] w-full shrink-0 opacity-50', qColors.stripBg)}
                         />
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">

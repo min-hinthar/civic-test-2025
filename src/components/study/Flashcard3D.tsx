@@ -19,6 +19,8 @@ interface Flashcard3DProps {
   category?: string;
   /** USCIS main category color: 'blue' | 'amber' | 'emerald' */
   categoryColor?: 'blue' | 'amber' | 'emerald';
+  /** Sub-category strip background class (e.g. 'bg-blue-600') - overrides categoryColor */
+  subCategoryStripBg?: string;
   /** Optional explanation to show on back of card */
   explanation?: Explanation;
   /** All questions for RelatedQuestions lookup */
@@ -29,7 +31,7 @@ interface Flashcard3DProps {
   className?: string;
 }
 
-// Category color header strip classes
+// Category color header strip classes (fallback when subCategoryStripBg not provided)
 const CATEGORY_STRIP_COLORS: Record<string, string> = {
   blue: 'bg-blue-500',
   amber: 'bg-amber-500',
@@ -76,6 +78,7 @@ export function Flashcard3D({
   answerMy,
   category,
   categoryColor,
+  subCategoryStripBg,
   explanation,
   allQuestions = [],
   onFlip,
@@ -107,7 +110,9 @@ export function Flashcard3D({
 
   const gradient = category ? categoryGradients[category] : 'from-primary-500/10 to-primary-600/10';
 
-  const stripColorClass = categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null;
+  // Prefer sub-category strip color, fall back to main category color
+  const stripColorClass =
+    subCategoryStripBg ?? (categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null);
 
   // Common card styles
   const cardFaceClasses = clsx(

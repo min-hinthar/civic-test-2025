@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Flashcard3D } from './Flashcard3D';
-import { getUSCISCategory, CATEGORY_COLORS } from '@/lib/mastery';
+import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
 
 interface FlashcardStackProps {
@@ -166,6 +166,7 @@ export function FlashcardStack({
                   | 'amber'
                   | 'emerald'
               }
+              subCategoryStripBg={getSubCategoryColors(currentQuestion.category).stripBg}
               explanation={currentQuestion.explanation}
               allQuestions={questions}
             />

@@ -116,6 +116,75 @@ export const SUB_CATEGORY_NAMES: Record<Category, CategoryName> = {
 };
 
 /**
+ * Sub-category accent color definitions for visual differentiation.
+ *
+ * Each sub-category gets a unique shade within its parent category family:
+ * - American Government: blue-400 / blue-500 / blue-600
+ * - American History: amber-400 / amber-500 / amber-600
+ * - Integrated Civics: emerald-500
+ */
+export interface SubCategoryColors {
+  /** Tailwind bg class for header strip (e.g. 'bg-blue-500') */
+  stripBg: string;
+  /** Tailwind border-l class for card accent (e.g. 'border-l-blue-500') */
+  borderAccent: string;
+  /** Tailwind text class for labels (e.g. 'text-blue-500') */
+  textColor: string;
+}
+
+export const SUB_CATEGORY_COLORS: Record<Category, SubCategoryColors> = {
+  'Principles of American Democracy': {
+    stripBg: 'bg-blue-500',
+    borderAccent: 'border-l-blue-500',
+    textColor: 'text-blue-500',
+  },
+  'System of Government': {
+    stripBg: 'bg-blue-600',
+    borderAccent: 'border-l-blue-600',
+    textColor: 'text-blue-600',
+  },
+  'Rights and Responsibilities': {
+    stripBg: 'bg-sky-500',
+    borderAccent: 'border-l-sky-500',
+    textColor: 'text-sky-500',
+  },
+  'American History: Colonial Period and Independence': {
+    stripBg: 'bg-amber-500',
+    borderAccent: 'border-l-amber-500',
+    textColor: 'text-amber-500',
+  },
+  'American History: 1800s': {
+    stripBg: 'bg-orange-500',
+    borderAccent: 'border-l-orange-500',
+    textColor: 'text-orange-500',
+  },
+  'Recent American History and Other Important Historical Information': {
+    stripBg: 'bg-amber-600',
+    borderAccent: 'border-l-amber-600',
+    textColor: 'text-amber-600',
+  },
+  'Civics: Symbols and Holidays': {
+    stripBg: 'bg-emerald-500',
+    borderAccent: 'border-l-emerald-500',
+    textColor: 'text-emerald-500',
+  },
+};
+
+/**
+ * Get sub-category accent colors for a given category.
+ * Falls back to the parent USCIS category color if sub-category not found.
+ */
+export function getSubCategoryColors(category: Category): SubCategoryColors {
+  return (
+    SUB_CATEGORY_COLORS[category] ?? {
+      stripBg: 'bg-gray-500',
+      borderAccent: 'border-l-gray-500',
+      textColor: 'text-gray-500',
+    }
+  );
+}
+
+/**
  * Get the main USCIS category for a given sub-category.
  */
 export function getUSCISCategory(subCategory: Category): USCISCategory {
