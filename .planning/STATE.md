@@ -265,6 +265,12 @@ Recent decisions affecting current work:
 - 08-02: Offline sessions use offline-{timestamp} ID pattern for identification
 - 08-02: No toast on offline save -- caller shows normal success since data is queued
 - 08-03: Settings gear icon already delivered in 08-02 commit (no new commit needed)
+- 09-01: Button default shape changed from rounded-full to rounded-xl (12px Duolingo chunky), pill prop for backward compat
+- 09-01: Destructive hue shifted from 25 (warm orange) to 10 (warm coral-red) for data-loss actions
+- 09-01: Accent purple tokens added (hue 270) for achievements/badges/milestones
+- 09-01: 3D chunky button pattern: box-shadow 0 4px 0 + active:translateY(3px) via CSS transition
+- 09-01: Card border-radius increased to 20px (rounded-2xl) with overflow-hidden
+- 09-01: Page-shell blur reduced to 45px, opacity increased for more visible paper texture
 - 09-02: Separate AudioContext from audioChime.ts for sound effects (avoids cross-domain interference)
 - 09-02: Five distinct sounds: playCorrect, playIncorrect, playLevelUp, playMilestone, playSwoosh
 - 09-02: SSR-safe isSoundMuted returns true when window undefined
