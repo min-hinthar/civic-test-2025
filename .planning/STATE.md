@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 6 - Interview Simulation in progress
+**Current focus:** Phase 6 - Interview Simulation COMPLETE
 
 ## Current Position
 
 Phase: 6 of 7 (Interview Simulation)
-Plan: 5 of 6 complete (06-01, 06-02, 06-03, 06-04, 06-05)
-Status: In progress
-Last activity: 2026-02-08 - Completed 06-05-PLAN.md (Interview Results Screen)
+Plan: 6 of 6 complete (06-01, 06-02, 06-03, 06-04, 06-05, 06-06)
+Status: Phase complete
+Last activity: 2026-02-08 - Completed 06-06-PLAN.md (Interview Sync, Widget & History Tab)
 
-Progress: [██████████] 98% (44 plans / ~45 total estimated)
+Progress: [██████████] 100% (45 plans / 45 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 44 (Phases 1-5 + 06-01, 06-02, 06-03, 06-04, 06-05)
+- Total plans completed: 45 (Phases 1-5 + 06-01 through 06-06)
 - Average duration: ~13 min
-- Total execution time: ~558 min
+- Total execution time: ~567 min
 
 **By Phase:**
 
@@ -215,6 +215,11 @@ Recent decisions affecting current work:
 - 06-05: Trend chart shows last 10 sessions reversed for proper time axis
 - 06-05: Zero-total categories filtered from breakdown display
 - 06-05: TTS closing statement fires on 1s delay after mount for natural pacing
+- 06-06: useMemo-derived activeTab from location.hash to avoid setState in effect (React Compiler ESLint)
+- 06-06: Interview sync skips silently when offline (offline-first, IndexedDB is primary store)
+- 06-06: Individual question results stay in IndexedDB only; only aggregate session data syncs to Supabase
+- 06-06: SQL migration provided as comment in interviewSync.ts
+- 06-06: InterviewDashboardWidget placed after SRSWidget, before CategoryGrid in Dashboard
 
 ### Pending Todos
 
@@ -232,7 +237,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 06-05-PLAN.md (Interview Results Screen). Phase 6 in progress, 1 plan remaining (06-06).
+Stopped at: Completed 06-06-PLAN.md (Interview Sync, Widget & History Tab). Phase 6 COMPLETE.
 Resume file: None
 
 ---
