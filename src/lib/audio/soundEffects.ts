@@ -1,0 +1,213 @@
+/**
+ * Sound Effects Module
+ *
+ * Provides gamified audio feedback for correct/incorrect answers,
+ * level-ups, milestones, and navigation transitions.
+ *
+ * Extends the audioChime.ts pattern: module-level AudioContext singleton
+ * with lazy initialization. All functions are module-level (NOT hooks)
+ * and are React Compiler safe -- call from event handlers only.
+ *
+ * Failures are silently caught so sound issues never break app flow.
+ */
+
+// ---------------------------------------------------------------------------
+// Mute preference
+// ---------------------------------------------------------------------------
+
+const SOUND_MUTE_KEY = 'civic-prep-sound-muted';
+
+/**
+ * Check whether sound effects are muted.
+ * Returns true when muted or when running in SSR (no window).
+ */
+export function isSoundMuted(): boolean {
+  if (typeof window === 'undefined') return true;
+  return localStorage.getItem(SOUND_MUTE_KEY) === 'true';
+}
+
+/**
+ * Toggle mute state. Returns the new muted value.
+ */
+export function toggleMute(): boolean {
+  const next = !isSoundMuted();
+  localStorage.setItem(SOUND_MUTE_KEY, String(next));
+  return next;
+}
+
+/**
+ * Explicitly set mute state.
+ */
+export function setSoundMuted(muted: boolean): void {
+  localStorage.setItem(SOUND_MUTE_KEY, String(muted));
+}
+
+// ---------------------------------------------------------------------------
+// AudioContext singleton (separate from audioChime.ts)
+// ---------------------------------------------------------------------------
+
+let audioContext: AudioContext | null = null;
+
+/**
+ * Lazily create / resume the shared AudioContext.
+ * Returns null when AudioContext is unavailable (SSR, old browser, error).
+ */
+function getContext(): AudioContext | null {
+  try {
+    if (typeof window === 'undefined') return null;
+    if (!audioContext) {
+      audioContext = new AudioContext();
+    }
+    if (audioContext.state === 'suspended') {
+      void audioContext.resume();
+    }
+    return audioContext;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Reusable note helper
+// ---------------------------------------------------------------------------
+
+type OscillatorWaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+
+/**
+ * Play a single note with an oscillator + gain envelope.
+ *
+ * @param ctx   - AudioContext
+ * @param freq  - Frequency in Hz
+ * @param delay - Seconds from now to start
+ * @param duration - Seconds the note sustains
+ * @param gain  - Peak gain (0-1)
+ * @param waveType - Oscillator wave shape
+ */
+function playNote(
+  ctx: AudioContext,
+  freq: number,
+  delay: number,
+  duration: number,
+  gain = 0.25,
+  waveType: OscillatorWaveType = 'sine'
+): void {
+  const osc = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+
+  osc.type = waveType;
+  osc.frequency.value = freq;
+
+  const startTime = ctx.currentTime + delay;
+
+  gainNode.gain.setValueAtTime(gain, startTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+// ---------------------------------------------------------------------------
+// Sound functions
+// ---------------------------------------------------------------------------
+
+/**
+ * Ascending two-note ding for correct answers.
+ * C5 (523 Hz) -> E5 (659 Hz). Bright, cheerful.
+ */
+export function playCorrect(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 523, 0, 0.15, 0.25); // C5
+    playNote(ctx, 659, 0.12, 0.15, 0.25); // E5
+  } catch {
+    // Silently ignore -- sound failure must never break app flow
+  }
+}
+
+/**
+ * Soft descending two-note for incorrect answers.
+ * E4 (330 Hz) -> C4 (262 Hz). Gentle, not punishing.
+ */
+export function playIncorrect(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 330, 0, 0.2, 0.15); // E4
+    playNote(ctx, 262, 0.15, 0.3, 0.15); // C4
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Ascending arpeggio for level-ups.
+ * C5 -> E5 -> G5 in quick succession. Energetic.
+ */
+export function playLevelUp(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 523, 0, 0.2, 0.3); // C5
+    playNote(ctx, 659, 0.1, 0.2, 0.3); // E5
+    playNote(ctx, 784, 0.2, 0.2, 0.3); // G5
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Triumphant chord for milestone celebrations.
+ * C5+E5+G5 simultaneous with longer sustain, followed by octave C6.
+ */
+export function playMilestone(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    // Simultaneous chord
+    playNote(ctx, 523, 0, 0.4, 0.25); // C5
+    playNote(ctx, 659, 0, 0.4, 0.25); // E5
+    playNote(ctx, 784, 0, 0.4, 0.25); // G5
+    // Octave C6 after a brief pause
+    playNote(ctx, 1047, 0.3, 0.4, 0.25); // C6
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Quick pitch sweep for navigation/transitions.
+ * Frequency ramp from 400 Hz to 800 Hz over 0.15s. Subtle.
+ */
+export function playSwoosh(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.15);
+
+    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+  } catch {
+    // Silently ignore
+  }
+}
