@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Learning - Explanations & Category Progress** - Answer explanations, per-category mastery tracking, category-focused practice
 - [x] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [x] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
-- [ ] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
+- [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
 
 ## Phase Details
 
@@ -175,14 +175,14 @@ Plans:
 **Plans**: 8 plans in 4 waves
 
 Plans:
-- [ ] 07-01-PLAN.md — Streak tracking core, badge definitions, badge engine, composite score (data layer)
-- [ ] 07-02-PLAN.md — Supabase social tables, RLS policies, leaderboard RPC function
-- [ ] 07-03-PLAN.md — Streak widget, badge highlights, activity recording hooks
-- [ ] 07-04-PLAN.md — Badge celebration modal, badge grid, streak heatmap
-- [ ] 07-05-PLAN.md — Score sharing card (Canvas renderer, Web Share, preview modal)
-- [ ] 07-06-PLAN.md — Social context, opt-in flow, streak/profile sync, settings section
-- [ ] 07-07-PLAN.md — Social hub page, leaderboard table/widget/profile
-- [ ] 07-08-PLAN.md — Full integration (navigation, share buttons, badge celebrations)
+- [x] 07-01-PLAN.md — Streak tracking core, badge definitions, badge engine, composite score (data layer)
+- [x] 07-02-PLAN.md — Supabase social tables, RLS policies, leaderboard RPC function
+- [x] 07-03-PLAN.md — Streak widget, badge highlights, activity recording hooks
+- [x] 07-04-PLAN.md — Badge celebration modal, badge grid, streak heatmap
+- [x] 07-05-PLAN.md — Score sharing card (Canvas renderer, Web Share, preview modal)
+- [x] 07-06-PLAN.md — Social context, opt-in flow, streak/profile sync, settings section
+- [x] 07-07-PLAN.md — Social hub page, leaderboard table/widget/profile
+- [x] 07-08-PLAN.md — Full integration (navigation, share buttons, badge celebrations)
 
 ---
 
@@ -200,9 +200,9 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
-| 7. Social Features | 0/8 | Not started | - |
+| 7. Social Features | 8/8 | Complete | 2026-02-07 |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 6 execution*
+*Last updated: 2026-02-07 after Phase 7 execution — ALL PHASES COMPLETE*

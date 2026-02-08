@@ -96,12 +96,12 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Social Features
 
-- [ ] **SOCL-01**: Study streak tracking (consecutive days studied)
-- [ ] **SOCL-02**: Streak display on dashboard with encouragement messages
-- [ ] **SOCL-03**: Score sharing - generate shareable result card/image
-- [ ] **SOCL-04**: Leaderboard page showing top scores (opt-in, privacy-first)
-- [ ] **SOCL-05**: User can toggle leaderboard visibility (private by default)
-- [ ] **SOCL-06**: Privacy notice (bilingual) before enabling social features
+- [x] **SOCL-01**: Study streak tracking (consecutive days studied)
+- [x] **SOCL-02**: Streak display on dashboard with encouragement messages
+- [x] **SOCL-03**: Score sharing - generate shareable result card/image
+- [x] **SOCL-04**: Leaderboard page showing top scores (opt-in, privacy-first)
+- [x] **SOCL-05**: User can toggle leaderboard visibility (private by default)
+- [x] **SOCL-06**: Privacy notice (bilingual) before enabling social features
 
 ## v2 Requirements
 
@@ -204,12 +204,12 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | INTV-02 | Phase 6 | Complete |
 | INTV-03 | Phase 6 | Complete |
 | INTV-04 | Phase 6 | Complete |
-| SOCL-01 | Phase 7 | Pending |
-| SOCL-02 | Phase 7 | Pending |
-| SOCL-03 | Phase 7 | Pending |
-| SOCL-04 | Phase 7 | Pending |
-| SOCL-05 | Phase 7 | Pending |
-| SOCL-06 | Phase 7 | Pending |
+| SOCL-01 | Phase 7 | Complete |
+| SOCL-02 | Phase 7 | Complete |
+| SOCL-03 | Phase 7 | Complete |
+| SOCL-04 | Phase 7 | Complete |
+| SOCL-05 | Phase 7 | Complete |
+| SOCL-06 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 55 total
