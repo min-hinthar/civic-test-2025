@@ -52,17 +52,12 @@ export function WhyButton({
   const { showBurmese } = useLanguage();
 
   return (
-    <div
-      className={clsx(
-        'rounded-2xl border border-border/60 bg-card overflow-hidden',
-        className
-      )}
-    >
+    <div className={clsx('rounded-2xl border border-border/60 bg-card overflow-hidden', className)}>
       {/* Trigger header */}
       <button
         type="button"
         onClick={() => {
-          setIsExpanded((prev) => {
+          setIsExpanded(prev => {
             const next = !prev;
             onExpandChange?.(next);
             return next;
@@ -82,19 +77,9 @@ export function WhyButton({
             : strings.explanations.showExplanation.en
         }
       >
-        <Lightbulb
-          className={clsx(
-            'shrink-0 text-primary-500',
-            compact ? 'h-4 w-4' : 'h-5 w-5'
-          )}
-        />
+        <Lightbulb className={clsx('shrink-0 text-primary-500', compact ? 'h-4 w-4' : 'h-5 w-5')} />
         <span className="flex flex-1 flex-col">
-          <span
-            className={clsx(
-              'font-semibold text-foreground',
-              compact ? 'text-xs' : 'text-sm'
-            )}
-          >
+          <span className={clsx('font-semibold text-foreground', compact ? 'text-xs' : 'text-sm')}>
             {strings.explanations.why.en}
           </span>
           {!compact && showBurmese && (
@@ -105,15 +90,10 @@ export function WhyButton({
         </span>
         <motion.span
           animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={
-            shouldReduceMotion ? { duration: 0 } : { duration: 0.2 }
-          }
+          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2 }}
         >
           <ChevronDown
-            className={clsx(
-              'text-muted-foreground',
-              compact ? 'h-3.5 w-3.5' : 'h-4 w-4'
-            )}
+            className={clsx('text-muted-foreground', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')}
           />
         </motion.span>
       </button>
@@ -126,9 +106,7 @@ export function WhyButton({
             animate={{ height: 'auto', opacity: 1 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.25, ease: 'easeInOut' }
+              shouldReduceMotion ? { duration: 0 } : { duration: 0.25, ease: 'easeInOut' }
             }
             className="overflow-hidden"
           >
@@ -136,6 +114,7 @@ export function WhyButton({
               explanation={explanation}
               isCorrect={isCorrect}
               defaultExpanded
+              hideHeader
               allQuestions={allQuestions}
               className="border-0 rounded-none"
             />

@@ -2,14 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Lightbulb,
-  ChevronDown,
-  AlertTriangle,
-  Brain,
-  BookOpen,
-  Sparkles,
-} from 'lucide-react';
+import { Lightbulb, ChevronDown, AlertTriangle, Brain, BookOpen, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -24,6 +17,8 @@ export interface ExplanationCardProps {
   isCorrect?: boolean;
   /** Start expanded instead of collapsed */
   defaultExpanded?: boolean;
+  /** Hide the collapsible header (when parent already provides expand/collapse) */
+  hideHeader?: boolean;
   /** All questions (needed for RelatedQuestions lookups) */
   allQuestions?: Question[];
   /** Additional class names */
@@ -45,90 +40,97 @@ export function ExplanationCard({
   explanation,
   isCorrect,
   defaultExpanded = false,
+  hideHeader = false,
   allQuestions = [],
   className,
 }: ExplanationCardProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded || hideHeader);
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
 
-  const hasCommonMistake =
-    isCorrect === false && !!explanation.commonMistake_en;
+  const hasCommonMistake = isCorrect === false && !!explanation.commonMistake_en;
   const hasMnemonic = !!explanation.mnemonic_en;
   const hasCitation = !!explanation.citation;
   const hasFunFact = !!explanation.funFact_en;
-  const hasRelated =
-    !!explanation.relatedQuestionIds && explanation.relatedQuestionIds.length > 0;
+  const hasRelated = !!explanation.relatedQuestionIds && explanation.relatedQuestionIds.length > 0;
+
+  // When hideHeader is true, content is always shown (parent handles expand/collapse)
+  const showContent = hideHeader || isExpanded;
 
   return (
-    <div
-      className={clsx(
-        'rounded-2xl border border-border/60 bg-card overflow-hidden',
-        className
-      )}
-    >
-      {/* Trigger button */}
-      <button
-        type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
-        className={clsx(
-          'flex w-full items-center gap-3 px-4 text-left',
-          'min-h-[44px] py-3',
-          'transition-colors duration-150',
-          'hover:bg-muted/50',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
-        )}
-        aria-expanded={isExpanded}
-        aria-label={
-          isExpanded
-            ? strings.explanations.hideExplanation.en
-            : strings.explanations.showExplanation.en
-        }
-      >
-        <Lightbulb className="h-5 w-5 shrink-0 text-primary-500" />
-        <span className="flex flex-1 flex-col">
-          <span className="text-sm font-semibold text-foreground">
-            {strings.explanations.why.en}
-          </span>
-          {showBurmese && (
-            <span className="font-myanmar text-xs text-muted-foreground">
-              {strings.explanations.why.my}
-            </span>
+    <div className={clsx('rounded-2xl border border-border/60 bg-card overflow-hidden', className)}>
+      {/* Trigger button - hidden when parent provides its own header */}
+      {!hideHeader && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded(prev => !prev)}
+          className={clsx(
+            'flex w-full items-center gap-3 px-4 text-left',
+            'min-h-[44px] py-3',
+            'transition-colors duration-150',
+            'hover:bg-muted/50',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
           )}
-        </span>
-        <motion.span
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={
-            shouldReduceMotion ? { duration: 0 } : { duration: 0.2 }
+          aria-expanded={isExpanded}
+          aria-label={
+            isExpanded
+              ? strings.explanations.hideExplanation.en
+              : strings.explanations.showExplanation.en
           }
         >
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </motion.span>
-      </button>
+          <Lightbulb className="h-5 w-5 shrink-0 text-primary-500" />
+          <span className="flex flex-1 flex-col">
+            <span className="text-sm font-semibold text-foreground">
+              {strings.explanations.why.en}
+            </span>
+            {showBurmese && (
+              <span className="font-myanmar text-xs text-muted-foreground">
+                {strings.explanations.why.my}
+              </span>
+            )}
+          </span>
+          <motion.span
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2 }}
+          >
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          </motion.span>
+        </button>
+      )}
 
       {/* Expandable content */}
       <AnimatePresence initial={false}>
-        {isExpanded && (
+        {showContent && (
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { height: 0, opacity: 0 }}
+            initial={
+              hideHeader
+                ? { height: 'auto', opacity: 1 }
+                : shouldReduceMotion
+                  ? { opacity: 1 }
+                  : { height: 0, opacity: 0 }
+            }
             animate={{ height: 'auto', opacity: 1 }}
-            exit={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            exit={
+              hideHeader
+                ? { opacity: 0 }
+                : shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { height: 0, opacity: 0 }
+            }
             transition={
-              shouldReduceMotion
+              shouldReduceMotion || hideHeader
                 ? { duration: 0 }
                 : { duration: 0.25, ease: 'easeInOut' }
             }
             className="overflow-hidden"
           >
             <div className="space-y-3 px-4 pb-4">
-              {/* Divider */}
-              <div className="border-t border-border/40" />
+              {/* Divider - only when header is shown */}
+              {!hideHeader && <div className="border-t border-border/40" />}
 
               {/* Brief explanation */}
               <div>
-                <p className="text-sm text-foreground leading-relaxed">
-                  {explanation.brief_en}
-                </p>
+                <p className="text-sm text-foreground leading-relaxed">{explanation.brief_en}</p>
                 {showBurmese && (
                   <p className="mt-1 font-myanmar text-xs text-muted-foreground leading-relaxed">
                     {explanation.brief_my}
