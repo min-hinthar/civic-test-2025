@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, Clock, Settings, Volume2 } from 'lucide-react';
+import { ArrowLeft, Bell, Clock, Settings, Volume2, VolumeX } from 'lucide-react';
 import { NotificationSettings } from '@/components/pwa/NotificationSettings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -18,6 +18,7 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { Card, CardContent } from '@/components/ui/Card';
 import { SocialSettings } from '@/components/social/SocialSettings';
+import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
 const SPEECH_RATE_KEY = 'civic-prep-speech-rate';
@@ -43,6 +44,7 @@ export default function SettingsPage() {
     if (typeof window === 'undefined') return 'normal';
     return (localStorage.getItem(SPEECH_RATE_KEY) as SpeechRate) ?? 'normal';
   });
+  const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
 
   const handleReminderTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -53,6 +55,17 @@ export default function SettingsPage() {
   const handleSpeechRateChange = (rate: SpeechRate) => {
     setSpeechRate(rate);
     localStorage.setItem(SPEECH_RATE_KEY, rate);
+  };
+
+  const handleSoundToggle = () => {
+    const wasMuted = soundMuted;
+    const next = !wasMuted;
+    setSoundMuted(next);
+    setSoundMutedState(next);
+    // Play a preview when enabling sound so user hears the effect
+    if (wasMuted) {
+      playCorrect();
+    }
   };
 
   return (
@@ -138,6 +151,63 @@ export default function SettingsPage() {
         {/* Social Features */}
         <SocialSettings />
 
+        {/* Sound Effects */}
+        <section className="mb-8">
+          <SectionHeading
+            text={{
+              en: 'Sound Effects',
+              my: '\u1021\u101E\u1036\u1005\u1031\u1016\u1000\u103A\u1019\u103B\u102C\u1038',
+            }}
+          />
+          <Card>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {soundMuted ? (
+                    <VolumeX className="h-5 w-5 text-muted-foreground" />
+                  ) : (
+                    <Volume2 className="h-5 w-5 text-primary" />
+                  )}
+                  <div>
+                    <p className="font-medium text-foreground">Sound Effects</p>
+                    {showBurmese && (
+                      <p className="font-myanmar text-sm text-muted-foreground">
+                        {'\u1021\u101E\u1036\u1005\u1031\u1016\u1000\u103A\u1019\u103B\u102C\u1038'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={!soundMuted}
+                  aria-label="Toggle sound effects"
+                  onClick={handleSoundToggle}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
+                    !soundMuted ? 'bg-primary' : 'bg-muted'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ${
+                      !soundMuted ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Play sounds for correct answers, milestones, and level-ups.
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground mt-1">
+                  {
+                    '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A\u1019\u103B\u102C\u1038\u104D \u1019\u102D\u102F\u1004\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1019\u103B\u102C\u1038\u1014\u103E\u1004\u1037\u103A \u1021\u1006\u1004\u1037\u103A\u1019\u103C\u103E\u1004\u1037\u103A\u1019\u103B\u102C\u1038\u1021\u1010\u103D\u1000\u103A \u1021\u101E\u1036\u1016\u103D\u1004\u1037\u103A\u1015\u102B\u104B'
+                  }
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Review Reminders */}
         <section className="mb-8">
           <SectionHeading
@@ -151,12 +221,12 @@ export default function SettingsPage() {
               <div className="flex items-center gap-2 mb-1">
                 <Clock className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="font-medium text-foreground">
-                    Preferred Reminder Time
-                  </p>
+                  <p className="font-medium text-foreground">Preferred Reminder Time</p>
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-muted-foreground">
-                      {'\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1021\u1001\u103B\u102D\u1014\u103A'}
+                      {
+                        '\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1021\u1001\u103B\u102D\u1014\u103A'
+                      }
                     </p>
                   )}
                 </div>
@@ -164,7 +234,8 @@ export default function SettingsPage() {
 
               <div className="flex items-center gap-3">
                 <label htmlFor="srs-reminder-time" className="text-sm text-muted-foreground">
-                  Time / <span className="font-myanmar">{'\u1021\u1001\u103B\u102D\u1014\u103A'}</span>:
+                  Time /{' '}
+                  <span className="font-myanmar">{'\u1021\u1001\u103B\u102D\u1014\u103A'}</span>:
                 </label>
                 <input
                   type="time"
@@ -185,7 +256,9 @@ export default function SettingsPage() {
                   </div>
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-warning-600 dark:text-warning-400 mt-1 ml-6">
-                      {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u101B\u101B\u103E\u102D\u101B\u1014\u103A \u1021\u1011\u1000\u103A\u1015\u102B\u101B\u103E\u102D push notification \u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1015\u102B\u104B'}
+                      {
+                        '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u101B\u101B\u103E\u102D\u101B\u1014\u103A \u1021\u1011\u1000\u103A\u1015\u102B\u101B\u103E\u102D push notification \u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1015\u102B\u104B'
+                      }
                     </p>
                   )}
                 </div>
@@ -206,19 +279,19 @@ export default function SettingsPage() {
               <div className="flex items-center gap-2 mb-1">
                 <Volume2 className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="font-medium text-foreground">
-                    Interview Speech Speed
-                  </p>
+                  <p className="font-medium text-foreground">Interview Speech Speed</p>
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-muted-foreground">
-                      {'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'}
+                      {
+                        '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
+                      }
                     </p>
                   )}
                 </div>
               </div>
 
               <div className="flex gap-2" role="radiogroup" aria-label="Speech rate">
-                {SPEECH_RATE_OPTIONS.map((option) => (
+                {SPEECH_RATE_OPTIONS.map(option => (
                   <button
                     key={option.value}
                     type="button"
@@ -233,9 +306,7 @@ export default function SettingsPage() {
                   >
                     <span>{option.en}</span>
                     {showBurmese && (
-                      <span className="block font-myanmar text-xs mt-0.5">
-                        {option.my}
-                      </span>
+                      <span className="block font-myanmar text-xs mt-0.5">{option.my}</span>
                     )}
                   </button>
                 ))}
@@ -246,7 +317,9 @@ export default function SettingsPage() {
               </p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground">
-                  {'\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1005\u1005\u103A\u101E\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1021\u1010\u103D\u1004\u103A\u1038 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u101E\u100A\u1037\u103A\u1021\u1019\u103C\u1014\u103A\u1000\u102D\u102F \u1011\u102D\u1014\u103A\u1038\u1001\u103B\u102F\u1015\u103A\u1015\u102B\u104B'}
+                  {
+                    '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1005\u1005\u103A\u101E\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1021\u1010\u103D\u1004\u103A\u1038 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u101E\u100A\u1037\u103A\u1021\u1019\u103C\u1014\u103A\u1000\u102D\u102F \u1011\u102D\u1014\u103A\u1038\u1001\u103B\u102F\u1015\u103A\u1015\u102B\u104B'
+                  }
                 </p>
               )}
             </CardContent>
