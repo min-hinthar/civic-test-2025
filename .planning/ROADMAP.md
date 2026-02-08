@@ -172,14 +172,17 @@ Plans:
   3. User can view optional leaderboard showing top scores
   4. User's leaderboard visibility is private by default (opt-in required)
   5. User sees bilingual privacy notice before enabling any social features
-**Plans**: TBD
+**Plans**: 8 plans in 4 waves
 
 Plans:
-- [ ] 07-01: Study streak tracking and dashboard display
-- [ ] 07-02: Score sharing card generation
-- [ ] 07-03: Leaderboard page and opt-in flow
-- [ ] 07-04: Privacy controls and visibility settings
-- [ ] 07-05: Supabase social tables (follows, streaks, achievements)
+- [ ] 07-01-PLAN.md — Streak tracking core, badge definitions, badge engine, composite score (data layer)
+- [ ] 07-02-PLAN.md — Supabase social tables, RLS policies, leaderboard RPC function
+- [ ] 07-03-PLAN.md — Streak widget, badge highlights, activity recording hooks
+- [ ] 07-04-PLAN.md — Badge celebration modal, badge grid, streak heatmap
+- [ ] 07-05-PLAN.md — Score sharing card (Canvas renderer, Web Share, preview modal)
+- [ ] 07-06-PLAN.md — Social context, opt-in flow, streak/profile sync, settings section
+- [ ] 07-07-PLAN.md — Social hub page, leaderboard table/widget/profile
+- [ ] 07-08-PLAN.md — Full integration (navigation, share buttons, badge celebrations)
 
 ---
 
@@ -197,7 +200,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
-| 7. Social Features | 0/5 | Not started | - |
+| 7. Social Features | 0/8 | Not started | - |
 
 ---
 
