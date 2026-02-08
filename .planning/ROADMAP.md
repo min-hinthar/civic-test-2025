@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [x] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
-- [ ] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
+- [x] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
 - [ ] **Phase 9: UI Polish & Onboarding** - Replace residual red tokens, wire onboarding tour, surface offline sync status
 
 ## Phase Details
@@ -201,9 +201,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 08-01-PLAN.md — Build fixes: delete Sentry demo pages, fix lint errors, restore pre-commit hook
-- [ ] 08-02-PLAN.md — Wire offline test result sync to IndexedDB queue with auto-sync
-- [ ] 08-03-PLAN.md — Add Settings navigation link to Dashboard header
+- [x] 08-01-PLAN.md — Build fixes: delete Sentry demo pages, fix lint errors, restore pre-commit hook
+- [x] 08-02-PLAN.md — Wire offline test result sync to IndexedDB queue with auto-sync
+- [x] 08-03-PLAN.md — Add Settings navigation link to Dashboard header
 
 ---
 
@@ -238,7 +238,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
-| 8. Critical Integration Fixes | 0/3 | Pending | — |
+| 8. Critical Integration Fixes | 3/3 | Complete | 2026-02-08 |
 | 9. UI Polish & Onboarding | 0/1 | Pending | — |
 
 ---
