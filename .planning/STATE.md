@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 10 of 10 (Tech Debt Cleanup)
-Plan: 3 of 4
-Status: In progress (10-03, 10-04 complete)
-Last activity: 2026-02-08 - Completed 10-03-PLAN.md
+Plan: 1 of 4
+Status: In progress (10-01, 10-03, 10-04 complete)
+Last activity: 2026-02-08 - Completed 10-01-PLAN.md
 
-Progress: [████████████████████░░] 70/72 plans (97%)
-Phase 10: [██████████████░░░░░░░░] 2/4 plans complete
+Progress: [████████████████████░░] 71/72 plans (99%)
+Phase 10: [████████████████░░░░░░] 3/4 plans complete
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 68 (All phases complete)
+- Total plans completed: 71 (Phase 10 in progress)
 - Average duration: ~11 min
-- Total execution time: ~754 min
+- Total execution time: ~802 min
 
 **By Phase:**
 
@@ -39,10 +39,11 @@ Phase 10: [██████████████░░░░░░░░] 2
 
 | 09-ui-polish-onboarding | 12/12 | ~111 min | ~9 min |
 
-| 10-tech-debt-cleanup | 2/4 | ~29 min | ~15 min |
+| 10-tech-debt-cleanup | 3/4 | ~48 min | ~16 min |
 
 **Recent Trend:**
-- Phase 10 (Tech Debt Cleanup) in progress - 2/4 plans complete
+- Phase 10 (Tech Debt Cleanup) in progress - 3/4 plans complete
+- 10-01: All 19 broken toast shim calls converted to BilingualToast across 8 files
 - 10-03: 139 new unit tests for 6 pure-function modules (108 -> 247 total)
 - 10-04: Phase 02 and Phase 09 formal VERIFICATION.md artifacts created
 - 10-04: Keyboard accessibility findings documented for both phases
@@ -334,6 +335,9 @@ Recent decisions affecting current work:
 - 10-03: Used --no-verify for commits due to pre-existing PasswordResetPage.tsx typecheck error
 - 10-03: Colocated test files pattern: *.test.ts next to source for pure-function modules
 - 10-03: vi.useFakeTimers pattern for date-dependent tests (streakTracker, detectStaleCategories, fsrsEngine)
+- 10-01: All toast notifications must use useToast from BilingualToast with separate en/my fields
+- 10-01: BilingualToast en field contains consolidated English (title + description merged)
+- 10-01: Google sign-in toasts received new Burmese translations (previously English-only)
 
 ### Pending Todos
 
@@ -352,10 +356,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 10-03-PLAN.md (Pure-Function Unit Tests)
+Stopped at: Completed 10-01-PLAN.md (Toast Migration to BilingualToast)
 Resume file: None
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-08*
+*Last updated: 2026-02-08 (10-01 complete)*
