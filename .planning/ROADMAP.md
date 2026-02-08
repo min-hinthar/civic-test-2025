@@ -19,6 +19,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Spaced Repetition** - FSRS algorithm integration, personalized review scheduling, due cards study mode
 - [x] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
+- [ ] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
+- [ ] **Phase 9: UI Polish & Onboarding** - Replace residual red tokens, wire onboarding tour, surface offline sync status
 
 ## Phase Details
 
@@ -186,10 +188,43 @@ Plans:
 
 ---
 
+### Phase 8: Critical Integration Fixes
+**Goal**: Users can take tests offline without losing results, and can discover and access the Settings page from the app navigation.
+**Depends on**: Phase 2 (sync queue), Phase 7 (all features complete)
+**Requirements**: None (gap closure — fixes integration wiring for existing requirements PWA-07, UIUX-08)
+**Gap Closure**: Closes integration gaps from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. User takes a test while offline and results are queued in IndexedDB sync queue
+  2. User goes back online and queued test results automatically sync to Supabase
+  3. User can navigate to Settings from the app navigation menu
+  4. Developer runs `npm run lint` with zero errors
+**Plans**: TBD
+
+Plans:
+- [ ] 08-01-PLAN.md — Wire offline test sync and add settings navigation link
+
+---
+
+### Phase 9: UI Polish & Onboarding
+**Goal**: Users see consistent anxiety-reducing design (no red error states) and first-time users get a guided onboarding tour.
+**Depends on**: Phase 8
+**Requirements**: None (gap closure — fixes tech debt for ANXR-02, UIUX-07)
+**Gap Closure**: Closes tech debt from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. No `text-red-600` or `bg-red-600` remains in any component (replaced with destructive/warning tokens)
+  2. First-time users see the OnboardingTour on their initial visit
+  3. User sees pending sync count indicator when offline items are queued
+**Plans**: TBD
+
+Plans:
+- [ ] 09-01-PLAN.md — Replace residual red tokens, wire OnboardingTour, surface sync status in UI
+
+---
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 
 | Phase | Plans Complete | Status | Completed |
@@ -201,8 +236,10 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
+| 8. Critical Integration Fixes | 0/1 | Pending | — |
+| 9. UI Polish & Onboarding | 0/1 | Pending | — |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 7 execution — ALL PHASES COMPLETE*
+*Last updated: 2026-02-08 after gap closure phases added (v1 audit)*
