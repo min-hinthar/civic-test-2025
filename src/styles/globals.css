@@ -11,6 +11,7 @@
   --app-viewport-offset-left: 0px;
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --bottom-tab-height: 0px;
   --background: 210 60% 99%;
   --foreground: 222 47% 12%;
   --card: 0 0% 100%;
@@ -214,7 +215,14 @@ body {
   color: hsl(var(--foreground));
   isolation: isolate;
   padding-top: var(--safe-area-top);
-  padding-bottom: calc(var(--safe-area-bottom) + 1rem);
+  padding-bottom: calc(var(--safe-area-bottom) + var(--bottom-tab-height) + 1rem);
+}
+
+/* Mobile bottom tab bar height - cleared at md: breakpoint */
+@media (max-width: 767px) {
+  :root {
+    --bottom-tab-height: 64px;
+  }
 }
 
 .page-shell::before {

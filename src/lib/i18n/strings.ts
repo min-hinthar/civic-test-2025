@@ -23,6 +23,7 @@ export const strings = {
     signOut: { en: 'Sign Out', my: 'ထွက်ရန်' },
     practiceInterview: { en: 'Interview', my: 'အင်တာဗျူး' },
     socialHub: { en: 'Community', my: 'အသိုင်းအဝိုင်း' },
+    progress: { en: 'Progress', my: 'တိုးတက်မှု' },
   },
 
   // Common actions
@@ -217,8 +218,14 @@ export const strings = {
     replaysUsed: { en: 'replays used', my: 'ပြန်ဖွင့်မှုအကြိမ်' },
     alsoAccepted: { en: 'Also accepted', my: 'လက်ခံနိုင်သောအဖြေများ' },
     yourAnswer: { en: 'Your Recording', my: 'သင့်အသံဖမ်းမှု' },
-    realisticTip: { en: 'Like the real USCIS interview. 15 seconds per question.', my: 'တကယ့် USCIS အင်တာဗျူးကဲ့သို့။ မေးခွန်းတစ်ခုလျှင် ၁၅ စက္ကန့်။' },
-    practiceTip: { en: 'Self-paced with explanations. Take your time.', my: 'ရှင်းလင်းချက်များနှင့်အတူ သင့်အချိန်ယူပါ။' },
+    realisticTip: {
+      en: 'Like the real USCIS interview. 15 seconds per question.',
+      my: 'တကယ့် USCIS အင်တာဗျူးကဲ့သို့။ မေးခွန်းတစ်ခုလျှင် ၁၅ စက္ကန့်။',
+    },
+    practiceTip: {
+      en: 'Self-paced with explanations. Take your time.',
+      my: 'ရှင်းလင်းချက်များနှင့်အတူ သင့်အချိန်ယူပါ။',
+    },
     speechRate: { en: 'Speech Rate', my: 'စကားပြောနှုန်း' },
     slow: { en: 'Slow', my: 'နှေးနှေး' },
     normal: { en: 'Normal', my: 'ပုံမှန်' },
@@ -226,7 +233,10 @@ export const strings = {
     interviewHistory: { en: 'Interviews', my: 'အင်တာဗျူးများ' },
     endInterview: { en: 'End Interview', my: 'အင်တာဗျူးရပ်ပါ' },
     confirmEndTitle: { en: 'End Interview?', my: 'အင်တာဗျူးရပ်မလား?' },
-    confirmEndMessage: { en: 'Your progress so far will be saved.', my: 'ယခုအထိတိုးတက်မှုကို သိမ်းဆည်းပါမည်။' },
+    confirmEndMessage: {
+      en: 'Your progress so far will be saved.',
+      my: 'ယခုအထိတိုးတက်မှုကို သိမ်းဆည်းပါမည်။',
+    },
     cancel: { en: 'Cancel', my: 'ပယ်ဖျက်ပါ' },
     confirm: { en: 'End', my: 'ရပ်ပါ' },
     questionOf: { en: 'of', my: 'မှ' },
