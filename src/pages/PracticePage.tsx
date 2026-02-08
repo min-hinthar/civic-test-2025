@@ -25,9 +25,9 @@ const categoryColorToTailwind: Record<string, string> = {
  * Practice mode page managing config -> session -> results flow.
  *
  * State machine:
- * - config: User selects category, count, timer
- * - session: User answers questions with explanations
- * - results: Post-practice review with animated mastery update
+ * - config: User selects category, count, timer (rounded-2xl cards, 3D start)
+ * - session: User answers with gamified feedback (icons, sounds, 3D buttons)
+ * - results: Post-practice celebration with playLevelUp(), 3D done button
  */
 const PracticePage = () => {
   const [phase, setPhase] = useState<PracticePhase>('config');

@@ -453,7 +453,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         >
           <BilingualButton
             label={strings.practice.startPractice}
-            variant="primary"
+            variant="chunky"
             size="lg"
             fullWidth
             onClick={handleStart}

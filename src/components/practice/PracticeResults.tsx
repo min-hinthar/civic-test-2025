@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { Filter } from 'lucide-react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { Filter, Trophy } from 'lucide-react';
+import { motion } from 'motion/react';
 import { clsx } from 'clsx';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { ShareButton } from '@/components/social/ShareButton';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useStreak } from '@/hooks/useStreak';
 import { strings } from '@/lib/i18n/strings';
 import { allQuestions } from '@/constants/questions';
+import { playLevelUp } from '@/lib/audio/soundEffects';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type { QuestionResult } from '@/types';
 import type { CategoryName } from '@/lib/mastery';
@@ -51,10 +55,12 @@ export function PracticeResults({
   onDone,
 }: PracticeResultsProps) {
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
   const { overallMastery, refresh } = useCategoryMastery();
   const { currentStreak } = useStreak();
   const [showAllResults, setShowAllResults] = useState(false);
   const [displayMastery, setDisplayMastery] = useState(previousMastery);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const correctCount = results.filter(r => r.isCorrect).length;
   const totalCount = results.length;
@@ -84,10 +90,7 @@ export function PracticeResults({
   }, [results, correctCount, totalCount, currentStreak]);
 
   // Build questionsById map for explanation lookup
-  const questionsById = useMemo(
-    () => new Map(allQuestions.map(q => [q.id, q])),
-    []
-  );
+  const questionsById = useMemo(() => new Map(allQuestions.map(q => [q.id, q])), []);
 
   // Refresh mastery data and animate ring update
   useEffect(() => {
@@ -107,15 +110,34 @@ export function PracticeResults({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const filteredResults = showAllResults
-    ? results
-    : results.filter(r => !r.isCorrect);
+  // Celebration sound handler (called from event-like callback, React Compiler safe)
+  const handleScoreCountComplete = useCallback(() => {
+    setShowConfetti(true);
+    playLevelUp();
+  }, []);
+
+  const filteredResults = showAllResults ? results : results.filter(r => !r.isCorrect);
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
-      <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
-        {/* Header */}
+      <Confetti fire={showConfetti} intensity="burst" />
+
+      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
+        {/* Header with trophy */}
         <div className="text-center py-8">
+          <motion.div
+            initial={shouldReduceMotion ? {} : { scale: 0, rotate: -15 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }
+            }
+            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20"
+          >
+            <Trophy className="h-7 w-7 text-primary-500" />
+          </motion.div>
+
           <BilingualHeading
             text={strings.practice.practiceComplete}
             level={1}
@@ -128,6 +150,7 @@ export function PracticeResults({
           <CountUpScore
             score={correctCount}
             total={totalCount}
+            onComplete={handleScoreCountComplete}
           />
 
           {/* Mastery ring animation */}
@@ -148,9 +171,7 @@ export function PracticeResults({
             >
               <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold text-foreground">{displayMastery}%</span>
-                <span className="text-xs text-muted-foreground">
-                  {categoryName.en}
-                </span>
+                <span className="text-xs text-muted-foreground">{categoryName.en}</span>
               </div>
             </CategoryRing>
             {previousMastery !== displayMastery && (
@@ -189,7 +210,7 @@ export function PracticeResults({
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <BilingualButton
             label={strings.actions.done}
-            variant="primary"
+            variant="chunky"
             size="md"
             onClick={onDone}
           />
@@ -232,11 +253,8 @@ export function PracticeResults({
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            {strings.test.showing.en}{' '}
-            {filteredResults.length}{' '}
-            {strings.test.ofQuestions.en}{' '}
-            {results.length}{' '}
-            {strings.test.questions.en}
+            {strings.test.showing.en} {filteredResults.length} {strings.test.ofQuestions.en}{' '}
+            {results.length} {strings.test.questions.en}
           </p>
         </div>
 
