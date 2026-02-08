@@ -1,62 +1,58 @@
 'use client';
 
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Languages, Map, Shield, Smartphone, Users } from 'lucide-react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import {
+  BookOpen,
+  Brain,
+  Clock,
+  GraduationCap,
+  Mic,
+  Smartphone,
+  Star,
+  Trophy,
+  WifiOff,
+} from 'lucide-react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
-import { BilingualButton } from '@/components/bilingual/BilingualButton';
-import { FadeIn } from '@/components/animations/StaggeredList';
-import { strings } from '@/lib/i18n/strings';
+import { Button } from '@/components/ui/Button';
+import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 
 const features = [
   {
-    title: 'Bilingual Mastery • အင်္ဂလိပ်/မြန်မာ',
-    description:
-      'Every civic question is available in English and Burmese with culturally aware explanations.',
-    descriptionMy:
-      'အမေရိကန်နိုင်ငံသားမေးခွန်းတစ်ခုချင်းစီကို အင်္ဂလိပ်/မြန်မာ ဘာသာနှစ်မျိုးဖြင့် ဖတ်ရှုလေ့လာနိုင်ပါသည်။',
-    icon: Languages,
+    icon: BookOpen,
+    titleEn: '100+ USCIS Questions',
+    titleMy: 'USCIS မေးခွန်း ၁၀၀+',
+    descEn: 'All official civics questions with detailed bilingual explanations and memory tips.',
+    descMy: 'အဖြေရှင်းလင်းချက်နှင့် မှတ်ဉာဏ်အကူများပါသော USCIS မေးခွန်းအားလုံး။',
   },
   {
-    title: 'Smart Practice Tests • စမ်းသပ်မေးခွန်း စာမေးပွဲ',
-    description: 'Timed, randomized 20-question mock tests with real-time scoring feedback.',
-    descriptionMy:
-      'နေရာမရွေး ဖုန်းထဲကနေ အသုံးပြုနိုင်သော မိနစ် ၂၀ အချိန်၊ မေးခွန်း ၂၀ ဖြင့် လေ့ကျင့်နိုင်ပါသည်။',
-    icon: CheckCircle2,
+    icon: Brain,
+    titleEn: 'Spaced Repetition',
+    titleMy: 'ထပ်ခါထပ်ခါ မှတ်မိအောင်လေ့ကျင့်',
+    descEn: 'Smart flashcard system schedules reviews at the perfect time for long-term memory.',
+    descMy: 'ရေရှည်မှတ်မိနိုင်ရန် အချိန်မှန်မှန် ပြန်လည်လေ့ကျင့်ပေးသော စနစ်။',
   },
   {
-    title: 'Category Insights • အမျိုးအစားအလိုက် ထိုးထွင်းသိမြင်မှု',
-    description:
-      'Analytics that reveal strengths and blind spots across all USCIS knowledge areas.',
-    descriptionMy:
-      'Supabase အချက်အလက်ဖြင့် သင်၏ အားသာချက်၊ အားနည်းချက်များကို အမျိုးအစားအလိုက် လေ့လာနိုင်ပါသည်။',
-    icon: ArrowRight,
+    icon: Clock,
+    titleEn: 'Timed Mock Tests',
+    titleMy: 'အချိန်သတ်မှတ် စာမေးပွဲ',
+    descEn: 'Realistic 20-question tests with instant scoring and detailed review.',
+    descMy: 'အမှတ်ချက်ချင်းပေးပြီး ပြန်လည်လေ့လာနိုင်သော မေးခွန်း ၂၀ စာမေးပွဲ။',
+  },
+  {
+    icon: Mic,
+    titleEn: 'Interview Practice',
+    titleMy: 'အင်တာဗျူးလေ့ကျင့်မှု',
+    descEn: 'Practice speaking answers aloud with voice recording and TTS pronunciation.',
+    descMy: 'အသံဖမ်းခြင်းနှင့် အသံထွက်လေ့ကျင့်ခြင်းဖြင့် အင်တာဗျူးပြင်ဆင်ပါ။',
   },
 ];
 
-const opEdShareUrl = 'https://civic-test-2025.vercel.app/op-ed';
-const opEdShareText =
-  'Read and share our op-ed on why the TPS story for Burma matters for families, safety, and democracy.';
-const opEdTiles = [
-  {
-    id: 'families',
-    title: 'Protect Burmese families',
-    description: 'Hear personal stories about keeping loved ones safe during TPS renewals.',
-    icon: Users,
-  },
-  {
-    id: 'propaganda',
-    title: 'Debunk propaganda',
-    description: 'See how misinformation spreads and how civic voices can respond.',
-    icon: Shield,
-  },
-  {
-    id: 'next-steps',
-    title: 'Actionable next steps',
-    description: 'Share concrete policy asks with friends, advocates, and lawmakers.',
-    icon: ArrowRight,
-  },
+const stats = [
+  { emoji: '📚', labelEn: '100+ Questions', labelMy: 'မေးခွန်း ၁၀၀+' },
+  { emoji: '🇺🇸', labelEn: 'EN + MY Bilingual', labelMy: 'နှစ်ဘာသာ' },
+  { emoji: '📱', labelEn: 'Offline Ready', labelMy: 'အင်တာနက်မလို' },
+  { emoji: '🏆', labelEn: 'Track Progress', labelMy: 'တိုးတက်မှုမှတ်တမ်း' },
 ];
 
 const LandingPage = () => {
@@ -69,244 +65,255 @@ const LandingPage = () => {
 
   return (
     <div className="page-shell overflow-hidden">
-      <div className="pointer-events-none absolute inset-x-0 top-[-200px] mx-auto h-[420px] w-[640px] rounded-full bg-gradient-to-r from-primary/40 via-rose-300/40 to-amber-200/40 blur-[120px]" />
       <AppNavigation translucent />
-      <header className="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-20 pt-16 text-center lg:flex-row lg:items-center lg:text-left">
-        <div className="flex-1 space-y-6">
-          <span className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-            Burmese Language · Mobile ready
-          </span>
-          <FadeIn>
-            <BilingualHeading
-              text={strings.app.title}
-              level={1}
-              size="2xl"
-              className="mb-4"
-            />
-            <p className="text-muted-foreground text-center lg:text-left max-w-lg mx-auto lg:mx-0 mb-2">
-              {strings.app.tagline.en}
-              <span className="block font-myanmar mt-1">{strings.app.tagline.my}</span>
-            </p>
-          </FadeIn>
-          <p className="text-lg text-muted-foreground">
-            Civic Test Prep blends immersive flip cards, adaptive timed quizzes, and
-            Supabase-powered analytics so every Burmese learner can master the 100+ USCIS questions
-            in English and Myanmar.
+
+      {/* Hero Section */}
+      <header className="relative mx-auto max-w-4xl px-4 pb-12 pt-12 text-center sm:px-6 sm:pt-16 md:pb-16">
+        {/* Decorative gradient blob */}
+        <div className="pointer-events-none absolute inset-x-0 top-[-120px] mx-auto h-[350px] w-[500px] rounded-full bg-gradient-to-r from-primary/30 via-accent-500/20 to-success-400/20 blur-[100px] dark:opacity-60" />
+
+        <FadeIn>
+          {/* Patriotic mascot emojis */}
+          <div
+            className="mb-4 flex items-center justify-center gap-3 text-4xl sm:text-5xl"
+            aria-hidden="true"
+          >
+            <span>🦅</span>
+            <span>🗽</span>
+            <span>🇺🇸</span>
+          </div>
+
+          {/* Main headline */}
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            U.S. Citizenship Test Prep
+          </h1>
+          <p className="mt-2 font-myanmar text-lg text-muted-foreground sm:text-xl">
+            အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row justify-center lg:justify-start">
-            <BilingualButton
-              label={strings.actions.startStudying}
-              variant="primary"
+
+          {/* Bilingual tagline */}
+          <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
+            Master all 100 USCIS civics questions in English and Burmese. Study smart, pass with
+            confidence.
+          </p>
+          <p className="mx-auto mt-1 max-w-xl font-myanmar text-sm text-muted-foreground sm:text-base">
+            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း ၁၀၀ ကို ကျွမ်းကျင်စွာလေ့လာပါ။
+            ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
+          </p>
+        </FadeIn>
+
+        {/* CTA Buttons */}
+        <FadeIn delay={200}>
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button
               size="lg"
-              onClick={() => navigate('/study')}
-            />
-            <BilingualButton
-              label={strings.actions.startTest}
+              onClick={() => navigate('/auth')}
+              className="w-full text-lg sm:w-auto sm:px-10"
+            >
+              Get Started Free
+            </Button>
+            <Button
               variant="outline"
               size="lg"
-              onClick={() => navigate('/test')}
-            />
+              onClick={() => navigate('/study')}
+              className="w-full sm:w-auto"
+            >
+              Browse Questions
+            </Button>
           </div>
-        </div>
-        <div className="flex-1 rounded-3xl border border-border/60 bg-card/80 p-8 shadow-2xl shadow-primary/10 backdrop-blur">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
-            Live Progress Snapshot
+          <p className="mt-3 font-myanmar text-sm text-muted-foreground">
+            အခမဲ့စတင်ပါ - အကောင့်ဖွင့်ရန်မလိုပါ
           </p>
-          <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
-              <p className="text-sm text-white/70">Mock Test Score</p>
-              <p className="mt-2 text-4xl font-bold">17 / 20</p>
-              <p className="text-sm text-white/70">Top 5% of Burmese-language learners</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-lg shadow-rose-100/70">
-                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Streak</p>
-                <p className="text-2xl font-bold text-foreground">12 days</p>
-                <p className="text-sm text-muted-foreground">Daily reminders for iOS & Android</p>
-              </div>
-              <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-lg shadow-sky-100/70">
-                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  Categories mastered
-                </p>
-                <p className="text-2xl font-bold text-foreground">5 / 7</p>
-                <p className="text-sm text-muted-foreground">Real-time category heat map</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+        </FadeIn>
 
-      <section className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-16 text-white">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
-            <div className="space-y-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-                Featured op-ed
-              </p>
-              <h2 className="text-3xl font-bold sm:text-4xl">
-                Why the TPS story for Burma matters
-              </h2>
-              <p className="text-base text-slate-200">
-                Explore our in-depth op-ed about protecting Burmese families, countering propaganda,
-                and keeping the civic process honest. Available in English and မြန်မာ.
-              </p>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {opEdTiles.map(tile => (
-                  <Link
-                    key={tile.id}
-                    to={`/op-ed#${tile.id}`}
-                    className="interactive-tile group rounded-2xl border border-white/15 bg-white/5 p-4 text-left shadow-lg shadow-primary/20 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-primary/40"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="inline-flex rounded-full bg-primary/20 p-2 text-primary">
-                        <tile.icon className="h-5 w-5" />
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-white/60 transition group-hover:translate-x-1" />
-                    </div>
-                    <h3 className="mt-3 text-lg font-semibold text-white">{tile.title}</h3>
-                    <p className="mt-1 text-sm text-white/80">{tile.description}</p>
-                  </Link>
-                ))}
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link
-                  to={`https://civic-test-2025.vercel.app/op-ed`}
-                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:shadow-primary/40"
-                >
-                  Read the op-ed
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-                <div className="text-sm text-slate-200">Share with your community:</div>
-              </div>
-              <div className="flex flex-wrap gap-3" aria-label="Share the op-ed">
-                {[
-                  {
-                    label: 'X / Twitter',
-                    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(opEdShareText)}&url=${encodeURIComponent(opEdShareUrl)}`,
-                    bg: 'bg-white text-slate-900',
-                  },
-                  {
-                    label: 'Facebook',
-                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(opEdShareUrl)}`,
-                    bg: 'bg-[#1877F2] text-white',
-                  },
-                  {
-                    label: 'Instagram',
-                    href: `https://www.instagram.com/?url=${encodeURIComponent(opEdShareUrl)}`,
-                    bg: 'bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white',
-                  },
-                  {
-                    label: 'LinkedIn',
-                    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(opEdShareUrl)}`,
-                    bg: 'bg-[#0A66C2] text-white',
-                  },
-                ].map(button => (
-                  <a
-                    key={button.label}
-                    href={button.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-primary/30 ${button.bg}`}
-                  >
-                    {button.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-primary/20 backdrop-blur">
-              <div className="flex items-center justify-between text-sm text-slate-200">
-                <span className="inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-primary">
-                  New
-                </span>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em]">
-                  Op-ed
-                </span>
-              </div>
-              <div className="mt-6 space-y-3">
-                <p className="text-sm uppercase tracking-[0.24em] text-primary">
-                  Table of contents
-                </p>
-                <ul className="space-y-2 text-slate-100">
-                  <li>• A brown Burmese kid in a big red state</li>
-                  <li>• TPS framing vs. reality</li>
-                  <li>• Hostages, not citizens</li>
-                  <li>• Vet carefully, protect families</li>
-                  <li>• Scam centre strike force</li>
-                </ul>
-                <p className="text-sm text-slate-300">
-                  Tap the tiles to jump into key sections, then read the full piece and share it
-                  with friends, family, and decision makers.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-card py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.3em] text-primary">
-            Everything you need
-          </p>
-          <h2 className="mt-4 text-center text-3xl font-bold text-foreground">
-            Your bilingual toolkit
-            <span className="mt-1 block text-lg font-medium text-muted-foreground font-myanmar">
-              အင်္ဂလိပ်·မြန်မာ နှစ်ဘာသာသင်ရိုးညွှန်း
-            </span>
-          </h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {features.map(feature => (
+        {/* Stats badges */}
+        <FadeIn delay={400}>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            {stats.map(stat => (
               <div
-                key={feature.title}
-                className="rounded-2xl border border-border/60 bg-card/80 p-6 shadow-lg shadow-primary/10 transition hover:-translate-y-1 hover:shadow-primary/30"
+                key={stat.labelEn}
+                className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/80 px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur"
               >
-                <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3 text-primary">
-                  <feature.icon className="h-6 w-6" />
-                </div>
-                <h3 className="text-xl font-semibold text-foreground">{feature.title}</h3>
-                <p className="mt-2 text-muted-foreground">{feature.description}</p>
-                {feature.descriptionMy && (
-                  <p className="mt-1 text-sm text-muted-foreground font-myanmar leading-relaxed">
-                    {feature.descriptionMy}
-                  </p>
-                )}
+                <span className="text-lg" aria-hidden="true">
+                  {stat.emoji}
+                </span>
+                <span className="text-foreground">{stat.labelEn}</span>
+                <span className="font-myanmar text-xs text-muted-foreground">{stat.labelMy}</span>
               </div>
             ))}
           </div>
+        </FadeIn>
+      </header>
+
+      {/* Feature Cards Section */}
+      <section className="bg-card/50 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <FadeIn>
+            <div className="text-center">
+              <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
+                Everything You Need to Pass
+              </h2>
+              <p className="mt-1 font-myanmar text-base text-muted-foreground">
+                အောင်မြင်ရန် လိုအပ်သမျှအားလုံး
+              </p>
+            </div>
+          </FadeIn>
+
+          <StaggeredList className="mt-10 grid gap-4 sm:grid-cols-2" delay={100} stagger={100}>
+            {features.map(feature => (
+              <StaggeredItem key={feature.titleEn}>
+                <div className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg sm:p-6">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <feature.icon className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-foreground sm:text-lg">
+                      {feature.titleEn}
+                    </h3>
+                    <p className="mt-0.5 font-myanmar text-sm text-primary/80">{feature.titleMy}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {feature.descEn}
+                    </p>
+                    <p className="mt-1 font-myanmar text-xs leading-relaxed text-muted-foreground">
+                      {feature.descMy}
+                    </p>
+                  </div>
+                </div>
+              </StaggeredItem>
+            ))}
+          </StaggeredList>
         </div>
       </section>
 
-      <section className="pb-16">
-        <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-sky-500/10 to-indigo-500/10 p-8 shadow-lg animate-soft-bounce">
-            <Smartphone className="h-8 w-8 text-primary" />
-            <h3 className="mt-4 text-2xl font-semibold text-foreground">
-              Designed for mobile study
-            </h3>
-            <p className="mt-2 text-muted-foreground">
-              Gesture-friendly flip cards, larger tap targets, and breathable Burmese spacing keep
-              the experience smooth on every iOS and Android screen size.
-            </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">
-              iOS · Android တွင် နှစ်ဘက်လှည့်ကတ်များဖြင့် အလွယ်တကူလေ့လာသင်ယူနိုင်ပါသည်။
-            </p>
-          </div>
-          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-rose-500/10 to-amber-400/10 p-8 shadow-lg">
-            <Map className="h-8 w-8 text-rose-500" />
-            <h3 className="mt-4 text-2xl font-semibold text-foreground">
-              Know exactly what to review
-            </h3>
-            <p className="mt-2 text-muted-foreground">
-              Color-coded categories, animated transitions, and Supabase-backed history let you
-              navigate between study, tests, and analytics in a single tap.
-            </p>
-            <p className="mt-2 text-muted-foreground font-myanmar">
-              အရောင်အလိုက် ကဏ္ဍများအလိုက်၊ Supabase မှ မှတ်တမ်းများကို တစ်ချက်တည်းနှိပ်ရုံဖြင့်
-              အသုံးပြုနိုင်ပါသည်။
-            </p>
+      {/* Why This App Section */}
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <FadeIn>
+            <div className="text-center">
+              <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
+                Built for Burmese Learners
+              </h2>
+              <p className="mt-1 font-myanmar text-base text-muted-foreground">
+                မြန်မာလေ့လာသူများအတွက် အထူးပြုလုပ်ထားသည်
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            <FadeIn delay={100}>
+              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center shadow-md">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+                  <GraduationCap className="h-7 w-7 text-primary" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground">Study Your Way</h3>
+                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                  သင့်ပုံစံနဲ့ လေ့လာပါ
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Flashcards, tests, interviews, and practice modes for every learning style.
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={200}>
+              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-accent-500/5 to-accent-500/10 p-6 text-center shadow-md">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-500/10">
+                  <Smartphone className="h-7 w-7 text-accent-500" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground">Works on Any Device</h3>
+                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                  မည်သည့်စက်ပစ္စည်းတွင်မဆို
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Mobile-first design with offline support. Study anywhere, anytime.
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={300}>
+              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-success-400/5 to-success-400/10 p-6 text-center shadow-md">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-success-400/10">
+                  <Trophy className="h-7 w-7 text-success-500" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground">Track Your Progress</h3>
+                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                  တိုးတက်မှုကို ခြေရာခံပါ
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Streaks, badges, mastery levels, and leaderboards to keep you motivated.
+                </p>
+              </div>
+            </FadeIn>
           </div>
         </div>
       </section>
+
+      {/* Offline + Mobile section */}
+      <section className="bg-card/50 py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <FadeIn>
+            <div className="flex flex-col items-center gap-6 rounded-2xl border border-border/60 bg-card p-6 text-center shadow-md sm:flex-row sm:text-left">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                <WifiOff className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-foreground">
+                  Study Offline, Sync When Ready
+                </h3>
+                <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+                  အင်တာနက်မရှိလည်း လေ့လာနိုင်ပြီး ပြန်ချိတ်ဆက်သောအခါ အလိုအလျောက်ချိတ်ဆက်ပေးပါသည်
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  All questions are cached on your device. Your progress syncs automatically when
+                  you reconnect.
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <FadeIn>
+            <div className="flex justify-center text-4xl" aria-hidden="true">
+              <span>🇺🇸</span>
+            </div>
+            <h2 className="mt-4 text-2xl font-extrabold text-foreground sm:text-3xl">
+              Ready to Start Your Journey?
+            </h2>
+            <p className="mt-1 font-myanmar text-base text-muted-foreground">
+              သင့်ခရီးစတင်ဖို့ အဆင်သင့်ဖြစ်ပြီလား
+            </p>
+            <p className="mt-3 text-muted-foreground">
+              Join learners preparing for the U.S. citizenship test with confidence.
+            </p>
+            <div className="mt-6">
+              <Button
+                size="lg"
+                onClick={() => navigate('/auth')}
+                className="w-full text-lg sm:w-auto sm:px-10"
+              >
+                <Star className="mr-2 h-5 w-5" />
+                Start Studying Today
+              </Button>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border/40 py-6">
+        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-muted-foreground sm:px-6">
+          <p>
+            Civic Test Prep 2025 &mdash; Free bilingual study tool for the U.S. citizenship test
+          </p>
+          <p className="mt-1 font-myanmar text-xs">
+            အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲအတွက် အခမဲ့နှစ်ဘာသာလေ့လာရေးကိရိယာ
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
