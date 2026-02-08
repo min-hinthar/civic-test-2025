@@ -89,10 +89,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Learning Features - Interview Simulation
 
-- [ ] **INTV-01**: Interview simulation mode that plays questions aloud via TTS
-- [ ] **INTV-02**: User responds verbally (honor system), then reveals correct answer
-- [ ] **INTV-03**: Simulation paces questions like real civics interview
-- [ ] **INTV-04**: Results tracked same as regular test mode
+- [x] **INTV-01**: Interview simulation mode that plays questions aloud via TTS
+- [x] **INTV-02**: User responds verbally (honor system), then reveals correct answer
+- [x] **INTV-03**: Simulation paces questions like real civics interview
+- [x] **INTV-04**: Results tracked same as regular test mode
 
 ### Social Features
 
@@ -200,10 +200,10 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | SRS-04 | Phase 5 | Complete |
 | SRS-05 | Phase 5 | Complete |
 | SRS-06 | Phase 5 | Complete |
-| INTV-01 | Phase 6 | Pending |
-| INTV-02 | Phase 6 | Pending |
-| INTV-03 | Phase 6 | Pending |
-| INTV-04 | Phase 6 | Pending |
+| INTV-01 | Phase 6 | Complete |
+| INTV-02 | Phase 6 | Complete |
+| INTV-03 | Phase 6 | Complete |
+| INTV-04 | Phase 6 | Complete |
 | SOCL-01 | Phase 7 | Pending |
 | SOCL-02 | Phase 7 | Pending |
 | SOCL-03 | Phase 7 | Pending |
@@ -218,4 +218,4 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 5 completion*
+*Last updated: 2026-02-07 after Phase 6 completion*
