@@ -13,13 +13,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  ChevronDown,
-  BookOpen,
-  Flame,
-  CheckCircle2,
-  Plus,
-} from 'lucide-react';
+import { ChevronDown, BookOpen, Flame, CheckCircle2, Plus } from 'lucide-react';
 import clsx from 'clsx';
 
 import { useSRSWidget } from '@/hooks/useSRSWidget';
@@ -60,13 +54,10 @@ export function SRSWidget({ className }: SRSWidgetProps) {
 
   const { deck } = useSRS();
 
-  const toggleExpanded = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsExpanded((prev) => !prev);
-    },
-    []
-  );
+  const toggleExpanded = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(prev => !prev);
+  }, []);
 
   const navigateToStudy = useCallback(() => {
     navigate({ pathname: '/study', hash: '#deck' });
@@ -83,7 +74,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
       >
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
-          <span className="text-sm text-muted-foreground">
+          <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
             {showBurmese
               ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038 \u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
               : 'Loading review cards...'}
@@ -108,12 +99,14 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               <BookOpen className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1000\u102D\u102F \u1005\u1010\u1004\u103A\u1015\u102B'
                   : 'Start your review deck'}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
                   ? '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038 \u1011\u100A\u103A\u1037\u101E\u103D\u1004\u103A\u1038\u104A \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A \u1005\u1010\u1004\u103A\u1015\u102B!'
                   : 'Add questions to start reviewing!'}
@@ -126,7 +119,9 @@ export function SRSWidget({ className }: SRSWidgetProps) {
             className="flex h-9 items-center gap-1.5 rounded-full bg-primary-500 px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>{showBurmese ? '\u1011\u100A\u103A\u1037\u1015\u102B' : 'Add'}</span>
+            <span className={showBurmese ? 'font-myanmar' : ''}>
+              {showBurmese ? '\u1011\u100A\u103A\u1037\u1015\u102B' : 'Add'}
+            </span>
           </button>
         </div>
       </div>
@@ -144,7 +139,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
         onClick={toggleExpanded}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             setIsExpanded(true);
@@ -157,13 +152,15 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               <CheckCircle2 className="h-5 w-5 text-success-500" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!'
                   : 'All caught up!'}
               </p>
               {nextDueText && (
-                <p className="text-xs text-muted-foreground">
+                <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                   {showBurmese
                     ? `\u1014\u1031\u102C\u1000\u103A\u101C\u102C\u1019\u100A\u103A\u1037 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1001\u103B\u102D\u1014\u103A: ${nextDueText.my}`
                     : `Next review: ${nextDueText.en}`}
@@ -206,7 +203,9 @@ export function SRSWidget({ className }: SRSWidgetProps) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? `\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A ${dueCount} \u1001\u102F`
                   : `${dueCount} card${dueCount !== 1 ? 's' : ''} due`}
@@ -218,7 +217,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 </div>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
               {showBurmese
                 ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A \u1014\u103E\u102D\u1015\u103A\u1015\u102B'
                 : 'Tap to review your deck'}
@@ -256,7 +255,9 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               {reviewStreak > 0 && (
                 <div className="flex items-center gap-2 rounded-xl bg-warning-50 px-3 py-2">
                   <Flame className="h-4 w-4 text-warning-500" />
-                  <span className="text-sm font-medium text-foreground">
+                  <span
+                    className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? `${reviewStreak} \u101B\u1000\u103A\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A!`
                       : `${reviewStreak} day streak! Keep going!`}
@@ -268,7 +269,9 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               {isAllCaughtUp && nextDueText && (
                 <div className="flex items-center gap-2 rounded-xl bg-success-50 px-3 py-2">
                   <CheckCircle2 className="h-4 w-4 text-success-500" />
-                  <span className="text-sm font-medium text-foreground">
+                  <span
+                    className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? `\u1021\u102C\u1038\u101C\u102F\u1036\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E! \u1014\u1031\u102C\u1000\u103A: ${nextDueText.my}`
                       : `All caught up! Next review: ${nextDueText.en}`}
@@ -279,18 +282,21 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               {/* Category breakdown */}
               {categoryBreakdown.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <p
+                    className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A'
                       : 'By Category'}
                   </p>
                   <div className="space-y-1.5">
-                    {categoryBreakdown.map((entry) => {
+                    {categoryBreakdown.map(entry => {
                       const catName = USCIS_CATEGORY_NAMES[entry.categoryId as USCISCategory];
                       const color = CATEGORY_COLORS[entry.categoryId as USCISCategory] ?? 'blue';
-                      const pct = entry.totalCount > 0
-                        ? Math.round((entry.dueCount / entry.totalCount) * 100)
-                        : 0;
+                      const pct =
+                        entry.totalCount > 0
+                          ? Math.round((entry.dueCount / entry.totalCount) * 100)
+                          : 0;
 
                       return (
                         <div
@@ -306,17 +312,17 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                                 color === 'emerald' && 'bg-emerald-500'
                               )}
                             />
-                            <span className="text-foreground truncate">
+                            <span
+                              className={`text-foreground truncate ${showBurmese && catName ? 'font-myanmar' : ''}`}
+                            >
                               {showBurmese && catName
                                 ? catName.my
-                                : catName?.en ?? entry.categoryId}
+                                : (catName?.en ?? entry.categoryId)}
                             </span>
                           </div>
                           <span className="text-muted-foreground tabular-nums shrink-0 ml-2">
                             {entry.dueCount}/{entry.totalCount}
-                            {entry.dueCount > 0 && (
-                              <span className="text-xs ml-1">({pct}%)</span>
-                            )}
+                            {entry.dueCount > 0 && <span className="text-xs ml-1">({pct}%)</span>}
                           </span>
                         </div>
                       );
@@ -327,7 +333,9 @@ export function SRSWidget({ className }: SRSWidgetProps) {
 
               {/* Review heatmap */}
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <p
+                  className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
+                >
                   {showBurmese
                     ? '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1001\u103B\u102D\u1014\u103A \u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038'
                     : 'Review Activity'}
@@ -342,7 +350,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
               >
                 <BookOpen className="h-4 w-4" />
-                <span>
+                <span className={showBurmese ? 'font-myanmar' : ''}>
                   {showBurmese
                     ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038 \u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A'
                     : 'Go to Review Deck'}

@@ -90,12 +90,14 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
               <Trophy className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? '\u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
                   : 'Join the leaderboard!'}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
                   ? '\u101E\u1004\u1037\u103A\u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u1015\u102B'
                   : 'Compete with fellow learners'}
@@ -108,7 +110,9 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
             className="flex h-9 items-center gap-1.5 rounded-full bg-primary-500 px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
           >
             <Trophy className="h-3.5 w-3.5" />
-            <span>{showBurmese ? '\u1000\u103C\u100A\u1037\u103A\u1015\u102B' : 'View'}</span>
+            <span className={showBurmese ? 'font-myanmar' : ''}>
+              {showBurmese ? '\u1000\u103C\u100A\u1037\u103A\u1015\u102B' : 'View'}
+            </span>
           </button>
         </div>
       </div>
@@ -125,7 +129,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
       onClick={goToLeaderboard}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           goToLeaderboard();
@@ -134,14 +138,15 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className={clsx(
-            'flex h-10 w-10 items-center justify-center rounded-xl',
-            userRank ? 'bg-primary-100' : 'bg-muted'
-          )}>
-            <Trophy className={clsx(
-              'h-5 w-5',
-              userRank ? 'text-primary-600' : 'text-muted-foreground'
-            )} />
+          <div
+            className={clsx(
+              'flex h-10 w-10 items-center justify-center rounded-xl',
+              userRank ? 'bg-primary-100' : 'bg-muted'
+            )}
+          >
+            <Trophy
+              className={clsx('h-5 w-5', userRank ? 'text-primary-600' : 'text-muted-foreground')}
+            />
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">
@@ -166,17 +171,14 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
 
       {/* Top 3 mini list */}
       <div className="space-y-1.5 ml-[52px]">
-        {entries.map((entry) => {
+        {entries.map(entry => {
           const isCurrentUser = user?.id === entry.userId;
           const medalColor = MEDAL_COLORS[entry.rank];
 
           return (
             <div
               key={entry.userId}
-              className={clsx(
-                'flex items-center gap-2 text-sm',
-                isCurrentUser && 'font-semibold'
-              )}
+              className={clsx('flex items-center gap-2 text-sm', isCurrentUser && 'font-semibold')}
             >
               <span
                 className={clsx(
@@ -186,12 +188,8 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
               >
                 #{entry.rank}
               </span>
-              <span className="flex-1 truncate text-foreground text-xs">
-                {entry.displayName}
-              </span>
-              {entry.isWeeklyWinner && (
-                <Crown className="h-3 w-3 text-yellow-500 shrink-0" />
-              )}
+              <span className="flex-1 truncate text-foreground text-xs">{entry.displayName}</span>
+              {entry.isWeeklyWinner && <Crown className="h-3 w-3 text-yellow-500 shrink-0" />}
               <span className="text-xs text-muted-foreground tabular-nums">
                 {entry.compositeScore.toLocaleString()}
               </span>

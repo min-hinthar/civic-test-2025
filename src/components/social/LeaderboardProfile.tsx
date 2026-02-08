@@ -14,22 +14,9 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import {
-  Flame,
-  Target,
-  Star,
-  BookCheck,
-  Award,
-  Trophy,
-  type LucideIcon,
-} from 'lucide-react';
+import { Flame, Target, Star, BookCheck, Award, Trophy, type LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/Dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabaseClient';
 import type { LeaderboardEntry } from '@/hooks/useLeaderboard';
@@ -102,7 +89,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           setEarnedBadgeIds([]);
         } else {
           const rows = (data ?? []) as EarnedBadgeRow[];
-          setEarnedBadgeIds(rows.map((r) => r.badge_id));
+          setEarnedBadgeIds(rows.map(r => r.badge_id));
         }
       } catch {
         // Network error or Supabase unavailable
@@ -124,18 +111,18 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
   const earnedBadges = useMemo(() => {
     if (earnedBadgeIds.length === 0) return [];
     const idSet = new Set(earnedBadgeIds);
-    return BADGE_DEFINITIONS.filter((b) => idSet.has(b.id));
+    return BADGE_DEFINITIONS.filter(b => idSet.has(b.id));
   }, [earnedBadgeIds]);
 
   if (!entry) return null;
 
-  const TopBadgeIcon = entry.topBadge ? ICON_MAP[entry.topBadge] ?? null : null;
+  const TopBadgeIcon = entry.topBadge ? (ICON_MAP[entry.topBadge] ?? null) : null;
   const topBadgeDef = entry.topBadge
-    ? BADGE_DEFINITIONS.find((b) => b.icon === entry.topBadge) ?? null
+    ? (BADGE_DEFINITIONS.find(b => b.icon === entry.topBadge) ?? null)
     : null;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+    <Dialog open={open} onOpenChange={isOpen => !isOpen && onClose()}>
       <DialogContent>
         <div className="flex flex-col items-center text-center">
           {/* Rank badge */}
@@ -151,12 +138,8 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           </div>
 
           {/* Display name */}
-          <DialogTitle className="mt-4 text-xl">
-            {entry.displayName}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Profile for {entry.displayName}
-          </DialogDescription>
+          <DialogTitle className="mt-4 text-xl">{entry.displayName}</DialogTitle>
+          <DialogDescription className="sr-only">Profile for {entry.displayName}</DialogDescription>
 
           {/* Rank */}
           <p className="mt-1 text-sm font-semibold text-primary">
@@ -172,7 +155,9 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           <div className="mt-5 grid grid-cols-2 gap-4 w-full max-w-xs">
             {/* Composite score */}
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+              <p
+                className={`text-xs text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese ? '\u101B\u1019\u103E\u1010\u103A' : 'Score'}
               </p>
               <p className="text-2xl font-bold text-foreground tabular-nums mt-1">
@@ -182,10 +167,10 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
 
             {/* Current streak */}
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                {showBurmese
-                  ? '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A'
-                  : 'Streak'}
+              <p
+                className={`text-xs text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
+              >
+                {showBurmese ? '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A' : 'Streak'}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
                 <Flame className="h-5 w-5 text-warning-500" />
@@ -200,7 +185,9 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           {TopBadgeIcon && topBadgeDef && (
             <div className="mt-4 flex items-center gap-2 rounded-full bg-amber-50 dark:bg-amber-900/20 px-4 py-2">
               <TopBadgeIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-              <span className="text-sm font-medium text-foreground">
+              <span
+                className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese ? topBadgeDef.name.my : topBadgeDef.name.en}
               </span>
             </div>
@@ -209,13 +196,15 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           {/* Earned badges row */}
           {earnedBadges.length > 0 && (
             <div className="mt-4 w-full">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              <p
+                className={`text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? '\u101B\u101B\u103E\u102D\u1011\u102C\u1038\u101E\u1031\u102C \u1010\u1036\u1006\u102D\u1015\u103A\u1019\u103B\u102C\u1038'
                   : 'Earned Badges'}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
-                {earnedBadges.map((badge) => {
+                {earnedBadges.map(badge => {
                   const IconComp = ICON_MAP[badge.icon] ?? Award;
                   return (
                     <div
@@ -235,8 +224,12 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           {badgesLoading && (
             <div className="mt-4 flex items-center gap-2">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
-              <span className="text-xs text-muted-foreground">
-                {showBurmese ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...' : 'Loading badges...'}
+              <span
+                className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
+                {showBurmese
+                  ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+                  : 'Loading badges...'}
               </span>
             </div>
           )}

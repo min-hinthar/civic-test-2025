@@ -29,7 +29,15 @@ interface ReviewHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const DAY_LABELS_MY = ['', '\u1010\u1014\u1039\u101C\u102C', '', '\u1017\u102F\u1012\u1039\u1013', '', '\u101E\u1031\u102C', ''];
+const DAY_LABELS_MY = [
+  '',
+  '\u1010\u1014\u1039\u101C\u102C',
+  '',
+  '\u1017\u102F\u1012\u1039\u1013',
+  '',
+  '\u101E\u1031\u102C',
+  '',
+];
 
 /** Color intensity classes based on review count */
 function getCellColor(count: number): string {
@@ -63,7 +71,10 @@ function buildReviewCountMap(deck: SRSCardRecord[]): Map<string, number> {
  * Generate an array of dates from `daysAgo` days ago to today.
  * Returns dates aligned to start on a Sunday (for week columns).
  */
-function generateDateGrid(daysAgo: number): { dates: Date[]; monthLabels: { label: string; col: number }[] } {
+function generateDateGrid(daysAgo: number): {
+  dates: Date[];
+  monthLabels: { label: string; col: number }[];
+} {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -85,7 +96,20 @@ function generateDateGrid(daysAgo: number): { dates: Date[]; monthLabels: { labe
   // Build month labels at first occurrence of each month
   const monthLabels: { label: string; col: number }[] = [];
   const seenMonths = new Set<string>();
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   for (let i = 0; i < dates.length; i++) {
     const d = dates[i];
@@ -119,30 +143,26 @@ export function ReviewHeatmap({ deck, className }: ReviewHeatmapProps) {
     <div className={clsx('space-y-1', className)}>
       {/* Desktop heatmap (60 days) */}
       <div className="hidden sm:block">
-        <HeatmapGrid
-          grid={desktopGrid}
-          reviewCounts={reviewCounts}
-          dayLabels={dayLabels}
-        />
+        <HeatmapGrid grid={desktopGrid} reviewCounts={reviewCounts} dayLabels={dayLabels} />
       </div>
 
       {/* Mobile heatmap (30 days) */}
       <div className="block sm:hidden">
-        <HeatmapGrid
-          grid={mobileGrid}
-          reviewCounts={reviewCounts}
-          dayLabels={dayLabels}
-        />
+        <HeatmapGrid grid={mobileGrid} reviewCounts={reviewCounts} dayLabels={dayLabels} />
       </div>
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground">
-        <span>{showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}</span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>
+          {showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}
+        </span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-200" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-400" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-500" />
-        <span>{showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}</span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>
+          {showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}
+        </span>
       </div>
     </div>
   );
@@ -178,12 +198,9 @@ function HeatmapGrid({
         {/* Empty cell for day label column */}
         <div />
         {Array.from({ length: numWeeks }, (_, colIdx) => {
-          const monthLabel = monthLabels.find((m) => m.col === colIdx);
+          const monthLabel = monthLabels.find(m => m.col === colIdx);
           return (
-            <div
-              key={colIdx}
-              className="text-xs text-muted-foreground truncate leading-none"
-            >
+            <div key={colIdx} className="text-xs text-muted-foreground truncate leading-none">
               {monthLabel?.label ?? ''}
             </div>
           );
@@ -215,9 +232,7 @@ function HeatmapGrid({
             const date = dates[dateIdx];
 
             if (!date) {
-              cells.push(
-                <div key={`empty-${col}-${rowIdx}`} className="aspect-square" />
-              );
+              cells.push(<div key={`empty-${col}-${rowIdx}`} className="aspect-square" />);
               continue;
             }
 

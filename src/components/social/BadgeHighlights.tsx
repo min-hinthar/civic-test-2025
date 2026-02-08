@@ -11,14 +11,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Flame,
-  Target,
-  Star,
-  BookCheck,
-  Award,
-  Lock,
-} from 'lucide-react';
+import { Flame, Target, Star, BookCheck, Award, Lock } from 'lucide-react';
 import clsx from 'clsx';
 
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -66,7 +59,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
     let cancelled = false;
 
     getEarnedBadges()
-      .then((records) => {
+      .then(records => {
         if (!cancelled) {
           setEarnedRecords(records);
           setIsLoading(false);
@@ -83,19 +76,19 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
 
   // Match earned records to badge definitions (top 5)
   const displayBadges: Array<{ badge: BadgeDefinition; earned: boolean }> = useMemo(() => {
-    const earnedIds = new Set(earnedRecords.map((r) => r.badgeId));
+    const earnedIds = new Set(earnedRecords.map(r => r.badgeId));
 
     // Get earned badges, sorted by earn date (newest first)
-    const earned = BADGE_DEFINITIONS.filter((b) => earnedIds.has(b.id))
+    const earned = BADGE_DEFINITIONS.filter(b => earnedIds.has(b.id))
       .slice(0, 5)
-      .map((badge) => ({ badge, earned: true }));
+      .map(badge => ({ badge, earned: true }));
 
     if (earned.length > 0) {
       return earned;
     }
 
     // Show 3 locked placeholders if no badges earned
-    return BADGE_DEFINITIONS.slice(0, 3).map((badge) => ({
+    return BADGE_DEFINITIONS.slice(0, 3).map(badge => ({
       badge,
       earned: false,
     }));
@@ -109,11 +102,8 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
   if (isLoading) {
     return (
       <div className={clsx('flex gap-2 overflow-x-auto py-1', className)}>
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="h-12 w-12 shrink-0 animate-pulse rounded-full bg-muted/40"
-          />
+        {[0, 1, 2].map(i => (
+          <div key={i} className="h-12 w-12 shrink-0 animate-pulse rounded-full bg-muted/40" />
         ))}
       </div>
     );
@@ -129,7 +119,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
         onClick={goToBadges}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             goToBadges();
@@ -144,9 +134,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
               key={badge.id}
               className={clsx(
                 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                earned
-                  ? 'border-amber-400 bg-amber-50 shadow-sm'
-                  : 'border-border/60 bg-muted/30'
+                earned ? 'border-amber-400 bg-amber-50 shadow-sm' : 'border-border/60 bg-muted/30'
               )}
               title={showBurmese ? badge.name.my : badge.name.en}
               aria-label={showBurmese ? badge.name.my : badge.name.en}
@@ -162,7 +150,9 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
 
         {/* Message next to badges */}
         <div className="shrink-0 pl-1">
-          <p className="text-xs text-muted-foreground whitespace-nowrap">
+          <p
+            className={`text-xs text-muted-foreground whitespace-nowrap ${showBurmese ? 'font-myanmar' : ''}`}
+          >
             {hasEarnedBadges
               ? showBurmese
                 ? `${earnedRecords.length} \u1018\u1000\u103A\u1001\u103A \u101B\u101B\u103E\u102D\u1015\u103C\u102E\u1038`

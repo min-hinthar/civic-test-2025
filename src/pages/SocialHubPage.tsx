@@ -422,12 +422,16 @@ const SocialHubPage = () => {
                     <Sparkles className="h-5 w-5 text-accent-purple" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">
+                    <p
+                      className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
                       {showBurmese
                         ? '\u101E\u1004\u1037\u103A\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038'
                         : 'Your Achievements'}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p
+                      className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
                       {showBurmese
                         ? `\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F ${earnedBadges.length} \u1001\u102F \u101B\u101B\u103E\u102D\u1015\u103C\u102E\u1038 \u104D \u1006\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B!`
                         : `${earnedBadges.length} earned - keep learning!`}
@@ -455,7 +459,9 @@ const SocialHubPage = () => {
                   <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">
                     {streakLoading ? '--' : currentStreak}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 font-bold">
+                  <p
+                    className={`text-xs text-muted-foreground mt-1 font-bold ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese ? '\u101C\u1000\u103A\u101B\u103E\u102D' : 'Current'}
                   </p>
                 </Card>
@@ -466,7 +472,9 @@ const SocialHubPage = () => {
                   <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">
                     {streakLoading ? '--' : longestStreak}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 font-bold">
+                  <p
+                    className={`text-xs text-muted-foreground mt-1 font-bold ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? '\u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038'
                       : 'Longest'}
@@ -485,7 +493,9 @@ const SocialHubPage = () => {
 
               {/* Streak heatmap */}
               <Card>
-                <h3 className="text-sm font-bold text-foreground mb-3">
+                <h3
+                  className={`text-sm font-bold text-foreground mb-3 ${showBurmese ? 'font-myanmar' : ''}`}
+                >
                   {showBurmese
                     ? '\u101C\u103E\u102F\u1015\u103A\u101B\u103E\u102C\u1038\u1019\u103E\u102F'
                     : 'Activity Calendar'}
@@ -497,7 +507,9 @@ const SocialHubPage = () => {
               <Card className="border-blue-200/40 dark:border-blue-500/20 bg-blue-50/30 dark:bg-blue-500/5">
                 <div className="flex items-center gap-2 mb-2">
                   <Snowflake className="h-5 w-5 text-blue-400" />
-                  <h3 className="text-sm font-bold text-foreground">
+                  <h3
+                    className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? 'Freeze \u1021\u101C\u102F\u1015\u103A\u101C\u102F\u1015\u103A\u1015\u102F\u1036'
                       : 'How Freezes Work'}

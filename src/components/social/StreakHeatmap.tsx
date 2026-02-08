@@ -37,9 +37,30 @@ interface StreakHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const DAY_LABELS_MY = ['', '\u1010\u1014\u1039\u101C\u102C', '', '\u1017\u102F\u1012\u1039\u1013', '', '\u101E\u1031\u102C', ''];
+const DAY_LABELS_MY = [
+  '',
+  '\u1010\u1014\u1039\u101C\u102C',
+  '',
+  '\u1017\u102F\u1012\u1039\u1013',
+  '',
+  '\u101E\u1031\u102C',
+  '',
+];
 
-const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_LABELS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 const MONTH_LABELS_MY = [
   '\u1007\u1014\u103A',
   '\u1016\u1031',
@@ -191,12 +212,16 @@ export function StreakHeatmap({ activityDates, freezesUsed, className }: StreakH
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground pt-1">
-        <span>{showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}</span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>
+          {showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}
+        </span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-200 dark:bg-orange-900/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-400 dark:bg-orange-700/60" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-500 dark:bg-orange-600" />
-        <span>{showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}</span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>
+          {showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}
+        </span>
         <span className="ml-2">|</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-blue-200 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600" />
         <span>{showBurmese ? 'Freeze' : 'Freeze'}</span>
@@ -238,17 +263,10 @@ function HeatmapGrid({
         {/* Empty cell for day label column */}
         <div />
         {Array.from({ length: numWeeks }, (_, colIdx) => {
-          const monthLabel = monthLabels.find((m) => m.col === colIdx);
+          const monthLabel = monthLabels.find(m => m.col === colIdx);
           return (
-            <div
-              key={colIdx}
-              className="text-xs text-muted-foreground truncate leading-none"
-            >
-              {monthLabel
-                ? showBurmese
-                  ? monthLabel.labelMy
-                  : monthLabel.label
-                : ''}
+            <div key={colIdx} className="text-xs text-muted-foreground truncate leading-none">
+              {monthLabel ? (showBurmese ? monthLabel.labelMy : monthLabel.label) : ''}
             </div>
           );
         })}
@@ -279,9 +297,7 @@ function HeatmapGrid({
             const date = dates[dateIdx];
 
             if (!date) {
-              cells.push(
-                <div key={`empty-${col}-${rowIdx}`} className="aspect-square" />
-              );
+              cells.push(<div key={`empty-${col}-${rowIdx}`} className="aspect-square" />);
               continue;
             }
 
@@ -309,9 +325,7 @@ function HeatmapGrid({
                 key={dateStr}
                 className={clsx(
                   'aspect-square rounded-sm min-w-[10px]',
-                  isFuture
-                    ? 'bg-transparent'
-                    : getCellColor(count, isFreezeDay),
+                  isFuture ? 'bg-transparent' : getCellColor(count, isFreezeDay),
                   isToday && !isFuture && 'ring-2 ring-foreground/30'
                 )}
                 title={tooltipText}
