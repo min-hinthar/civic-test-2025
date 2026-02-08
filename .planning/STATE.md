@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 6 of 7 (Interview Simulation)
-Plan: 1 of 6 complete (06-01)
+Plan: 2 of 6 complete (06-01, 06-02)
 Status: In progress
-Last activity: 2026-02-08 - Completed 06-01-PLAN.md (Interview Foundation)
+Last activity: 2026-02-08 - Completed 06-02-PLAN.md (Audio Hooks)
 
-Progress: [██████████] 95% (40 plans / ~45 total estimated)
+Progress: [██████████] 96% (41 plans / ~45 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 40 (Phases 1-5 + 06-01)
+- Total plans completed: 41 (Phases 1-5 + 06-01, 06-02)
 - Average duration: ~13 min
-- Total execution time: ~531 min
+- Total execution time: ~538 min
 
 **By Phase:**
 
@@ -198,6 +198,11 @@ Recent decisions affecting current work:
 - 06-01: Dedicated IndexedDB database 'civic-prep-interview' for interview sessions
 - 06-01: Module-level AudioContext singleton with lazy initialization for chime
 - 06-01: 880 Hz sine wave (A5 note) for chime at 0.3 gain fading over 0.5s
+- 06-02: Lazy useState for isSupported (avoids unused setter from React Compiler ESLint)
+- 06-02: Speech rate stored in localStorage key civic-prep-speech-rate (slow/normal/fast)
+- 06-02: TTS timeout formula: (wordCount/2.5)*1000/rate + 3000ms buffer
+- 06-02: MediaRecorder mimeType omitted to let browser choose default codec
+- 06-02: useAudioRecorder exposes stream state for waveform visualization
 
 ### Pending Todos
 
@@ -215,7 +220,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 06-01-PLAN.md (Interview Foundation). Phase 6 in progress.
+Stopped at: Completed 06-02-PLAN.md (Audio Hooks). Phase 6 in progress.
 Resume file: None
 
 ---
