@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   YAxis,
 } from 'recharts';
-import { ChevronDown, ChevronUp, Layers3 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Layers3, ClipboardList, Mic2, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
@@ -63,7 +63,9 @@ const HistoryPage = () => {
     return null;
   }, [location.hash]);
 
-  const [userSelectedTab, setUserSelectedTab] = useState<'tests' | 'practice' | 'interview' | null>(null);
+  const [userSelectedTab, setUserSelectedTab] = useState<'tests' | 'practice' | 'interview' | null>(
+    null
+  );
   const activeTab = userSelectedTab ?? tabFromHash ?? 'tests';
 
   const setActiveTab = useCallback((tab: 'tests' | 'practice' | 'interview') => {
@@ -183,6 +185,28 @@ const HistoryPage = () => {
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [location.hash]);
 
+  // Tab config for DRY rendering
+  const tabs = [
+    {
+      key: 'tests' as const,
+      en: strings.nav.mockTest.en,
+      my: strings.nav.mockTest.my,
+      icon: ClipboardList,
+    },
+    {
+      key: 'practice' as const,
+      en: strings.practice.practiceSessions.en,
+      my: strings.practice.practiceSessions.my,
+      icon: BookOpen,
+    },
+    {
+      key: 'interview' as const,
+      en: strings.interview.interviewHistory.en,
+      my: strings.interview.interviewHistory.my,
+      icon: Mic2,
+    },
+  ];
+
   return (
     <div className="page-shell" data-tour="test-history">
       <AppNavigation />
@@ -196,54 +220,31 @@ const HistoryPage = () => {
           </span>
         </p>
 
-        {/* Tab navigation */}
-        <div className="mb-8 flex rounded-lg border border-border bg-muted/30 p-0.5 w-fit">
-          <button
-            onClick={() => setActiveTab('tests')}
-            className={clsx(
-              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
-              activeTab === 'tests'
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            {strings.nav.mockTest.en}
-            {showBurmese && (
-              <span className="ml-1 font-myanmar text-xs">{strings.nav.mockTest.my}</span>
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('practice')}
-            className={clsx(
-              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
-              activeTab === 'practice'
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            {strings.practice.practiceSessions.en}
-            {showBurmese && (
-              <span className="ml-1 font-myanmar text-xs">
-                {strings.practice.practiceSessions.my}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('interview')}
-            className={clsx(
-              'rounded-md px-4 py-2 text-sm font-semibold transition-colors min-h-[44px]',
-              activeTab === 'interview'
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            {strings.interview.interviewHistory.en}
-            {showBurmese && (
-              <span className="ml-1 font-myanmar text-xs">
-                {strings.interview.interviewHistory.my}
-              </span>
-            )}
-          </button>
+        {/* Tab navigation - Duolingo-style rounded pill tabs */}
+        <div className="mb-8 flex rounded-2xl border border-border bg-muted/30 p-1 w-fit">
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={clsx(
+                  'rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] flex items-center gap-2',
+                  activeTab === tab.key
+                    ? 'bg-primary-500 text-white shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px] transition-[box-shadow,transform] duration-100'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                <span className="hidden sm:inline">
+                  {tab.en}
+                  {showBurmese && (
+                    <span className="ml-1 font-myanmar text-xs opacity-80">{tab.my}</span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Practice Sessions Tab */}
@@ -267,7 +268,7 @@ const HistoryPage = () => {
                       >
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex-1">
-                            <p className="text-sm font-semibold text-foreground">
+                            <p className="text-sm font-bold text-foreground">
                               {new Date(session.date).toLocaleString()}
                             </p>
                             <p className="text-sm text-muted-foreground">
@@ -290,7 +291,11 @@ const HistoryPage = () => {
                             </div>
                             <button
                               type="button"
-                              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                              className={clsx(
+                                'inline-flex items-center justify-center gap-2 rounded-xl border-2 border-border px-4 py-2 text-sm font-bold text-foreground min-h-[44px]',
+                                'transition-all hover:bg-muted/40 hover:border-primary-300',
+                                'shadow-[0_3px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[2px]'
+                              )}
                               aria-label={isExpanded ? 'Hide details' : 'Show details'}
                             >
                               {isExpanded ? 'Hide' : 'Details'}
@@ -329,7 +334,7 @@ const HistoryPage = () => {
                                   </span>
                                   <span
                                     className={clsx(
-                                      'text-xs font-semibold',
+                                      'text-xs font-bold',
                                       answer.isCorrect ? 'text-success-500' : 'text-warning-500'
                                     )}
                                   >
@@ -347,7 +352,8 @@ const HistoryPage = () => {
               </StaggeredList>
             ) : (
               <FadeIn>
-                <div className="text-center py-12">
+                <Card className="text-center py-12">
+                  <p className="text-4xl mb-4">📝</p>
                   <BilingualHeading
                     text={{
                       en: 'No practice sessions yet',
@@ -368,10 +374,10 @@ const HistoryPage = () => {
                   </p>
                   <BilingualButton
                     label={strings.practice.startPractice}
-                    variant="primary"
+                    variant="chunky"
                     onClick={() => navigate('/practice')}
                   />
-                </div>
+                </Card>
               </FadeIn>
             )}
           </section>
@@ -407,20 +413,24 @@ const HistoryPage = () => {
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <p className="text-sm font-semibold text-foreground">
+                              <p className="text-sm font-bold text-foreground">
                                 {new Date(session.date).toLocaleString()}
                               </p>
                               <span
                                 className={clsx(
-                                  'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold',
+                                  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold',
                                   session.mode === 'realistic'
                                     ? 'bg-primary/10 text-primary'
                                     : 'bg-muted text-muted-foreground'
                                 )}
                               >
                                 {session.mode === 'realistic'
-                                  ? (showBurmese ? strings.interview.realisticMode.my : 'Realistic')
-                                  : (showBurmese ? strings.interview.practiceMode.my : 'Practice')}
+                                  ? showBurmese
+                                    ? strings.interview.realisticMode.my
+                                    : 'Realistic'
+                                  : showBurmese
+                                    ? strings.interview.practiceMode.my
+                                    : 'Practice'}
                               </span>
                             </div>
                             <p className="text-sm text-muted-foreground">
@@ -443,13 +453,21 @@ const HistoryPage = () => {
                               </span>
                               <span className="block text-sm text-muted-foreground">
                                 {session.passed
-                                  ? (showBurmese ? `${strings.interview.passed.my}` : 'Passed')
-                                  : (showBurmese ? `${strings.interview.failed.my}` : 'Keep trying')}
+                                  ? showBurmese
+                                    ? `${strings.interview.passed.my}`
+                                    : 'Passed'
+                                  : showBurmese
+                                    ? `${strings.interview.failed.my}`
+                                    : 'Keep trying'}
                               </span>
                             </div>
                             <button
                               type="button"
-                              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                              className={clsx(
+                                'inline-flex items-center justify-center gap-2 rounded-xl border-2 border-border px-4 py-2 text-sm font-bold text-foreground min-h-[44px]',
+                                'transition-all hover:bg-muted/40 hover:border-primary-300',
+                                'shadow-[0_3px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[2px]'
+                              )}
                               aria-label={isExpanded ? 'Hide details' : 'Show details'}
                             >
                               {isExpanded ? 'Hide' : 'Details'}
@@ -488,15 +506,19 @@ const HistoryPage = () => {
                                   </span>
                                   <span
                                     className={clsx(
-                                      'text-xs font-semibold',
+                                      'text-xs font-bold',
                                       result.selfGrade === 'correct'
                                         ? 'text-success-500'
                                         : 'text-warning-500'
                                     )}
                                   >
                                     {result.selfGrade === 'correct'
-                                      ? (showBurmese ? strings.interview.correct.my : 'Correct')
-                                      : (showBurmese ? strings.interview.incorrect.my : 'Incorrect')}
+                                      ? showBurmese
+                                        ? strings.interview.correct.my
+                                        : 'Correct'
+                                      : showBurmese
+                                        ? strings.interview.incorrect.my
+                                        : 'Incorrect'}
                                   </span>
                                 </div>
                                 <p className="text-sm font-medium text-foreground">
@@ -529,7 +551,8 @@ const HistoryPage = () => {
               </StaggeredList>
             ) : (
               <FadeIn>
-                <div className="text-center py-12">
+                <Card className="text-center py-12">
+                  <p className="text-4xl mb-4">🎤</p>
                   <BilingualHeading
                     text={{
                       en: 'No interview sessions yet',
@@ -544,16 +567,18 @@ const HistoryPage = () => {
                     Try a mock interview to practice for your USCIS appointment!
                     {showBurmese && (
                       <span className="block font-myanmar mt-1">
-                        USCIS \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1021\u1010\u103D\u1000\u103A \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1019\u103E\u102F\u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B!
+                        USCIS
+                        \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1021\u1010\u103D\u1000\u103A
+                        \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1019\u103E\u102F\u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B!
                       </span>
                     )}
                   </p>
                   <BilingualButton
                     label={strings.interview.startInterview}
-                    variant="primary"
+                    variant="chunky"
                     onClick={() => navigate('/interview')}
                   />
-                </div>
+                </Card>
               </FadeIn>
             )}
           </section>
@@ -572,97 +597,122 @@ const HistoryPage = () => {
                 Overview statistics
               </span>
               <FadeIn>
-                <Card className="p-6">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                <Card className="p-6 text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-bold">
                     Attempts
                   </p>
-                  <p className="text-3xl font-bold text-foreground">{history.length}</p>
-                  <p className="text-sm text-muted-foreground">Total synced tests</p>
-                  <p className="text-xs text-muted-foreground font-myanmar">စာမေးပွဲ စုစုပေါင်း</p>
+                  <p className="text-4xl font-bold text-foreground mt-1">{history.length}</p>
+                  <p className="text-sm text-muted-foreground mt-1">Total synced tests</p>
+                  <p className="text-xs text-muted-foreground font-myanmar">
+                    {
+                      '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038'
+                    }
+                  </p>
                 </Card>
               </FadeIn>
               <FadeIn delay={100}>
-                <Card className="p-6">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                <Card className="p-6 text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-bold">
                     Best score
                   </p>
-                  <p className="text-3xl font-bold text-foreground">
+                  <p className="text-4xl font-bold text-foreground mt-1">
                     {bestSession ? `${bestSession.score} / ${bestSession.totalQuestions}` : '-'}
                   </p>
-                  <p className="text-sm text-muted-foreground">Keep chasing perfection</p>
-                  <p className="text-xs text-muted-foreground font-myanmar">အကောင်းဆုံးအမှတ်</p>
+                  <p className="text-sm text-muted-foreground mt-1">Keep chasing perfection</p>
+                  <p className="text-xs text-muted-foreground font-myanmar">
+                    {
+                      '\u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038\u1021\u1019\u103E\u1010\u103A'
+                    }
+                  </p>
                 </Card>
               </FadeIn>
               <FadeIn delay={200}>
-                <Card className="p-6">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                <Card className="p-6 text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-bold">
                     Pass rate
                   </p>
-                  <p className="text-3xl font-bold text-foreground">{passRate}%</p>
-                  <p className="text-sm text-muted-foreground">60%+ earns a pass</p>
-                  <p className="text-xs text-muted-foreground font-myanmar">အောင်မြင်နှုန်း</p>
+                  <p className="text-4xl font-bold text-foreground mt-1">{passRate}%</p>
+                  <p className="text-sm text-muted-foreground mt-1">60%+ earns a pass</p>
+                  <p className="text-xs text-muted-foreground font-myanmar">
+                    {
+                      '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1014\u103E\u102F\u1014\u103A\u1038'
+                    }
+                  </p>
                 </Card>
               </FadeIn>
             </section>
 
             {/* Score trend chart */}
-            <section
-              id="trend"
-              className="mt-8 glass-panel p-6 shadow-primary/15"
-              aria-labelledby="history-trend"
-            >
-              <h2 id="history-trend" className="text-lg font-semibold text-foreground">
-                Score trend ·{' '}
-                <span className="font-myanmar text-muted-foreground">အမှတ်တိုးတက်မှု</span>
-              </h2>
-              <div className="mt-6 h-72 w-full">
-                {chartData.length ? (
-                  <ResponsiveContainer>
-                    <LineChart data={chartData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
-                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
-                      <YAxis
-                        domain={[0, 100]}
-                        tickFormatter={value => `${value}%`}
-                        stroke="#94a3b8"
-                        fontSize={12}
-                      />
-                      <Tooltip
-                        formatter={value => `${Number(value).toFixed(0)}%`}
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          borderRadius: '1rem',
-                          border: '1px solid hsl(var(--border))',
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke="#6366f1"
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <p className="text-muted-foreground">
-                    Complete your first test to unlock analytics.
-                  </p>
-                )}
-              </div>
+            <section id="trend" className="mt-8" aria-labelledby="history-trend">
+              <Card>
+                <h2 id="history-trend" className="text-lg font-bold text-foreground mb-1">
+                  Score trend
+                </h2>
+                <p className="font-myanmar text-sm text-muted-foreground mb-4">
+                  {
+                    '\u1021\u1019\u103E\u1010\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F'
+                  }
+                </p>
+                <div className="h-72 w-full">
+                  {chartData.length ? (
+                    <ResponsiveContainer>
+                      <LineChart
+                        data={chartData}
+                        margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
+                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
+                        <YAxis
+                          domain={[0, 100]}
+                          tickFormatter={value => `${value}%`}
+                          stroke="#94a3b8"
+                          fontSize={12}
+                        />
+                        <Tooltip
+                          formatter={value => `${Number(value).toFixed(0)}%`}
+                          contentStyle={{
+                            backgroundColor: 'hsl(var(--card))',
+                            borderRadius: '1rem',
+                            border: '1px solid hsl(var(--border))',
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="score"
+                          stroke="#6366f1"
+                          strokeWidth={3}
+                          dot={{ r: 4 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <p className="text-muted-foreground">
+                        Complete your first test to unlock analytics.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </Card>
             </section>
 
             {/* Attempt log with staggered list */}
             <section id="attempts" className="mt-8 space-y-6" aria-labelledby="history-attempts">
               <div className="flex items-center gap-3">
-                <Layers3 className="h-5 w-5 text-primary" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-500/15">
+                  <Layers3 className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                </div>
                 <div>
-                  <h2 id="history-attempts" className="text-lg font-semibold text-foreground">
-                    Attempt log ·{' '}
-                    <span className="font-myanmar text-muted-foreground">မှတ်တမ်းဇယား</span>
+                  <h2 id="history-attempts" className="text-lg font-bold text-foreground">
+                    Attempt log
                   </h2>
                   <p className="text-sm text-muted-foreground">
                     Tap any row to review every question you answered.
+                    {showBurmese && (
+                      <span className="font-myanmar ml-1">
+                        {'\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1007\u101A\u102C\u1038'}
+                      </span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -683,7 +733,7 @@ const HistoryPage = () => {
                         >
                           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex-1">
-                              <p className="text-sm font-semibold text-foreground">
+                              <p className="text-sm font-bold text-foreground">
                                 {new Date(session.date).toLocaleString()}
                               </p>
                               <p className="text-sm text-muted-foreground">
@@ -706,32 +756,45 @@ const HistoryPage = () => {
                                 </span>
                                 <span className="block text-sm text-muted-foreground">
                                   {session.passed
-                                    ? 'Passed / အောင်'
-                                    : 'Keep trying / ဆက်ကြိုးစားပါ'}
+                                    ? 'Passed / \u1021\u1031\u102C\u1004\u103A'
+                                    : 'Keep trying / \u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B'}
                                 </span>
                               </div>
                               <ShareButton
                                 variant="compact"
-                                data={{
-                                  score: session.score,
-                                  total: session.totalQuestions,
-                                  sessionType: 'test',
-                                  streak: 0,
-                                  topBadge: null,
-                                  categories: Object.entries(
-                                    session.results.reduce<Record<string, { correct: number; total: number }>>((acc, r) => {
-                                      if (!acc[r.category]) acc[r.category] = { correct: 0, total: 0 };
-                                      acc[r.category].total += 1;
-                                      if (r.isCorrect) acc[r.category].correct += 1;
-                                      return acc;
-                                    }, {})
-                                  ).map(([name, stats]) => ({ name, correct: stats.correct, total: stats.total })),
-                                  date: session.date,
-                                } satisfies ShareCardData}
+                                data={
+                                  {
+                                    score: session.score,
+                                    total: session.totalQuestions,
+                                    sessionType: 'test',
+                                    streak: 0,
+                                    topBadge: null,
+                                    categories: Object.entries(
+                                      session.results.reduce<
+                                        Record<string, { correct: number; total: number }>
+                                      >((acc, r) => {
+                                        if (!acc[r.category])
+                                          acc[r.category] = { correct: 0, total: 0 };
+                                        acc[r.category].total += 1;
+                                        if (r.isCorrect) acc[r.category].correct += 1;
+                                        return acc;
+                                      }, {})
+                                    ).map(([name, stats]) => ({
+                                      name,
+                                      correct: stats.correct,
+                                      total: stats.total,
+                                    })),
+                                    date: session.date,
+                                  } satisfies ShareCardData
+                                }
                               />
                               <button
                                 type="button"
-                                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"
+                                className={clsx(
+                                  'inline-flex items-center justify-center gap-2 rounded-xl border-2 border-border px-4 py-2 text-sm font-bold text-foreground min-h-[44px]',
+                                  'transition-all hover:bg-muted/40 hover:border-primary-300',
+                                  'shadow-[0_3px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[2px]'
+                                )}
                                 aria-label={isExpanded ? 'Hide review' : 'Review answers'}
                               >
                                 {isExpanded ? 'Hide' : 'Review'}
@@ -760,7 +823,7 @@ const HistoryPage = () => {
                                   key={`${sessionId}-${result.questionId}`}
                                   className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
                                 >
-                                  <p className="text-sm font-semibold text-foreground">
+                                  <p className="text-sm font-bold text-foreground">
                                     {result.questionText_en}
                                   </p>
                                   <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
@@ -780,10 +843,13 @@ const HistoryPage = () => {
                                   </div>
                                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                     <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                                        Your answer · <span className="font-myanmar">အဖြေ</span>
+                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                                        Your answer ·{' '}
+                                        <span className="font-myanmar">
+                                          {'\u1021\u1016\u103C\u1031'}
+                                        </span>
                                       </p>
-                                      <p className="text-sm font-semibold text-foreground">
+                                      <p className="text-sm font-bold text-foreground">
                                         {result.selectedAnswer.text_en}
                                       </p>
                                       <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
@@ -791,11 +857,13 @@ const HistoryPage = () => {
                                       </p>
                                     </div>
                                     <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
                                         Official answer ·{' '}
-                                        <span className="font-myanmar">အဖြေမှန်</span>
+                                        <span className="font-myanmar">
+                                          {'\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A'}
+                                        </span>
                                       </p>
-                                      <p className="text-sm font-semibold text-foreground">
+                                      <p className="text-sm font-bold text-foreground">
                                         {result.correctAnswer.text_en}
                                       </p>
                                       <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
@@ -803,7 +871,7 @@ const HistoryPage = () => {
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold">
+                                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold">
                                     <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
                                       {result.category}
                                     </span>
@@ -812,7 +880,9 @@ const HistoryPage = () => {
                                         result.isCorrect ? 'text-success-500' : 'text-warning-500'
                                       }
                                     >
-                                      {result.isCorrect ? 'Correct · မှန်' : 'Incorrect · မှား'}
+                                      {result.isCorrect
+                                        ? 'Correct · \u1019\u103E\u1014\u103A'
+                                        : 'Incorrect · \u1019\u103E\u102C\u1038'}
                                     </span>
                                   </div>
                                 </div>
@@ -829,11 +899,12 @@ const HistoryPage = () => {
               {/* Empty state with encouraging bilingual message */}
               {!history.length && (
                 <FadeIn>
-                  <div className="text-center py-12">
+                  <Card className="text-center py-12">
+                    <p className="text-4xl mb-4">🇺🇸</p>
                     <BilingualHeading
                       text={{
                         en: "You haven't taken any tests yet",
-                        my: 'သင်မည်သည့်စာမေးပွဲမှမဖြေဆိုရသေးပါ',
+                        my: '\u101E\u1004\u103A\u1019\u100A\u103A\u101E\u100A\u1037\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103E\u1016\u103C\u1031\u1006\u102D\u102F\u101B\u101E\u1031\u1038\u1015\u102B',
                       }}
                       level={2}
                       size="lg"
@@ -843,15 +914,17 @@ const HistoryPage = () => {
                     <p className="text-muted-foreground mb-6">
                       Take your first practice test to start tracking progress!
                       <span className="block font-myanmar mt-1">
-                        တိုးတက်မှုခြေရာခံဖို့ ပထမဆုံးစာမေးပွဲဖြေပါ!
+                        {
+                          '\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1001\u103C\u1031\u101B\u102C\u1001\u1036\u1016\u102D\u102F\u1037 \u1015\u1011\u1019\u1006\u102F\u1036\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1016\u103C\u1031\u1015\u102B!'
+                        }
                       </span>
                     </p>
                     <BilingualButton
                       label={strings.actions.startTest}
-                      variant="primary"
+                      variant="chunky"
                       onClick={() => navigate('/test')}
                     />
-                  </div>
+                  </Card>
                 </FadeIn>
               )}
             </section>

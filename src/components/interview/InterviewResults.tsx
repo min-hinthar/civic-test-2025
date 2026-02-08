@@ -31,21 +31,12 @@ import { useStreak } from '@/hooks/useStreak';
 import { saveInterviewSession, getInterviewHistory } from '@/lib/interview/interviewStore';
 import { getClosingStatement } from '@/lib/interview/interviewGreetings';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
-import {
-  USCIS_CATEGORIES,
-  CATEGORY_COLORS,
-  getUSCISCategory,
-} from '@/lib/mastery/categoryMapping';
+import { USCIS_CATEGORIES, CATEGORY_COLORS, getUSCISCategory } from '@/lib/mastery/categoryMapping';
 import type { USCISCategory } from '@/lib/mastery/categoryMapping';
 import { allQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
-import type {
-  InterviewMode,
-  InterviewResult,
-  InterviewEndReason,
-  InterviewSession,
-} from '@/types';
+import type { InterviewMode, InterviewResult, InterviewEndReason, InterviewSession } from '@/types';
 
 /** Map of end reasons to bilingual display text */
 const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = {
@@ -133,10 +124,7 @@ export function InterviewResults({
   const [hasSaved, setHasSaved] = useState(false);
 
   // --- Computed values ---
-  const score = useMemo(
-    () => results.filter(r => r.selfGrade === 'correct').length,
-    [results]
-  );
+  const score = useMemo(() => results.filter(r => r.selfGrade === 'correct').length, [results]);
   const passed = score >= 12;
   const totalQuestions = results.length;
   const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
@@ -161,17 +149,22 @@ export function InterviewResults({
   }, [results]);
 
   // Share card data for social sharing
-  const shareCardData: ShareCardData = useMemo(() => ({
-    score,
-    total: totalQuestions,
-    sessionType: 'interview',
-    streak: currentStreak,
-    topBadge: null,
-    categories: (Object.entries(categoryBreakdown) as Array<[string, { correct: number; total: number }]>)
-      .filter(([, stats]) => stats.total > 0)
-      .map(([name, stats]) => ({ name, correct: stats.correct, total: stats.total })),
-    date: new Date().toISOString(),
-  }), [score, totalQuestions, currentStreak, categoryBreakdown]);
+  const shareCardData: ShareCardData = useMemo(
+    () => ({
+      score,
+      total: totalQuestions,
+      sessionType: 'interview',
+      streak: currentStreak,
+      topBadge: null,
+      categories: (
+        Object.entries(categoryBreakdown) as Array<[string, { correct: number; total: number }]>
+      )
+        .filter(([, stats]) => stats.total > 0)
+        .map(([name, stats]) => ({ name, correct: stats.correct, total: stats.total })),
+      date: new Date().toISOString(),
+    }),
+    [score, totalQuestions, currentStreak, categoryBreakdown]
+  );
 
   // Incorrect questions
   const incorrectResults = useMemo(
@@ -275,11 +268,7 @@ export function InterviewResults({
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-6">
       {/* Confetti overlay */}
-      <Confetti
-        fire={showConfetti}
-        intensity="celebration"
-        onComplete={handleConfettiComplete}
-      />
+      <Confetti fire={showConfetti} intensity="celebration" onComplete={handleConfettiComplete} />
 
       {/* Interviewer avatar with TTS */}
       <FadeIn>
@@ -307,7 +296,9 @@ export function InterviewResults({
             <span
               className={clsx(
                 'text-2xl font-bold',
-                passed ? 'text-success-600 dark:text-success-400' : 'text-warning-600 dark:text-warning-400'
+                passed
+                  ? 'text-success-600 dark:text-success-400'
+                  : 'text-warning-600 dark:text-warning-400'
               )}
             >
               {passed ? strings.interview.passed.en : strings.interview.failed.en}
@@ -317,7 +308,9 @@ export function InterviewResults({
             <p
               className={clsx(
                 'font-myanmar text-sm',
-                passed ? 'text-success-600/80 dark:text-success-400/80' : 'text-warning-600/80 dark:text-warning-400/80'
+                passed
+                  ? 'text-success-600/80 dark:text-success-400/80'
+                  : 'text-warning-600/80 dark:text-warning-400/80'
               )}
             >
               {passed ? strings.interview.passed.my : strings.interview.failed.my}
@@ -326,9 +319,7 @@ export function InterviewResults({
           <p className="mt-2 text-sm text-muted-foreground">
             {END_REASON_TEXT[endReason].en}
             {showBurmese && (
-              <span className="ml-1 font-myanmar text-xs">
-                · {END_REASON_TEXT[endReason].my}
-              </span>
+              <span className="ml-1 font-myanmar text-xs">· {END_REASON_TEXT[endReason].my}</span>
             )}
           </p>
         </div>
@@ -373,45 +364,43 @@ export function InterviewResults({
             text={{ en: 'Category Breakdown', my: 'အမျိုးအစားအလိုက်ခွဲခြမ်းစိတ်ဖြာမှု' }}
           />
           <div className="space-y-3">
-            {(Object.entries(categoryBreakdown) as Array<[USCISCategory, { correct: number; total: number }]>).map(
-              ([category, { correct, total }]) => {
-                if (total === 0) return null;
-                const color = CATEGORY_COLORS[category];
-                const colorClasses = CATEGORY_COLOR_CLASSES[color] ?? CATEGORY_COLOR_CLASSES.blue;
-                const pct = Math.round((correct / total) * 100);
+            {(
+              Object.entries(categoryBreakdown) as Array<
+                [USCISCategory, { correct: number; total: number }]
+              >
+            ).map(([category, { correct, total }]) => {
+              if (total === 0) return null;
+              const color = CATEGORY_COLORS[category];
+              const colorClasses = CATEGORY_COLOR_CLASSES[color] ?? CATEGORY_COLOR_CLASSES.blue;
+              const pct = Math.round((correct / total) * 100);
 
-                return (
-                  <Card key={category} className="p-4" elevated={false}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={clsx(
-                            'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                            colorClasses.bg,
-                            colorClasses.text
-                          )}
-                        >
-                          {USCIS_CATEGORIES[category].name.en}
-                        </span>
-                      </div>
-                      <span className="text-sm font-semibold text-foreground">
-                        {correct}/{total}
+              return (
+                <Card key={category} className="p-4" elevated={false}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={clsx(
+                          'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                          colorClasses.bg,
+                          colorClasses.text
+                        )}
+                      >
+                        {USCIS_CATEGORIES[category].name.en}
                       </span>
                     </div>
-                    {showBurmese && (
-                      <p className="mb-2 font-myanmar text-xs text-muted-foreground">
-                        {USCIS_CATEGORIES[category].name.my}
-                      </p>
-                    )}
-                    <Progress
-                      value={pct}
-                      variant={pct >= 60 ? 'success' : 'warning'}
-                      size="sm"
-                    />
-                  </Card>
-                );
-              }
-            )}
+                    <span className="text-sm font-semibold text-foreground">
+                      {correct}/{total}
+                    </span>
+                  </div>
+                  {showBurmese && (
+                    <p className="mb-2 font-myanmar text-xs text-muted-foreground">
+                      {USCIS_CATEGORIES[category].name.my}
+                    </p>
+                  )}
+                  <Progress value={pct} variant={pct >= 60 ? 'success' : 'warning'} size="sm" />
+                </Card>
+              );
+            })}
           </div>
         </div>
       </FadeIn>
@@ -419,9 +408,7 @@ export function InterviewResults({
       {/* 5. Trend Chart */}
       <FadeIn delay={900}>
         <div className="mt-8">
-          <SectionHeading
-            text={{ en: 'Score Trend', my: 'အမှတ်တိုးတက်မှု' }}
-          />
+          <SectionHeading text={{ en: 'Score Trend', my: 'အမှတ်တိုးတက်မှု' }} />
           {trendData.length >= 2 ? (
             <Card className="p-4" elevated={false}>
               <div className="h-48 w-full">
@@ -436,7 +423,7 @@ export function InterviewResults({
                       tickFormatter={(value: number) => `${value}`}
                     />
                     <Tooltip
-                      formatter={(value) => [`${Number(value)} / 20`, 'Score']}
+                      formatter={value => [`${Number(value)} / 20`, 'Score']}
                       contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         borderRadius: '1rem',
@@ -517,13 +504,13 @@ export function InterviewResults({
         </FadeIn>
       )}
 
-      {/* 7. Action Buttons */}
+      {/* 7. Action Buttons - 3D chunky Duolingo treatment */}
       <FadeIn delay={1300}>
         <div className="mt-8 flex flex-col items-center gap-3 pb-8">
           {passed && <ShareButton data={shareCardData} />}
           <BilingualButton
             label={strings.actions.tryAgain}
-            variant="primary"
+            variant="chunky"
             onClick={onRetry}
             fullWidth
           />
@@ -543,15 +530,17 @@ export function InterviewResults({
             onClick={() => navigate('/')}
             whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
             className={clsx(
-              'mt-2 flex items-center gap-2 rounded-full px-6 py-3',
-              'text-sm font-semibold text-muted-foreground',
+              'mt-2 flex items-center gap-2 rounded-xl px-6 py-3',
+              'text-sm font-bold text-muted-foreground min-h-[44px]',
               'transition-colors hover:text-foreground hover:bg-muted/40',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
             )}
           >
             <Home className="h-4 w-4" />
             <span>
-              {showBurmese ? 'Dashboard · ဒက်ရှ်ဘုတ်' : 'Dashboard'}
+              {showBurmese
+                ? 'Dashboard · \u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A'
+                : 'Dashboard'}
             </span>
           </motion.button>
         </div>

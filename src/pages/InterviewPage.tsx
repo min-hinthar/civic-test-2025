@@ -14,10 +14,14 @@ type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
  * Interview simulation page managing setup -> countdown -> session -> results flow.
  *
  * State machine:
- * - setup: User selects Realistic or Practice mode
+ * - setup: User selects Realistic or Practice mode (3D chunky cards)
  * - countdown: 3-2-1-Begin countdown animation
  * - session: Active interview with TTS, recording, grading
- * - results: Post-interview analysis with score, chart, explanations
+ * - results: Post-interview analysis with confetti, 3D buttons
+ *
+ * Duolingo visual treatment applied across all phases via sub-components:
+ * - InterviewSetup: rounded-2xl mode cards, 3D chunky Start buttons
+ * - InterviewResults: rounded-2xl category cards, 3D action buttons, confetti
  */
 const InterviewPage = () => {
   const [phase, setPhase] = useState<InterviewPhase>('setup');
@@ -78,12 +82,10 @@ const InterviewPage = () => {
     <div className="page-shell">
       <AppNavigation
         locked={phase === 'session' && mode === 'realistic'}
-        lockMessage="Complete the interview before leaving this page. · အင်တာဗျူးပြီးမှ ထွက်ပါ"
+        lockMessage="Complete the interview before leaving this page. · \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1015\u103C\u102E\u1038\u1019\u103E \u1011\u103D\u1000\u103A\u1015\u102B"
       />
       {phase === 'setup' && <InterviewSetup onStart={handleStart} />}
-      {phase === 'countdown' && (
-        <InterviewCountdown onComplete={handleCountdownComplete} />
-      )}
+      {phase === 'countdown' && <InterviewCountdown onComplete={handleCountdownComplete} />}
       {phase === 'session' && (
         <InterviewSession
           mode={mode}
