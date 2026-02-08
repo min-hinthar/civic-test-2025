@@ -148,6 +148,15 @@ export async function recordStudyActivity(
 }
 
 /**
+ * Save streak data to IndexedDB.
+ *
+ * Used by the sync layer to write back merged local+remote data.
+ */
+export async function saveStreakData(data: StreakData): Promise<void> {
+  await set(STREAK_KEY, data, streakDb);
+}
+
+/**
  * Manually earn a streak freeze.
  *
  * Increments freezesAvailable (capped at 3).
