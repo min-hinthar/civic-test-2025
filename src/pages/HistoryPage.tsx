@@ -956,7 +956,7 @@ const HistoryPage = () => {
               {!history.length && (
                 <FadeIn>
                   <Card className="text-center py-12">
-                    <p className="text-4xl mb-4">🇺🇸</p>
+                    <p className="text-4xl mb-4">🗽</p>
                     <BilingualHeading
                       text={{
                         en: "You haven't taken any tests yet",

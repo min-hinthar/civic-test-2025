@@ -42,7 +42,7 @@ const PasswordResetPage = () => {
               aria-hidden="true"
             >
               <span>🔑</span>
-              <span>🇺🇸</span>
+              <span>🗽</span>
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">Forgot Password</h1>
             <p className="mt-1 font-myanmar text-sm text-muted-foreground">

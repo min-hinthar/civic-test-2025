@@ -65,7 +65,7 @@ const AuthPage = () => {
               aria-hidden="true"
             >
               <span>🦅</span>
-              <span>🇺🇸</span>
+              <span>🗽</span>
             </div>
             <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">
               {mode === 'login' && 'Welcome Back'}

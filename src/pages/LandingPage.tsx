@@ -50,7 +50,7 @@ const features = [
 
 const stats = [
   { emoji: '📚', labelEn: '100+ Questions', labelMy: 'မေးခွန်း ၁၀၀+' },
-  { emoji: '🇺🇸', labelEn: 'EN + MY Bilingual', labelMy: 'နှစ်ဘာသာ' },
+  { emoji: '🗽', labelEn: 'EN + MY Bilingual', labelMy: 'နှစ်ဘာသာ' },
   { emoji: '📱', labelEn: 'Offline Ready', labelMy: 'အင်တာနက်မလို' },
   { emoji: '🏆', labelEn: 'Track Progress', labelMy: 'တိုးတက်မှုမှတ်တမ်း' },
 ];
@@ -80,7 +80,7 @@ const LandingPage = () => {
           >
             <span>🦅</span>
             <span>🗽</span>
-            <span>🇺🇸</span>
+            <span>⭐</span>
           </div>
 
           {/* Main headline */}
@@ -278,7 +278,7 @@ const LandingPage = () => {
         <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
           <FadeIn>
             <div className="flex justify-center text-4xl" aria-hidden="true">
-              <span>🇺🇸</span>
+              <span>🗽</span>
             </div>
             <h2 className="mt-4 text-2xl font-extrabold text-foreground sm:text-3xl">
               Ready to Start Your Journey?

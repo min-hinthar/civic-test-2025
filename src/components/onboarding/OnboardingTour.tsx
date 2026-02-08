@@ -153,7 +153,7 @@ const tourSteps: Step[] = [
         </p>
         <div className="mt-4 text-4xl" role="img" aria-label="celebration">
           <span role="img" aria-hidden="true">
-            &#127881;&#127482;&#127480;&#10024;
+            &#127881;&#128509;&#10024;
           </span>
         </div>
       </div>

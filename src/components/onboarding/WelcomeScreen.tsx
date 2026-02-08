@@ -68,7 +68,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
 
           {/* Patriotic emoji header */}
           <div className="mb-4 text-3xl" aria-hidden="true">
-            &#129413; &#127482;&#127480; &#128293;
+            &#129413; &#128509; &#128293;
           </div>
 
           {/* English welcome text */}

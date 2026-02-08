@@ -289,14 +289,14 @@ const Dashboard = () => {
                       {`\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`}
                     </span>
                     <span className="ml-2" aria-hidden="true">
-                      {'\uD83C\uDDFA\uD83C\uDDF8'}
+                      {'\uD83D\uDDFD'}
                     </span>
                   </>
                 ) : (
                   <>
                     <span>{`Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`}</span>
                     <span className="ml-2" aria-hidden="true">
-                      {'\uD83C\uDDFA\uD83C\uDDF8'}
+                      {'\uD83D\uDDFD'}
                     </span>
                   </>
                 )}
@@ -332,7 +332,7 @@ const Dashboard = () => {
               className="absolute bottom-3 left-3 text-lg opacity-20 select-none"
               aria-hidden="true"
             >
-              {'\uD83C\uDDFA\uD83C\uDDF8'}
+              {'\uD83D\uDDFD'}
             </div>
             <div className="p-5 sm:p-6">
               <ReadinessIndicator
@@ -617,7 +617,7 @@ const Dashboard = () => {
           <motion.section className="mb-6" {...stagger(10)}>
             <div className="rounded-2xl border-2 border-dashed border-border/60 bg-card/50 p-8 text-center">
               <div className="text-4xl mb-3" aria-hidden="true">
-                {'\uD83C\uDDFA\uD83C\uDDF8 \uD83D\uDCDA'}
+                {'\uD83D\uDDFD \uD83D\uDCDA'}
               </div>
               <h3 className="font-bold text-foreground text-lg mb-1">
                 {showBurmese ? (
