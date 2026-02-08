@@ -19,13 +19,14 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Elevated card with subtle shadow and hover lift effect.
+ * Elevated card with Duolingo-inspired rounded corners and intense shadows.
  *
  * Features:
- * - Paper-like physical card aesthetic
- * - Subtle elevation with light shadows
+ * - 20px border radius (rounded-2xl) for chunky, friendly feel
+ * - overflow-hidden to prevent child content clipping
+ * - Intense gradient shadow with primary color tinting
  * - Hover lift + shadow increase (when interactive)
- * - 16px+ border radius (bubbly, friendly)
+ * - Equally vibrant in dark mode
  * - Respects prefers-reduced-motion
  */
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -35,16 +36,18 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     const baseClasses = clsx(
       // Base card styles
       'bg-card text-card-foreground',
-      // Rounded corners (16px+)
+      // Rounded corners (20px - Duolingo chunky)
       'rounded-2xl',
+      // Overflow hidden for child content clipping
+      'overflow-hidden',
       // Border
       'border border-border/60',
       // Padding
       'p-5',
       // Transition for non-motion properties
       'transition-colors duration-150',
-      // Elevation shadow
-      elevated && 'shadow-lg shadow-primary/10',
+      // Elevation shadow with intense gradient
+      elevated && 'shadow-xl shadow-primary/15 dark:shadow-primary/10',
       className
     );
 
@@ -57,17 +60,17 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       );
     }
 
-    // Interactive card with hover animation
+    // Interactive card with hover animation - more intense shadows
     const motionVariants = {
       idle: {
         y: 0,
-        boxShadow: '0 10px 40px -10px rgba(59, 130, 246, 0.1)',
+        boxShadow: '0 10px 40px -10px rgba(59, 130, 246, 0.15)',
       },
       hover: shouldReduceMotion
         ? {}
         : {
             y: -4,
-            boxShadow: '0 20px 60px -15px rgba(59, 130, 246, 0.25)',
+            boxShadow: '0 20px 60px -15px rgba(59, 130, 246, 0.3)',
           },
     };
 
@@ -95,11 +98,11 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = 'Card';
 
 /**
- * Card header section
+ * Card header section with bold typography
  */
 export function CardHeader({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx('mb-4', className)} {...props}>
+    <div className={clsx('mb-4 font-bold', className)} {...props}>
       {children}
     </div>
   );

@@ -12,16 +12,52 @@ const springTransition = {
   damping: 17,
 };
 
-// Button variants using theme tokens
+// 3D chunky shadow classes (CSS transition handles shadow + translateY on active)
+const chunky3D = [
+  'shadow-[0_4px_0_hsl(var(--primary-700))]',
+  'hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
+  'active:shadow-[0_1px_0_hsl(var(--primary-800))] active:translate-y-[3px]',
+  'transition-[box-shadow,transform] duration-100',
+].join(' ');
+
+const chunkyDestructive3D = [
+  'shadow-[0_4px_0_hsl(10_45%_35%)]',
+  'hover:shadow-[0_4px_0_hsl(10_40%_30%)]',
+  'active:shadow-[0_1px_0_hsl(10_40%_30%)] active:translate-y-[3px]',
+  'transition-[box-shadow,transform] duration-100',
+].join(' ');
+
+const chunkySuccess3D = [
+  'shadow-[0_4px_0_hsl(142_76%_30%)]',
+  'hover:shadow-[0_4px_0_hsl(142_76%_25%)]',
+  'active:shadow-[0_1px_0_hsl(142_76%_25%)] active:translate-y-[3px]',
+  'transition-[box-shadow,transform] duration-100',
+].join(' ');
+
+// Button variants using theme tokens with 3D depth
 const variants = {
-  primary:
-    'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 shadow-lg shadow-primary/25',
+  primary: clsx(
+    'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    chunky3D
+  ),
   secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70',
   outline: 'border-2 border-primary text-primary hover:bg-primary/10 active:bg-primary/20',
   ghost: 'text-primary hover:bg-primary/10 active:bg-primary/20',
-  destructive:
-    'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/25',
-  success: 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/25',
+  destructive: clsx(
+    'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    chunkyDestructive3D
+  ),
+  success: clsx('bg-emerald-500 text-white hover:bg-emerald-600', chunkySuccess3D),
+  // Explicit chunky variants for standalone use
+  chunky: clsx(
+    'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    chunky3D
+  ),
+  'chunky-destructive': clsx(
+    'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    chunkyDestructive3D
+  ),
+  'chunky-success': clsx('bg-emerald-500 text-white hover:bg-emerald-600', chunkySuccess3D),
 };
 
 // Button sizes with 44px minimum for touch accessibility
@@ -39,18 +75,21 @@ export interface ButtonProps extends MotionButtonProps {
   size?: keyof typeof sizes;
   fullWidth?: boolean;
   loading?: boolean;
+  pill?: boolean;
   children: ReactNode;
 }
 
 /**
- * Animated pill button with Duolingo-style tactile feedback.
+ * Animated button with Duolingo-style 3D chunky depth.
  *
  * Features:
- * - Scale down + spring back on press
- * - Scale up + shadow lift on hover (desktop)
- * - Pill shape (fully rounded ends)
+ * - 3D raised appearance with bottom shadow that depresses on click
+ * - Scale down + spring back on press (motion/react)
+ * - Scale up on hover (desktop)
+ * - Rounded-xl shape (12px) by default, pill shape via `pill` prop
  * - Respects prefers-reduced-motion
  * - 44px minimum height for touch accessibility
+ * - Bold font weight for Duolingo feel
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -60,6 +99,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       loading = false,
       disabled = false,
+      pill = false,
       className,
       children,
       ...props
@@ -68,15 +108,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const shouldReduceMotion = useReducedMotion();
 
-    // Animation variants
+    // Animation variants - scale only (box-shadow handled by CSS transition)
     const motionVariants = {
       idle: { scale: 1 },
-      hover: shouldReduceMotion
-        ? {}
-        : {
-            scale: 1.03,
-            boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-          },
+      hover: shouldReduceMotion ? {} : { scale: 1.03 },
       tap: shouldReduceMotion ? {} : { scale: 0.97 },
     };
 
@@ -92,16 +127,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         transition={springTransition}
         disabled={isDisabled}
         className={clsx(
-          // Base styles
-          'inline-flex items-center justify-center font-semibold',
-          // Pill shape (fully rounded)
-          'rounded-full',
+          // Base styles with bold font
+          'inline-flex items-center justify-center font-bold',
+          // Rounded-xl by default, pill shape optional
+          pill ? 'rounded-full' : 'rounded-xl',
           // Focus ring
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           // Disabled state
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
-          // Transition for non-motion properties
-          'transition-colors duration-150',
           // Variant and size
           variants[variant],
           sizes[size],
