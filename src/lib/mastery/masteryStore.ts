@@ -11,6 +11,8 @@
 
 import { createStore, get, set } from 'idb-keyval';
 
+import { recordStudyActivity } from '@/lib/social';
+
 /** A single stored answer record */
 export interface StoredAnswer {
   questionId: string;
@@ -39,6 +41,13 @@ export async function recordAnswer(
   };
   history.push(storedAnswer);
   await set(HISTORY_KEY, history, masteryDb);
+
+  // Fire-and-forget: record activity for streak tracking.
+  // streakStore handles per-day deduplication internally.
+  const activityType = answer.sessionType === 'test' ? 'test' : 'practice';
+  recordStudyActivity(activityType).catch(() => {
+    // Streak recording is non-critical
+  });
 }
 
 /**

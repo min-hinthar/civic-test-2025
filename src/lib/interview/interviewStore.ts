@@ -10,6 +10,7 @@
 import { createStore, get, set } from 'idb-keyval';
 
 import type { InterviewSession } from '@/types';
+import { recordStudyActivity } from '@/lib/social';
 
 // ---------------------------------------------------------------------------
 // Dedicated IndexedDB store for interview data
@@ -38,6 +39,11 @@ export async function saveInterviewSession(
   const history = await getInterviewHistory();
   history.unshift(session);
   await set(SESSIONS_KEY, history, interviewDb);
+
+  // Fire-and-forget: record interview activity for streak tracking
+  recordStudyActivity('interview').catch(() => {
+    // Streak recording is non-critical
+  });
 }
 
 /**

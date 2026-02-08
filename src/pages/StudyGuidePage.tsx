@@ -19,6 +19,7 @@ import { DeckManager } from '@/components/srs/DeckManager';
 import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
 import { strings } from '@/lib/i18n/strings';
+import { recordStudyActivity } from '@/lib/social';
 
 const categoryColors: Record<string, string> = {
   'Principles of American Democracy': 'from-rose-500 to-pink-500',
@@ -52,6 +53,13 @@ const StudyGuidePage = () => {
 
   // SRS deck state for due count badge
   const { dueCount } = useSRS();
+
+  // Fire-and-forget: record study guide visit for streak tracking
+  useEffect(() => {
+    recordStudyActivity('study_guide').catch(() => {
+      // Streak recording is non-critical
+    });
+  }, []);
 
   // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review
   const hash = location.hash;

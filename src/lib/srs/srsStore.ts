@@ -12,6 +12,7 @@ import { createStore, get, set, del, keys } from 'idb-keyval';
 
 import type { SRSCardRecord } from './srsTypes';
 import { isDue } from './fsrsEngine';
+import { recordStudyActivity } from '@/lib/social';
 
 // ---------------------------------------------------------------------------
 // Dedicated IndexedDB store for SRS data
@@ -33,6 +34,14 @@ export async function getSRSCard(
 /** Upsert an SRS card record, keyed by questionId. */
 export async function setSRSCard(record: SRSCardRecord): Promise<void> {
   await set(record.questionId, record, srsDb);
+
+  // Fire-and-forget: record SRS review activity for streak tracking.
+  // Only record when card has been reviewed (not just added to deck).
+  if (record.lastReviewedAt) {
+    recordStudyActivity('srs_review').catch(() => {
+      // Streak recording is non-critical
+    });
+  }
 }
 
 /** Remove an SRS card from the deck by questionId. */
