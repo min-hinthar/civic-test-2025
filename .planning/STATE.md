@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 Phase: 9 of 9 (UI Polish & Onboarding)
 Plan: 11 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-11-PLAN.md
+Last activity: 2026-02-08 - Completed 09-10-PLAN.md
 
-Progress: [█████████░] 96% (65 plans / 68 total)
+Progress: [█████████░] 99% (67 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 65 (Phases 1-8 complete, Phase 9: 11/12)
+- Total plans completed: 67 (Phases 1-8 complete, Phase 9: 11/12)
 - Average duration: ~12 min
-- Total execution time: ~733 min
+- Total execution time: ~745 min
 
 **By Phase:**
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 96% (65 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 11/12 | ~90 min | ~8 min |
+| 09-ui-polish-onboarding | 11/12 | ~102 min | ~9 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
@@ -51,6 +51,7 @@ Progress: [█████████░] 96% (65 plans / 68 total)
 - Dashboard overhauled: hero ReadinessIndicator, 3D chunky action buttons, stagger animations, responsive grid
 - Settings page Duolingo treatment: grouped rounded-2xl card sections with icons, ToggleSwitch, 44px targets
 - Progress page redesigned: Duolingo skill tree with 7 USCIS sub-category nodes, sequential unlock, medal rings
+- Study Guide overhauled: category color header strips on flashcards, tab navigation, search, 3D chunky styling
 - Test page overhauled: horizontal progress bar, 3D chunky answers, animated star/shake icons, sound effects
 - Practice page Duolingo refresh: 3D chunky buttons, sounds, confetti, trophy icons on results
 
@@ -323,6 +324,11 @@ Recent decisions affecting current work:
 - 09-11: Sequential unlock: node N+1 requires 50%+ mastery on node N
 - 09-11: Medal ring indicators: bronze (50%), silver (75%), gold (100%) matching existing MasteryBadge thresholds
 - 09-11: Node click navigates to /study?category=#cards for that sub-category
+- 09-10: Flashcard3D categoryColor prop with 5px header strip (blue/amber/emerald) on both card faces
+- 09-10: getCategoryStripColor helper maps sub-category to USCIS main category color
+- 09-10: Study Guide tab bar (Browse/Deck/Review) with 3D chunky active state pattern
+- 09-10: Category grid cards use border-l-4 color accent for USCIS identification
+- 09-10: Rounded search input filters flip cards by English or Burmese text
 
 ### Pending Todos
 
@@ -341,7 +347,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-11-PLAN.md (Skill Tree Path)
+Stopped at: Completed 09-10-PLAN.md (Study Guide & Flashcard Category Colors)
 Resume file: None
 
 ---
