@@ -6,7 +6,6 @@ import { LogOut, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
 import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
-import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useSRS } from '@/contexts/SRSContext';
 import { toast } from '@/components/ui/use-toast';
@@ -104,7 +103,6 @@ const AppNavigation = ({
         </div>
         <div className="flex items-center gap-2">
           <OnlineStatusIndicator />
-          <SyncStatusIndicator />
           <LanguageToggleCompact />
           <div data-tour="theme-toggle">
             <ThemeToggle />
