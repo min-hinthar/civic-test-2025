@@ -3,13 +3,14 @@
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppNavigation from '@/components/AppNavigation';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/animations/StaggeredList';
 
 const PasswordResetPage = () => {
   const { sendPasswordReset, authError } = useAuth();
+  const { showSuccess } = useToast();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -18,10 +19,9 @@ const PasswordResetPage = () => {
     setIsSubmitting(true);
     try {
       await sendPasswordReset(email, `${window.location.origin}/auth/update-password`);
-      toast({
-        title: 'Reset email sent',
-        description:
-          'Check your inbox for the recovery link. လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ။',
+      showSuccess({
+        en: 'Reset email sent — check your inbox for the recovery link',
+        my: 'လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ',
       });
       setEmail('');
     } catch (error) {

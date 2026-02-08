@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import AppNavigation from '@/components/AppNavigation';
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 import { Button } from '@/components/ui/Button';
@@ -11,6 +11,7 @@ import { FadeIn } from '@/components/animations/StaggeredList';
 
 const AuthPage = () => {
   const { login, register, authError, user, sendPasswordReset } = useAuth();
+  const { showSuccess, showInfo } = useToast();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
@@ -21,21 +22,21 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         await login(form.email, form.password);
-        toast({
-          title: 'Welcome back!',
-          description: 'ကြိုဆိုပါတယ်! သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ',
+        showSuccess({
+          en: 'Welcome back!',
+          my: 'ကြိုဆိုပါတယ်! သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ',
         });
       } else if (mode === 'register') {
         await register(form.name, form.email, form.password);
-        toast({
-          title: 'Account created!',
-          description: 'Check your email to confirm. အီးမေးလ်ဖြင့် အတည်ပြုပါ။',
+        showSuccess({
+          en: 'Account created! Check your email to confirm.',
+          my: 'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ဖြင့် အတည်ပြုပါ။',
         });
       } else {
         await sendPasswordReset(form.email, `${window.location.origin}/auth/update-password`);
-        toast({
-          title: 'Check your inbox',
-          description: 'We sent a password reset link. လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ။',
+        showInfo({
+          en: 'Check your inbox — we sent a password reset link',
+          my: 'လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ',
         });
         setMode('login');
         return;

@@ -11,7 +11,7 @@ import { civicsQuestions } from '@/constants/civicsQuestions';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Progress } from '@/components/ui/Progress';
@@ -49,6 +49,7 @@ const TestPage = () => {
   const { categoryMasteries } = useCategoryMastery();
   const { currentStreak } = useStreak();
   const shouldReduceMotion = useReducedMotion();
+  const { showSuccess, showWarning } = useToast();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -259,10 +260,9 @@ const TestPage = () => {
     };
     const handlePopState = () => {
       window.history.replaceState(null, '', window.location.href);
-      toast({
-        title: 'Please finish the mock test first!',
-        description: lockMessage,
-        variant: 'warning',
+      showWarning({
+        en: 'Please finish the mock test first!',
+        my: 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ',
       });
     };
     window.addEventListener('beforeunload', beforeUnload);
@@ -272,7 +272,7 @@ const TestPage = () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFinished, lockMessage, showPreTest]);
+  }, [isFinished, lockMessage, showPreTest, showWarning]);
 
   // Save session on finish
   useEffect(() => {
@@ -295,22 +295,30 @@ const TestPage = () => {
     const persist = async () => {
       try {
         await saveTestSession(session);
-        toast({
-          title: 'Mock test saved',
-          description: `You answered ${correctAnswers} questions correctly.`,
+        showSuccess({
+          en: `Mock test saved — ${correctAnswers} correct answers`,
+          my: `စမ်းသပ်စာမေးပွဲ သိမ်းဆည်းပြီး — အဖြေမှန် ${correctAnswers} ခု`,
         });
       } catch (error) {
         console.error(error);
         hasSavedSessionRef.current = false;
-        toast({
-          title: 'Unable to save test',
-          description: 'Please check your connection and try again.',
-          variant: 'warning',
+        showWarning({
+          en: 'Unable to save test — please check your connection',
+          my: 'စာမေးပွဲ သိမ်းဆည်းမရပါ — ချိတ်ဆက်မှုကို စစ်ဆေးပါ',
         });
       }
     };
     persist();
-  }, [endReason, isFinished, questions.length, results, saveTestSession, timeLeft]);
+  }, [
+    endReason,
+    isFinished,
+    questions.length,
+    results,
+    saveTestSession,
+    showSuccess,
+    showWarning,
+    timeLeft,
+  ]);
 
   // Scroll to top on finish
   useEffect(() => {

@@ -3,13 +3,14 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AppNavigation from '@/components/AppNavigation';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/animations/StaggeredList';
 
 const PasswordUpdatePage = () => {
   const { user, isLoading, updatePassword, authError } = useAuth();
+  const { showSuccess, showWarning, showError } = useToast();
   const navigate = useNavigate();
   const [passwords, setPasswords] = useState({ password: '', confirm: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,40 +18,36 @@ const PasswordUpdatePage = () => {
   useEffect(() => {
     if (user) return;
     const timer = setTimeout(() => {
-      toast({
-        title: 'Open from the secure email link',
-        description:
-          'We need the recovery session to update your password. လျှို့ဝှက်စာပြောင်းရန် အီးမေးလ်လင့်ခ်မှဖွင့်ပါ။',
-        variant: 'destructive',
+      showError({
+        en: 'Open from the secure email link to update your password',
+        my: 'လျှို့ဝှက်စာပြောင်းရန် အီးမေးလ်လင့်ခ်မှဖွင့်ပါ',
       });
     }, 500);
     return () => clearTimeout(timer);
-  }, [user]);
+  }, [showError, user]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (passwords.password !== passwords.confirm) {
-      toast({
-        title: 'Passwords must match',
-        description: 'Please confirm the same password. လျှို့ဝှက်စာနံပါတ်များ တူညီရပါမည်။',
-        variant: 'warning',
+      showWarning({
+        en: 'Passwords must match — please confirm the same password',
+        my: 'လျှို့ဝှက်စာနံပါတ်များ တူညီရပါမည်',
       });
       return;
     }
     if (passwords.password.length < 12) {
-      toast({
-        title: 'Password too short',
-        description: 'Use at least 12 characters. အနည်းဆုံး ၁၂ လုံး ထည့်ပါ။',
-        variant: 'warning',
+      showWarning({
+        en: 'Password too short — use at least 12 characters',
+        my: 'လျှို့ဝှက်စာတိုလွန်းသည် — အနည်းဆုံး ၁၂ လုံး ထည့်ပါ',
       });
       return;
     }
     setIsSubmitting(true);
     try {
       await updatePassword(passwords.password);
-      toast({
-        title: 'Password updated!',
-        description: 'Your new password is active. လျှို့ဝှက်စာနံပါတ်အသစ် အသုံးပြုနိုင်ပါပြီ။',
+      showSuccess({
+        en: 'Password updated! Your new password is active.',
+        my: 'လျှို့ဝှက်စာနံပါတ်အသစ် အသုံးပြုနိုင်ပါပြီ',
       });
       navigate('/dashboard', { replace: true });
     } catch (error) {
