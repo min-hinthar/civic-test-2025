@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 9 of 9 (UI Polish & Onboarding)
-Plan: 6 of 12
+Plan: 7 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-06-PLAN.md
+Last activity: 2026-02-08 - Completed 09-07-PLAN.md
 
-Progress: [█████████░] 91% (62 plans / 68 total)
+Progress: [█████████░] 93% (63 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 62 (Phases 1-8 complete, Phase 9: 6/12)
+- Total plans completed: 63 (Phases 1-8 complete, Phase 9: 7/12)
 - Average duration: ~12 min
 - Total execution time: ~720 min
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 91% (62 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 6/12 | ~54 min | ~9 min |
+| 09-ui-polish-onboarding | 7/12 | ~67 min | ~10 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
@@ -46,6 +46,8 @@ Progress: [█████████░] 91% (62 plans / 68 total)
 - Onboarding tour enhanced with 7-step Joyride, CSS-only flag welcome, custom tooltip
 - Mobile bottom tab bar with 5 Duolingo-style tabs (Dashboard, Study, Test, Interview, Progress)
 - Desktop nav refreshed with lucide icons, rounded-xl active states, left-border accent
+- Landing page fully redesigned: patriotic emojis, bilingual hero, feature previews, stats badges
+- Auth/password pages redesigned: centered card, 3D buttons, bilingual labels, warning toasts for validation
 
 *Updated after each plan completion*
 
@@ -298,6 +300,11 @@ Recent decisions affecting current work:
 - 09-06: Desktop nav keeps all 6 links with lucide icons, rounded-xl active/hover
 - 09-06: Locked navigation toast reclassified from destructive to warning per 09-05 deferral
 - 09-06: CSS --bottom-tab-height: 64px at mobile breakpoint for page-shell clearance
+- 09-07: Landing page removed op-ed section for cleaner first impression
+- 09-07: Auth page condensed to single centered card (max-w-md) for mobile-first focus
+- 09-07: Password validation toasts use warning variant, auth errors use destructive
+- 09-07: Inline bilingual text with font-myanmar on Burmese spans instead of BilingualHeading for marketing pages
+- 09-07: Patriotic emoji mascot pattern (eagle, liberty, flag) as page visual anchors
 
 ### Pending Todos
 
@@ -316,7 +323,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-06-PLAN.md (Mobile Bottom Tab Bar & Desktop Nav Refresh)
+Stopped at: Completed 09-07-PLAN.md (Landing & Auth Pages Redesign)
 Resume file: None
 
 ---
