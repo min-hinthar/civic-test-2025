@@ -92,7 +92,7 @@ export function useInterviewTTS() {
   const callbackFiredRef = useRef(false);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isSupported, setIsSupported] = useState(() => {
+  const [isSupported] = useState(() => {
     if (typeof window === 'undefined') return false;
     return 'speechSynthesis' in window;
   });
