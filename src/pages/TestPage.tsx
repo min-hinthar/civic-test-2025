@@ -73,10 +73,7 @@ const TestPage = () => {
     []
   );
   // Map questionId -> Question for explanation lookup in review screen
-  const questionsById = useMemo(
-    () => new Map(questions.map(q => [q.id, q])),
-    [questions]
-  );
+  const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), [questions]);
   const currentQuestion = !isFinished ? questions[currentIndex] : null;
   const questionAudioText = currentQuestion?.question_en ?? '';
   const answerChoicesAudioText =
@@ -196,17 +193,14 @@ const TestPage = () => {
     [currentQuestion, isFinished, showFeedback, advanceToNext]
   );
 
-  const handleExplanationExpandChange = useCallback(
-    (expanded: boolean) => {
-      setExplanationExpanded(expanded);
-      if (expanded && feedbackTimeoutRef.current) {
-        // Pause auto-advance when user expands explanation
-        clearTimeout(feedbackTimeoutRef.current);
-        feedbackTimeoutRef.current = null;
-      }
-    },
-    []
-  );
+  const handleExplanationExpandChange = useCallback((expanded: boolean) => {
+    setExplanationExpanded(expanded);
+    if (expanded && feedbackTimeoutRef.current) {
+      // Pause auto-advance when user expands explanation
+      clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
+    }
+  }, []);
 
   // Timer countdown
   useEffect(() => {
@@ -237,7 +231,7 @@ const TestPage = () => {
       toast({
         title: 'Please finish the mock test first!',
         description: lockMessage,
-        variant: 'destructive',
+        variant: 'warning',
       });
     };
     window.addEventListener('beforeunload', beforeUnload);
@@ -280,7 +274,7 @@ const TestPage = () => {
         toast({
           title: 'Unable to save test',
           description: 'Please check your connection and try again.',
-          variant: 'destructive',
+          variant: 'warning',
         });
       }
     };
@@ -564,8 +558,7 @@ const TestPage = () => {
           <p className="text-xs text-muted-foreground">
             {strings.test.showing.en}{' '}
             {showAllResults ? results.length : results.filter(r => !r.isCorrect).length}{' '}
-            {strings.test.ofQuestions.en} {results.length}{' '}
-            {strings.test.questions.en}
+            {strings.test.ofQuestions.en} {results.length} {strings.test.questions.en}
           </p>
         </div>
 
@@ -584,7 +577,10 @@ const TestPage = () => {
             <FadeIn delay={400}>
               <div className="mt-6 rounded-2xl border border-border/60 bg-muted/20 p-4">
                 <SectionHeading
-                  text={{ en: 'Based on this test, consider reviewing:', my: 'ဒီစာမေးပွဲအပေါ်အခြေခံ၍ ပြန်လည်လေ့လာရန်:' }}
+                  text={{
+                    en: 'Based on this test, consider reviewing:',
+                    my: 'ဒီစာမေးပွဲအပေါ်အခြေခံ၍ ပြန်လည်လေ့လာရန်:',
+                  }}
                   className="mb-3"
                 />
                 <div className="space-y-3">
@@ -594,8 +590,12 @@ const TestPage = () => {
                       category={w.categoryId}
                       mastery={w.mastery}
                       isUnattempted={w.mastery === 0}
-                      onPractice={() => navigate(`/practice?category=${encodeURIComponent(w.categoryId)}`)}
-                      onReview={() => navigate(`/study#category-${encodeURIComponent(w.categoryId)}`)}
+                      onPractice={() =>
+                        navigate(`/practice?category=${encodeURIComponent(w.categoryId)}`)
+                      }
+                      onReview={() =>
+                        navigate(`/study#category-${encodeURIComponent(w.categoryId)}`)
+                      }
                     />
                   ))}
                 </div>
@@ -642,7 +642,8 @@ const TestPage = () => {
                     )}
                   >
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.yourAnswer.en} · <span className="font-myanmar">{strings.test.yourAnswer.my}</span>
+                      {strings.test.yourAnswer.en} ·{' '}
+                      <span className="font-myanmar">{strings.test.yourAnswer.my}</span>
                     </p>
                     <p className="text-sm font-semibold text-foreground">
                       {result.selectedAnswer.text_en}
@@ -653,7 +654,8 @@ const TestPage = () => {
                   </div>
                   <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.correctAnswer.en} · <span className="font-myanmar">{strings.test.correctAnswer.my}</span>
+                      {strings.test.correctAnswer.en} ·{' '}
+                      <span className="font-myanmar">{strings.test.correctAnswer.my}</span>
                     </p>
                     <p className="text-sm font-semibold text-foreground">
                       {result.correctAnswer.text_en}

@@ -151,7 +151,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
         toast({
           title: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''}. Will retry.`,
           description: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
-          variant: 'destructive',
+          variant: 'warning',
         });
       }
     } catch (error) {

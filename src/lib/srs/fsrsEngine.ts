@@ -8,14 +8,7 @@
  * expensive to create -- no reason to instantiate per-component).
  */
 
-import {
-  createEmptyCard,
-  fsrs,
-  Rating,
-  State,
-  type Card,
-  type RecordLogItem,
-} from 'ts-fsrs';
+import { createEmptyCard, fsrs, Rating, State, type Card, type RecordLogItem } from 'ts-fsrs';
 
 // ---------------------------------------------------------------------------
 // FSRS singleton with sensible defaults
@@ -84,7 +77,7 @@ const BURMESE_DIGITS = [
 function toBurmeseNumeral(n: number): string {
   return String(n)
     .split('')
-    .map((ch) => BURMESE_DIGITS[Number(ch)] ?? ch)
+    .map(ch => BURMESE_DIGITS[Number(ch)] ?? ch)
     .join('');
 }
 
@@ -157,8 +150,7 @@ export function getCardStatusLabel(card: Card): {
   if (card.due <= new Date()) {
     return {
       label: 'Due',
-      labelMy:
-        '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A', // ပြန်လည်ရန်
+      labelMy: '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A', // ပြန်လည်ရန်
       color: 'text-warning-500',
     };
   }
@@ -176,14 +168,14 @@ export function getCardStatusLabel(card: Card): {
 /**
  * Return a Tailwind background class based on the card's scheduled interval.
  *
- * - <= 1 day:  red   (learning / weak)
+ * - <= 1 day:  warning orange (learning / weak)
  * - <= 7 days: orange (short interval)
  * - <= 30 days: yellow (medium retention)
  * - > 30 days: green  (strong retention)
  */
 export function getIntervalStrengthColor(card: Card): string {
   const { scheduled_days } = card;
-  if (scheduled_days <= 1) return 'bg-red-500';
+  if (scheduled_days <= 1) return 'bg-warning-500';
   if (scheduled_days <= 7) return 'bg-orange-500';
   if (scheduled_days <= 30) return 'bg-yellow-500';
   return 'bg-green-500';
