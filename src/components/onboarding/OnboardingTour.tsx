@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import Joyride, { type Step, type CallBackProps, STATUS, EVENTS, ACTIONS } from 'react-joyride';
+import { useState, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import type { Step, CallBackProps } from 'react-joyride';
+import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -9,8 +11,19 @@ import { WelcomeScreen } from './WelcomeScreen';
 import { TourTooltip } from './TourTooltip';
 
 /**
- * 7-step tour — all targets are on the Dashboard page.
+ * Dynamically import react-joyride with SSR disabled.
+ * react-joyride uses browser APIs (document, window) internally
+ * which causes issues during Next.js SSG/SSR pre-rendering.
+ */
+const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
+
+/**
+ * 7-step tour -- all targets are on the Dashboard page.
  * Each step uses disableBeacon: true for immediate display.
+ *
+ * Note: The theme-toggle step targets AppNavigation which is
+ * hidden on mobile (md:block). On mobile, this step will be
+ * skipped by react-joyride when the target is not found.
  */
 const tourSteps: Step[] = [
   {
@@ -160,10 +173,15 @@ interface OnboardingTourProps {
  *
  * Flow:
  * 1. WelcomeScreen renders first (CSS-only flag motif, bilingual)
- * 2. After 2s auto-transition, Joyride tour starts
+ * 2. After 2s auto-transition, waits 800ms for DOM targets to mount
  * 3. 7 steps highlighting Dashboard features (single-page, no navigation)
  * 4. Custom TourTooltip with progress dots and 3D chunky buttons
  * 5. Tour only runs on /dashboard route
+ *
+ * Fixes applied:
+ * - Dynamic import for react-joyride (SSR-safe with Next.js)
+ * - 800ms delay after welcome for staggered animations to complete
+ * - disableScrollParentFix for better target positioning
  *
  * data-tour targets required on Dashboard:
  * - data-tour="dashboard" (page shell)
@@ -171,7 +189,7 @@ interface OnboardingTourProps {
  * - data-tour="test-action" (test button)
  * - data-tour="srs-deck" (SRS widget)
  * - data-tour="interview-sim" (interview widget)
- * - data-tour="theme-toggle" (in AppNavigation)
+ * - data-tour="theme-toggle" (in AppNavigation, desktop only)
  */
 export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const { shouldShow, complete, skip } = useOnboarding();
@@ -188,10 +206,24 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
+  // Delay start after welcome completes to ensure DOM targets are mounted
+  // Dashboard widgets use staggered motion animations (80ms * ~10 items)
   const handleWelcomeComplete = useCallback(() => {
     setShowWelcome(false);
-    setRun(true);
   }, []);
+
+  // Start tour after welcome screen closes with a delay for DOM readiness
+  useEffect(() => {
+    if (showWelcome || run) return;
+    if (!shouldRun || !isOnDashboard) return;
+
+    // Only start if welcome was just dismissed (shouldRun is true but we're not running yet)
+    const timer = setTimeout(() => {
+      setRun(true);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [showWelcome, run, shouldRun, isOnDashboard]);
 
   const handleCallback = useCallback(
     (data: CallBackProps) => {
@@ -235,6 +267,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
         showProgress
         callback={handleCallback}
         disableScrolling={false}
+        disableScrollParentFix
         spotlightClicks
         tooltipComponent={TourTooltip}
         locale={{
