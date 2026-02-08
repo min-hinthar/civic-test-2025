@@ -2,16 +2,14 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, type To } from 'react-router-dom';
-import { BookOpenCheck, ChevronDown, Settings } from 'lucide-react';
+import { BookOpenCheck, ChevronDown, Flag, Mic, Settings, Sparkles, Trophy } from 'lucide-react';
 import clsx from 'clsx';
+import { motion } from 'motion/react';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
-import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
-import { BilingualButton } from '@/components/bilingual/BilingualButton';
-import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { ProgressWithLabel } from '@/components/ui/Progress';
-import { StaggeredGrid, FadeIn } from '@/components/animations/StaggeredList';
 import { ReadinessIndicator } from '@/components/dashboard/ReadinessIndicator';
 import { CategoryGrid } from '@/components/progress/CategoryGrid';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
@@ -26,13 +24,14 @@ import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { useStreak } from '@/hooks/useStreak';
 import { useBadges } from '@/hooks/useBadges';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getAnswerHistory } from '@/lib/mastery';
 import type { StoredAnswer } from '@/lib/mastery';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
 import type { BadgeCheckData } from '@/lib/social';
 import { strings } from '@/lib/i18n/strings';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
 const studyCardsLink = (category?: string): To => ({
   pathname: '/study',
   search: category ? `?category=${encodeURIComponent(category)}` : undefined,
@@ -42,9 +41,31 @@ const studyCardsLink = (category?: string): To => ({
 /** localStorage key for category progress collapse state */
 const COLLAPSE_KEY = 'civic-prep-dashboard-category-collapsed';
 
+/** Bilingual motivational messages based on readiness level */
+const MOTIVATIONAL_MESSAGES = {
+  ready: {
+    en: 'You are ready to pass! Keep up the amazing work!',
+    my: '\u101E\u1004\u103A\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1016\u102D\u102F\u1037\u1021\u1006\u1004\u103A\u101E\u1004\u1037\u103A\u1016\u103C\u1005\u103A\u1015\u102B\u1015\u103C\u102E!',
+  },
+  almostReady: {
+    en: 'Almost there! A few more study sessions and you will be confident.',
+    my: '\u1014\u102E\u1038\u1015\u102B\u1015\u103C\u102E! \u1014\u100A\u103A\u1038\u1014\u100A\u103A\u1038\u101C\u1031\u1037\u101C\u102C\u101B\u1004\u103A \u101A\u102F\u1036\u1000\u103C\u100A\u103A\u1019\u103E\u102F\u101B\u1015\u102B\u1019\u101A\u103A\u104B',
+  },
+  gettingThere: {
+    en: 'Great progress! Every question brings you closer to citizenship.',
+    my: '\u1000\u1031\u102C\u1004\u103A\u1038\u1019\u103D\u1014\u103A\u1005\u103D\u102C\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1014\u1031\u1015\u102B\u1010\u101A\u103A! \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1038\u1000 \u101E\u1004\u1037\u103A\u1000\u102D\u102F \u1014\u102E\u1038\u1005\u1031\u1015\u102B\u1010\u101A\u103A\u104B',
+  },
+  notReady: {
+    en: 'Welcome! Start studying and you will be ready in no time.',
+    my: '\u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A! \u101C\u1031\u1037\u101C\u102C\u1005\u1010\u1004\u103A\u101B\u1004\u103A \u1019\u1000\u103C\u102C\u1001\u1004\u103A\u1019\u103E\u102C \u1021\u1006\u1004\u103A\u101E\u1004\u1037\u103A\u1016\u103C\u1005\u103A\u101C\u102C\u1015\u102B\u1019\u101A\u103A\u104B',
+  },
+};
+
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   // Category mastery data
   const {
@@ -62,16 +83,16 @@ const Dashboard = () => {
     const testHistory = user?.testHistory ?? [];
     if (testHistory.length === 0 && currentStreak === 0) return null;
 
-    // Best test accuracy percentage
     const bestTestAccuracy = testHistory.reduce((best, session) => {
       const pct = session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
       return Math.max(best, pct);
     }, 0);
 
-    // Best test score (raw correct answers)
-    const bestTestScore = testHistory.reduce((best, session) => Math.max(best, session.score), 0);
+    const bestTestScore = testHistory.reduce(
+      (best, session) => Math.max(best, session.score),
+      0
+    );
 
-    // Unique questions answered across all tests
     const uniqueQIds = new Set<string>();
     for (const session of testHistory) {
       for (const result of session.results) {
@@ -79,7 +100,6 @@ const Dashboard = () => {
       }
     }
 
-    // Categories mastered (100% mastery)
     const catValues = Object.values(categoryMasteries);
     const catsMastered = catValues.filter(v => v >= 100).length;
 
@@ -108,7 +128,6 @@ const Dashboard = () => {
       return Math.max(best, pct);
     }, 0);
 
-    // Coverage: unique questions / 100 total USCIS questions
     const uniqueQIds = new Set<string>();
     for (const session of testHistory) {
       for (const result of session.results) {
@@ -123,10 +142,8 @@ const Dashboard = () => {
       coveragePercent,
     });
 
-    // Find top badge (first earned badge by priority)
     const topBadge = earnedBadges.length > 0 ? earnedBadges[0].id : null;
 
-    // Fire-and-forget sync
     updateCompositeScore(user.id, composite, currentStreak, topBadge).catch(() => {
       // Sync failure is non-critical
     });
@@ -172,38 +189,36 @@ const Dashboard = () => {
     categoryValues.length > 0
       ? Math.round(categoryValues.reduce((s, v) => s + v, 0) / categoryValues.length)
       : 0;
-  const history = user?.testHistory ?? [];
-  const latestAttempt = history[0];
-  const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
+  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+  const totalQuestionsAnswered = history.reduce(
+    (sum, session) => sum + session.totalQuestions,
+    0
+  );
   const accuracy = totalQuestionsAnswered
     ? Math.round(
         (history.reduce((sum, session) => sum + session.score, 0) / totalQuestionsAnswered) * 100
       )
     : 0;
 
-  const categoryBreakdown = history.reduce<Record<string, { correct: number; total: number }>>(
-    (acc, session) => {
-      session.results.forEach((result: QuestionResult) => {
-        if (!acc[result.category]) {
-          acc[result.category] = { correct: 0, total: 0 };
-        }
-        acc[result.category].total += 1;
-        if (result.isCorrect) acc[result.category].correct += 1;
-      });
-      return acc;
-    },
-    {}
+  const categoryBreakdown = useMemo(
+    () =>
+      history.reduce<Record<string, { correct: number; total: number }>>((acc, session) => {
+        session.results.forEach((result: QuestionResult) => {
+          if (!acc[result.category]) {
+            acc[result.category] = { correct: 0, total: 0 };
+          }
+          acc[result.category].total += 1;
+          if (result.isCorrect) acc[result.category].correct += 1;
+        });
+        return acc;
+      }, {}),
+    [history]
   );
 
-  const trackedCategories = Object.keys(categoryBreakdown).length;
-  const masteredCategories = Object.values(categoryBreakdown).filter(
-    stats => stats.total > 0 && stats.correct === stats.total
-  ).length;
-
   // Compute mastered count (unique correctly answered questions)
-  const masteredCount = Object.values(categoryBreakdown).reduce(
-    (sum, stats) => sum + stats.correct,
-    0
+  const masteredCount = useMemo(
+    () => Object.values(categoryBreakdown).reduce((sum, stats) => sum + stats.correct, 0),
+    [categoryBreakdown]
   );
 
   // Compute recent accuracy from last 5 tests
@@ -237,315 +252,407 @@ const Dashboard = () => {
     return streak;
   })();
 
-  const detailTiles: Array<{
-    to: To;
-    title: string;
-    titleMy: string;
-    stat: string;
-    description: string;
-  }> = [
-    {
-      to: historyLink('trend'),
-      title: 'Analytics Snapshot',
-      titleMy: '\u1006\u1014\u103A\u1038\u1005\u1005\u103A\u1001\u103B\u1000\u103A',
-      stat: history.length ? `${accuracy}% avg accuracy` : 'Need data',
-      description: history.length
-        ? 'Based on all completed mock tests.'
-        : 'Complete a mock test to unlock insights.',
-    },
-    {
-      to: studyCardsLink(),
-      title: 'Master Categories',
-      titleMy:
-        '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F',
-      stat: trackedCategories
-        ? `${masteredCategories}/${trackedCategories} mastered`
-        : '0 categories tracked',
-      description: trackedCategories
-        ? 'Tap to revisit bilingual flip-cards by category.'
-        : 'Review flip-cards to start tracking mastery.',
-    },
-    {
-      to: latestAttempt ? historyLink('attempts') : '/test',
-      title: 'Latest Test Summary',
-      titleMy:
-        '\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1001\u1032\u1037\u101E\u100A\u103A\u1037 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1000\u103B\u1025\u103A\u1038\u1001\u103B\u102F\u1036\u1038',
-      stat: latestAttempt
-        ? `${latestAttempt.score} / ${latestAttempt.totalQuestions}`
-        : 'No attempts yet',
-      description: latestAttempt
-        ? `Finished in ${Math.round(latestAttempt.durationSeconds / 60)} mins on ${new Date(latestAttempt.date).toLocaleDateString()}`
-        : 'Start a mock test to save your first report.',
-    },
-  ];
+  // Determine readiness level for motivational message
+  const readinessScore = useMemo(() => {
+    const coveragePercent = masteredCount > 0 ? (masteredCount / 100) * 100 : 0;
+    const accuracyWeight = recentAccuracy * 0.4;
+    const coverageWeight = coveragePercent * 0.5;
+    const streakBonus = Math.min(streakDays * 2, 10);
+    return Math.min(100, Math.round(accuracyWeight + coverageWeight + streakBonus));
+  }, [masteredCount, recentAccuracy, streakDays]);
+
+  const motivationalMessage = useMemo(() => {
+    if (readinessScore >= 80) return MOTIVATIONAL_MESSAGES.ready;
+    if (readinessScore >= 60) return MOTIVATIONAL_MESSAGES.almostReady;
+    if (readinessScore >= 30) return MOTIVATIONAL_MESSAGES.gettingThere;
+    return MOTIVATIONAL_MESSAGES.notReady;
+  }, [readinessScore]);
+
+  // Stagger animation delay helper
+  const stagger = (index: number) => {
+    if (shouldReduceMotion) {
+      return {};
+    }
+    return {
+      initial: { opacity: 0, y: 16 } as const,
+      animate: { opacity: 1, y: 0 } as const,
+      transition: { delay: index * 0.08, duration: 0.4, ease: 'easeOut' as const },
+    };
+  };
 
   return (
     <div className="page-shell" data-tour="dashboard">
       <AppNavigation />
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        {/* Welcome header with bilingual heading */}
-        <header className="mb-8">
-          <FadeIn>
-            <div className="flex items-start justify-between">
-              <div>
-                <BilingualHeading
-                  text={{
-                    en: `Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`,
-                    my: `\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`,
-                  }}
-                  level={1}
-                  size="2xl"
-                />
-                <p className="mt-2 text-muted-foreground">
-                  Track your bilingual U.S civics study journey, jump into a new mock test, or brush
-                  up with flip-cards.
-                </p>
-              </div>
-              <Link
-                to="/settings"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
-                aria-label="Settings \u00B7 \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103B\u102C\u1038"
-              >
-                <Settings className="h-5 w-5" />
-              </Link>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
+        {/* Welcome header with patriotic emojis */}
+        <motion.header className="mb-6" {...stagger(0)}>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">
+                {showBurmese ? (
+                  <>
+                    <span>
+                      {`\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`}
+                    </span>
+                    <span className="ml-2" aria-hidden="true">
+                      {'\uD83C\uDDFA\uD83C\uDDF8'}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span>{`Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`}</span>
+                    <span className="ml-2" aria-hidden="true">
+                      {'\uD83C\uDDFA\uD83C\uDDF8'}
+                    </span>
+                  </>
+                )}
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground max-w-md">
+                {motivationalMessage.en}
+                {showBurmese && (
+                  <span className="block font-myanmar mt-0.5">{motivationalMessage.my}</span>
+                )}
+              </p>
             </div>
-          </FadeIn>
-        </header>
+            <Link
+              to="/settings"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
+              aria-label="Settings \u00B7 \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103B\u102C\u1038"
+            >
+              <Settings className="h-5 w-5" />
+            </Link>
+          </div>
+        </motion.header>
 
-        {/* Quick action buttons */}
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row">
+        {/* HERO: Readiness Score - The most prominent element */}
+        <motion.section className="mb-6" {...stagger(1)}>
+          <div className="relative overflow-hidden rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 via-white to-primary-50 dark:from-primary-950 dark:via-card dark:to-primary-950 shadow-xl shadow-primary/20">
+            {/* Patriotic decorative stars */}
+            <div
+              className="absolute top-3 right-3 text-2xl opacity-30 select-none"
+              aria-hidden="true"
+            >
+              {'\u2B50\uFE0F'}
+            </div>
+            <div
+              className="absolute bottom-3 left-3 text-lg opacity-20 select-none"
+              aria-hidden="true"
+            >
+              {'\uD83C\uDDFA\uD83C\uDDF8'}
+            </div>
+            <div className="p-5 sm:p-6">
+              <ReadinessIndicator
+                correctCount={masteredCount}
+                totalQuestions={100}
+                recentAccuracy={recentAccuracy}
+                streakDays={streakDays}
+                onStartTest={() => navigate('/test')}
+              />
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Quick Action Buttons - 3D Chunky Style */}
+        <motion.div className="mb-6 grid grid-cols-3 gap-3" {...stagger(2)}>
           <div data-tour="study-action">
-            <BilingualButton
-              label={strings.actions.startStudying}
-              variant="outline"
-              icon={<BookOpenCheck className="h-4 w-4" />}
+            <button
+              type="button"
               onClick={() => navigate('/study')}
-            />
+              className={clsx(
+                'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
+                'bg-primary-500 text-white font-bold text-sm',
+                'shadow-[0_4px_0_0] shadow-primary-700',
+                'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-primary-700',
+                'transition-all duration-150',
+                'hover:bg-primary-600',
+                'min-h-[72px]'
+              )}
+            >
+              <BookOpenCheck className="h-5 w-5" />
+              <span>Study</span>
+              {showBurmese && (
+                <span className="font-myanmar text-xs opacity-80">
+                  {'\u101C\u1031\u1037\u101C\u102C\u1015\u102B'}
+                </span>
+              )}
+            </button>
           </div>
           <div data-tour="test-action">
-            <BilingualButton
-              label={strings.actions.startTest}
-              variant="primary"
+            <button
+              type="button"
               onClick={() => navigate('/test')}
-            />
+              className={clsx(
+                'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
+                'bg-success-500 text-white font-bold text-sm',
+                'shadow-[0_4px_0_0] shadow-success-600',
+                'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-success-600',
+                'transition-all duration-150',
+                'hover:bg-success-600',
+                'min-h-[72px]'
+              )}
+            >
+              <Flag className="h-5 w-5" />
+              <span>Test</span>
+              {showBurmese && (
+                <span className="font-myanmar text-xs opacity-80">
+                  {'\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032'}
+                </span>
+              )}
+            </button>
           </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => navigate('/interview')}
+              className={clsx(
+                'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
+                'bg-accent-500 text-white font-bold text-sm',
+                'shadow-[0_4px_0_0] shadow-accent-700',
+                'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-accent-700',
+                'transition-all duration-150',
+                'hover:bg-accent-600',
+                'min-h-[72px]'
+              )}
+            >
+              <Mic className="h-5 w-5" />
+              <span>Interview</span>
+              {showBurmese && (
+                <span className="font-myanmar text-xs opacity-80">
+                  {'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038'}
+                </span>
+              )}
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Card Hierarchy: SRS Widget -> Streak -> Interview -> rest */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {/* SRS Review Widget */}
+          <motion.section data-tour="srs-deck" {...stagger(3)}>
+            <SRSWidget />
+          </motion.section>
+
+          {/* Streak Widget */}
+          <motion.section {...stagger(4)}>
+            <StreakWidget />
+          </motion.section>
         </div>
 
-        {/* ANXR-05: Readiness confidence indicator */}
-        <section className="mb-8">
-          <ReadinessIndicator
-            correctCount={masteredCount}
-            totalQuestions={100}
-            recentAccuracy={recentAccuracy}
-            streakDays={streakDays}
-            onStartTest={() => navigate('/test')}
-          />
-        </section>
+        {/* Interview Widget - Full width */}
+        <motion.section className="mb-6" data-tour="interview-sim" {...stagger(5)}>
+          <InterviewDashboardWidget />
+        </motion.section>
 
-        {/* Streak Widget */}
-        <section className="mb-8">
-          <FadeIn delay={25}>
-            <StreakWidget />
-          </FadeIn>
-        </section>
-
-        {/* Badge Highlights */}
-        <section className="mb-8">
-          <FadeIn delay={40}>
-            <BadgeHighlights />
-          </FadeIn>
-        </section>
-
-        {/* SRS Review Widget */}
-        <section className="mb-8" data-tour="srs-deck">
-          <FadeIn delay={50}>
-            <SRSWidget />
-          </FadeIn>
-        </section>
-
-        {/* Interview Simulation Widget */}
-        <section className="mb-8" data-tour="interview-sim">
-          <FadeIn delay={75}>
-            <InterviewDashboardWidget />
-          </FadeIn>
-        </section>
-
-        {/* Leaderboard Widget */}
-        <section className="mb-8">
-          <FadeIn delay={85}>
-            <LeaderboardWidget />
-          </FadeIn>
-        </section>
-
-        {/* Category Progress - collapsible section */}
-        <section className="mb-8">
-          <FadeIn delay={100}>
-            <div className="rounded-3xl border border-border/60 bg-card shadow-sm overflow-hidden">
-              {/* Collapsible header */}
-              <button
-                type="button"
-                className="flex w-full items-center justify-between p-5 text-left min-h-[44px] hover:bg-muted/20 transition-colors"
-                onClick={toggleCategoryCollapse}
-                aria-expanded={!isCategoryCollapsed}
-              >
-                <SectionHeading text={strings.progress.categoryProgress} className="mb-0" />
-                <div className="flex items-center gap-3">
-                  {isCategoryCollapsed && (
-                    <span className="text-sm text-muted-foreground tabular-nums">
-                      {categoryValues.length} categories, {avgMastery}% avg
+        {/* Badge Highlights + Leaderboard in grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <motion.section {...stagger(6)}>
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-lg shadow-primary/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Trophy className="h-5 w-5 text-amber-500" />
+                <h3 className="font-bold text-foreground text-sm">
+                  Badges
+                  {showBurmese && (
+                    <span className="font-myanmar text-xs text-muted-foreground ml-2">
+                      {'\u1018\u1000\u103A\u1001\u103B\u1019\u103B\u102C\u1038'}
                     </span>
                   )}
-                  <ChevronDown
-                    className={clsx(
-                      'h-5 w-5 text-muted-foreground transition-transform',
-                      !isCategoryCollapsed && 'rotate-180'
-                    )}
-                  />
-                </div>
-              </button>
-
-              {/* Expanded content */}
-              {!isCategoryCollapsed && (
-                <div className="px-5 pb-5">
-                  {masteryLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent" />
-                    </div>
-                  ) : (
-                    <>
-                      <CategoryGrid
-                        categoryMasteries={categoryMasteries}
-                        subCategoryMasteries={subCategoryMasteries}
-                        onCategoryClick={() => navigate('/progress')}
-                      />
-
-                      {/* View Full Progress link */}
-                      <div className="mt-4 flex justify-center">
-                        <BilingualButton
-                          label={{
-                            en: 'View Full Progress',
-                            my: '\u1021\u1015\u103C\u100A\u103A\u1037\u1021\u1005\u102F\u1036\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B',
-                          }}
-                          variant="outline"
-                          size="sm"
-                          onClick={() => navigate('/progress')}
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+                </h3>
+              </div>
+              <BadgeHighlights />
             </div>
-          </FadeIn>
-        </section>
+          </motion.section>
+
+          <motion.section {...stagger(7)}>
+            <LeaderboardWidget />
+          </motion.section>
+        </div>
+
+        {/* Category Progress - collapsible section */}
+        <motion.section className="mb-6" {...stagger(8)}>
+          <div className="rounded-2xl border border-border/60 bg-card shadow-lg shadow-primary/10 overflow-hidden">
+            {/* Collapsible header */}
+            <button
+              type="button"
+              className="flex w-full items-center justify-between p-5 text-left min-h-[44px] hover:bg-muted/20 transition-colors"
+              onClick={toggleCategoryCollapse}
+              aria-expanded={!isCategoryCollapsed}
+            >
+              <SectionHeading text={strings.progress.categoryProgress} className="mb-0" />
+              <div className="flex items-center gap-3">
+                {isCategoryCollapsed && (
+                  <span className="text-sm text-muted-foreground tabular-nums">
+                    {categoryValues.length} categories, {avgMastery}% avg
+                  </span>
+                )}
+                <ChevronDown
+                  className={clsx(
+                    'h-5 w-5 text-muted-foreground transition-transform',
+                    !isCategoryCollapsed && 'rotate-180'
+                  )}
+                />
+              </div>
+            </button>
+
+            {/* Expanded content */}
+            {!isCategoryCollapsed && (
+              <div className="px-5 pb-5">
+                {masteryLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent" />
+                  </div>
+                ) : (
+                  <>
+                    <CategoryGrid
+                      categoryMasteries={categoryMasteries}
+                      subCategoryMasteries={subCategoryMasteries}
+                      onCategoryClick={() => navigate('/progress')}
+                    />
+
+                    {/* View Full Progress link */}
+                    <div className="mt-4 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/progress')}
+                        className={clsx(
+                          'inline-flex items-center gap-2 rounded-xl px-5 py-2.5',
+                          'border-2 border-primary-500 text-primary-600 font-bold text-sm',
+                          'shadow-[0_3px_0_0] shadow-primary-200 dark:shadow-primary-800',
+                          'active:translate-y-[2px] active:shadow-[0_1px_0_0]',
+                          'transition-all duration-150',
+                          'hover:bg-primary-50 dark:hover:bg-primary-950',
+                          'min-h-[44px]'
+                        )}
+                      >
+                        <Sparkles className="h-4 w-4" />
+                        {showBurmese
+                          ? '\u1021\u1015\u103C\u100A\u103A\u1037\u1021\u1005\u102F\u1036\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B'
+                          : 'View Full Progress'}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </motion.section>
 
         {/* Suggested Focus - weak area nudges */}
         {!masteryLoading && (
-          <SuggestedFocus categoryMasteries={categoryMasteries} answerHistory={answerHistory} />
+          <motion.div {...stagger(9)}>
+            <SuggestedFocus
+              categoryMasteries={categoryMasteries}
+              answerHistory={answerHistory}
+            />
+          </motion.div>
         )}
 
         {/* Overall accuracy */}
         {history.length > 0 && (
-          <section className="mb-8">
-            <ProgressWithLabel
-              value={accuracy}
-              labelEn="Overall Accuracy"
-              labelMy="\u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F"
-              variant="success"
-              size="lg"
-            />
-          </section>
+          <motion.section className="mb-6" {...stagger(10)}>
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-lg shadow-primary/10">
+              <ProgressWithLabel
+                value={accuracy}
+                labelEn="Overall Accuracy"
+                labelMy="\u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F"
+                variant="success"
+                size="lg"
+              />
+            </div>
+          </motion.section>
         )}
 
-        {/* Data analytics tiles in staggered grid */}
-        <section id="deep-dive" className="mb-8" aria-labelledby="deep-dive-title">
-          <SectionHeading
-            text={{
-              en: 'Personalized Data Analytics',
-              my: '\u1012\u1031\u1010\u102C\u1015\u102D\u102F\u1004\u103A\u1038\u1001\u103C\u102C\u1038\u1005\u102D\u1010\u103A\u1016\u103C\u102C\u1019\u103E\u102F',
-            }}
-          />
-          <StaggeredGrid columns={3}>
-            {detailTiles.map((tile, index) => (
-              <Link
-                key={index}
-                to={tile.to}
-                className="block min-h-[44px]"
-                aria-label={`${tile.title} \u2013 ${tile.titleMy}`}
-              >
-                <Card interactive elevated>
-                  <CardHeader>
-                    <BilingualHeading
-                      text={{ en: tile.title, my: tile.titleMy }}
-                      level={3}
-                      size="sm"
-                    />
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-2xl font-bold text-foreground">{tile.stat}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{tile.description}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </StaggeredGrid>
-        </section>
-
         {/* Category accuracy breakdown */}
-        <section
-          id="category-accuracy"
-          className="rounded-3xl border border-border/60 bg-card p-6 shadow-lg"
-          aria-labelledby="category-accuracy-title"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <SectionHeading
-              text={{
-                en: 'Category Accuracy',
-                my: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1010\u102D\u1000\u103B\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F',
-              }}
-              className="mb-0"
-            />
-            <Link
-              to="/history"
-              className="text-sm font-semibold text-primary min-h-[44px] inline-flex items-center"
-            >
-              View full analytics
-            </Link>
-          </div>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-            {Object.entries(categoryBreakdown).map(([category, stats]) => {
-              const rate = Math.round((stats.correct / stats.total) * 100);
-              return (
-                <Link
-                  key={category}
-                  to={studyCardsLink(category)}
-                  className="group rounded-2xl border border-border/60 p-4 min-h-[44px] transition hover:-translate-y-0.5 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  aria-label={`Review ${category}`}
-                >
-                  <p className="text-sm font-semibold text-foreground">{category}</p>
-                  <div className="mt-2 flex items-center gap-3">
-                    <div className="flex-1 overflow-hidden rounded-full bg-muted/60">
-                      <div
-                        className="h-2 rounded-full bg-primary transition-all"
-                        style={{ width: `${rate}%` }}
-                      />
+        {Object.keys(categoryBreakdown).length > 0 && (
+          <motion.section
+            className="mb-6 rounded-2xl border border-border/60 bg-card p-5 shadow-lg shadow-primary/10"
+            aria-labelledby="category-accuracy-title"
+            {...stagger(11)}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <SectionHeading
+                text={{
+                  en: 'Category Accuracy',
+                  my: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1010\u102D\u1000\u103B\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F',
+                }}
+                className="mb-0"
+              />
+              <Link
+                to="/history"
+                className="text-sm font-bold text-primary min-h-[44px] inline-flex items-center"
+              >
+                View full analytics
+              </Link>
+            </div>
+            <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
+              {Object.entries(categoryBreakdown).map(([category, stats]) => {
+                const rate = Math.round((stats.correct / stats.total) * 100);
+                return (
+                  <Link
+                    key={category}
+                    to={studyCardsLink(category)}
+                    className="group rounded-2xl border border-border/60 p-4 min-h-[44px] transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                    aria-label={`Review ${category}`}
+                  >
+                    <p className="text-sm font-bold text-foreground">{category}</p>
+                    <div className="mt-2 flex items-center gap-3">
+                      <div className="flex-1 overflow-hidden rounded-full bg-muted/60 h-2.5">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all"
+                          style={{ width: `${rate}%` }}
+                        />
+                      </div>
+                      <span className="text-sm font-bold text-foreground tabular-nums">
+                        {rate}%
+                      </span>
                     </div>
-                    <span className="text-sm font-semibold text-foreground">{rate}%</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {stats.correct} correct out of {stats.total} questions
-                  </p>
-                  <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary opacity-0 transition group-hover:opacity-100">
-                    Go to flip-cards
-                  </span>
-                </Link>
-              );
-            })}
-            {!Object.keys(categoryBreakdown).length && (
-              <p className="text-muted-foreground">Complete a mock test to unlock insights.</p>
-            )}
-          </div>
-        </section>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {stats.correct} correct out of {stats.total} questions
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.section>
+        )}
+
+        {/* Empty state when no tests taken */}
+        {history.length === 0 && (
+          <motion.section className="mb-6" {...stagger(10)}>
+            <div className="rounded-2xl border-2 border-dashed border-border/60 bg-card/50 p-8 text-center">
+              <div className="text-4xl mb-3" aria-hidden="true">
+                {'\uD83C\uDDFA\uD83C\uDDF8 \uD83D\uDCDA'}
+              </div>
+              <h3 className="font-bold text-foreground text-lg mb-1">
+                {showBurmese
+                  ? '\u101E\u1004\u1037\u103A\u1001\u101B\u102E\u1038\u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B!'
+                  : 'Start your citizenship journey!'}
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                {showBurmese
+                  ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1010\u1005\u103A\u1001\u102F\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038 \u101E\u1004\u1037\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1001\u103B\u1000\u103A\u1001\u103B\u1004\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B\u104B'
+                  : 'Take a mock test to track your progress and see personalized insights.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/test')}
+                className={clsx(
+                  'mt-4 inline-flex items-center gap-2 rounded-2xl px-6 py-3',
+                  'bg-primary-500 text-white font-bold',
+                  'shadow-[0_4px_0_0] shadow-primary-700',
+                  'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-primary-700',
+                  'transition-all duration-150',
+                  'hover:bg-primary-600',
+                  'min-h-[48px]'
+                )}
+              >
+                <Flag className="h-4 w-4" />
+                {showBurmese
+                  ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1005\u1010\u1004\u103A\u1015\u102B'
+                  : 'Take Your First Test'}
+              </button>
+            </div>
+          </motion.section>
+        )}
 
         {/* Milestone celebration modal */}
         <MasteryMilestone milestone={currentMilestone} onDismiss={dismissMilestone} />

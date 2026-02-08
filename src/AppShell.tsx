@@ -33,6 +33,7 @@ import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
 import SocialHubPage from '@/pages/SocialHubPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
+import { BottomTabBar } from '@/components/navigation/BottomTabBar';
 
 /**
  * Hook to detect if running on client side.
@@ -221,6 +222,7 @@ const AppShell = () => {
                       <PWAOnboardingFlow />
                       <OnboardingTour />
                       <SyncStatusIndicator />
+                      <BottomTabBar />
                     </Router>
                   </SRSProvider>
                 </SocialProvider>

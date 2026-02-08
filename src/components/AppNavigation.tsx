@@ -2,7 +2,7 @@
 
 import { MouseEvent, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X, Home, BookOpen, ClipboardCheck, Mic, History, Users } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
 import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
@@ -19,12 +19,12 @@ interface AppNavigationProps {
 }
 
 const navLinks = [
-  { href: '/dashboard', label: strings.nav.dashboard },
-  { href: '/study', label: strings.nav.studyGuide },
-  { href: '/test', label: strings.nav.mockTest },
-  { href: '/interview', label: strings.nav.practiceInterview },
-  { href: '/history', label: strings.nav.testHistory },
-  { href: '/social', label: strings.nav.socialHub },
+  { href: '/dashboard', label: strings.nav.dashboard, icon: Home },
+  { href: '/study', label: strings.nav.studyGuide, icon: BookOpen },
+  { href: '/test', label: strings.nav.mockTest, icon: ClipboardCheck },
+  { href: '/interview', label: strings.nav.practiceInterview, icon: Mic },
+  { href: '/history', label: strings.nav.testHistory, icon: History },
+  { href: '/social', label: strings.nav.socialHub, icon: Users },
 ];
 
 const AppNavigation = ({
@@ -51,7 +51,7 @@ const AppNavigation = ({
       description:
         lockMessage ??
         'Complete the mock test before leaving this page. · စမ်းသပ်စာမေးပွဲပြီးမှ ထွက်ပါ',
-      variant: 'destructive',
+      variant: 'warning',
     });
   };
 
@@ -66,7 +66,7 @@ const AppNavigation = ({
       <div className="mx-auto flex max-w-6xl items-center justify-between px-2 sm:px-4 py-3 sm:py-4">
         <Link
           to="/"
-          className={`text-lg font-semibold text-foreground ${locked ? 'cursor-not-allowed opacity-70' : ''}`}
+          className={`text-lg font-extrabold text-foreground ${locked ? 'cursor-not-allowed opacity-70' : ''}`}
           onClick={event => locked && handleGuardedNavigation(event)}
           aria-disabled={locked}
         >
@@ -76,21 +76,23 @@ const AppNavigation = ({
             အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုးညွှန်း
           </span>
         </Link>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {navLinks.map(link => {
             const isActive = location.pathname === link.href;
+            const Icon = link.icon;
             return (
               <Link
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-full px-4 py-2 text-left transition flex items-center ${
+                className={`rounded-xl px-3 py-2 text-left transition-colors flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
-                    : 'text-muted-foreground hover:bg-muted/40'
+                    ? 'bg-primary-500/15 font-semibold text-primary-600 dark:text-primary-400 border-l-2 border-primary-500'
+                    : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
                 }`}
                 aria-disabled={locked && link.href !== '/test'}
               >
+                <Icon className="h-4 w-4 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
                 <BilingualText text={link.label} size="sm" equalSize />
                 {link.href === '/study' && dueCount > 0 && (
                   <span className="ml-1 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5">
@@ -154,26 +156,31 @@ const AppNavigation = ({
       {isMenuOpen && (
         <div className="card-edge-safe border-t border-border/60 px-4 py-3 md:hidden">
           <div className="flex flex-col gap-2">
-            {navLinks.map(link => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`rounded-full px-4 py-3 text-left flex items-center ${
-                  location.pathname === link.href
-                    ? 'bg-primary-500 text-white shadow'
-                    : 'bg-card/80 text-foreground shadow-sm'
-                } ${locked && link.href !== '/test' ? 'cursor-not-allowed opacity-60' : ''}`}
-                aria-disabled={locked && link.href !== '/test'}
-              >
-                <BilingualText text={link.label} size="sm" equalSize />
-                {link.href === '/study' && dueCount > 0 && (
-                  <span className="ml-1 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5">
-                    {dueCount > 99 ? '99+' : dueCount}
-                  </span>
-                )}
-              </Link>
-            ))}
+            {navLinks.map(link => {
+              const isActive = location.pathname === link.href;
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={event => handleGuardedNavigation(event, link.href)}
+                  className={`rounded-xl px-4 py-3 text-left flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-primary-500/15 font-semibold text-primary-600 dark:text-primary-400 border-l-2 border-primary-500'
+                      : 'bg-card/80 text-foreground shadow-sm hover:bg-muted/60'
+                  } ${locked && link.href !== '/test' ? 'cursor-not-allowed opacity-60' : ''}`}
+                  aria-disabled={locked && link.href !== '/test'}
+                >
+                  <Icon className="h-4 w-4 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  <BilingualText text={link.label} size="sm" equalSize />
+                  {link.href === '/study' && dueCount > 0 && (
+                    <span className="ml-1 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5">
+                      {dueCount > 99 ? '99+' : dueCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
             {user ? (
               <button
                 className={`flex items-center justify-center gap-2 rounded-full bg-destructive px-4 py-3 text-destructive-foreground ${
