@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 9 of 9 (UI Polish & Onboarding)
-Plan: 5 of 12
+Plan: 6 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-04-PLAN.md (backfill)
+Last activity: 2026-02-08 - Completed 09-06-PLAN.md
 
-Progress: [█████████░] 90% (61 plans / 68 total)
+Progress: [█████████░] 91% (62 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 61 (Phases 1-8 complete, Phase 9: 5/12)
+- Total plans completed: 62 (Phases 1-8 complete, Phase 9: 6/12)
 - Average duration: ~12 min
 - Total execution time: ~720 min
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 90% (61 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 5/12 | ~40 min | ~8 min |
+| 09-ui-polish-onboarding | 6/12 | ~54 min | ~9 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
@@ -44,6 +44,8 @@ Progress: [█████████░] 90% (61 plans / 68 total)
 - Floating sync indicator replaces toolbar icon for non-intrusive sync feedback
 - Red token audit complete: semantic destructive/warning color classification enforced
 - Onboarding tour enhanced with 7-step Joyride, CSS-only flag welcome, custom tooltip
+- Mobile bottom tab bar with 5 Duolingo-style tabs (Dashboard, Study, Test, Interview, Progress)
+- Desktop nav refreshed with lucide icons, rounded-xl active states, left-border accent
 
 *Updated after each plan completion*
 
@@ -291,6 +293,11 @@ Recent decisions affecting current work:
 - 09-05: AppNavigation destructive toast deferred to plan 09-06
 - 09-05: fsrsEngine interval strength <= 1 day uses bg-warning-500 (was bg-red-500)
 - 09-05: Semantic rule: destructive (warm red) for data-loss/auth only; warning (orange) for all other errors
+- 09-06: BottomTabBar hidden on HIDDEN_ROUTES (/, /auth, etc.) for clean public page experience
+- 09-06: 5 mobile tabs: Dashboard, Study, Test, Interview, Progress (not History/Social)
+- 09-06: Desktop nav keeps all 6 links with lucide icons, rounded-xl active/hover
+- 09-06: Locked navigation toast reclassified from destructive to warning per 09-05 deferral
+- 09-06: CSS --bottom-tab-height: 64px at mobile breakpoint for page-shell clearance
 
 ### Pending Todos
 
@@ -309,7 +316,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-04-PLAN.md (Onboarding Tour Enhancement)
+Stopped at: Completed 09-06-PLAN.md (Mobile Bottom Tab Bar & Desktop Nav Refresh)
 Resume file: None
 
 ---
