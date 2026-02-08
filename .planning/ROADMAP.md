@@ -20,7 +20,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
 - [x] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
-- [ ] **Phase 9: UI Polish & Onboarding** - Duolingo-inspired UI overhaul, onboarding tour, sound effects, sync indicator, red token audit
+- [x] **Phase 9: UI Polish & Onboarding** - Duolingo-inspired UI overhaul, onboarding tour, sound effects, sync indicator, red token audit
+- [ ] **Phase 10: Tech Debt Cleanup** - Bilingual toast audit, deprecated imports, test coverage, phase verification, accessibility audit
 
 ## Phase Details
 
@@ -223,25 +224,46 @@ Plans:
 **Plans**: 12 plans in 5 waves
 
 Plans:
-- [ ] 09-01-PLAN.md — Design system foundation: tokens, 3D buttons, radius, accent colors, destructive hue shift
-- [ ] 09-02-PLAN.md — Sound effects system with mute toggle in Settings
-- [ ] 09-03-PLAN.md — Floating sync status indicator redesign (OfflineContext, AnimatePresence)
-- [ ] 09-04-PLAN.md — Onboarding tour: welcome screen, 7 steps, custom tooltip, AppShell mount, Settings replay
-- [ ] 09-05-PLAN.md — Red token audit: warning toast variant, destructive reclassification, remaining red fixes
-- [ ] 09-06-PLAN.md — Navigation overhaul: mobile bottom tab bar + desktop nav refresh
-- [ ] 09-07-PLAN.md — Landing + Auth page full bilingual Duolingo-inspired redesign
-- [ ] 09-08-PLAN.md — Dashboard hero readiness + Settings grouped sections overhaul
-- [ ] 09-09-PLAN.md — Test + Practice page overhaul: progress bar, icon reactions, sound integration
-- [ ] 09-10-PLAN.md — Study Guide + Flashcard overhaul: category color header strips
-- [ ] 09-11-PLAN.md — Progress page Duolingo-style vertical skill tree path
-- [ ] 09-12-PLAN.md — History + Social + Interview refresh + final comprehensive audit checkpoint
+- [x] 09-01-PLAN.md — Design system foundation: tokens, 3D buttons, radius, accent colors, destructive hue shift
+- [x] 09-02-PLAN.md — Sound effects system with mute toggle in Settings
+- [x] 09-03-PLAN.md — Floating sync status indicator redesign (OfflineContext, AnimatePresence)
+- [x] 09-04-PLAN.md — Onboarding tour: welcome screen, 7 steps, custom tooltip, AppShell mount, Settings replay
+- [x] 09-05-PLAN.md — Red token audit: warning toast variant, destructive reclassification, remaining red fixes
+- [x] 09-06-PLAN.md — Navigation overhaul: mobile bottom tab bar + desktop nav refresh
+- [x] 09-07-PLAN.md — Landing + Auth page full bilingual Duolingo-inspired redesign
+- [x] 09-08-PLAN.md — Dashboard hero readiness + Settings grouped sections overhaul
+- [x] 09-09-PLAN.md — Test + Practice page overhaul: progress bar, icon reactions, sound integration
+- [x] 09-10-PLAN.md — Study Guide + Flashcard overhaul: category color header strips
+- [x] 09-11-PLAN.md — Progress page Duolingo-style vertical skill tree path
+- [x] 09-12-PLAN.md — History + Social + Interview refresh + final comprehensive audit checkpoint
+
+---
+
+### Phase 10: Tech Debt Cleanup
+**Goal**: Close all tech debt identified in v1.0 milestone audit — complete bilingual toast coverage, clean deprecated imports, improve test coverage, and produce formal verification artifacts for unverified phases.
+**Depends on**: Phase 9
+**Requirements**: None (tech debt closure — strengthens BILN-03, BILN-04, FNDN-08, UIUX-06)
+**Gap Closure**: Closes all 8 tech debt items from v1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. All toast callsites use bilingual format (zero English-only toast calls remain)
+  2. No files import from deprecated `@/constants/civicsQuestions` path
+  3. Unit test coverage improved toward 70% threshold (new tests for uncovered modules)
+  4. Phase 02 and Phase 09 have formal VERIFICATION.md artifacts
+  5. Keyboard accessibility findings documented
+**Plans**: 4 plans in 2 waves
+
+Plans:
+- [ ] 10-01-PLAN.md — Bilingual toast audit: convert all English-only toast calls to BilingualToast format
+- [ ] 10-02-PLAN.md — Code cleanup: deprecated imports, lint, TS error investigation
+- [ ] 10-03-PLAN.md — Test coverage improvements: add unit tests for uncovered modules
+- [ ] 10-04-PLAN.md — Phase verification and accessibility audit: run verifier on Ph02/09, document keyboard findings
 
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 
 | Phase | Plans Complete | Status | Completed |
@@ -254,9 +276,10 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
 | 8. Critical Integration Fixes | 3/3 | Complete | 2026-02-08 |
-| 9. UI Polish & Onboarding | 0/12 | Pending | — |
+| 9. UI Polish & Onboarding | 12/12 | Complete | 2026-02-08 |
+| 10. Tech Debt Cleanup | 0/4 | Pending | — |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-08 after Phase 9 planning (12 plans in 5 waves)*
+*Last updated: 2026-02-08 after Phase 10 tech debt closure planning (4 plans in 2 waves)*
