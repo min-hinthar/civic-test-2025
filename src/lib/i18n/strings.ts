@@ -21,6 +21,7 @@ export const strings = {
     settings: { en: 'Settings', my: 'ဆက်တင်များ' },
     signIn: { en: 'Sign In', my: 'ဝင်ရောက်ပါ' },
     signOut: { en: 'Sign Out', my: 'ထွက်ရန်' },
+    practiceInterview: { en: 'Interview', my: 'အင်တာဗျူး' },
   },
 
   // Common actions
@@ -195,6 +196,33 @@ export const strings = {
     timer: { en: 'Timer', my: 'အချိန်တိုင်း' },
     timerOff: { en: 'Timer Off', my: 'အချိန်တိုင်းပိတ်' },
     timerOn: { en: 'Timer On', my: 'အချိန်တိုင်းဖွင့်' },
+  },
+
+  // Interview simulation
+  interview: {
+    practiceInterview: { en: 'Practice Interview', my: 'အင်တာဗျူးလေ့ကျင့်မှု' },
+    realisticMode: { en: 'Realistic Interview', my: 'လက်တွေ့အင်တာဗျူး' },
+    practiceMode: { en: 'Practice Interview', my: 'လေ့ကျင့်အင်တာဗျူး' },
+    startInterview: { en: 'Start Interview', my: 'အင်တာဗျူးစတင်ပါ' },
+    showAnswer: { en: 'Show Answer', my: 'အဖြေပြပါ' },
+    correct: { en: 'Correct', my: 'မှန်ပါတယ်' },
+    incorrect: { en: 'Incorrect', my: 'မှားပါတယ်' },
+    nextQuestion: { en: 'Next Question', my: 'နောက်မေးခွန်း' },
+    whatToExpect: { en: 'What to Expect', my: 'ဘာကိုမျှော်လင့်ရမလဲ' },
+    recentScores: { en: 'Recent Scores', my: 'မကြာသေးမီရမှတ်များ' },
+    interviewResults: { en: 'Interview Results', my: 'အင်တာဗျူးရလဒ်များ' },
+    passed: { en: 'Passed', my: 'အောင်မြင်ပါတယ်' },
+    failed: { en: 'Did Not Pass', my: 'မအောင်မြင်ပါ' },
+    replaysUsed: { en: 'replays used', my: 'ပြန်ဖွင့်မှုအကြိမ်' },
+    alsoAccepted: { en: 'Also accepted', my: 'လက်ခံနိုင်သောအဖြေများ' },
+    yourAnswer: { en: 'Your Recording', my: 'သင့်အသံဖမ်းမှု' },
+    realisticTip: { en: 'Like the real USCIS interview. 15 seconds per question.', my: 'တကယ့် USCIS အင်တာဗျူးကဲ့သို့။ မေးခွန်းတစ်ခုလျှင် ၁၅ စက္ကန့်။' },
+    practiceTip: { en: 'Self-paced with explanations. Take your time.', my: 'ရှင်းလင်းချက်များနှင့်အတူ သင့်အချိန်ယူပါ။' },
+    speechRate: { en: 'Speech Rate', my: 'စကားပြောနှုန်း' },
+    slow: { en: 'Slow', my: 'နှေးနှေး' },
+    normal: { en: 'Normal', my: 'ပုံမှန်' },
+    fast: { en: 'Fast', my: 'မြန်မြန်' },
+    interviewHistory: { en: 'Interviews', my: 'အင်တာဗျူးများ' },
   },
 
   // App meta
