@@ -53,6 +53,10 @@ module.exports = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        'accent-purple': {
+          DEFAULT: 'hsl(var(--accent-purple))',
+          foreground: 'hsl(var(--accent-purple-foreground))',
+        },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
@@ -86,6 +90,10 @@ module.exports = {
         // Extended radii for bubbly Phase 3 design
         '3xl': '2rem',
         '4xl': '2.5rem',
+      },
+      boxShadow: {
+        chunky: '0 4px 0 hsl(var(--primary-700))',
+        'chunky-active': '0 1px 0 hsl(var(--primary-700))',
       },
       keyframes: {
         'accordion-down': {

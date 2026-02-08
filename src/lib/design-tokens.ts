@@ -1,6 +1,6 @@
 /**
- * Design tokens for Phase 3: UI/UX Polish
- * Multi-shade blue system inspired by Duolingo energy with patriotic feel
+ * Design tokens for Phase 9: Duolingo-inspired visual overhaul
+ * Multi-shade blue system with accent purple, 3D button shadows, updated radius
  */
 
 // Blue palette - primary accent (HSL values for Tailwind)
@@ -18,10 +18,21 @@ export const colors = {
     800: '226 71% 40%', // Dark text on light
     900: '224 64% 33%', // Darkest blue
   },
-  // Success green (correct answers, progress)
+  // Accent purple (achievements, badges, milestones)
+  accent: {
+    50: '270 70% 96%',
+    100: '270 65% 90%',
+    200: '270 65% 80%',
+    300: '270 68% 70%',
+    500: '270 70% 60%', // Main accent purple
+    600: '270 65% 52%',
+    700: '270 60% 44%',
+  },
+  // Success green (correct answers, progress, celebrations)
   success: {
     50: '142 76% 95%',
     100: '141 84% 86%',
+    400: '142 69% 52%', // Bright success for celebrations
     500: '142 71% 45%',
     600: '142 76% 36%',
   },
@@ -69,15 +80,28 @@ export const timing = {
   page: '300ms', // Page transitions only
 };
 
-// Border radius (bubbly, friendly per user decision: 16px+)
+// Border radius (Duolingo-inspired chunky, rounded)
 export const radius = {
   sm: '0.5rem', // 8px
-  md: '0.75rem', // 12px
-  lg: '1rem', // 16px - minimum for phase 3
-  xl: '1.25rem', // 20px
-  '2xl': '1.5rem', // 24px
+  md: '0.75rem', // 12px - buttons
+  lg: '1.25rem', // 20px - cards (updated from 16px)
+  xl: '1.5rem', // 24px
+  '2xl': '1.75rem', // 28px
   '3xl': '2rem', // 32px
   full: '9999px', // Pill buttons
+};
+
+// 3D shadow values for chunky Duolingo-style buttons
+export const shadows = {
+  chunky: '0 4px 0', // Normal state - raised
+  chunkyActive: '0 1px 0', // Active/pressed state - pushed down
+  chunkyOffset: '3px', // translateY distance on press
+};
+
+// Typography weights for bolder Duolingo feel
+export const typography = {
+  bold: 700,
+  extrabold: 800,
 };
 
 // Spring physics for Motion animations (Duolingo-style tactile feedback)
