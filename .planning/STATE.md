@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 6 of 7 (Interview Simulation)
-Plan: 3 of 6 complete (06-01, 06-02, 06-03)
+Plan: 4 of 6 complete (06-01, 06-02, 06-03, 06-04)
 Status: In progress
-Last activity: 2026-02-08 - Completed 06-03-PLAN.md (Interview Page & Setup)
+Last activity: 2026-02-08 - Completed 06-04-PLAN.md (Interview Session Flow)
 
-Progress: [██████████] 96% (42 plans / ~45 total estimated)
+Progress: [██████████] 96% (43 plans / ~45 total estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 42 (Phases 1-5 + 06-01, 06-02, 06-03)
+- Total plans completed: 43 (Phases 1-5 + 06-01, 06-02, 06-03, 06-04)
 - Average duration: ~13 min
-- Total execution time: ~544 min
+- Total execution time: ~553 min
 
 **By Phase:**
 
@@ -207,6 +207,10 @@ Recent decisions affecting current work:
 - 06-03: Results state deferred to plan 06-05 (avoid unused variable lint error)
 - 06-03: Microphone permission requested proactively during setup with graceful degradation
 - 06-03: Interview components directory at src/components/interview/
+- 06-04: Removed 'revealing' phase to avoid setState in effect; merged into 'grading' phase
+- 06-04: Used lazy useState(() => Date.now()) instead of useRef(Date.now()) for React Compiler purity
+- 06-04: InterviewTimer resets via React key (parent uses key={currentIndex}) instead of setState in effect
+- 06-04: Grading phase reads answer aloud via TTS effect (no state transition in effect body)
 
 ### Pending Todos
 
@@ -224,7 +228,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 06-03-PLAN.md (Interview Page & Setup). Phase 6 in progress.
+Stopped at: Completed 06-04-PLAN.md (Interview Session Flow). Phase 6 in progress.
 Resume file: None
 
 ---
