@@ -287,7 +287,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
           },
         }}
         floaterProps={{
-          disableAnimation: shouldReduceMotion,
+          ...(shouldReduceMotion ? { hideArrow: true } : {}),
         }}
       />
     </>

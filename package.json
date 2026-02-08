@@ -39,7 +39,7 @@
     "react-countdown-circle-timer": "^3.2.1",
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.0",
-    "react-joyride": "^2.9.3",
+    "react-joyride": "3.0.0-7",
     "react-router-dom": "^7.0.2",
     "react-swipeable": "^7.0.2",
     "recharts": "^3.4.1",
