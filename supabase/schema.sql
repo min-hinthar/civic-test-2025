@@ -255,3 +255,64 @@ create policy "Users can insert own badges" on public.earned_badges
 
 create index if not exists earned_badges_user_idx
   on public.earned_badges (user_id);
+
+-- Leaderboard ranking function (server-side for security)
+create or replace function public.get_leaderboard(
+  board_type text default 'all-time',
+  result_limit int default 25
+)
+returns table (
+  rank bigint,
+  user_id uuid,
+  display_name text,
+  composite_score numeric,
+  current_streak int,
+  top_badge text,
+  is_weekly_winner boolean
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  return query
+  select
+    row_number() over (order by sp.composite_score desc)::bigint as rank,
+    sp.user_id,
+    sp.display_name,
+    sp.composite_score,
+    sp.current_streak,
+    sp.top_badge,
+    sp.is_weekly_winner
+  from social_profiles sp
+  where sp.social_opt_in = true
+    and (board_type = 'all-time' or sp.weekly_score_updated_at >= date_trunc('week', now()))
+  order by sp.composite_score desc
+  limit result_limit;
+end;
+$$;
+
+-- Get authenticated user's rank among opted-in users
+create or replace function public.get_user_rank(target_user_id uuid)
+returns bigint
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  user_rank bigint;
+begin
+  select r.rank into user_rank
+  from (
+    select sp.user_id, row_number() over (order by sp.composite_score desc) as rank
+    from social_profiles sp
+    where sp.social_opt_in = true
+  ) r
+  where r.user_id = target_user_id;
+  return user_rank;
+end;
+$$;
+
+-- Grant execution permissions
+grant execute on function public.get_leaderboard to authenticated, anon;
+grant execute on function public.get_user_rank to authenticated;
