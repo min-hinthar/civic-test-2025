@@ -25,6 +25,7 @@ const navLinks = [
   { href: '/test', label: strings.nav.mockTest },
   { href: '/interview', label: strings.nav.practiceInterview },
   { href: '/history', label: strings.nav.testHistory },
+  { href: '/social', label: strings.nav.socialHub },
 ];
 
 const AppNavigation = ({

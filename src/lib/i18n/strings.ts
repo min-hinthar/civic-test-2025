@@ -22,6 +22,7 @@ export const strings = {
     signIn: { en: 'Sign In', my: 'ဝင်ရောက်ပါ' },
     signOut: { en: 'Sign Out', my: 'ထွက်ရန်' },
     practiceInterview: { en: 'Interview', my: 'အင်တာဗျူး' },
+    socialHub: { en: 'Community', my: 'အသိုင်းအဝိုင်း' },
   },
 
   // Common actions

@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { OfflineProvider } from '@/contexts/OfflineContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { SRSProvider } from '@/contexts/SRSContext';
+import { SocialProvider } from '@/contexts/SocialContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { PageTransition } from '@/components/animations/PageTransition';
@@ -29,6 +30,7 @@ import SettingsPage from '@/pages/SettingsPage';
 import ProgressPage from '@/pages/ProgressPage';
 import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
+import SocialHubPage from '@/pages/SocialHubPage';
 
 /**
  * Hook to detect if running on client side.
@@ -127,6 +129,7 @@ const AppShell = () => {
           <ThemeProvider>
             <ToastProvider>
               <AuthProvider>
+                <SocialProvider>
                 <SRSProvider>
                 <Router>
                   <Head>
@@ -200,6 +203,7 @@ const AppShell = () => {
                             </ProtectedRoute>
                           }
                         />
+                        <Route path="/social" element={<SocialHubPage />} />
                         <Route
                           path="/settings"
                           element={
@@ -215,6 +219,7 @@ const AppShell = () => {
                   <PWAOnboardingFlow />
                 </Router>
                 </SRSProvider>
+                </SocialProvider>
               </AuthProvider>
             </ToastProvider>
           </ThemeProvider>
