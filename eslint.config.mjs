@@ -9,7 +9,7 @@ import prettier from 'eslint-config-prettier';
 export default [
   js.configs.recommended,
   {
-    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'coverage/**'],
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'coverage/**', 'out/**'],
   },
   {
     files: ['**/*.{ts,tsx}'],
