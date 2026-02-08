@@ -168,7 +168,10 @@ export function Flashcard3D({
         }
       >
         {/* Front - Question */}
-        <div className={cardFaceClasses} style={{ backfaceVisibility: 'hidden' }}>
+        <div
+          className={cardFaceClasses}
+          style={{ backfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
+        >
           {colorStrip}
           <div className={clsx('absolute inset-0 rounded-2xl bg-gradient-to-br', gradient)} />
           {paperTexture}
@@ -214,6 +217,7 @@ export function Flashcard3D({
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
+            pointerEvents: isFlipped ? 'auto' : 'none',
           }}
         >
           {colorStrip}
