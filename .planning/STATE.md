@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 9 of 9 (UI Polish & Onboarding)
-Plan: 7 of 12
+Plan: 8 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-07-PLAN.md
+Last activity: 2026-02-08 - Completed 09-08-PLAN.md
 
-Progress: [█████████░] 93% (63 plans / 68 total)
+Progress: [█████████░] 94% (64 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 63 (Phases 1-8 complete, Phase 9: 7/12)
+- Total plans completed: 64 (Phases 1-8 complete, Phase 9: 8/12)
 - Average duration: ~12 min
 - Total execution time: ~720 min
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 93% (63 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 7/12 | ~67 min | ~10 min |
+| 09-ui-polish-onboarding | 8/12 | ~77 min | ~10 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
@@ -48,6 +48,8 @@ Progress: [█████████░] 93% (63 plans / 68 total)
 - Desktop nav refreshed with lucide icons, rounded-xl active states, left-border accent
 - Landing page fully redesigned: patriotic emojis, bilingual hero, feature previews, stats badges
 - Auth/password pages redesigned: centered card, 3D buttons, bilingual labels, warning toasts for validation
+- Dashboard overhauled: hero ReadinessIndicator, 3D chunky action buttons, stagger animations, responsive grid
+- Settings page Duolingo treatment: grouped rounded-2xl card sections with icons, ToggleSwitch, 44px targets
 
 *Updated after each plan completion*
 
@@ -305,6 +307,10 @@ Recent decisions affecting current work:
 - 09-07: Password validation toasts use warning variant, auth errors use destructive
 - 09-07: Inline bilingual text with font-myanmar on Burmese spans instead of BilingualHeading for marketing pages
 - 09-07: Patriotic emoji mascot pattern (eagle, liberty, flag) as page visual anchors
+- 09-08: Dashboard stagger helper uses as-const for Motion Easing type narrowing
+- 09-08: SettingsSection/SettingsRow/ToggleSwitch helper components for grouped card pattern
+- 09-08: useMemo for history, categoryBreakdown, masteredCount to satisfy React Compiler
+- 09-08: SocialSettings embedded directly inside SettingsSection wrapper (has own internal structure)
 
 ### Pending Todos
 
@@ -323,7 +329,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-07-PLAN.md (Landing & Auth Pages Redesign)
+Stopped at: Completed 09-08-PLAN.md (Dashboard & Settings Page Overhaul)
 Resume file: None
 
 ---
