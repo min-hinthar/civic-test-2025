@@ -18,6 +18,8 @@ import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { SuggestedFocus } from '@/components/nudges/SuggestedFocus';
 import { SRSWidget } from '@/components/srs/SRSWidget';
 import { InterviewDashboardWidget } from '@/components/interview/InterviewDashboardWidget';
+import { StreakWidget } from '@/components/social/StreakWidget';
+import { BadgeHighlights } from '@/components/social/BadgeHighlights';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { getAnswerHistory } from '@/lib/mastery';
@@ -239,6 +241,20 @@ const Dashboard = () => {
             streakDays={streakDays}
             onStartTest={() => navigate('/test')}
           />
+        </section>
+
+        {/* Streak Widget */}
+        <section className="mb-8">
+          <FadeIn delay={25}>
+            <StreakWidget />
+          </FadeIn>
+        </section>
+
+        {/* Badge Highlights */}
+        <section className="mb-8">
+          <FadeIn delay={40}>
+            <BadgeHighlights />
+          </FadeIn>
         </section>
 
         {/* SRS Review Widget */}
