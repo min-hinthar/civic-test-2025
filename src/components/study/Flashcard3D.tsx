@@ -17,6 +17,8 @@ interface Flashcard3DProps {
   answerMy: string;
   /** Category for gradient styling */
   category?: string;
+  /** USCIS main category color: 'blue' | 'amber' | 'emerald' */
+  categoryColor?: 'blue' | 'amber' | 'emerald';
   /** Optional explanation to show on back of card */
   explanation?: Explanation;
   /** All questions for RelatedQuestions lookup */
@@ -26,6 +28,13 @@ interface Flashcard3DProps {
   /** Additional class names */
   className?: string;
 }
+
+// Category color header strip classes
+const CATEGORY_STRIP_COLORS: Record<string, string> = {
+  blue: 'bg-blue-500',
+  amber: 'bg-amber-500',
+  emerald: 'bg-emerald-500',
+};
 
 // Category to gradient mapping
 const categoryGradients: Record<string, string> = {
@@ -66,6 +75,7 @@ export function Flashcard3D({
   answerEn,
   answerMy,
   category,
+  categoryColor,
   explanation,
   allQuestions = [],
   onFlip,
@@ -97,14 +107,23 @@ export function Flashcard3D({
 
   const gradient = category ? categoryGradients[category] : 'from-primary-500/10 to-primary-600/10';
 
+  const stripColorClass = categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null;
+
   // Common card styles
   const cardFaceClasses = clsx(
     'absolute inset-0 w-full h-full',
     'rounded-2xl border border-border/60',
-    'bg-card shadow-xl',
-    'p-6 flex flex-col',
+    'bg-card',
+    'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
+    'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
+    'flex flex-col overflow-hidden',
     'backface-hidden' // CSS for hiding back face
   );
+
+  // Category color header strip
+  const colorStrip = stripColorClass ? (
+    <div className={clsx('h-[5px] w-full shrink-0', stripColorClass)} aria-hidden="true" />
+  ) : null;
 
   // Paper texture overlay
   const paperTexture = (
@@ -145,10 +164,11 @@ export function Flashcard3D({
       >
         {/* Front - Question */}
         <div className={cardFaceClasses} style={{ backfaceVisibility: 'hidden' }}>
+          {colorStrip}
           <div className={clsx('absolute inset-0 rounded-2xl bg-gradient-to-br', gradient)} />
           {paperTexture}
 
-          <div className="relative z-10 flex-1 flex flex-col">
+          <div className="relative z-10 flex-1 flex flex-col p-6">
             {/* Category badge */}
             {category && (
               <span className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
@@ -191,10 +211,11 @@ export function Flashcard3D({
             transform: 'rotateY(180deg)',
           }}
         >
+          {colorStrip}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success-500/10 to-emerald-500/10" />
           {paperTexture}
 
-          <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
+          <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">
             {/* Answer label */}
             <div className="text-sm font-medium text-success-500 mb-2">Answer / အဖြေ</div>
 
@@ -213,7 +234,7 @@ export function Flashcard3D({
                 <div
                   className="mt-3"
                   onClick={(e: MouseEvent) => e.stopPropagation()}
-                  onKeyDown={(e) => e.stopPropagation()}
+                  onKeyDown={e => e.stopPropagation()}
                 >
                   <ExplanationCard
                     explanation={explanation}
