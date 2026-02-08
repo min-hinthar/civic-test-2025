@@ -51,6 +51,8 @@ Progress: [█████████░] 96% (65 plans / 68 total)
 - Dashboard overhauled: hero ReadinessIndicator, 3D chunky action buttons, stagger animations, responsive grid
 - Settings page Duolingo treatment: grouped rounded-2xl card sections with icons, ToggleSwitch, 44px targets
 - Progress page redesigned: Duolingo skill tree with 7 USCIS sub-category nodes, sequential unlock, medal rings
+- Test page overhauled: horizontal progress bar, 3D chunky answers, animated star/shake icons, sound effects
+- Practice page Duolingo refresh: 3D chunky buttons, sounds, confetti, trophy icons on results
 
 *Updated after each plan completion*
 
@@ -312,6 +314,11 @@ Recent decisions affecting current work:
 - 09-08: SettingsSection/SettingsRow/ToggleSwitch helper components for grouped card pattern
 - 09-08: useMemo for history, categoryBreakdown, masteredCount to satisfy React Compiler
 - 09-08: SocialSettings embedded directly inside SettingsSection wrapper (has own internal structure)
+- 09-09: BilingualButton chunky variant added for 3D raised buttons in bilingual contexts
+- 09-09: Horizontal progress bar + compact circular timer at top replaces sidebar progress panel
+- 09-09: AnswerFeedback animated Star icon (spring scale+rotate) for correct, shake X for incorrect
+- 09-09: Sound effects in child components (PracticeSession/PracticeResults) since PracticePage delegates
+- 09-09: Confetti + playLevelUp on practice results, playMilestone on passing test results
 - 09-11: 7 skill tree nodes match USCIS sub-categories with category-colored backgrounds (blue/amber/emerald)
 - 09-11: Sequential unlock: node N+1 requires 50%+ mastery on node N
 - 09-11: Medal ring indicators: bronze (50%), silver (75%), gold (100%) matching existing MasteryBadge thresholds
