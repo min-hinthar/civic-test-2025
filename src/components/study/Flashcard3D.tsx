@@ -217,10 +217,10 @@ export function Flashcard3D({
 
           <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">
             {/* Answer label */}
-            <div className="text-sm font-medium text-success-500 mb-2">Answer / အဖြေ</div>
+            <div className="text-sm font-medium text-success-500 mb-2 shrink-0">Answer / အဖြေ</div>
 
             {/* Scrollable content area */}
-            <div className="flex-1 overflow-y-auto min-h-0">
+            <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
               {/* Answer text */}
               <div>
                 <p className="text-xl font-bold text-foreground leading-relaxed">{answerEn}</p>
@@ -229,12 +229,15 @@ export function Flashcard3D({
                 </p>
               </div>
 
-              {/* Explanation card */}
+              {/* Explanation card - stopPropagation prevents flip on interact */}
               {explanation && (
                 <div
                   className="mt-3"
+                  role="region"
+                  aria-label="Explanation"
                   onClick={(e: MouseEvent) => e.stopPropagation()}
                   onKeyDown={e => e.stopPropagation()}
+                  onPointerDown={e => e.stopPropagation()}
                 >
                   <ExplanationCard
                     explanation={explanation}

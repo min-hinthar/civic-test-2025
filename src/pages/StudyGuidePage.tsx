@@ -442,8 +442,8 @@ const StudyGuidePage = () => {
                             STRIP_BG[stripColor]
                           )}
                         />
-                        <div className="flex-1 flex flex-col p-6">
-                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
+                        <div className="flex-1 flex flex-col p-6 overflow-hidden">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
                               Answer - အဖြေ
                             </p>
@@ -454,34 +454,40 @@ const StudyGuidePage = () => {
                               stopPropagation
                             />
                           </div>
-                          <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
-                            {question.studyAnswers.map(answer => (
-                              <li
-                                key={answer.text_en}
-                                className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                          {/* Scrollable area for answers + explanation */}
+                          <div className="mt-4 flex-1 overflow-y-auto overscroll-contain pr-1 min-h-0">
+                            <ul className="space-y-3">
+                              {question.studyAnswers.map(answer => (
+                                <li
+                                  key={answer.text_en}
+                                  className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                                >
+                                  <p className="text-base font-semibold tracking-wide">
+                                    {answer.text_en}
+                                  </p>
+                                  <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                    {answer.text_my}
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                            {question.explanation && (
+                              <div
+                                className="mt-3"
+                                role="region"
+                                aria-label="Explanation"
+                                onClick={e => e.stopPropagation()}
+                                onKeyDown={e => e.stopPropagation()}
+                                onPointerDown={e => e.stopPropagation()}
                               >
-                                <p className="text-base font-semibold tracking-wide">
-                                  {answer.text_en}
-                                </p>
-                                <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                  {answer.text_my}
-                                </p>
-                              </li>
-                            ))}
-                          </ul>
-                          {question.explanation && (
-                            <div
-                              className="mt-3"
-                              onClick={e => e.stopPropagation()}
-                              onKeyDown={e => e.stopPropagation()}
-                            >
-                              <ExplanationCard
-                                explanation={question.explanation}
-                                allQuestions={civicsQuestions}
-                                className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
-                              />
-                            </div>
-                          )}
+                                <ExplanationCard
+                                  explanation={question.explanation}
+                                  allQuestions={civicsQuestions}
+                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -707,8 +713,8 @@ const StudyGuidePage = () => {
                             STRIP_BG[qStripColor]
                           )}
                         />
-                        <div className="flex-1 flex flex-col p-6">
-                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
+                        <div className="flex-1 flex flex-col p-6 overflow-hidden">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
                               Answer - အဖြေ
                             </p>
@@ -719,34 +725,40 @@ const StudyGuidePage = () => {
                               stopPropagation
                             />
                           </div>
-                          <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
-                            {question.studyAnswers.map(answer => (
-                              <li
-                                key={answer.text_en}
-                                className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                          {/* Scrollable area for answers + explanation */}
+                          <div className="mt-4 flex-1 overflow-y-auto overscroll-contain pr-1 min-h-0">
+                            <ul className="space-y-3">
+                              {question.studyAnswers.map(answer => (
+                                <li
+                                  key={answer.text_en}
+                                  className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                                >
+                                  <p className="text-base font-semibold tracking-wide">
+                                    {answer.text_en}
+                                  </p>
+                                  <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                    {answer.text_my}
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                            {question.explanation && (
+                              <div
+                                className="mt-3"
+                                role="region"
+                                aria-label="Explanation"
+                                onClick={e => e.stopPropagation()}
+                                onKeyDown={e => e.stopPropagation()}
+                                onPointerDown={e => e.stopPropagation()}
                               >
-                                <p className="text-base font-semibold tracking-wide">
-                                  {answer.text_en}
-                                </p>
-                                <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                  {answer.text_my}
-                                </p>
-                              </li>
-                            ))}
-                          </ul>
-                          {question.explanation && (
-                            <div
-                              className="mt-3"
-                              onClick={e => e.stopPropagation()}
-                              onKeyDown={e => e.stopPropagation()}
-                            >
-                              <ExplanationCard
-                                explanation={question.explanation}
-                                allQuestions={civicsQuestions}
-                                className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
-                              />
-                            </div>
-                          )}
+                                <ExplanationCard
+                                  explanation={question.explanation}
+                                  allQuestions={civicsQuestions}
+                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
