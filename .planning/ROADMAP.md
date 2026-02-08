@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Interview Simulation** - Audio-only question playback, simulated interview pacing, verbal response practice
 - [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
 - [x] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
-- [ ] **Phase 9: UI Polish & Onboarding** - Replace residual red tokens, wire onboarding tour, surface offline sync status
+- [ ] **Phase 9: UI Polish & Onboarding** - Duolingo-inspired UI overhaul, onboarding tour, sound effects, sync indicator, red token audit
 
 ## Phase Details
 
@@ -208,18 +208,33 @@ Plans:
 ---
 
 ### Phase 9: UI Polish & Onboarding
-**Goal**: Users see consistent anxiety-reducing design (no red error states) and first-time users get a guided onboarding tour.
+**Goal**: Users experience a full Duolingo-inspired visual overhaul with consistent anxiety-reducing design, gamified sound feedback, guided onboarding tour, and visible sync status.
 **Depends on**: Phase 8
 **Requirements**: None (gap closure — fixes tech debt for ANXR-02, UIUX-07)
-**Gap Closure**: Closes tech debt from v1 audit
+**Gap Closure**: Closes tech debt from v1 audit + comprehensive UI overhaul
 **Success Criteria** (what must be TRUE):
   1. No `text-red-600` or `bg-red-600` remains in any component (replaced with destructive/warning tokens)
   2. First-time users see the OnboardingTour on their initial visit
   3. User sees pending sync count indicator when offline items are queued
-**Plans**: TBD
+  4. All pages have Duolingo-inspired 3D buttons, rounded cards, bold typography
+  5. Sound effects play for correct/incorrect answers with mute toggle in Settings
+  6. Mobile users see bottom tab bar navigation
+  7. Progress page shows vertical skill tree with 7 sub-category nodes
+**Plans**: 12 plans in 5 waves
 
 Plans:
-- [ ] 09-01-PLAN.md — Replace residual red tokens, wire OnboardingTour, surface sync status in UI
+- [ ] 09-01-PLAN.md — Design system foundation: tokens, 3D buttons, radius, accent colors, destructive hue shift
+- [ ] 09-02-PLAN.md — Sound effects system with mute toggle in Settings
+- [ ] 09-03-PLAN.md — Floating sync status indicator redesign (OfflineContext, AnimatePresence)
+- [ ] 09-04-PLAN.md — Onboarding tour: welcome screen, 7 steps, custom tooltip, AppShell mount, Settings replay
+- [ ] 09-05-PLAN.md — Red token audit: warning toast variant, destructive reclassification, remaining red fixes
+- [ ] 09-06-PLAN.md — Navigation overhaul: mobile bottom tab bar + desktop nav refresh
+- [ ] 09-07-PLAN.md — Landing + Auth page full bilingual Duolingo-inspired redesign
+- [ ] 09-08-PLAN.md — Dashboard hero readiness + Settings grouped sections overhaul
+- [ ] 09-09-PLAN.md — Test + Practice page overhaul: progress bar, icon reactions, sound integration
+- [ ] 09-10-PLAN.md — Study Guide + Flashcard overhaul: category color header strips
+- [ ] 09-11-PLAN.md — Progress page Duolingo-style vertical skill tree path
+- [ ] 09-12-PLAN.md — History + Social + Interview refresh + final comprehensive audit checkpoint
 
 ---
 
@@ -239,9 +254,9 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
 | 8. Critical Integration Fixes | 3/3 | Complete | 2026-02-08 |
-| 9. UI Polish & Onboarding | 0/1 | Pending | — |
+| 9. UI Polish & Onboarding | 0/12 | Pending | — |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-08 after gap closure phases added (v1 audit)*
+*Last updated: 2026-02-08 after Phase 9 planning (12 plans in 5 waves)*
