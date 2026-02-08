@@ -223,6 +223,16 @@ export const strings = {
     normal: { en: 'Normal', my: 'ပုံမှန်' },
     fast: { en: 'Fast', my: 'မြန်မြန်' },
     interviewHistory: { en: 'Interviews', my: 'အင်တာဗျူးများ' },
+    endInterview: { en: 'End Interview', my: 'အင်တာဗျူးရပ်ပါ' },
+    confirmEndTitle: { en: 'End Interview?', my: 'အင်တာဗျူးရပ်မလား?' },
+    confirmEndMessage: { en: 'Your progress so far will be saved.', my: 'ယခုအထိတိုးတက်မှုကို သိမ်းဆည်းပါမည်။' },
+    cancel: { en: 'Cancel', my: 'ပယ်ဖျက်ပါ' },
+    confirm: { en: 'End', my: 'ရပ်ပါ' },
+    questionOf: { en: 'of', my: 'မှ' },
+    replay: { en: 'Replay', my: 'ပြန်ဖွင့်ပါ' },
+    recordingUnavailable: { en: 'Recording unavailable', my: 'အသံဖမ်း၍မရပါ' },
+    listening: { en: 'Listening...', my: 'နားထောင်နေသည်...' },
+    correctCount: { en: 'Correct', my: 'မှန်' },
   },
 
   // App meta
