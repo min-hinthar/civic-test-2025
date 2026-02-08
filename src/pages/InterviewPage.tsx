@@ -5,6 +5,7 @@ import AppNavigation from '@/components/AppNavigation';
 import { InterviewSetup } from '@/components/interview/InterviewSetup';
 import { InterviewCountdown } from '@/components/interview/InterviewCountdown';
 import { InterviewSession } from '@/components/interview/InterviewSession';
+import { InterviewResults } from '@/components/interview/InterviewResults';
 import type { InterviewMode, InterviewResult, InterviewEndReason } from '@/types';
 
 type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
@@ -16,15 +17,15 @@ type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
  * - setup: User selects Realistic or Practice mode
  * - countdown: 3-2-1-Begin countdown animation
  * - session: Active interview with TTS, recording, grading
- * - results: Post-interview review (placeholder, coming in plan 06-05)
+ * - results: Post-interview analysis with score, chart, explanations
  */
 const InterviewPage = () => {
   const [phase, setPhase] = useState<InterviewPhase>('setup');
   const [mode, setMode] = useState<InterviewMode>('practice');
   const [micPermission, setMicPermission] = useState(false);
-  const [, setSessionResults] = useState<InterviewResult[]>([]);
-  const [, setSessionDuration] = useState(0);
-  const [, setEndReason] = useState<InterviewEndReason>('complete');
+  const [sessionResults, setSessionResults] = useState<InterviewResult[]>([]);
+  const [sessionDuration, setSessionDuration] = useState(0);
+  const [endReason, setEndReason] = useState<InterviewEndReason>('complete');
 
   const handleStart = useCallback((selectedMode: InterviewMode) => {
     setMode(selectedMode);
@@ -59,7 +60,18 @@ const InterviewPage = () => {
   );
 
   const handleRetry = useCallback(() => {
+    setSessionResults([]);
+    setSessionDuration(0);
+    setEndReason('complete');
     setPhase('setup');
+  }, []);
+
+  const handleSwitchMode = useCallback((newMode: InterviewMode) => {
+    setSessionResults([]);
+    setSessionDuration(0);
+    setEndReason('complete');
+    setMode(newMode);
+    setPhase('countdown');
   }, []);
 
   return (
@@ -80,17 +92,14 @@ const InterviewPage = () => {
         />
       )}
       {phase === 'results' && (
-        <div className="flex flex-1 items-center justify-center p-8">
-          <p className="text-muted-foreground">
-            Interview results coming in plan 06-05
-          </p>
-          <button
-            onClick={handleRetry}
-            className="ml-4 rounded-full bg-primary-500 px-4 py-2 text-white"
-          >
-            Try Again
-          </button>
-        </div>
+        <InterviewResults
+          results={sessionResults}
+          mode={mode}
+          durationSeconds={sessionDuration}
+          endReason={endReason}
+          onRetry={handleRetry}
+          onSwitchMode={handleSwitchMode}
+        />
       )}
     </div>
   );
