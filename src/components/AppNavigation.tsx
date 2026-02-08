@@ -17,7 +17,7 @@ import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
 import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useSRS } from '@/contexts/SRSContext';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -44,6 +44,7 @@ const AppNavigation = ({
 }: AppNavigationProps) => {
   const { user, logout } = useAuth();
   const { dueCount } = useSRS();
+  const { showWarning } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
@@ -55,12 +56,9 @@ const AppNavigation = ({
     if (!locked) return;
     if (href && href === '/test') return;
     event.preventDefault();
-    toast({
-      title: 'Please finish your mock test first!',
-      description:
-        lockMessage ??
-        'Complete the mock test before leaving this page. \u00B7 \u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1015\u103C\u102E\u1038\u1019\u103E \u1011\u103D\u1000\u103A\u1015\u102B',
-      variant: 'warning',
+    showWarning({
+      en: lockMessage ?? 'Please finish your mock test first!',
+      my: 'စမ်းသပ်စာမေးပွဲပြီးဆုံးစွာ ဖြေဆိုပြီးမှ ထွက်ပါ',
     });
   };
 

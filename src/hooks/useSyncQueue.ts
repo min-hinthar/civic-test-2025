@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useOnlineStatus } from './useOnlineStatus';
 import { syncAllPendingResults, getPendingSyncCount, type SyncResult } from '@/lib/pwa/syncQueue';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 
 /**
  * Return type for useSyncQueue hook
@@ -49,6 +49,7 @@ export interface UseSyncQueueResult {
  */
 export function useSyncQueue(): UseSyncQueueResult {
   const isOnline = useOnlineStatus();
+  const { showSuccess, showWarning } = useToast();
   const [pendingCount, setPendingCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncResult, setLastSyncResult] = useState<SyncResult | null>(null);
@@ -76,15 +77,14 @@ export function useSyncQueue(): UseSyncQueueResult {
 
       // Show bilingual toast on completion
       if (result.synced > 0 && result.failed === 0) {
-        toast({
-          title: `Synced ${result.synced} offline result${result.synced > 1 ? 's' : ''}`,
-          description: `အော့ဖ်လိုင်း ရလဒ် ${result.synced} ခု စင့်ခ်လုပ်ပြီးပါပြီ`,
+        showSuccess({
+          en: `Synced ${result.synced} offline result${result.synced > 1 ? 's' : ''}`,
+          my: `အော့ဖ်လိုင်း ရလဒ် ${result.synced} ခု စင့်ခ်လုပ်ပြီးပါပြီ`,
         });
       } else if (result.failed > 0) {
-        toast({
-          title: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''}. Will retry.`,
-          description: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
-          variant: 'warning',
+        showWarning({
+          en: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''} — will retry`,
+          my: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
         });
       }
     } catch (error) {
@@ -92,7 +92,7 @@ export function useSyncQueue(): UseSyncQueueResult {
     } finally {
       setIsSyncing(false);
     }
-  }, [isSyncing, isOnline, refreshCount]);
+  }, [isSyncing, isOnline, refreshCount, showSuccess, showWarning]);
 
   // Refresh count on mount
   useEffect(() => {

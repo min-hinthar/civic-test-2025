@@ -18,7 +18,7 @@ import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { cacheQuestions, getCachedQuestions, hasQuestionsCache } from '@/lib/pwa/offlineDb';
 import { syncAllPendingResults, getPendingSyncCount, type SyncResult } from '@/lib/pwa/syncQueue';
 import { allQuestions } from '@/constants/questions';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import type { Question } from '@/types';
 
 /**
@@ -77,6 +77,7 @@ interface OfflineProviderProps {
  */
 export function OfflineProvider({ children }: OfflineProviderProps) {
   const isOnline = useOnlineStatus();
+  const { showSuccess, showWarning } = useToast();
   const [questions, setQuestions] = useState<Question[]>(allQuestions);
   const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false);
   const [isCached, setIsCached] = useState(false);
@@ -142,16 +143,15 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
 
       // Show bilingual toast on completion
       if (result.synced > 0 && result.failed === 0) {
-        toast({
-          title: `Synced ${result.synced} offline result${result.synced > 1 ? 's' : ''}`,
-          description: `အော့ဖ်လိုင်း ရလဒ် ${result.synced} ခု စင့်ခ်လုပ်ပြီးပါပြီ`,
+        showSuccess({
+          en: `Synced ${result.synced} offline result${result.synced > 1 ? 's' : ''}`,
+          my: `အော့ဖ်လိုင်း ရလဒ် ${result.synced} ခု စင့်ခ်လုပ်ပြီးပါပြီ`,
         });
       } else if (result.failed > 0) {
         setSyncFailed(true);
-        toast({
-          title: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''}. Will retry.`,
-          description: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
-          variant: 'warning',
+        showWarning({
+          en: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''} — will retry`,
+          my: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
         });
       }
     } catch (error) {
@@ -160,7 +160,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
     } finally {
       setIsSyncing(false);
     }
-  }, [isSyncing, isOnline, refreshPendingCount]);
+  }, [isSyncing, isOnline, refreshPendingCount, showSuccess, showWarning]);
 
   // Refresh sync count on mount
   useEffect(() => {

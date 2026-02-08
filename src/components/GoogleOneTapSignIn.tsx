@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Script from 'next/script';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -10,6 +10,7 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 const GoogleOneTapSignIn = () => {
   const { user, loginWithGoogleIdToken } = useAuth();
+  const { showSuccess, showError } = useToast();
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [gsiReady, setGsiReady] = useState(false);
@@ -21,20 +22,19 @@ const GoogleOneTapSignIn = () => {
       if (!credential) return;
       try {
         await loginWithGoogleIdToken(credential);
-        toast({
-          title: 'Signed in with Google',
-          description: 'One Tap sign-in succeeded. Welcome back! 🎉',
+        showSuccess({
+          en: 'Signed in with Google',
+          my: 'Google ဖြင့် ဝင်ရောက်ပြီးပါပြီ',
         });
       } catch (error) {
         console.error('Google One Tap failed', error);
-        toast({
-          title: 'Google sign-in blocked',
-          description: 'We could not complete Google One Tap. Please try again or use email.',
-          variant: 'destructive',
+        showError({
+          en: 'Google sign-in blocked — please try again or use email',
+          my: 'Google ဝင်ရောက်မှု ပိတ်ဆို့ခံရပါသည်',
         });
       }
     },
-    [loginWithGoogleIdToken]
+    [loginWithGoogleIdToken, showSuccess, showError]
   );
 
   const shouldAutoPrompt = useMemo(
@@ -87,13 +87,12 @@ const GoogleOneTapSignIn = () => {
       }
     } catch (error) {
       console.error('Supabase Google OAuth fallback failed', error);
-      toast({
-        title: 'Google sign-in unavailable',
-        description: 'We could not start Google sign-in. Please try email login instead.',
-        variant: 'destructive',
+      showError({
+        en: 'Google sign-in unavailable — please try email login instead',
+        my: 'Google ဝင်ရောက်မှု မရရှိနိုင်ပါ',
       });
     }
-  }, []);
+  }, [showError]);
 
   const attemptPrompt = useCallback(
     (forceManual = false) => {
