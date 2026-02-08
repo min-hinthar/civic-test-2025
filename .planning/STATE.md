@@ -14,14 +14,14 @@ Plan: 3 of 3
 Status: Phase complete
 Last activity: 2026-02-08 - Completed 08-03-PLAN.md
 
-Progress: [█████████░] 98% (55 plans / 56 total)
+Progress: [██████████] 100% (56 plans / 56 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 55 (Phases 1-7 complete, Phase 8: 2/3 summaries)
+- Total plans completed: 56 (Phases 1-8 complete)
 - Average duration: ~12 min
-- Total execution time: ~671 min
+- Total execution time: ~680 min
 
 **By Phase:**
 
@@ -34,7 +34,7 @@ Progress: [█████████░] 98% (55 plans / 56 total)
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
 | 07-social-features | 8/8 | 86 min | 11 min |
-| 08-critical-integration-fixes | 3/3 | 18 min | 6 min |
+| 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
 **Recent Trend:**
 - Phase 8 addresses build/lint blockers from v1 audit
@@ -258,6 +258,10 @@ Recent decisions affecting current work:
 - 08-01: Remove deprecated disableLogger and automaticVercelMonitors from Sentry config (cleanest fix)
 - 08-01: Close menu via click handler setIsMenuOpen(false) instead of route-change useEffect
 - 08-01: Pre-commit hook: lint-staged + typecheck only (no next build)
+- 08-02: PendingTestResult stores full bilingual response data matching Supabase schema (no simplified fields)
+- 08-02: Network error detection uses triple check: navigator.onLine, TypeError/fetch, NetworkError message
+- 08-02: Offline sessions use offline-{timestamp} ID pattern for identification
+- 08-02: No toast on offline save -- caller shows normal success since data is queued
 - 08-03: Settings gear icon already delivered in 08-02 commit (no new commit needed)
 
 ### Pending Todos
@@ -277,7 +281,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 08-03-PLAN.md (Dashboard Settings Navigation)
+Stopped at: Completed 08-02-PLAN.md (Offline Test Result Sync Pipeline)
 Resume file: None
 
 ---
