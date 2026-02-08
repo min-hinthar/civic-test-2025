@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 9 of 9 (UI Polish & Onboarding)
-Plan: 3 of 12
+Plan: 5 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-03-PLAN.md
+Last activity: 2026-02-08 - Completed 09-05-PLAN.md
 
-Progress: [████████░░] 87% (59 plans / 68 total)
+Progress: [████████░░] 88% (60 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 59 (Phases 1-8 complete, Phase 9: 3/12)
+- Total plans completed: 60 (Phases 1-8 complete, Phase 9: 4/12)
 - Average duration: ~12 min
-- Total execution time: ~695 min
+- Total execution time: ~705 min
 
 **By Phase:**
 
@@ -36,12 +36,13 @@ Progress: [████████░░] 87% (59 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 3/12 | ~15 min | ~5 min |
+| 09-ui-polish-onboarding | 4/12 | ~25 min | ~6 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
 - Sound effects module provides audio feedback for gamified interactions
 - Floating sync indicator replaces toolbar icon for non-intrusive sync feedback
+- Red token audit complete: semantic destructive/warning color classification enforced
 
 *Updated after each plan completion*
 
@@ -281,6 +282,10 @@ Recent decisions affecting current work:
 - 09-03: syncFailed state added to OfflineContext for downstream failure awareness
 - 09-03: bottom-20 offset on floating indicator to clear future mobile bottom tab bar (09-06)
 - 09-03: Indicator is informational only (no tap-to-sync action)
+- 09-05: Warning variant already added in 09-03 (Task 1 was no-op)
+- 09-05: AppNavigation destructive toast deferred to plan 09-06
+- 09-05: fsrsEngine interval strength <= 1 day uses bg-warning-500 (was bg-red-500)
+- 09-05: Semantic rule: destructive (warm red) for data-loss/auth only; warning (orange) for all other errors
 
 ### Pending Todos
 
@@ -299,7 +304,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-03-PLAN.md (Floating Sync Status Indicator)
+Stopped at: Completed 09-05-PLAN.md (Red Token Audit & Warning Reclassification)
 Resume file: None
 
 ---
