@@ -29,6 +29,7 @@ import { Card } from '@/components/ui/Card';
 import { FadeIn } from '@/components/animations/StaggeredList';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useSocial } from '@/contexts/SocialContext';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import { useStreak } from '@/hooks/useStreak';
 import { useBadges } from '@/hooks/useBadges';
@@ -61,6 +62,7 @@ const OPT_IN_DISMISSED_KEY = 'civic-prep-social-optin-dismissed';
 
 const SocialHubPage = () => {
   const { user } = useAuth();
+  const { isOptedIn, isLoading: socialLoading } = useSocial();
   const location = useLocation();
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
@@ -190,51 +192,31 @@ const SocialHubPage = () => {
   // Social opt-in flow
   // -------------------------------------------------------------------------
 
-  const [showOptIn, setShowOptIn] = useState(false);
-  const [isOptedIn, setIsOptedIn] = useState(false);
+  // Track whether user has manually closed the opt-in dialog this session
+  const [optInClosed, setOptInClosed] = useState(false);
 
-  // Check opt-in state on mount (lazy import useSocial only if SocialProvider available)
-  // Since SocialProvider may not be in the tree yet (plan 08), we check gracefully
-  useEffect(() => {
-    if (!user?.id) return;
-
-    // Check if user already dismissed the opt-in prompt
+  // Check localStorage once for persistent dismissal
+  const optInDismissed: boolean = useMemo(() => {
     try {
-      const dismissed = localStorage.getItem(OPT_IN_DISMISSED_KEY);
-      if (dismissed === 'true') return;
+      return localStorage.getItem(OPT_IN_DISMISSED_KEY) === 'true';
     } catch {
-      // localStorage not available
+      return false;
     }
+  }, []);
 
-    // Use dynamic import to safely check social profile
-    import('@/lib/social/socialProfileSync')
-      .then(({ getSocialProfile }) => {
-        getSocialProfile(user.id)
-          .then(profile => {
-            if (profile?.socialOptIn) {
-              setIsOptedIn(true);
-            } else if (profile === null || !profile.socialOptIn) {
-              // User hasn't opted in, show opt-in flow
-              setShowOptIn(true);
-            }
-          })
-          .catch(() => {
-            // Supabase not available
-          });
-      })
-      .catch(() => {
-        // Module not available
-      });
-  }, [user?.id]);
+  // Derive whether to show the opt-in prompt (no setState in effect needed)
+  const showOptIn: boolean = useMemo(
+    () => !!user?.id && !socialLoading && !isOptedIn && !optInDismissed && !optInClosed,
+    [user?.id, socialLoading, isOptedIn, optInDismissed, optInClosed]
+  );
 
   const handleOptInComplete = useCallback(() => {
-    setShowOptIn(false);
-    setIsOptedIn(true);
+    setOptInClosed(true);
     refreshLeaderboard();
   }, [refreshLeaderboard]);
 
   const handleOptInCancel = useCallback(() => {
-    setShowOptIn(false);
+    setOptInClosed(true);
     try {
       localStorage.setItem(OPT_IN_DISMISSED_KEY, 'true');
     } catch {
@@ -334,7 +316,9 @@ const SocialHubPage = () => {
                       : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
                   )}
                 >
-                  {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
+                  <span className={showBurmese ? 'font-myanmar' : ''}>
+                    {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
+                  </span>
                 </button>
                 <button
                   onClick={() => setBoardType('weekly')}
@@ -345,7 +329,9 @@ const SocialHubPage = () => {
                       : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
                   )}
                 >
-                  {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
+                  <span className={showBurmese ? 'font-myanmar' : ''}>
+                    {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
+                  </span>
                 </button>
               </div>
 
@@ -358,12 +344,16 @@ const SocialHubPage = () => {
                         <Heart className="h-5 w-5 text-primary-500" />
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-foreground">
+                        <p
+                          className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                        >
                           {showBurmese
                             ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
                             : 'Join the community!'}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p
+                          className={`text-xs text-muted-foreground mt-0.5 ${showBurmese ? 'font-myanmar' : ''}`}
+                        >
                           {showBurmese
                             ? '\u101E\u1004\u1037\u103A\u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u1015\u102B'
                             : 'Share your journey and encourage others'}
@@ -371,14 +361,16 @@ const SocialHubPage = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowOptIn(true)}
+                      onClick={() => setOptInClosed(false)}
                       className={clsx(
                         'shrink-0 rounded-xl bg-primary-500 px-5 py-2.5 text-sm font-bold text-white min-h-[44px]',
                         'shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
                         'transition-all hover:bg-primary-600'
                       )}
                     >
-                      {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                      <span className={showBurmese ? 'font-myanmar' : ''}>
+                        {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                      </span>
                     </button>
                   </div>
                 </Card>
@@ -388,12 +380,16 @@ const SocialHubPage = () => {
               {!user && (
                 <Card className="text-center">
                   <Sparkles className="h-8 w-8 text-primary-400 mx-auto mb-2" />
-                  <p className="text-sm font-bold text-foreground mb-1">
+                  <p
+                    className={`text-sm font-bold text-foreground mb-1 ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? '\u1015\u102B\u101D\u1004\u103A\u101B\u1014\u103A \u1021\u101B\u1004\u103A \u101D\u1004\u103A\u101B\u1031\u102C\u1000\u103A\u1015\u102B'
                       : 'Sign in to participate'}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p
+                    className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                  >
                     {showBurmese
                       ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u103C\u102E\u1038 \u1021\u1010\u1030\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B'
                       : 'Join the community and learn together'}

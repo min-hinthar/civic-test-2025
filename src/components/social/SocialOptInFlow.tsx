@@ -15,12 +15,7 @@
 import React, { useCallback, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Check, Shield, User } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/Dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/Button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSocial } from '@/contexts/SocialContext';
@@ -55,11 +50,7 @@ const stepTransition = {
 // Component
 // ---------------------------------------------------------------------------
 
-export function SocialOptInFlow({
-  open,
-  onComplete,
-  onCancel,
-}: SocialOptInFlowProps) {
+export function SocialOptInFlow({ open, onComplete, onCancel }: SocialOptInFlowProps) {
   const { showBurmese } = useLanguage();
   const { optIn } = useSocial();
   const { user } = useAuth();
@@ -104,7 +95,9 @@ export function SocialOptInFlow({
           Social Features
           {showBurmese && (
             <span className="block font-myanmar text-base font-normal text-muted-foreground mt-1">
-              {'\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038'}
+              {
+                '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038'
+              }
             </span>
           )}
         </DialogTitle>
@@ -174,7 +167,7 @@ export function SocialOptInFlow({
 
         {/* Step indicator */}
         <div className="mt-4 flex items-center justify-center gap-2">
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3].map(s => (
             <div
               key={s}
               className={`h-2 w-2 rounded-full transition-colors ${
@@ -208,19 +201,24 @@ function StepPrivacyNotice({
         <span className="font-semibold">Privacy Notice</span>
         {showBurmese && (
           <span className="font-myanmar text-sm text-muted-foreground">
-            / {'\u1000\u102D\u102F\u101A\u103A\u101B\u1031\u1038\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A'}
+            /{' '}
+            {
+              '\u1000\u102D\u102F\u101A\u103A\u101B\u1031\u1038\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A'
+            }
           </span>
         )}
       </div>
 
       <p className="text-sm text-muted-foreground leading-relaxed">
-        By enabling social features, your display name and scores will be visible
-        on the leaderboard. You can disable this at any time from Settings.
+        By enabling social features, your display name and scores will be visible on the
+        leaderboard. You can disable this at any time from Settings.
       </p>
 
       {showBurmese && (
         <p className="font-myanmar text-sm text-muted-foreground leading-relaxed">
-          {'\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1001\u103C\u1004\u103A\u1038\u1016\u103C\u1004\u1037\u103A \u101E\u1004\u1037\u103A\u1015\u103C\u101E\u1019\u100A\u1037\u103A\u1021\u1019\u100A\u103A\u1014\u103E\u1004\u1037\u103A \u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1019\u103C\u1004\u103A\u101B\u1015\u102B\u1019\u100A\u103A\u104B Settings \u1019\u103E \u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103D\u1031\u1038 \u1015\u102D\u1010\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A\u104B'}
+          {
+            '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1001\u103C\u1004\u103A\u1038\u1016\u103C\u1004\u1037\u103A \u101E\u1004\u1037\u103A\u1015\u103C\u101E\u1019\u100A\u1037\u103A\u1021\u1019\u100A\u103A\u1014\u103E\u1004\u1037\u103A \u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1019\u103C\u1004\u103A\u101B\u1015\u102B\u1019\u100A\u103A\u104B Settings \u1019\u103E \u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103D\u1031\u1038 \u1015\u102D\u1010\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A\u104B'
+          }
         </p>
       )}
 
@@ -277,14 +275,13 @@ function StepDisplayName({
       </div>
 
       <div>
-        <label
-          htmlFor="social-display-name"
-          className="mb-1 block text-sm text-muted-foreground"
-        >
+        <label htmlFor="social-display-name" className="mb-1 block text-sm text-muted-foreground">
           This name will appear on the leaderboard
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
-              {'\u1024\u1021\u1019\u100A\u103A\u101E\u100A\u103A \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u1031\u102B\u103A\u101C\u102C\u1015\u102B\u1019\u100A\u103A'}
+              {
+                '\u1024\u1021\u1019\u100A\u103A\u101E\u100A\u103A \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u1031\u102B\u103A\u101C\u102C\u1015\u102B\u1019\u100A\u103A'
+              }
             </span>
           )}
         </label>
@@ -292,7 +289,7 @@ function StepDisplayName({
           id="social-display-name"
           type="text"
           value={displayName}
-          onChange={(e) => onDisplayNameChange(e.target.value)}
+          onChange={e => onDisplayNameChange(e.target.value)}
           onKeyDown={handleKeyDown}
           maxLength={30}
           autoFocus
@@ -311,12 +308,7 @@ function StepDisplayName({
             Back
           </span>
         </Button>
-        <Button
-          size="sm"
-          onClick={onContinue}
-          disabled={!nameValid}
-          className="flex-1"
-        >
+        <Button size="sm" onClick={onContinue} disabled={!nameValid} className="flex-1">
           <span className="flex items-center gap-1">
             Continue
             <ArrowRight className="h-4 w-4" />
@@ -358,33 +350,32 @@ function StepConfirm({
         <p className="text-lg font-bold text-primary">{displayName}</p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
-            {'\u101E\u1004\u1037\u103A\u1015\u101B\u102D\u102F\u1016\u102D\u102F\u1004\u103A\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u103C\u101E\u1015\u102B\u1019\u100A\u103A\u104B'}
+            {
+              '\u101E\u1004\u1037\u103A\u1015\u101B\u102D\u102F\u1016\u102D\u102F\u1004\u103A\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u103C\u101E\u1015\u102B\u1019\u100A\u103A\u104B'
+            }
           </p>
         )}
       </div>
 
       <div className="flex gap-3 pt-2">
-        <Button variant="ghost" size="sm" onClick={onBack} className="flex-1">
+        <Button variant="ghost" size="md" onClick={onBack} className="shrink-0">
           <span className="flex items-center gap-1">
             <ArrowLeft className="h-4 w-4" />
             Back
           </span>
         </Button>
-        <Button
-          size="sm"
-          onClick={onConfirm}
-          loading={isSubmitting}
-          className="flex-1"
-        >
+        <Button size="md" onClick={onConfirm} loading={isSubmitting} className="flex-1">
           {showBurmese ? (
-            <span className="flex flex-col items-center leading-tight">
-              <span>Enable Social Features</span>
-              <span className="font-myanmar text-xs opacity-80">
-                {'\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038 \u1016\u103D\u1004\u1037\u103A\u1015\u102B'}
+            <span className="flex flex-col items-center leading-tight py-1">
+              <span>Enable Social</span>
+              <span className="font-myanmar text-xs opacity-80 font-normal">
+                {
+                  '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038 \u1016\u103D\u1004\u1037\u103A\u1015\u102B'
+                }
               </span>
             </span>
           ) : (
-            'Enable Social Features'
+            'Enable Social'
           )}
         </Button>
       </div>
