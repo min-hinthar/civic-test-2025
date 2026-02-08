@@ -150,13 +150,15 @@ Plans:
   2. User responds verbally (honor system), then reveals correct answer
   3. User experiences realistic pacing between questions (simulating USCIS interview)
   4. User sees interview simulation results tracked in test history
-**Plans**: TBD
+**Plans**: 6 plans in 5 waves
 
 Plans:
-- [ ] 06-01: Interview simulation mode UI
-- [ ] 06-02: Audio-only question playback
-- [ ] 06-03: Interview pacing and timing logic
-- [ ] 06-04: Results tracking integration
+- [ ] 06-01-PLAN.md — Interview types, IndexedDB store, greetings, audio chime, bilingual strings
+- [ ] 06-02-PLAN.md — Extended TTS hook with onEnd callbacks, audio recorder hook, speech rate settings
+- [ ] 06-03-PLAN.md — Interview page state machine, setup screen, countdown, navigation integration
+- [ ] 06-04-PLAN.md — Interview session core flow (TTS orchestration, recording, grading, timers)
+- [ ] 06-05-PLAN.md — Interview results (analysis, trend chart, celebration, mastery integration)
+- [ ] 06-06-PLAN.md — Supabase sync, dashboard widget, history page interview tab
 
 ---
 
@@ -194,10 +196,10 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 3. UI/UX & Bilingual Polish | 10/10 | Complete | 2026-02-07 |
 | 4. Learning - Explanations & Category Progress | 9/9 | Complete | 2026-02-07 |
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
-| 6. Interview Simulation | 0/4 | Not started | - |
+| 6. Interview Simulation | 0/6 | Not started | - |
 | 7. Social Features | 0/5 | Not started | - |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 5 completion*
+*Last updated: 2026-02-07 after Phase 6 planning*
