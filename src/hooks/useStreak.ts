@@ -13,12 +13,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import {
-  getStreakData,
-  calculateStreak,
-  shouldAutoUseFreeze,
-  recordStudyActivity,
-} from '@/lib/social';
+import { getStreakData, calculateStreak, shouldAutoUseFreeze } from '@/lib/social';
 import type { StreakData } from '@/lib/social';
 import { useToast } from '@/components/BilingualToast';
 
@@ -83,10 +78,7 @@ export function useStreak(): UseStreakReturn {
 
         // Check if freeze should be auto-used
         if (!freezeAutoUsedThisSession && data.freezesAvailable > 0) {
-          const freezeCheck = shouldAutoUseFreeze(
-            data.activityDates,
-            data.freezesAvailable
-          );
+          const freezeCheck = shouldAutoUseFreeze(data.activityDates, data.freezesAvailable);
 
           if (
             freezeCheck.useFreeze &&
@@ -146,7 +138,7 @@ export function useStreak(): UseStreakReturn {
     let cancelled = false;
 
     getStreakData()
-      .then((data) => {
+      .then(data => {
         if (!cancelled) {
           setStreakData(data);
         }

@@ -1,6 +1,6 @@
 'use client';
 
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -39,15 +39,11 @@ const AppNavigation = ({
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: close menu on route change
-    setIsMenuOpen(false);
-  }, [location.pathname]);
-
   const handleGuardedNavigation = (
     event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
     href?: string
   ) => {
+    setIsMenuOpen(false);
     if (!locked) return;
     if (href && href === '/test') return;
     event.preventDefault();
@@ -116,6 +112,7 @@ const AppNavigation = ({
           {user ? (
             <button
               onClick={event => {
+                setIsMenuOpen(false);
                 if (locked) {
                   handleGuardedNavigation(event);
                   return;
@@ -185,6 +182,7 @@ const AppNavigation = ({
                   locked ? 'cursor-not-allowed opacity-70' : ''
                 }`}
                 onClick={event => {
+                  setIsMenuOpen(false);
                   if (locked) {
                     handleGuardedNavigation(event);
                     return;
