@@ -47,6 +47,22 @@ export interface MockTestRow {
 }
 
 /**
+ * Row type for the interview_sessions table
+ */
+export interface InterviewSessionRow {
+  id: string;
+  user_id: string;
+  completed_at: string;
+  mode: string;
+  score: number;
+  total_questions: number;
+  duration_seconds: number;
+  passed: boolean;
+  end_reason: string;
+  created_at: string;
+}
+
+/**
  * Google OAuth user_metadata structure from Supabase
  */
 export interface GoogleUserMetadata {

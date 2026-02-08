@@ -19,3 +19,8 @@ export {
 } from './interviewGreetings';
 
 export { playChime } from './audioChime';
+
+export {
+  syncInterviewSession,
+  loadInterviewHistoryFromSupabase,
+} from './interviewSync';

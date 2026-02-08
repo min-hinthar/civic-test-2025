@@ -73,6 +73,7 @@ export type {
   ProfileRow,
   MockTestResponseRow,
   MockTestRow,
+  InterviewSessionRow,
   GoogleUserMetadata,
   StandardUserMetadata,
   UserMetadata,
