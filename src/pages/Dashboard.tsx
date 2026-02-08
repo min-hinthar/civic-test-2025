@@ -88,10 +88,7 @@ const Dashboard = () => {
       return Math.max(best, pct);
     }, 0);
 
-    const bestTestScore = testHistory.reduce(
-      (best, session) => Math.max(best, session.score),
-      0
-    );
+    const bestTestScore = testHistory.reduce((best, session) => Math.max(best, session.score), 0);
 
     const uniqueQIds = new Set<string>();
     for (const session of testHistory) {
@@ -190,10 +187,7 @@ const Dashboard = () => {
       ? Math.round(categoryValues.reduce((s, v) => s + v, 0) / categoryValues.length)
       : 0;
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
-  const totalQuestionsAnswered = history.reduce(
-    (sum, session) => sum + session.totalQuestions,
-    0
-  );
+  const totalQuestionsAnswered = history.reduce((sum, session) => sum + session.totalQuestions, 0);
   const accuracy = totalQuestionsAnswered
     ? Math.round(
         (history.reduce((sum, session) => sum + session.score, 0) / totalQuestionsAnswered) * 100
@@ -539,10 +533,7 @@ const Dashboard = () => {
         {/* Suggested Focus - weak area nudges */}
         {!masteryLoading && (
           <motion.div {...stagger(9)}>
-            <SuggestedFocus
-              categoryMasteries={categoryMasteries}
-              answerHistory={answerHistory}
-            />
+            <SuggestedFocus categoryMasteries={categoryMasteries} answerHistory={answerHistory} />
           </motion.div>
         )}
 
