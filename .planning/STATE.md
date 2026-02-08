@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 7 of 7 (Social Features)
-Plan: 1 of 8 complete (07-02)
+Plan: 2 of 8 complete (07-01, 07-02)
 Status: In progress
-Last activity: 2026-02-08 - Completed 07-02-PLAN.md (Social Schema Foundation)
+Last activity: 2026-02-08 - Completed 07-01-PLAN.md (Social Data Layer)
 
-Progress: [█████████░] 87% (46 plans / 53 total)
+Progress: [█████████░] 89% (47 plans / 53 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 46 (Phases 1-6 + 07-02)
+- Total plans completed: 47 (Phases 1-6 + 07-01, 07-02)
 - Average duration: ~12 min
-- Total execution time: ~569 min
+- Total execution time: ~574 min
 
 **By Phase:**
 
@@ -33,7 +33,7 @@ Progress: [█████████░] 87% (46 plans / 53 total)
 | 04-learning-explanations | 9 | 72 min | 8 min |
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
-| 07-social-features | 1/8 | 2 min | 2 min |
+| 07-social-features | 2/8 | 7 min | 4 min |
 
 **Recent Trend:**
 - Phase 6 wave execution: 6 plans in 5 waves with parallel execution
@@ -222,6 +222,9 @@ Recent decisions affecting current work:
 - 06-06: Individual question results stay in IndexedDB only; only aggregate session data syncs to Supabase
 - 06-06: SQL migration provided as comment in interviewSync.ts
 - 06-06: InterviewDashboardWidget placed after SRSWidget, before CategoryGrid in Dashboard
+- 07-01: Streak badges check both currentStreak and longestStreak (earned badges not lost on streak reset)
+- 07-01: Daily activity counts reset on new day for per-day freeze eligibility
+- 07-01: Composite score inputs clamped to 0-100 range for safety
 - 07-02: Public SELECT uses social_opt_in = true (not USING true) for privacy-by-default
 - 07-02: SECURITY DEFINER on RPC functions bypasses RLS for server-side ranking
 - 07-02: get_user_rank granted to authenticated only (not anon)
@@ -242,7 +245,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 07-02-PLAN.md (Social Schema Foundation). Phase 7 in progress.
+Stopped at: Completed 07-01-PLAN.md (Social Data Layer). Phase 7 in progress.
 Resume file: None
 
 ---
