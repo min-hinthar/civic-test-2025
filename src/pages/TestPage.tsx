@@ -23,6 +23,9 @@ import { WhyButton } from '@/components/explanations/WhyButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
+import { ShareButton } from '@/components/social/ShareButton';
+import { useStreak } from '@/hooks/useStreak';
+import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
@@ -41,6 +44,7 @@ const TestPage = () => {
   const { saveTestSession } = useAuth();
   const navigate = useNavigate();
   const { categoryMasteries } = useCategoryMastery();
+  const { currentStreak } = useStreak();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -84,6 +88,34 @@ const TestPage = () => {
   const correctCount = results.filter(result => result.isCorrect).length;
   const askedCount = results.length;
   const incorrectCount = askedCount - correctCount;
+
+  // Share card data for social sharing (only when test is complete)
+  const shareCardData: ShareCardData | null = useMemo(() => {
+    if (!isFinished || correctCount < PASS_THRESHOLD) return null;
+
+    // Build category breakdown from results
+    const catMap: Record<string, { correct: number; total: number }> = {};
+    for (const r of results) {
+      if (!catMap[r.category]) catMap[r.category] = { correct: 0, total: 0 };
+      catMap[r.category].total += 1;
+      if (r.isCorrect) catMap[r.category].correct += 1;
+    }
+
+    return {
+      score: correctCount,
+      total: askedCount,
+      sessionType: 'test',
+      streak: currentStreak,
+      topBadge: null,
+      categories: Object.entries(catMap).map(([name, stats]) => ({
+        name,
+        correct: stats.correct,
+        total: stats.total,
+      })),
+      date: new Date().toISOString(),
+    };
+  }, [isFinished, correctCount, askedCount, results, currentStreak]);
+
   const completionMessage: Record<TestEndReason, string> = {
     passThreshold:
       'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early! အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။',
@@ -466,6 +498,7 @@ const TestPage = () => {
               icon={<Sparkles className="h-4 w-4" />}
               onClick={() => window.location.reload()}
             />
+            {shareCardData && <ShareButton data={shareCardData} />}
           </div>
         </div>
 

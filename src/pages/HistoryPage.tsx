@@ -23,10 +23,12 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem, FadeIn } from '@/components/animations/StaggeredList';
 import { Progress } from '@/components/ui/Progress';
+import { ShareButton } from '@/components/social/ShareButton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getAnswerHistory } from '@/lib/mastery/masteryStore';
 import type { StoredAnswer } from '@/lib/mastery';
 import { strings } from '@/lib/i18n/strings';
+import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 
 const reasonCopy: Record<TestEndReason, string> = {
   passThreshold: 'Ended early after 12 correct answers',
@@ -708,6 +710,25 @@ const HistoryPage = () => {
                                     : 'Keep trying / ဆက်ကြိုးစားပါ'}
                                 </span>
                               </div>
+                              <ShareButton
+                                variant="compact"
+                                data={{
+                                  score: session.score,
+                                  total: session.totalQuestions,
+                                  sessionType: 'test',
+                                  streak: 0,
+                                  topBadge: null,
+                                  categories: Object.entries(
+                                    session.results.reduce<Record<string, { correct: number; total: number }>>((acc, r) => {
+                                      if (!acc[r.category]) acc[r.category] = { correct: 0, total: 0 };
+                                      acc[r.category].total += 1;
+                                      if (r.isCorrect) acc[r.category].correct += 1;
+                                      return acc;
+                                    }, {})
+                                  ).map(([name, stats]) => ({ name, correct: stats.correct, total: stats.total })),
+                                  date: session.date,
+                                } satisfies ShareCardData}
+                              />
                               <button
                                 type="button"
                                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/40 min-h-[44px]"

@@ -23,9 +23,11 @@ import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { WhyButton } from '@/components/explanations/WhyButton';
 import { FadeIn } from '@/components/animations/StaggeredList';
+import { ShareButton } from '@/components/social/ShareButton';
 import { useInterviewTTS } from '@/hooks/useInterviewTTS';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useStreak } from '@/hooks/useStreak';
 import { saveInterviewSession, getInterviewHistory } from '@/lib/interview/interviewStore';
 import { getClosingStatement } from '@/lib/interview/interviewGreetings';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
@@ -37,6 +39,7 @@ import {
 import type { USCISCategory } from '@/lib/mastery/categoryMapping';
 import { allQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
+import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type {
   InterviewMode,
   InterviewResult,
@@ -123,6 +126,7 @@ export function InterviewResults({
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
+  const { currentStreak } = useStreak();
 
   const [showConfetti, setShowConfetti] = useState(false);
   const [trendData, setTrendData] = useState<Array<{ date: string; score: number }>>([]);
@@ -155,6 +159,19 @@ export function InterviewResults({
 
     return breakdown;
   }, [results]);
+
+  // Share card data for social sharing
+  const shareCardData: ShareCardData = useMemo(() => ({
+    score,
+    total: totalQuestions,
+    sessionType: 'interview',
+    streak: currentStreak,
+    topBadge: null,
+    categories: (Object.entries(categoryBreakdown) as Array<[string, { correct: number; total: number }]>)
+      .filter(([, stats]) => stats.total > 0)
+      .map(([name, stats]) => ({ name, correct: stats.correct, total: stats.total })),
+    date: new Date().toISOString(),
+  }), [score, totalQuestions, currentStreak, categoryBreakdown]);
 
   // Incorrect questions
   const incorrectResults = useMemo(
@@ -503,6 +520,7 @@ export function InterviewResults({
       {/* 7. Action Buttons */}
       <FadeIn delay={1300}>
         <div className="mt-8 flex flex-col items-center gap-3 pb-8">
+          {passed && <ShareButton data={shareCardData} />}
           <BilingualButton
             label={strings.actions.tryAgain}
             variant="primary"

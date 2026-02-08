@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, type To } from 'react-router-dom';
 import { BookOpenCheck, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
@@ -20,10 +20,16 @@ import { SRSWidget } from '@/components/srs/SRSWidget';
 import { InterviewDashboardWidget } from '@/components/interview/InterviewDashboardWidget';
 import { StreakWidget } from '@/components/social/StreakWidget';
 import { BadgeHighlights } from '@/components/social/BadgeHighlights';
+import { BadgeCelebration } from '@/components/social/BadgeCelebration';
+import { LeaderboardWidget } from '@/components/social/LeaderboardWidget';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
+import { useStreak } from '@/hooks/useStreak';
+import { useBadges } from '@/hooks/useBadges';
 import { getAnswerHistory } from '@/lib/mastery';
 import type { StoredAnswer } from '@/lib/mastery';
+import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
+import type { BadgeCheckData } from '@/lib/social';
 import { strings } from '@/lib/i18n/strings';
 
 const historyLink = (section: string): To => ({ pathname: '/history', hash: `#${section}` });
@@ -47,6 +53,84 @@ const Dashboard = () => {
     isLoading: masteryLoading,
   } = useCategoryMastery();
   const { currentMilestone, dismissMilestone } = useMasteryMilestones(categoryMasteries);
+
+  // Streak data for badge checks and composite score
+  const { currentStreak, longestStreak } = useStreak();
+
+  // Badge check data - derived from dashboard stats
+  const badgeCheckData: BadgeCheckData | null = useMemo(() => {
+    const testHistory = user?.testHistory ?? [];
+    if (testHistory.length === 0 && currentStreak === 0) return null;
+
+    // Best test accuracy percentage
+    const bestTestAccuracy = testHistory.reduce((best, session) => {
+      const pct = session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
+      return Math.max(best, pct);
+    }, 0);
+
+    // Best test score (raw correct answers)
+    const bestTestScore = testHistory.reduce((best, session) => Math.max(best, session.score), 0);
+
+    // Unique questions answered across all tests
+    const uniqueQIds = new Set<string>();
+    for (const session of testHistory) {
+      for (const result of session.results) {
+        uniqueQIds.add(result.questionId);
+      }
+    }
+
+    // Categories mastered (100% mastery)
+    const catValues = Object.values(categoryMasteries);
+    const catsMastered = catValues.filter(v => v >= 100).length;
+
+    return {
+      currentStreak,
+      longestStreak,
+      bestTestAccuracy,
+      bestTestScore,
+      totalTestsTaken: testHistory.length,
+      uniqueQuestionsAnswered: uniqueQIds.size,
+      categoriesMastered: catsMastered,
+      totalCategories: catValues.length || 7,
+    };
+  }, [user?.testHistory, currentStreak, longestStreak, categoryMasteries]);
+
+  // Badge detection and celebration
+  const { newlyEarnedBadge, dismissCelebration, earnedBadges } = useBadges(badgeCheckData);
+
+  // Composite score sync to Supabase on mount
+  useEffect(() => {
+    if (!user?.id || !badgeCheckData) return;
+
+    const testHistory = user.testHistory ?? [];
+    const bestAccuracy = testHistory.reduce((best, session) => {
+      const pct = session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
+      return Math.max(best, pct);
+    }, 0);
+
+    // Coverage: unique questions / 100 total USCIS questions
+    const uniqueQIds = new Set<string>();
+    for (const session of testHistory) {
+      for (const result of session.results) {
+        uniqueQIds.add(result.questionId);
+      }
+    }
+    const coveragePercent = (uniqueQIds.size / 100) * 100;
+
+    const composite = calculateCompositeScore({
+      currentStreak,
+      bestTestAccuracy: bestAccuracy,
+      coveragePercent,
+    });
+
+    // Find top badge (first earned badge by priority)
+    const topBadge = earnedBadges.length > 0 ? earnedBadges[0].id : null;
+
+    // Fire-and-forget sync
+    updateCompositeScore(user.id, composite, currentStreak, topBadge).catch(() => {
+      // Sync failure is non-critical
+    });
+  }, [user?.id, user?.testHistory, badgeCheckData, currentStreak, earnedBadges]);
 
   // Answer history for SuggestedFocus stale detection
   const [answerHistory, setAnswerHistory] = useState<StoredAnswer[]>([]);
@@ -271,6 +355,13 @@ const Dashboard = () => {
           </FadeIn>
         </section>
 
+        {/* Leaderboard Widget */}
+        <section className="mb-8">
+          <FadeIn delay={85}>
+            <LeaderboardWidget />
+          </FadeIn>
+        </section>
+
         {/* Category Progress - collapsible section */}
         <section className="mb-8">
           <FadeIn delay={100}>
@@ -443,6 +534,16 @@ const Dashboard = () => {
 
         {/* Milestone celebration modal */}
         <MasteryMilestone milestone={currentMilestone} onDismiss={dismissMilestone} />
+
+        {/* Badge celebration modal */}
+        <BadgeCelebration
+          badge={newlyEarnedBadge}
+          onDismiss={() => {
+            if (newlyEarnedBadge) {
+              dismissCelebration(newlyEarnedBadge.id);
+            }
+          }}
+        />
       </div>
     </div>
   );

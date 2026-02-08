@@ -9,10 +9,13 @@ import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { ShareButton } from '@/components/social/ShareButton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useStreak } from '@/hooks/useStreak';
 import { strings } from '@/lib/i18n/strings';
 import { allQuestions } from '@/constants/questions';
+import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type { QuestionResult } from '@/types';
 import type { CategoryName } from '@/lib/mastery';
 
@@ -49,11 +52,36 @@ export function PracticeResults({
 }: PracticeResultsProps) {
   const { showBurmese } = useLanguage();
   const { overallMastery, refresh } = useCategoryMastery();
+  const { currentStreak } = useStreak();
   const [showAllResults, setShowAllResults] = useState(false);
   const [displayMastery, setDisplayMastery] = useState(previousMastery);
 
   const correctCount = results.filter(r => r.isCorrect).length;
   const totalCount = results.length;
+
+  // Share card data for social sharing
+  const shareCardData: ShareCardData = useMemo(() => {
+    const catMap: Record<string, { correct: number; total: number }> = {};
+    for (const r of results) {
+      if (!catMap[r.category]) catMap[r.category] = { correct: 0, total: 0 };
+      catMap[r.category].total += 1;
+      if (r.isCorrect) catMap[r.category].correct += 1;
+    }
+
+    return {
+      score: correctCount,
+      total: totalCount,
+      sessionType: 'practice',
+      streak: currentStreak,
+      topBadge: null,
+      categories: Object.entries(catMap).map(([name, stats]) => ({
+        name,
+        correct: stats.correct,
+        total: stats.total,
+      })),
+      date: new Date().toISOString(),
+    };
+  }, [results, correctCount, totalCount, currentStreak]);
 
   // Build questionsById map for explanation lookup
   const questionsById = useMemo(
@@ -157,14 +185,15 @@ export function PracticeResults({
           </div>
         </div>
 
-        {/* Done button */}
-        <div className="mt-6 flex justify-center">
+        {/* Action buttons */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <BilingualButton
             label={strings.actions.done}
             variant="primary"
             size="md"
             onClick={onDone}
           />
+          <ShareButton data={shareCardData} />
         </div>
 
         {/* Filter toggle */}
