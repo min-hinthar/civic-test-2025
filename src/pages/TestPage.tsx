@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ChevronRight } from 'lucide-react';
+import { Sparkles, ChevronRight, Trophy } from 'lucide-react';
+import { motion } from 'motion/react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
@@ -25,6 +26,7 @@ import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { ShareButton } from '@/components/social/ShareButton';
 import { useStreak } from '@/hooks/useStreak';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
@@ -34,6 +36,7 @@ import { allQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
 import { FadeIn } from '@/components/animations/StaggeredList';
 import { Filter } from 'lucide-react';
+import { playCorrect, playIncorrect, playLevelUp, playMilestone } from '@/lib/audio/soundEffects';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
@@ -45,6 +48,7 @@ const TestPage = () => {
   const navigate = useNavigate();
   const { categoryMasteries } = useCategoryMastery();
   const { currentStreak } = useStreak();
+  const shouldReduceMotion = useReducedMotion();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -164,6 +168,13 @@ const TestPage = () => {
       setShowFeedback(true);
       setExplanationExpanded(false);
 
+      // Play sound in event handler (React Compiler safe)
+      if (answer.correct) {
+        playCorrect();
+      } else {
+        playIncorrect();
+      }
+
       const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
       const result: QuestionResult = {
         questionId: currentQuestion.id,
@@ -201,6 +212,16 @@ const TestPage = () => {
       feedbackTimeoutRef.current = null;
     }
   }, []);
+
+  // Handler for results celebration sound
+  const handleScoreCountComplete = useCallback(() => {
+    setShowConfetti(true);
+    if (correctCount >= PASS_THRESHOLD) {
+      playMilestone();
+    } else {
+      playLevelUp();
+    }
+  }, [correctCount]);
 
   // Timer countdown
   useEffect(() => {
@@ -314,91 +335,103 @@ const TestPage = () => {
   }
 
   const activeView = (
-    <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
-      <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">
-              Mock Test · စမ်းသပ်စာမေးပွဲ
+    <div className="mx-auto max-w-5xl px-4 pb-16 pt-6">
+      {/* Horizontal progress bar at top with timer alongside */}
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary-500">
+              Question {currentIndex + 1} / {questions.length}
             </p>
-            <h1 className="text-3xl font-bold text-foreground">
-              Question {currentIndex + 1}{' '}
-              <span className="text-muted-foreground">/ {questions.length}</span>
-            </h1>
+            <p className="text-xs text-muted-foreground">{answeredQuestions} answered</p>
           </div>
-
-          {/* Circular Timer */}
-          <CircularTimer duration={TEST_DURATION_SECONDS} remainingTime={timeLeft} allowHide />
-
-          <div className="w-full rounded-2xl border border-border bg-card/80 p-6 lg:w-64">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Test Progress · <span className="font-myanmar">စာမေးပွဲပြီးဆုံးရန်</span>
-            </p>
-            <div className="mt-2">
-              <Progress value={progressPercent} size="sm" />
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Answered {answeredQuestions} of {questions.length}
-            </p>
-            <p className="mt-4 text-xs text-muted-foreground">
-              <span className="font-myanmar">
-                အဖြေမှန် ၁၂ ခု သို့မဟုတ် အဖြေမှား ၉ ခု ဖြေပြီးလျှင် စာမေးပွဲပြီးဆုံးစေပါမည်။
-              </span>
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Interview ends early after 12 correct or 9 incorrect answers.
-            </p>
-          </div>
+          <Progress value={progressPercent} size="lg" />
         </div>
+        {/* Compact circular timer alongside progress */}
+        <div className="shrink-0">
+          <CircularTimer
+            duration={TEST_DURATION_SECONDS}
+            remainingTime={timeLeft}
+            size="sm"
+            allowHide
+          />
+        </div>
+      </div>
 
+      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
         {/* Question area */}
-        <div className="mt-6 flex flex-col gap-6 lg:flex-row">
-          <div className="flex-1 rounded-2xl border border-border/50 bg-muted/30 p-6">
-            <p className="mt-1 text-sm text-muted-foreground">{currentQuestion?.category}</p>
-            <p className="text-lg font-semibold text-foreground">{currentQuestion?.question_en}</p>
-            <p className="mt-3 text-base text-muted-foreground font-myanmar leading-relaxed">
-              {currentQuestion?.question_my}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <SpeechButton
-                text={questionAudioText}
-                label="Play Test Question"
-                ariaLabel="Play English test question audio"
-              />
-              <SpeechButton
-                text={answerChoicesAudioText}
-                label="Play Answer Choices"
-                ariaLabel="Play English answer choices audio"
-              />
-            </div>
+        <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
+          <p className="text-xs uppercase tracking-[0.2em] text-primary-500 font-semibold">
+            {currentQuestion?.category}
+          </p>
+          <p className="mt-2 text-lg font-bold text-foreground leading-snug">
+            {currentQuestion?.question_en}
+          </p>
+          <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
+            {currentQuestion?.question_my}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <SpeechButton
+              text={questionAudioText}
+              label="Play Test Question"
+              ariaLabel="Play English test question audio"
+            />
+            <SpeechButton
+              text={answerChoicesAudioText}
+              label="Play Answer Choices"
+              ariaLabel="Play English answer choices audio"
+            />
           </div>
         </div>
 
-        {/* Answer options with getAnswerOptionClasses */}
-        <div className="mt-8 grid gap-4">
-          {currentQuestion?.answers.map(answer => (
-            <button
-              key={answer.text_en}
-              onClick={() => handleAnswerSelect(answer)}
-              disabled={showFeedback}
-              className={clsx(
-                getAnswerOptionClasses(
-                  selectedAnswer === answer,
-                  showFeedback ? answer.correct : null,
-                  showFeedback
-                ),
-                'w-full min-h-[44px] py-3 px-4 text-left space-y-1'
-              )}
-            >
-              <span className="font-semibold block">{answer.text_en}</span>
-              <span className="font-myanmar text-muted-foreground block text-sm">
-                {answer.text_my}
-              </span>
-            </button>
-          ))}
+        {/* Answer options as 3D chunky buttons */}
+        <div className="mt-6 grid gap-3">
+          {currentQuestion?.answers.map((answer, index) => {
+            const isSelected = selectedAnswer === answer;
+            const isAnswered = showFeedback;
+
+            // 3D chunky styles for unanswered state
+            const chunkyBase = !isAnswered
+              ? clsx(
+                  'rounded-2xl border-2 px-5 py-4 text-left w-full min-h-[56px]',
+                  'font-semibold transition-all duration-100',
+                  'shadow-[0_4px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[3px]',
+                  'hover:border-primary-400 hover:bg-primary-50/50 hover:shadow-[0_4px_0_hsl(var(--primary-600))]',
+                  'dark:hover:bg-primary-500/10',
+                  isSelected
+                    ? 'border-primary-500 bg-primary-50 shadow-[0_4px_0_hsl(var(--primary-600))] dark:bg-primary-500/10'
+                    : 'border-border bg-card'
+                )
+              : undefined;
+
+            // When answered, use getAnswerOptionClasses for correct/incorrect coloring
+            const answeredClasses = isAnswered
+              ? clsx(
+                  getAnswerOptionClasses(isSelected, answer.correct, true),
+                  'w-full min-h-[56px] py-4 px-5 text-left'
+                )
+              : undefined;
+
+            return (
+              <motion.button
+                key={answer.text_en}
+                initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.05 }}
+                onClick={() => handleAnswerSelect(answer)}
+                disabled={showFeedback}
+                className={chunkyBase ?? answeredClasses}
+              >
+                <span className="font-bold block text-foreground">{answer.text_en}</span>
+                <span className="font-myanmar text-muted-foreground block text-sm mt-0.5">
+                  {answer.text_my}
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
 
-        {/* Answer feedback */}
+        {/* Answer feedback with animated icons */}
         <div className="mt-4">
           <AnswerFeedback
             isCorrect={selectedAnswer?.correct ?? false}
@@ -423,10 +456,10 @@ const TestPage = () => {
                 onClick={advanceToNext}
                 className={clsx(
                   'mt-3 flex w-full items-center justify-center gap-2',
-                  'min-h-[44px] rounded-xl border border-primary-500/30 bg-primary-50 px-4 py-2.5',
-                  'text-sm font-semibold text-primary-600',
-                  'transition-colors duration-150 hover:bg-primary-100',
-                  'dark:bg-primary-500/10 dark:text-primary-400 dark:hover:bg-primary-500/20'
+                  'min-h-[48px] rounded-xl px-4 py-2.5',
+                  'bg-primary text-primary-foreground font-bold',
+                  'shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
+                  'transition-[box-shadow,transform] duration-100'
                 )}
               >
                 {strings.actions.next.en}
@@ -437,9 +470,14 @@ const TestPage = () => {
           </div>
         )}
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          Tap an answer to move to the next question.
-        </p>
+        {/* Progress summary */}
+        <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span className="text-success-500 font-bold">{correctCount} correct</span>
+            <span className="text-warning-500 font-bold">{incorrectCount} incorrect</span>
+          </div>
+          <p className="text-xs text-muted-foreground">12 correct or 9 incorrect ends the test</p>
+        </div>
       </div>
     </div>
   );
@@ -451,8 +489,27 @@ const TestPage = () => {
         intensity={correctCount >= PASS_THRESHOLD ? 'celebration' : 'burst'}
       />
 
-      <div className="glass-panel p-6 shadow-2xl shadow-primary/20">
+      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
+        {/* Results header with trophy */}
         <div className="text-center py-8">
+          <motion.div
+            initial={shouldReduceMotion ? {} : { scale: 0, rotate: -15 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }
+            }
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20"
+          >
+            <Trophy
+              className={clsx(
+                'h-8 w-8',
+                correctCount >= PASS_THRESHOLD ? 'text-success-500' : 'text-warning-500'
+              )}
+            />
+          </motion.div>
+
           <BilingualHeading
             text={strings.test.testComplete}
             level={1}
@@ -463,7 +520,7 @@ const TestPage = () => {
           <CountUpScore
             score={correctCount}
             total={askedCount}
-            onComplete={() => setShowConfetti(true)}
+            onComplete={handleScoreCountComplete}
           />
         </div>
 
@@ -487,7 +544,7 @@ const TestPage = () => {
             />
             <BilingualButton
               label={strings.actions.tryAgain}
-              variant="primary"
+              variant="chunky"
               size="sm"
               icon={<Sparkles className="h-4 w-4" />}
               onClick={() => window.location.reload()}

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, X } from 'lucide-react';
+import { Check, X, Star } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getRandomCorrectEncouragement, getRandomIncorrectEncouragement } from '@/lib/i18n/strings';
@@ -14,11 +14,11 @@ interface AnswerFeedbackProps {
 }
 
 /**
- * Soft feedback display for answer results.
+ * Gamified feedback display for answer results.
  *
  * Features:
- * - Green for correct with checkmark icon
- * - Soft orange for incorrect with X icon (never red)
+ * - Green for correct with animated star + checkmark icon
+ * - Soft orange for incorrect with gentle shake X icon (never red)
  * - Bilingual encouragement message (rotating variety)
  * - Shows correct answer for incorrect responses
  * - Respects prefers-reduced-motion
@@ -51,25 +51,57 @@ export function AnswerFeedback({
           )}
         >
           <div className="flex items-start gap-3">
-            {/* Icon */}
-            <div
-              className={clsx(
-                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
-                isCorrect ? 'bg-success-500 text-white' : 'bg-warning-500 text-white'
-              )}
-            >
-              {isCorrect ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
-            </div>
+            {/* Animated icon */}
+            {isCorrect ? (
+              <motion.div
+                initial={shouldReduceMotion ? {} : { scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: 'spring', stiffness: 400, damping: 12 }
+                }
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-500 text-white"
+              >
+                <Star className="h-5 w-5 fill-current" />
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={shouldReduceMotion ? {} : { x: 0 }}
+                animate={shouldReduceMotion ? {} : { x: [0, -4, 4, -3, 3, -1, 0] }}
+                transition={
+                  shouldReduceMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' }
+                }
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning-500 text-white"
+              >
+                <X className="h-5 w-5" />
+              </motion.div>
+            )}
 
             {/* Content */}
             <div className="flex-1">
-              {/* Encouragement */}
-              <p className="font-semibold text-foreground">
-                {encouragement.en}
-                <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
-                  {encouragement.my}
-                </span>
-              </p>
+              {/* Encouragement with animated check for correct */}
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-foreground">
+                  {encouragement.en}
+                  <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
+                    {encouragement.my}
+                  </span>
+                </p>
+                {isCorrect && (
+                  <motion.div
+                    initial={shouldReduceMotion ? {} : { scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { delay: 0.2, type: 'spring', stiffness: 500, damping: 15 }
+                    }
+                  >
+                    <Check className="h-5 w-5 text-success-500" />
+                  </motion.div>
+                )}
+              </div>
 
               {/* Show correct answer for incorrect */}
               {!isCorrect && correctAnswer && (

@@ -104,10 +104,10 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
         </div>
       </div>
 
-      {/* Ready button */}
+      {/* Ready button - 3D chunky */}
       <BilingualButton
         label={strings.actions.iAmReady}
-        variant="primary"
+        variant="chunky"
         size="lg"
         onClick={onReady}
       />

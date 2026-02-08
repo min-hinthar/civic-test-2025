@@ -14,6 +14,14 @@ const springTransition = {
   damping: 17,
 };
 
+// 3D chunky shadow classes (Duolingo-style raised button)
+const chunky3D = [
+  'shadow-[0_4px_0_hsl(224_76%_48%)]',
+  'hover:shadow-[0_4px_0_hsl(224_76%_43%)]',
+  'active:shadow-[0_1px_0_hsl(224_76%_43%)] active:translate-y-[3px]',
+  'transition-[box-shadow,transform] duration-100',
+].join(' ');
+
 const variants = {
   primary:
     'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 shadow-lg shadow-primary-500/25',
@@ -21,6 +29,7 @@ const variants = {
     'bg-primary-100 text-primary-700 hover:bg-primary-200 dark:bg-primary-900 dark:text-primary-100',
   outline: 'border-2 border-primary-500 text-primary-600 hover:bg-primary-50 dark:text-primary-400',
   ghost: 'text-primary-600 hover:bg-primary-100 dark:text-primary-400',
+  chunky: `bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 ${chunky3D}`,
 };
 
 const sizes = {
