@@ -38,7 +38,7 @@ const CATEGORY_STRIP_COLORS: Record<string, string> = {
   emerald: 'bg-emerald-500',
 };
 
-// Category to gradient mapping
+// Category to gradient mapping (vibrant gradients at low opacity for front face)
 const categoryGradients: Record<string, string> = {
   'Principles of American Democracy': 'from-rose-500/10 to-pink-500/10',
   'System of Government': 'from-blue-500/10 to-cyan-500/10',

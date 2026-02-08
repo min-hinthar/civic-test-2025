@@ -118,35 +118,40 @@ export const SUB_CATEGORY_NAMES: Record<Category, CategoryName> = {
 /**
  * Sub-category accent color definitions for visual differentiation.
  *
- * Each sub-category gets a unique shade within its parent category family:
- * - American Government: blue-400 / blue-500 / blue-600
- * - American History: amber-400 / amber-500 / amber-600
- * - Integrated Civics: emerald-500
+ * Each sub-category gets a vibrant, distinctive color matching the
+ * original CATEGORY_COLORS_MAP palette used on flip card backs:
+ * - Principles of American Democracy: rose (warm, founding docs)
+ * - System of Government: blue (institutional, structural)
+ * - Rights and Responsibilities: emerald (growth, civic duty)
+ * - Colonial Period and Independence: amber (historical warmth)
+ * - 1800s: fuchsia (distinctive, stands out)
+ * - Recent American History: sky (modern, forward-looking)
+ * - Symbols and Holidays: slate (neutral, grounded)
  */
 export interface SubCategoryColors {
-  /** Tailwind bg class for header strip (e.g. 'bg-blue-500') */
+  /** Tailwind bg class for header strip (e.g. 'bg-rose-500') */
   stripBg: string;
-  /** Tailwind border-l class for card accent (e.g. 'border-l-blue-500') */
+  /** Tailwind border-l class for card accent (e.g. 'border-l-rose-500') */
   borderAccent: string;
-  /** Tailwind text class for labels (e.g. 'text-blue-500') */
+  /** Tailwind text class for labels (e.g. 'text-rose-500') */
   textColor: string;
 }
 
 export const SUB_CATEGORY_COLORS: Record<Category, SubCategoryColors> = {
   'Principles of American Democracy': {
+    stripBg: 'bg-rose-500',
+    borderAccent: 'border-l-rose-500',
+    textColor: 'text-rose-500',
+  },
+  'System of Government': {
     stripBg: 'bg-blue-500',
     borderAccent: 'border-l-blue-500',
     textColor: 'text-blue-500',
   },
-  'System of Government': {
-    stripBg: 'bg-blue-600',
-    borderAccent: 'border-l-blue-600',
-    textColor: 'text-blue-600',
-  },
   'Rights and Responsibilities': {
-    stripBg: 'bg-sky-500',
-    borderAccent: 'border-l-sky-500',
-    textColor: 'text-sky-500',
+    stripBg: 'bg-emerald-500',
+    borderAccent: 'border-l-emerald-500',
+    textColor: 'text-emerald-500',
   },
   'American History: Colonial Period and Independence': {
     stripBg: 'bg-amber-500',
@@ -154,19 +159,19 @@ export const SUB_CATEGORY_COLORS: Record<Category, SubCategoryColors> = {
     textColor: 'text-amber-500',
   },
   'American History: 1800s': {
-    stripBg: 'bg-orange-500',
-    borderAccent: 'border-l-orange-500',
-    textColor: 'text-orange-500',
+    stripBg: 'bg-fuchsia-500',
+    borderAccent: 'border-l-fuchsia-500',
+    textColor: 'text-fuchsia-500',
   },
   'Recent American History and Other Important Historical Information': {
-    stripBg: 'bg-amber-600',
-    borderAccent: 'border-l-amber-600',
-    textColor: 'text-amber-600',
+    stripBg: 'bg-sky-500',
+    borderAccent: 'border-l-sky-500',
+    textColor: 'text-sky-500',
   },
   'Civics: Symbols and Holidays': {
-    stripBg: 'bg-emerald-500',
-    borderAccent: 'border-l-emerald-500',
-    textColor: 'text-emerald-500',
+    stripBg: 'bg-slate-500',
+    borderAccent: 'border-l-slate-500',
+    textColor: 'text-slate-500',
   },
 };
 

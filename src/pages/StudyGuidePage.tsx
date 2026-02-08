@@ -24,14 +24,14 @@ import type { Category } from '@/types';
 
 /** USCIS main category color for sub-category flip card back gradients */
 const CATEGORY_COLORS_MAP: Record<string, string> = {
-  'Principles of American Democracy': 'from-blue-500 to-blue-600',
-  'System of Government': 'from-blue-600 to-indigo-600',
-  'Rights and Responsibilities': 'from-sky-500 to-blue-500',
+  'Principles of American Democracy': 'from-rose-500 to-pink-500',
+  'System of Government': 'from-blue-500 to-cyan-500',
+  'Rights and Responsibilities': 'from-emerald-500 to-lime-500',
   'American History: Colonial Period and Independence': 'from-amber-500 to-orange-500',
-  'American History: 1800s': 'from-orange-500 to-orange-600',
+  'American History: 1800s': 'from-fuchsia-500 to-purple-500',
   'Recent American History and Other Important Historical Information':
-    'from-amber-600 to-amber-700',
-  'Civics: Symbols and Holidays': 'from-emerald-500 to-teal-500',
+    'from-sky-500 to-indigo-500',
+  'Civics: Symbols and Holidays': 'from-slate-500 to-stone-500',
 };
 
 /** Tab definitions for the study guide */
