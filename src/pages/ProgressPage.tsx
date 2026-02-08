@@ -12,14 +12,15 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { ChevronLeft, ChevronDown, ChevronRight, TrendingUp } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronRight, TrendingUp, Trophy } from 'lucide-react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
-import { PageTitle, SectionHeading } from '@/components/bilingual/BilingualHeading';
+import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card, CardContent } from '@/components/ui/Card';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { MasteryBadge } from '@/components/progress/MasteryBadge';
+import { SkillTreePath } from '@/components/progress/SkillTreePath';
 import { StaggeredList, StaggeredItem, FadeIn } from '@/components/animations/StaggeredList';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import {
@@ -190,17 +191,30 @@ const ProgressPage = () => {
     });
   };
 
+  // Handle skill tree node click -- navigate to practice that sub-category
+  const handleNodeClick = (subCategory: string) => {
+    navigate(`/study?category=${encodeURIComponent(subCategory)}#cards`);
+  };
+
   return (
     <div className="page-shell">
       <AppNavigation />
       <div className="mx-auto max-w-4xl px-4 py-10">
-        {/* Page header */}
-        <PageTitle
-          text={{
-            en: 'Category Progress',
-            my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038 \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F',
-          }}
-        />
+        {/* Page header with trophy -- Duolingo bold style */}
+        <div className="mb-6 text-center">
+          <div className="inline-flex items-center gap-3 mb-2">
+            <Trophy className="h-8 w-8 text-yellow-500" />
+            <h1 className="text-3xl font-extrabold text-foreground">Skill Progress</h1>
+            <Trophy className="h-8 w-8 text-yellow-500" />
+          </div>
+          {showBurmese && (
+            <p className="text-lg font-myanmar text-muted-foreground">
+              {
+                '\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F'
+              }
+            </p>
+          )}
+        </div>
 
         {/* Back to dashboard link */}
         <Link
@@ -213,7 +227,9 @@ const ProgressPage = () => {
             {showBurmese && (
               <span className="font-myanmar ml-1 text-muted-foreground">
                 /
-                \u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037
+                {
+                  '\u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037'
+                }
               </span>
             )}
           </span>
@@ -226,39 +242,111 @@ const ProgressPage = () => {
           </div>
         ) : (
           <>
-            {/* Overall readiness score */}
+            {/* Overall mastery summary card */}
             <FadeIn>
-              <section className="mb-10 flex flex-col items-center text-center">
-                <CategoryRing
-                  percentage={overallMastery}
-                  color="text-primary-500"
-                  size={160}
-                  strokeWidth={12}
-                >
-                  <div className="flex flex-col items-center">
-                    <span className="text-4xl font-bold text-foreground tabular-nums">
-                      {overallMastery}%
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {strings.progress.overallReadiness.en}
-                    </span>
-                  </div>
-                </CategoryRing>
+              <Card className="mb-8">
+                <CardContent className="p-6">
+                  <div className="flex flex-col sm:flex-row items-center gap-6">
+                    <CategoryRing
+                      percentage={overallMastery}
+                      color="text-primary-500"
+                      size={140}
+                      strokeWidth={12}
+                    >
+                      <div className="flex flex-col items-center">
+                        <span className="text-3xl font-extrabold text-foreground tabular-nums">
+                          {overallMastery}%
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                          {strings.progress.overallReadiness.en}
+                        </span>
+                      </div>
+                    </CategoryRing>
 
-                <p className="mt-4 text-sm text-muted-foreground">
-                  {practicedQuestionIds.size} of 100 questions practiced
-                  {showBurmese && (
-                    <span className="block font-myanmar mt-0.5">
-                      {'\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038'}{' '}
-                      {practicedQuestionIds.size} / 100{' '}
-                      {'\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038'}
-                    </span>
-                  )}
-                </p>
+                    <div className="flex-1 text-center sm:text-left">
+                      <h2 className="text-xl font-bold text-foreground mb-1">
+                        {overallMastery >= 80
+                          ? 'Almost Ready!'
+                          : overallMastery >= 50
+                            ? 'Making Progress!'
+                            : 'Keep Going!'}
+                      </h2>
+                      {showBurmese && (
+                        <p className="text-sm font-myanmar text-muted-foreground mb-2">
+                          {overallMastery >= 80
+                            ? '\u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u1015\u103C\u102E!'
+                            : overallMastery >= 50
+                              ? '\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1014\u1031\u1015\u102B\u1010\u101A\u103A!'
+                              : '\u1006\u1000\u103A\u101C\u1000\u103A\u1015\u102B!'}
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        {practicedQuestionIds.size} of 100 questions practiced
+                        {showBurmese && (
+                          <span className="block font-myanmar mt-0.5">
+                            {'\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038'}{' '}
+                            {practicedQuestionIds.size} / 100{' '}
+                            {
+                              '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038'
+                            }
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+
+            {/* Skill Tree Path -- main content */}
+            <FadeIn delay={100}>
+              <section className="mb-10">
+                <SectionHeading
+                  text={{
+                    en: 'Skill Tree',
+                    my: '\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F \u101C\u1019\u103A\u1038\u1000\u103C\u1031\u102C\u1004\u103A\u1038',
+                  }}
+                />
+                <Card className="overflow-visible">
+                  <CardContent className="px-2 py-6 sm:px-6">
+                    {practicedQuestionIds.size === 0 ? (
+                      /* Empty state */
+                      <div className="text-center py-8">
+                        <div className="text-5xl mb-4">{'\u{1F331}'}</div>
+                        <p className="text-base font-semibold text-foreground mb-1">
+                          Start your journey!
+                        </p>
+                        {showBurmese && (
+                          <p className="text-sm font-myanmar text-muted-foreground mb-4">
+                            {
+                              '\u101E\u1004\u103A\u1037\u1001\u101B\u102E\u1038\u1005\u1010\u1004\u103A\u1015\u102B!'
+                            }
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+                          Practice questions to unlock nodes and earn bronze, silver, and gold
+                          medals.
+                          {showBurmese && (
+                            <span className="block font-myanmar mt-1">
+                              {
+                                '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038 \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038 \u1010\u1036\u1006\u102D\u1015\u103A\u1019\u103B\u102C\u1038 \u101B\u101A\u1030\u1015\u102B\u104B'
+                              }
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    ) : (
+                      <SkillTreePath
+                        subcategoryMastery={subCategoryMasteries}
+                        onNodeClick={handleNodeClick}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
               </section>
             </FadeIn>
 
-            {/* Category cards */}
+            {/* Category breakdown cards */}
             <section className="mb-10">
               <SectionHeading text={strings.progress.categoryProgress} />
 
