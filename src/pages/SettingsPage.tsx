@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, Clock, Settings, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Bell, Clock, RotateCcw, Settings, Volume2, VolumeX } from 'lucide-react';
 import { NotificationSettings } from '@/components/pwa/NotificationSettings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -266,6 +266,55 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </section>
+        {/* Onboarding Tour Replay */}
+        <section className="mb-8">
+          <SectionHeading
+            text={{
+              en: 'Onboarding Tour',
+              my: '\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u1019\u103E\u102F\u1001\u101B\u102E\u1038',
+            }}
+          />
+          <Card>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <RotateCcw className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-foreground">Replay Onboarding Tour</p>
+                    {showBurmese && (
+                      <p className="font-myanmar text-sm text-muted-foreground">
+                        {
+                          '\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u1019\u103E\u102F\u1001\u101B\u102E\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u1000\u103C\u100A\u1037\u103A\u101B\u103E\u102F\u1015\u102B'
+                        }
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem('civic-test-onboarding-complete');
+                    navigate('/dashboard');
+                  }}
+                  className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20 transition-colors min-h-[36px]"
+                >
+                  Replay
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Walk through the guided introduction tour again.
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground mt-1">
+                  {
+                    '\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u1015\u103C\u1019\u103E\u102F\u1001\u101B\u102E\u1038\u1000\u102D\u102F \u1011\u1015\u103A\u1019\u1036\u1016\u103C\u1010\u103A\u101E\u103D\u102C\u1038\u1015\u102B\u104B'
+                  }
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Speech Rate */}
         <section className="mb-6">
           <SectionHeading

@@ -314,17 +314,21 @@ const Dashboard = () => {
 
         {/* Quick action buttons */}
         <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-          <BilingualButton
-            label={strings.actions.startStudying}
-            variant="outline"
-            icon={<BookOpenCheck className="h-4 w-4" />}
-            onClick={() => navigate('/study')}
-          />
-          <BilingualButton
-            label={strings.actions.startTest}
-            variant="primary"
-            onClick={() => navigate('/test')}
-          />
+          <div data-tour="study-action">
+            <BilingualButton
+              label={strings.actions.startStudying}
+              variant="outline"
+              icon={<BookOpenCheck className="h-4 w-4" />}
+              onClick={() => navigate('/study')}
+            />
+          </div>
+          <div data-tour="test-action">
+            <BilingualButton
+              label={strings.actions.startTest}
+              variant="primary"
+              onClick={() => navigate('/test')}
+            />
+          </div>
         </div>
 
         {/* ANXR-05: Readiness confidence indicator */}
@@ -353,14 +357,14 @@ const Dashboard = () => {
         </section>
 
         {/* SRS Review Widget */}
-        <section className="mb-8">
+        <section className="mb-8" data-tour="srs-deck">
           <FadeIn delay={50}>
             <SRSWidget />
           </FadeIn>
         </section>
 
         {/* Interview Simulation Widget */}
-        <section className="mb-8">
+        <section className="mb-8" data-tour="interview-sim">
           <FadeIn delay={75}>
             <InterviewDashboardWidget />
           </FadeIn>
