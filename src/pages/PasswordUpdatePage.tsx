@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AppNavigation from '@/components/AppNavigation';
 import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { Button } from '@/components/ui/Button';
+import { FadeIn } from '@/components/animations/StaggeredList';
 
 const PasswordUpdatePage = () => {
   const { user, isLoading, updatePassword, authError } = useAuth();
@@ -17,7 +19,8 @@ const PasswordUpdatePage = () => {
     const timer = setTimeout(() => {
       toast({
         title: 'Open from the secure email link',
-        description: 'To update your password we need the recovery session from Supabase.',
+        description:
+          'We need the recovery session to update your password. လျှို့ဝှက်စာပြောင်းရန် အီးမေးလ်လင့်ခ်မှဖွင့်ပါ။',
         variant: 'destructive',
       });
     }, 500);
@@ -29,16 +32,16 @@ const PasswordUpdatePage = () => {
     if (passwords.password !== passwords.confirm) {
       toast({
         title: 'Passwords must match',
-        description: 'Please confirm the same 12+ character password.',
-        variant: 'destructive',
+        description: 'Please confirm the same password. လျှို့ဝှက်စာနံပါတ်များ တူညီရပါမည်။',
+        variant: 'warning',
       });
       return;
     }
     if (passwords.password.length < 12) {
       toast({
         title: 'Password too short',
-        description: 'Use at least 12 characters for a strong password.',
-        variant: 'destructive',
+        description: 'Use at least 12 characters. အနည်းဆုံး ၁၂ လုံး ထည့်ပါ။',
+        variant: 'warning',
       });
       return;
     }
@@ -46,8 +49,8 @@ const PasswordUpdatePage = () => {
     try {
       await updatePassword(passwords.password);
       toast({
-        title: 'Password updated',
-        description: 'Your session stays active with the new password.',
+        title: 'Password updated!',
+        description: 'Your new password is active. လျှို့ဝှက်စာနံပါတ်အသစ် အသုံးပြုနိုင်ပါပြီ။',
       });
       navigate('/dashboard', { replace: true });
     } catch (error) {
@@ -60,58 +63,88 @@ const PasswordUpdatePage = () => {
   return (
     <div className="page-shell">
       <AppNavigation translucent />
-      <div className="mx-auto max-w-3xl px-4 pb-16 pt-12">
-        <div className="rounded-3xl border border-border/60 bg-card/80 p-8 shadow-xl shadow-primary/10 backdrop-blur">
-          <h1 className="text-2xl font-semibold text-foreground">Update your password</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            We use your Supabase recovery session to update credentials without exposing them to
-            third-parties.
-          </p>
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                New password (12+ characters)
-              </label>
-              <input
-                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
-                type="password"
-                value={passwords.password}
-                onChange={event =>
-                  setPasswords(prev => ({ ...prev, password: event.target.value }))
-                }
-                required
-                minLength={12}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Confirm new password
-              </label>
-              <input
-                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
-                type="password"
-                value={passwords.confirm}
-                onChange={event => setPasswords(prev => ({ ...prev, confirm: event.target.value }))}
-                required
-                minLength={12}
-              />
-            </div>
-            {authError && <p className="text-sm text-destructive">{authError}</p>}
-            <button
-              type="submit"
-              disabled={isSubmitting || isLoading || !user}
-              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+      <div className="mx-auto max-w-md px-4 pb-16 pt-12">
+        <FadeIn>
+          <div className="text-center">
+            <div
+              className="mb-3 flex items-center justify-center gap-2 text-3xl"
+              aria-hidden="true"
             >
-              Save new password
-            </button>
-          </form>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            No recovery session?{' '}
-            <Link className="font-semibold text-primary" to="/auth/forgot">
-              Request a fresh reset email
-            </Link>
-          </p>
-        </div>
+              <span>🔐</span>
+              <span>🇺🇸</span>
+            </div>
+            <h1 className="text-2xl font-extrabold text-foreground">Update Your Password</h1>
+            <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              သင့်လျှို့ဝှက်စာနံပါတ်ကို အသစ်ပြောင်းပါ
+            </p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={100}>
+          <div className="mt-6 rounded-2xl border border-border/60 bg-card p-6 shadow-lg">
+            <p className="mb-4 text-sm text-muted-foreground">
+              Choose a strong new password (12+ characters).{' '}
+              <span className="font-myanmar">
+                ခိုင်မာသော လျှို့ဝှက်စာနံပါတ်အသစ်ရွေးပါ (၁၂ လုံးအထက်)။
+              </span>
+            </p>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label className="text-sm font-semibold text-foreground">
+                  New password{' '}
+                  <span className="font-myanmar text-xs text-muted-foreground">
+                    လျှို့ဝှက်စာအသစ်
+                  </span>
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  type="password"
+                  value={passwords.password}
+                  onChange={event =>
+                    setPasswords(prev => ({ ...prev, password: event.target.value }))
+                  }
+                  required
+                  minLength={12}
+                  placeholder="12+ characters"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-foreground">
+                  Confirm password{' '}
+                  <span className="font-myanmar text-xs text-muted-foreground">အတည်ပြုပါ</span>
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  type="password"
+                  value={passwords.confirm}
+                  onChange={event =>
+                    setPasswords(prev => ({ ...prev, confirm: event.target.value }))
+                  }
+                  required
+                  minLength={12}
+                  placeholder="Repeat password"
+                />
+              </div>
+              {authError && <p className="text-sm font-medium text-destructive">{authError}</p>}
+              <Button
+                type="submit"
+                fullWidth
+                size="lg"
+                disabled={isSubmitting || isLoading || !user}
+                loading={isSubmitting}
+              >
+                Save New Password
+              </Button>
+            </form>
+            <p className="mt-5 text-center text-sm text-muted-foreground">
+              No recovery session?{' '}
+              <Link className="font-semibold text-primary" to="/auth/forgot">
+                Request a new reset email
+              </Link>
+              <span className="font-myanmar text-xs"> · ပြန်လည်ရယူရေးလင့်ခ် တောင်းပါ</span>
+            </p>
+          </div>
+        </FadeIn>
       </div>
     </div>
   );

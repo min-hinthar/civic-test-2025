@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import AppNavigation from '@/components/AppNavigation';
 import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { Button } from '@/components/ui/Button';
+import { FadeIn } from '@/components/animations/StaggeredList';
 
 const PasswordResetPage = () => {
   const { sendPasswordReset, authError } = useAuth();
@@ -17,8 +19,9 @@ const PasswordResetPage = () => {
     try {
       await sendPasswordReset(email, `${window.location.origin}/auth/update-password`);
       toast({
-        title: 'Secure reset email sent',
-        description: 'Open the link on this device to safely update your password.',
+        title: 'Reset email sent',
+        description:
+          'Check your inbox for the recovery link. လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ။',
       });
       setEmail('');
     } catch (error) {
@@ -31,40 +34,65 @@ const PasswordResetPage = () => {
   return (
     <div className="page-shell">
       <AppNavigation translucent />
-      <div className="mx-auto max-w-3xl px-4 pb-16 pt-12">
-        <div className="rounded-3xl border border-border/60 bg-card/80 p-8 shadow-xl shadow-primary/10 backdrop-blur">
-          <h1 className="text-2xl font-semibold text-foreground">Forgot password</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            We will email you a Supabase recovery link that redirects back to this app. Only use
-            links you requested to avoid phishing.
-          </p>
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Email</label>
-              <input
-                className="mt-1 w-full rounded-2xl border border-border bg-card/70 px-4 py-3"
-                type="email"
-                value={email}
-                onChange={event => setEmail(event.target.value)}
-                required
-              />
-            </div>
-            {authError && <p className="text-sm text-destructive">{authError}</p>}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-2xl bg-gradient-to-r from-primary to-rose-500 px-4 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+      <div className="mx-auto max-w-md px-4 pb-16 pt-12">
+        <FadeIn>
+          <div className="text-center">
+            <div
+              className="mb-3 flex items-center justify-center gap-2 text-3xl"
+              aria-hidden="true"
             >
-              Send recovery email
-            </button>
-          </form>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Remembered your password?{' '}
-            <Link className="font-semibold text-primary" to="/auth">
-              Go back to sign in
-            </Link>
-          </p>
-        </div>
+              <span>🔑</span>
+              <span>🇺🇸</span>
+            </div>
+            <h1 className="text-2xl font-extrabold text-foreground">Forgot Password</h1>
+            <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              လျှို့ဝှက်စာနံပါတ် မေ့နေပါသလား
+            </p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={100}>
+          <div className="mt-6 rounded-2xl border border-border/60 bg-card p-6 shadow-lg">
+            <p className="mb-4 text-sm text-muted-foreground">
+              We will email you a recovery link that redirects back to this app.{' '}
+              <span className="font-myanmar">
+                ပြန်လည်ရယူရန် လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
+              </span>
+            </p>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label className="text-sm font-semibold text-foreground">
+                  Email <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  type="email"
+                  value={email}
+                  onChange={event => setEmail(event.target.value)}
+                  required
+                  placeholder="you@example.com"
+                />
+              </div>
+              {authError && <p className="text-sm font-medium text-destructive">{authError}</p>}
+              <Button
+                type="submit"
+                fullWidth
+                size="lg"
+                disabled={isSubmitting}
+                loading={isSubmitting}
+              >
+                Send Recovery Email
+              </Button>
+            </form>
+            <p className="mt-5 text-center text-sm text-muted-foreground">
+              Remember your password?{' '}
+              <Link className="font-semibold text-primary" to="/auth">
+                Sign in
+              </Link>
+              <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာမှတ်မိပါသလား</span>
+            </p>
+          </div>
+        </FadeIn>
       </div>
     </div>
   );
