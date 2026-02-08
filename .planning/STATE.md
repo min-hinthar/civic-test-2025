@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 7 of 7 (Social Features)
-Plan: 6 of 8 complete (07-01, 07-02, 07-03, 07-04, 07-05, 07-06)
+Plan: 7 of 8 complete (07-01, 07-02, 07-03, 07-04, 07-05, 07-06, 07-07)
 Status: In progress
-Last activity: 2026-02-08 - Completed 07-06-PLAN.md (Social Identity Layer)
+Last activity: 2026-02-08 - Completed 07-07-PLAN.md (Social Hub & Leaderboard)
 
-Progress: [█████████░] 96% (51 plans / 53 total)
+Progress: [█████████░] 98% (52 plans / 53 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 51 (Phases 1-6 + 07-01 through 07-06)
+- Total plans completed: 52 (Phases 1-6 + 07-01 through 07-07)
 - Average duration: ~12 min
-- Total execution time: ~633 min
+- Total execution time: ~644 min
 
 **By Phase:**
 
@@ -33,7 +33,7 @@ Progress: [█████████░] 96% (51 plans / 53 total)
 | 04-learning-explanations | 9 | 72 min | 8 min |
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
-| 07-social-features | 6/8 | 66 min | 11 min |
+| 07-social-features | 7/8 | 77 min | 11 min |
 
 **Recent Trend:**
 - Phase 6 wave execution: 6 plans in 5 waves with parallel execution
@@ -246,6 +246,9 @@ Recent decisions affecting current work:
 - 07-06: Fire-and-forget sync for all Supabase social operations (offline-safe)
 - 07-06: SocialContext returns no-op functions when unauthenticated
 - 07-06: SocialSettings placed between Notifications and Review Reminders in Settings page
+- 07-07: Dynamic import for socialProfileSync in SocialHubPage (SocialProvider not yet in tree)
+- 07-07: Opt-in dismissal stored in localStorage key civic-prep-social-optin-dismissed
+- 07-07: LeaderboardWidget uses useLeaderboard with limit=3 for compact display
 
 ### Pending Todos
 
@@ -263,7 +266,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 07-06-PLAN.md (Social Identity Layer). Phase 7 in progress.
+Stopped at: Completed 07-07-PLAN.md (Social Hub & Leaderboard). Phase 7 in progress.
 Resume file: None
 
 ---
