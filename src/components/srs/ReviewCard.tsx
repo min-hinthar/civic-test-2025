@@ -19,9 +19,7 @@ const SWIPE_THRESHOLD = 80;
 const SWIPE_VELOCITY = 400;
 
 // Build question lookup map once at module level
-const questionsById: Map<string, Question> = new Map(
-  allQuestions.map((q) => [q.id, q])
-);
+const questionsById: Map<string, Question> = new Map(allQuestions.map(q => [q.id, q]));
 
 // ---------------------------------------------------------------------------
 // Types
@@ -78,11 +76,11 @@ export function ReviewCard({
     if (!question) return { en: '', my: '' };
     if (question.studyAnswers && question.studyAnswers.length > 0) {
       return {
-        en: question.studyAnswers.map((a) => a.text_en).join(', '),
-        my: question.studyAnswers.map((a) => a.text_my).join(', '),
+        en: question.studyAnswers.map(a => a.text_en).join(', '),
+        my: question.studyAnswers.map(a => a.text_my).join(', '),
       };
     }
-    const correctAnswer = question.answers.find((a) => a.correct);
+    const correctAnswer = question.answers.find(a => a.correct);
     return {
       en: correctAnswer?.text_en ?? '',
       my: correctAnswer?.text_my ?? '',
@@ -100,11 +98,11 @@ export function ReviewCard({
     x,
     [-200, -50, 0, 50, 200],
     [
-      'rgba(251, 146, 60, 0.3)',   // orange-400/0.3
-      'rgba(251, 146, 60, 0.1)',   // orange-400/0.1
-      'rgba(0, 0, 0, 0)',          // transparent
-      'rgba(74, 222, 128, 0.1)',   // green-400/0.1
-      'rgba(74, 222, 128, 0.3)',   // green-400/0.3
+      'rgba(251, 146, 60, 0.3)', // orange-400/0.3
+      'rgba(251, 146, 60, 0.1)', // orange-400/0.1
+      'rgba(0, 0, 0, 0)', // transparent
+      'rgba(74, 222, 128, 0.1)', // green-400/0.1
+      'rgba(74, 222, 128, 0.3)', // green-400/0.3
     ]
   );
 
@@ -221,9 +219,7 @@ export function ReviewCard({
               'absolute inset-0 rounded-2xl z-30',
               'flex flex-col items-center justify-center',
               'backdrop-blur-sm',
-              showRatingFeedback.isEasy
-                ? 'bg-green-400/20'
-                : 'bg-orange-400/20'
+              showRatingFeedback.isEasy ? 'bg-green-400/20' : 'bg-orange-400/20'
             )}
           >
             <div className="text-center px-4">
@@ -247,7 +243,10 @@ export function ReviewCard({
                       : 'text-warning-600 dark:text-warning-400'
                   )}
                 >
-                  {'\u1014\u1031\u102C\u1000\u103A\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037'}: {showRatingFeedback.intervalText.my}
+                  {
+                    '\u1014\u1031\u102C\u1000\u103A\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037'
+                  }
+                  : {showRatingFeedback.intervalText.my}
                 </p>
               )}
 
@@ -259,7 +258,9 @@ export function ReviewCard({
                   </p>
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-foreground/60 mt-0.5">
-                      {'\u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B \u101E\u1004\u103A\u101C\u102F\u1015\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1010\u101A\u103A\u104B'}
+                      {
+                        '\u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B \u101E\u1004\u103A\u101C\u102F\u1015\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1010\u101A\u103A\u104B'
+                      }
                     </p>
                   )}
                 </div>

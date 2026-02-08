@@ -44,9 +44,7 @@ export interface SessionSummaryProps {
 // Question lookup (module-level for performance)
 // ---------------------------------------------------------------------------
 
-const questionsById: Map<string, Question> = new Map(
-  allQuestions.map((q) => [q.id, q])
-);
+const questionsById: Map<string, Question> = new Map(allQuestions.map(q => [q.id, q]));
 
 // ---------------------------------------------------------------------------
 // Component
@@ -71,19 +69,13 @@ export function SessionSummary({
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
 
-  const easyCount = useMemo(
-    () => results.filter((r) => r.rating === 'easy').length,
-    [results]
-  );
-  const hardCount = useMemo(
-    () => results.filter((r) => r.rating === 'hard').length,
-    [results]
-  );
+  const easyCount = useMemo(() => results.filter(r => r.rating === 'easy').length, [results]);
+  const hardCount = useMemo(() => results.filter(r => r.rating === 'hard').length, [results]);
   const totalCount = results.length;
 
   // Group hard questions by USCIS main category
   const weakCategories = useMemo(() => {
-    const hardResults = results.filter((r) => r.rating === 'hard');
+    const hardResults = results.filter(r => r.rating === 'hard');
     const categoryMap = new Map<string, number>();
 
     for (const result of hardResults) {
@@ -148,12 +140,12 @@ export function SessionSummary({
       {/* Header */}
       <motion.div variants={fadeVariants} className="text-center">
         <Trophy className="h-12 w-12 text-success-500 mx-auto mb-3" />
-        <h2 className="text-2xl font-bold text-foreground">
-          Session Complete
-        </h2>
+        <h2 className="text-2xl font-bold text-foreground">Session Complete</h2>
         {showBurmese && (
           <p className="font-myanmar text-base text-muted-foreground mt-1">
-            {'\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E'}
+            {
+              '\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E'
+            }
           </p>
         )}
       </motion.div>
@@ -174,9 +166,7 @@ export function SessionSummary({
 
           {/* Easy */}
           <Card className="text-center py-4 px-2">
-            <p className="text-3xl font-bold text-success-600 dark:text-success-400">
-              {easyCount}
-            </p>
+            <p className="text-3xl font-bold text-success-600 dark:text-success-400">{easyCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Easy</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">
@@ -187,9 +177,7 @@ export function SessionSummary({
 
           {/* Hard */}
           <Card className="text-center py-4 px-2">
-            <p className="text-3xl font-bold text-warning-600 dark:text-warning-400">
-              {hardCount}
-            </p>
+            <p className="text-3xl font-bold text-warning-600 dark:text-warning-400">{hardCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Hard</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">
@@ -202,13 +190,9 @@ export function SessionSummary({
 
       {/* Encouraging message */}
       <motion.div variants={fadeVariants} className="text-center">
-        <p className="text-base font-medium text-foreground">
-          {encouragement.en}
-        </p>
+        <p className="text-base font-medium text-foreground">{encouragement.en}</p>
         {showBurmese && (
-          <p className="font-myanmar text-sm text-muted-foreground mt-1">
-            {encouragement.my}
-          </p>
+          <p className="font-myanmar text-sm text-muted-foreground mt-1">{encouragement.my}</p>
         )}
       </motion.div>
 
@@ -218,13 +202,13 @@ export function SessionSummary({
           <Card className="p-4">
             <div className="flex items-center gap-2 mb-3">
               <Target className="h-4 w-4 text-warning-500 shrink-0" />
-              <p className="text-sm font-semibold text-foreground">
-                Practice these categories
-              </p>
+              <p className="text-sm font-semibold text-foreground">Practice these categories</p>
             </div>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mb-3">
-                {'\u1024\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'}
+                {
+                  '\u1024\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                }
               </p>
             )}
 
@@ -248,13 +232,9 @@ export function SessionSummary({
                   <div className="flex items-center gap-2.5 text-left">
                     <BookOpen className="h-4 w-4 text-warning-600 dark:text-warning-400 shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-foreground">
-                        {name.en}
-                      </p>
+                      <p className="text-sm font-medium text-foreground">{name.en}</p>
                       {showBurmese && (
-                        <p className="font-myanmar text-xs text-muted-foreground">
-                          {name.my}
-                        </p>
+                        <p className="font-myanmar text-xs text-muted-foreground">{name.my}</p>
                       )}
                     </div>
                   </div>
@@ -275,7 +255,9 @@ export function SessionSummary({
             <span>Back to Deck</span>
             {showBurmese && (
               <span className="font-myanmar text-sm opacity-80">
-                {'\u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1006\u102E\u101E\u102D\u102F\u1037\u1015\u103C\u1014\u103A\u101E\u103D\u102C\u1038\u1015\u102B'}
+                {
+                  '\u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1006\u102E\u101E\u102D\u102F\u1037\u1015\u103C\u1014\u103A\u101E\u103D\u102C\u1038\u1015\u102B'
+                }
               </span>
             )}
           </span>

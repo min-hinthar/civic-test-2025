@@ -67,10 +67,7 @@ export function useBadges(badgeCheckData: BadgeCheckData | null): UseBadgesRetur
 
     async function load() {
       try {
-        const [earned, shown] = await Promise.all([
-          getEarnedBadges(),
-          getShownBadgeIds(),
-        ]);
+        const [earned, shown] = await Promise.all([getEarnedBadges(), getShownBadgeIds()]);
 
         if (!cancelled) {
           setEarnedRecords(earned);
@@ -92,7 +89,7 @@ export function useBadges(badgeCheckData: BadgeCheckData | null): UseBadgesRetur
 
   // Derive earned badge IDs as a Set for O(1) lookup
   const earnedBadgeIds: Set<string> = useMemo(
-    () => new Set(earnedRecords.map((r) => r.badgeId)),
+    () => new Set(earnedRecords.map(r => r.badgeId)),
     [earnedRecords]
   );
 
@@ -101,7 +98,7 @@ export function useBadges(badgeCheckData: BadgeCheckData | null): UseBadgesRetur
     if (!badgeCheckData) return [];
 
     return BADGE_DEFINITIONS.filter(
-      (badge) => badge.check(badgeCheckData) || earnedBadgeIds.has(badge.id)
+      badge => badge.check(badgeCheckData) || earnedBadgeIds.has(badge.id)
     );
   }, [badgeCheckData, earnedBadgeIds]);
 
@@ -109,8 +106,8 @@ export function useBadges(badgeCheckData: BadgeCheckData | null): UseBadgesRetur
   const lockedBadges: BadgeDefinition[] = useMemo(() => {
     if (!badgeCheckData) return BADGE_DEFINITIONS;
 
-    const earnedIds = new Set(earnedBadges.map((b) => b.id));
-    return BADGE_DEFINITIONS.filter((badge) => !earnedIds.has(badge.id));
+    const earnedIds = new Set(earnedBadges.map(b => b.id));
+    return BADGE_DEFINITIONS.filter(badge => !earnedIds.has(badge.id));
   }, [badgeCheckData, earnedBadges]);
 
   // Derive newly earned badge (earned but not shown - for celebration)
@@ -121,28 +118,25 @@ export function useBadges(badgeCheckData: BadgeCheckData | null): UseBadgesRetur
   }, [badgeCheckData, earnedBadgeIds, shownIds, isLoading]);
 
   // Dismiss celebration: persist to IndexedDB and update local state
-  const dismissCelebration = useCallback(
-    async (badgeId: string) => {
-      try {
-        await Promise.all([markBadgeShown(badgeId), markBadgeEarned(badgeId)]);
-      } catch {
-        // IndexedDB write failed - still update local state
-      }
+  const dismissCelebration = useCallback(async (badgeId: string) => {
+    try {
+      await Promise.all([markBadgeShown(badgeId), markBadgeEarned(badgeId)]);
+    } catch {
+      // IndexedDB write failed - still update local state
+    }
 
-      // Update local state to reflect dismissal
-      setShownIds((prev) => {
-        const next = new Set(prev);
-        next.add(badgeId);
-        return next;
-      });
+    // Update local state to reflect dismissal
+    setShownIds(prev => {
+      const next = new Set(prev);
+      next.add(badgeId);
+      return next;
+    });
 
-      setEarnedRecords((prev) => {
-        if (prev.some((r) => r.badgeId === badgeId)) return prev;
-        return [...prev, { badgeId, earnedAt: new Date().toISOString() }];
-      });
-    },
-    []
-  );
+    setEarnedRecords(prev => {
+      if (prev.some(r => r.badgeId === badgeId)) return prev;
+      return [...prev, { badgeId, earnedAt: new Date().toISOString() }];
+    });
+  }, []);
 
   return {
     earnedBadges,

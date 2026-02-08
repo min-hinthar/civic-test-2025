@@ -46,9 +46,7 @@ export async function shareScoreCard(blob: Blob): Promise<ShareResult> {
   // --- Path 2: Clipboard API ---
   try {
     if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
-      await navigator.clipboard.write([
-        new ClipboardItem({ 'image/png': blob }),
-      ]);
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
       return 'copied';
     }
   } catch {

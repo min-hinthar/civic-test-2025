@@ -33,9 +33,7 @@ export async function getInterviewHistory(): Promise<InterviewSession[]> {
  * Save a new interview session to history.
  * Prepends to the front of the array (newest first).
  */
-export async function saveInterviewSession(
-  session: InterviewSession
-): Promise<void> {
+export async function saveInterviewSession(session: InterviewSession): Promise<void> {
   const history = await getInterviewHistory();
   history.unshift(session);
   await set(SESSIONS_KEY, history, interviewDb);

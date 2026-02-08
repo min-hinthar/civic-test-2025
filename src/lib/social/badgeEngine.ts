@@ -23,9 +23,7 @@ export function evaluateBadges(
   data: BadgeCheckData,
   earnedBadgeIds: Set<string>
 ): BadgeDefinition[] {
-  return BADGE_DEFINITIONS.filter(
-    (badge) => badge.check(data) && !earnedBadgeIds.has(badge.id)
-  );
+  return BADGE_DEFINITIONS.filter(badge => badge.check(data) && !earnedBadgeIds.has(badge.id));
 }
 
 /**

@@ -14,14 +14,7 @@
  * - Works offline-first (local IndexedDB only, no login required)
  */
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Card } from 'ts-fsrs';
 import type { SRSCardRecord } from '@/lib/srs';
 import {
@@ -92,10 +85,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
   // -------------------------------------------------------------------------
   // Derived: due count
   // -------------------------------------------------------------------------
-  const dueCount: number = useMemo(
-    () => deck.filter((r) => isDue(r.card)).length,
-    [deck]
-  );
+  const dueCount: number = useMemo(() => deck.filter(r => isDue(r.card)).length, [deck]);
 
   // -------------------------------------------------------------------------
   // Load deck from IndexedDB on mount
@@ -207,7 +197,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
   // -------------------------------------------------------------------------
   const getDueCards = useCallback((): SRSCardRecord[] => {
     return deck
-      .filter((r) => isDue(r.card))
+      .filter(r => isDue(r.card))
       .sort((a, b) => a.card.due.getTime() - b.card.due.getTime());
   }, [deck]);
 
@@ -216,7 +206,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
   // -------------------------------------------------------------------------
   const isInDeck = useCallback(
     (questionId: string): boolean => {
-      return deck.some((r) => r.questionId === questionId);
+      return deck.some(r => r.questionId === questionId);
     },
     [deck]
   );
@@ -227,7 +217,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
   const addCard = useCallback(
     async (questionId: string) => {
       // Skip if already in deck
-      if (deck.some((r) => r.questionId === questionId)) return;
+      if (deck.some(r => r.questionId === questionId)) return;
 
       const newCard = createNewSRSCard();
       const record: SRSCardRecord = {
@@ -240,7 +230,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
       await setSRSCard(record);
 
       // Optimistic in-memory update
-      setDeck((prev) => [...prev, record]);
+      setDeck(prev => [...prev, record]);
 
       // Queue sync if logged in
       if (user?.id) {
@@ -263,12 +253,12 @@ export function SRSProvider({ children }: SRSProviderProps) {
       await removeSRSCardFromStore(questionId);
 
       // Optimistic in-memory update
-      setDeck((prev) => prev.filter((r) => r.questionId !== questionId));
+      setDeck(prev => prev.filter(r => r.questionId !== questionId));
 
       // Queue delete sync if logged in
       if (user?.id) {
         // We need a placeholder record for the sync queue
-        const existing = deck.find((r) => r.questionId === questionId);
+        const existing = deck.find(r => r.questionId === questionId);
         if (existing) {
           await queueSRSSync({
             questionId,
@@ -290,7 +280,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
       questionId: string,
       isEasy: boolean
     ): Promise<{ card: Card; intervalText: { en: string; my: string } }> => {
-      const existing = deck.find((r) => r.questionId === questionId);
+      const existing = deck.find(r => r.questionId === questionId);
       if (!existing) {
         throw new Error(`[SRSContext] Card not found: ${questionId}`);
       }
@@ -311,9 +301,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
       await setSRSCard(updatedRecord);
 
       // Optimistic in-memory update
-      setDeck((prev) =>
-        prev.map((r) => (r.questionId === questionId ? updatedRecord : r))
-      );
+      setDeck(prev => prev.map(r => (r.questionId === questionId ? updatedRecord : r)));
 
       // Queue sync if logged in
       if (user?.id) {

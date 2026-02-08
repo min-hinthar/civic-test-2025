@@ -21,13 +21,19 @@ export interface ShareCardData {
 }
 
 /** Session type labels (always bilingual on card) */
-const SESSION_LABELS: Record<
-  ShareCardData['sessionType'],
-  { en: string; my: string }
-> = {
-  test: { en: 'Mock Test Results', my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038' },
-  practice: { en: 'Practice Results', my: '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1001\u1014\u103A\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038' },
-  interview: { en: 'Interview Results', my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038' },
+const SESSION_LABELS: Record<ShareCardData['sessionType'], { en: string; my: string }> = {
+  test: {
+    en: 'Mock Test Results',
+    my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+  },
+  practice: {
+    en: 'Practice Results',
+    my: '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1001\u1014\u103A\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+  },
+  interview: {
+    en: 'Interview Results',
+    my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+  },
 };
 
 /**
@@ -132,16 +138,16 @@ export async function renderShareCard(data: ShareCardData): Promise<Blob> {
 
   // --- Background gradient ---
   const gradient = ctx.createLinearGradient(0, 0, W, H);
-  gradient.addColorStop(0, '#1e3a8a');   // Deep blue
+  gradient.addColorStop(0, '#1e3a8a'); // Deep blue
   gradient.addColorStop(0.5, '#4338ca'); // Indigo
-  gradient.addColorStop(1, '#7c3aed');   // Purple
+  gradient.addColorStop(1, '#7c3aed'); // Purple
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, W, H);
 
   // --- Gold accent bars ---
   ctx.fillStyle = '#FFD700';
-  ctx.fillRect(0, 0, W, 8);       // Top bar
-  ctx.fillRect(0, H - 8, W, 8);   // Bottom bar
+  ctx.fillRect(0, 0, W, 8); // Top bar
+  ctx.fillRect(0, H - 8, W, 8); // Bottom bar
 
   // --- Corner accents ---
   drawCornerAccents(ctx, W, H);
@@ -256,15 +262,12 @@ export async function renderShareCard(data: ShareCardData): Promise<Blob> {
 
   // --- Convert to Blob ---
   return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          reject(new Error('Canvas toBlob returned null'));
-        }
-      },
-      'image/png'
-    );
+    canvas.toBlob(blob => {
+      if (blob) {
+        resolve(blob);
+      } else {
+        reject(new Error('Canvas toBlob returned null'));
+      }
+    }, 'image/png');
   });
 }

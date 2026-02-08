@@ -72,9 +72,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         </button>
 
         {/* Welcome header */}
-        <h2 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">
-          Welcome!
-        </h2>
+        <h2 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">Welcome!</h2>
         <p className="font-myanmar mb-1 text-xl font-bold text-gray-900 dark:text-white">
           ကြိုဆိုပါတယ်!
         </p>
@@ -90,9 +88,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <WifiOff className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">
-                Works offline
-              </p>
+              <p className="font-medium text-gray-900 dark:text-white">Works offline</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Study anytime, even without internet.
               </p>
@@ -108,15 +104,12 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <RefreshCw className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">
-                Auto-syncs your progress
-              </p>
+              <p className="font-medium text-gray-900 dark:text-white">Auto-syncs your progress</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Your test results sync when you&apos;re back online.
               </p>
               <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500">
-                အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက်
-                စင့်ခ်လုပ်ပါမယ်။
+                အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် စင့်ခ်လုပ်ပါမယ်။
               </p>
             </div>
           </div>
@@ -127,9 +120,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <Smartphone className="h-4 w-4 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">
-                Open from home screen
-              </p>
+              <p className="font-medium text-gray-900 dark:text-white">Open from home screen</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 For the best experience, open the app from your home screen.
               </p>

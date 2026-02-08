@@ -93,9 +93,7 @@ export async function recordStudyActivity(
 
   // Reset daily activity counts if it's a new day
   const lastActivityDate =
-    data.activityDates.length > 0
-      ? data.activityDates[data.activityDates.length - 1]
-      : null;
+    data.activityDates.length > 0 ? data.activityDates[data.activityDates.length - 1] : null;
 
   if (lastActivityDate !== today) {
     data.dailyActivityCounts = {

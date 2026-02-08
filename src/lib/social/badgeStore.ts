@@ -53,7 +53,7 @@ export async function markBadgeEarned(badgeId: string): Promise<void> {
   const earned = await getEarnedBadges();
 
   // Skip if already earned
-  if (earned.some((b) => b.badgeId === badgeId)) {
+  if (earned.some(b => b.badgeId === badgeId)) {
     return;
   }
 

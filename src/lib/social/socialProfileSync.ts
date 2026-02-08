@@ -55,9 +55,7 @@ interface SocialProfileRow {
  * Returns null if no profile exists or on error.
  * Note: RLS allows users to view their own profile regardless of opt-in status.
  */
-export async function getSocialProfile(
-  userId: string
-): Promise<SocialProfile | null> {
+export async function getSocialProfile(userId: string): Promise<SocialProfile | null> {
   try {
     const { data, error } = await supabase
       .from('social_profiles')
@@ -169,10 +167,7 @@ export async function updateCompositeScore(
  * leaderboard (RLS policies filter by social_opt_in = true).
  * Skips silently when offline.
  */
-export async function toggleSocialOptIn(
-  userId: string,
-  optIn: boolean
-): Promise<void> {
+export async function toggleSocialOptIn(userId: string, optIn: boolean): Promise<void> {
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     return;
   }

@@ -24,11 +24,7 @@ interface InterviewTimerProps {
  * the parent element (e.g., key={questionIndex}). This causes React to
  * unmount and remount, giving a fresh timer without setState in effects.
  */
-export function InterviewTimer({
-  duration = 15,
-  onExpired,
-  isActive,
-}: InterviewTimerProps) {
+export function InterviewTimer({ duration = 15, onExpired, isActive }: InterviewTimerProps) {
   const shouldReduceMotion = useReducedMotion();
   const [timeRemaining, setTimeRemaining] = useState(duration);
   const onExpiredRef = useRef(onExpired);
@@ -73,11 +69,7 @@ export function InterviewTimer({
             ? 'var(--color-warning-500, #f59e0b)'
             : 'var(--color-primary-500, #3b82f6)',
         }}
-        transition={
-          shouldReduceMotion
-            ? { duration: 0.1 }
-            : { duration: 0.8, ease: 'linear' }
-        }
+        transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.8, ease: 'linear' }}
       />
     </div>
   );

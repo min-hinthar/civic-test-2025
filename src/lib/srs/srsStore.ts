@@ -25,9 +25,7 @@ const srsDb = createStore('civic-prep-srs', 'cards');
 // ---------------------------------------------------------------------------
 
 /** Get a single SRS card record by questionId. */
-export async function getSRSCard(
-  questionId: string
-): Promise<SRSCardRecord | undefined> {
+export async function getSRSCard(questionId: string): Promise<SRSCardRecord | undefined> {
   return get<SRSCardRecord>(questionId, srsDb);
 }
 
@@ -63,7 +61,7 @@ export async function getAllSRSCards(): Promise<SRSCardRecord[]> {
 /** Get all SRS cards that are currently due for review. */
 export async function getDueSRSCards(): Promise<SRSCardRecord[]> {
   const allCards = await getAllSRSCards();
-  return allCards.filter((record) => isDue(record.card));
+  return allCards.filter(record => isDue(record.card));
 }
 
 /** Get the total number of SRS cards without loading all records. */

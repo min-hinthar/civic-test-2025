@@ -26,9 +26,7 @@ describe('detectWeakAreas', () => {
   });
 
   it('does not include categories at exactly the threshold', () => {
-    const categories = [
-      { categoryId: 'cat1', mastery: 60, questionCount: 10 },
-    ];
+    const categories = [{ categoryId: 'cat1', mastery: 60, questionCount: 10 }];
     expect(detectWeakAreas(categories, 60)).toEqual([]);
   });
 
@@ -70,18 +68,14 @@ describe('detectWeakAreas', () => {
   });
 
   it('handles 0% mastery correctly', () => {
-    const categories = [
-      { categoryId: 'cat1', mastery: 0, questionCount: 10 },
-    ];
+    const categories = [{ categoryId: 'cat1', mastery: 0, questionCount: 10 }];
     const weak = detectWeakAreas(categories);
     expect(weak).toHaveLength(1);
     expect(weak[0].mastery).toBe(0);
   });
 
   it('only returns categoryId and mastery (no questionCount)', () => {
-    const categories = [
-      { categoryId: 'cat1', mastery: 30, questionCount: 100 },
-    ];
+    const categories = [{ categoryId: 'cat1', mastery: 30, questionCount: 100 }];
     const weak = detectWeakAreas(categories);
     expect(weak[0]).toEqual({ categoryId: 'cat1', mastery: 30 });
     expect(weak[0]).not.toHaveProperty('questionCount');
@@ -111,8 +105,8 @@ describe('detectStaleCategories', () => {
 
   it('returns categories never practiced', () => {
     const categoryMap = {
-      'cat1': ['Q1'],
-      'cat2': ['Q2'],
+      cat1: ['Q1'],
+      cat2: ['Q2'],
     };
     const stale = detectStaleCategories([], categoryMap);
     expect(stale).toHaveLength(2);
@@ -122,7 +116,7 @@ describe('detectStaleCategories', () => {
 
   it('returns categories with old activity beyond staleDays', () => {
     const categoryMap = {
-      'cat1': ['Q1'],
+      cat1: ['Q1'],
     };
     const history = [makeAnswer('Q1', 10)]; // 10 days ago
     const stale = detectStaleCategories(history, categoryMap, 7);
@@ -133,7 +127,7 @@ describe('detectStaleCategories', () => {
 
   it('does not return recently active categories', () => {
     const categoryMap = {
-      'cat1': ['Q1'],
+      cat1: ['Q1'],
     };
     const history = [makeAnswer('Q1', 2)]; // 2 days ago
     const stale = detectStaleCategories(history, categoryMap, 7);
@@ -142,11 +136,11 @@ describe('detectStaleCategories', () => {
 
   it('uses the most recent answer for each category', () => {
     const categoryMap = {
-      'cat1': ['Q1', 'Q2'],
+      cat1: ['Q1', 'Q2'],
     };
     const history = [
       makeAnswer('Q1', 20), // old
-      makeAnswer('Q2', 3),  // recent
+      makeAnswer('Q2', 3), // recent
     ];
     const stale = detectStaleCategories(history, categoryMap, 7);
     expect(stale).toHaveLength(0); // most recent is 3 days ago, within 7-day window
@@ -154,11 +148,11 @@ describe('detectStaleCategories', () => {
 
   it('separates categories correctly by their question IDs', () => {
     const categoryMap = {
-      'cat1': ['Q1'],
-      'cat2': ['Q2'],
+      cat1: ['Q1'],
+      cat2: ['Q2'],
     };
     const history = [
-      makeAnswer('Q1', 2),  // cat1 is recent
+      makeAnswer('Q1', 2), // cat1 is recent
       makeAnswer('Q2', 10), // cat2 is stale
     ];
     const stale = detectStaleCategories(history, categoryMap, 7);
@@ -167,14 +161,14 @@ describe('detectStaleCategories', () => {
   });
 
   it('uses default staleDays of 7', () => {
-    const categoryMap = { 'cat1': ['Q1'] };
+    const categoryMap = { cat1: ['Q1'] };
     const history = [makeAnswer('Q1', 6)]; // 6 days ago
     const stale = detectStaleCategories(history, categoryMap);
     expect(stale).toHaveLength(0); // within default 7-day window
   });
 
   it('returns stale at exactly staleDays boundary', () => {
-    const categoryMap = { 'cat1': ['Q1'] };
+    const categoryMap = { cat1: ['Q1'] };
     // Activity at exactly 8 days ago, staleDays = 7
     const history = [makeAnswer('Q1', 8)];
     const stale = detectStaleCategories(history, categoryMap, 7);

@@ -28,14 +28,22 @@ import { SessionSummary, type SessionResult } from '@/components/srs/SessionSumm
 // ---------------------------------------------------------------------------
 
 const BURMESE_DIGITS = [
-  '\u1040', '\u1041', '\u1042', '\u1043', '\u1044',
-  '\u1045', '\u1046', '\u1047', '\u1048', '\u1049',
+  '\u1040',
+  '\u1041',
+  '\u1042',
+  '\u1043',
+  '\u1044',
+  '\u1045',
+  '\u1046',
+  '\u1047',
+  '\u1048',
+  '\u1049',
 ];
 
 function toBurmeseNumeral(n: number): string {
   return String(n)
     .split('')
-    .map((ch) => BURMESE_DIGITS[Number(ch)] ?? ch)
+    .map(ch => BURMESE_DIGITS[Number(ch)] ?? ch)
     .join('');
 }
 
@@ -108,7 +116,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
     if (phase !== 'reviewing' || !timerEnabled) return;
 
     const interval = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
+      setElapsedSeconds(prev => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -120,7 +128,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
 
   const handleFlip = useCallback(() => {
     if (!isRating) {
-      setIsFlipped((prev) => !prev);
+      setIsFlipped(prev => !prev);
     }
   }, [isRating]);
 
@@ -141,11 +149,14 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
         // Show rating feedback for FEEDBACK_DURATION_MS
         setRatingFeedback({
           isEasy,
-          intervalText: { en: 'Scheduling...', my: '\u1021\u1005\u102E\u1021\u1005\u1009\u103A\u1006\u103D\u1032\u1014\u1031\u1015\u102B\u101E\u100A\u103A...' },
+          intervalText: {
+            en: 'Scheduling...',
+            my: '\u1021\u1005\u102E\u1021\u1005\u1009\u103A\u1006\u103D\u1032\u1014\u1031\u1015\u102B\u101E\u100A\u103A...',
+          },
         });
 
         // Wait for feedback duration, then clear and reset for next card
-        await new Promise((resolve) => setTimeout(resolve, FEEDBACK_DURATION_MS));
+        await new Promise(resolve => setTimeout(resolve, FEEDBACK_DURATION_MS));
         setRatingFeedback(null);
         setIsFlipped(false);
       }
@@ -177,7 +188,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         if (!isRating) {
-          setIsFlipped((prev) => !prev);
+          setIsFlipped(prev => !prev);
         }
         return;
       }
@@ -210,7 +221,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
   // -------------------------------------------------------------------------
   // Convert hook results to SessionSummary format
   // -------------------------------------------------------------------------
-  const summaryResults: SessionResult[] = results.map((r) => ({
+  const summaryResults: SessionResult[] = results.map(r => ({
     questionId: r.questionId,
     rating: r.rating,
     intervalText: r.intervalText,
@@ -271,9 +282,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           <X className="h-4 w-4" />
           <span>Exit</span>
           {showBurmese && (
-            <span className="font-myanmar ml-1">
-              / {'\u1011\u103D\u1000\u103A\u1015\u102B'}
-            </span>
+            <span className="font-myanmar ml-1">/ {'\u1011\u103D\u1000\u103A\u1015\u102B'}</span>
           )}
         </button>
 
@@ -293,15 +302,12 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           </p>
           {showBurmese && (
             <p className="font-myanmar text-xs text-muted-foreground">
-              {'\u1000\u1010\u103A'} {toBurmeseNumeral(currentIndex + 1)} / {toBurmeseNumeral(sessionSize)}
+              {'\u1000\u1010\u103A'} {toBurmeseNumeral(currentIndex + 1)} /{' '}
+              {toBurmeseNumeral(sessionSize)}
             </p>
           )}
         </div>
-        <Progress
-          value={progressValue}
-          max={progressMax}
-          size="sm"
-        />
+        <Progress value={progressValue} max={progressMax} size="sm" />
       </div>
 
       {/* Card with AnimatePresence transitions */}
@@ -309,11 +315,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
-            initial={
-              shouldReduceMotion
-                ? { opacity: 1 }
-                : { opacity: 0, x: 60 }
-            }
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             exit={
               shouldReduceMotion
@@ -324,9 +326,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
                   }
             }
             transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { type: 'spring', stiffness: 300, damping: 25 }
+              shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 25 }
             }
           >
             <ReviewCard
@@ -348,15 +348,10 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
             transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { type: 'spring', stiffness: 400, damping: 25 }
+              shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }
             }
           >
-            <RatingButtons
-              onRate={handleRate}
-              disabled={isRating}
-            />
+            <RatingButtons onRate={handleRate} disabled={isRating} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -367,7 +362,9 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           Tap card to reveal answer
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
-              {'\u1021\u1016\u103C\u1031\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1000\u1010\u103A\u1000\u102D\u102F\u1014\u103E\u102D\u1015\u103A\u1015\u102B'}
+              {
+                '\u1021\u1016\u103C\u1031\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1000\u1010\u103A\u1000\u102D\u102F\u1014\u103E\u102D\u1015\u103A\u1015\u102B'
+              }
             </span>
           )}
         </p>

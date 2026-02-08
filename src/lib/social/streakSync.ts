@@ -44,10 +44,7 @@ interface StreakDataRow {
  * Skips silently if offline (fire-and-forget pattern).
  * On error: logs to console, does not throw.
  */
-export async function syncStreakToSupabase(
-  userId: string,
-  streakData: StreakData
-): Promise<void> {
+export async function syncStreakToSupabase(userId: string, streakData: StreakData): Promise<void> {
   // Skip if offline
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     return;
@@ -81,9 +78,7 @@ export async function syncStreakToSupabase(
  * Used on sign-in to merge cloud data with local.
  * Returns null if no data exists or on error (graceful degradation).
  */
-export async function loadStreakFromSupabase(
-  userId: string
-): Promise<StreakData | null> {
+export async function loadStreakFromSupabase(userId: string): Promise<StreakData | null> {
   try {
     const { data, error } = await supabase
       .from('streak_data')
@@ -132,19 +127,14 @@ export async function loadStreakFromSupabase(
  * - dailyActivityCounts: kept from local (current device state)
  * - lastSyncedAt: current time
  */
-export function mergeStreakData(
-  local: StreakData,
-  remote: StreakData
-): StreakData {
+export function mergeStreakData(local: StreakData, remote: StreakData): StreakData {
   // Union activity dates (deduplicate and sort)
   const activityDates = Array.from(
     new Set([...local.activityDates, ...remote.activityDates])
   ).sort();
 
   // Union freezes used (deduplicate and sort)
-  const freezesUsed = Array.from(
-    new Set([...local.freezesUsed, ...remote.freezesUsed])
-  ).sort();
+  const freezesUsed = Array.from(new Set([...local.freezesUsed, ...remote.freezesUsed])).sort();
 
   return {
     activityDates,

@@ -75,9 +75,7 @@ function getInitialInstalledState(): boolean {
   }
 
   // Check iOS standalone mode
-  if (
-    (navigator as unknown as { standalone?: boolean }).standalone === true
-  ) {
+  if ((navigator as unknown as { standalone?: boolean }).standalone === true) {
     return true;
   }
 
@@ -99,15 +97,12 @@ function getInitialDismissedState(): boolean {
 }
 
 export function useInstallPrompt(): UseInstallPromptResult {
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(getInitialInstalledState);
   const [wasDismissed, setWasDismissed] = useState(getInitialDismissedState);
 
   // Detect iOS (no beforeinstallprompt support)
-  const isIOS =
-    typeof navigator !== 'undefined' &&
-    /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   // Listen for install-related browser events
   useEffect(() => {

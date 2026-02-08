@@ -15,14 +15,22 @@ import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredL
 // ---------------------------------------------------------------------------
 
 const BURMESE_DIGITS = [
-  '\u1040', '\u1041', '\u1042', '\u1043', '\u1044',
-  '\u1045', '\u1046', '\u1047', '\u1048', '\u1049',
+  '\u1040',
+  '\u1041',
+  '\u1042',
+  '\u1043',
+  '\u1044',
+  '\u1045',
+  '\u1046',
+  '\u1047',
+  '\u1048',
+  '\u1049',
 ];
 
 function toBurmeseNumeral(n: number): string {
   return String(n)
     .split('')
-    .map((ch) => BURMESE_DIGITS[Number(ch)] ?? ch)
+    .map(ch => BURMESE_DIGITS[Number(ch)] ?? ch)
     .join('');
 }
 
@@ -73,12 +81,7 @@ interface SizeOption {
  * - All-caught-up empty state when no cards are due
  * - Consistent with PracticePage config screen pattern (Phase 4)
  */
-export function SessionSetup({
-  totalDue,
-  onStart,
-  onBack,
-  className,
-}: SessionSetupProps) {
+export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSetupProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
 
@@ -141,27 +144,29 @@ export function SessionSetup({
             <ArrowLeft className="h-4 w-4" />
             <span>Back</span>
             {showBurmese && (
-              <span className="font-myanmar ml-1">/  {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}</span>
+              <span className="font-myanmar ml-1">
+                / {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}
+              </span>
             )}
           </button>
         </div>
 
         <Card className="w-full max-w-md text-center py-10">
           <Sparkles className="h-12 w-12 text-success-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-foreground">
-            All caught up!
-          </h2>
+          <h2 className="text-xl font-bold text-foreground">All caught up!</h2>
           {showBurmese && (
             <p className="font-myanmar text-base text-muted-foreground mt-1">
-              {'\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E\u104B'}
+              {
+                '\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E\u104B'
+              }
             </p>
           )}
-          <p className="text-sm text-muted-foreground mt-3">
-            Come back later for more reviews.
-          </p>
+          <p className="text-sm text-muted-foreground mt-3">Come back later for more reviews.</p>
           {showBurmese && (
             <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
-              {'\u1014\u1031\u102C\u1000\u103A\u1019\u103E\u1015\u103C\u1014\u103A\u101C\u102C\u1015\u102B\u104B'}
+              {
+                '\u1014\u1031\u102C\u1000\u103A\u1019\u103E\u1015\u103C\u1014\u103A\u101C\u102C\u1015\u102B\u104B'
+              }
             </p>
           )}
         </Card>
@@ -186,7 +191,9 @@ export function SessionSetup({
           <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
           {showBurmese && (
-            <span className="font-myanmar ml-1">/ {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}</span>
+            <span className="font-myanmar ml-1">
+              / {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}
+            </span>
           )}
         </button>
       </div>
@@ -195,12 +202,12 @@ export function SessionSetup({
         <StaggeredList>
           {/* Header */}
           <StaggeredItem>
-            <h2 className="text-xl font-bold text-foreground">
-              Review Session
-            </h2>
+            <h2 className="text-xl font-bold text-foreground">Review Session</h2>
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
-                {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038'}
+                {
+                  '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038'
+                }
               </p>
             )}
           </StaggeredItem>
@@ -208,15 +215,13 @@ export function SessionSetup({
           {/* Due count */}
           <StaggeredItem className="mt-6">
             <div className="text-center py-4 bg-primary/5 rounded-2xl">
-              <p className="text-4xl font-bold text-primary">
-                {totalDue}
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">
-                cards due for review
-              </p>
+              <p className="text-4xl font-bold text-primary">{totalDue}</p>
+              <p className="text-sm text-muted-foreground mt-1">cards due for review</p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u101B\u1019\u100A\u103A\u1037 \u1000\u1010\u103A\u1019\u103B\u102C\u1038'}
+                  {
+                    '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u101B\u1019\u100A\u103A\u1037 \u1000\u1010\u103A\u1019\u103B\u102C\u1038'
+                  }
                 </p>
               )}
             </div>
@@ -228,12 +233,15 @@ export function SessionSetup({
               Session size
               {showBurmese && (
                 <span className="font-myanmar text-muted-foreground ml-2">
-                  / {'\u1021\u1000\u103C\u102D\u1019\u103A\u1021\u101B\u1031\u1021\u1010\u103D\u1000\u103A'}
+                  /{' '}
+                  {
+                    '\u1021\u1000\u103C\u102D\u1019\u103A\u1021\u101B\u1031\u1021\u1010\u103D\u1000\u103A'
+                  }
                 </span>
               )}
             </p>
             <div className="flex gap-2">
-              {sizeOptions.map((option) => (
+              {sizeOptions.map(option => (
                 <motion.button
                   key={option.value}
                   type="button"
@@ -273,12 +281,12 @@ export function SessionSetup({
               <div className="flex items-center gap-2.5">
                 <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-foreground">
-                    Enable Timer
-                  </p>
+                  <p className="text-sm font-medium text-foreground">Enable Timer</p>
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
-                      {'\u1021\u1001\u103B\u102D\u1014\u103A\u1010\u102D\u102F\u1004\u103A\u1038\u1000\u102D\u101B\u102D\u101A\u102C \u1016\u103D\u1004\u103A\u1037\u1015\u102B'}
+                      {
+                        '\u1021\u1001\u103B\u102D\u1014\u103A\u1010\u102D\u102F\u1004\u103A\u1038\u1000\u102D\u101B\u102D\u101A\u102C \u1016\u103D\u1004\u103A\u1037\u1015\u102B'
+                      }
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -286,7 +294,9 @@ export function SessionSetup({
                   </p>
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
-                      {'\u1021\u1001\u103B\u102D\u1014\u103A\u1016\u102D\u1021\u102C\u1038\u1016\u103C\u1004\u103A\u1037 \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'}
+                      {
+                        '\u1021\u1001\u103B\u102D\u1014\u103A\u1016\u102D\u1021\u102C\u1038\u1016\u103C\u1004\u103A\u1037 \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                      }
                     </p>
                   )}
                 </div>
@@ -297,7 +307,7 @@ export function SessionSetup({
                 type="button"
                 role="switch"
                 aria-checked={timerEnabled}
-                onClick={() => setTimerEnabled((prev) => !prev)}
+                onClick={() => setTimerEnabled(prev => !prev)}
                 className={clsx(
                   'relative inline-flex h-6 w-11 shrink-0 rounded-full',
                   'border-2 border-transparent cursor-pointer',
@@ -330,7 +340,9 @@ export function SessionSetup({
                 <span>Start Review</span>
                 {showBurmese && (
                   <span className="font-myanmar text-sm opacity-80">
-                    {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1001\u103C\u1004\u103A\u1038\u1005\u1010\u1004\u103A\u1015\u102B'}
+                    {
+                      '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1001\u103C\u1004\u103A\u1038\u1005\u1010\u1004\u103A\u1015\u102B'
+                    }
                   </span>
                 )}
               </span>

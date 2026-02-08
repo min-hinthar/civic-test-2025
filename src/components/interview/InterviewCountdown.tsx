@@ -62,16 +62,8 @@ export function InterviewCountdown({ onComplete }: InterviewCountdownProps) {
         {currentStep != null && (
           <motion.div
             key={stepIndex}
-            initial={
-              shouldReduceMotion
-                ? { opacity: 0 }
-                : { opacity: 0, scale: 2 }
-            }
-            animate={
-              shouldReduceMotion
-                ? { opacity: 1 }
-                : { opacity: 1, scale: 1 }
-            }
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 2 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={
               shouldReduceMotion
@@ -86,9 +78,7 @@ export function InterviewCountdown({ onComplete }: InterviewCountdownProps) {
           >
             <span
               className={`block font-bold text-primary-500 ${
-                currentStep === 'Begin'
-                  ? 'text-4xl sm:text-5xl'
-                  : 'text-7xl sm:text-8xl'
+                currentStep === 'Begin' ? 'text-4xl sm:text-5xl' : 'text-7xl sm:text-8xl'
               }`}
             >
               {currentStep}

@@ -102,10 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             errors++;
             // If subscription is expired/invalid (HTTP 410 Gone), clean it up
             if ((err as { statusCode?: number }).statusCode === 410) {
-              await supabaseAdmin
-                .from('push_subscriptions')
-                .delete()
-                .eq('user_id', sub.user_id);
+              await supabaseAdmin.from('push_subscriptions').delete().eq('user_id', sub.user_id);
             }
           }
         }

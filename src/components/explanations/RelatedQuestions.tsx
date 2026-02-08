@@ -29,16 +29,12 @@ export interface RelatedQuestionsProps {
  * - Stays in current view (no page navigation)
  * - Respects prefers-reduced-motion
  */
-export function RelatedQuestions({
-  questionIds,
-  allQuestions,
-  className,
-}: RelatedQuestionsProps) {
+export function RelatedQuestions({ questionIds, allQuestions, className }: RelatedQuestionsProps) {
   const { showBurmese } = useLanguage();
 
   // Look up actual question data from IDs
   const relatedQuestions = questionIds
-    .map((id) => allQuestions.find((q) => q.id === id))
+    .map(id => allQuestions.find(q => q.id === id))
     .filter((q): q is Question => q !== undefined);
 
   if (relatedQuestions.length === 0) {
@@ -62,11 +58,8 @@ export function RelatedQuestions({
 
       {/* Related question links */}
       <div className="space-y-1.5">
-        {relatedQuestions.map((question) => (
-          <RelatedQuestionItem
-            key={question.id}
-            question={question}
-          />
+        {relatedQuestions.map(question => (
+          <RelatedQuestionItem key={question.id} question={question} />
         ))}
       </div>
     </div>
@@ -89,7 +82,7 @@ function RelatedQuestionItem({ question }: { question: Question }) {
       {/* Clickable question link */}
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={() => setIsExpanded(prev => !prev)}
         className={clsx(
           'flex w-full items-center gap-2 px-3 py-2 text-left',
           'min-h-[36px]',
@@ -101,9 +94,7 @@ function RelatedQuestionItem({ question }: { question: Question }) {
       >
         <motion.span
           animate={{ rotate: isExpanded ? 90 : 0 }}
-          transition={
-            shouldReduceMotion ? { duration: 0 } : { duration: 0.15 }
-          }
+          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.15 }}
         >
           <ChevronRight className="h-3 w-3 shrink-0 text-muted-foreground" />
         </motion.span>
@@ -126,20 +117,14 @@ function RelatedQuestionItem({ question }: { question: Question }) {
             initial={shouldReduceMotion ? { opacity: 1 } : { height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.2, ease: 'easeInOut' }
-            }
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
             <div className="border-t border-border/30 px-3 py-2.5 pl-8 space-y-2">
               {/* Answer */}
               {primaryAnswer && (
                 <div>
-                  <p className="text-xs font-medium text-foreground">
-                    {primaryAnswer.text_en}
-                  </p>
+                  <p className="text-xs font-medium text-foreground">{primaryAnswer.text_en}</p>
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
                       {primaryAnswer.text_my}

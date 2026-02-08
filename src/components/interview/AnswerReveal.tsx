@@ -33,11 +33,7 @@ interface AnswerRevealProps {
  * - WhyButton and AddToDeckButton in practice mode
  * - Bilingual text throughout
  */
-export function AnswerReveal({
-  question,
-  audioURL,
-  mode,
-}: AnswerRevealProps) {
+export function AnswerReveal({ question, audioURL, mode }: AnswerRevealProps) {
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -73,9 +69,7 @@ export function AnswerReveal({
           <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-success-500">
             {strings.interview.correct.en}
           </div>
-          <p className="text-lg font-semibold text-foreground">
-            {primaryAnswer.text_en}
-          </p>
+          <p className="text-lg font-semibold text-foreground">{primaryAnswer.text_en}</p>
           {showBurmese && (
             <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
               {primaryAnswer.text_my}
@@ -128,18 +122,10 @@ export function AnswerReveal({
         {mode === 'practice' && (
           <div className="flex flex-col gap-3 border-t border-border/40 pt-3">
             {question.explanation && (
-              <WhyButton
-                explanation={question.explanation}
-                compact
-                allQuestions={allQuestions}
-              />
+              <WhyButton explanation={question.explanation} compact allQuestions={allQuestions} />
             )}
             <div className="flex justify-end">
-              <AddToDeckButton
-                questionId={question.id}
-                compact
-                stopPropagation
-              />
+              <AddToDeckButton questionId={question.id} compact stopPropagation />
             </div>
           </div>
         )}

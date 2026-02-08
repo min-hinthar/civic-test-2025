@@ -31,10 +31,7 @@ export function calculateCompositeScore(data: {
   const accuracyScore = Math.min(Math.max(data.bestTestAccuracy, 0), 100);
   const coverageScore = Math.min(Math.max(data.coveragePercent, 0), 100);
 
-  const composite =
-    accuracyScore * 0.5 +
-    coverageScore * 0.3 +
-    streakScore * 0.2;
+  const composite = accuracyScore * 0.5 + coverageScore * 0.3 + streakScore * 0.2;
 
   return Math.round(composite);
 }

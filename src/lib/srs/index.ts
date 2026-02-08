@@ -8,16 +8,8 @@
  */
 
 // Types and serialization
-export {
-  cardToRow,
-  rowToCard,
-} from './srsTypes';
-export type {
-  SRSCardRecord,
-  SupabaseSRSRow,
-  ReviewResult,
-  SessionPhase,
-} from './srsTypes';
+export { cardToRow, rowToCard } from './srsTypes';
+export type { SRSCardRecord, SupabaseSRSRow, ReviewResult, SessionPhase } from './srsTypes';
 
 // FSRS engine
 export {

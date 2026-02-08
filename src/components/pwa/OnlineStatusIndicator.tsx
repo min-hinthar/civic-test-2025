@@ -38,9 +38,7 @@ export function OnlineStatusIndicator() {
     >
       {/* Status dot */}
       <span
-        className={`h-2.5 w-2.5 rounded-full ${
-          isOnline ? 'bg-green-500' : 'bg-orange-500'
-        }`}
+        className={`h-2.5 w-2.5 rounded-full ${isOnline ? 'bg-green-500' : 'bg-orange-500'}`}
         aria-hidden="true"
       />
     </div>

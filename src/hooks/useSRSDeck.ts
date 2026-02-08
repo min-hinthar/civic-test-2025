@@ -7,11 +7,7 @@
 
 import { useCallback } from 'react';
 import { useSRS } from '@/contexts/SRSContext';
-import {
-  detectWeakAreas,
-  getCategoryQuestionIds,
-  USCIS_CATEGORIES,
-} from '@/lib/mastery';
+import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
 import type { CategoryMasteryEntry, USCISCategory } from '@/lib/mastery';
 import { allQuestions } from '@/constants/questions';
 import type { Category } from '@/types';
@@ -50,31 +46,25 @@ export function useSRSDeck() {
    * Identifies USCIS categories below threshold and collects all
    * question IDs from those categories for bulk-add to the SRS deck.
    */
-  const getWeakQuestionIds = useCallback(
-    (categoryMasteries: CategoryMasteryEntry[]): string[] => {
-      const weakAreas = detectWeakAreas(categoryMasteries);
-      const weakIds: string[] = [];
+  const getWeakQuestionIds = useCallback((categoryMasteries: CategoryMasteryEntry[]): string[] => {
+    const weakAreas = detectWeakAreas(categoryMasteries);
+    const weakIds: string[] = [];
 
-      for (const weak of weakAreas) {
-        // Check if it's a USCIS main category
-        if (weak.categoryId in USCIS_CATEGORIES) {
-          const ids = getCategoryQuestionIds(
-            weak.categoryId as USCISCategory,
-            allQuestions
-          );
-          weakIds.push(...ids);
-        } else {
-          // Sub-category
-          const ids = getCategoryQuestionIds(weak.categoryId as Category, allQuestions);
-          weakIds.push(...ids);
-        }
+    for (const weak of weakAreas) {
+      // Check if it's a USCIS main category
+      if (weak.categoryId in USCIS_CATEGORIES) {
+        const ids = getCategoryQuestionIds(weak.categoryId as USCISCategory, allQuestions);
+        weakIds.push(...ids);
+      } else {
+        // Sub-category
+        const ids = getCategoryQuestionIds(weak.categoryId as Category, allQuestions);
+        weakIds.push(...ids);
       }
+    }
 
-      // Deduplicate
-      return [...new Set(weakIds)];
-    },
-    []
-  );
+    // Deduplicate
+    return [...new Set(weakIds)];
+  }, []);
 
   return {
     deck,

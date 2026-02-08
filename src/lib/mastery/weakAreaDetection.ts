@@ -79,9 +79,7 @@ export function detectStaleCategories(
   for (const [categoryId, questionIds] of Object.entries(categoryQuestionMap)) {
     // Find answers that belong to this category's questions
     const questionIdSet = new Set(questionIds);
-    const categoryAnswers = answerHistory.filter(a =>
-      questionIdSet.has(a.questionId)
-    );
+    const categoryAnswers = answerHistory.filter(a => questionIdSet.has(a.questionId));
 
     if (categoryAnswers.length === 0) {
       // Never practiced
@@ -117,9 +115,7 @@ export function detectStaleCategories(
  * @param mastery - Current mastery percentage (0-100)
  * @returns Next milestone or null if gold is achieved (mastery >= 100)
  */
-export function getNextMilestone(
-  mastery: number
-): Milestone | null {
+export function getNextMilestone(mastery: number): Milestone | null {
   if (mastery >= 100) {
     return null;
   }

@@ -59,8 +59,9 @@ export function PageTransition({ children }: PageTransitionProps) {
   const shouldReduceMotion = useReducedMotion();
 
   // Pass location prop to Routes child for exit animation support
-  const routesWithLocation =
-    isValidElement(children) ? cloneElement(children, { location } as Record<string, unknown>) : children;
+  const routesWithLocation = isValidElement(children)
+    ? cloneElement(children, { location } as Record<string, unknown>)
+    : children;
 
   return (
     <AnimatePresence mode="wait" initial={false}>

@@ -56,13 +56,13 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
     setPreviewUrl(null);
 
     renderShareCard(data)
-      .then((result) => {
+      .then(result => {
         if (cancelled) return;
         setBlob(result);
         setPreviewUrl(URL.createObjectURL(result));
         setIsGenerating(false);
       })
-      .catch((err) => {
+      .catch(err => {
         if (cancelled) return;
         console.error('[ShareCardPreview] Render failed:', err);
         setIsGenerating(false);
@@ -130,9 +130,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
         className="w-[95vw] max-w-md p-4 sm:p-6"
         aria-describedby="share-card-description"
       >
-        <DialogTitle className="text-center">
-          Share Results
-        </DialogTitle>
+        <DialogTitle className="text-center">Share Results</DialogTitle>
         <DialogDescription id="share-card-description" className="text-center">
           Preview your score card before sharing
         </DialogDescription>
@@ -169,9 +167,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  <span className="text-sm text-muted-foreground">
-                    Generating card...
-                  </span>
+                  <span className="text-sm text-muted-foreground">Generating card...</span>
                 </div>
               </motion.div>
             )}

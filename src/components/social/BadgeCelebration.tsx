@@ -19,20 +19,8 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { clsx } from 'clsx';
-import {
-  Flame,
-  Target,
-  Star,
-  BookCheck,
-  Award,
-  type LucideIcon,
-} from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/Dialog';
+import { Flame, Target, Star, BookCheck, Award, type LucideIcon } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
@@ -100,7 +88,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
       <Confetti fire={isOpen} intensity="celebration" />
 
       {/* Celebration dialog */}
-      <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss()}>
+      <Dialog open={isOpen} onOpenChange={open => !open && onDismiss()}>
         <DialogContent
           className="ring-2 ring-yellow-400/50 shadow-yellow-200/20"
           showCloseButton={false}
@@ -126,13 +114,13 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
             </motion.div>
 
             {/* Congrats heading */}
-            <DialogTitle className="mt-5 text-xl">
-              Badge Earned!
-            </DialogTitle>
+            <DialogTitle className="mt-5 text-xl">Badge Earned!</DialogTitle>
 
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
-                {'\u1010\u1036\u1006\u102D\u1015\u103A\u101B\u101B\u103E\u102D\u1015\u103C\u102E\u0021'}
+                {
+                  '\u1010\u1036\u1006\u102D\u1015\u103A\u101B\u101B\u103E\u102D\u1015\u103C\u102E\u0021'
+                }
               </p>
             )}
 
@@ -147,15 +135,11 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
             </motion.p>
 
             {showBurmese && (
-              <p className="font-myanmar text-lg text-muted-foreground mt-0.5">
-                {badge.name.my}
-              </p>
+              <p className="font-myanmar text-lg text-muted-foreground mt-0.5">{badge.name.my}</p>
             )}
 
             {/* Badge description */}
-            <DialogDescription className="mt-3 text-base">
-              {badge.description.en}
-            </DialogDescription>
+            <DialogDescription className="mt-3 text-base">{badge.description.en}</DialogDescription>
 
             {showBurmese && (
               <p className="font-myanmar text-sm text-muted-foreground mt-0.5">

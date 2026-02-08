@@ -1,130 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#002868">
-  <title>Offline | US Civics</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#002868" />
+    <title>Offline | US Civics</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      padding: 1.5rem;
-      text-align: center;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        text-align: center;
+      }
 
-    .container {
-      max-width: 400px;
-      background: white;
-      padding: 2.5rem 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 10px 40px rgba(0, 40, 104, 0.1);
-    }
+      .container {
+        max-width: 400px;
+        background: white;
+        padding: 2.5rem 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 40px rgba(0, 40, 104, 0.1);
+      }
 
-    .icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 1.5rem;
-      background: #002868;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      .icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: #002868;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .icon svg {
-      width: 40px;
-      height: 40px;
-      fill: white;
-    }
+      .icon svg {
+        width: 40px;
+        height: 40px;
+        fill: white;
+      }
 
-    h1 {
-      color: #002868;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
+      h1 {
+        color: #002868;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
 
-    .burmese {
-      color: #64748b;
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
+      .burmese {
+        color: #64748b;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+      }
 
-    p {
-      color: #475569;
-      line-height: 1.6;
-      margin-bottom: 0.75rem;
-    }
+      p {
+        color: #475569;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+      }
 
-    .burmese-text {
-      color: #64748b;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-    }
+      .burmese-text {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
 
-    button {
-      background: #002868;
-      color: white;
-      border: none;
-      padding: 0.875rem 2rem;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      width: 100%;
-    }
+      button {
+        background: #002868;
+        color: white;
+        border: none;
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        width: 100%;
+      }
 
-    button:hover {
-      background: #001a4d;
-    }
+      button:hover {
+        background: #001a4d;
+      }
 
-    button:active {
-      transform: translateY(1px);
-    }
+      button:active {
+        transform: translateY(1px);
+      }
 
-    .footer {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-      color: #94a3b8;
-      font-size: 0.875rem;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="none"/>
-        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
-      </svg>
+      .footer {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        color: #94a3b8;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            fill="none"
+          />
+          <path
+            d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"
+          />
+        </svg>
+      </div>
+
+      <h1>You're Offline</h1>
+      <p class="burmese">အင်တာနက် ချိတ်ဆက်မှု မရှိပါ</p>
+
+      <p>
+        This page isn't available offline yet. Please check your internet connection and try again.
+      </p>
+      <p class="burmese-text">
+        ဤစာမျက်နှာကို offline တွင် မရရှိနိုင်သေးပါ။ သင့်အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပြီး
+        ထပ်မံကြိုးစားပါ။
+      </p>
+
+      <button onclick="location.reload()">Try Again / ထပ်ကြိုးစားပါ</button>
+
+      <div class="footer">US Civics Test Prep</div>
     </div>
-
-    <h1>You're Offline</h1>
-    <p class="burmese">အင်တာနက် ချိတ်ဆက်မှု မရှိပါ</p>
-
-    <p>This page isn't available offline yet. Please check your internet connection and try again.</p>
-    <p class="burmese-text">ဤစာမျက်နှာကို offline တွင် မရရှိနိုင်သေးပါ။ သင့်အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်မံကြိုးစားပါ။</p>
-
-    <button onclick="location.reload()">
-      Try Again / ထပ်ကြိုးစားပါ
-    </button>
-
-    <div class="footer">
-      US Civics Test Prep
-    </div>
-  </div>
-</body>
+  </body>
 </html>

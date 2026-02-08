@@ -91,9 +91,7 @@ describe('gradeCard', () => {
     const easyResult = gradeCard(card, true);
     const hardResult = gradeCard(card, false);
     // Easy (Good) should schedule further out than Hard (Again)
-    expect(easyResult.card.due.getTime()).toBeGreaterThanOrEqual(
-      hardResult.card.due.getTime()
-    );
+    expect(easyResult.card.due.getTime()).toBeGreaterThanOrEqual(hardResult.card.due.getTime());
   });
 
   it('grading returns updated card with new due date', () => {
@@ -112,7 +110,8 @@ describe('gradeCard', () => {
     const secondResult = gradeCard(card, true);
 
     // The second review should schedule even further out
-    const firstInterval = firstResult.card.due.getTime() - new Date('2026-02-08T12:00:00Z').getTime();
+    const firstInterval =
+      firstResult.card.due.getTime() - new Date('2026-02-08T12:00:00Z').getTime();
     const secondInterval = secondResult.card.due.getTime() - card.due.getTime();
     expect(secondInterval).toBeGreaterThanOrEqual(firstInterval);
   });

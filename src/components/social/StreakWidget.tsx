@@ -33,12 +33,7 @@ interface StreakWidgetProps {
 export function StreakWidget({ className }: StreakWidgetProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
-  const {
-    currentStreak,
-    longestStreak,
-    freezesAvailable,
-    isLoading,
-  } = useStreak();
+  const { currentStreak, longestStreak, freezesAvailable, isLoading } = useStreak();
 
   const goToSocial = useCallback(() => {
     navigate({ pathname: '/social', hash: '#streak' });
@@ -107,7 +102,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
       onClick={goToSocial}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           goToSocial();
@@ -145,9 +140,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
           {freezesAvailable > 0 && (
             <div className="flex items-center gap-1 text-xs text-blue-400">
               <Snowflake className="h-3.5 w-3.5" />
-              <span className="font-semibold">
-                {freezesAvailable}
-              </span>
+              <span className="font-semibold">{freezesAvailable}</span>
             </div>
           )}
         </div>

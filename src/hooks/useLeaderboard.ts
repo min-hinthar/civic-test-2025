@@ -129,10 +129,9 @@ export function useLeaderboard(
 
         // For authenticated users, fetch their own rank
         if (user?.id) {
-          const { data: rankData, error: rankError } = await supabase.rpc(
-            'get_user_rank',
-            { target_user_id: user.id }
-          );
+          const { data: rankData, error: rankError } = await supabase.rpc('get_user_rank', {
+            target_user_id: user.id,
+          });
 
           if (cancelled.current) return;
 

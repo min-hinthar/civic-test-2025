@@ -15,14 +15,7 @@
  * - Follows SRSContext.tsx patterns for context structure
  */
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { SocialProfile } from '@/lib/social/socialProfileSync';
 import {
@@ -180,7 +173,7 @@ export function SocialProvider({ children }: SocialProviderProps) {
         setSocialProfile(updated);
       } else {
         // Optimistic fallback if reload fails
-        setSocialProfile((prev) => ({
+        setSocialProfile(prev => ({
           userId: user.id,
           displayName: name,
           socialOptIn: true,
@@ -206,10 +199,8 @@ export function SocialProvider({ children }: SocialProviderProps) {
 
     await toggleSocialOptIn(user.id, false);
 
-    setSocialProfile((prev) =>
-      prev
-        ? { ...prev, socialOptIn: false, updatedAt: new Date().toISOString() }
-        : prev
+    setSocialProfile(prev =>
+      prev ? { ...prev, socialOptIn: false, updatedAt: new Date().toISOString() } : prev
     );
   }, [user?.id]);
 
@@ -225,10 +216,8 @@ export function SocialProvider({ children }: SocialProviderProps) {
         socialOptIn: socialProfile?.socialOptIn ?? false,
       });
 
-      setSocialProfile((prev) =>
-        prev
-          ? { ...prev, displayName: name, updatedAt: new Date().toISOString() }
-          : prev
+      setSocialProfile(prev =>
+        prev ? { ...prev, displayName: name, updatedAt: new Date().toISOString() } : prev
       );
     },
     [user?.id, socialProfile?.socialOptIn]
@@ -297,9 +286,7 @@ export function SocialProvider({ children }: SocialProviderProps) {
     noopAsync,
   ]);
 
-  return (
-    <SocialContext.Provider value={value}>{children}</SocialContext.Provider>
-  );
+  return <SocialContext.Provider value={value}>{children}</SocialContext.Provider>;
 }
 
 // ---------------------------------------------------------------------------

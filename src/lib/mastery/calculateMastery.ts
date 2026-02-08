@@ -58,15 +58,10 @@ function calculateWeight(answer: StoredAnswer, now: number): number {
  * @param questionIds - The question IDs belonging to this category
  * @returns Mastery percentage (0-100), rounded to nearest integer
  */
-export function calculateCategoryMastery(
-  answers: StoredAnswer[],
-  questionIds: string[]
-): number {
+export function calculateCategoryMastery(answers: StoredAnswer[], questionIds: string[]): number {
   // Use Set for O(1) lookups when filtering answers by category
   const questionIdSet = new Set(questionIds);
-  const categoryAnswers = answers.filter(a =>
-    questionIdSet.has(a.questionId)
-  );
+  const categoryAnswers = answers.filter(a => questionIdSet.has(a.questionId));
 
   if (categoryAnswers.length === 0) {
     return 0;
@@ -135,26 +130,18 @@ export interface CategoryMasteryEntry {
  * @param categoryMasteries - Array of category mastery entries
  * @returns Overall mastery percentage (0-100), rounded to nearest integer
  */
-export function calculateOverallMastery(
-  categoryMasteries: CategoryMasteryEntry[]
-): number {
+export function calculateOverallMastery(categoryMasteries: CategoryMasteryEntry[]): number {
   if (categoryMasteries.length === 0) {
     return 0;
   }
 
-  const totalQuestions = categoryMasteries.reduce(
-    (sum, c) => sum + c.questionCount,
-    0
-  );
+  const totalQuestions = categoryMasteries.reduce((sum, c) => sum + c.questionCount, 0);
 
   if (totalQuestions === 0) {
     return 0;
   }
 
-  const weightedSum = categoryMasteries.reduce(
-    (sum, c) => sum + c.mastery * c.questionCount,
-    0
-  );
+  const weightedSum = categoryMasteries.reduce((sum, c) => sum + c.mastery * c.questionCount, 0);
 
   return Math.round(weightedSum / totalQuestions);
 }

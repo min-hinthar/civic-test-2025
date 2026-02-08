@@ -18,18 +18,11 @@ import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredL
 import { useSRSDeck } from '@/hooks/useSRSDeck';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { allQuestions } from '@/constants/questions';
-import {
-  getCardStatusLabel,
-  getIntervalStrengthColor,
-  isDue,
-} from '@/lib/srs';
+import { getCardStatusLabel, getIntervalStrengthColor, isDue } from '@/lib/srs';
 import type { SRSCardRecord } from '@/lib/srs';
 import type { Question } from '@/types';
 import type { CategoryMasteryEntry } from '@/lib/mastery';
-import {
-  USCIS_CATEGORIES,
-  getCategoryQuestionIds,
-} from '@/lib/mastery';
+import { USCIS_CATEGORIES, getCategoryQuestionIds } from '@/lib/mastery';
 import type { USCISCategory } from '@/lib/mastery';
 import { State } from 'ts-fsrs';
 
@@ -37,9 +30,7 @@ import { State } from 'ts-fsrs';
 // Module-level question lookup for O(1) access
 // ---------------------------------------------------------------------------
 
-const questionsById: Map<string, Question> = new Map(
-  allQuestions.map((q) => [q.id, q])
-);
+const questionsById: Map<string, Question> = new Map(allQuestions.map(q => [q.id, q]));
 
 // ---------------------------------------------------------------------------
 // Props
@@ -66,14 +57,7 @@ function sortOrder(record: SRSCardRecord): number {
 // ---------------------------------------------------------------------------
 
 export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
-  const {
-    deck,
-    dueCount,
-    isLoading,
-    removeCard,
-    bulkAddCards,
-    getWeakQuestionIds,
-  } = useSRSDeck();
+  const { deck, dueCount, isLoading, removeCard, bulkAddCards, getWeakQuestionIds } = useSRSDeck();
 
   const { categoryMasteries } = useCategoryMastery();
 
@@ -108,10 +92,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
   // Sorted deck
   // -------------------------------------------------------------------------
 
-  const sortedDeck = useMemo(
-    () => [...deck].sort((a, b) => sortOrder(a) - sortOrder(b)),
-    [deck]
-  );
+  const sortedDeck = useMemo(() => [...deck].sort((a, b) => sortOrder(a) - sortOrder(b)), [deck]);
 
   // -------------------------------------------------------------------------
   // Bulk-add weak area questions
@@ -124,7 +105,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
     try {
       // Build CategoryMasteryEntry array from categoryMasteries
       const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
-      const entries: CategoryMasteryEntry[] = categories.map((cat) => ({
+      const entries: CategoryMasteryEntry[] = categories.map(cat => ({
         categoryId: cat,
         mastery: categoryMasteries[cat] ?? 0,
         questionCount: getCategoryQuestionIds(cat, allQuestions).length,
@@ -141,9 +122,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
       if (added === 0) {
         setBulkAddResult('All weak area questions are already in your deck.');
       } else {
-        setBulkAddResult(
-          `Added ${added} question${added !== 1 ? 's' : ''} from weak areas.`
-        );
+        setBulkAddResult(`Added ${added} question${added !== 1 ? 's' : ''} from weak areas.`);
       }
     } catch {
       setBulkAddResult('Failed to add questions. Please try again.');
@@ -173,9 +152,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         <p className="text-sm text-muted-foreground">
           Loading your deck...
-          <span className="block font-myanmar">
-            သင့်ကတ်များတင်နေသည်...
-          </span>
+          <span className="block font-myanmar">သင့်ကတ်များတင်နေသည်...</span>
         </p>
       </div>
     );
@@ -202,9 +179,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
 
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <BookOpen className="h-12 w-12 text-muted-foreground/50 mb-4" />
-          <h2 className="text-xl font-bold text-foreground mb-2">
-            Your Review Deck is Empty
-          </h2>
+          <h2 className="text-xl font-bold text-foreground mb-2">Your Review Deck is Empty</h2>
           <p className="text-muted-foreground mb-1">
             Add questions while studying to build your personalized review deck.
           </p>
@@ -213,17 +188,11 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           </p>
 
           {/* Bulk-add weak area questions CTA */}
-          <Button
-            variant="primary"
-            onClick={handleBulkAddWeak}
-            loading={bulkAddLoading}
-          >
+          <Button variant="primary" onClick={handleBulkAddWeak} loading={bulkAddLoading}>
             <Plus className="h-4 w-4 mr-2" />
             Add Weak Area Questions
           </Button>
-          {bulkAddResult && (
-            <p className="mt-3 text-sm text-muted-foreground">{bulkAddResult}</p>
-          )}
+          {bulkAddResult && <p className="mt-3 text-sm text-muted-foreground">{bulkAddResult}</p>}
         </div>
       </div>
     );
@@ -248,12 +217,8 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
       </div>
 
       {/* Title */}
-      <h2 className="text-2xl font-bold text-foreground mb-1">
-        Review Deck
-      </h2>
-      <p className="text-base text-muted-foreground font-myanmar mb-4">
-        ပြန်လည်သုံးသပ်ကတ်များ
-      </p>
+      <h2 className="text-2xl font-bold text-foreground mb-1">Review Deck</h2>
+      <p className="text-base text-muted-foreground font-myanmar mb-4">ပြန်လည်သုံးသပ်ကတ်များ</p>
 
       {/* Stats bar */}
       <div className="grid grid-cols-4 gap-3 mb-6">
@@ -265,32 +230,22 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
 
       {/* Action buttons */}
       <div className="flex flex-wrap gap-3 mb-6">
-        <Button
-          variant="primary"
-          onClick={onStartReview}
-          disabled={dueCount === 0}
-        >
+        <Button variant="primary" onClick={onStartReview} disabled={dueCount === 0}>
           <BookOpen className="h-4 w-4 mr-2" />
           Start Review ({dueCount} due)
         </Button>
-        <Button
-          variant="secondary"
-          onClick={handleBulkAddWeak}
-          loading={bulkAddLoading}
-        >
+        <Button variant="secondary" onClick={handleBulkAddWeak} loading={bulkAddLoading}>
           <Plus className="h-4 w-4 mr-2" />
           Add Weak Area Questions
         </Button>
       </div>
 
       {/* Bulk-add feedback */}
-      {bulkAddResult && (
-        <p className="mb-4 text-sm text-muted-foreground">{bulkAddResult}</p>
-      )}
+      {bulkAddResult && <p className="mb-4 text-sm text-muted-foreground">{bulkAddResult}</p>}
 
       {/* Card list */}
       <StaggeredList className="space-y-3">
-        {sortedDeck.map((record) => (
+        {sortedDeck.map(record => (
           <StaggeredItem key={record.questionId}>
             <DeckCardItem
               record={record}
@@ -379,9 +334,7 @@ function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
               <span className="font-myanmar ml-1">{status.labelMy}</span>
             </span>
             {nextReviewDate && (
-              <span className="text-xs text-muted-foreground">
-                Next: {nextReviewDate}
-              </span>
+              <span className="text-xs text-muted-foreground">Next: {nextReviewDate}</span>
             )}
           </div>
         </div>

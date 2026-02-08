@@ -90,20 +90,16 @@ export function MasteryBadge({ mastery, size = 'md', className }: MasteryBadgePr
         styles.bg,
         className
       )}
-      title={level === 'none' ? 'No badge yet' : `${level.charAt(0).toUpperCase() + level.slice(1)} badge`}
+      title={
+        level === 'none'
+          ? 'No badge yet'
+          : `${level.charAt(0).toUpperCase() + level.slice(1)} badge`
+      }
     >
-      {level === 'none' && (
-        <Circle className={styles.icon} size={iconSize} strokeWidth={1.5} />
-      )}
-      {level === 'bronze' && (
-        <Medal className={styles.icon} size={iconSize} strokeWidth={1.5} />
-      )}
-      {level === 'silver' && (
-        <Medal className={styles.icon} size={iconSize} strokeWidth={1.5} />
-      )}
-      {level === 'gold' && (
-        <Crown className={styles.icon} size={iconSize} strokeWidth={1.5} />
-      )}
+      {level === 'none' && <Circle className={styles.icon} size={iconSize} strokeWidth={1.5} />}
+      {level === 'bronze' && <Medal className={styles.icon} size={iconSize} strokeWidth={1.5} />}
+      {level === 'silver' && <Medal className={styles.icon} size={iconSize} strokeWidth={1.5} />}
+      {level === 'gold' && <Crown className={styles.icon} size={iconSize} strokeWidth={1.5} />}
     </div>
   );
 }

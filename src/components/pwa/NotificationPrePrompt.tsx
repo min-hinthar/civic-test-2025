@@ -32,10 +32,7 @@ interface NotificationPrePromptProps {
  * />
  * ```
  */
-export function NotificationPrePrompt({
-  onAccept,
-  onDecline,
-}: NotificationPrePromptProps) {
+export function NotificationPrePrompt({ onAccept, onDecline }: NotificationPrePromptProps) {
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800">
       <div className="flex items-start gap-3">
@@ -43,9 +40,7 @@ export function NotificationPrePrompt({
           <Bell className="h-5 w-5 text-blue-600 dark:text-blue-400" />
         </div>
         <div className="flex-1">
-          <h3 className="font-medium text-gray-900 dark:text-white">
-            Get study reminders?
-          </h3>
+          <h3 className="font-medium text-gray-900 dark:text-white">Get study reminders?</h3>
           <p className="font-myanmar text-sm text-gray-600 dark:text-gray-400">
             လေ့လာရန် သတိပေးချက် လိုချင်ပါသလား။
           </p>

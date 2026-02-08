@@ -46,13 +46,7 @@ const FAIL_THRESHOLD = 9;
 /** Number of questions per interview session */
 const QUESTIONS_PER_SESSION = 20;
 
-type QuestionPhase =
-  | 'greeting'
-  | 'chime'
-  | 'reading'
-  | 'responding'
-  | 'grading'
-  | 'transition';
+type QuestionPhase = 'greeting' | 'chime' | 'reading' | 'responding' | 'grading' | 'transition';
 
 interface InterviewSessionProps {
   /** Interview mode (realistic or practice) */
@@ -80,11 +74,7 @@ interface InterviewSessionProps {
  * - Realistic: 15s timer, auto-reveal, threshold stop (12 correct / 9 incorrect)
  * - Practice: user-paced, Show Answer button, WhyButton, AddToDeck, quit option
  */
-export function InterviewSession({
-  mode,
-  onComplete,
-  micPermission,
-}: InterviewSessionProps) {
+export function InterviewSession({ mode, onComplete, micPermission }: InterviewSessionProps) {
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
@@ -231,7 +221,14 @@ export function InterviewSession({
         },
       });
     }, 1000);
-  }, [replaysUsed, currentQuestion, stopRecording, speakWithCallback, micPermission, startRecording]);
+  }, [
+    replaysUsed,
+    currentQuestion,
+    stopRecording,
+    speakWithCallback,
+    micPermission,
+    startRecording,
+  ]);
 
   const handleGrade = useCallback(
     (grade: 'correct' | 'incorrect') => {
@@ -290,7 +287,16 @@ export function InterviewSession({
         setQuestionPhase('chime');
       }, TRANSITION_DELAY_MS);
     },
-    [currentQuestion, results, correctCount, incorrectCount, clearRecording, mode, currentIndex, startTime]
+    [
+      currentQuestion,
+      results,
+      correctCount,
+      incorrectCount,
+      clearRecording,
+      mode,
+      currentIndex,
+      startTime,
+    ]
   );
 
   const handleQuit = useCallback(() => {
@@ -330,11 +336,7 @@ export function InterviewSession({
           <div className="flex items-center gap-3">
             {mode === 'practice' && (
               <span className="text-sm text-muted-foreground">
-                <BilingualText
-                  text={strings.interview.correctCount}
-                  size="xs"
-                />
-                : {correctCount}
+                <BilingualText text={strings.interview.correctCount} size="xs" />: {correctCount}
               </span>
             )}
 
@@ -384,10 +386,7 @@ export function InterviewSession({
       <div className="flex flex-1 flex-col items-center justify-center">
         {/* Interviewer avatar */}
         <div className="mb-6">
-          <InterviewerAvatar
-            size={64}
-            isSpeaking={isSpeaking}
-          />
+          <InterviewerAvatar size={64} isSpeaking={isSpeaking} />
         </div>
 
         {/* Greeting state */}
@@ -446,9 +445,7 @@ export function InterviewSession({
             {/* Reading indicator (question not yet visible) */}
             {!textVisible && questionPhase === 'reading' && (
               <div className="text-center">
-                <p className="text-sm text-muted-foreground">
-                  {strings.interview.listening.en}
-                </p>
+                <p className="text-sm text-muted-foreground">{strings.interview.listening.en}</p>
               </div>
             )}
 
@@ -514,11 +511,7 @@ export function InterviewSession({
             {/* Answer reveal */}
             {showAnswerReveal && (
               <div className="mt-4">
-                <AnswerReveal
-                  question={currentQuestion}
-                  audioURL={audioURL}
-                  mode={mode}
-                />
+                <AnswerReveal question={currentQuestion} audioURL={audioURL} mode={mode} />
               </div>
             )}
 

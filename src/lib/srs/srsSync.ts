@@ -90,10 +90,7 @@ export async function syncPendingSRSReviews(
       synced++;
     } catch (error) {
       // Leave in queue for next sync attempt
-      console.error(
-        `[srsSync] Failed to sync ${String(key)}:`,
-        error
-      );
+      console.error(`[srsSync] Failed to sync ${String(key)}:`, error);
       failed++;
     }
   }
@@ -109,15 +106,10 @@ export async function syncPendingSRSReviews(
  * Push all local SRS cards to Supabase via batch upsert.
  * Used for initial sync when user first logs in or for full deck push.
  */
-export async function pushSRSCards(
-  userId: string,
-  cards: SRSCardRecord[]
-): Promise<void> {
+export async function pushSRSCards(userId: string, cards: SRSCardRecord[]): Promise<void> {
   if (cards.length === 0) return;
 
-  const rows = cards.map((record) =>
-    cardToRow(userId, record.questionId, record)
-  );
+  const rows = cards.map(record => cardToRow(userId, record.questionId, record));
 
   const { error } = await supabase
     .from('srs_cards')
@@ -133,13 +125,8 @@ export async function pushSRSCards(
  * Pull all SRS cards from Supabase for the given user.
  * Returns the remote deck converted to local SRSCardRecord format.
  */
-export async function pullSRSCards(
-  userId: string
-): Promise<SRSCardRecord[]> {
-  const { data, error } = await supabase
-    .from('srs_cards')
-    .select('*')
-    .eq('user_id', userId);
+export async function pullSRSCards(userId: string): Promise<SRSCardRecord[]> {
+  const { data, error } = await supabase.from('srs_cards').select('*').eq('user_id', userId);
 
   if (error) {
     console.error('[srsSync] pullSRSCards failed:', error);
@@ -166,10 +153,7 @@ export async function pullSRSCards(
  *
  * Conflict resolution is silent -- no user-facing notification.
  */
-export function mergeSRSDecks(
-  local: SRSCardRecord[],
-  remote: SRSCardRecord[]
-): SRSCardRecord[] {
+export function mergeSRSDecks(local: SRSCardRecord[], remote: SRSCardRecord[]): SRSCardRecord[] {
   const localMap = new Map<string, SRSCardRecord>();
   for (const card of local) {
     localMap.set(card.questionId, card);
@@ -181,10 +165,7 @@ export function mergeSRSDecks(
   }
 
   // Collect all unique questionIds
-  const allIds = new Set<string>([
-    ...localMap.keys(),
-    ...remoteMap.keys(),
-  ]);
+  const allIds = new Set<string>([...localMap.keys(), ...remoteMap.keys()]);
 
   const merged: SRSCardRecord[] = [];
 

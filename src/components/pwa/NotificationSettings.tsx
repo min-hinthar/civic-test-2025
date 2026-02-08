@@ -91,7 +91,9 @@ export function NotificationSettings() {
       <div className="rounded-lg border border-warning-200 bg-warning-50 p-4 dark:border-warning-800 dark:bg-warning-900/20">
         <div className="flex items-center gap-2">
           <BellOff className="h-5 w-5 text-warning-500" />
-          <p className="font-medium text-warning-800 dark:text-warning-200">Notifications blocked</p>
+          <p className="font-medium text-warning-800 dark:text-warning-200">
+            Notifications blocked
+          </p>
         </div>
         <p className="mt-1 text-sm text-warning-700 dark:text-warning-300">
           To enable notifications, update your browser settings.

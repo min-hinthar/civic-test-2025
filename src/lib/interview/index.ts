@@ -4,11 +4,7 @@
  * Re-exports all interview utilities: store, greetings, and audio.
  */
 
-export {
-  getInterviewHistory,
-  saveInterviewSession,
-  clearInterviewHistory,
-} from './interviewStore';
+export { getInterviewHistory, saveInterviewSession, clearInterviewHistory } from './interviewStore';
 
 export {
   INTERVIEWER_GREETINGS,
@@ -20,7 +16,4 @@ export {
 
 export { playChime } from './audioChime';
 
-export {
-  syncInterviewSession,
-  loadInterviewHistoryFromSupabase,
-} from './interviewSync';
+export { syncInterviewSession, loadInterviewHistoryFromSupabase } from './interviewSync';

@@ -21,13 +21,12 @@ interface InterviewerAvatarProps {
 export function InterviewerAvatar({ isSpeaking = false, size = 64 }: InterviewerAvatarProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  const pulseAnimation = isSpeaking && !shouldReduceMotion
-    ? { opacity: [0.6, 1, 0.6] }
-    : {};
+  const pulseAnimation = isSpeaking && !shouldReduceMotion ? { opacity: [0.6, 1, 0.6] } : {};
 
-  const pulseTransition = isSpeaking && !shouldReduceMotion
-    ? { repeat: Infinity, duration: 1.5, ease: 'easeInOut' as const }
-    : {};
+  const pulseTransition =
+    isSpeaking && !shouldReduceMotion
+      ? { repeat: Infinity, duration: 1.5, ease: 'easeInOut' as const }
+      : {};
 
   return (
     <motion.div
@@ -47,10 +46,7 @@ export function InterviewerAvatar({ isSpeaking = false, size = 64 }: Interviewer
         {/* Head */}
         <circle cx="20" cy="14" r="7" className="fill-primary-500" />
         {/* Shoulders */}
-        <path
-          d="M6 36 C6 26, 14 22, 20 22 C26 22, 34 26, 34 36"
-          className="fill-primary-500"
-        />
+        <path d="M6 36 C6 26, 14 22, 20 22 C26 22, 34 26, 34 36" className="fill-primary-500" />
       </svg>
     </motion.div>
   );

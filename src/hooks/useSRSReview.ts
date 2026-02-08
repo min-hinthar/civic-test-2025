@@ -67,10 +67,7 @@ export function useSRSReview() {
       const currentCard = cards[currentIndex];
       if (!currentCard) return;
 
-      const { intervalText } = await gradeCard(
-        currentCard.questionId,
-        isEasy
-      );
+      const { intervalText } = await gradeCard(currentCard.questionId, isEasy);
 
       const result: SessionReviewResult = {
         questionId: currentCard.questionId,
@@ -78,10 +75,10 @@ export function useSRSReview() {
         intervalText,
       };
 
-      setResults((prev) => [...prev, result]);
+      setResults(prev => [...prev, result]);
 
       if (currentIndex < cards.length - 1) {
-        setCurrentIndex((prev) => prev + 1);
+        setCurrentIndex(prev => prev + 1);
       } else {
         setPhase('summary');
       }

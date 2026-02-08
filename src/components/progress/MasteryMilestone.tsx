@@ -2,12 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/Dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { MasteryBadge } from './MasteryBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -143,19 +138,14 @@ export function MasteryMilestone({ milestone, onDismiss }: MasteryMilestoneProps
       <Confetti fire={isOpen} intensity={intensity} />
 
       {/* Celebration dialog */}
-      <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss()}>
-        <DialogContent
-          className={clsx(extraCardStyle)}
-          showCloseButton={false}
-        >
+      <Dialog open={isOpen} onOpenChange={open => !open && onDismiss()}>
+        <DialogContent className={clsx(extraCardStyle)} showCloseButton={false}>
           <div className="flex flex-col items-center text-center py-4">
             {/* Badge */}
             <MasteryBadge mastery={milestone.newPercentage} size="lg" />
 
             {/* Title */}
-            <DialogTitle className="mt-4 text-xl">
-              {message.en}
-            </DialogTitle>
+            <DialogTitle className="mt-4 text-xl">{message.en}</DialogTitle>
 
             {/* Burmese subtitle */}
             {showBurmese && (
@@ -165,9 +155,7 @@ export function MasteryMilestone({ milestone, onDismiss }: MasteryMilestoneProps
             )}
 
             {/* Category name */}
-            <p className="text-sm text-muted-foreground mt-3">
-              {milestone.category}
-            </p>
+            <p className="text-sm text-muted-foreground mt-3">{milestone.category}</p>
 
             {/* Progress indicator */}
             <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">

@@ -17,31 +17,18 @@ export {
 export type { DailyActivityCounts } from './streakTracker';
 
 // Streak IndexedDB storage
-export {
-  earnFreeze,
-  getStreakData,
-  recordStudyActivity,
-  saveStreakData,
-} from './streakStore';
+export { earnFreeze, getStreakData, recordStudyActivity, saveStreakData } from './streakStore';
 export type { StreakData } from './streakStore';
 
 // Badge definitions
 export { BADGE_DEFINITIONS } from './badgeDefinitions';
-export type {
-  BadgeCheckData,
-  BadgeDefinition,
-} from './badgeDefinitions';
+export type { BadgeCheckData, BadgeDefinition } from './badgeDefinitions';
 
 // Badge evaluation engine
 export { evaluateBadges, getNewlyEarnedBadge } from './badgeEngine';
 
 // Badge IndexedDB storage
-export {
-  getEarnedBadges,
-  getShownBadgeIds,
-  markBadgeEarned,
-  markBadgeShown,
-} from './badgeStore';
+export { getEarnedBadges, getShownBadgeIds, markBadgeEarned, markBadgeShown } from './badgeStore';
 export type { EarnedBadge } from './badgeStore';
 
 // Composite score
@@ -56,11 +43,7 @@ export { shareScoreCard } from './shareUtils';
 export type { ShareResult } from './shareUtils';
 
 // Streak sync (Supabase)
-export {
-  loadStreakFromSupabase,
-  mergeStreakData,
-  syncStreakToSupabase,
-} from './streakSync';
+export { loadStreakFromSupabase, mergeStreakData, syncStreakToSupabase } from './streakSync';
 
 // Social profile sync (Supabase)
 export {

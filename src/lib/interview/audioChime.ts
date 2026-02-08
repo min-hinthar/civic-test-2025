@@ -38,10 +38,7 @@ export function playChime(): void {
     osc.frequency.value = 880; // A5 note
 
     gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audioContext.currentTime + 0.5
-    );
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
 
     osc.connect(gain);
     gain.connect(audioContext.destination);

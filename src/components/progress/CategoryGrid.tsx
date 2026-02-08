@@ -4,11 +4,7 @@ import { motion } from 'motion/react';
 import { clsx } from 'clsx';
 import { CategoryRing } from './CategoryRing';
 import { MasteryBadge } from './MasteryBadge';
-import {
-  USCIS_CATEGORIES,
-  SUB_CATEGORY_NAMES,
-  CATEGORY_COLORS,
-} from '@/lib/mastery';
+import { USCIS_CATEGORIES, SUB_CATEGORY_NAMES, CATEGORY_COLORS } from '@/lib/mastery';
 import type { USCISCategory } from '@/lib/mastery';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -103,10 +99,7 @@ export function CategoryGrid({
 
   return (
     <motion.div
-      className={clsx(
-        'grid grid-cols-1 md:grid-cols-3 gap-4',
-        className
-      )}
+      className={clsx('grid grid-cols-1 md:grid-cols-3 gap-4', className)}
       variants={shouldReduceMotion ? undefined : containerVariants}
       initial={shouldReduceMotion ? undefined : 'hidden'}
       animate={shouldReduceMotion ? undefined : 'visible'}
@@ -130,7 +123,7 @@ export function CategoryGrid({
             onClick={() => onCategoryClick?.(category)}
             role={onCategoryClick ? 'button' : undefined}
             tabIndex={onCategoryClick ? 0 : undefined}
-            onKeyDown={(e) => {
+            onKeyDown={e => {
               if (onCategoryClick && (e.key === 'Enter' || e.key === ' ')) {
                 e.preventDefault();
                 onCategoryClick(category);
@@ -139,21 +132,12 @@ export function CategoryGrid({
           >
             {/* Header: Ring + Name + Badge */}
             <div className="flex items-center gap-3 mb-3">
-              <CategoryRing
-                percentage={mastery}
-                color={ringColor}
-                size={64}
-                strokeWidth={6}
-              >
-                <span className="text-sm font-bold text-foreground">
-                  {mastery}%
-                </span>
+              <CategoryRing percentage={mastery} color={ringColor} size={64} strokeWidth={6}>
+                <span className="text-sm font-bold text-foreground">{mastery}%</span>
               </CategoryRing>
 
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-foreground truncate">
-                  {def.name.en}
-                </h3>
+                <h3 className="text-sm font-semibold text-foreground truncate">{def.name.en}</h3>
                 {showBurmese && (
                   <p className="text-xs font-myanmar text-muted-foreground truncate">
                     {def.name.my}
@@ -181,12 +165,7 @@ export function CategoryGrid({
                           {subMastery}%
                         </span>
                       </div>
-                      <div
-                        className={clsx(
-                          'h-1.5 rounded-full overflow-hidden',
-                          barColors.track
-                        )}
-                      >
+                      <div className={clsx('h-1.5 rounded-full overflow-hidden', barColors.track)}>
                         <motion.div
                           className={clsx('h-full rounded-full', barColors.bg)}
                           initial={shouldReduceMotion ? { width: `${subMastery}%` } : { width: 0 }}

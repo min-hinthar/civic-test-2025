@@ -70,13 +70,12 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
           </p>
 
           <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
-            Open the app at least once a week to keep your study progress saved.
-            Better yet, add it to your home screen for the fullest experience!
+            Open the app at least once a week to keep your study progress saved. Better yet, add it
+            to your home screen for the fullest experience!
           </p>
           <p className="mt-1 font-myanmar text-sm text-amber-600 dark:text-amber-400">
-            သင့်လေ့လာမှု တိုးတက်မှုကို သိမ်းဆည်းထားဖို့ တစ်ပတ်လျှင် အနည်းဆုံး
-            တစ်ကြိမ် အက်ပ်ကို ဖွင့်ပါ။ Home screen မှာ ထည့်ရင်
-            ပိုကောင်းပါတယ်!
+            သင့်လေ့လာမှု တိုးတက်မှုကို သိမ်းဆည်းထားဖို့ တစ်ပတ်လျှင် အနည်းဆုံး တစ်ကြိမ် အက်ပ်ကို
+            ဖွင့်ပါ။ Home screen မှာ ထည့်ရင် ပိုကောင်းပါတယ်!
           </p>
         </div>
       </div>

@@ -46,7 +46,7 @@ function getSpeechRateFromStorage(): number {
  */
 function estimateDuration(text: string, rate: number): number {
   const wordCount = text.split(/\s+/).length;
-  return (wordCount / 2.5) * 1000 / rate + 3000;
+  return ((wordCount / 2.5) * 1000) / rate + 3000;
 }
 
 function findVoice(
@@ -57,9 +57,7 @@ function findVoice(
   if (!voices?.length) return undefined;
 
   const normalizedLang = lang.toLowerCase();
-  const matchesLang = voices.filter(voice =>
-    voice.lang?.toLowerCase().startsWith(normalizedLang)
-  );
+  const matchesLang = voices.filter(voice => voice.lang?.toLowerCase().startsWith(normalizedLang));
 
   const matchesHint = (voice: SpeechSynthesisVoice, hint: string) =>
     voice.name.toLowerCase().includes(hint) || voice.voiceURI.toLowerCase().includes(hint);
@@ -76,9 +74,7 @@ function findVoice(
     if (match) return match;
   }
 
-  const enhanced = matchesLang.find(voice =>
-    ENHANCED_HINTS.some(hint => matchesHint(voice, hint))
-  );
+  const enhanced = matchesLang.find(voice => ENHANCED_HINTS.some(hint => matchesHint(voice, hint)));
   if (enhanced) return enhanced;
 
   const localFirst = matchesLang.find(voice => voice.localService);

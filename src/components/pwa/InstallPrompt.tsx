@@ -35,16 +35,14 @@ interface InstallPromptProps {
  * ```
  */
 export function InstallPrompt({ onInstalled }: InstallPromptProps) {
-  const { canInstall, isInstalled, isIOS, promptInstall, dismissPrompt } =
-    useInstallPrompt();
+  const { canInstall, isInstalled, isIOS, promptInstall, dismissPrompt } = useInstallPrompt();
   const [showIOSInstructions, setShowIOSInstructions] = useState(false);
 
   // Don't render if already installed
   if (isInstalled) return null;
 
   // Show on first visit: either canInstall (Chromium) or iOS first visit
-  const shouldShow =
-    canInstall || (isIOS && !localStorage.getItem('ios-install-shown'));
+  const shouldShow = canInstall || (isIOS && !localStorage.getItem('ios-install-shown'));
 
   if (!shouldShow && !showIOSInstructions) return null;
 
@@ -105,9 +103,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
           showIOSInstructions ? (
             <div className="space-y-3">
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                1. Tap the{' '}
-                <Share className="inline h-4 w-4" aria-hidden="true" /> Share
-                button
+                1. Tap the <Share className="inline h-4 w-4" aria-hidden="true" /> Share button
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 2. Select &quot;Add to Home Screen&quot;

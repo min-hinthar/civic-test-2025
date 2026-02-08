@@ -90,11 +90,7 @@ export function CategoryRing({
           strokeLinecap="round"
           strokeDasharray={circumference}
           className={color}
-          initial={
-            shouldReduceMotion
-              ? { strokeDashoffset }
-              : { strokeDashoffset: circumference }
-          }
+          initial={shouldReduceMotion ? { strokeDashoffset } : { strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
           transition={
             shouldReduceMotion

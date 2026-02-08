@@ -13,14 +13,7 @@
 
 import { useMemo } from 'react';
 import { clsx } from 'clsx';
-import {
-  Flame,
-  Target,
-  Star,
-  BookCheck,
-  Award,
-  type LucideIcon,
-} from 'lucide-react';
+import { Flame, Target, Star, BookCheck, Award, type LucideIcon } from 'lucide-react';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
@@ -41,10 +34,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // Category labels (bilingual)
 // ---------------------------------------------------------------------------
 
-const CATEGORY_LABELS: Record<
-  'streak' | 'accuracy' | 'coverage',
-  { en: string; my: string }
-> = {
+const CATEGORY_LABELS: Record<'streak' | 'accuracy' | 'coverage', { en: string; my: string }> = {
   streak: { en: 'Streak', my: '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A' },
   accuracy: { en: 'Accuracy', my: '\u1010\u102D\u1000\u103B\u1019\u103E\u1014\u103A' },
   coverage: { en: 'Coverage', my: '\u101C\u103D\u1019\u103A\u1038\u1001\u103C\u102F\u1036' },
@@ -72,7 +62,7 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
 
   // Build sets for fast lookup
   const earnedIds: Set<string> = useMemo(
-    () => new Set(earnedBadges.map((b) => b.id)),
+    () => new Set(earnedBadges.map(b => b.id)),
     [earnedBadges]
   );
 
@@ -88,7 +78,7 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
     for (const badge of all) {
       if (groups[badge.category]) {
         // Deduplicate (in case a badge appears in both arrays somehow)
-        if (!groups[badge.category].some((b) => b.id === badge.id)) {
+        if (!groups[badge.category].some(b => b.id === badge.id)) {
           groups[badge.category].push(badge);
         }
       }
@@ -99,7 +89,7 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
 
   return (
     <div className={clsx('space-y-6', className)}>
-      {(['streak', 'accuracy', 'coverage'] as const).map((category) => {
+      {(['streak', 'accuracy', 'coverage'] as const).map(category => {
         const badges = groupedBadges[category];
         if (!badges || badges.length === 0) return null;
 
@@ -109,13 +99,9 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
           <div key={category}>
             {/* Category header */}
             <div className="mb-3">
-              <h3 className="text-sm font-semibold text-foreground">
-                {label.en}
-              </h3>
+              <h3 className="text-sm font-semibold text-foreground">{label.en}</h3>
               {showBurmese && (
-                <p className="text-xs font-myanmar text-muted-foreground">
-                  {label.my}
-                </p>
+                <p className="text-xs font-myanmar text-muted-foreground">{label.my}</p>
               )}
             </div>
 
@@ -125,7 +111,7 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
               stagger={60}
               delay={80}
             >
-              {badges.map((badge) => {
+              {badges.map(badge => {
                 const isEarned = earnedIds.has(badge.id);
                 return (
                   <StaggeredItem key={badge.id}>
@@ -168,25 +154,19 @@ function BadgeCard({
       <div
         className={clsx(
           'flex items-center justify-center h-12 w-12 rounded-full mb-3',
-          isEarned
-            ? 'bg-amber-100 dark:bg-amber-900/30'
-            : 'bg-muted grayscale'
+          isEarned ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted grayscale'
         )}
       >
         <IconComponent
           className={clsx(
             'h-6 w-6',
-            isEarned
-              ? 'text-amber-600 dark:text-amber-400'
-              : 'text-muted-foreground'
+            isEarned ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'
           )}
         />
       </div>
 
       {/* Badge name */}
-      <p className="text-sm font-semibold text-foreground leading-tight">
-        {badge.name.en}
-      </p>
+      <p className="text-sm font-semibold text-foreground leading-tight">{badge.name.en}</p>
       {showBurmese && (
         <p className="text-xs font-myanmar text-muted-foreground mt-0.5 leading-tight">
           {badge.name.my}
@@ -197,20 +177,12 @@ function BadgeCard({
       {isEarned ? (
         <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
           {badge.description.en}
-          {showBurmese && (
-            <span className="block font-myanmar mt-0.5">
-              {badge.description.my}
-            </span>
-          )}
+          {showBurmese && <span className="block font-myanmar mt-0.5">{badge.description.my}</span>}
         </p>
       ) : (
         <p className="text-xs text-muted-foreground mt-2 leading-relaxed italic">
           {badge.requirement.en}
-          {showBurmese && (
-            <span className="block font-myanmar mt-0.5">
-              {badge.requirement.my}
-            </span>
-          )}
+          {showBurmese && <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>}
         </p>
       )}
     </div>

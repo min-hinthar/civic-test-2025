@@ -162,11 +162,5 @@ export function AudioWaveform({ stream, isActive }: AudioWaveformProps) {
     );
   }
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="h-12 w-full rounded-xl"
-      aria-hidden="true"
-    />
-  );
+  return <canvas ref={canvasRef} className="h-12 w-full rounded-xl" aria-hidden="true" />;
 }

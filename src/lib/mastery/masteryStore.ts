@@ -31,9 +31,7 @@ const HISTORY_KEY = 'answers';
  * Record a new answer to the history.
  * Automatically adds a timestamp at the time of recording.
  */
-export async function recordAnswer(
-  answer: Omit<StoredAnswer, 'timestamp'>
-): Promise<void> {
+export async function recordAnswer(answer: Omit<StoredAnswer, 'timestamp'>): Promise<void> {
   const history = (await get<StoredAnswer[]>(HISTORY_KEY, masteryDb)) ?? [];
   const storedAnswer: StoredAnswer = {
     ...answer,
@@ -62,9 +60,7 @@ export async function getAnswerHistory(): Promise<StoredAnswer[]> {
  * Get answer history for a specific question.
  * Filters the full history by questionId.
  */
-export async function getQuestionHistory(
-  questionId: string
-): Promise<StoredAnswer[]> {
+export async function getQuestionHistory(questionId: string): Promise<StoredAnswer[]> {
   const history = await getAnswerHistory();
   return history.filter(a => a.questionId === questionId);
 }

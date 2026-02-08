@@ -74,7 +74,11 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
           )}
         >
           <Check className="h-5 w-5" />
-          <BilingualText text={strings.interview.correct} size="sm" className="text-white [&_span]:text-white" />
+          <BilingualText
+            text={strings.interview.correct}
+            size="sm"
+            className="text-white [&_span]:text-white"
+          />
         </motion.button>
 
         {/* Incorrect button */}
@@ -93,7 +97,11 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
           )}
         >
           <X className="h-5 w-5" />
-          <BilingualText text={strings.interview.incorrect} size="sm" className="text-white [&_span]:text-white" />
+          <BilingualText
+            text={strings.interview.incorrect}
+            size="sm"
+            className="text-white [&_span]:text-white"
+          />
         </motion.button>
       </div>
     </div>

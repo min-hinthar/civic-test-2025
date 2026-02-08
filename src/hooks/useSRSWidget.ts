@@ -21,17 +21,13 @@ interface CategoryBreakdownEntry {
 }
 
 // Build a questionId -> Question lookup map once at module level
-const questionsById: Map<string, Question> = new Map(
-  allQuestions.map((q) => [q.id, q])
-);
+const questionsById: Map<string, Question> = new Map(allQuestions.map(q => [q.id, q]));
 
 /**
  * Compute review streak: count consecutive days (backwards from today)
  * that have at least one reviewed card.
  */
-function computeReviewStreak(
-  deck: { lastReviewedAt?: string }[]
-): number {
+function computeReviewStreak(deck: { lastReviewedAt?: string }[]): number {
   // Collect unique review dates (YYYY-MM-DD)
   const reviewDates = new Set<string>();
   for (const record of deck) {
@@ -74,17 +70,11 @@ function computeReviewStreak(
 export function useSRSWidget() {
   const { deck, dueCount, isLoading } = useSRS();
 
-  const reviewStreak: number = useMemo(
-    () => computeReviewStreak(deck),
-    [deck]
-  );
+  const reviewStreak: number = useMemo(() => computeReviewStreak(deck), [deck]);
 
   const categoryBreakdown: CategoryBreakdownEntry[] = useMemo(() => {
     // Group deck cards by USCIS main category
-    const categoryMap = new Map<
-      string,
-      { dueCount: number; totalCount: number }
-    >();
+    const categoryMap = new Map<string, { dueCount: number; totalCount: number }>();
 
     // Initialize all categories
     for (const catName of Object.keys(USCIS_CATEGORIES)) {

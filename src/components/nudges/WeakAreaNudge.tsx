@@ -53,9 +53,7 @@ export function WeakAreaNudge({
     >
       {/* Category name and mastery */}
       <div className="flex items-center justify-between gap-2">
-        <h4 className="text-sm font-semibold text-foreground truncate">
-          {category}
-        </h4>
+        <h4 className="text-sm font-semibold text-foreground truncate">{category}</h4>
         <span
           className={clsx(
             'text-xs font-semibold tabular-nums whitespace-nowrap',
@@ -66,21 +64,13 @@ export function WeakAreaNudge({
                 : 'text-warning-500'
           )}
         >
-          {isUnattempted
-            ? strings.progress.notStarted.en
-            : `${mastery}%`}
+          {isUnattempted ? strings.progress.notStarted.en : `${mastery}%`}
         </span>
       </div>
 
       {/* Nudge message */}
-      <p className="mt-1 text-xs text-muted-foreground">
-        {message.en}
-      </p>
-      {showBurmese && (
-        <p className="text-xs text-muted-foreground font-myanmar">
-          {message.my}
-        </p>
-      )}
+      <p className="mt-1 text-xs text-muted-foreground">{message.en}</p>
+      {showBurmese && <p className="text-xs text-muted-foreground font-myanmar">{message.my}</p>}
 
       {/* Action buttons */}
       <div className="mt-3 flex gap-2">
@@ -98,9 +88,7 @@ export function WeakAreaNudge({
           <Play className="h-3.5 w-3.5" />
           <span>{strings.progress.practiceNow.en}</span>
           {showBurmese && (
-            <span className="font-myanmar text-[10px]">
-              {strings.progress.practiceNow.my}
-            </span>
+            <span className="font-myanmar text-[10px]">{strings.progress.practiceNow.my}</span>
           )}
         </button>
         <button
@@ -115,9 +103,7 @@ export function WeakAreaNudge({
           <BookOpen className="h-3.5 w-3.5" />
           <span>{strings.progress.reviewInGuide.en}</span>
           {showBurmese && (
-            <span className="font-myanmar text-[10px]">
-              {strings.progress.reviewInGuide.my}
-            </span>
+            <span className="font-myanmar text-[10px]">{strings.progress.reviewInGuide.my}</span>
           )}
         </button>
       </div>
