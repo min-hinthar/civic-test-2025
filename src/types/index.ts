@@ -97,3 +97,30 @@ export interface User {
   name: string;
   testHistory: TestSession[];
 }
+
+// Interview Simulation types
+
+export type InterviewMode = 'realistic' | 'practice';
+
+export type InterviewEndReason = 'passThreshold' | 'failThreshold' | 'complete' | 'quit';
+
+export interface InterviewResult {
+  questionId: string;
+  questionText_en: string;
+  questionText_my: string;
+  correctAnswers: Array<{ text_en: string; text_my: string }>;
+  selfGrade: 'correct' | 'incorrect';
+  category: Category;
+}
+
+export interface InterviewSession {
+  id?: string;
+  date: string;
+  mode: InterviewMode;
+  score: number;
+  totalQuestions: number;
+  durationSeconds: number;
+  passed: boolean;
+  endReason: InterviewEndReason;
+  results: InterviewResult[];
+}
