@@ -1,0 +1,242 @@
+'use client';
+
+/**
+ * ShareCardPreview
+ *
+ * Modal dialog that shows a preview of the generated score card
+ * before the user shares it. Renders the canvas image on open,
+ * with loading state and share/close actions.
+ *
+ * Uses Radix Dialog for accessibility (focus trap, ESC to close).
+ */
+
+import { useState, useEffect, useCallback } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/Dialog';
+import { useToast } from '@/components/BilingualToast';
+import { renderShareCard, type ShareCardData } from '@/lib/social/shareCardRenderer';
+import { shareScoreCard } from '@/lib/social/shareUtils';
+
+export interface ShareCardPreviewProps {
+  /** Card data to render, or null when closed */
+  data: ShareCardData | null;
+  /** Whether the dialog is open */
+  open: boolean;
+  /** Callback to close the dialog */
+  onClose: () => void;
+}
+
+/**
+ * Preview modal for the generated share card.
+ * Generates the canvas image when opened, shows loading spinner,
+ * then displays with share/close actions.
+ */
+export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps) {
+  const [blob, setBlob] = useState<Blob | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const { showSuccess } = useToast();
+
+  // Generate image when dialog opens
+  useEffect(() => {
+    if (!open || !data) {
+      return;
+    }
+
+    let cancelled = false;
+    setIsGenerating(true);
+    setBlob(null);
+    setPreviewUrl(null);
+
+    renderShareCard(data)
+      .then((result) => {
+        if (cancelled) return;
+        setBlob(result);
+        setPreviewUrl(URL.createObjectURL(result));
+        setIsGenerating(false);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error('[ShareCardPreview] Render failed:', err);
+        setIsGenerating(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, data]);
+
+  // Clean up object URL on unmount or when preview changes
+  useEffect(() => {
+    const url = previewUrl;
+    return () => {
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [previewUrl]);
+
+  const handleShare = useCallback(async () => {
+    if (!blob) return;
+
+    setIsSharing(true);
+    try {
+      const result = await shareScoreCard(blob);
+
+      if (result === 'shared') {
+        showSuccess({
+          en: 'Shared successfully!',
+          my: '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1005\u103D\u102C \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+        });
+      } else if (result === 'copied') {
+        showSuccess({
+          en: 'Copied to clipboard!',
+          my: '\u1000\u101C\u1005\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037 \u1000\u1030\u1038\u101A\u1030\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+        });
+      } else {
+        showSuccess({
+          en: 'Image downloaded!',
+          my: '\u1015\u102F\u1036\u1000\u102C\u1038 \u1012\u1031\u102B\u1004\u103A\u1038\u101C\u102F\u1012\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+        });
+      }
+
+      onClose();
+    } catch (err) {
+      console.error('[ShareCardPreview] Share failed:', err);
+    } finally {
+      setIsSharing(false);
+    }
+  }, [blob, showSuccess, onClose]);
+
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        className="w-[95vw] max-w-md p-4 sm:p-6"
+        aria-describedby="share-card-description"
+      >
+        <DialogTitle className="text-center">
+          Share Results
+        </DialogTitle>
+        <DialogDescription id="share-card-description" className="text-center">
+          Preview your score card before sharing
+        </DialogDescription>
+
+        {/* Image preview area */}
+        <div className="relative mt-4 aspect-square w-full overflow-hidden rounded-lg bg-muted/30">
+          <AnimatePresence mode="wait">
+            {isGenerating && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <svg
+                    className="h-8 w-8 animate-spin text-primary-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                  </svg>
+                  <span className="text-sm text-muted-foreground">
+                    Generating card...
+                  </span>
+                </div>
+              </motion.div>
+            )}
+            {previewUrl && !isGenerating && (
+              <motion.img
+                key="preview"
+                src={previewUrl}
+                alt="Share card preview"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="h-full w-full object-contain"
+              />
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Action buttons */}
+        <DialogFooter className="mt-4 flex-row gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-full border border-border px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            <span>Close</span>
+            <span className="ml-1 font-myanmar text-xs opacity-80">
+              {'\u1015\u102D\u1010\u103A\u1015\u102B'}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={handleShare}
+            disabled={!blob || isSharing}
+            className="flex-1 rounded-full bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isSharing ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              </span>
+            ) : (
+              <>
+                <span>Share</span>
+                <span className="ml-1 font-myanmar text-xs opacity-80">
+                  {'\u1019\u103B\u103E\u101D\u1031\u1015\u102B'}
+                </span>
+              </>
+            )}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
