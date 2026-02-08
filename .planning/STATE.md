@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 7 of 7 (Social Features)
-Plan: 3 of 8 complete (07-01, 07-02, 07-05)
+Plan: 4 of 8 complete (07-01, 07-02, 07-04, 07-05)
 Status: In progress
-Last activity: 2026-02-08 - Completed 07-05-PLAN.md (Score Sharing Cards)
+Last activity: 2026-02-08 - Completed 07-04-PLAN.md (Badge UI & Streak Heatmap)
 
-Progress: [█████████░] 91% (48 plans / 53 total)
+Progress: [█████████░] 92% (49 plans / 53 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 48 (Phases 1-6 + 07-01, 07-02, 07-05)
+- Total plans completed: 49 (Phases 1-6 + 07-01, 07-02, 07-04, 07-05)
 - Average duration: ~12 min
-- Total execution time: ~589 min
+- Total execution time: ~597 min
 
 **By Phase:**
 
@@ -33,7 +33,7 @@ Progress: [█████████░] 91% (48 plans / 53 total)
 | 04-learning-explanations | 9 | 72 min | 8 min |
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
-| 07-social-features | 3/8 | 22 min | 7 min |
+| 07-social-features | 4/8 | 30 min | 8 min |
 
 **Recent Trend:**
 - Phase 6 wave execution: 6 plans in 5 waves with parallel execution
@@ -233,6 +233,12 @@ Recent decisions affecting current work:
 - 07-05: Font wait (document.fonts.ready + explicit load) before canvas rendering
 - 07-05: Three-tier share fallback: Web Share API -> Clipboard -> Download
 - 07-05: ShareButton manages modal open state internally via useState
+- 07-04: Shared ICON_MAP in BadgeCelebration and BadgeGrid for consistent icon rendering
+- 07-04: StreakHeatmap uses warm orange gradient (orange-200/400/500) distinct from ReviewHeatmap blue
+- 07-04: Freeze days use blue-200/border-blue-400 for visual distinction
+- 07-04: Badge categories displayed as section groups with bilingual headers
+- 07-04: Auto-dismiss 8s for badge celebration (matching gold-level MasteryMilestone)
+- 07-04: Today cell highlighted with ring-2 ring-foreground/30 in StreakHeatmap
 
 ### Pending Todos
 
@@ -250,7 +256,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 07-05-PLAN.md (Score Sharing Cards). Phase 7 in progress.
+Stopped at: Completed 07-04-PLAN.md (Badge UI & Streak Heatmap). Phase 7 in progress.
 Resume file: None
 
 ---
