@@ -198,10 +198,12 @@ Plans:
   2. User goes back online and queued test results automatically sync to Supabase
   3. User can navigate to Settings from the app navigation menu
   4. Developer runs `npm run lint` with zero errors
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 08-01-PLAN.md — Wire offline test sync and add settings navigation link
+- [ ] 08-01-PLAN.md — Build fixes: delete Sentry demo pages, fix lint errors, restore pre-commit hook
+- [ ] 08-02-PLAN.md — Wire offline test result sync to IndexedDB queue with auto-sync
+- [ ] 08-03-PLAN.md — Add Settings navigation link to Dashboard header
 
 ---
 
@@ -236,7 +238,7 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 5. Spaced Repetition | 9/9 | Complete | 2026-02-07 |
 | 6. Interview Simulation | 6/6 | Complete | 2026-02-07 |
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
-| 8. Critical Integration Fixes | 0/1 | Pending | — |
+| 8. Critical Integration Fixes | 0/3 | Pending | — |
 | 9. UI Polish & Onboarding | 0/1 | Pending | — |
 
 ---
