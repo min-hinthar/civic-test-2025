@@ -18,6 +18,19 @@ key-files:
     - src/pages/InterviewPage.tsx
     - src/components/interview/InterviewSetup.tsx
     - src/components/interview/InterviewResults.tsx
+    - src/pages/Dashboard.tsx
+    - src/pages/TestPage.tsx
+    - src/pages/LandingPage.tsx
+    - src/pages/AuthPage.tsx
+    - src/pages/PasswordResetPage.tsx
+    - src/pages/PasswordUpdatePage.tsx
+    - src/components/AppNavigation.tsx
+    - src/components/navigation/BottomTabBar.tsx
+    - src/components/interview/InterviewDashboardWidget.tsx
+    - src/components/dashboard/ReadinessIndicator.tsx
+    - src/components/ErrorBoundary.tsx
+    - src/components/onboarding/OnboardingTour.tsx
+    - src/components/onboarding/WelcomeScreen.tsx
 decisions:
   - id: "09-12-01"
     title: "Tab bars use 3D chunky active state with icons"
@@ -89,23 +102,93 @@ metrics:
 **InterviewPage.tsx:**
 - Updated JSDoc with Duolingo treatment notes referencing rounded-2xl
 
+### Checkpoint Fixes: Font-Myanmar Rendering
+
+Applied `font-myanmar` CSS class to all inline Burmese text across 10 components that were missing proper font rendering:
+
+- **Dashboard.tsx:** Welcome greeting, empty state headings/descriptions, button labels
+- **HistoryPage.tsx:** Interview mode labels, pass/fail text, correct/incorrect badges
+- **TestPage.tsx:** Refactored `completionMessage` from flat strings to `{ en, my }` bilingual objects with separate `<span className="font-myanmar">` rendering
+- **AppNavigation.tsx:** Nav link Burmese labels, sign in/out buttons
+- **BottomTabBar.tsx:** Tab labels, More menu items, theme toggle labels, sign out button
+- **InterviewDashboardWidget.tsx:** Loading text, practice labels, start button, score display, mode labels
+- **InterviewSetup.tsx:** Start button Burmese text
+- **InterviewResults.tsx:** Dashboard button Burmese text
+- **ReadinessIndicator.tsx:** Inline Burmese readiness label
+- **ErrorBoundary.tsx:** Burmese error message paragraph
+
+### Checkpoint Fixes: US Flag Emoji
+
+Replaced US flag emoji (regional indicator sequence, poor cross-platform support) with Statue of Liberty emoji (single codepoint U+1F5FD) across 8 files:
+
+- **Dashboard.tsx:** 4 occurrences of escaped `\uD83C\uDDFA\uD83C\uDDF8` replaced with `\uD83D\uDDFD`
+- **HistoryPage.tsx:** Empty state emoji
+- **LandingPage.tsx:** Stats array, hero mascot row (replaced with star), CTA section
+- **AuthPage.tsx:** Header patriotic emoji
+- **PasswordResetPage.tsx:** Header patriotic emoji
+- **PasswordUpdatePage.tsx:** Header patriotic emoji
+- **WelcomeScreen.tsx:** HTML entity `&#127482;&#127480;` replaced with `&#128509;`
+- **OnboardingTour.tsx:** HTML entity `&#127482;&#127480;` replaced with `&#128509;`
+
 ## Task Commits
 
 | Task | Commit | Description |
 |------|--------|-------------|
 | 1 | 4de1ad4 | Duolingo visual refresh of History, Social Hub, and Interview pages |
+| Fix: nav | 5368111 | Hide top nav on mobile, polish desktop header styling |
+| Fix: tabs | 9e64d9d | Add More menu to mobile bottom tab bar |
+| Fix: why | 33fda46 | Eliminate duplicate Why? header in WhyButton + ExplanationCard |
+| Fix: tour | eba2757 | Fix broken onboarding tour with SSR-safe dynamic import |
+| Fix: colors | b31657a | Add 7 distinct sub-category accent colors for flashcards |
+| Fix: font | f850254 | Add font-myanmar class to all Burmese text spans |
+| Fix: emoji | 1f00b7b | Replace US flag emoji with cross-platform alternatives |
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+### Post-Checkpoint Fixes
+
+Multiple issues discovered during user verification checkpoint that required additional fixes beyond the original plan scope:
+
+**1. [Rule 1 - Bug] Font-myanmar missing on inline Burmese text (f850254)**
+- Found during checkpoint verification
+- Issue: Burmese Unicode text rendered without proper Myanmar font because `font-myanmar` CSS class was missing on inline `<span>` elements
+- Fix: Added `font-myanmar` class to all inline Burmese text across 10 components
+- 10 files modified
+
+**2. [Rule 1 - Bug] US flag emoji not displaying (1f00b7b)**
+- Found during checkpoint verification
+- Issue: US flag emoji (two-codepoint regional indicator sequence) has poor cross-platform support and fails to render on some browsers/OS
+- Fix: Replaced all US flag emoji with Statue of Liberty emoji (single codepoint, universal support) across 8 files
+- 8 files modified
+
+**3. [Rule 1 - Bug] Onboarding tour broken (eba2757)**
+- Found during checkpoint verification
+- Issue: react-joyride uses browser APIs causing SSR failures; react-router-dom import was incorrect
+- Fix: Dynamic import with `ssr: false`, proper timing delay for DOM targets
+
+**4. [Rule 1 - Bug] Duplicate Why? header (33fda46)**
+- Found during checkpoint verification
+- Issue: WhyButton rendered its own header on top of ExplanationCard's built-in header
+- Fix: Removed duplicate header rendering
+
+**5. [Rule 2 - Missing Critical] Mobile navigation incomplete (5368111, 9e64d9d)**
+- Found during checkpoint verification
+- Issue: Top nav visible on mobile alongside bottom tab bar; More menu missing History/Community access
+- Fix: Hide top nav on mobile, add More menu with secondary navigation items
+
+**6. [Rule 1 - Bug] Flashcard category colors indistinct (b31657a)**
+- Found during checkpoint verification
+- Issue: All flashcard categories used same blue color strip
+- Fix: Added 7 distinct sub-category accent colors matching USCIS category groupings
 
 ## Verification
 
-- TypeScript: `npx tsc --noEmit` passed cleanly
-- ESLint: `npx eslint` passed on all 5 modified files
+- TypeScript: `npx tsc --noEmit` passed (only pre-existing StudyGuidePage errors)
+- ESLint: Passed on all modified files
 - All three page files contain `rounded-2xl` (HistoryPage: 4, SocialHubPage: 2, InterviewPage via comment, InterviewSetup: 6)
 - All buttons meet 44px minimum touch targets
-- All Burmese text has font-myanmar class
+- All Burmese text has font-myanmar class (verified via grep)
+- No US flag emoji remaining in src/
 - No text-red-*/bg-red-* in modified files
 
 ## Self-Check: PASSED
