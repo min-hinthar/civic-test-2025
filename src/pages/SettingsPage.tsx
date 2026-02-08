@@ -17,6 +17,7 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { Card, CardContent } from '@/components/ui/Card';
+import { SocialSettings } from '@/components/social/SocialSettings';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
 const SPEECH_RATE_KEY = 'civic-prep-speech-rate';
@@ -133,6 +134,9 @@ export default function SettingsPage() {
           />
           <NotificationSettings />
         </section>
+
+        {/* Social Features */}
+        <SocialSettings />
 
         {/* Review Reminders */}
         <section className="mb-8">
