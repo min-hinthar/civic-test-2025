@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 9 of 9 (UI Polish & Onboarding)
-Plan: 8 of 12
+Plan: 11 of 12
 Status: In progress
-Last activity: 2026-02-08 - Completed 09-08-PLAN.md
+Last activity: 2026-02-08 - Completed 09-11-PLAN.md
 
-Progress: [█████████░] 94% (64 plans / 68 total)
+Progress: [█████████░] 96% (65 plans / 68 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 64 (Phases 1-8 complete, Phase 9: 8/12)
+- Total plans completed: 65 (Phases 1-8 complete, Phase 9: 11/12)
 - Average duration: ~12 min
-- Total execution time: ~720 min
+- Total execution time: ~733 min
 
 **By Phase:**
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 94% (64 plans / 68 total)
 | 07-social-features | 8/8 | 86 min | 11 min |
 | 08-critical-integration-fixes | 3/3 | 27 min | 9 min |
 
-| 09-ui-polish-onboarding | 8/12 | ~77 min | ~10 min |
+| 09-ui-polish-onboarding | 11/12 | ~90 min | ~8 min |
 
 **Recent Trend:**
 - Phase 9 focuses on Duolingo-style UI polish and gamification
@@ -50,6 +50,7 @@ Progress: [█████████░] 94% (64 plans / 68 total)
 - Auth/password pages redesigned: centered card, 3D buttons, bilingual labels, warning toasts for validation
 - Dashboard overhauled: hero ReadinessIndicator, 3D chunky action buttons, stagger animations, responsive grid
 - Settings page Duolingo treatment: grouped rounded-2xl card sections with icons, ToggleSwitch, 44px targets
+- Progress page redesigned: Duolingo skill tree with 7 USCIS sub-category nodes, sequential unlock, medal rings
 
 *Updated after each plan completion*
 
@@ -311,6 +312,10 @@ Recent decisions affecting current work:
 - 09-08: SettingsSection/SettingsRow/ToggleSwitch helper components for grouped card pattern
 - 09-08: useMemo for history, categoryBreakdown, masteredCount to satisfy React Compiler
 - 09-08: SocialSettings embedded directly inside SettingsSection wrapper (has own internal structure)
+- 09-11: 7 skill tree nodes match USCIS sub-categories with category-colored backgrounds (blue/amber/emerald)
+- 09-11: Sequential unlock: node N+1 requires 50%+ mastery on node N
+- 09-11: Medal ring indicators: bronze (50%), silver (75%), gold (100%) matching existing MasteryBadge thresholds
+- 09-11: Node click navigates to /study?category=#cards for that sub-category
 
 ### Pending Todos
 
@@ -329,7 +334,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 09-08-PLAN.md (Dashboard & Settings Page Overhaul)
+Stopped at: Completed 09-11-PLAN.md (Skill Tree Path)
 Resume file: None
 
 ---
