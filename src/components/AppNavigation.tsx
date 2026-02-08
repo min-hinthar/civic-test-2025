@@ -23,6 +23,7 @@ const navLinks = [
   { href: '/dashboard', label: strings.nav.dashboard },
   { href: '/study', label: strings.nav.studyGuide },
   { href: '/test', label: strings.nav.mockTest },
+  { href: '/interview', label: strings.nav.practiceInterview },
   { href: '/history', label: strings.nav.testHistory },
 ];
 

@@ -28,6 +28,7 @@ import OpEdPage from '@/pages/OpEdPage';
 import SettingsPage from '@/pages/SettingsPage';
 import ProgressPage from '@/pages/ProgressPage';
 import PracticePage from '@/pages/PracticePage';
+import InterviewPage from '@/pages/InterviewPage';
 
 /**
  * Hook to detect if running on client side.
@@ -188,6 +189,14 @@ const AppShell = () => {
                           element={
                             <ProtectedRoute>
                               <PracticePage />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/interview"
+                          element={
+                            <ProtectedRoute>
+                              <InterviewPage />
                             </ProtectedRoute>
                           }
                         />
