@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Social Features** - Study streaks, score sharing, opt-in leaderboards with privacy controls
 - [x] **Phase 8: Critical Integration Fixes** - Offline test sync wiring, settings page navigation, lint fixes
 - [x] **Phase 9: UI Polish & Onboarding** - Duolingo-inspired UI overhaul, onboarding tour, sound effects, sync indicator, red token audit
-- [ ] **Phase 10: Tech Debt Cleanup** - Bilingual toast audit, deprecated imports, test coverage, phase verification, accessibility audit
+- [x] **Phase 10: Tech Debt Cleanup** - Bilingual toast audit, deprecated imports, test coverage, phase verification, accessibility audit
 
 ## Phase Details
 
@@ -253,10 +253,10 @@ Plans:
 **Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 10-01-PLAN.md — Bilingual toast audit: convert all English-only toast calls to BilingualToast format
-- [ ] 10-02-PLAN.md — Code cleanup: deprecated imports, lint, TS error investigation
-- [ ] 10-03-PLAN.md — Test coverage improvements: add unit tests for uncovered modules
-- [ ] 10-04-PLAN.md — Phase verification and accessibility audit: run verifier on Ph02/09, document keyboard findings
+- [x] 10-01-PLAN.md — Bilingual toast audit: convert all English-only toast calls to BilingualToast format
+- [x] 10-02-PLAN.md — Code cleanup: deprecated imports, lint, TS error investigation
+- [x] 10-03-PLAN.md — Test coverage improvements: add unit tests for uncovered modules
+- [x] 10-04-PLAN.md — Phase verification and accessibility audit: run verifier on Ph02/09, document keyboard findings
 
 ---
 
@@ -277,9 +277,9 @@ Note: Phase 2 and 3 can run in parallel after Phase 1 completes.
 | 7. Social Features | 8/8 | Complete | 2026-02-07 |
 | 8. Critical Integration Fixes | 3/3 | Complete | 2026-02-08 |
 | 9. UI Polish & Onboarding | 12/12 | Complete | 2026-02-08 |
-| 10. Tech Debt Cleanup | 0/4 | Pending | — |
+| 10. Tech Debt Cleanup | 4/4 | Complete | 2026-02-08 |
 
 ---
 
 *Roadmap created: 2026-02-05*
-*Last updated: 2026-02-08 after Phase 10 tech debt closure planning (4 plans in 2 waves)*
+*Last updated: 2026-02-08 after Phase 10 execution complete (4/4 plans, 2 waves)*
