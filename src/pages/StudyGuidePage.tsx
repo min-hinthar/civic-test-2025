@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState, KeyboardEvent } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Search, BookOpen, Layers, GraduationCap } from 'lucide-react';
+import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { civicsQuestions } from '@/constants/civicsQuestions';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
-import { PageTitle } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
@@ -18,10 +18,12 @@ import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { DeckManager } from '@/components/srs/DeckManager';
 import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
-import { strings } from '@/lib/i18n/strings';
 import { recordStudyActivity } from '@/lib/social';
+import { getUSCISCategory, CATEGORY_COLORS } from '@/lib/mastery';
+import type { Category } from '@/types';
 
-const categoryColors: Record<string, string> = {
+/** USCIS main category color for sub-category flip cards */
+const CATEGORY_COLORS_MAP: Record<string, string> = {
   'Principles of American Democracy': 'from-rose-500 to-pink-500',
   'System of Government': 'from-blue-500 to-cyan-500',
   'Rights and Responsibilities': 'from-emerald-500 to-lime-500',
@@ -32,10 +34,38 @@ const categoryColors: Record<string, string> = {
   'Civics: Symbols and Holidays': 'from-slate-500 to-stone-500',
 };
 
+/** Get the USCIS main category header strip color for a sub-category */
+function getCategoryStripColor(cat: Category): 'blue' | 'amber' | 'emerald' {
+  const mainCat = getUSCISCategory(cat);
+  return CATEGORY_COLORS[mainCat] as 'blue' | 'amber' | 'emerald';
+}
+
+/** Category strip background classes for card header strips */
+const STRIP_BG: Record<string, string> = {
+  blue: 'bg-blue-500',
+  amber: 'bg-amber-500',
+  emerald: 'bg-emerald-500',
+};
+
+/** Category card border-left accent colors */
+const STRIP_BORDER: Record<string, string> = {
+  blue: 'border-l-blue-500',
+  amber: 'border-l-amber-500',
+  emerald: 'border-l-emerald-500',
+};
+
+/** Tab definitions for the study guide */
+const TABS = [
+  { id: '', label: 'Browse', labelMy: 'ကြည့်ရှုရန်', icon: BookOpen },
+  { id: '#deck', label: 'Deck', labelMy: 'ကတ်စုပုံ', icon: Layers },
+  { id: '#review', label: 'Review', labelMy: 'ပြန်လည်သုံးသပ်', icon: GraduationCap },
+] as const;
+
 const StudyGuidePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const questionCategories = useMemo<string[]>(
     () => Array.from(new Set(civicsQuestions.map(question => question.category))),
@@ -141,20 +171,81 @@ const StudyGuidePage = () => {
   };
 
   const legacyFilteredQuestions = useMemo(() => {
-    return category === 'all'
-      ? civicsQuestions
-      : civicsQuestions.filter(question => question.category === category);
-  }, [category]);
+    const base =
+      category === 'all'
+        ? civicsQuestions
+        : civicsQuestions.filter(question => question.category === category);
+    if (!searchQuery.trim()) return base;
+    const q = searchQuery.toLowerCase();
+    return base.filter(
+      question => question.question_en.toLowerCase().includes(q) || question.question_my.includes(q)
+    );
+  }, [category, searchQuery]);
 
   const categories = useMemo(() => ['all', ...questionCategories], [questionCategories]);
+
+  // Determine active tab from hash
+  const activeTab = useMemo(() => {
+    if (isDeckView) return '#deck';
+    if (isReviewView) return '#review';
+    return '';
+  }, [isDeckView, isReviewView]);
+
+  // Page header with bold title and patriotic emoji
+  const pageHeader = (
+    <div className="mb-8">
+      <motion.h1
+        className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        Study Guide
+      </motion.h1>
+      <p className="mt-1 text-base text-muted-foreground font-myanmar">လေ့လာမှုလမ်းညွှန်</p>
+    </div>
+  );
+
+  // Tab navigation bar
+  const tabBar = (
+    <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+      {TABS.map(tab => {
+        const isActive = activeTab === tab.id;
+        const Icon = tab.icon;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => navigate(tab.id ? `/study${tab.id}` : '/study')}
+            className={clsx(
+              'relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold',
+              'transition-all min-h-[44px] whitespace-nowrap',
+              isActive
+                ? 'bg-primary-500 text-white shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-[2px]'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+            )}
+          >
+            <Icon className="h-4 w-4" />
+            <span>{tab.label}</span>
+            <span className="font-myanmar text-xs opacity-80">/ {tab.labelMy}</span>
+            {tab.id === '#deck' && dueCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning-500 text-white text-xs font-bold shadow-sm">
+                {dueCount}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   // Review session view
   if (isReviewView) {
     return (
       <div className="page-shell" data-tour="study-guide">
         <AppNavigation />
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <PageTitle text={strings.study.studyGuide} />
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {pageHeader}
+          {tabBar}
           <ReviewSession onExit={() => navigate('/study#deck')} />
         </div>
       </div>
@@ -166,8 +257,9 @@ const StudyGuidePage = () => {
     return (
       <div className="page-shell" data-tour="study-guide">
         <AppNavigation />
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <PageTitle text={strings.study.studyGuide} />
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {pageHeader}
+          {tabBar}
           <DeckManager
             onStartReview={() => navigate('/study#review')}
             onBack={handleBackToCategories}
@@ -182,13 +274,18 @@ const StudyGuidePage = () => {
     return (
       <div className="page-shell" data-tour="study-guide">
         <AppNavigation />
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <PageTitle text={strings.study.studyGuide} />
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {pageHeader}
+          {tabBar}
 
           <div className="mb-4">
             <button
               onClick={handleBackToCategories}
-              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 min-h-[44px]"
+              className={clsx(
+                'text-sm font-bold text-muted-foreground hover:text-foreground',
+                'flex items-center gap-1 min-h-[44px] px-3 py-2 rounded-xl',
+                'hover:bg-muted/50 transition-colors'
+              )}
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Back to Categories</span>
@@ -205,17 +302,23 @@ const StudyGuidePage = () => {
   // Category selection view with hash routing
   if (selectedCategory && questionCategories.includes(selectedCategory)) {
     const categoryQuestions = civicsQuestions.filter(q => q.category === selectedCategory);
+    const stripColor = getCategoryStripColor(selectedCategory as Category);
 
     return (
       <div className="page-shell" data-tour="study-guide">
         <AppNavigation />
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <PageTitle text={strings.study.studyGuide} />
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {pageHeader}
+          {tabBar}
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <button
               onClick={handleBackToCategories}
-              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 min-h-[44px]"
+              className={clsx(
+                'text-sm font-bold text-muted-foreground hover:text-foreground',
+                'flex items-center gap-1 min-h-[44px] px-3 py-2 rounded-xl',
+                'hover:bg-muted/50 transition-colors'
+              )}
             >
               <ChevronLeft className="h-4 w-4" />
               <span>All Categories</span>
@@ -223,13 +326,27 @@ const StudyGuidePage = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 mb-2">
-            <h2 className="text-xl font-bold text-foreground">{selectedCategory}</h2>
-            <CategoryHeaderBadge category={selectedCategory} />
+          {/* Category header with color strip */}
+          <div
+            className={clsx(
+              'rounded-2xl border border-border/60 bg-card overflow-hidden mb-6',
+              'shadow-[0_4px_0_0_rgba(0,0,0,0.06)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.2)]'
+            )}
+          >
+            <div className={clsx('h-[5px]', STRIP_BG[stripColor])} />
+            <div className="p-5">
+              <div className="flex items-center gap-3 mb-1">
+                <h2 className="text-xl font-extrabold text-foreground">{selectedCategory}</h2>
+                <CategoryHeaderBadge category={selectedCategory} />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {categoryQuestions.length} questions in this category
+                <span className="font-myanmar ml-1">
+                  / ဤအမျိုးအစားတွင် မေးခွန်း {categoryQuestions.length} ခု
+                </span>
+              </p>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-6">
-            {categoryQuestions.length} questions in this category
-          </p>
 
           <div className="mb-6">
             <BilingualButton
@@ -268,89 +385,104 @@ const StudyGuidePage = () => {
                   >
                     <div
                       className={clsx(
-                        'flip-card-inner rounded-3xl border border-border/70 bg-card/95 text-foreground shadow-xl shadow-primary/10',
+                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground overflow-hidden',
+                        'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
+                        'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
                         'min-h-[30rem]'
                       )}
                     >
-                      <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
-                        <div className="flex items-center justify-between gap-2">
-                          <p
-                            className={clsx(
-                              'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
-                              categoryColors[question.category] ?? 'from-primary to-primary'
-                            )}
-                          >
-                            {question.category}
-                          </p>
-                          <AddToDeckButton questionId={question.id} compact stopPropagation />
-                          <QuestionAccuracyDot questionId={question.id} />
-                        </div>
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            <SpeechButton
-                              text={question.question_en}
-                              label="Play Question"
-                              ariaLabel={`Play English question audio for ${question.question_en}`}
-                              stopPropagation
-                            />
+                      <div className="flip-card-face flip-card-front flex h-full flex-col rounded-2xl">
+                        {/* Category color strip */}
+                        <div className={clsx('h-[5px] w-full shrink-0', STRIP_BG[stripColor])} />
+                        <div className="flex-1 flex flex-col justify-between p-6">
+                          <div className="flex items-center justify-between gap-2">
+                            <p
+                              className={clsx(
+                                'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
+                                CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
+                              )}
+                            >
+                              {question.category}
+                            </p>
+                            <AddToDeckButton questionId={question.id} compact stopPropagation />
+                            <QuestionAccuracyDot questionId={question.id} />
                           </div>
-                          <p className="mt-4 text-xl font-semibold text-foreground">
-                            {question.question_en}
-                          </p>
-                          <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
-                            {question.question_my}
+                          <div className="space-y-3">
+                            <div className="flex flex-wrap gap-2">
+                              <SpeechButton
+                                text={question.question_en}
+                                label="Play Question"
+                                ariaLabel={`Play English question audio for ${question.question_en}`}
+                                stopPropagation
+                              />
+                            </div>
+                            <p className="mt-4 text-xl font-semibold text-foreground">
+                              {question.question_en}
+                            </p>
+                            <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                              {question.question_my}
+                            </p>
+                          </div>
+                          <p className="text-sm font-semibold text-primary">
+                            Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
                           </p>
                         </div>
-                        <p className="text-sm font-semibold text-primary">
-                          Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
-                        </p>
                       </div>
                       <div
                         className={clsx(
-                          'flip-card-face flip-card-back flex h-full flex-col rounded-3xl p-6 text-white',
+                          'flip-card-face flip-card-back flex h-full flex-col rounded-2xl text-white',
                           'bg-gradient-to-br',
-                          categoryColors[question.category] ?? 'from-primary to-primary'
+                          CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
                         )}
                       >
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
-                          <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                            Answer - အဖြေ
-                          </p>
-                          <SpeechButton
-                            text={englishAnswersText}
-                            label="Play Answers"
-                            ariaLabel={`Play English answers for ${question.question_en}`}
-                            stopPropagation
-                          />
-                        </div>
-                        <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
-                          {question.studyAnswers.map(answer => (
-                            <li
-                              key={answer.text_en}
-                              className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
-                            >
-                              <p className="text-base font-semibold tracking-wide">
-                                {answer.text_en}
-                              </p>
-                              <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                {answer.text_my}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                        {question.explanation && (
-                          <div
-                            className="mt-3"
-                            onClick={e => e.stopPropagation()}
-                            onKeyDown={e => e.stopPropagation()}
-                          >
-                            <ExplanationCard
-                              explanation={question.explanation}
-                              allQuestions={civicsQuestions}
-                              className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                        {/* Category color strip on back */}
+                        <div
+                          className={clsx(
+                            'h-[5px] w-full shrink-0 opacity-50',
+                            STRIP_BG[stripColor]
+                          )}
+                        />
+                        <div className="flex-1 flex flex-col p-6">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
+                            <p className="text-sm font-semibold uppercase tracking-[0.2em]">
+                              Answer - အဖြေ
+                            </p>
+                            <SpeechButton
+                              text={englishAnswersText}
+                              label="Play Answers"
+                              ariaLabel={`Play English answers for ${question.question_en}`}
+                              stopPropagation
                             />
                           </div>
-                        )}
+                          <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
+                            {question.studyAnswers.map(answer => (
+                              <li
+                                key={answer.text_en}
+                                className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                              >
+                                <p className="text-base font-semibold tracking-wide">
+                                  {answer.text_en}
+                                </p>
+                                <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                  {answer.text_my}
+                                </p>
+                              </li>
+                            ))}
+                          </ul>
+                          {question.explanation && (
+                            <div
+                              className="mt-3"
+                              onClick={e => e.stopPropagation()}
+                              onKeyDown={e => e.stopPropagation()}
+                            >
+                              <ExplanationCard
+                                explanation={question.explanation}
+                                allQuestions={civicsQuestions}
+                                className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                              />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -367,40 +499,50 @@ const StudyGuidePage = () => {
   return (
     <div className="page-shell" data-tour="study-guide">
       <AppNavigation />
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <PageTitle text={strings.study.studyGuide} />
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        {pageHeader}
+        {tabBar}
 
         {/* Bilingual encouraging intro */}
-        <p className="text-muted-foreground mb-6">
+        <p className="text-base text-muted-foreground mb-6">
           Tap a category to start studying. Every card you review builds your confidence!
           <span className="block font-myanmar mt-1">
             လေ့လာရန် အမျိုးအစားတစ်ခုကို ရွေးပါ။ သင်ကြည့်တဲ့ကတ်တိုင်းက သင့်ကိုယုံကြည်မှုပိုပေးပါတယ်!
           </span>
         </p>
 
-        {/* Category grid with staggered animation */}
-        <StaggeredList className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {questionCategories.map(cat => (
-            <StaggeredItem key={cat}>
-              <Card
-                interactive
-                onClick={() => handleCategorySelect(cat)}
-                className="min-h-[44px] p-4"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="font-semibold">{cat}</h3>
-                  <CategoryHeaderBadge category={cat} />
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {questionsPerCategory[cat]} questions / မေးခွန်း
-                </p>
-              </Card>
-            </StaggeredItem>
-          ))}
+        {/* Category grid with staggered animation and color accents */}
+        <StaggeredList className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {questionCategories.map(cat => {
+            const stripColor = getCategoryStripColor(cat as Category);
+            return (
+              <StaggeredItem key={cat}>
+                <Card
+                  interactive
+                  onClick={() => handleCategorySelect(cat)}
+                  className={clsx(
+                    'min-h-[44px] p-0 overflow-hidden border-l-4',
+                    STRIP_BORDER[stripColor]
+                  )}
+                >
+                  <div className="p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-bold text-foreground">{cat}</h3>
+                      <CategoryHeaderBadge category={cat} />
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {questionsPerCategory[cat]} questions
+                      <span className="font-myanmar ml-1">/ မေးခွန်း</span>
+                    </p>
+                  </div>
+                </Card>
+              </StaggeredItem>
+            );
+          })}
         </StaggeredList>
 
         {/* Action buttons: flashcards + review deck */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           <BilingualButton
             label={{ en: 'View All Flashcards', my: 'ကတ်များအားလုံးကြည့်ပါ' }}
             variant="secondary"
@@ -421,159 +563,198 @@ const StudyGuidePage = () => {
         </div>
 
         {/* Divider */}
-        <hr className="my-10 border-border/50" />
+        <hr className="border-border/50 mb-8" />
 
-        {/* Legacy flip-card grid with category filter */}
-        <header className="glass-panel flex flex-col gap-4 p-6 shadow-primary/20 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-primary">
-              Flip Cards · လှည့်ကတ်များ
-            </p>
-            <h2 className="text-2xl font-bold text-foreground">
-              Interactive Bilingual Flip-Cards
-              <span className="mt-1 block text-lg font-normal text-muted-foreground font-myanmar">
+        {/* Flip-card grid section with search and category filter */}
+        <div className="rounded-2xl border border-border/60 bg-card/50 p-6 shadow-[0_4px_0_0_rgba(0,0,0,0.04)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.15)]">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
+              <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
                 အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ
-              </span>
-            </h2>
-            <p className="text-muted-foreground">
-              Tap a card to reveal Burmese answers with extra spacing for easier reading.
-            </p>
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Rounded search input */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search questions..."
+                  className={clsx(
+                    'w-full sm:w-56 pl-9 pr-4 py-2.5 rounded-xl',
+                    'border border-border/60 bg-background text-sm text-foreground',
+                    'placeholder:text-muted-foreground/60',
+                    'focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500',
+                    'transition-colors min-h-[44px]'
+                  )}
+                />
+              </div>
+              {/* Category select */}
+              <select
+                className={clsx(
+                  'rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm font-medium',
+                  'focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500',
+                  'transition-colors min-h-[44px]'
+                )}
+                value={category}
+                onChange={event => handleCategoryChange(event.target.value)}
+              >
+                {categories.map(option => (
+                  <option key={option} value={option}>
+                    {option === 'all' ? 'All Categories' : option}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Sort by category ·{' '}
-              <span className="font-myanmar text-muted-foreground">ကဏ္ဍရွေးချယ်ရန်</span>
-            </label>
-            <select
-              className="mt-2 w-full rounded-2xl border border-border bg-card/80 px-4 py-3 text-sm"
-              value={category}
-              onChange={event => handleCategoryChange(event.target.value)}
-            >
-              {categories.map(option => (
-                <option key={option} value={option}>
-                  {option === 'all' ? 'All Categories · အားလုံး' : option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </header>
-        <div id="cards" className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {legacyFilteredQuestions.map(question => {
-            const isLocked = Boolean(flippedCards[question.id]);
-            const isFlipped = isLocked;
-            const englishAnswersText = question.studyAnswers
-              .map(answer => answer.text_en)
-              .join('. ');
 
-            const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                toggleCard(question.id);
-              }
-            };
+          {/* Empty state */}
+          {legacyFilteredQuestions.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-lg font-bold text-muted-foreground">No questions found</p>
+              <p className="text-sm text-muted-foreground font-myanmar mt-1">
+                မေးခွန်းမတွေ့ပါ - ရှာဖွေမှုကိုပြောင်းကြည့်ပါ
+              </p>
+            </div>
+          )}
 
-            return (
-              <div key={question.id} className="flip-card" data-flipped={isFlipped}>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="flip-card-button interactive-tile"
-                  onClick={() => toggleCard(question.id)}
-                  onKeyDown={handleCardKeyDown}
-                  aria-pressed={isLocked}
-                  aria-label={`Reveal answer for ${question.question_en}`}
-                >
+          <div id="cards" className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {legacyFilteredQuestions.map(question => {
+              const isLocked = Boolean(flippedCards[question.id]);
+              const isFlipped = isLocked;
+              const englishAnswersText = question.studyAnswers
+                .map(answer => answer.text_en)
+                .join('. ');
+              const qStripColor = getCategoryStripColor(question.category);
+
+              const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  toggleCard(question.id);
+                }
+              };
+
+              return (
+                <div key={question.id} className="flip-card" data-flipped={isFlipped}>
                   <div
-                    className={clsx(
-                      'flip-card-inner rounded-3xl border border-border/70 bg-card/95 text-foreground shadow-xl shadow-primary/10',
-                      'min-h-[30rem]'
-                    )}
+                    role="button"
+                    tabIndex={0}
+                    className="flip-card-button interactive-tile"
+                    onClick={() => toggleCard(question.id)}
+                    onKeyDown={handleCardKeyDown}
+                    aria-pressed={isLocked}
+                    aria-label={`Reveal answer for ${question.question_en}`}
                   >
-                    <div className="flip-card-face flip-card-front flex h-full flex-col justify-between rounded-3xl p-6">
-                      <div className="flex items-center justify-between gap-2">
-                        <p
-                          className={clsx(
-                            'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
-                            categoryColors[question.category] ?? 'from-primary to-primary'
-                          )}
-                        >
-                          {question.category}
-                        </p>
-                        <AddToDeckButton questionId={question.id} compact stopPropagation />
-                        <QuestionAccuracyDot questionId={question.id} />
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap gap-2">
-                          <SpeechButton
-                            text={question.question_en}
-                            label="Play Question"
-                            ariaLabel={`Play English question audio for ${question.question_en}`}
-                            stopPropagation
-                          />
-                        </div>
-                        <p className="mt-4 text-xl font-semibold text-foreground">
-                          {question.question_en}
-                        </p>
-                        <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
-                          {question.question_my}
-                        </p>
-                      </div>
-                      <p className="text-sm font-semibold text-primary">
-                        Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
-                      </p>
-                    </div>
                     <div
                       className={clsx(
-                        'flip-card-face flip-card-back flex h-full flex-col rounded-3xl p-6 text-white',
-                        'bg-gradient-to-br',
-                        categoryColors[question.category] ?? 'from-primary to-primary'
+                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground overflow-hidden',
+                        'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
+                        'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
+                        'min-h-[30rem]'
                       )}
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
-                        <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                          Answer - အဖြေ
-                        </p>
-                        <SpeechButton
-                          text={englishAnswersText}
-                          label="Play Answers"
-                          ariaLabel={`Play English answers for ${question.question_en}`}
-                          stopPropagation
-                        />
-                      </div>
-                      <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
-                        {question.studyAnswers.map(answer => (
-                          <li
-                            key={answer.text_en}
-                            className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
-                          >
-                            <p className="text-base font-semibold tracking-wide">
-                              {answer.text_en}
+                      <div className="flip-card-face flip-card-front flex h-full flex-col rounded-2xl">
+                        {/* Category color header strip */}
+                        <div className={clsx('h-[5px] w-full shrink-0', STRIP_BG[qStripColor])} />
+                        <div className="flex-1 flex flex-col justify-between p-6">
+                          <div className="flex items-center justify-between gap-2">
+                            <p
+                              className={clsx(
+                                'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
+                                CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
+                              )}
+                            >
+                              {question.category}
                             </p>
-                            <p className="pt-1 text-base font-myanmar leading-relaxed">
-                              {answer.text_my}
+                            <AddToDeckButton questionId={question.id} compact stopPropagation />
+                            <QuestionAccuracyDot questionId={question.id} />
+                          </div>
+                          <div className="space-y-3">
+                            <div className="flex flex-wrap gap-2">
+                              <SpeechButton
+                                text={question.question_en}
+                                label="Play Question"
+                                ariaLabel={`Play English question audio for ${question.question_en}`}
+                                stopPropagation
+                              />
+                            </div>
+                            <p className="mt-4 text-xl font-semibold text-foreground">
+                              {question.question_en}
                             </p>
-                          </li>
-                        ))}
-                      </ul>
-                      {question.explanation && (
-                        <div
-                          className="mt-3"
-                          onClick={e => e.stopPropagation()}
-                          onKeyDown={e => e.stopPropagation()}
-                        >
-                          <ExplanationCard
-                            explanation={question.explanation}
-                            allQuestions={civicsQuestions}
-                            className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
-                          />
+                            <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                              {question.question_my}
+                            </p>
+                          </div>
+                          <p className="text-sm font-semibold text-primary">
+                            Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
+                          </p>
                         </div>
-                      )}
+                      </div>
+                      <div
+                        className={clsx(
+                          'flip-card-face flip-card-back flex h-full flex-col rounded-2xl text-white',
+                          'bg-gradient-to-br',
+                          CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
+                        )}
+                      >
+                        {/* Category color strip on back */}
+                        <div
+                          className={clsx(
+                            'h-[5px] w-full shrink-0 opacity-50',
+                            STRIP_BG[qStripColor]
+                          )}
+                        />
+                        <div className="flex-1 flex flex-col p-6">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90">
+                            <p className="text-sm font-semibold uppercase tracking-[0.2em]">
+                              Answer - အဖြေ
+                            </p>
+                            <SpeechButton
+                              text={englishAnswersText}
+                              label="Play Answers"
+                              ariaLabel={`Play English answers for ${question.question_en}`}
+                              stopPropagation
+                            />
+                          </div>
+                          <ul className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 content-center">
+                            {question.studyAnswers.map(answer => (
+                              <li
+                                key={answer.text_en}
+                                className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
+                              >
+                                <p className="text-base font-semibold tracking-wide">
+                                  {answer.text_en}
+                                </p>
+                                <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                  {answer.text_my}
+                                </p>
+                              </li>
+                            ))}
+                          </ul>
+                          {question.explanation && (
+                            <div
+                              className="mt-3"
+                              onClick={e => e.stopPropagation()}
+                              onKeyDown={e => e.stopPropagation()}
+                            >
+                              <ExplanationCard
+                                explanation={question.explanation}
+                                allQuestions={civicsQuestions}
+                                className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

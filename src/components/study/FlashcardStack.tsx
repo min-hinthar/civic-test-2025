@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Flashcard3D } from './Flashcard3D';
+import { getUSCISCategory, CATEGORY_COLORS } from '@/lib/mastery';
 import type { Question } from '@/types';
 
 interface FlashcardStackProps {
@@ -90,12 +91,12 @@ export function FlashcardStack({
     // Prefer studyAnswers for flashcard display (may have multiple correct answers)
     if (q.studyAnswers && q.studyAnswers.length > 0) {
       return {
-        en: q.studyAnswers.map((a) => a.text_en).join(', '),
-        my: q.studyAnswers.map((a) => a.text_my).join(', '),
+        en: q.studyAnswers.map(a => a.text_en).join(', '),
+        my: q.studyAnswers.map(a => a.text_my).join(', '),
       };
     }
     // Fallback to answers array (find correct one)
-    const correctAnswer = q.answers.find((a) => a.correct);
+    const correctAnswer = q.answers.find(a => a.correct);
     return {
       en: correctAnswer?.text_en ?? '',
       my: correctAnswer?.text_my ?? '',
@@ -124,9 +125,7 @@ export function FlashcardStack({
     <div className={clsx('relative', className)}>
       {/* Progress indicator */}
       <div className="text-center mb-4 text-sm text-muted-foreground">
-        <span className="font-semibold text-foreground">
-          {currentIndex + 1}
-        </span>
+        <span className="font-semibold text-foreground">{currentIndex + 1}</span>
         <span className="mx-1">/</span>
         <span>{questions.length}</span>
         <span className="ml-2 font-myanmar">
@@ -161,25 +160,33 @@ export function FlashcardStack({
               answerEn={answer.en}
               answerMy={answer.my}
               category={currentQuestion.category}
+              categoryColor={
+                CATEGORY_COLORS[getUSCISCategory(currentQuestion.category)] as
+                  | 'blue'
+                  | 'amber'
+                  | 'emerald'
+              }
               explanation={currentQuestion.explanation}
               allQuestions={questions}
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation arrows */}
+        {/* 3D chunky navigation arrows */}
         <button
           type="button"
           onClick={goToPrev}
           disabled={currentIndex === 0}
           className={clsx(
             'absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4',
-            'h-12 w-12 rounded-full bg-card border border-border shadow-lg',
+            'h-12 w-12 rounded-xl bg-card border border-border/60',
+            'shadow-[0_4px_0_0_rgba(0,0,0,0.1)] active:shadow-none active:translate-y-[2px]',
+            'dark:shadow-[0_4px_0_0_rgba(0,0,0,0.3)]',
             'flex items-center justify-center',
             'text-muted-foreground hover:text-foreground hover:bg-muted/50',
             'transition-all disabled:opacity-30 disabled:cursor-not-allowed',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
-            'hidden sm:flex' // Hide on mobile (swipe instead)
+            'hidden sm:flex'
           )}
           aria-label="Previous card"
         >
@@ -192,7 +199,9 @@ export function FlashcardStack({
           disabled={currentIndex === questions.length - 1}
           className={clsx(
             'absolute right-0 top-1/2 -translate-y-1/2 translate-x-4',
-            'h-12 w-12 rounded-full bg-card border border-border shadow-lg',
+            'h-12 w-12 rounded-xl bg-card border border-border/60',
+            'shadow-[0_4px_0_0_rgba(0,0,0,0.1)] active:shadow-none active:translate-y-[2px]',
+            'dark:shadow-[0_4px_0_0_rgba(0,0,0,0.3)]',
             'flex items-center justify-center',
             'text-muted-foreground hover:text-foreground hover:bg-muted/50',
             'transition-all disabled:opacity-30 disabled:cursor-not-allowed',
