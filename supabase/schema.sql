@@ -169,3 +169,89 @@ create policy "Users can insert own interview sessions"
 
 create index if not exists interview_sessions_user_idx
   on public.interview_sessions (user_id, completed_at desc);
+
+-- ============================================================
+-- Social Features (Phase 7)
+-- ============================================================
+
+-- Social profiles for leaderboard identity and opt-in control
+create table if not exists public.social_profiles (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  display_name text not null,
+  social_opt_in boolean not null default false,
+  composite_score numeric not null default 0,
+  current_streak int not null default 0,
+  longest_streak int not null default 0,
+  top_badge text,
+  is_weekly_winner boolean not null default false,
+  weekly_score_updated_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.social_profiles enable row level security;
+
+drop policy if exists "Anyone can view opted-in social profiles" on public.social_profiles;
+create policy "Anyone can view opted-in social profiles" on public.social_profiles
+  for select using (social_opt_in = true);
+drop policy if exists "Users can view own social profile" on public.social_profiles;
+create policy "Users can view own social profile" on public.social_profiles
+  for select using (auth.uid() = user_id);
+drop policy if exists "Users can upsert own social profile" on public.social_profiles;
+create policy "Users can upsert own social profile" on public.social_profiles
+  for insert with check (auth.uid() = user_id);
+drop policy if exists "Users can update own social profile" on public.social_profiles;
+create policy "Users can update own social profile" on public.social_profiles
+  for update using (auth.uid() = user_id);
+
+create index if not exists social_profiles_score_idx
+  on public.social_profiles (composite_score desc) where social_opt_in = true;
+
+-- Streak data for cross-device streak sync
+create table if not exists public.streak_data (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  activity_dates text[] not null default '{}',
+  freezes_available int not null default 0,
+  freezes_used text[] not null default '{}',
+  longest_streak int not null default 0,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.streak_data enable row level security;
+
+drop policy if exists "Users can manage own streak data" on public.streak_data;
+create policy "Users can manage own streak data" on public.streak_data
+  for all using (auth.uid() = user_id);
+drop policy if exists "Users can insert own streak data" on public.streak_data;
+create policy "Users can insert own streak data" on public.streak_data
+  for insert with check (auth.uid() = user_id);
+
+-- Earned badges for per-user achievement tracking
+create table if not exists public.earned_badges (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  badge_id text not null,
+  earned_at timestamptz not null default now(),
+  unique (user_id, badge_id)
+);
+
+alter table public.earned_badges enable row level security;
+
+drop policy if exists "Anyone can view opted-in users badges" on public.earned_badges;
+create policy "Anyone can view opted-in users badges" on public.earned_badges
+  for select using (
+    exists (
+      select 1 from public.social_profiles sp
+      where sp.user_id = earned_badges.user_id
+        and sp.social_opt_in = true
+    )
+  );
+drop policy if exists "Users can manage own badges" on public.earned_badges;
+create policy "Users can manage own badges" on public.earned_badges
+  for all using (auth.uid() = user_id);
+drop policy if exists "Users can insert own badges" on public.earned_badges;
+create policy "Users can insert own badges" on public.earned_badges
+  for insert with check (auth.uid() = user_id);
+
+create index if not exists earned_badges_user_idx
+  on public.earned_badges (user_id);
