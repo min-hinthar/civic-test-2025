@@ -250,19 +250,29 @@ const TestPage = () => {
     return () => clearInterval(timer);
   }, [isFinished, showPreTest]);
 
-  // Navigation lock
+  // Navigation lock — throttle history API to stay under browser's 100/10s limit
   useEffect(() => {
     if (isFinished || showPreTest) return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
     };
+    let lastWarningTime = 0;
     const handlePopState = () => {
-      window.history.replaceState(null, '', window.location.href);
-      showWarning({
-        en: 'Please finish the mock test first!',
-        my: 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ',
-      });
+      try {
+        window.history.pushState(null, '', window.location.href);
+      } catch {
+        // SecurityError: browser rate limit exceeded — earlier pushState calls
+        // already have guard entries in the history stack, so navigation is still blocked
+      }
+      const now = Date.now();
+      if (now - lastWarningTime > 3000) {
+        lastWarningTime = now;
+        showWarning({
+          en: 'Please finish the mock test first!',
+          my: 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ',
+        });
+      }
     };
     window.addEventListener('beforeunload', beforeUnload);
     window.addEventListener('popstate', handlePopState);
@@ -271,7 +281,7 @@ const TestPage = () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFinished, lockMessage, showPreTest, showWarning]);
+  }, [isFinished, showPreTest, showWarning]);
 
   // Save session on finish
   useEffect(() => {

@@ -127,10 +127,10 @@ const AppShell = () => {
 
   return (
     <ErrorBoundary>
-      <OfflineProvider>
-        <LanguageProvider>
-          <ThemeProvider>
-            <ToastProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <OfflineProvider>
               <AuthProvider>
                 <SocialProvider>
                   <SRSProvider>
@@ -227,10 +227,10 @@ const AppShell = () => {
                   </SRSProvider>
                 </SocialProvider>
               </AuthProvider>
-            </ToastProvider>
-          </ThemeProvider>
-        </LanguageProvider>
-      </OfflineProvider>
+            </OfflineProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 };
