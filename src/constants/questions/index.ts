@@ -35,7 +35,7 @@ import { symbolsHolidaysQuestions } from './symbols-holidays';
 
 /**
  * All civics questions aggregated from category modules.
- * Order matches original civicsQuestions.ts for backwards compatibility.
+ * Order matches original question bank for backwards compatibility.
  */
 export const allQuestions: Question[] = [
   ...americanGovernmentQuestions, // GOV-P01-12, GOV-S01-35 (47 questions)

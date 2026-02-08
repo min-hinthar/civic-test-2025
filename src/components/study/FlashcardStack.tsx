@@ -35,7 +35,7 @@ const SWIPE_VELOCITY = 500;
  *
  * Usage:
  * ```tsx
- * <FlashcardStack questions={civicsQuestions} />
+ * <FlashcardStack questions={allQuestions} />
  * ```
  */
 export function FlashcardStack({

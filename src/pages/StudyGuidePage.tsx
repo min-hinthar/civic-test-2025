@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Search, BookOpen, Layers, GraduationCap } from 'lucide-react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
-import { civicsQuestions } from '@/constants/civicsQuestions';
+import { allQuestions } from '@/constants/questions';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
@@ -48,7 +48,7 @@ const StudyGuidePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const questionCategories = useMemo<string[]>(
-    () => Array.from(new Set(civicsQuestions.map(question => question.category))),
+    () => Array.from(new Set(allQuestions.map(question => question.category))),
     []
   );
 
@@ -56,7 +56,7 @@ const StudyGuidePage = () => {
   const questionsPerCategory = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const cat of questionCategories) {
-      counts[cat] = civicsQuestions.filter(q => q.category === cat).length;
+      counts[cat] = allQuestions.filter(q => q.category === cat).length;
     }
     return counts;
   }, [questionCategories]);
@@ -88,8 +88,8 @@ const StudyGuidePage = () => {
   // Filter questions based on selected category or cards category
   const filteredQuestions = useMemo(() => {
     const activeCat = isCardsView ? cardsCategory : selectedCategory;
-    if (!activeCat) return civicsQuestions;
-    return civicsQuestions.filter(q => q.category === activeCat);
+    if (!activeCat) return allQuestions;
+    return allQuestions.filter(q => q.category === activeCat);
   }, [isCardsView, cardsCategory, selectedCategory]);
 
   // Legacy support: category from search params for the flip-card grid view
@@ -153,8 +153,8 @@ const StudyGuidePage = () => {
   const legacyFilteredQuestions = useMemo(() => {
     const base =
       category === 'all'
-        ? civicsQuestions
-        : civicsQuestions.filter(question => question.category === category);
+        ? allQuestions
+        : allQuestions.filter(question => question.category === category);
     if (!searchQuery.trim()) return base;
     const q = searchQuery.toLowerCase();
     return base.filter(
@@ -281,7 +281,7 @@ const StudyGuidePage = () => {
 
   // Category selection view with hash routing
   if (selectedCategory && questionCategories.includes(selectedCategory)) {
-    const categoryQuestions = civicsQuestions.filter(q => q.category === selectedCategory);
+    const categoryQuestions = allQuestions.filter(q => q.category === selectedCategory);
     const subColors = getSubCategoryColors(selectedCategory as Category);
 
     return (
@@ -459,7 +459,7 @@ const StudyGuidePage = () => {
                               >
                                 <ExplanationCard
                                   explanation={question.explanation}
-                                  allQuestions={civicsQuestions}
+                                  allQuestions={allQuestions}
                                   className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
                                 />
                               </div>
@@ -727,7 +727,7 @@ const StudyGuidePage = () => {
                               >
                                 <ExplanationCard
                                   explanation={question.explanation}
-                                  allQuestions={civicsQuestions}
+                                  allQuestions={allQuestions}
                                   className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
                                 />
                               </div>

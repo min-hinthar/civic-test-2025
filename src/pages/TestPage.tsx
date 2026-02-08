@@ -7,7 +7,6 @@ import { motion } from 'motion/react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import SpeechButton from '@/components/ui/SpeechButton';
-import { civicsQuestions } from '@/constants/civicsQuestions';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -69,7 +68,7 @@ const TestPage = () => {
 
   const questions = useMemo(
     () =>
-      fisherYatesShuffle(civicsQuestions)
+      fisherYatesShuffle(allQuestions)
         .slice(0, 20)
         .map(question => ({
           ...question,
