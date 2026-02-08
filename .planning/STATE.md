@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-05)
 ## Current Position
 
 Phase: 8 of 9 (Critical Integration Fixes)
-Plan: 0 of 1 (not yet planned)
-Status: Phase pending planning
-Last activity: 2026-02-08 - Added gap closure phases 8-9 from v1 audit
+Plan: 1 of 3
+Status: In progress
+Last activity: 2026-02-08 - Completed 08-01-PLAN.md
 
-Progress: [█████████░] 96% (53 plans / 55 total)
+Progress: [█████████░] 98% (54 plans / 55 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 53 (All phases 1-7 complete)
+- Total plans completed: 54 (Phases 1-7 complete, Phase 8 in progress)
 - Average duration: ~12 min
-- Total execution time: ~653 min
+- Total execution time: ~666 min
 
 **By Phase:**
 
@@ -34,10 +34,11 @@ Progress: [█████████░] 96% (53 plans / 55 total)
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
 | 07-social-features | 8/8 | 86 min | 11 min |
+| 08-critical-integration-fixes | 1/3 | 13 min | 13 min |
 
 **Recent Trend:**
-- Phase 6 wave execution: 6 plans in 5 waves with parallel execution
-- Wave-based parallelization continues to reduce total phase time
+- Phase 8 addresses build/lint blockers from v1 audit
+- Pre-commit hook restored (was bypassed since Phase 4)
 
 *Updated after each plan completion*
 
@@ -254,6 +255,9 @@ Recent decisions affecting current work:
 - 07-08: Compact share on history entries for non-intrusive list layout
 - 07-08: Composite score sync on Dashboard mount (fire-and-forget)
 - 07-08: Top badge = first earned badge by BADGE_DEFINITIONS order priority
+- 08-01: Remove deprecated disableLogger and automaticVercelMonitors from Sentry config (cleanest fix)
+- 08-01: Close menu via click handler setIsMenuOpen(false) instead of route-change useEffect
+- 08-01: Pre-commit hook: lint-staged + typecheck only (no next build)
 
 ### Pending Todos
 
@@ -266,12 +270,13 @@ None.
 - ~~history.pushState memory leak during tests~~ (FIXED: 01-02)
 - React Router + Next.js causes 404 on refresh (PWA-02 will address)
 - iOS Safari 7-day data eviction (PWA-11 will mitigate)
-- Next.js build fails during SSG of sentry-example-page (manifest.json ENOENT) - pre-existing, pre-commit hook bypassed with --no-verify
+- ~~Next.js build fails during SSG of sentry-example-page (manifest.json ENOENT)~~ (FIXED: 08-01, deleted demo pages)
+- ~~Pre-commit hook bypassed with --no-verify since Phase 4~~ (FIXED: 08-01, restored with lint-staged + typecheck)
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 07-08-PLAN.md (Social Features Integration). All phases complete.
+Stopped at: Completed 08-01-PLAN.md (Build & Lint Fixes)
 Resume file: None
 
 ---
