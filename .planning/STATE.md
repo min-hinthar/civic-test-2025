@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 6 complete. Next: Phase 7 - Social Features
+**Current focus:** Phase 7 - Social Features (in progress)
 
 ## Current Position
 
-Phase: 6 of 7 (Interview Simulation)
-Plan: 6 of 6 complete (06-01, 06-02, 06-03, 06-04, 06-05, 06-06)
-Status: Phase complete
-Last activity: 2026-02-08 - Completed 06-06-PLAN.md (Interview Sync, Widget & History Tab)
+Phase: 7 of 7 (Social Features)
+Plan: 1 of 8 complete (07-02)
+Status: In progress
+Last activity: 2026-02-08 - Completed 07-02-PLAN.md (Social Schema Foundation)
 
-Progress: [█████████░] 90% (45 plans / ~50 total estimated)
+Progress: [█████████░] 87% (46 plans / 53 total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 45 (Phases 1-5 + 06-01 through 06-06)
-- Average duration: ~13 min
-- Total execution time: ~567 min
+- Total plans completed: 46 (Phases 1-6 + 07-02)
+- Average duration: ~12 min
+- Total execution time: ~569 min
 
 **By Phase:**
 
@@ -33,6 +33,7 @@ Progress: [█████████░] 90% (45 plans / ~50 total estimated)
 | 04-learning-explanations | 9 | 72 min | 8 min |
 | 05-spaced-repetition | 9 | ~60 min | ~7 min |
 | 06-interview-simulation | 6 | ~40 min | ~7 min |
+| 07-social-features | 1/8 | 2 min | 2 min |
 
 **Recent Trend:**
 - Phase 6 wave execution: 6 plans in 5 waves with parallel execution
@@ -221,6 +222,9 @@ Recent decisions affecting current work:
 - 06-06: Individual question results stay in IndexedDB only; only aggregate session data syncs to Supabase
 - 06-06: SQL migration provided as comment in interviewSync.ts
 - 06-06: InterviewDashboardWidget placed after SRSWidget, before CategoryGrid in Dashboard
+- 07-02: Public SELECT uses social_opt_in = true (not USING true) for privacy-by-default
+- 07-02: SECURITY DEFINER on RPC functions bypasses RLS for server-side ranking
+- 07-02: get_user_rank granted to authenticated only (not anon)
 
 ### Pending Todos
 
@@ -238,7 +242,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 06-06-PLAN.md (Interview Sync, Widget & History Tab). Phase 6 COMPLETE.
+Stopped at: Completed 07-02-PLAN.md (Social Schema Foundation). Phase 7 in progress.
 Resume file: None
 
 ---
