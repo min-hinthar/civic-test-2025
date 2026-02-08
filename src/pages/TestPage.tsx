@@ -117,13 +117,23 @@ const TestPage = () => {
     };
   }, [isFinished, correctCount, askedCount, results, currentStreak]);
 
-  const completionMessage: Record<TestEndReason, string> = {
-    passThreshold:
-      'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early! အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။',
-    failThreshold:
-      'Interview ended after 9 incorrect answers. Review the feedback below before retrying. - အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
-    time: 'Time expired before the full set finished.',
-    complete: 'You completed all 20 questions.',
+  const completionMessage: Record<TestEndReason, { en: string; my: string }> = {
+    passThreshold: {
+      en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
+      my: '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A \u1041\u1042 \u1001\u103B\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u101C\u103B\u103E\u1004\u103A\u101B\u1015\u103A\u1010\u1014\u1037\u103A\u1015\u102B\u1010\u101A\u103A\u104B \u1005\u1031\u102C\u1005\u102E\u1038\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1005\u103D\u102C\u1016\u103C\u1031\u1006\u102D\u102F\u1014\u102D\u102F\u1004\u103A\u101E\u100A\u103A\u1000\u102D\u102F \u1002\u102F\u100F\u103A\u101A\u1030\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B',
+    },
+    failThreshold: {
+      en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
+      my: '\u1021\u1019\u103E\u102C\u1038 \u1049 \u1000\u103C\u102D\u1019\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1014\u1031\u102C\u1000\u103A\u101B\u1015\u103A\u1010\u1014\u1037\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u1010\u101A\u103A\u104B \u1011\u1015\u103A\u1019\u1036\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u101B\u1014\u103A \u1016\u103C\u1031\u1006\u102D\u102F\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1015\u102B\u104B',
+    },
+    time: {
+      en: 'Time expired before the full set finished.',
+      my: '',
+    },
+    complete: {
+      en: 'You completed all 20 questions.',
+      my: '',
+    },
   };
 
   const processResult = useCallback(
@@ -531,7 +541,12 @@ const TestPage = () => {
             </p>
             {endReason && (
               <p className="mt-2 text-sm font-semibold text-primary">
-                {completionMessage[endReason]}
+                {completionMessage[endReason].en}
+                {completionMessage[endReason].my && (
+                  <span className="block font-myanmar mt-0.5 font-normal text-muted-foreground">
+                    {completionMessage[endReason].my}
+                  </span>
+                )}
               </p>
             )}
           </div>

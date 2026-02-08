@@ -154,7 +154,7 @@ function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) 
         <h2 className="mb-2 text-xl font-semibold text-slate-900 dark:text-white">{message.en}</h2>
 
         {/* Burmese message */}
-        <p className="mb-8 text-lg text-slate-600 dark:text-slate-300">{message.my}</p>
+        <p className="mb-8 text-lg text-slate-600 dark:text-slate-300 font-myanmar">{message.my}</p>
 
         {/* Action buttons */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">

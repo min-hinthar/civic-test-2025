@@ -171,7 +171,11 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 'transition-[box-shadow,transform] duration-100'
               )}
             >
-              {showBurmese ? '\u1005\u1010\u1004\u103A\u1015\u102B' : 'Start'}
+              {showBurmese ? (
+                <span className="font-myanmar">{'\u1005\u1010\u1004\u103A\u1015\u102B'}</span>
+              ) : (
+                'Start'
+              )}
             </span>
           </div>
         </Card>
@@ -205,7 +209,11 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 'transition-[box-shadow,transform] duration-100'
               )}
             >
-              {showBurmese ? '\u1005\u1010\u1004\u103A\u1015\u102B' : 'Start'}
+              {showBurmese ? (
+                <span className="font-myanmar">{'\u1005\u1010\u1004\u103A\u1015\u102B'}</span>
+              ) : (
+                'Start'
+              )}
             </span>
           </div>
         </Card>

@@ -538,9 +538,16 @@ export function InterviewResults({
           >
             <Home className="h-4 w-4" />
             <span>
-              {showBurmese
-                ? 'Dashboard · \u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A'
-                : 'Dashboard'}
+              {showBurmese ? (
+                <>
+                  Dashboard ·{' '}
+                  <span className="font-myanmar">
+                    {'\u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A'}
+                  </span>
+                </>
+              ) : (
+                'Dashboard'
+              )}
             </span>
           </motion.button>
         </div>

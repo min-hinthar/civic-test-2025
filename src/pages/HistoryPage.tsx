@@ -424,13 +424,21 @@ const HistoryPage = () => {
                                     : 'bg-muted text-muted-foreground'
                                 )}
                               >
-                                {session.mode === 'realistic'
-                                  ? showBurmese
-                                    ? strings.interview.realisticMode.my
-                                    : 'Realistic'
-                                  : showBurmese
-                                    ? strings.interview.practiceMode.my
-                                    : 'Practice'}
+                                {session.mode === 'realistic' ? (
+                                  showBurmese ? (
+                                    <span className="font-myanmar">
+                                      {strings.interview.realisticMode.my}
+                                    </span>
+                                  ) : (
+                                    'Realistic'
+                                  )
+                                ) : showBurmese ? (
+                                  <span className="font-myanmar">
+                                    {strings.interview.practiceMode.my}
+                                  </span>
+                                ) : (
+                                  'Practice'
+                                )}
                               </span>
                             </div>
                             <p className="text-sm text-muted-foreground">
@@ -452,13 +460,21 @@ const HistoryPage = () => {
                                 {scorePercent}%
                               </span>
                               <span className="block text-sm text-muted-foreground">
-                                {session.passed
-                                  ? showBurmese
-                                    ? `${strings.interview.passed.my}`
-                                    : 'Passed'
-                                  : showBurmese
-                                    ? `${strings.interview.failed.my}`
-                                    : 'Keep trying'}
+                                {session.passed ? (
+                                  showBurmese ? (
+                                    <span className="font-myanmar">
+                                      {strings.interview.passed.my}
+                                    </span>
+                                  ) : (
+                                    'Passed'
+                                  )
+                                ) : showBurmese ? (
+                                  <span className="font-myanmar">
+                                    {strings.interview.failed.my}
+                                  </span>
+                                ) : (
+                                  'Keep trying'
+                                )}
                               </span>
                             </div>
                             <button
@@ -512,13 +528,21 @@ const HistoryPage = () => {
                                         : 'text-warning-500'
                                     )}
                                   >
-                                    {result.selfGrade === 'correct'
-                                      ? showBurmese
-                                        ? strings.interview.correct.my
-                                        : 'Correct'
-                                      : showBurmese
-                                        ? strings.interview.incorrect.my
-                                        : 'Incorrect'}
+                                    {result.selfGrade === 'correct' ? (
+                                      showBurmese ? (
+                                        <span className="font-myanmar">
+                                          {strings.interview.correct.my}
+                                        </span>
+                                      ) : (
+                                        'Correct'
+                                      )
+                                    ) : showBurmese ? (
+                                      <span className="font-myanmar">
+                                        {strings.interview.incorrect.my}
+                                      </span>
+                                    ) : (
+                                      'Incorrect'
+                                    )}
                                   </span>
                                 </div>
                                 <p className="text-sm font-medium text-foreground">
@@ -539,9 +563,15 @@ const HistoryPage = () => {
 
                         {isExpanded && session.results.length === 0 && (
                           <p className="mt-4 text-xs text-muted-foreground italic">
-                            {showBurmese
-                              ? '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u104D'
-                              : 'Detailed question results not available for synced sessions.'}
+                            {showBurmese ? (
+                              <span className="font-myanmar">
+                                {
+                                  '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u104D'
+                                }
+                              </span>
+                            ) : (
+                              'Detailed question results not available for synced sessions.'
+                            )}
                           </p>
                         )}
                       </Card>
@@ -755,9 +785,23 @@ const HistoryPage = () => {
                                   {scorePercent}%
                                 </span>
                                 <span className="block text-sm text-muted-foreground">
-                                  {session.passed
-                                    ? 'Passed / \u1021\u1031\u102C\u1004\u103A'
-                                    : 'Keep trying / \u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B'}
+                                  {session.passed ? (
+                                    <>
+                                      Passed /{' '}
+                                      <span className="font-myanmar">
+                                        {'\u1021\u1031\u102C\u1004\u103A'}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      Keep trying /{' '}
+                                      <span className="font-myanmar">
+                                        {
+                                          '\u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B'
+                                        }
+                                      </span>
+                                    </>
+                                  )}
                                 </span>
                               </div>
                               <ShareButton
@@ -880,9 +924,21 @@ const HistoryPage = () => {
                                         result.isCorrect ? 'text-success-500' : 'text-warning-500'
                                       }
                                     >
-                                      {result.isCorrect
-                                        ? 'Correct · \u1019\u103E\u1014\u103A'
-                                        : 'Incorrect · \u1019\u103E\u102C\u1038'}
+                                      {result.isCorrect ? (
+                                        <>
+                                          Correct ·{' '}
+                                          <span className="font-myanmar">
+                                            {'\u1019\u103E\u1014\u103A'}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          Incorrect ·{' '}
+                                          <span className="font-myanmar">
+                                            {'\u1019\u103E\u102C\u1038'}
+                                          </span>
+                                        </>
+                                      )}
                                     </span>
                                   </div>
                                 </div>

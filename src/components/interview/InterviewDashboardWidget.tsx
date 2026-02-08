@@ -58,7 +58,7 @@ function getContextualSuggestion(sessions: InterviewSession[]): Suggestion {
 
   if (!last.passed) {
     return {
-      en: 'Keep practicing! You\'re improving.',
+      en: "Keep practicing! You're improving.",
       my: '\u1006\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B! \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A\u104D',
     };
   }
@@ -115,8 +115,10 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
       >
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
-          <span className="text-sm text-muted-foreground">
-            {showBurmese ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...' : 'Loading...'}
+          <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
+            {showBurmese
+              ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+              : 'Loading...'}
           </span>
         </div>
       </div>
@@ -141,12 +143,14 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
               <Mic className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? strings.interview.practiceInterview.my
                   : strings.interview.practiceInterview.en}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese ? suggestion.my : suggestion.en}
               </p>
             </div>
@@ -157,7 +161,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
             className="flex h-9 items-center gap-1.5 rounded-full bg-primary-500 px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
           >
             <Mic className="h-3.5 w-3.5" />
-            <span>
+            <span className={showBurmese ? 'font-myanmar' : ''}>
               {showBurmese ? '\u1005\u1010\u1004\u103A\u1015\u102B' : 'Start'}
             </span>
           </button>
@@ -167,9 +171,10 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
   }
 
   // Has history: show last score and contextual nudge
-  const scorePercent = lastSession.totalQuestions > 0
-    ? Math.round((lastSession.score / lastSession.totalQuestions) * 100)
-    : 0;
+  const scorePercent =
+    lastSession.totalQuestions > 0
+      ? Math.round((lastSession.score / lastSession.totalQuestions) * 100)
+      : 0;
 
   return (
     <div
@@ -180,7 +185,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
       onClick={goToInterview}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           goToInterview();
@@ -189,10 +194,12 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={clsx(
-            'flex h-10 w-10 items-center justify-center rounded-xl',
-            lastSession.passed ? 'bg-success-50' : 'bg-primary-100'
-          )}>
+          <div
+            className={clsx(
+              'flex h-10 w-10 items-center justify-center rounded-xl',
+              lastSession.passed ? 'bg-success-50' : 'bg-primary-100'
+            )}
+          >
             {lastSession.passed ? (
               <Trophy className="h-5 w-5 text-success-500" />
             ) : (
@@ -201,7 +208,9 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-foreground">
+              <p
+                className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {showBurmese
                   ? `\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038: ${lastSession.score}/${lastSession.totalQuestions}`
                   : `Last Interview: ${lastSession.score}/${lastSession.totalQuestions}`}
@@ -214,26 +223,40 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
                     : 'bg-warning-50 text-warning-500'
                 )}
               >
-                {lastSession.passed
-                  ? (showBurmese ? strings.interview.passed.my : strings.interview.passed.en)
-                  : (showBurmese ? strings.interview.failed.my : strings.interview.failed.en)}
+                {lastSession.passed ? (
+                  showBurmese ? (
+                    <span className="font-myanmar">{strings.interview.passed.my}</span>
+                  ) : (
+                    strings.interview.passed.en
+                  )
+                ) : showBurmese ? (
+                  <span className="font-myanmar">{strings.interview.failed.my}</span>
+                ) : (
+                  strings.interview.failed.en
+                )}
               </span>
             </div>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-muted-foreground">
+              <span
+                className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+              >
                 {lastSession.mode === 'realistic'
-                  ? (showBurmese ? strings.interview.realisticMode.my : strings.interview.realisticMode.en)
-                  : (showBurmese ? strings.interview.practiceMode.my : strings.interview.practiceMode.en)}
+                  ? showBurmese
+                    ? strings.interview.realisticMode.my
+                    : strings.interview.realisticMode.en
+                  : showBurmese
+                    ? strings.interview.practiceMode.my
+                    : strings.interview.practiceMode.en}
               </span>
-              <span className="text-xs text-muted-foreground">
-                {scorePercent}%
-              </span>
+              <span className="text-xs text-muted-foreground">{scorePercent}%</span>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="hidden sm:block text-xs text-muted-foreground max-w-[140px] text-right">
+          <span
+            className={`hidden sm:block text-xs text-muted-foreground max-w-[140px] text-right ${showBurmese ? 'font-myanmar' : ''}`}
+          >
             {showBurmese ? suggestion.my : suggestion.en}
           </span>
           <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -241,7 +264,9 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
       </div>
 
       {/* Mobile suggestion text */}
-      <p className="sm:hidden mt-2 text-xs text-muted-foreground">
+      <p
+        className={`sm:hidden mt-2 text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+      >
         {showBurmese ? suggestion.my : suggestion.en}
       </p>
     </div>

@@ -167,7 +167,7 @@ export function BottomTabBar() {
                         <span
                           className={`text-[11px] leading-tight text-center ${
                             isActive ? 'font-semibold text-primary-500' : 'text-muted-foreground'
-                          }`}
+                          } ${showBurmese ? 'font-myanmar' : ''}`}
                         >
                           {showBurmese ? item.label.my : item.label.en}
                         </span>
@@ -194,13 +194,21 @@ export function BottomTabBar() {
                     <Moon className="h-5 w-5 text-muted-foreground" />
                   )}
                   <span className="text-sm font-medium text-foreground">
-                    {theme === 'dark'
-                      ? showBurmese
-                        ? '\u1021\u101C\u1004\u103A\u1038\u1019\u102F\u1012\u103A'
-                        : 'Light Mode'
-                      : showBurmese
-                        ? '\u1021\u1019\u103E\u102C\u1004\u103A\u1019\u102F\u1012\u103A'
-                        : 'Dark Mode'}
+                    {theme === 'dark' ? (
+                      showBurmese ? (
+                        <span className="font-myanmar">
+                          {'\u1021\u101C\u1004\u103A\u1038\u1019\u102F\u1012\u103A'}
+                        </span>
+                      ) : (
+                        'Light Mode'
+                      )
+                    ) : showBurmese ? (
+                      <span className="font-myanmar">
+                        {'\u1021\u1019\u103E\u102C\u1004\u103A\u1019\u102F\u1012\u103A'}
+                      </span>
+                    ) : (
+                      'Dark Mode'
+                    )}
                   </span>
                 </button>
 
@@ -212,7 +220,9 @@ export function BottomTabBar() {
                     className="flex items-center gap-3 rounded-xl px-3 py-3 min-h-[44px] text-left hover:bg-destructive/10 active:bg-destructive/15 transition-colors w-full"
                   >
                     <LogOut className="h-5 w-5 text-destructive" />
-                    <span className="text-sm font-medium text-destructive">
+                    <span
+                      className={`text-sm font-medium text-destructive ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
                       {showBurmese ? strings.nav.signOut.my : strings.nav.signOut.en}
                     </span>
                   </button>
@@ -260,7 +270,7 @@ export function BottomTabBar() {
                   <span
                     className={`text-[10px] leading-tight transition-colors ${
                       isActive ? 'font-semibold text-primary-500' : 'text-muted-foreground'
-                    }`}
+                    } ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese ? tab.label.my : tab.label.en}
                   </span>
@@ -296,7 +306,13 @@ export function BottomTabBar() {
                     : 'text-muted-foreground'
                 }`}
               >
-                {showBurmese ? '\u1014\u1031\u102C\u1000\u103A\u1011\u1015\u103A' : 'More'}
+                {showBurmese ? (
+                  <span className="font-myanmar">
+                    {'\u1014\u1031\u102C\u1000\u103A\u1011\u1015\u103A'}
+                  </span>
+                ) : (
+                  'More'
+                )}
               </span>
             </motion.div>
           </button>

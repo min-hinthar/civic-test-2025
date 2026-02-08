@@ -118,7 +118,11 @@ const AppNavigation = ({
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span className="hidden lg:inline whitespace-nowrap">
-                  {showBurmese ? link.label.my : link.label.en}
+                  {showBurmese ? (
+                    <span className="font-myanmar">{link.label.my}</span>
+                  ) : (
+                    link.label.en
+                  )}
                 </span>
                 {link.href === '/study' && dueCount > 0 && (
                   <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1">
@@ -155,7 +159,11 @@ const AppNavigation = ({
             >
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden lg:inline">
-                {showBurmese ? strings.nav.signOut.my : strings.nav.signOut.en}
+                {showBurmese ? (
+                  <span className="font-myanmar">{strings.nav.signOut.my}</span>
+                ) : (
+                  strings.nav.signOut.en
+                )}
               </span>
             </button>
           ) : (
@@ -167,7 +175,11 @@ const AppNavigation = ({
               }`}
               aria-disabled={locked}
             >
-              {showBurmese ? strings.nav.signIn.my : strings.nav.signIn.en}
+              {showBurmese ? (
+                <span className="font-myanmar">{strings.nav.signIn.my}</span>
+              ) : (
+                strings.nav.signIn.en
+              )}
             </Link>
           )}
         </div>

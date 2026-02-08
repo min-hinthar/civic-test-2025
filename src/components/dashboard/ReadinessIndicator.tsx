@@ -132,8 +132,12 @@ export function ReadinessIndicator({
               {readinessScore}%
             </span>
             <span className="text-sm text-muted-foreground">
-              Readiness /
-              \u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u1019\u103E\u102F
+              Readiness /{' '}
+              <span className="font-myanmar">
+                {
+                  '\u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u1019\u103E\u102F'
+                }
+              </span>
             </span>
           </div>
           <Progress value={readinessScore} variant={progressVariants[level]} size="lg" />
