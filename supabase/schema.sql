@@ -7,10 +7,13 @@ create table if not exists public.profiles (
 );
 
 alter table public.profiles enable row level security;
+drop policy if exists "Profiles are readable by the owner" on public.profiles;
 create policy "Profiles are readable by the owner" on public.profiles
   for select using (auth.uid() = id);
+drop policy if exists "Profiles are upsertable by the owner" on public.profiles;
 create policy "Profiles are upsertable by the owner" on public.profiles
   for insert with check (auth.uid() = id);
+drop policy if exists "Profiles are updateable by the owner" on public.profiles;
 create policy "Profiles are updateable by the owner" on public.profiles
   for update using (auth.uid() = id);
 
@@ -65,8 +68,10 @@ begin
 end $$;
 
 alter table public.mock_tests enable row level security;
+drop policy if exists "Users can manage their own mock tests" on public.mock_tests;
 create policy "Users can manage their own mock tests" on public.mock_tests
   using (auth.uid() = user_id);
+drop policy if exists "Users can insert their own mock tests" on public.mock_tests;
 create policy "Users can insert their own mock tests" on public.mock_tests
   for insert with check (auth.uid() = user_id);
 
@@ -87,8 +92,10 @@ create table if not exists public.mock_test_responses (
 );
 
 alter table public.mock_test_responses enable row level security;
+drop policy if exists "Users can access their own responses" on public.mock_test_responses;
 create policy "Users can access their own responses" on public.mock_test_responses
   using (auth.uid() = (select user_id from public.mock_tests where id = mock_test_id));
+drop policy if exists "Users can insert their own responses" on public.mock_test_responses;
 create policy "Users can insert their own responses" on public.mock_test_responses
   for insert with check (auth.uid() = (select user_id from public.mock_tests where id = mock_test_id));
 
@@ -118,12 +125,16 @@ create table if not exists public.srs_cards (
 
 alter table public.srs_cards enable row level security;
 
+drop policy if exists "Users can read their own SRS cards" on public.srs_cards;
 create policy "Users can read their own SRS cards"
   on public.srs_cards for select using (auth.uid() = user_id);
+drop policy if exists "Users can insert their own SRS cards" on public.srs_cards;
 create policy "Users can insert their own SRS cards"
   on public.srs_cards for insert with check (auth.uid() = user_id);
+drop policy if exists "Users can update their own SRS cards" on public.srs_cards;
 create policy "Users can update their own SRS cards"
   on public.srs_cards for update using (auth.uid() = user_id);
+drop policy if exists "Users can delete their own SRS cards" on public.srs_cards;
 create policy "Users can delete their own SRS cards"
   on public.srs_cards for delete using (auth.uid() = user_id);
 
@@ -132,3 +143,29 @@ create index if not exists srs_cards_due_idx
   on public.srs_cards (user_id, due);
 create index if not exists srs_cards_question_idx
   on public.srs_cards (user_id, question_id);
+
+-- Interview simulation session history
+create table if not exists public.interview_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  completed_at timestamptz not null default now(),
+  mode text not null check (mode in ('realistic', 'practice')),
+  score integer not null,
+  total_questions integer not null default 20,
+  duration_seconds integer not null,
+  passed boolean not null,
+  end_reason text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.interview_sessions enable row level security;
+
+drop policy if exists "Users can view own interview sessions" on public.interview_sessions;
+create policy "Users can view own interview sessions"
+  on public.interview_sessions for select using (auth.uid() = user_id);
+drop policy if exists "Users can insert own interview sessions" on public.interview_sessions;
+create policy "Users can insert own interview sessions"
+  on public.interview_sessions for insert with check (auth.uid() = user_id);
+
+create index if not exists interview_sessions_user_idx
+  on public.interview_sessions (user_id, completed_at desc);
