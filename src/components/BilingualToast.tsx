@@ -9,7 +9,7 @@ import type { BilingualMessage } from '@/lib/errorSanitizer';
 /**
  * Toast types for different notification styles.
  */
-export type ToastType = 'error' | 'success' | 'info';
+export type ToastType = 'error' | 'success' | 'info' | 'warning';
 
 /**
  * Internal toast instance with unique ID and metadata.
@@ -31,6 +31,8 @@ interface ToastContextValue {
   showSuccess: (message: BilingualMessage) => string;
   /** Show an info toast with bilingual message */
   showInfo: (message: BilingualMessage) => string;
+  /** Show a warning toast with bilingual message (orange, non-data-loss errors) */
+  showWarning: (message: BilingualMessage) => string;
   /** Dismiss a specific toast by ID */
   dismiss: (id: string) => void;
   /** Dismiss all toasts */
@@ -46,6 +48,7 @@ const DEFAULT_DURATIONS: Record<ToastType, number> = {
   error: 6000, // Errors stay longer so users can read both languages
   success: 4000,
   info: 5000,
+  warning: 5000,
 };
 
 /**
@@ -96,10 +99,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [addToast]
   );
 
+  const showWarning = useCallback(
+    (message: BilingualMessage) => addToast('warning', message),
+    [addToast]
+  );
+
   const contextValue: ToastContextValue = {
     showError,
     showSuccess,
     showInfo,
+    showWarning,
     dismiss,
     dismissAll,
   };
@@ -131,6 +140,7 @@ const typeStyles: Record<ToastType, string> = {
   error: 'bg-destructive text-white border-destructive/80',
   success: 'bg-green-600 text-white border-green-700',
   info: 'bg-blue-600 text-white border-blue-700',
+  warning: 'bg-warning-500 text-white border-warning-600',
 };
 
 /**
@@ -140,6 +150,7 @@ const typeIcons: Record<ToastType, string> = {
   error: '\u26A0\uFE0F', // Warning sign
   success: '\u2713', // Check mark
   info: '\u2139\uFE0F', // Info symbol
+  warning: '\u26A0', // Warning triangle
 };
 
 /**

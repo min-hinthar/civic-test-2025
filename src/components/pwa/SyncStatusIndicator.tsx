@@ -3,63 +3,72 @@
 /**
  * Sync Status Indicator Component
  *
- * Shows a refresh icon with badge for pending offline results.
- * Spins during sync, clickable for manual retry.
- * Hidden when no pending items and not syncing.
+ * Floating bottom-center toast-like indicator showing pending sync count.
+ * Appears only when items are pending sync, with animated tick-down
+ * and slide-away when count reaches zero.
+ *
+ * Informational only -- no tap-to-sync action.
+ * Uses bottom-20 offset to clear mobile bottom tab bar.
  */
 
-import React from 'react';
-import { RefreshCw } from 'lucide-react';
-import { useSyncQueue } from '@/hooks/useSyncQueue';
+import { Cloud, CloudOff } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useOffline } from '@/contexts/OfflineContext';
 
 /**
- * Indicator showing sync status with pending count badge.
+ * Floating sync status indicator with AnimatePresence slide animation.
  *
- * Features:
- * - Hidden when no pending items
- * - Orange badge shows pending count
- * - Spinning animation during sync
- * - Click to manually trigger sync
+ * States:
+ * - Normal syncing: Cloud icon with pulse animation + count
+ * - Sync failure: CloudOff icon in warning-500 (orange)
  *
  * @example
  * ```tsx
- * // In header/navigation
+ * // In AppShell, inside Router
  * <SyncStatusIndicator />
  * ```
  */
 export function SyncStatusIndicator() {
-  const { pendingCount, isSyncing, triggerSync } = useSyncQueue();
+  const { pendingSyncCount, isSyncing, syncFailed } = useOffline();
 
-  // Don't render if nothing pending and not syncing
-  if (pendingCount === 0 && !isSyncing) {
-    return null;
-  }
+  const isVisible = pendingSyncCount > 0 || isSyncing;
 
   return (
-    <button
-      onClick={() => triggerSync()}
-      disabled={isSyncing}
-      className="relative flex items-center justify-center p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-wait"
-      title={isSyncing ? 'Syncing...' : `${pendingCount} pending`}
-      aria-label={
-        isSyncing
-          ? 'Syncing offline results'
-          : `${pendingCount} result${pendingCount !== 1 ? 's' : ''} waiting to sync`
-      }
-    >
-      <RefreshCw
-        className={`h-4 w-4 text-muted-foreground ${isSyncing ? 'animate-spin' : ''}`}
-        aria-hidden="true"
-      />
-      {/* Badge showing pending count */}
-      {pendingCount > 0 && !isSyncing && (
-        <span
-          className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[10px] font-medium text-white"
-          aria-hidden="true"
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 20, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2"
+          role="status"
+          aria-label={
+            syncFailed
+              ? `${pendingSyncCount} items failed to sync`
+              : `${pendingSyncCount} items syncing`
+          }
         >
-          {pendingCount > 9 ? '9+' : pendingCount}
-        </span>
+          <div className="flex items-center gap-2 rounded-full bg-card/95 px-4 py-2 shadow-lg backdrop-blur-lg border border-border/40">
+            {syncFailed ? (
+              <CloudOff className="h-4 w-4 text-warning-500" aria-hidden="true" />
+            ) : (
+              <Cloud className="h-4 w-4 text-primary-500 animate-pulse" aria-hidden="true" />
+            )}
+            <motion.span
+              key={pendingSyncCount}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+              className={`text-sm font-semibold tabular-nums ${
+                syncFailed ? 'text-warning-500' : 'text-foreground'
+              }`}
+            >
+              {pendingSyncCount}
+            </motion.span>
+          </div>
+        </motion.div>
       )}
-    </button>
+    </AnimatePresence>
   );
 }

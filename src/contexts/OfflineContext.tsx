@@ -13,24 +13,10 @@
  * - Auto-sync when coming back online
  */
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import {
-  cacheQuestions,
-  getCachedQuestions,
-  hasQuestionsCache,
-} from '@/lib/pwa/offlineDb';
-import {
-  syncAllPendingResults,
-  getPendingSyncCount,
-  type SyncResult,
-} from '@/lib/pwa/syncQueue';
+import { cacheQuestions, getCachedQuestions, hasQuestionsCache } from '@/lib/pwa/offlineDb';
+import { syncAllPendingResults, getPendingSyncCount, type SyncResult } from '@/lib/pwa/syncQueue';
 import { allQuestions } from '@/constants/questions';
 import { toast } from '@/components/ui/use-toast';
 import type { Question } from '@/types';
@@ -55,6 +41,8 @@ interface OfflineContextValue {
   refreshCache: () => Promise<void>;
   /** Refresh the pending sync count from IndexedDB */
   refreshPendingCount: () => Promise<void>;
+  /** Whether the last sync attempt had failures */
+  syncFailed: boolean;
   /** Manually trigger sync of pending results */
   triggerSync: () => Promise<void>;
 }
@@ -94,6 +82,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
   const [isCached, setIsCached] = useState(false);
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncFailed, setSyncFailed] = useState(false);
   const [wasOffline, setWasOffline] = useState(false);
 
   // Load questions from cache or cache them on first load
@@ -146,6 +135,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
     if (isSyncing || !isOnline) return;
 
     setIsSyncing(true);
+    setSyncFailed(false);
     try {
       const result: SyncResult = await syncAllPendingResults();
       await refreshPendingCount();
@@ -157,6 +147,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
           description: `အော့ဖ်လိုင်း ရလဒ် ${result.synced} ခု စင့်ခ်လုပ်ပြီးပါပြီ`,
         });
       } else if (result.failed > 0) {
+        setSyncFailed(true);
         toast({
           title: `Failed to sync ${result.failed} result${result.failed > 1 ? 's' : ''}. Will retry.`,
           description: `ရလဒ် ${result.failed} ခု စင့်ခ်မလုပ်နိုင်ပါ။ ပြန်လုပ်ပါမည်။`,
@@ -165,6 +156,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
       }
     } catch (error) {
       console.error('[OfflineContext] Sync failed:', error);
+      setSyncFailed(true);
     } finally {
       setIsSyncing(false);
     }
@@ -197,14 +189,13 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
     isCached,
     pendingSyncCount,
     isSyncing,
+    syncFailed,
     refreshCache,
     refreshPendingCount,
     triggerSync,
   };
 
-  return (
-    <OfflineContext.Provider value={value}>{children}</OfflineContext.Provider>
-  );
+  return <OfflineContext.Provider value={value}>{children}</OfflineContext.Provider>;
 }
 
 /**

@@ -63,7 +63,7 @@ export function useToast() {
 export const toast = (_options: {
   title?: string;
   description?: string;
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'warning';
 }) => {
   // Legacy shim - this gets overridden by the context provider
   console.warn('Toast called outside of ToastContextProvider');
