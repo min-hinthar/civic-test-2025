@@ -12,6 +12,7 @@ import {
 import type { PostgrestError, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
 import { createSaveSessionGuard } from '@/lib/saveSession';
+import { queueTestResult } from '@/lib/pwa/offlineDb';
 import type {
   QuestionResult,
   TestEndReason,
@@ -313,6 +314,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           );
           await hydrateFromSupabase((await supabase.auth.getSession()).data.session ?? null);
         } catch (error) {
+          // Detect network/offline errors and queue for later sync
+          const isNetworkError =
+            !navigator.onLine ||
+            (error instanceof TypeError &&
+              (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) ||
+            (error instanceof Error && error.message.includes('NetworkError'));
+
+          if (isNetworkError) {
+            // Queue for offline sync via IndexedDB
+            await queueTestResult({
+              userId: user.id,
+              completedAt: session.date,
+              score: session.score,
+              totalQuestions: session.totalQuestions,
+              durationSeconds: session.durationSeconds,
+              incorrectCount: session.incorrectCount,
+              passed: session.passed,
+              endReason: session.endReason,
+              responses: session.results.map(r => ({
+                questionId: r.questionId,
+                questionText_en: r.questionText_en,
+                questionText_my: r.questionText_my,
+                category: r.category,
+                selectedAnswer_en: r.selectedAnswer.text_en,
+                selectedAnswer_my: r.selectedAnswer.text_my,
+                correctAnswer_en: r.correctAnswer.text_en,
+                correctAnswer_my: r.correctAnswer.text_my,
+                isCorrect: r.isCorrect,
+              })),
+            });
+
+            // Add to local testHistory immediately so the user sees the result
+            const offlineSession: TestSession = {
+              ...session,
+              id: `offline-${Date.now()}`,
+            };
+            setUser(prev =>
+              prev ? { ...prev, testHistory: [offlineSession, ...prev.testHistory] } : prev
+            );
+            // Return normally — caller shows success as usual
+            return;
+          }
+
+          // Non-network errors still propagate
           console.error('Failed to save mock test session', error);
           throw error;
         } finally {
