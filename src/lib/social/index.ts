@@ -21,6 +21,7 @@ export {
   earnFreeze,
   getStreakData,
   recordStudyActivity,
+  saveStreakData,
 } from './streakStore';
 export type { StreakData } from './streakStore';
 
@@ -45,3 +46,27 @@ export type { EarnedBadge } from './badgeStore';
 
 // Composite score
 export { calculateCompositeScore } from './compositeScore';
+
+// Share card renderer
+export { renderShareCard } from './shareCardRenderer';
+export type { ShareCardData } from './shareCardRenderer';
+
+// Share utilities
+export { shareScoreCard } from './shareUtils';
+export type { ShareResult } from './shareUtils';
+
+// Streak sync (Supabase)
+export {
+  loadStreakFromSupabase,
+  mergeStreakData,
+  syncStreakToSupabase,
+} from './streakSync';
+
+// Social profile sync (Supabase)
+export {
+  getSocialProfile,
+  toggleSocialOptIn,
+  updateCompositeScore,
+  upsertSocialProfile,
+} from './socialProfileSync';
+export type { SocialProfile } from './socialProfileSync';
