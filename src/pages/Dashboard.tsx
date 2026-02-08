@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, type To } from 'react-router-dom';
-import { BookOpenCheck, ChevronDown } from 'lucide-react';
+import { BookOpenCheck, ChevronDown, Settings } from 'lucide-react';
 import clsx from 'clsx';
 import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -286,18 +286,29 @@ const Dashboard = () => {
         {/* Welcome header with bilingual heading */}
         <header className="mb-8">
           <FadeIn>
-            <BilingualHeading
-              text={{
-                en: `Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`,
-                my: `\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`,
-              }}
-              level={1}
-              size="2xl"
-            />
-            <p className="mt-2 text-muted-foreground">
-              Track your bilingual U.S civics study journey, jump into a new mock test, or brush up
-              with flip-cards.
-            </p>
+            <div className="flex items-start justify-between">
+              <div>
+                <BilingualHeading
+                  text={{
+                    en: `Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`,
+                    my: `\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`,
+                  }}
+                  level={1}
+                  size="2xl"
+                />
+                <p className="mt-2 text-muted-foreground">
+                  Track your bilingual U.S civics study journey, jump into a new mock test, or brush
+                  up with flip-cards.
+                </p>
+              </div>
+              <Link
+                to="/settings"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
+                aria-label="Settings \u00B7 \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103B\u102C\u1038"
+              >
+                <Settings className="h-5 w-5" />
+              </Link>
+            </div>
           </FadeIn>
         </header>
 

@@ -83,22 +83,29 @@ export async function clearQuestionsCache(): Promise<void> {
 // ============================================
 
 /**
- * Interface for test results pending sync to server
+ * Interface for test results pending sync to server.
+ * Stores the FULL session data matching what saveTestSession sends to Supabase.
  */
 export interface PendingTestResult {
   id: string;
   userId: string;
+  completedAt: string;
   score: number;
   totalQuestions: number;
   durationSeconds: number;
+  incorrectCount: number;
   passed: boolean;
   endReason: string;
-  createdAt: string;
   responses: Array<{
     questionId: string;
-    selectedAnswer: string;
-    correct: boolean;
-    timeSpentSeconds: number;
+    questionText_en: string;
+    questionText_my: string;
+    category: string;
+    selectedAnswer_en: string;
+    selectedAnswer_my: string;
+    correctAnswer_en: string;
+    correctAnswer_my: string;
+    isCorrect: boolean;
   }>;
 }
 

@@ -44,31 +44,37 @@ async function syncSingleResult(key: string, data: PendingTestResult): Promise<b
 
   while (retries < MAX_RETRIES) {
     try {
-      // Insert mock test record
+      // Insert mock test record (matches saveTestSession in SupabaseAuthContext)
       const { data: testData, error: testError } = await supabase
         .from('mock_tests')
         .insert({
           user_id: data.userId,
+          completed_at: data.completedAt,
           score: data.score,
           total_questions: data.totalQuestions,
           duration_seconds: data.durationSeconds,
-          passed: data.passed,
+          incorrect_count: data.incorrectCount,
           end_reason: data.endReason,
-          created_at: data.createdAt,
+          passed: data.passed,
         })
         .select('id')
         .single();
 
       if (testError) throw testError;
 
-      // Insert test responses if any
+      // Insert test responses (matches saveTestSession column names)
       if (data.responses.length > 0 && testData) {
         const responsesToInsert = data.responses.map(r => ({
           mock_test_id: testData.id,
           question_id: r.questionId,
-          selected_answer: r.selectedAnswer,
-          is_correct: r.correct,
-          time_spent_seconds: r.timeSpentSeconds,
+          question_en: r.questionText_en,
+          question_my: r.questionText_my,
+          category: r.category,
+          selected_answer_en: r.selectedAnswer_en,
+          selected_answer_my: r.selectedAnswer_my,
+          correct_answer_en: r.correctAnswer_en,
+          correct_answer_my: r.correctAnswer_my,
+          is_correct: r.isCorrect,
         }));
 
         const { error: responseError } = await supabase
