@@ -31,11 +31,47 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!mounted) return;
     const root = document.documentElement;
+
+    // Add transitioning class for smooth theme switch
+    root.classList.add('theme-transitioning');
+
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    document.documentElement.style.setProperty('color-scheme', theme);
+    root.style.setProperty('color-scheme', theme);
     window.localStorage.setItem('civic-theme', theme);
+
+    // Update PWA theme-color meta tag for browser chrome
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute(
+        'content',
+        theme === 'dark' ? '#1a1f36' : '#002868'
+      );
+    }
+
+    // Remove transitioning class after animation completes
+    const timer = setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [theme, mounted]);
+
+  // Listen for system preference changes (only when no manual override is stored)
+  useEffect(() => {
+    if (!mounted) return;
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      const hasManualOverride = window.localStorage.getItem('civic-theme');
+      if (!hasManualOverride) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, [mounted]);
 
   const value = useMemo(
     () => ({

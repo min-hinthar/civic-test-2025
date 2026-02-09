@@ -109,6 +109,16 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Smooth theme transition - applied temporarily when toggling light/dark */
+html.theme-transitioning,
+html.theme-transitioning body,
+html.theme-transitioning .page-shell {
+  transition:
+    background-color 0.3s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
 ::selection {
   background: hsl(var(--color-primary));
   color: hsl(var(--color-text-on-primary));
