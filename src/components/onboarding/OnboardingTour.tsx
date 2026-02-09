@@ -7,6 +7,7 @@ import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { totalQuestions } from '@/constants/questions';
 import { WelcomeScreen } from './WelcomeScreen';
 import { TourTooltip } from './TourTooltip';
 
@@ -48,11 +49,12 @@ const tourSteps: Step[] = [
       <div>
         <h3 className="font-bold text-lg mb-2">Study with Flashcards</h3>
         <p className="text-muted-foreground text-sm">
-          Flip through bilingual flashcards to learn all 100 civics questions. Tap to reveal
+          Flip through bilingual flashcards to learn all {totalQuestions} civics questions. Tap to
+          reveal
           answers!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'မေးခွန်း ၁၀၀ လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။'}
+          {`မေးခွန်း ${totalQuestions} လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။`}
         </p>
       </div>
     ),
@@ -65,11 +67,11 @@ const tourSteps: Step[] = [
       <div>
         <h3 className="font-bold text-lg mb-2">Practice with Mock Tests</h3>
         <p className="text-muted-foreground text-sm">
-          Take timed practice tests just like the real interview. You need 6 correct out of 10 to
+          Take timed practice tests just like the real interview. You need 12 correct out of 20 to
           pass!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၁၀ ခုမှ ၆ ခုမှန်ရပါမည်။'}
+          {'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၂၀ ခုမှ ၁၂ ခုမှန်ရပါမည်။'}
         </p>
       </div>
     ),

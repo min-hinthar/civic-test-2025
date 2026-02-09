@@ -10,6 +10,8 @@
  * - Coverage: Question/category completion milestones
  */
 
+import { totalQuestions } from '@/constants/questions';
+
 /** Data provided to badge check functions for evaluation */
 export interface BadgeCheckData {
   currentStreak: number;
@@ -143,15 +145,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
       my: 'ပြည့်စုံပညာရှင်',
     },
     description: {
-      en: 'Answered all 100 questions',
-      my: 'မေးခွန်း ၁၀၀ လုံးလေ့လာပြီး',
+      en: `Answered all ${totalQuestions} questions`,
+      my: `မေးခွန်း ${totalQuestions} လုံးလေ့လာပြီး`,
     },
     requirement: {
-      en: 'Answer all 100 questions at least once',
-      my: 'မေးခွန်း ၁၀၀ လုံးကို အနည်းဆုံး တစ်ကြိမ်ဖြေပါ',
+      en: `Answer all ${totalQuestions} questions at least once`,
+      my: `မေးခွန်း ${totalQuestions} လုံးကို အနည်းဆုံး တစ်ကြိမ်ဖြေပါ`,
     },
     icon: 'BookCheck',
-    check: data => data.uniqueQuestionsAnswered >= 100,
+    check: data => data.uniqueQuestionsAnswered >= totalQuestions,
   },
   {
     id: 'coverage-mastered',

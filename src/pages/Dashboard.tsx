@@ -26,6 +26,7 @@ import { useStreak } from '@/hooks/useStreak';
 import { useBadges } from '@/hooks/useBadges';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getAnswerHistory } from '@/lib/mastery';
+import { totalQuestions } from '@/constants/questions';
 import type { StoredAnswer } from '@/lib/mastery';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
 import type { BadgeCheckData } from '@/lib/social';
@@ -131,7 +132,7 @@ const Dashboard = () => {
         uniqueQIds.add(result.questionId);
       }
     }
-    const coveragePercent = (uniqueQIds.size / 100) * 100;
+    const coveragePercent = (uniqueQIds.size / totalQuestions) * 100;
 
     const composite = calculateCompositeScore({
       currentStreak,
@@ -248,7 +249,7 @@ const Dashboard = () => {
 
   // Determine readiness level for motivational message
   const readinessScore = useMemo(() => {
-    const coveragePercent = masteredCount > 0 ? (masteredCount / 100) * 100 : 0;
+    const coveragePercent = masteredCount > 0 ? (masteredCount / totalQuestions) * 100 : 0;
     const accuracyWeight = recentAccuracy * 0.4;
     const coverageWeight = coveragePercent * 0.5;
     const streakBonus = Math.min(streakDays * 2, 10);
@@ -337,7 +338,7 @@ const Dashboard = () => {
             <div className="p-5 sm:p-6">
               <ReadinessIndicator
                 correctCount={masteredCount}
-                totalQuestions={100}
+                totalQuestions={totalQuestions}
                 recentAccuracy={recentAccuracy}
                 streakDays={streakDays}
                 onStartTest={() => navigate('/test')}

@@ -32,7 +32,7 @@ import {
   getAnswerHistory,
 } from '@/lib/mastery';
 import type { USCISCategory, StoredAnswer } from '@/lib/mastery';
-import { allQuestions } from '@/constants/questions';
+import { allQuestions, totalQuestions } from '@/constants/questions';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { strings } from '@/lib/i18n/strings';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -274,10 +274,11 @@ const ProgressPage = () => {
                         </p>
                       )}
                       <p className="text-sm text-muted-foreground">
-                        {practicedQuestionIds.size} of 100 questions practiced
+                        {practicedQuestionIds.size} of {totalQuestions} questions practiced
                         {showBurmese && (
                           <span className="block font-myanmar mt-0.5">
-                            {'မေးခွန်း'} {practicedQuestionIds.size} / 100 {'လေ့ကျင့်ပြီး'}
+                            {'မေးခွန်း'} {practicedQuestionIds.size} / {totalQuestions}{' '}
+                            {'လေ့ကျင့်ပြီး'}
                           </span>
                         )}
                       </p>

@@ -16,12 +16,13 @@ import AppNavigation from '@/components/AppNavigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { totalQuestions } from '@/constants/questions';
 
 const features = [
   {
     icon: BookOpen,
-    titleEn: '100+ USCIS Questions',
-    titleMy: 'USCIS မေးခွန်း ၁၀၀+',
+    titleEn: `${totalQuestions} USCIS Questions`,
+    titleMy: `USCIS မေးခွန်း ${totalQuestions}`,
     descEn: 'All official civics questions with detailed bilingual explanations and memory tips.',
     descMy: 'အဖြေရှင်းလင်းချက်နှင့် မှတ်ဉာဏ်အကူများပါသော USCIS မေးခွန်းအားလုံး။',
   },
@@ -49,7 +50,7 @@ const features = [
 ];
 
 const stats = [
-  { emoji: '📚', labelEn: '100+ Questions', labelMy: 'မေးခွန်း ၁၀၀+' },
+  { emoji: '📚', labelEn: `${totalQuestions} Questions`, labelMy: `မေးခွန်း ${totalQuestions}` },
   { emoji: '🗽', labelEn: 'EN + MY Bilingual', labelMy: 'နှစ်ဘာသာ' },
   { emoji: '📱', labelEn: 'Offline Ready', labelMy: 'အင်တာနက်မလို' },
   { emoji: '🏆', labelEn: 'Track Progress', labelMy: 'တိုးတက်မှုမှတ်တမ်း' },
@@ -93,11 +94,11 @@ const LandingPage = () => {
 
           {/* Bilingual tagline */}
           <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Master all 100 USCIS civics questions in English and Burmese. Study smart, pass with
-            confidence.
+            Master all {totalQuestions} USCIS civics questions in English and Burmese. Study smart,
+            pass with confidence.
           </p>
           <p className="mx-auto mt-1 max-w-xl font-myanmar text-sm text-muted-foreground sm:text-base">
-            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း ၁၀၀ ကို ကျွမ်းကျင်စွာလေ့လာပါ။
+            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို ကျွမ်းကျင်စွာလေ့လာပါ။
             ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
           </p>
         </FadeIn>

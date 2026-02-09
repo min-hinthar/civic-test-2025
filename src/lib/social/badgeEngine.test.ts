@@ -7,6 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { evaluateBadges, getNewlyEarnedBadge } from './badgeEngine';
 import type { BadgeCheckData } from './badgeDefinitions';
+import { totalQuestions } from '@/constants/questions';
 
 // Helper to create default badge check data (all zeros / empty)
 function makeData(overrides: Partial<BadgeCheckData> = {}): BadgeCheckData {
@@ -62,8 +63,8 @@ describe('evaluateBadges', () => {
     expect(ids).toContain('accuracy-100');
   });
 
-  it('returns coverage-all badge when uniqueQuestionsAnswered >= 100', () => {
-    const badges = evaluateBadges(makeData({ uniqueQuestionsAnswered: 100 }), new Set());
+  it('returns coverage-all badge when uniqueQuestionsAnswered >= totalQuestions', () => {
+    const badges = evaluateBadges(makeData({ uniqueQuestionsAnswered: totalQuestions }), new Set());
     const ids = badges.map(b => b.id);
     expect(ids).toContain('coverage-all');
   });
@@ -88,7 +89,7 @@ describe('evaluateBadges', () => {
       makeData({
         currentStreak: 7,
         bestTestAccuracy: 100,
-        uniqueQuestionsAnswered: 100,
+        uniqueQuestionsAnswered: totalQuestions,
       }),
       new Set()
     );
