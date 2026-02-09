@@ -7,7 +7,7 @@
 
 All 55 v1 requirements satisfied. See `.planning/milestones/v1.0/REQUIREMENTS.md` for full list.
 
-**Summary:** 10 categories (FNDN, PWA, UIUX, BILN, ANXR, EXPL, CPRO, SRS, INTV, SOCL) — 55/55 complete.
+**Summary:** 10 categories (FNDN, PWA, UIUX, BILN, ANXR, EXPL, CPRO, SRS, INTV, SOCL) -- 55/55 complete.
 
 ## v2.0 Requirements
 
@@ -109,41 +109,41 @@ Requirements for the Unified Learning Hub milestone. Each maps to roadmap phases
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| NAV-04 | — | Pending |
-| NAV-05 | — | Pending |
-| DASH-01 | — | Pending |
-| DASH-02 | — | Pending |
-| DASH-03 | — | Pending |
-| DASH-04 | — | Pending |
-| DASH-05 | — | Pending |
-| HUB-01 | — | Pending |
-| HUB-02 | — | Pending |
-| HUB-03 | — | Pending |
-| HUB-04 | — | Pending |
-| HUB-05 | — | Pending |
-| UISYS-01 | — | Pending |
-| UISYS-02 | — | Pending |
-| UISYS-03 | — | Pending |
-| UISYS-04 | — | Pending |
-| UISYS-05 | — | Pending |
-| USCIS-01 | — | Pending |
-| USCIS-02 | — | Pending |
-| USCIS-03 | — | Pending |
-| USCIS-04 | — | Pending |
-| USCIS-05 | — | Pending |
-| SEC-01 | — | Pending |
-| SEC-02 | — | Pending |
-| SEC-03 | — | Pending |
-| SEC-04 | — | Pending |
+| NAV-01 | Phase 14 | Pending |
+| NAV-02 | Phase 14 | Pending |
+| NAV-03 | Phase 14 | Pending |
+| NAV-04 | Phase 14 | Pending |
+| NAV-05 | Phase 14 | Pending |
+| DASH-01 | Phase 16 | Pending |
+| DASH-02 | Phase 16 | Pending |
+| DASH-03 | Phase 16 | Pending |
+| DASH-04 | Phase 16 | Pending |
+| DASH-05 | Phase 16 | Pending |
+| HUB-01 | Phase 15 | Pending |
+| HUB-02 | Phase 15 | Pending |
+| HUB-03 | Phase 15 | Pending |
+| HUB-04 | Phase 15 | Pending |
+| HUB-05 | Phase 15 | Pending |
+| UISYS-01 | Phase 11 | Pending |
+| UISYS-02 | Phase 17 | Pending |
+| UISYS-03 | Phase 17 | Pending |
+| UISYS-04 | Phase 17 | Pending |
+| UISYS-05 | Phase 17 | Pending |
+| USCIS-01 | Phase 12 | Pending |
+| USCIS-02 | Phase 12 | Pending |
+| USCIS-03 | Phase 12 | Pending |
+| USCIS-04 | Phase 12 | Pending |
+| USCIS-05 | Phase 12 | Pending |
+| SEC-01 | Phase 13 | Pending |
+| SEC-02 | Phase 13 | Pending |
+| SEC-03 | Phase 13 | Pending |
+| SEC-04 | Phase 13 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 29 total
-- Mapped to phases: 0
-- Unmapped: 29 ⚠️
+- Mapped to phases: 29
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-09 after v2.0 milestone scoping*
+*Last updated: 2026-02-09 after v2.0 roadmap creation (all 29 requirements mapped)*
