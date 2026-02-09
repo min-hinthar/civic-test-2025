@@ -1,0 +1,28 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "color-no-hex": true,
+    "color-named": "never",
+    "at-rule-no-unknown": [true, {
+      "ignoreAtRules": ["tailwind", "apply", "layer", "config"]
+    }],
+    "function-no-unknown": [true, {
+      "ignoreFunctions": ["theme", "hsl", "var", "env", "calc", "max", "min", "rgb", "radial-gradient", "linear-gradient"]
+    }],
+    "import-notation": null,
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "alpha-value-notation": null,
+    "rule-empty-line-before": null,
+    "font-family-name-quotes": null,
+    "media-feature-range-notation": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "length-zero-no-unit": null
+  },
+  "ignoreFiles": [
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "src/styles/tokens.css"
+  ]
+}

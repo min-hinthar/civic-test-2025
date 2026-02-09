@@ -12,6 +12,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
+    "lint:css": "stylelint \"src/styles/**/*.css\" --ignore-pattern \"src/styles/tokens.css\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
@@ -74,6 +75,8 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "serwist": "^9.5.4",
+    "stylelint": "^17.1.1",
+    "stylelint-config-standard": "^40.0.0",
     "typescript": "~5.8.2",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18"
