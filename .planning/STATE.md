@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 11 of 17 (Design Token Foundation)
-Plan: 5 of 7 completed (01, 02, 03, 05, 06 done; 04, 07 remaining)
+Plan: 6 of 7 completed (01, 02, 03, 04, 05, 06 done; 07 remaining)
 Status: In progress
-Last activity: 2026-02-09 -- Completed 11-05-PLAN.md (Bulk Semantic Token Migration)
+Last activity: 2026-02-09 -- Completed 11-04-PLAN.md (High/Medium Complexity Token Migration)
 
-Progress: [█████░░░░░] 5/7 plans (Phase 11)
+Progress: [██████░░░░] 6/7 plans (Phase 11)
 
 ## Completed Milestones
 
@@ -35,7 +35,7 @@ See `.planning/milestones/v1.0/` for full archive.
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11 (tokens) | 5/7 | 49min | 10min |
+| 11 (tokens) | 6/7 | 82min | 14min |
 
 *Updated after each plan completion*
 
@@ -61,6 +61,9 @@ Recent decisions affecting current work:
 - [11-05]: bg-white -> bg-surface universally; contrast for buttons on dark backgrounds handled at token level, not component level
 - [11-05]: 19 structural dark: overrides retained in non-SKIP files (7 dark:shadow-[rgba(...)], 12 text-success-600 dark:text-success pairs)
 - [11-05]: Data viz files (CategoryGrid, StreakHeatmap, Flashcard3D, CategoryRing) exempt from amber/emerald -> warning/success migration
+- [11-04]: Timer stage colors (blue->yellow->orange->red) kept as hardcoded HSL constants -- semantic timer stages, not theme colors
+- [11-04]: Data-viz heatmap intensity cells kept as Tailwind palette classes (orange-200/400/500, blue-200 freeze) per data-viz exemption
+- [11-04]: Snap-to-token simplification: multiple gray shades consolidated to single semantic equivalent (intentional, not regression)
 
 ### Key Learnings (from v1.0)
 
@@ -77,10 +80,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 plan 05 complete; 04 and 07 remaining
-Resume file: .planning/phases/11-design-token-foundation/11-04-PLAN.md
+Stopped at: Phase 11 plan 04 complete; only 07 (final audit) remaining
+Resume file: .planning/phases/11-design-token-foundation/11-07-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (11-05 bulk semantic token migration complete)*
+*Last updated: 2026-02-09 (11-04 high/medium complexity token migration complete)*
