@@ -9,6 +9,7 @@ import { OfflineProvider } from '@/contexts/OfflineContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { SRSProvider } from '@/contexts/SRSContext';
 import { SocialProvider } from '@/contexts/SocialContext';
+import { StateProvider } from '@/contexts/StateContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { PageTransition } from '@/components/animations/PageTransition';
@@ -134,7 +135,8 @@ const AppShell = () => {
               <AuthProvider>
                 <SocialProvider>
                   <SRSProvider>
-                    <Router>
+                    <StateProvider>
+                      <Router>
                       <Head>
                         <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
                         <meta
@@ -223,7 +225,8 @@ const AppShell = () => {
                       <OnboardingTour />
                       <SyncStatusIndicator />
                       <BottomTabBar />
-                    </Router>
+                      </Router>
+                    </StateProvider>
                   </SRSProvider>
                 </SocialProvider>
               </AuthProvider>
