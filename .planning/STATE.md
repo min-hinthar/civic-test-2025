@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 11 of 17 (Design Token Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-09 -- Roadmap created for v2.0 (7 phases, 29 requirements)
+Plan: 1 of 7 in current phase
+Status: In progress
+Last activity: 2026-02-09 -- Completed 11-01-PLAN.md (Design Token Foundation)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 1/7 plans (Phase 11)
 
 ## Completed Milestones
 
@@ -35,7 +35,7 @@ See `.planning/milestones/v1.0/` for full archive.
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 11 (tokens) | 1/7 | 8min | 8min |
 
 *Updated after each plan completion*
 
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - [v2.0 roadmap]: UISYS-01 (tokens) separated into own phase; remaining UISYS (glass, touch, micro-interactions) deferred to Phase 17 after all layout changes stabilize
 - [v2.0 roadmap]: Phases 11-13 are independent foundations (tokens, USCIS data, security) before structural UI changes begin in Phase 14
 - [v2.0 roadmap]: BRMSE (Burmese translation trust) deferred to v2.1+ per requirements scoping
+- [11-01]: Backward compat aliases added in tokens.css for all old CSS variable names (--background, --card, --primary-700, etc.) to avoid big-bang component migration
+- [11-01]: Border radius --radius alias now points to --radius-xl (1.25rem) instead of old 0.85rem
+- [11-01]: Dark mode override blocks removed from globals.css -- token system handles dark mode automatically via .dark semantic overrides
 
 ### Key Learnings (from v1.0)
 
@@ -65,10 +68,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: v2.0 roadmap created, ready to plan Phase 11
-Resume file: None
+Stopped at: Phase 11 plan 01 complete, ready for plan 02
+Resume file: .planning/phases/11-design-token-foundation/11-02-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (v2.0 roadmap created)*
+*Last updated: 2026-02-09 (11-01 design token foundation complete)*
