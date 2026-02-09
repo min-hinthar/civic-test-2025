@@ -29,6 +29,8 @@ import { getAnswerHistory } from '@/lib/mastery/masteryStore';
 import type { StoredAnswer } from '@/lib/mastery';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
+import { getTokenColor } from '@/lib/tokens';
+import { useThemeContext } from '@/contexts/ThemeContext';
 
 const reasonCopy: Record<TestEndReason, string> = {
   passThreshold: 'Ended early after 12 correct answers',
@@ -53,6 +55,9 @@ const HistoryPage = () => {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
+  // Subscribe to theme changes so getTokenColor() re-resolves on toggle
+  useThemeContext();
 
   // Derive active tab from URL hash (tab-specific hashes) or use user-selected override
   const tabFromHash: 'tests' | 'practice' | 'interview' | null = useMemo(() => {
@@ -674,26 +679,34 @@ const HistoryPage = () => {
                         data={chartData}
                         margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke={getTokenColor('--color-border', 0.3)}
+                          opacity={0.3}
+                        />
+                        <XAxis
+                          dataKey="date"
+                          stroke={getTokenColor('--color-text-secondary')}
+                          fontSize={12}
+                        />
                         <YAxis
                           domain={[0, 100]}
                           tickFormatter={value => `${value}%`}
-                          stroke="#94a3b8"
+                          stroke={getTokenColor('--color-text-secondary')}
                           fontSize={12}
                         />
                         <Tooltip
                           formatter={value => `${Number(value).toFixed(0)}%`}
                           contentStyle={{
-                            backgroundColor: 'hsl(var(--card))',
+                            backgroundColor: getTokenColor('--color-surface'),
                             borderRadius: '1rem',
-                            border: '1px solid hsl(var(--border))',
+                            border: `1px solid ${getTokenColor('--color-border')}`,
                           }}
                         />
                         <Line
                           type="monotone"
                           dataKey="score"
-                          stroke="#6366f1"
+                          stroke={getTokenColor('--color-chart-blue')}
                           strokeWidth={3}
                           dot={{ r: 4 }}
                         />

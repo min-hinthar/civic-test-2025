@@ -46,8 +46,8 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       'p-5',
       // Transition for non-motion properties
       'transition-colors duration-150',
-      // Elevation shadow with intense gradient
-      elevated && 'shadow-xl shadow-primary/15 dark:shadow-primary/10',
+      // Elevation shadow - semantic token handles dark mode
+      elevated && 'shadow-xl shadow-primary/15',
       className
     );
 
@@ -60,17 +60,17 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       );
     }
 
-    // Interactive card with hover animation - more intense shadows
+    // Interactive card with hover animation - semantic token shadows
     const motionVariants = {
       idle: {
         y: 0,
-        boxShadow: '0 10px 40px -10px rgba(59, 130, 246, 0.15)',
+        boxShadow: '0 10px 40px -10px hsl(var(--color-primary) / 0.15)',
       },
       hover: shouldReduceMotion
         ? {}
         : {
             y: -4,
-            boxShadow: '0 20px 60px -15px rgba(59, 130, 246, 0.3)',
+            boxShadow: '0 20px 60px -15px hsl(var(--color-primary) / 0.3)',
           },
     };
 

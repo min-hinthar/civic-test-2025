@@ -37,6 +37,8 @@ import { allQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type { InterviewMode, InterviewResult, InterviewEndReason, InterviewSession } from '@/types';
+import { getTokenColor } from '@/lib/tokens';
+import { useThemeContext } from '@/contexts/ThemeContext';
 
 /** Map of end reasons to bilingual display text */
 const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = {
@@ -58,21 +60,21 @@ const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = 
   },
 };
 
-/** Color classes for each USCIS category */
+/** Color classes for each USCIS category - semantic tokens */
 const CATEGORY_COLOR_CLASSES: Record<string, { bg: string; text: string; bar: string }> = {
   blue: {
-    bg: 'bg-primary-subtle',
-    text: 'text-primary',
+    bg: 'bg-chart-blue/10',
+    text: 'text-chart-blue',
     bar: 'default' as const,
   },
   amber: {
-    bg: 'bg-warning-50',
-    text: 'text-amber-700',
+    bg: 'bg-chart-amber/10',
+    text: 'text-chart-amber',
     bar: 'warning' as const,
   },
   emerald: {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-700',
+    bg: 'bg-chart-emerald/10',
+    text: 'text-chart-emerald',
     bar: 'success' as const,
   },
 };
@@ -118,6 +120,9 @@ export function InterviewResults({
   const shouldReduceMotion = useReducedMotion();
   const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
   const { currentStreak } = useStreak();
+
+  // Subscribe to theme changes so getTokenColor() re-resolves on toggle
+  useThemeContext();
 
   const [showConfetti, setShowConfetti] = useState(false);
   const [trendData, setTrendData] = useState<Array<{ date: string; score: number }>>([]);
@@ -283,8 +288,8 @@ export function InterviewResults({
           className={clsx(
             'rounded-2xl px-6 py-5 text-center',
             passed
-              ? 'bg-gradient-to-br from-success-50 to-success-100/60 dark:from-success-500/15 dark:to-success-500/5'
-              : 'bg-gradient-to-br from-warning-50 to-warning-100/60 dark:from-warning-500/15 dark:to-warning-500/5'
+              ? 'bg-gradient-to-br from-success-50 to-success-100/60'
+              : 'bg-gradient-to-br from-warning-50 to-warning-100/60'
           )}
         >
           <div className="mb-2 flex items-center justify-center gap-2">
@@ -297,8 +302,8 @@ export function InterviewResults({
               className={clsx(
                 'text-2xl font-bold',
                 passed
-                  ? 'text-success-600 dark:text-success'
-                  : 'text-warning'
+                  ? 'text-success-600'
+                  : 'text-warning-600'
               )}
             >
               {passed ? strings.interview.passed.en : strings.interview.failed.en}
@@ -309,8 +314,8 @@ export function InterviewResults({
               className={clsx(
                 'font-myanmar text-sm',
                 passed
-                  ? 'text-success-600/80 dark:text-success/80'
-                  : 'text-warning/80/80'
+                  ? 'text-success-600/80'
+                  : 'text-warning-600/80'
               )}
             >
               {passed ? strings.interview.passed.my : strings.interview.failed.my}
@@ -414,26 +419,34 @@ export function InterviewResults({
               <div className="h-48 w-full">
                 <ResponsiveContainer>
                   <LineChart data={trendData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
-                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={getTokenColor('--color-border', 0.3)}
+                      opacity={0.3}
+                    />
+                    <XAxis
+                      dataKey="date"
+                      stroke={getTokenColor('--color-text-secondary')}
+                      fontSize={11}
+                    />
                     <YAxis
                       domain={[0, 20]}
-                      stroke="#94a3b8"
+                      stroke={getTokenColor('--color-text-secondary')}
                       fontSize={11}
                       tickFormatter={(value: number) => `${value}`}
                     />
                     <Tooltip
                       formatter={value => [`${Number(value)} / 20`, 'Score']}
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--card))',
+                        backgroundColor: getTokenColor('--color-surface'),
                         borderRadius: '1rem',
-                        border: '1px solid hsl(var(--border))',
+                        border: `1px solid ${getTokenColor('--color-border')}`,
                       }}
                     />
                     <Line
                       type="monotone"
                       dataKey="score"
-                      stroke="#6366f1"
+                      stroke={getTokenColor('--color-chart-blue')}
                       strokeWidth={3}
                       dot={{ r: 4 }}
                     />

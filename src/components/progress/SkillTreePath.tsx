@@ -17,8 +17,8 @@ const SKILL_NODES: {
   emoji: string;
   color: 'blue' | 'amber' | 'emerald';
 }[] = [
-  { subCategory: 'Principles of American Democracy', emoji: '⚖️', color: 'blue' },
-  { subCategory: 'System of Government', emoji: '\u{1F3DB}️', color: 'blue' },
+  { subCategory: 'Principles of American Democracy', emoji: '\u2696\uFE0F', color: 'blue' },
+  { subCategory: 'System of Government', emoji: '\u{1F3DB}\uFE0F', color: 'blue' },
   { subCategory: 'Rights and Responsibilities', emoji: '\u{1F4DC}', color: 'blue' },
   {
     subCategory: 'American History: Colonial Period and Independence',
@@ -37,23 +37,23 @@ const SKILL_NODES: {
 /** Medal ring color classes per threshold level */
 const MEDAL_RING_CLASSES = {
   none: '',
-  bronze: 'ring-4 ring-amber-600 dark:ring-amber-500',
-  silver: 'ring-4 ring-gray-400 dark:ring-gray-300',
-  gold: 'ring-4 ring-yellow-400 dark:ring-yellow-300',
+  bronze: 'ring-4 ring-amber-600',
+  silver: 'ring-4 ring-gray-400',
+  gold: 'ring-4 ring-yellow-400',
 } as const;
 
-/** Node background color per category color */
+/** Node background color per category color - semantic tokens */
 const NODE_BG_CLASSES = {
-  blue: 'bg-blue-500 dark:bg-blue-600',
-  amber: 'bg-amber-500 dark:bg-amber-600',
-  emerald: 'bg-emerald-500 dark:bg-emerald-600',
+  blue: 'bg-chart-blue',
+  amber: 'bg-chart-amber',
+  emerald: 'bg-chart-emerald',
 } as const;
 
-/** Node shadow color for glow effect */
+/** Node shadow color for glow effect - semantic tokens */
 const NODE_GLOW_CLASSES = {
-  blue: 'shadow-blue-500/40',
-  amber: 'shadow-amber-500/40',
-  emerald: 'shadow-emerald-500/40',
+  blue: 'shadow-chart-blue/40',
+  amber: 'shadow-chart-amber/40',
+  emerald: 'shadow-chart-emerald/40',
 } as const;
 
 type MedalLevel = 'none' | 'bronze' | 'silver' | 'gold';
@@ -68,9 +68,9 @@ function getMedalLevel(mastery: number): MedalLevel {
 /** Medal label text */
 const MEDAL_LABELS: Record<MedalLevel, { en: string; my: string } | null> = {
   none: null,
-  bronze: { en: 'Bronze', my: 'ကြေးတံဆိပ်' },
-  silver: { en: 'Silver', my: 'ငွေတံဆိပ်' },
-  gold: { en: 'Gold', my: 'ရွှေတံဆိပ်' },
+  bronze: { en: 'Bronze', my: '\u1000\u103C\u1031\u1038\u1010\u1036\u1006\u102D\u1015\u103A' },
+  silver: { en: 'Silver', my: '\u1004\u103D\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
+  gold: { en: 'Gold', my: '\u101B\u103D\u103E\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
 };
 
 export interface SkillTreePathProps {
@@ -92,6 +92,7 @@ export interface SkillTreePathProps {
  * - Connecting lines between nodes (solid unlocked, dashed locked)
  * - Responsive and dark mode supported
  * - Bilingual labels with font-myanmar
+ * - Uses semantic design tokens for category colors
  */
 export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePathProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -178,7 +179,7 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
                   'relative flex-shrink-0 flex items-center justify-center',
                   'w-16 h-16 rounded-full text-2xl',
                   'transition-all duration-200',
-                  state.isUnlocked ? NODE_BG_CLASSES[node.color] : 'bg-muted dark:bg-muted/60',
+                  state.isUnlocked ? NODE_BG_CLASSES[node.color] : 'bg-muted',
                   state.isUnlocked ? 'text-white' : 'text-muted-foreground grayscale opacity-40',
                   state.isUnlocked && MEDAL_RING_CLASSES[state.medal],
                   isCurrent && !shouldReduceMotion && 'shadow-lg',
@@ -196,9 +197,9 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
                   isCurrent && !shouldReduceMotion
                     ? {
                         boxShadow: [
-                          '0 0 0 0px rgba(59, 130, 246, 0)',
-                          '0 0 0 8px rgba(59, 130, 246, 0.15)',
-                          '0 0 0 0px rgba(59, 130, 246, 0)',
+                          '0 0 0 0px hsl(var(--color-primary) / 0)',
+                          '0 0 0 8px hsl(var(--color-primary) / 0.15)',
+                          '0 0 0 0px hsl(var(--color-primary) / 0)',
                         ],
                       }
                     : {}

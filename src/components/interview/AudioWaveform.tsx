@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { MicOff } from 'lucide-react';
 import { BilingualText } from '@/components/bilingual/BilingualText';
 import { strings } from '@/lib/i18n/strings';
+import { getTokenColor } from '@/lib/tokens';
 
 interface AudioWaveformProps {
   /** MediaStream from microphone */
@@ -21,6 +22,7 @@ interface AudioWaveformProps {
  * - Shows flat line when inactive
  * - Graceful fallback (mic-off icon) when stream is null
  * - Cleanup: cancels animation frame and disconnects audio nodes on unmount
+ * - Uses semantic design tokens for colors (theme-aware)
  *
  * React Compiler safe: canvas ref accessed only in effects, never render.
  */
@@ -71,7 +73,8 @@ export function AudioWaveform({ stream, isActive }: AudioWaveformProps) {
           const w = canvas.offsetWidth;
           const h = canvas.offsetHeight;
           ctx.clearRect(0, 0, w, h);
-          ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+          // Read token color for flat line (theme-aware)
+          ctx.strokeStyle = getTokenColor('--color-border', 0.3);
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(0, h / 2);
@@ -118,8 +121,8 @@ export function AudioWaveform({ stream, isActive }: AudioWaveformProps) {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Primary-500 color for waveform
-      ctx.strokeStyle = 'rgb(59, 130, 246)';
+      // Read token color each frame so theme changes take effect immediately
+      ctx.strokeStyle = getTokenColor('--color-primary');
       ctx.lineWidth = 2;
       ctx.beginPath();
 

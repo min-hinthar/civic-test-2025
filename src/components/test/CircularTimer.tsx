@@ -5,6 +5,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Eye, EyeOff } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { getTokenColor } from '@/lib/tokens';
 
 interface CircularTimerProps {
   /** Duration in seconds */
@@ -36,6 +37,7 @@ const timerLabels = {
 /**
  * Get timer color based on remaining percentage.
  * Blue -> Yellow (50%) -> Orange (25%) -> Red pulse (10%)
+ * Timer stage colors are kept as hardcoded constants (semantic timer stages, not theme colors).
  */
 function getTimerColor(remainingTime: number, duration: number): string {
   const percent = (remainingTime / duration) * 100;
@@ -56,6 +58,7 @@ function getTimerColor(remainingTime: number, duration: number): string {
  * - Hide/show toggle for anxiety reduction
  * - Bilingual show/hide labels
  * - Respects prefers-reduced-motion
+ * - Trail color uses semantic border token
  */
 export function CircularTimer({
   duration,
@@ -80,6 +83,9 @@ export function CircularTimer({
 
   const toggleLabel = isHidden ? timerLabels.showTimer : timerLabels.hideTimer;
 
+  // Trail color from semantic border token (theme-aware)
+  const trailColor = (getTokenColor('--color-border') || '#E5E7EB') as `#${string}`;
+
   return (
     <div className="flex flex-col items-center gap-2">
       {/* Timer display */}
@@ -99,7 +105,7 @@ export function CircularTimer({
           size={config.size}
           strokeWidth={config.strokeWidth}
           strokeLinecap="round"
-          trailColor="#E5E7EB"
+          trailColor={trailColor}
           onComplete={onComplete}
           isSmoothColorTransition
         >
