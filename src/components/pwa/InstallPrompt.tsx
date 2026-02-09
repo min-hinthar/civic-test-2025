@@ -11,7 +11,7 @@
  * - iOS: Shows manual "Add to Home Screen" instructions
  * - 7-day cooldown after dismissal
  * - Bilingual text throughout (English + Burmese)
- * - Uses primary theme color #002868
+ * - Uses semantic design tokens (no dark: overrides needed)
  */
 
 import React, { useState } from 'react';
@@ -66,11 +66,11 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+      <div className="relative w-full max-w-md rounded-lg bg-card p-6 shadow-xl">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute right-3 top-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="absolute right-3 top-3 p-1 text-muted-foreground hover:text-foreground"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
@@ -78,45 +78,45 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
 
         {/* Icon */}
         <div className="mb-4 flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-            <Download className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-subtle">
+            <Download className="h-8 w-8 text-primary" />
           </div>
         </div>
 
         {/* Bilingual title */}
-        <h2 className="mb-2 text-center text-xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="mb-2 text-center text-xl font-semibold text-foreground">
           Install US Civics App
         </h2>
-        <p className="mb-4 text-center font-myanmar text-lg text-gray-600 dark:text-gray-300">
+        <p className="mb-4 text-center font-myanmar text-lg text-muted-foreground">
           US Civics App ကို ထည့်သွင်းပါ
         </p>
 
         {/* Bilingual description */}
-        <p className="mb-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-2 text-center text-sm text-muted-foreground">
           Study offline, anytime, anywhere.
         </p>
-        <p className="mb-6 text-center font-myanmar text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-6 text-center font-myanmar text-sm text-muted-foreground">
           အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
         </p>
 
         {isIOS ? (
           showIOSInstructions ? (
             <div className="space-y-3">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+              <p className="text-sm text-foreground">
                 1. Tap the <Share className="inline h-4 w-4" aria-hidden="true" /> Share button
               </p>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+              <p className="text-sm text-foreground">
                 2. Select &quot;Add to Home Screen&quot;
               </p>
-              <p className="font-myanmar text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 ၁။ Share ခလုတ်ကို နှိပ်ပါ
               </p>
-              <p className="font-myanmar text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 ၂။ &quot;Add to Home Screen&quot; ကို ရွေးပါ
               </p>
               <button
                 onClick={handleDismiss}
-                className="mt-4 w-full rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                className="mt-4 w-full rounded-lg bg-muted px-4 py-2 font-medium text-foreground hover:bg-muted/80"
               >
                 Got it / နားလည်ပါပြီ
               </button>
@@ -124,7 +124,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
           ) : (
             <button
               onClick={handleIOSClick}
-              className="w-full rounded-lg bg-[#002868] px-4 py-3 font-medium text-white hover:bg-blue-800"
+              className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
             >
               Show me how / ပြသပါ
             </button>
@@ -132,7 +132,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
         ) : (
           <button
             onClick={handleInstall}
-            className="w-full rounded-lg bg-[#002868] px-4 py-3 font-medium text-white hover:bg-blue-800"
+            className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
           >
             Install Now / အခုထည့်သွင်းပါ
           </button>
@@ -140,7 +140,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
 
         <button
           onClick={handleDismiss}
-          className="mt-3 w-full text-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-foreground"
         >
           Maybe later / နောက်မှ
         </button>

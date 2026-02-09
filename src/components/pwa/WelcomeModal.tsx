@@ -12,6 +12,7 @@
  * - Notification permission pre-prompt (if not already decided)
  * - Only shown once per device (tracked via localStorage)
  * - Scrollable on small screens
+ * - Semantic design tokens (no dark: overrides needed)
  */
 
 import React, { useState } from 'react';
@@ -61,22 +62,22 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-card p-6 shadow-xl">
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute right-3 top-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="absolute right-3 top-3 p-1 text-muted-foreground hover:text-foreground"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Welcome header */}
-        <h2 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">Welcome!</h2>
-        <p className="font-myanmar mb-1 text-xl font-bold text-gray-900 dark:text-white">
+        <h2 className="mb-1 text-2xl font-bold text-foreground">Welcome!</h2>
+        <p className="font-myanmar mb-1 text-xl font-bold text-foreground">
           ကြိုဆိုပါတယ်!
         </p>
-        <p className="mb-6 text-gray-600 dark:text-gray-400">
+        <p className="mb-6 text-muted-foreground">
           Your app is ready. Here are some tips:
         </p>
 
@@ -84,15 +85,15 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         <div className="mb-6 space-y-4">
           {/* Offline tip */}
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-              <WifiOff className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success-100">
+              <WifiOff className="h-4 w-4 text-success-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">Works offline</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-medium text-foreground">Works offline</p>
+              <p className="text-sm text-muted-foreground">
                 Study anytime, even without internet.
               </p>
-              <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
               </p>
             </div>
@@ -100,15 +101,15 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
 
           {/* Sync tip */}
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-              <RefreshCw className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-subtle">
+              <RefreshCw className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">Auto-syncs your progress</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-medium text-foreground">Auto-syncs your progress</p>
+              <p className="text-sm text-muted-foreground">
                 Your test results sync when you&apos;re back online.
               </p>
-              <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် စင့်ခ်လုပ်ပါမယ်။
               </p>
             </div>
@@ -116,15 +117,15 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
 
           {/* Home screen tip */}
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900">
-              <Smartphone className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-100">
+              <Smartphone className="h-4 w-4 text-purple-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">Open from home screen</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-medium text-foreground">Open from home screen</p>
+              <p className="text-sm text-muted-foreground">
                 For the best experience, open the app from your home screen.
               </p>
-              <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 အကောင်းဆုံး အတွေ့အကြုံအတွက် Home screen မှ ဖွင့်ပါ။
               </p>
             </div>
@@ -147,7 +148,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         {/* Get started button */}
         <button
           onClick={handleClose}
-          className="w-full rounded-lg bg-[#002868] px-4 py-3 font-medium text-white hover:bg-blue-800"
+          className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
           Get Started / စတင်ပါ
         </button>

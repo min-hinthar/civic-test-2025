@@ -6,13 +6,16 @@
  * Follows ReviewHeatmap's CSS Grid + Tailwind pattern exactly (no external library).
  * Displays 60 days on desktop, 30 days on mobile via responsive hidden/block classes.
  *
- * Color scheme:
+ * Color scheme (data-visualization, kept as palette classes per plan):
  * - No activity: gray (bg-muted/40)
- * - 1 activity: light orange
- * - 2-3 activities: medium orange
- * - 4+ activities: strong orange
+ * - 1 activity: light orange (bg-orange-200)
+ * - 2-3 activities: medium orange (bg-orange-400)
+ * - 4+ activities: strong orange (bg-orange-500)
  * - Freeze days: blue with border for visual distinction
  * - Today: highlighted with ring border
+ *
+ * Note: Heatmap cell colors are data-visualization intensity levels,
+ * not theme colors. They use palette classes as computed values per plan.
  */
 
 import { useMemo } from 'react';
@@ -74,16 +77,17 @@ const MONTH_LABELS_MY = [
 
 /**
  * Pure function: determine cell color based on activity count and freeze status.
+ * These are data-visualization intensity colors, not theme semantic colors.
  */
 function getCellColor(count: number, isFreezeDay: boolean): string {
   if (isFreezeDay) {
-    return 'bg-blue-200 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600';
+    return 'bg-blue-200 border border-blue-400';
   }
 
   if (count === 0) return 'bg-muted/40';
-  if (count === 1) return 'bg-orange-200 dark:bg-orange-900/40';
-  if (count <= 3) return 'bg-orange-400 dark:bg-orange-700/60';
-  return 'bg-orange-500 dark:bg-orange-600';
+  if (count === 1) return 'bg-orange-200';
+  if (count <= 3) return 'bg-orange-400';
+  return 'bg-orange-500';
 }
 
 // ---------------------------------------------------------------------------
@@ -202,16 +206,16 @@ export function StreakHeatmap({ activityDates, freezesUsed, className }: StreakH
         />
       </div>
 
-      {/* Legend */}
+      {/* Legend - data-visualization colors kept as palette classes */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground pt-1">
         <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'နည်း' : 'Less'}</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
-        <div className="h-2.5 w-2.5 rounded-sm bg-orange-200 dark:bg-orange-900/40" />
-        <div className="h-2.5 w-2.5 rounded-sm bg-orange-400 dark:bg-orange-700/60" />
-        <div className="h-2.5 w-2.5 rounded-sm bg-orange-500 dark:bg-orange-600" />
+        <div className="h-2.5 w-2.5 rounded-sm bg-orange-200" />
+        <div className="h-2.5 w-2.5 rounded-sm bg-orange-400" />
+        <div className="h-2.5 w-2.5 rounded-sm bg-orange-500" />
         <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'များ' : 'More'}</span>
         <span className="ml-2">|</span>
-        <div className="h-2.5 w-2.5 rounded-sm bg-blue-200 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600" />
+        <div className="h-2.5 w-2.5 rounded-sm bg-blue-200 border border-blue-400" />
         <span>{showBurmese ? 'Freeze' : 'Freeze'}</span>
       </div>
     </div>

@@ -13,6 +13,7 @@
  * - Bilingual: English + Burmese
  * - Warm amber color scheme with lightbulb icon
  * - Bottom banner positioning (non-blocking)
+ * - Semantic design tokens (no dark: overrides needed)
  */
 
 import React from 'react';
@@ -46,34 +47,34 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
   };
 
   return (
-    <div className="relative rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-lg dark:border-amber-800 dark:bg-amber-900/20">
+    <div className="relative rounded-lg border border-warning-200 bg-warning-50 p-4 shadow-lg">
       {/* Close button */}
       <button
         onClick={handleDismiss}
-        className="absolute right-2 top-2 p-1 text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200"
+        className="absolute right-2 top-2 p-1 text-warning-600 hover:text-warning-800"
         aria-label="Dismiss tip"
       >
         <X className="h-4 w-4" />
       </button>
 
       <div className="flex items-start gap-3 pr-6">
-        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-800">
-          <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-warning-100">
+          <Lightbulb className="h-4 w-4 text-warning-600" />
         </div>
         <div>
           {/* Friendly tip - not a warning */}
-          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+          <p className="text-sm font-medium text-warning-800">
             Quick tip for the best experience
           </p>
-          <p className="font-myanmar text-sm text-amber-700 dark:text-amber-300">
+          <p className="font-myanmar text-sm text-warning-700">
             အကောင်းဆုံး အတွေ့အကြုံအတွက် အကြံပြုချက်
           </p>
 
-          <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
+          <p className="mt-2 text-sm text-warning-700">
             Open the app at least once a week to keep your study progress saved. Better yet, add it
             to your home screen for the fullest experience!
           </p>
-          <p className="mt-1 font-myanmar text-sm text-amber-600 dark:text-amber-400">
+          <p className="mt-1 font-myanmar text-sm text-warning-600">
             သင့်လေ့လာမှု တိုးတက်မှုကို သိမ်းဆည်းထားဖို့ တစ်ပတ်လျှင် အနည်းဆုံး တစ်ကြိမ် အက်ပ်ကို
             ဖွင့်ပါ။ Home screen မှာ ထည့်ရင် ပိုကောင်းပါတယ်!
           </p>
