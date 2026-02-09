@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 11 of 17 (Design Token Foundation)
-Plan: 6 of 7 in current phase
+Plan: 5 of 7 completed (01, 02, 03, 05, 06 done; 04, 07 remaining)
 Status: In progress
-Last activity: 2026-02-09 -- Completed 11-06-PLAN.md (Globals.css Tokenization)
+Last activity: 2026-02-09 -- Completed 11-05-PLAN.md (Bulk Semantic Token Migration)
 
-Progress: [██████░░░░] 6/7 plans (Phase 11)
+Progress: [█████░░░░░] 5/7 plans (Phase 11)
 
 ## Completed Milestones
 
@@ -35,7 +35,7 @@ See `.planning/milestones/v1.0/` for full archive.
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11 (tokens) | 6/7 | 31min | 5min |
+| 11 (tokens) | 5/7 | 49min | 10min |
 
 *Updated after each plan completion*
 
@@ -58,6 +58,9 @@ Recent decisions affecting current work:
 - [11-03]: Dead code design-tokens.ts deleted (113 lines, zero imports confirmed)
 - [11-06]: Decorative gradients use approximate semantic tokens (patriotic-red, primary, secondary, accent-purple, etc.) rather than pixel-perfect rgba matching
 - [11-06]: New --green-700 primitive (142 76% 30%) and semantic active tokens (success-active, destructive-active, accent-purple-active) added to tokens.css
+- [11-05]: bg-white -> bg-surface universally; contrast for buttons on dark backgrounds handled at token level, not component level
+- [11-05]: 19 structural dark: overrides retained in non-SKIP files (7 dark:shadow-[rgba(...)], 12 text-success-600 dark:text-success pairs)
+- [11-05]: Data viz files (CategoryGrid, StreakHeatmap, Flashcard3D, CategoryRing) exempt from amber/emerald -> warning/success migration
 
 ### Key Learnings (from v1.0)
 
@@ -74,10 +77,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 plan 06 complete, ready for plan 07
-Resume file: .planning/phases/11-design-token-foundation/11-07-PLAN.md
+Stopped at: Phase 11 plan 05 complete; 04 and 07 remaining
+Resume file: .planning/phases/11-design-token-foundation/11-04-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (11-06 globals.css tokenization complete)*
+*Last updated: 2026-02-09 (11-05 bulk semantic token migration complete)*
