@@ -48,10 +48,16 @@ This roadmap tracks all development phases for the Civic Test Prep app. The v1.0
   1. All color, spacing, shadow, and border-radius values are defined as CSS custom properties in one file and consumed by Tailwind config
   2. Dark mode switches entirely via CSS variable values (no manual `.dark .bg-primary-500` overrides scattered across components)
   3. Typography uses a consistent scale (defined once, referenced everywhere) with no hardcoded font-size values outside the scale
-**Plans**: TBD
+**Plans**: 7 plans
 
 Plans:
-- [ ] 11-01: TBD
+- [ ] 11-01-PLAN.md -- Token system + Tailwind config + globals.css restructure
+- [ ] 11-02-PLAN.md -- Dark mode infra (FOUC prevention, ThemeContext, animated toggle)
+- [ ] 11-03-PLAN.md -- JS token access utility + delete design-tokens.ts
+- [ ] 11-04-PLAN.md -- Migrate high/medium complexity files (charts, canvas, heavy dark: overrides)
+- [ ] 11-05-PLAN.md -- Bulk migrate ~80 low-complexity component/page files
+- [ ] 11-06-PLAN.md -- Tokenize globals.css gradients and @layer utilities
+- [ ] 11-07-PLAN.md -- Lint enforcement + visual verification checkpoint
 
 ### Phase 12: USCIS 2025 Question Bank
 **Goal**: Users study the complete, legally accurate USCIS 2025 civics test content with all 128 questions, correct category structure, and updated progress metrics
