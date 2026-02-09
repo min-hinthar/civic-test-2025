@@ -44,6 +44,25 @@ const tourSteps: Step[] = [
     disableBeacon: true,
   },
   {
+    target: 'body',
+    content: (
+      <div>
+        <h3 className="font-bold text-lg mb-2">Select Your State</h3>
+        <p className="text-muted-foreground text-sm">
+          Choose your state in Settings to see your governor, senators, and capital in study
+          questions.
+        </p>
+        <p className="font-myanmar text-sm text-muted-foreground mt-2">
+          {
+            'လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် မြို့တော်ကို ကြည့်ရှုရန် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။'
+          }
+        </p>
+      </div>
+    ),
+    placement: 'center' as const,
+    disableBeacon: true,
+  },
+  {
     target: '[data-tour="study-action"]',
     content: (
       <div>

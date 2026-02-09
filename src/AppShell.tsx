@@ -34,6 +34,7 @@ import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
 import SocialHubPage from '@/pages/SocialHubPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
+import { WhatsNewModal, useWhatsNew } from '@/components/update/WhatsNewModal';
 import { BottomTabBar } from '@/components/navigation/BottomTabBar';
 
 /**
@@ -115,6 +116,16 @@ function PWAOnboardingFlow() {
       )}
     </>
   );
+}
+
+/**
+ * What's New modal flow for returning users.
+ * Shows once after the USCIS 2025 update, then dismisses permanently.
+ */
+function WhatsNewFlow() {
+  const { showWhatsNew, dismissWhatsNew } = useWhatsNew();
+  if (!showWhatsNew) return null;
+  return <WhatsNewModal onClose={dismissWhatsNew} />;
 }
 
 const AppShell = () => {
@@ -223,6 +234,7 @@ const AppShell = () => {
                       </ErrorBoundary>
                       <PWAOnboardingFlow />
                       <OnboardingTour />
+                      <WhatsNewFlow />
                       <SyncStatusIndicator />
                       <BottomTabBar />
                       </Router>

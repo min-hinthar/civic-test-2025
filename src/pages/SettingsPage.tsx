@@ -16,6 +16,7 @@ import {
   Clock,
   Globe,
   LogOut,
+  MapPin,
   Mic,
   Palette,
   RotateCcw,
@@ -31,6 +32,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { SocialSettings } from '@/components/social/SocialSettings';
+import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
@@ -178,6 +180,7 @@ export default function SettingsPage() {
     if (typeof window === 'undefined') return 'normal';
     return (localStorage.getItem(SPEECH_RATE_KEY) as SpeechRate) ?? 'normal';
   });
+  const { selectedState, setSelectedState, allStates } = useUserState();
   const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
 
   const handleReminderTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -257,6 +260,40 @@ export default function SettingsPage() {
               </p>
             )}
           </div>
+        </SettingsSection>
+
+        {/* ======= Location Section ======= */}
+        <SettingsSection
+          icon={<MapPin className="h-5 w-5" />}
+          titleEn="Location"
+          titleMy={'တည်နေရာ'}
+          showBurmese={showBurmese}
+        >
+          <SettingsRow
+            label="Your State"
+            labelMy={'သင့်ပြည်နယ်'}
+            description="Used for governor, senator, and capital questions"
+            descriptionMy={'အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်နှင့် မြို့တော်မေးခွန်းများအတွက် အသုံးပြုသည်'}
+            showBurmese={showBurmese}
+            action={
+              <select
+                value={selectedState ?? ''}
+                onChange={e => setSelectedState(e.target.value || null)}
+                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[44px] min-w-[140px]"
+                aria-label="Select your state or territory"
+              >
+                <option value="">
+                  {showBurmese ? 'ပြည်နယ်ရွေးချယ်ပါ...' : 'Select state...'}
+                </option>
+                {allStates.map(s => (
+                  <option key={s.code} value={s.code}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            }
+            isLast
+          />
         </SettingsSection>
 
         {/* ======= Sound & Notifications Section ======= */}
