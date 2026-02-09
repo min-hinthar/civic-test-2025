@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import AppNavigation from '@/components/AppNavigation';
+import { UpdateBanner } from '@/components/update/UpdateBanner';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { InterviewSetup } from '@/components/interview/InterviewSetup';
 import { InterviewCountdown } from '@/components/interview/InterviewCountdown';
 import { InterviewSession } from '@/components/interview/InterviewSession';
@@ -24,6 +26,7 @@ type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
  * - InterviewResults: rounded-2xl category cards, 3D action buttons, confetti
  */
 const InterviewPage = () => {
+  const { showBurmese } = useLanguage();
   const [phase, setPhase] = useState<InterviewPhase>('setup');
   const [mode, setMode] = useState<InterviewMode>('practice');
   const [micPermission, setMicPermission] = useState(false);
@@ -84,7 +87,12 @@ const InterviewPage = () => {
         locked={phase === 'session' && mode === 'realistic'}
         lockMessage="Complete the interview before leaving this page. · အင်တာဗျူးပြီးမှ ထွက်ပါ"
       />
-      {phase === 'setup' && <InterviewSetup onStart={handleStart} />}
+      {phase === 'setup' && (
+        <>
+          <UpdateBanner showBurmese={showBurmese} />
+          <InterviewSetup onStart={handleStart} />
+        </>
+      )}
       {phase === 'countdown' && <InterviewCountdown onComplete={handleCountdownComplete} />}
       {phase === 'session' && (
         <InterviewSession

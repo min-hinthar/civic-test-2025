@@ -34,6 +34,8 @@ import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { USCIS_CATEGORIES, CATEGORY_COLORS, getUSCISCategory } from '@/lib/mastery/categoryMapping';
 import type { USCISCategory } from '@/lib/mastery/categoryMapping';
 import { allQuestions } from '@/constants/questions';
+import { useUserState } from '@/contexts/StateContext';
+import { DynamicAnswerNote } from '@/components/study/Flashcard3D';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type { InterviewMode, InterviewResult, InterviewEndReason, InterviewSession } from '@/types';
@@ -117,6 +119,7 @@ export function InterviewResults({
 }: InterviewResultsProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const { stateInfo } = useUserState();
   const shouldReduceMotion = useReducedMotion();
   const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
   const { currentStreak } = useStreak();
@@ -498,6 +501,10 @@ export function InterviewResults({
                         {result.correctAnswers.map(a => a.text_en).join('; ')}
                       </p>
                     </div>
+                    {/* Dynamic answer note */}
+                    {question?.dynamic && (
+                      <DynamicAnswerNote dynamic={question.dynamic} stateInfo={stateInfo} />
+                    )}
                     {/* WhyButton explanation */}
                     {question?.explanation && (
                       <div className="mt-3">

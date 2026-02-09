@@ -169,6 +169,7 @@ export function FlashcardStack({
               subCategoryStripBg={getSubCategoryColors(currentQuestion.category).stripBg}
               explanation={currentQuestion.explanation}
               allQuestions={questions}
+              dynamic={currentQuestion.dynamic}
             />
           </motion.div>
         </AnimatePresence>

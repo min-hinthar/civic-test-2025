@@ -32,6 +32,7 @@ import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
 import type { BadgeCheckData } from '@/lib/social';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { UpdateBanner } from '@/components/update/UpdateBanner';
 
 const studyCardsLink = (category?: string): To => ({
   pathname: '/study',
@@ -278,6 +279,7 @@ const Dashboard = () => {
   return (
     <div className="page-shell">
       <AppNavigation />
+      <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
         {/* Welcome header with patriotic emojis */}
         <motion.header className="mb-6" {...stagger(0)}>

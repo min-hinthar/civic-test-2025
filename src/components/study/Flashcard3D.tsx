@@ -4,9 +4,10 @@ import { useState, useCallback, KeyboardEvent, MouseEvent } from 'react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useUserState } from '@/contexts/StateContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
-import type { Explanation, Question } from '@/types';
+import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
 
 interface Flashcard3DProps {
   /** Question text (front of card) */
@@ -25,6 +26,8 @@ interface Flashcard3DProps {
   explanation?: Explanation;
   /** All questions for RelatedQuestions lookup */
   allQuestions?: Question[];
+  /** Dynamic answer metadata for time/state-varying questions */
+  dynamic?: DynamicAnswerMeta;
   /** Called when card is flipped */
   onFlip?: (isFlipped: boolean) => void;
   /** Additional class names */
@@ -49,6 +52,78 @@ const categoryGradients: Record<string, string> = {
     'from-sky-500/10 to-indigo-500/10',
   'Civics: Symbols and Holidays': 'from-slate-500/10 to-stone-500/10',
 };
+
+/**
+ * Bilingual dynamic answer note for time/state-varying questions.
+ * Exported for reuse across study, test, and interview pages.
+ */
+export function DynamicAnswerNote({
+  dynamic,
+  stateInfo,
+}: {
+  dynamic: DynamicAnswerMeta;
+  stateInfo: {
+    name: string;
+    governor: string;
+    senators: [string, string] | null;
+    capital: string;
+  } | null;
+}) {
+  if (dynamic.type === 'time') {
+    return (
+      <div className="bg-warning-subtle rounded-lg p-2 mt-2">
+        <p className="text-xs text-foreground/80">
+          This answer may change with elections. Last verified: {dynamic.lastVerified}
+        </p>
+        <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+          {'ဤအဖြေသည် ရွေးကောက်ပွဲများနှင့်အတူ ပြောင်းလဲနိုင်ပါသည်။ နောက်ဆုံးအတည်ပြုချိန်: '}
+          {dynamic.lastVerified}
+        </p>
+      </div>
+    );
+  }
+
+  // dynamic.type === 'state'
+  if (stateInfo) {
+    let answer: string;
+    const field = dynamic.field;
+    if (field === 'governor') {
+      answer = stateInfo.governor;
+    } else if (field === 'senators') {
+      answer = stateInfo.senators ? stateInfo.senators.join(', ') : 'N/A';
+    } else if (field === 'capital') {
+      answer = stateInfo.capital;
+    } else if (field === 'representative') {
+      answer = 'Visit house.gov to find your representative';
+    } else {
+      answer = '';
+    }
+    return (
+      <div className="bg-warning-subtle rounded-lg p-2 mt-2">
+        <p className="text-xs text-foreground/80">
+          For {stateInfo.name}: {answer}
+        </p>
+        <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+          {stateInfo.name}
+          {'အတွက်: '}
+          {answer}
+        </p>
+      </div>
+    );
+  }
+
+  // No state selected
+  return (
+    <div className="bg-warning-subtle rounded-lg p-2 mt-2">
+      <p className="text-xs text-foreground/80">
+        Go to Settings to select your state for a personalized answer.
+      </p>
+      <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+        {'ပုဂ္ဂိုလ်ရေးအဖြေအတွက် ဆက်တင်တွင် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။'}
+      </p>
+    </div>
+  );
+}
 
 /**
  * 3D flip flashcard with physical paper-like texture.
@@ -81,11 +156,13 @@ export function Flashcard3D({
   subCategoryStripBg,
   explanation,
   allQuestions = [],
+  dynamic,
   onFlip,
   className,
 }: Flashcard3DProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { stateInfo } = useUserState();
 
   const handleFlip = useCallback(() => {
     const newState = !isFlipped;
@@ -237,6 +314,11 @@ export function Flashcard3D({
                   {answerMy}
                 </p>
               </div>
+
+              {/* Dynamic answer note for time/state-varying questions */}
+              {dynamic && (
+                <DynamicAnswerNote dynamic={dynamic} stateInfo={stateInfo} />
+              )}
 
               {/* Explanation card - stopPropagation prevents flip on interact */}
               {explanation && (

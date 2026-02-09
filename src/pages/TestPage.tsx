@@ -32,9 +32,13 @@ import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
 import type { USCISCategory, CategoryMasteryEntry } from '@/lib/mastery';
 import { allQuestions } from '@/constants/questions';
+import { useUserState } from '@/contexts/StateContext';
+import { DynamicAnswerNote } from '@/components/study/Flashcard3D';
 import { strings } from '@/lib/i18n/strings';
 import { FadeIn } from '@/components/animations/StaggeredList';
+import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { Filter } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { playCorrect, playIncorrect, playLevelUp, playMilestone } from '@/lib/audio/soundEffects';
 
 const TEST_DURATION_SECONDS = 20 * 60;
@@ -48,6 +52,8 @@ const TestPage = () => {
   const { categoryMasteries } = useCategoryMastery();
   const { currentStreak } = useStreak();
   const shouldReduceMotion = useReducedMotion();
+  const { stateInfo } = useUserState();
+  const { showBurmese } = useLanguage();
   const { showSuccess, showWarning } = useToast();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
@@ -341,6 +347,7 @@ const TestPage = () => {
     return (
       <div className="page-shell" data-tour="mock-test">
         <AppNavigation />
+        <UpdateBanner showBurmese={showBurmese} />
         <PreTestScreen
           questionCount={20}
           durationMinutes={20}
@@ -467,6 +474,11 @@ const TestPage = () => {
             correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
           />
         </div>
+
+        {/* Dynamic answer note during in-test feedback */}
+        {showFeedback && currentQuestion?.dynamic && (
+          <DynamicAnswerNote dynamic={currentQuestion.dynamic} stateInfo={stateInfo} />
+        )}
 
         {/* WhyButton inline explanation (only when feedback shown and explanation exists) */}
         {showFeedback && currentQuestion?.explanation && (
@@ -764,6 +776,11 @@ const TestPage = () => {
                     ? `${strings.test.correct.en} · ${strings.test.correct.my}`
                     : `${strings.test.reviewAnswer.en} · ${strings.test.reviewAnswer.my}`}
                 </p>
+
+                {/* Dynamic answer note for time/state-varying questions */}
+                {questionData?.dynamic && (
+                  <DynamicAnswerNote dynamic={questionData.dynamic} stateInfo={stateInfo} />
+                )}
 
                 {/* Explanation card for review */}
                 {explanation && (

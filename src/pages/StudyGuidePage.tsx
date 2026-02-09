@@ -18,6 +18,8 @@ import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { DeckManager } from '@/components/srs/DeckManager';
 import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { recordStudyActivity } from '@/lib/social';
 import { getSubCategoryColors } from '@/lib/mastery';
 import type { Category } from '@/types';
@@ -61,6 +63,7 @@ const StudyGuidePage = () => {
     return counts;
   }, [questionCategories]);
 
+  const { showBurmese } = useLanguage();
   // SRS deck state for due count badge
   const { dueCount } = useSRS();
 
@@ -174,6 +177,7 @@ const StudyGuidePage = () => {
   // Page header with bold title and patriotic emoji
   const pageHeader = (
     <div className="mb-8">
+      <UpdateBanner showBurmese={showBurmese} className="mb-4 -mx-4 sm:-mx-0 rounded-none sm:rounded-xl" />
       <motion.h1
         className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight"
         initial={{ opacity: 0, y: -10 }}
