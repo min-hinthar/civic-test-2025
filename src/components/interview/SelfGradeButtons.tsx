@@ -51,7 +51,7 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
             transition={{ duration: 0.5 }}
             className={clsx(
               'pointer-events-none absolute inset-0 z-10 rounded-2xl',
-              flash === 'correct' ? 'bg-success-subtle0/30' : 'bg-warning/30'
+              flash === 'correct' ? 'bg-success/30' : 'bg-warning/30'
             )}
           />
         )}
@@ -67,7 +67,7 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
           className={clsx(
             'flex flex-1 items-center justify-center gap-2 rounded-xl px-4',
             'min-h-[48px]',
-            'bg-success-subtle0 text-white font-semibold',
+            'bg-success text-white font-semibold',
             'transition-opacity duration-150',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2',
             disabled && 'opacity-50 pointer-events-none'

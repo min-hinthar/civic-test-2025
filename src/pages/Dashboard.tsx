@@ -374,11 +374,11 @@ const Dashboard = () => {
               onClick={() => navigate('/test')}
               className={clsx(
                 'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
-                'bg-success-subtle0 text-white font-bold text-sm',
-                'shadow-[0_4px_0_0] shadow-success-600',
-                'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-success-600',
+                'bg-success text-white font-bold text-sm',
+                'shadow-[0_4px_0_0_hsl(var(--green-600))]',
+                'active:translate-y-[3px] active:shadow-[0_1px_0_0_hsl(var(--green-600))]',
                 'transition-all duration-150',
-                'hover:bg-success-600',
+                'hover:brightness-110',
                 'min-h-[72px]'
               )}
             >
@@ -393,11 +393,11 @@ const Dashboard = () => {
               onClick={() => navigate('/interview')}
               className={clsx(
                 'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
-                'bg-accent text-white font-bold text-sm',
-                'shadow-[0_4px_0_0] shadow-accent-700',
-                'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-accent-700',
+                'bg-accent-purple text-white font-bold text-sm',
+                'shadow-[0_4px_0_0_hsl(var(--color-accent-purple-active))]',
+                'active:translate-y-[3px] active:shadow-[0_1px_0_0_hsl(var(--color-accent-purple-active))]',
                 'transition-all duration-150',
-                'hover:bg-accent-600',
+                'hover:brightness-110',
                 'min-h-[72px]'
               )}
             >

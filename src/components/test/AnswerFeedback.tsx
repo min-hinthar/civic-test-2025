@@ -61,7 +61,7 @@ export function AnswerFeedback({
                     ? { duration: 0 }
                     : { type: 'spring', stiffness: 400, damping: 12 }
                 }
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-subtle0 text-white"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success text-white"
               >
                 <Star className="h-5 w-5 fill-current" />
               </motion.div>

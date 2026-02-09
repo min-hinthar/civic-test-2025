@@ -29,7 +29,7 @@ const sizeClasses = {
 
 const variantClasses = {
   default: 'bg-primary',
-  success: 'bg-success-subtle0',
+  success: 'bg-success',
   warning: 'bg-warning',
 };
 

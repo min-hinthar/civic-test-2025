@@ -221,7 +221,7 @@ export function Flashcard3D({
           }}
         >
           {colorStrip}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success-subtle0/10 to-emerald-500/10" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success/10 to-emerald-500/10" />
           {paperTexture}
 
           <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">

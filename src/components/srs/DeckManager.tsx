@@ -327,7 +327,7 @@ function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
                 status.color,
                 status.label === 'New' && 'bg-primary/10',
                 status.label === 'Due' && 'bg-warning/10',
-                status.label === 'Done' && 'bg-success-subtle0/10'
+                status.label === 'Done' && 'bg-success/10'
               )}
             >
               {status.label}
