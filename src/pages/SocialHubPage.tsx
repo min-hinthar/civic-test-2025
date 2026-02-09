@@ -281,7 +281,7 @@ const SocialHubPage = () => {
                 className={clsx(
                   'rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] flex items-center gap-2',
                   activeTab === tab.key
-                    ? 'bg-primary-500 text-white shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px] transition-[box-shadow,transform] duration-100'
+                    ? 'bg-primary text-white shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px] transition-[box-shadow,transform] duration-100'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 )}
               >
@@ -310,7 +310,7 @@ const SocialHubPage = () => {
                   className={clsx(
                     'rounded-xl px-4 py-2 text-sm font-bold transition-all min-h-[44px]',
                     boardType === 'all-time'
-                      ? 'bg-primary-500 text-white shadow-[0_3px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[2px]'
+                      ? 'bg-primary text-white shadow-[0_3px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[2px]'
                       : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
                   )}
                 >
@@ -323,7 +323,7 @@ const SocialHubPage = () => {
                   className={clsx(
                     'rounded-xl px-4 py-2 text-sm font-bold transition-all min-h-[44px]',
                     boardType === 'weekly'
-                      ? 'bg-primary-500 text-white shadow-[0_3px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[2px]'
+                      ? 'bg-primary text-white shadow-[0_3px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[2px]'
                       : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
                   )}
                 >
@@ -338,8 +338,8 @@ const SocialHubPage = () => {
                 <Card className="border-primary/20 bg-primary/5">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-500/15">
-                        <Heart className="h-5 w-5 text-primary-500" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle">
+                        <Heart className="h-5 w-5 text-primary" />
                       </div>
                       <div>
                         <p
@@ -359,9 +359,9 @@ const SocialHubPage = () => {
                     <button
                       onClick={() => setOptInClosed(false)}
                       className={clsx(
-                        'shrink-0 rounded-xl bg-primary-500 px-5 py-2.5 text-sm font-bold text-white min-h-[44px]',
+                        'shrink-0 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white min-h-[44px]',
                         'shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
-                        'transition-all hover:bg-primary-600'
+                        'transition-all hover:bg-primary'
                       )}
                     >
                       <span className={showBurmese ? 'font-myanmar' : ''}>
@@ -375,7 +375,7 @@ const SocialHubPage = () => {
               {/* Non-authenticated CTA */}
               {!user && (
                 <Card className="text-center">
-                  <Sparkles className="h-8 w-8 text-primary-400 mx-auto mb-2" />
+                  <Sparkles className="h-8 w-8 text-primary mx-auto mb-2" />
                   <p
                     className={`text-sm font-bold text-foreground mb-1 ${showBurmese ? 'font-myanmar' : ''}`}
                   >
@@ -410,7 +410,7 @@ const SocialHubPage = () => {
           <FadeIn>
             <section className="space-y-6" aria-label="Achievements">
               {/* Encouraging header for badges */}
-              <Card className="border-accent-purple/20 bg-accent-purple/5 dark:bg-accent-purple/10">
+              <Card className="border-accent-purple/20 bg-accent-purple/5">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-purple/20">
                     <Sparkles className="h-5 w-5 text-accent-purple" />
@@ -447,7 +447,7 @@ const SocialHubPage = () => {
               <div className="grid grid-cols-3 gap-4">
                 {/* Current streak */}
                 <Card className="text-center">
-                  <Flame className="h-7 w-7 text-orange-500 mx-auto" />
+                  <Flame className="h-7 w-7 text-accent mx-auto" />
                   <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">
                     {streakLoading ? '--' : currentStreak}
                   </p>
@@ -460,7 +460,7 @@ const SocialHubPage = () => {
 
                 {/* Longest streak */}
                 <Card className="text-center">
-                  <Trophy className="h-7 w-7 text-primary-500 mx-auto" />
+                  <Trophy className="h-7 w-7 text-primary mx-auto" />
                   <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">
                     {streakLoading ? '--' : longestStreak}
                   </p>
@@ -473,7 +473,7 @@ const SocialHubPage = () => {
 
                 {/* Freezes available */}
                 <Card className="text-center">
-                  <Snowflake className="h-7 w-7 text-blue-400 mx-auto" />
+                  <Snowflake className="h-7 w-7 text-primary mx-auto" />
                   <p className="text-3xl font-bold text-foreground mt-2 tabular-nums">
                     {streakLoading ? '--' : `${freezesAvailable}/3`}
                   </p>
@@ -492,9 +492,9 @@ const SocialHubPage = () => {
               </Card>
 
               {/* How freezes work - encouraging tone */}
-              <Card className="border-blue-200/40 dark:border-blue-500/20 bg-blue-50/30 dark:bg-blue-500/5">
+              <Card className="border-primary/40 bg-primary-subtle/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <Snowflake className="h-5 w-5 text-blue-400" />
+                  <Snowflake className="h-5 w-5 text-primary" />
                   <h3
                     className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >

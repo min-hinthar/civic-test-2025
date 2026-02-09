@@ -321,7 +321,7 @@ const Dashboard = () => {
 
         {/* HERO: Readiness Score - The most prominent element */}
         <motion.section className="mb-6" {...stagger(1)}>
-          <div className="relative overflow-hidden rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 via-white to-primary-50 dark:from-primary-950 dark:via-card dark:to-primary-950 shadow-xl shadow-primary/20">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-primary-subtle via-surface to-primary-subtle shadow-xl shadow-primary/20">
             {/* Patriotic decorative stars */}
             <div
               className="absolute top-3 right-3 text-2xl opacity-30 select-none"
@@ -355,11 +355,11 @@ const Dashboard = () => {
               onClick={() => navigate('/study')}
               className={clsx(
                 'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
-                'bg-primary-500 text-white font-bold text-sm',
+                'bg-primary text-white font-bold text-sm',
                 'shadow-[0_4px_0_0] shadow-primary-700',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-primary-700',
                 'transition-all duration-150',
-                'hover:bg-primary-600',
+                'hover:bg-primary',
                 'min-h-[72px]'
               )}
             >
@@ -393,7 +393,7 @@ const Dashboard = () => {
               onClick={() => navigate('/interview')}
               className={clsx(
                 'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
-                'bg-accent-500 text-white font-bold text-sm',
+                'bg-accent text-white font-bold text-sm',
                 'shadow-[0_4px_0_0] shadow-accent-700',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-accent-700',
                 'transition-all duration-150',
@@ -433,7 +433,7 @@ const Dashboard = () => {
           <motion.section {...stagger(6)}>
             <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-lg shadow-primary/10">
               <div className="flex items-center gap-2 mb-3">
-                <Trophy className="h-5 w-5 text-amber-500" />
+                <Trophy className="h-5 w-5 text-warning" />
                 <h3 className="font-bold text-foreground text-sm">
                   Badges
                   {showBurmese && (
@@ -483,7 +483,7 @@ const Dashboard = () => {
               <div className="px-5 pb-5">
                 {masteryLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent" />
+                    <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary border-t-transparent" />
                   </div>
                 ) : (
                   <>
@@ -500,11 +500,11 @@ const Dashboard = () => {
                         onClick={() => navigate('/progress')}
                         className={clsx(
                           'inline-flex items-center gap-2 rounded-xl px-5 py-2.5',
-                          'border-2 border-primary-500 text-primary-600 font-bold text-sm',
-                          'shadow-[0_3px_0_0] shadow-primary-200 dark:shadow-primary-800',
+                          'border-2 border-primary text-primary font-bold text-sm',
+                          'shadow-[0_3px_0_0] shadow-primary-200',
                           'active:translate-y-[2px] active:shadow-[0_1px_0_0]',
                           'transition-all duration-150',
-                          'hover:bg-primary-50 dark:hover:bg-primary-950',
+                          'hover:bg-primary-subtle',
                           'min-h-[44px]'
                         )}
                       >
@@ -627,11 +627,11 @@ const Dashboard = () => {
                 onClick={() => navigate('/test')}
                 className={clsx(
                   'mt-4 inline-flex items-center gap-2 rounded-2xl px-6 py-3',
-                  'bg-primary-500 text-white font-bold',
+                  'bg-primary text-white font-bold',
                   'shadow-[0_4px_0_0] shadow-primary-700',
                   'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-primary-700',
                   'transition-all duration-150',
-                  'hover:bg-primary-600',
+                  'hover:bg-primary',
                   'min-h-[48px]'
                 )}
               >

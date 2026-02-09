@@ -65,11 +65,11 @@ function ToggleSwitch({
       disabled={disabled}
       onClick={onChange}
       className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? 'bg-primary-500' : 'bg-muted'
+        checked ? 'bg-primary' : 'bg-muted'
       }`}
     >
       <span
-        className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow-md ring-0 transition-transform duration-200 ${
+        className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-surface shadow-md ring-0 transition-transform duration-200 ${
           checked ? 'translate-x-5' : 'translate-x-0'
         }`}
       />
@@ -94,8 +94,8 @@ function SettingsSection({
   variant?: 'default' | 'danger';
 }) {
   const borderColor =
-    variant === 'danger' ? 'border-destructive/30 dark:border-destructive/40' : 'border-border/60';
-  const bgColor = variant === 'danger' ? 'bg-destructive/5 dark:bg-destructive/10' : 'bg-card';
+    variant === 'danger' ? 'border-destructive/30' : 'border-border/60';
+  const bgColor = variant === 'danger' ? 'bg-destructive/5' : 'bg-card';
 
   return (
     <section className="mb-5">
@@ -108,7 +108,7 @@ function SettingsSection({
             className={`flex h-9 w-9 items-center justify-center rounded-xl ${
               variant === 'danger'
                 ? 'bg-destructive/10 text-destructive'
-                : 'bg-primary-50 text-primary-500 dark:bg-primary-900/40 dark:text-primary-400'
+                : 'bg-primary-subtle text-primary'
             }`}
           >
             {icon}
@@ -214,7 +214,7 @@ export default function SettingsPage() {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex items-center gap-2">
-            <Settings className="h-5 w-5 text-primary-500" />
+            <Settings className="h-5 w-5 text-primary" />
             <div>
               <h1 className="text-lg font-extrabold text-foreground">Settings</h1>
               {showBurmese && (
@@ -278,7 +278,7 @@ export default function SettingsPage() {
                 {soundMuted ? (
                   <VolumeX className="h-4 w-4 text-muted-foreground" />
                 ) : (
-                  <Volume2 className="h-4 w-4 text-primary-500" />
+                  <Volume2 className="h-4 w-4 text-primary" />
                 )}
                 <ToggleSwitch
                   checked={!soundMuted}
@@ -292,7 +292,7 @@ export default function SettingsPage() {
           {/* Notification Settings */}
           <div className="py-3 border-b border-border/40">
             <div className="flex items-center gap-2 mb-2">
-              <Bell className="h-4 w-4 text-primary-500" />
+              <Bell className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Study Reminders</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
@@ -306,7 +306,7 @@ export default function SettingsPage() {
           {/* Review Reminder Time */}
           <div className="py-3">
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-primary-500" />
+              <Clock className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
@@ -328,15 +328,15 @@ export default function SettingsPage() {
             </div>
 
             {!isSubscribed && (
-              <div className="mt-2 rounded-xl border border-warning-200 bg-warning-50 px-3 py-2 dark:border-warning-800 dark:bg-warning-900/20">
+              <div className="mt-2 rounded-xl border border-warning bg-warning-50 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <Bell className="h-4 w-4 text-warning-500" />
-                  <p className="text-xs text-warning-700 dark:text-warning-300">
+                  <p className="text-xs text-warning">
                     Enable push notifications above to receive reminders.
                   </p>
                 </div>
                 {showBurmese && (
-                  <p className="font-myanmar text-xs text-warning-600 dark:text-warning-400 mt-1 ml-6">
+                  <p className="font-myanmar text-xs text-warning mt-1 ml-6">
                     {'ပြန်လှည့်သတိပေးချက်များရရှိရန် push notification ဖွင့်ပါ။'}
                   </p>
                 )}
@@ -354,7 +354,7 @@ export default function SettingsPage() {
         >
           <div className="py-3">
             <div className="flex items-center gap-2 mb-2">
-              <Globe className="h-4 w-4 text-primary-500" />
+              <Globe className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Speech Speed</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
@@ -372,7 +372,7 @@ export default function SettingsPage() {
                   onClick={() => handleSpeechRateChange(option.value)}
                   className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
                     speechRate === option.value
-                      ? 'border-primary-500 bg-primary-50 text-primary-600 shadow-[0_2px_0_0] shadow-primary-200 dark:bg-primary-900/30 dark:text-primary-400 dark:shadow-primary-800'
+                      ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
                       : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
                   }`}
                 >
@@ -426,7 +426,7 @@ export default function SettingsPage() {
                   localStorage.removeItem('civic-test-onboarding-complete');
                   navigate('/dashboard');
                 }}
-                className="rounded-xl bg-primary-50 px-4 py-2 text-sm font-bold text-primary-600 hover:bg-primary-100 transition-colors min-h-[44px] dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
+                className="rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px]"
               >
                 Replay
               </button>

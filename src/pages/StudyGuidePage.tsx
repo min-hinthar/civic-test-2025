@@ -200,7 +200,7 @@ const StudyGuidePage = () => {
               'relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold',
               'transition-all min-h-[44px] whitespace-nowrap',
               isActive
-                ? 'bg-primary-500 text-white shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-[2px]'
+                ? 'bg-primary text-white shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-[2px]'
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
             )}
           >
@@ -208,7 +208,7 @@ const StudyGuidePage = () => {
             <span>{tab.label}</span>
             <span className="font-myanmar text-xs opacity-80">/ {tab.labelMy}</span>
             {tab.id === '#deck' && dueCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning-500 text-white text-xs font-bold shadow-sm">
+              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning text-white text-xs font-bold shadow-sm">
                 {dueCount}
               </span>
             )}
@@ -460,7 +460,7 @@ const StudyGuidePage = () => {
                                 <ExplanationCard
                                   explanation={question.explanation}
                                   allQuestions={allQuestions}
-                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary]:text-white [&_.text-primary]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning\\/10]:bg-white/10 [&_.bg-primary-subtle]:bg-white/10 [&_.dark\\:bg-primary\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary\\/30]:border-white/20"
                                 />
                               </div>
                             )}
@@ -538,7 +538,7 @@ const StudyGuidePage = () => {
               onClick={() => navigate('/study#deck')}
             />
             {dueCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning-500 text-white text-xs font-bold shadow-sm">
+              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning text-white text-xs font-bold shadow-sm">
                 {dueCount}
               </span>
             )}
@@ -570,7 +570,7 @@ const StudyGuidePage = () => {
                     'w-full sm:w-56 pl-9 pr-4 py-2.5 rounded-xl',
                     'border border-border/60 bg-background text-sm text-foreground',
                     'placeholder:text-muted-foreground/60',
-                    'focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500',
+                    'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
                     'transition-colors min-h-[44px]'
                   )}
                 />
@@ -579,7 +579,7 @@ const StudyGuidePage = () => {
               <select
                 className={clsx(
                   'rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm font-medium',
-                  'focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500',
+                  'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
                   'transition-colors min-h-[44px]'
                 )}
                 value={category}
@@ -728,7 +728,7 @@ const StudyGuidePage = () => {
                                 <ExplanationCard
                                   explanation={question.explanation}
                                   allQuestions={allQuestions}
-                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary-500]:text-white [&_.text-primary-400]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning-500\\/10]:bg-white/10 [&_.bg-primary-50]:bg-white/10 [&_.dark\\:bg-primary-500\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary-500\\/30]:border-white/20"
+                                  className="border-white/20 bg-black/20 [&_*]:text-white [&_.text-muted-foreground]:text-white/70 [&_.text-foreground]:text-white [&_.text-primary]:text-white [&_.text-primary]:text-white/80 [&_.text-success-500]:text-white [&_.text-warning-500]:text-white [&_button]:hover:bg-white/10 [&_.border-border\\/40]:border-white/20 [&_.border-border\\/60]:border-white/20 [&_.bg-muted\\/30]:bg-white/10 [&_.bg-warning-50]:bg-white/10 [&_.dark\\:bg-warning\\/10]:bg-white/10 [&_.bg-primary-subtle]:bg-white/10 [&_.dark\\:bg-primary\\/10]:bg-white/10 [&_.border-warning-500\\/30]:border-white/20 [&_.border-primary\\/30]:border-white/20"
                                 />
                               </div>
                             )}

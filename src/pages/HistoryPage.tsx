@@ -231,7 +231,7 @@ const HistoryPage = () => {
                 className={clsx(
                   'rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] flex items-center gap-2',
                   activeTab === tab.key
-                    ? 'bg-primary-500 text-white shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px] transition-[box-shadow,transform] duration-100'
+                    ? 'bg-primary text-white shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px] transition-[box-shadow,transform] duration-100'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 )}
               >
@@ -324,8 +324,8 @@ const HistoryPage = () => {
                                 className={clsx(
                                   'rounded-xl border p-3 text-sm',
                                   answer.isCorrect
-                                    ? 'border-success-500/20 bg-success-50/50 dark:bg-success-500/5'
-                                    : 'border-warning-500/20 bg-warning-50/50 dark:bg-warning-500/5'
+                                    ? 'border-success-500/20 bg-success-50/50'
+                                    : 'border-warning-500/20 bg-warning-50/50'
                                 )}
                               >
                                 <div className="flex items-center justify-between gap-2">
@@ -512,8 +512,8 @@ const HistoryPage = () => {
                                 className={clsx(
                                   'rounded-xl border p-3 text-sm',
                                   result.selfGrade === 'correct'
-                                    ? 'border-success-500/20 bg-success-50/50 dark:bg-success-500/5'
-                                    : 'border-warning-500/20 bg-warning-50/50 dark:bg-warning-500/5'
+                                    ? 'border-success-500/20 bg-success-50/50'
+                                    : 'border-warning-500/20 bg-warning-50/50'
                                 )}
                               >
                                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -713,8 +713,8 @@ const HistoryPage = () => {
             {/* Attempt log with staggered list */}
             <section id="attempts" className="mt-8 space-y-6" aria-labelledby="history-attempts">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-500/15">
-                  <Layers3 className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle">
+                  <Layers3 className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <h2 id="history-attempts" className="text-lg font-bold text-foreground">

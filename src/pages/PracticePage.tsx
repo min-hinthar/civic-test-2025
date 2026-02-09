@@ -16,9 +16,9 @@ import type { USCISCategory, CategoryName } from '@/lib/mastery';
 type PracticePhase = 'config' | 'session' | 'results';
 
 const categoryColorToTailwind: Record<string, string> = {
-  blue: 'text-blue-500',
-  amber: 'text-amber-500',
-  emerald: 'text-emerald-500',
+  blue: 'text-primary',
+  amber: 'text-warning',
+  emerald: 'text-success',
 };
 
 /**
@@ -35,7 +35,7 @@ const PracticePage = () => {
   const [practiceResults, setPracticeResults] = useState<QuestionResult[]>([]);
   const [timerEnabled, setTimerEnabled] = useState(false);
   const [categoryName, setCategoryName] = useState<CategoryName>({ en: '', my: '' });
-  const [categoryColor, setCategoryColor] = useState('text-primary-500');
+  const [categoryColor, setCategoryColor] = useState('text-primary');
   const [previousMastery, setPreviousMastery] = useState(0);
   const { overallMastery, categoryMasteries } = useCategoryMastery();
 
@@ -61,13 +61,13 @@ const PracticePage = () => {
 
         if (mainCat) {
           const color = CATEGORY_COLORS[mainCat];
-          setCategoryColor(categoryColorToTailwind[color] ?? 'text-primary-500');
+          setCategoryColor(categoryColorToTailwind[color] ?? 'text-primary');
         } else {
           // Sub-category: find parent
           for (const [parentCat, def] of Object.entries(USCIS_CATEGORIES)) {
             if (def.subCategories.includes(config.category as Category)) {
               const color = CATEGORY_COLORS[parentCat as USCISCategory];
-              setCategoryColor(categoryColorToTailwind[color] ?? 'text-primary-500');
+              setCategoryColor(categoryColorToTailwind[color] ?? 'text-primary');
               break;
             }
           }

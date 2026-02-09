@@ -71,7 +71,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <header className="relative mx-auto max-w-4xl px-4 pb-12 pt-12 text-center sm:px-6 sm:pt-16 md:pb-16">
         {/* Decorative gradient blob */}
-        <div className="pointer-events-none absolute inset-x-0 top-[-120px] mx-auto h-[350px] w-[500px] rounded-full bg-gradient-to-r from-primary/30 via-accent-500/20 to-success-400/20 blur-[100px] dark:opacity-60" />
+        <div className="pointer-events-none absolute inset-x-0 top-[-120px] mx-auto h-[350px] w-[500px] rounded-full bg-gradient-to-r from-primary/30 via-accent-500/20 to-success/20 blur-[100px]" />
 
         <FadeIn>
           {/* Patriotic mascot emojis */}
@@ -217,9 +217,9 @@ const LandingPage = () => {
             </FadeIn>
 
             <FadeIn delay={200}>
-              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-accent-500/5 to-accent-500/10 p-6 text-center shadow-md">
-                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-500/10">
-                  <Smartphone className="h-7 w-7 text-accent-500" />
+              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-accent/5 to-accent/10 p-6 text-center shadow-md">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10">
+                  <Smartphone className="h-7 w-7 text-accent" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Works on Any Device</h3>
                 <p className="mt-1 font-myanmar text-sm text-muted-foreground">
@@ -232,8 +232,8 @@ const LandingPage = () => {
             </FadeIn>
 
             <FadeIn delay={300}>
-              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-success-400/5 to-success-400/10 p-6 text-center shadow-md">
-                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-success-400/10">
+              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-success/5 to-success/10 p-6 text-center shadow-md">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-success/10">
                   <Trophy className="h-7 w-7 text-success-500" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Track Your Progress</h3>

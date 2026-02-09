@@ -23,7 +23,7 @@ const OpEdPage = () => {
     <div className="page-shell">
       <AppNavigation />
       <main className="mx-auto max-w-4xl px-6 py-10 space-y-10">
-        <header className="glass-panel relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8 text-white shadow-2xl shadow-primary/25">
+        <header className="glass-panel relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-[hsl(var(--color-background))] via-[hsl(var(--color-surface))] to-[hsl(var(--color-background))] p-8 text-white shadow-2xl shadow-primary/25">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-20 right-10 h-64 w-64 rounded-full bg-accent/20 blur-[120px]" />
           <div className="relative space-y-4">
@@ -37,11 +37,11 @@ const OpEdPage = () => {
               Op-ed · TPS for Burma
             </p>
             <h1 className="text-3xl font-bold sm:text-4xl">Why the TPS story for Burma matters</h1>
-            <p className="text-base text-slate-200">
+            <p className="text-base text-white/80">
               A bilingual editorial on how Temporary Protected Status intersects with safety,
               propaganda, and the everyday lives of Burmese families in the United States.
             </p>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-slate-200">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
               <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
                 English · မြန်မာ
               </span>
@@ -55,7 +55,7 @@ const OpEdPage = () => {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 to="https://civic-test-2025.vercel.app/op-ed"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-foreground shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
               >
                 Read the Op-Ed
                 <ArrowRight className="h-4 w-4" />
@@ -96,7 +96,7 @@ const OpEdPage = () => {
                 appointments shift.
               </p>
             </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-emerald-500/10 via-emerald-400/5 to-emerald-500/10 p-4 shadow-inner">
+            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-success/10 via-success/5 to-success/10 p-4 shadow-inner">
               <h3 className="text-lg font-semibold text-foreground">What communities ask for</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Clearer renewal timelines, multilingual alerts, and protections for mixed-status
@@ -144,7 +144,7 @@ const OpEdPage = () => {
             ].map(tile => (
               <div
                 key={tile.title}
-                className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-slate-900/5 via-slate-900/10 to-slate-900/5 p-4 shadow-inner"
+                className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-slate-900/5 via-[hsl(var(--color-surface))]/10 to-slate-900/5 p-4 shadow-inner"
               >
                 <div className="flex items-center gap-2 text-primary">
                   <tile.icon className="h-5 w-5" />
@@ -172,19 +172,19 @@ const OpEdPage = () => {
             people-centered.
           </p>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-amber-500/10 via-amber-400/10 to-amber-500/5 p-4 shadow-inner">
+            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-warning/10 via-warning/10 to-warning/5 p-4 shadow-inner">
               <h3 className="text-lg font-semibold text-foreground">Share with lawmakers</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Send the op-ed with a note about why Burmese TPS families need timely renewals.
               </p>
             </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-rose-500/10 via-rose-400/10 to-rose-500/5 p-4 shadow-inner">
+            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-destructive/10 via-destructive/10 to-destructive/5 p-4 shadow-inner">
               <h3 className="text-lg font-semibold text-foreground">Host a bilingual teach-in</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Use the talking points to hold community sessions in English and မြန်မာ.
               </p>
             </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-sky-500/10 via-sky-400/10 to-sky-500/5 p-4 shadow-inner">
+            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-primary/10 to-primary/5 p-4 shadow-inner">
               <h3 className="text-lg font-semibold text-foreground">Circulate on social</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Share the link on X/Twitter, Facebook, Instagram, and LinkedIn using the buttons
@@ -201,7 +201,7 @@ const OpEdPage = () => {
               {
                 label: 'X / Twitter',
                 href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(opEdShareText)}&url=${encodeURIComponent(opEdShareUrl)}`,
-                classes: 'bg-white text-slate-900',
+                classes: 'bg-surface text-foreground',
               },
               {
                 label: 'Facebook',

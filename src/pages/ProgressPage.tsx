@@ -36,33 +36,35 @@ import { allQuestions, totalQuestions } from '@/constants/questions';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { strings } from '@/lib/i18n/strings';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { getTokenColor } from '@/lib/tokens';
+import { useThemeContext } from '@/contexts/ThemeContext';
 
-/** Color values for chart lines, matching category color tokens */
-const CHART_COLORS: Record<string, string> = {
-  blue: '#3B82F6',
-  amber: '#F59E0B',
-  emerald: '#10B981',
+/** Token names for chart lines, matching category color tokens */
+const CHART_COLOR_TOKENS: Record<string, string> = {
+  blue: '--color-chart-blue',
+  amber: '--color-chart-amber',
+  emerald: '--color-chart-emerald',
 };
 
 /** Tailwind ring color classes per category color */
 const ringColorClasses: Record<string, string> = {
-  blue: 'text-blue-500',
-  amber: 'text-amber-500',
-  emerald: 'text-emerald-500',
+  blue: 'text-chart-blue',
+  amber: 'text-chart-amber',
+  emerald: 'text-chart-emerald',
 };
 
 /** Category card border accent classes */
 const cardAccentClasses: Record<string, string> = {
-  blue: 'border-l-blue-500',
-  amber: 'border-l-amber-500',
-  emerald: 'border-l-emerald-500',
+  blue: 'border-l-chart-blue',
+  amber: 'border-l-chart-amber',
+  emerald: 'border-l-chart-emerald',
 };
 
 /** Sub-category progress bar color classes */
 const barColorClasses: Record<string, { bg: string; track: string }> = {
-  blue: { bg: 'bg-blue-500', track: 'bg-blue-100 dark:bg-blue-950/30' },
-  amber: { bg: 'bg-amber-500', track: 'bg-amber-100 dark:bg-amber-950/30' },
-  emerald: { bg: 'bg-emerald-500', track: 'bg-emerald-100 dark:bg-emerald-950/30' },
+  blue: { bg: 'bg-chart-blue', track: 'bg-chart-blue/10' },
+  amber: { bg: 'bg-chart-amber', track: 'bg-chart-amber/10' },
+  emerald: { bg: 'bg-chart-emerald', track: 'bg-chart-emerald/10' },
 };
 
 /**
@@ -134,6 +136,9 @@ const ProgressPage = () => {
   const { categoryMasteries, subCategoryMasteries, overallMastery, isLoading } =
     useCategoryMastery();
 
+  // Subscribe to theme changes so getTokenColor() resolves fresh values
+  useThemeContext();
+
   // Track which categories are expanded
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   // Track which sub-categories show individual questions
@@ -203,9 +208,9 @@ const ProgressPage = () => {
         {/* Page header with trophy -- Duolingo bold style */}
         <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-2">
-            <Trophy className="h-8 w-8 text-yellow-500" />
+            <Trophy className="h-8 w-8 text-chart-amber" />
             <h1 className="text-3xl font-extrabold text-foreground">Skill Progress</h1>
-            <Trophy className="h-8 w-8 text-yellow-500" />
+            <Trophy className="h-8 w-8 text-chart-amber" />
           </div>
           {showBurmese && (
             <p className="text-lg font-myanmar text-muted-foreground">
@@ -231,7 +236,7 @@ const ProgressPage = () => {
         {/* Loading state */}
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           </div>
         ) : (
           <>
@@ -242,7 +247,7 @@ const ProgressPage = () => {
                   <div className="flex flex-col sm:flex-row items-center gap-6">
                     <CategoryRing
                       percentage={overallMastery}
-                      color="text-primary-500"
+                      color="text-primary"
                       size={140}
                       strokeWidth={12}
                     >
@@ -267,7 +272,7 @@ const ProgressPage = () => {
                       {showBurmese && (
                         <p className="text-sm font-myanmar text-muted-foreground mb-2">
                           {overallMastery >= 80
-                            ? 'အဆင်သင့်ဖြစ်ပြီ!'
+                            ? 'အဆင်သင့်ဖြစ်ပြီ!'
                             : overallMastery >= 50
                               ? 'တိုးတက်နေပါတယ်!'
                               : 'ဆက်လက်ပါ!'}
@@ -278,7 +283,7 @@ const ProgressPage = () => {
                         {showBurmese && (
                           <span className="block font-myanmar mt-0.5">
                             {'မေးခွန်း'} {practicedQuestionIds.size} / {totalQuestions}{' '}
-                            {'လေ့ကျင့်ပြီး'}
+                            {'လေ့ကျင့်ပြီး'}
                           </span>
                         )}
                       </p>
@@ -308,7 +313,7 @@ const ProgressPage = () => {
                         </p>
                         {showBurmese && (
                           <p className="text-sm font-myanmar text-muted-foreground mb-4">
-                            {'သင့်ခရီးစတင်ပါ!'}
+                            {'သင့်ခရီးစတင်ပါ!'}
                           </p>
                         )}
                         <p className="text-sm text-muted-foreground max-w-xs mx-auto">
@@ -316,7 +321,7 @@ const ProgressPage = () => {
                           medals.
                           {showBurmese && (
                             <span className="block font-myanmar mt-1">
-                              {'မေးခွန်းများ လေ့ကျင့်ပြီး တံဆိပ်များ ရယူပါ။'}
+                              {'မေးခွန်းများ လေ့ကျင့်ပြီး တံဆိပ်များ ရယူပါ။'}
                             </span>
                           )}
                         </p>
@@ -341,7 +346,7 @@ const ProgressPage = () => {
                   const def = USCIS_CATEGORIES[category];
                   const color = CATEGORY_COLORS[category];
                   const mastery = categoryMasteries[category] ?? 0;
-                  const ringColor = ringColorClasses[color] ?? 'text-blue-500';
+                  const ringColor = ringColorClasses[color] ?? 'text-chart-blue';
                   const isExpanded = expandedCategories.has(category);
                   const barColors = barColorClasses[color] ?? barColorClasses.blue;
                   const accent = cardAccentClasses[color] ?? '';
@@ -481,9 +486,9 @@ const ProgressPage = () => {
                                                   accuracy.total === 0
                                                     ? 'text-muted-foreground'
                                                     : accuracy.accuracy >= 80
-                                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                                      ? 'text-success'
                                                       : accuracy.accuracy >= 50
-                                                        ? 'text-amber-600 dark:text-amber-400'
+                                                        ? 'text-warning'
                                                         : 'text-warning-500'
                                                 )}
                                               >
@@ -505,7 +510,7 @@ const ProgressPage = () => {
                                 <BilingualButton
                                   label={{
                                     en: `Practice ${def.name.en} (${mastery}%)`,
-                                    my: `${def.name.my} လေ့ကျင့်ပါ`,
+                                    my: `${def.name.my} လေ့ကျင့်ပါ`,
                                   }}
                                   variant="outline"
                                   size="sm"
@@ -544,32 +549,33 @@ const ProgressPage = () => {
                             data={trendData}
                             margin={{ left: 0, right: 10, top: 10, bottom: 0 }}
                           >
-                            <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.3} />
-                            <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
+                            <CartesianGrid strokeDasharray="3 3" stroke={getTokenColor('--color-border', 0.3)} />
+                            <XAxis dataKey="date" stroke={getTokenColor('--color-text-secondary')} fontSize={12} />
                             <YAxis
                               domain={[0, 100]}
                               tickFormatter={value => `${value}%`}
-                              stroke="#94a3b8"
+                              stroke={getTokenColor('--color-text-secondary')}
                               fontSize={12}
                             />
                             <Tooltip
                               formatter={value => `${Number(value).toFixed(0)}%`}
                               contentStyle={{
-                                backgroundColor: 'hsl(var(--card))',
+                                backgroundColor: getTokenColor('--color-surface'),
                                 borderRadius: '1rem',
-                                border: '1px solid hsl(var(--border))',
+                                border: `1px solid ${getTokenColor('--color-border')}`,
                               }}
                             />
                             <Legend />
                             {categories.map(cat => {
                               const color = CATEGORY_COLORS[cat];
+                              const token = CHART_COLOR_TOKENS[color] ?? '--color-chart-blue';
                               return (
                                 <Line
                                   key={cat}
                                   type="monotone"
                                   dataKey={cat}
                                   name={USCIS_CATEGORIES[cat].name.en}
-                                  stroke={CHART_COLORS[color] ?? '#6366f1'}
+                                  stroke={getTokenColor(token)}
                                   strokeWidth={2.5}
                                   dot={{ r: 3 }}
                                   connectNulls
@@ -594,7 +600,7 @@ const ProgressPage = () => {
                     Complete at least 2 tests to see your mastery trend chart.
                     {showBurmese && (
                       <span className="block font-myanmar mt-0.5">
-                        {"လမ်းကြောင်းချက်ကိုကြည့်ရန် အနည်းဆုံး စာမေးပွဲ '2' ခု ဖြေဆိုပါ။"}
+                        {"လမ်းကြောင်းချက်ကိုကြည့်ရန် အနည်းဆုံး စာမေးပွဲ '2' ခု ဖြေဆိုပါ။"}
                       </span>
                     )}
                   </p>
