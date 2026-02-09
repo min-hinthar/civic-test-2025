@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.0 Unified Learning Hub -- Phase 11 (Design Token Foundation)
+**Current focus:** v2.0 Unified Learning Hub -- Phase 12 (USCIS 2025 Question Bank)
 
 ## Current Position
 
-Phase: 11 of 17 (Design Token Foundation)
-Plan: 6 of 7 completed (01, 02, 03, 04, 05, 06 done; 07 remaining)
-Status: In progress
-Last activity: 2026-02-09 -- Completed 11-04-PLAN.md (High/Medium Complexity Token Migration)
+Phase: 12 of 17 (USCIS 2025 Question Bank)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-02-09 -- Phase 11 (Design Token Foundation) complete, verified
 
-Progress: [██████░░░░] 6/7 plans (Phase 11)
+Progress: [█░░░░░░░░░] 1/7 phases (v2.0)
 
 ## Completed Milestones
 
@@ -35,7 +35,7 @@ See `.planning/milestones/v1.0/` for full archive.
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11 (tokens) | 6/7 | 82min | 14min |
+| 11 (tokens) | 7/7 | ~90min | ~13min |
 
 *Updated after each plan completion*
 
@@ -49,27 +49,20 @@ Recent decisions affecting current work:
 - [v2.0 roadmap]: UISYS-01 (tokens) separated into own phase; remaining UISYS (glass, touch, micro-interactions) deferred to Phase 17 after all layout changes stabilize
 - [v2.0 roadmap]: Phases 11-13 are independent foundations (tokens, USCIS data, security) before structural UI changes begin in Phase 14
 - [v2.0 roadmap]: BRMSE (Burmese translation trust) deferred to v2.1+ per requirements scoping
-- [11-01]: Backward compat aliases added in tokens.css for all old CSS variable names (--background, --card, --primary-700, etc.) to avoid big-bang component migration
-- [11-01]: Border radius --radius alias now points to --radius-xl (1.25rem) instead of old 0.85rem
-- [11-01]: Dark mode override blocks removed from globals.css -- token system handles dark mode automatically via .dark semantic overrides
-- [11-02]: Theme transition uses temporary CSS class (theme-transitioning) on html/body/page-shell only, removed after 500ms -- avoids global * transition jank
-- [11-02]: System preference listener defers to manual override (localStorage key exists = ignore OS changes)
-- [11-03]: getToken/getTokenColor utility kept minimal (2 functions, no deps) -- canvas/chart components import directly from @/lib/tokens
-- [11-03]: Dead code design-tokens.ts deleted (113 lines, zero imports confirmed)
-- [11-06]: Decorative gradients use approximate semantic tokens (patriotic-red, primary, secondary, accent-purple, etc.) rather than pixel-perfect rgba matching
-- [11-06]: New --green-700 primitive (142 76% 30%) and semantic active tokens (success-active, destructive-active, accent-purple-active) added to tokens.css
-- [11-05]: bg-white -> bg-surface universally; contrast for buttons on dark backgrounds handled at token level, not component level
-- [11-05]: 19 structural dark: overrides retained in non-SKIP files (7 dark:shadow-[rgba(...)], 12 text-success-600 dark:text-success pairs)
-- [11-05]: Data viz files (CategoryGrid, StreakHeatmap, Flashcard3D, CategoryRing) exempt from amber/emerald -> warning/success migration
-- [11-04]: Timer stage colors (blue->yellow->orange->red) kept as hardcoded HSL constants -- semantic timer stages, not theme colors
-- [11-04]: Data-viz heatmap intensity cells kept as Tailwind palette classes (orange-200/400/500, blue-200 freeze) per data-viz exemption
-- [11-04]: Snap-to-token simplification: multiple gray shades consolidated to single semantic equivalent (intentional, not regression)
+- [11-01]: Backward compat aliases added in tokens.css for all old CSS variable names
+- [11-02]: FOUC prevention via blocking script in _document.tsx; theme-transitioning class for smooth toggle
+- [11-03]: getToken/getTokenColor utility kept minimal; design-tokens.ts deleted
+- [11-04]: Timer stage colors kept as hardcoded HSL; data-viz heatmap cells kept as palette classes
+- [11-05]: 63 files bulk-migrated; 19 structural dark: overrides retained
+- [11-06]: Decorative gradients use approximate semantic tokens; 3 new active tokens added
+- [11-07]: Migration quality fixes: primitive→semantic (141 instances), subtle0 bug (8 instances), accent→accent-purple for Interview button, nav highlight boosted to /20
 
-### Key Learnings (from v1.0)
+### Key Learnings (from v2.0 Phase 11)
 
-- React Compiler ESLint rules require specific patterns (no setState in effects, no ref.current in render)
-- motion/react inline transforms override CSS centering -- use flexbox wrappers
-- Lazy useState initializers instead of useRef for React Compiler purity
+- Migration script ordering matters: broader patterns (bg-success-50) match substrings of narrower ones (bg-success-500)
+- Primitive tokens (success-50, warning-500) look fine in light mode but blend in dark mode -- always use semantic equivalents
+- Accent color semantic token becomes surface tint in dark mode -- not suitable for solid action buttons
+- Stale .next cache after many HMR recompilations causes server errors -- delete .next and restart
 
 ### Blockers/Concerns
 
@@ -80,10 +73,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 plan 04 complete; only 07 (final audit) remaining
-Resume file: .planning/phases/11-design-token-foundation/11-07-PLAN.md
+Stopped at: Phase 11 complete and verified; ready to plan Phase 12
+Resume file: None
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (11-04 high/medium complexity token migration complete)*
+*Last updated: 2026-02-09 (Phase 11 complete)*

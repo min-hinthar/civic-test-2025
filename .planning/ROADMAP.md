@@ -155,7 +155,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 11. Design Token Foundation | v2.0 | 0/TBD | Not started | - |
+| 11. Design Token Foundation | v2.0 | 7/7 | Complete | 2026-02-09 |
 | 12. USCIS 2025 Question Bank | v2.0 | 0/TBD | Not started | - |
 | 13. Security Hardening | v2.0 | 0/TBD | Not started | - |
 | 14. Unified Navigation | v2.0 | 0/TBD | Not started | - |
@@ -166,7 +166,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | TBD | 0/29 | In progress |
+| v2.0 | 7 | 7/TBD | 1/29 | In progress |
 
 ---
 
