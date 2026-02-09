@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 12 of 17 (USCIS 2025 Question Bank)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-09 -- Phase 11 (Design Token Foundation) complete, verified
+Plan: 3 of 6 in current phase (1 completed)
+Status: In progress
+Last activity: 2026-02-09 -- Completed 12-03-PLAN.md (Update Indicator UI)
 
 Progress: [█░░░░░░░░░] 1/7 phases (v2.0)
 
@@ -36,6 +36,7 @@ See `.planning/milestones/v1.0/` for full archive.
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11 (tokens) | 7/7 | ~90min | ~13min |
+| 12 (USCIS 2025) | 1/6 | ~8min | ~8min |
 
 *Updated after each plan completion*
 
@@ -56,6 +57,8 @@ Recent decisions affecting current work:
 - [11-05]: 63 files bulk-migrated; 19 structural dark: overrides retained
 - [11-06]: Decorative gradients use approximate semantic tokens; 3 new active tokens added
 - [11-07]: Migration quality fixes: primitive→semantic (141 instances), subtle0 bug (8 instances), accent→accent-purple for Interview button, nav highlight boosted to /20
+- [12-03]: Used warning-subtle token for MapPin icon bg (accent-subtle not defined in Tailwind config)
+- [12-03]: Returning user detection via civic-prep-* localStorage key prefix; useWhatsNew with lazy initializer
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -73,10 +76,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 complete and verified; ready to plan Phase 12
-Resume file: None
+Stopped at: Phase 12 in progress; completed 12-03 (Update Indicator UI)
+Resume file: .planning/phases/12-uscis-2025-question-bank/12-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (Phase 11 complete)*
+*Last updated: 2026-02-09 (12-03 complete)*
