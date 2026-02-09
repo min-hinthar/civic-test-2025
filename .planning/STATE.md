@@ -2,16 +2,17 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-08)
+See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v1.0 complete — no active milestone
+**Current focus:** v2.0 Unified Learning Hub — defining requirements
 
 ## Current Position
 
-Milestone: v1.0 COMPLETE
-Phase: None active
-Status: Between milestones — use `/gsd:new-milestone` to start v2
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-09 — Milestone v2.0 started
 
 ## Completed Milestones
 
@@ -21,7 +22,9 @@ Status: Between milestones — use `/gsd:new-milestone` to start v2
 
 See `.planning/milestones/v1.0/` for full archive.
 
-## Performance Summary (v1.0)
+## Accumulated Context
+
+### Performance Summary (v1.0)
 
 - Total plans completed: 72
 - Average plan duration: ~11 min
@@ -30,13 +33,20 @@ See `.planning/milestones/v1.0/` for full archive.
 - Source: 189 files, ~37,500 LOC
 - Commits: 348
 
+### Key Learnings
+
+- React Compiler ESLint rules require specific patterns (no setState in effects, no ref.current in render)
+- motion/react inline transforms override CSS centering — use flexbox wrappers
+- Dialog/modal with asChild + animation needs pointer-events toggling
+- Lazy useState initializers instead of useRef for React Compiler purity
+
 ## Session Continuity
 
-Last session: 2026-02-08
-Stopped at: v1.0 milestone archived
+Last session: 2026-02-09
+Stopped at: v2.0 milestone initialization
 Resume file: None
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-08 (v1.0 milestone completed and archived)*
+*Last updated: 2026-02-09 (v2.0 milestone started)*

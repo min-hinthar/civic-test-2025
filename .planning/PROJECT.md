@@ -53,7 +53,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ### Active
 
-No active requirements. Use `/gsd:new-milestone` to define v2 scope.
+See `.planning/REQUIREMENTS.md` for v2.0 requirements (NAV, DASH, HUB, UISYS, BRMSE, USCIS, SEC categories).
 
 ### Out of Scope
 
@@ -99,11 +99,33 @@ No active requirements. Use `/gsd:new-milestone` to define v2 scope.
 | Canvas-only share cards | No external images avoids CORS issues in PWA context | Validated — 1080x1080 bilingual cards render without server |
 | IndexedDB as primary, Supabase as sync | Offline-first architecture for unreliable connectivity | Validated — 7 IndexedDB stores, fire-and-forget Supabase sync |
 
+## Current Milestone: v2.0 Unified Learning Hub
+
+**Goal:** Deliver a polished, premium iOS-inspired experience with trustworthy Burmese, clear learning path, unified navigation, and updated USCIS 120-question bank.
+
+**Target features:**
+- Unified navigation (desktop + mobile) with single learning path
+- Dashboard "Next Best Action" CTA with Today's Plan
+- Progress Hub consolidation (Progress + History + Community)
+- Premium iOS-inspired UI system (design tokens, micro-interactions)
+- Burmese translation trust upgrade (style guide, top 20 strings, text expansion)
+- USCIS 2025 question bank (120 questions, updated thresholds)
+- Security hardening (push subscription auth + rate limiting)
+
 ## Milestones
 
 | Version | Status | Date | Requirements |
 |---------|--------|------|-------------|
 | v1.0 | Complete | 2026-02-08 | 55/55 satisfied |
+| v2.0 | In Progress | — | Defining |
+
+## Key Decisions (v2.0)
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Dashboard stays as landing page | Users expect a "home" with guidance; Progress Hub is one tab | — Pending |
+| Study as default inactive CTA | Study is the start of the learning path; builds confidence | — Pending |
+| Style guide over community reviewers | Lower overhead, faster iteration; community QA can come later | — Pending |
 
 ---
-*Last updated: 2026-02-08 after v1.0 milestone completion*
+*Last updated: 2026-02-09 after v2.0 milestone started*
