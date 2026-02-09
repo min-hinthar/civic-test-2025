@@ -432,3 +432,13 @@ FodyWeavers.xsd
 # Service Worker generated files (Serwist)
 public/sw.js
 public/sw.js.map
+
+# Test coverage output
+coverage/
+
+# Temporary screenshots
+*.png
+!public/**/*.png
+
+# Playwright MCP artifacts
+.playwright-mcp/
