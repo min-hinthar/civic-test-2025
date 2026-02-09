@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 12 of 17 (USCIS 2025 Question Bank)
-Plan: 3 of 6 in current phase (3 completed: 12-01, 12-02, 12-03)
+Plan: 5 of 6 in current phase (4 completed: 12-01, 12-02, 12-03, 12-05)
 Status: In progress
-Last activity: 2026-02-09 -- Completed 12-02-PLAN.md (State Personalization Data Layer)
+Last activity: 2026-02-09 -- Completed 12-05-PLAN.md (Question Bank Validation Tests)
 
 Progress: [█░░░░░░░░░] 1/7 phases (v2.0)
 
@@ -36,7 +36,7 @@ See `.planning/milestones/v1.0/` for full archive.
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11 (tokens) | 7/7 | ~90min | ~13min |
-| 12 (USCIS 2025) | 3/6 | ~27min | ~9min |
+| 12 (USCIS 2025) | 4/6 | ~30min | ~8min |
 
 *Updated after each plan completion*
 
@@ -63,6 +63,7 @@ Recent decisions affecting current work:
 - [12-03]: Returning user detection via civic-prep-* localStorage key prefix; useWhatsNew with lazy initializer
 - [12-02]: RawStateEntry intermediate type for JSON string[] to tuple conversion; allStatesData pre-computed at module level
 - [12-02]: DC governor field uses mayor name (Muriel Bowser); territories have senators: null
+- [12-05]: 16-case validation test suite as regression guard; exact category distribution counts as snapshot
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -80,10 +81,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 12 in progress; completed 12-01, 12-02, 12-03
-Resume file: .planning/phases/12-uscis-2025-question-bank/12-02-SUMMARY.md
+Stopped at: Phase 12 in progress; completed 12-01, 12-02, 12-03, 12-05
+Resume file: .planning/phases/12-uscis-2025-question-bank/12-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (12-02 complete)*
+*Last updated: 2026-02-09 (12-05 complete)*
