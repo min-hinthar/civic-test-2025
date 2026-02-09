@@ -1,0 +1,394 @@
+{
+  "AL": {
+    "name": "Alabama",
+    "capital": "Montgomery",
+    "governor": "Kay Ivey",
+    "senators": ["Tommy Tuberville", "Katie Britt"],
+    "lastUpdated": "2026-02-09"
+  },
+  "AK": {
+    "name": "Alaska",
+    "capital": "Juneau",
+    "governor": "Mike Dunleavy",
+    "senators": ["Lisa Murkowski", "Dan Sullivan"],
+    "lastUpdated": "2026-02-09"
+  },
+  "AZ": {
+    "name": "Arizona",
+    "capital": "Phoenix",
+    "governor": "Katie Hobbs",
+    "senators": ["Kyrsten Sinema", "Ruben Gallego"],
+    "lastUpdated": "2026-02-09"
+  },
+  "AR": {
+    "name": "Arkansas",
+    "capital": "Little Rock",
+    "governor": "Sarah Huckabee Sanders",
+    "senators": ["John Boozman", "Tom Cotton"],
+    "lastUpdated": "2026-02-09"
+  },
+  "CA": {
+    "name": "California",
+    "capital": "Sacramento",
+    "governor": "Gavin Newsom",
+    "senators": ["Alex Padilla", "Adam Schiff"],
+    "lastUpdated": "2026-02-09"
+  },
+  "CO": {
+    "name": "Colorado",
+    "capital": "Denver",
+    "governor": "Jared Polis",
+    "senators": ["Michael Bennet", "John Hickenlooper"],
+    "lastUpdated": "2026-02-09"
+  },
+  "CT": {
+    "name": "Connecticut",
+    "capital": "Hartford",
+    "governor": "Ned Lamont",
+    "senators": ["Richard Blumenthal", "Chris Murphy"],
+    "lastUpdated": "2026-02-09"
+  },
+  "DE": {
+    "name": "Delaware",
+    "capital": "Dover",
+    "governor": "Matt Meyer",
+    "senators": ["Tom Carper", "Chris Coons"],
+    "lastUpdated": "2026-02-09"
+  },
+  "FL": {
+    "name": "Florida",
+    "capital": "Tallahassee",
+    "governor": "Ron DeSantis",
+    "senators": ["Rick Scott", "Marco Rubio"],
+    "lastUpdated": "2026-02-09"
+  },
+  "GA": {
+    "name": "Georgia",
+    "capital": "Atlanta",
+    "governor": "Brian Kemp",
+    "senators": ["Jon Ossoff", "Raphael Warnock"],
+    "lastUpdated": "2026-02-09"
+  },
+  "HI": {
+    "name": "Hawaii",
+    "capital": "Honolulu",
+    "governor": "Josh Green",
+    "senators": ["Mazie Hirono", "Brian Schatz"],
+    "lastUpdated": "2026-02-09"
+  },
+  "ID": {
+    "name": "Idaho",
+    "capital": "Boise",
+    "governor": "Brad Little",
+    "senators": ["Mike Crapo", "Jim Risch"],
+    "lastUpdated": "2026-02-09"
+  },
+  "IL": {
+    "name": "Illinois",
+    "capital": "Springfield",
+    "governor": "JB Pritzker",
+    "senators": ["Dick Durbin", "Tammy Duckworth"],
+    "lastUpdated": "2026-02-09"
+  },
+  "IN": {
+    "name": "Indiana",
+    "capital": "Indianapolis",
+    "governor": "Mike Braun",
+    "senators": ["Todd Young", "Jim Banks"],
+    "lastUpdated": "2026-02-09"
+  },
+  "IA": {
+    "name": "Iowa",
+    "capital": "Des Moines",
+    "governor": "Kim Reynolds",
+    "senators": ["Chuck Grassley", "Joni Ernst"],
+    "lastUpdated": "2026-02-09"
+  },
+  "KS": {
+    "name": "Kansas",
+    "capital": "Topeka",
+    "governor": "Laura Kelly",
+    "senators": ["Jerry Moran", "Roger Marshall"],
+    "lastUpdated": "2026-02-09"
+  },
+  "KY": {
+    "name": "Kentucky",
+    "capital": "Frankfort",
+    "governor": "Andy Beshear",
+    "senators": ["Mitch McConnell", "Rand Paul"],
+    "lastUpdated": "2026-02-09"
+  },
+  "LA": {
+    "name": "Louisiana",
+    "capital": "Baton Rouge",
+    "governor": "Jeff Landry",
+    "senators": ["Bill Cassidy", "John Kennedy"],
+    "lastUpdated": "2026-02-09"
+  },
+  "ME": {
+    "name": "Maine",
+    "capital": "Augusta",
+    "governor": "Janet Mills",
+    "senators": ["Susan Collins", "Angus King"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MD": {
+    "name": "Maryland",
+    "capital": "Annapolis",
+    "governor": "Wes Moore",
+    "senators": ["Ben Cardin", "Angela Alsobrooks"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MA": {
+    "name": "Massachusetts",
+    "capital": "Boston",
+    "governor": "Maura Healey",
+    "senators": ["Elizabeth Warren", "Ed Markey"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MI": {
+    "name": "Michigan",
+    "capital": "Lansing",
+    "governor": "Gretchen Whitmer",
+    "senators": ["Gary Peters", "Elissa Slotkin"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MN": {
+    "name": "Minnesota",
+    "capital": "Saint Paul",
+    "governor": "Tim Walz",
+    "senators": ["Amy Klobuchar", "Tina Smith"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MS": {
+    "name": "Mississippi",
+    "capital": "Jackson",
+    "governor": "Tate Reeves",
+    "senators": ["Roger Wicker", "Cindy Hyde-Smith"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MO": {
+    "name": "Missouri",
+    "capital": "Jefferson City",
+    "governor": "Mike Kehoe",
+    "senators": ["Eric Schmitt", "Josh Hawley"],
+    "lastUpdated": "2026-02-09"
+  },
+  "MT": {
+    "name": "Montana",
+    "capital": "Helena",
+    "governor": "Greg Gianforte",
+    "senators": ["Steve Daines", "Tim Sheehy"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NE": {
+    "name": "Nebraska",
+    "capital": "Lincoln",
+    "governor": "Jim Pillen",
+    "senators": ["Deb Fischer", "Pete Ricketts"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NV": {
+    "name": "Nevada",
+    "capital": "Carson City",
+    "governor": "Joe Lombardo",
+    "senators": ["Catherine Cortez Masto", "Jacky Rosen"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NH": {
+    "name": "New Hampshire",
+    "capital": "Concord",
+    "governor": "Kelly Ayotte",
+    "senators": ["Jeanne Shaheen", "Maggie Hassan"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NJ": {
+    "name": "New Jersey",
+    "capital": "Trenton",
+    "governor": "Phil Murphy",
+    "senators": ["Cory Booker", "Andy Kim"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NM": {
+    "name": "New Mexico",
+    "capital": "Santa Fe",
+    "governor": "Michelle Lujan Grisham",
+    "senators": ["Martin Heinrich", "Ben Ray Lujan"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NY": {
+    "name": "New York",
+    "capital": "Albany",
+    "governor": "Kathy Hochul",
+    "senators": ["Chuck Schumer", "Kirsten Gillibrand"],
+    "lastUpdated": "2026-02-09"
+  },
+  "NC": {
+    "name": "North Carolina",
+    "capital": "Raleigh",
+    "governor": "Josh Stein",
+    "senators": ["Thom Tillis", "Ted Budd"],
+    "lastUpdated": "2026-02-09"
+  },
+  "ND": {
+    "name": "North Dakota",
+    "capital": "Bismarck",
+    "governor": "Kelly Armstrong",
+    "senators": ["John Hoeven", "Kevin Cramer"],
+    "lastUpdated": "2026-02-09"
+  },
+  "OH": {
+    "name": "Ohio",
+    "capital": "Columbus",
+    "governor": "Mike DeWine",
+    "senators": ["Sherrod Brown", "Bernie Moreno"],
+    "lastUpdated": "2026-02-09"
+  },
+  "OK": {
+    "name": "Oklahoma",
+    "capital": "Oklahoma City",
+    "governor": "Kevin Stitt",
+    "senators": ["James Lankford", "Markwayne Mullin"],
+    "lastUpdated": "2026-02-09"
+  },
+  "OR": {
+    "name": "Oregon",
+    "capital": "Salem",
+    "governor": "Tina Kotek",
+    "senators": ["Ron Wyden", "Jeff Merkley"],
+    "lastUpdated": "2026-02-09"
+  },
+  "PA": {
+    "name": "Pennsylvania",
+    "capital": "Harrisburg",
+    "governor": "Josh Shapiro",
+    "senators": ["Bob Casey", "Dave McCormick"],
+    "lastUpdated": "2026-02-09"
+  },
+  "RI": {
+    "name": "Rhode Island",
+    "capital": "Providence",
+    "governor": "Dan McKee",
+    "senators": ["Jack Reed", "Sheldon Whitehouse"],
+    "lastUpdated": "2026-02-09"
+  },
+  "SC": {
+    "name": "South Carolina",
+    "capital": "Columbia",
+    "governor": "Henry McMaster",
+    "senators": ["Lindsey Graham", "Tim Scott"],
+    "lastUpdated": "2026-02-09"
+  },
+  "SD": {
+    "name": "South Dakota",
+    "capital": "Pierre",
+    "governor": "Kristi Noem",
+    "senators": ["John Thune", "Mike Rounds"],
+    "lastUpdated": "2026-02-09"
+  },
+  "TN": {
+    "name": "Tennessee",
+    "capital": "Nashville",
+    "governor": "Bill Lee",
+    "senators": ["Marsha Blackburn", "Bill Hagerty"],
+    "lastUpdated": "2026-02-09"
+  },
+  "TX": {
+    "name": "Texas",
+    "capital": "Austin",
+    "governor": "Greg Abbott",
+    "senators": ["John Cornyn", "Ted Cruz"],
+    "lastUpdated": "2026-02-09"
+  },
+  "UT": {
+    "name": "Utah",
+    "capital": "Salt Lake City",
+    "governor": "Spencer Cox",
+    "senators": ["Mike Lee", "John Curtis"],
+    "lastUpdated": "2026-02-09"
+  },
+  "VT": {
+    "name": "Vermont",
+    "capital": "Montpelier",
+    "governor": "Phil Scott",
+    "senators": ["Patrick Leahy", "Peter Welch"],
+    "lastUpdated": "2026-02-09"
+  },
+  "VA": {
+    "name": "Virginia",
+    "capital": "Richmond",
+    "governor": "Glenn Youngkin",
+    "senators": ["Mark Warner", "Tim Kaine"],
+    "lastUpdated": "2026-02-09"
+  },
+  "WA": {
+    "name": "Washington",
+    "capital": "Olympia",
+    "governor": "Bob Ferguson",
+    "senators": ["Patty Murray", "Maria Cantwell"],
+    "lastUpdated": "2026-02-09"
+  },
+  "WV": {
+    "name": "West Virginia",
+    "capital": "Charleston",
+    "governor": "Patrick Morrisey",
+    "senators": ["Shelley Moore Capito", "Jim Justice"],
+    "lastUpdated": "2026-02-09"
+  },
+  "WI": {
+    "name": "Wisconsin",
+    "capital": "Madison",
+    "governor": "Tony Evers",
+    "senators": ["Tammy Baldwin", "Eric Hovde"],
+    "lastUpdated": "2026-02-09"
+  },
+  "WY": {
+    "name": "Wyoming",
+    "capital": "Cheyenne",
+    "governor": "Mark Gordon",
+    "senators": ["John Barrasso", "Cynthia Lummis"],
+    "lastUpdated": "2026-02-09"
+  },
+  "DC": {
+    "name": "District of Columbia",
+    "capital": "Washington, D.C.",
+    "governor": "Muriel Bowser",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  },
+  "PR": {
+    "name": "Puerto Rico",
+    "capital": "San Juan",
+    "governor": "Jenniffer Gonzalez-Colon",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  },
+  "GU": {
+    "name": "Guam",
+    "capital": "Hagatna",
+    "governor": "Lourdes Leon Guerrero",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  },
+  "VI": {
+    "name": "U.S. Virgin Islands",
+    "capital": "Charlotte Amalie",
+    "governor": "Albert Bryan Jr.",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  },
+  "AS": {
+    "name": "American Samoa",
+    "capital": "Pago Pago",
+    "governor": "Lemanu Peleti Mauga",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  },
+  "MP": {
+    "name": "Northern Mariana Islands",
+    "capital": "Saipan",
+    "governor": "Arnold Palacios",
+    "senators": null,
+    "lastUpdated": "2026-02-09"
+  }
+}
