@@ -359,7 +359,7 @@ const Dashboard = () => {
                 'shadow-[0_4px_0_0] shadow-primary-700',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-primary-700',
                 'transition-all duration-150',
-                'hover:bg-primary',
+                'hover:brightness-110 hover:-translate-y-0.5',
                 'min-h-[72px]'
               )}
             >
@@ -378,7 +378,7 @@ const Dashboard = () => {
                 'shadow-[0_4px_0_0_hsl(var(--green-600))]',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0_hsl(var(--green-600))]',
                 'transition-all duration-150',
-                'hover:brightness-110',
+                'hover:brightness-110 hover:-translate-y-0.5',
                 'min-h-[72px]'
               )}
             >
@@ -397,7 +397,7 @@ const Dashboard = () => {
                 'shadow-[0_4px_0_0_hsl(var(--color-accent-purple-active))]',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0_hsl(var(--color-accent-purple-active))]',
                 'transition-all duration-150',
-                'hover:brightness-110',
+                'hover:brightness-110 hover:-translate-y-0.5',
                 'min-h-[72px]'
               )}
             >

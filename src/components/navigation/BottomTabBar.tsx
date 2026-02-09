@@ -251,8 +251,10 @@ export function BottomTabBar() {
               >
                 <motion.div
                   whileTap={{ scale: 0.9 }}
-                  className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-colors ${
-                    isActive ? 'bg-primary-subtle' : ''
+                  className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all ${
+                    isActive
+                      ? 'bg-primary/20 shadow-sm shadow-primary/15'
+                      : 'active:bg-primary/10'
                   }`}
                 >
                   <Icon
@@ -283,8 +285,10 @@ export function BottomTabBar() {
           >
             <motion.div
               whileTap={{ scale: 0.9 }}
-              className={`relative flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-colors ${
-                isMoreOpen || isMoreRouteActive ? 'bg-primary-subtle' : ''
+              className={`relative flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all ${
+                isMoreOpen || isMoreRouteActive
+                  ? 'bg-primary/20 shadow-sm shadow-primary/15'
+                  : 'active:bg-primary/10'
               }`}
             >
               <MoreHorizontal

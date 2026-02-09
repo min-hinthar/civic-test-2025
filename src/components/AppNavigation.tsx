@@ -101,8 +101,8 @@ const AppNavigation = ({
                 onClick={event => handleGuardedNavigation(event, link.href)}
                 className={`relative flex items-center gap-1.5 rounded-xl px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-150 ${
                   isActive
-                    ? 'bg-primary/12 text-primary font-semibold'
-                    : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    ? 'bg-primary/20 text-primary font-semibold shadow-sm shadow-primary/10'
+                    : 'text-muted-foreground hover:bg-primary/10 hover:text-primary active:bg-primary/15'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
                 aria-disabled={locked && link.href !== '/test'}
