@@ -185,7 +185,7 @@ const AppNavigation = ({
 
       {/* Lock warning bar */}
       {locked && (
-        <div className="border-t border-warning/60 bg-warning-50/80 px-4 py-1.5 text-center text-xs font-semibold text-warning">
+        <div className="border-t border-warning/60 bg-warning-subtle/80 px-4 py-1.5 text-center text-xs font-semibold text-warning">
           {lockMessage ?? 'Complete the mock test before leaving this page.'}
         </div>
       )}

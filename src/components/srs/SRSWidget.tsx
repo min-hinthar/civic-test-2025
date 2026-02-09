@@ -144,8 +144,8 @@ export function SRSWidget({ className }: SRSWidgetProps) {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-success-50">
-              <CheckCircle2 className="h-5 w-5 text-success-500" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-success-subtle">
+              <CheckCircle2 className="h-5 w-5 text-success" />
             </div>
             <div>
               <p
@@ -164,7 +164,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
           </div>
           <div className="flex items-center gap-2">
             {reviewStreak > 0 && (
-              <div className="flex items-center gap-1 text-xs text-warning-500">
+              <div className="flex items-center gap-1 text-xs text-warning">
                 <Flame className="h-3.5 w-3.5" />
                 <span className="font-semibold">{reviewStreak}</span>
               </div>
@@ -212,7 +212,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                   : `${dueCount} card${dueCount !== 1 ? 's' : ''} due`}
               </p>
               {reviewStreak > 0 && (
-                <div className="flex items-center gap-0.5 text-xs text-warning-500">
+                <div className="flex items-center gap-0.5 text-xs text-warning">
                   <Flame className="h-3 w-3" />
                   <span className="font-semibold">{reviewStreak}</span>
                 </div>
@@ -252,8 +252,8 @@ export function SRSWidget({ className }: SRSWidgetProps) {
             <div className="px-5 pb-5 space-y-4">
               {/* Review streak message */}
               {reviewStreak > 0 && (
-                <div className="flex items-center gap-2 rounded-xl bg-warning-50 px-3 py-2">
-                  <Flame className="h-4 w-4 text-warning-500" />
+                <div className="flex items-center gap-2 rounded-xl bg-warning-subtle px-3 py-2">
+                  <Flame className="h-4 w-4 text-warning" />
                   <span
                     className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
@@ -266,8 +266,8 @@ export function SRSWidget({ className }: SRSWidgetProps) {
 
               {/* All caught up banner (when expanded from caught-up state) */}
               {isAllCaughtUp && nextDueText && (
-                <div className="flex items-center gap-2 rounded-xl bg-success-50 px-3 py-2">
-                  <CheckCircle2 className="h-4 w-4 text-success-500" />
+                <div className="flex items-center gap-2 rounded-xl bg-success-subtle px-3 py-2">
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                   <span
                     className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >

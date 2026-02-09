@@ -188,13 +188,13 @@ export function PracticeResults({
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
               {strings.test.correct.en}
             </p>
-            <p className="text-2xl font-bold text-success-500">{correctCount}</p>
+            <p className="text-2xl font-bold text-success">{correctCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
               {strings.test.incorrect.en}
             </p>
-            <p className="text-2xl font-bold text-warning-500">{totalCount - correctCount}</p>
+            <p className="text-2xl font-bold text-warning">{totalCount - correctCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -292,8 +292,8 @@ export function PracticeResults({
                     className={clsx(
                       'rounded-2xl border p-3',
                       result.isCorrect
-                        ? 'border-success-500/30 bg-success-50'
-                        : 'border-warning-500/30 bg-warning-50'
+                        ? 'border-success/30 bg-success-subtle'
+                        : 'border-warning/30 bg-warning-subtle'
                     )}
                   >
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -331,7 +331,7 @@ export function PracticeResults({
                 <p
                   className={clsx(
                     'mt-3 text-sm font-semibold',
-                    result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                    result.isCorrect ? 'text-success' : 'text-warning'
                   )}
                 >
                   {result.isCorrect

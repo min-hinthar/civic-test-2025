@@ -234,7 +234,7 @@ const LandingPage = () => {
             <FadeIn delay={300}>
               <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-success/5 to-success/10 p-6 text-center shadow-md">
                 <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-success/10">
-                  <Trophy className="h-7 w-7 text-success-500" />
+                  <Trophy className="h-7 w-7 text-success" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Track Your Progress</h3>
                 <p className="mt-1 font-myanmar text-sm text-muted-foreground">

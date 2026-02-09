@@ -72,7 +72,7 @@ export function CountUpScore({
           className={clsx(
             'font-bold tabular-nums',
             sizeClasses[size],
-            isPassing ? 'text-success-500' : 'text-warning-500'
+            isPassing ? 'text-success' : 'text-warning'
           )}
         >
           {showPercentage ? `${percentage}%` : score}
@@ -93,7 +93,7 @@ export function CountUpScore({
         className={clsx(
           'font-bold tabular-nums',
           sizeClasses[size],
-          isPassing ? 'text-success-500' : 'text-warning-500'
+          isPassing ? 'text-success' : 'text-warning'
         )}
       >
         {hasStarted ? (

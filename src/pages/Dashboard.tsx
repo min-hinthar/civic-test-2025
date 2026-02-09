@@ -374,7 +374,7 @@ const Dashboard = () => {
               onClick={() => navigate('/test')}
               className={clsx(
                 'w-full flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-4',
-                'bg-success-500 text-white font-bold text-sm',
+                'bg-success-subtle0 text-white font-bold text-sm',
                 'shadow-[0_4px_0_0] shadow-success-600',
                 'active:translate-y-[3px] active:shadow-[0_1px_0_0] active:shadow-success-600',
                 'transition-all duration-150',

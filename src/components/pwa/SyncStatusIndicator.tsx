@@ -51,7 +51,7 @@ export function SyncStatusIndicator() {
         >
           <div className="flex items-center gap-2 rounded-full bg-card/95 px-4 py-2 shadow-lg backdrop-blur-lg border border-border/40">
             {syncFailed ? (
-              <CloudOff className="h-4 w-4 text-warning-500" aria-hidden="true" />
+              <CloudOff className="h-4 w-4 text-warning" aria-hidden="true" />
             ) : (
               <Cloud className="h-4 w-4 text-primary animate-pulse" aria-hidden="true" />
             )}
@@ -61,7 +61,7 @@ export function SyncStatusIndicator() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 400, damping: 15 }}
               className={`text-sm font-semibold tabular-nums ${
-                syncFailed ? 'text-warning-500' : 'text-foreground'
+                syncFailed ? 'text-warning' : 'text-foreground'
               }`}
             >
               {pendingSyncCount}

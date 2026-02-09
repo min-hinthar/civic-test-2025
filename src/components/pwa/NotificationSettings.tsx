@@ -87,9 +87,9 @@ export function NotificationSettings() {
   // If user has blocked notifications in browser settings
   if (permission === 'denied') {
     return (
-      <div className="rounded-lg border border-warning-200 bg-warning-50 p-4">
+      <div className="rounded-lg border border-warning/40 bg-warning-subtle p-4">
         <div className="flex items-center gap-2">
-          <BellOff className="h-5 w-5 text-warning-500" />
+          <BellOff className="h-5 w-5 text-warning" />
           <p className="font-medium text-warning-800">
             Notifications blocked
           </p>

@@ -46,8 +46,8 @@ export function AnswerFeedback({
           className={clsx(
             'rounded-2xl p-4 border',
             isCorrect
-              ? 'bg-success-50 border-success-500'
-              : 'bg-warning-50 border-warning-500'
+              ? 'bg-success-subtle border-success'
+              : 'bg-warning-subtle border-warning'
           )}
         >
           <div className="flex items-start gap-3">
@@ -61,7 +61,7 @@ export function AnswerFeedback({
                     ? { duration: 0 }
                     : { type: 'spring', stiffness: 400, damping: 12 }
                 }
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-500 text-white"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success-subtle0 text-white"
               >
                 <Star className="h-5 w-5 fill-current" />
               </motion.div>
@@ -98,14 +98,14 @@ export function AnswerFeedback({
                         : { delay: 0.2, type: 'spring', stiffness: 500, damping: 15 }
                     }
                   >
-                    <Check className="h-5 w-5 text-success-500" />
+                    <Check className="h-5 w-5 text-success" />
                   </motion.div>
                 )}
               </div>
 
               {/* Show correct answer for incorrect */}
               {!isCorrect && correctAnswer && (
-                <div className="mt-3 pt-3 border-t border-warning-500/30">
+                <div className="mt-3 pt-3 border-t border-warning/30">
                   <p className="text-sm text-muted-foreground">
                     Correct answer:
                     <span className="block font-myanmar">မှန်ကန်သောအဖြေ:</span>
@@ -158,7 +158,7 @@ export function getAnswerOptionClasses(
   if (isCorrect) {
     return clsx(
       'border-2 rounded-2xl p-4',
-      'border-success-500 bg-success-50'
+      'border-success bg-success-subtle'
     );
   }
 
@@ -166,7 +166,7 @@ export function getAnswerOptionClasses(
   if (isSelected && !isCorrect) {
     return clsx(
       'border-2 rounded-2xl p-4',
-      'border-warning-500 bg-warning-50'
+      'border-warning bg-warning-subtle'
     );
   }
 

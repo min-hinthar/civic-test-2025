@@ -323,8 +323,8 @@ export function PracticeSession({ questions, timerEnabled, onComplete }: Practic
         {/* Progress summary */}
         <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="text-success-500 font-bold">{correctCount} correct</span>
-            <span className="text-warning-500 font-bold">{incorrectCount} incorrect</span>
+            <span className="text-success font-bold">{correctCount} correct</span>
+            <span className="text-warning font-bold">{incorrectCount} incorrect</span>
           </div>
           <p className="text-xs text-muted-foreground">
             {questions.length - results.length} remaining

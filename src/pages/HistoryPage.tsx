@@ -285,7 +285,7 @@ const HistoryPage = () => {
                               <span
                                 className={clsx(
                                   'text-2xl font-bold',
-                                  scorePercent >= 60 ? 'text-success-500' : 'text-warning-500'
+                                  scorePercent >= 60 ? 'text-success' : 'text-warning'
                                 )}
                               >
                                 {scorePercent}%
@@ -329,8 +329,8 @@ const HistoryPage = () => {
                                 className={clsx(
                                   'rounded-xl border p-3 text-sm',
                                   answer.isCorrect
-                                    ? 'border-success-500/20 bg-success-50/50'
-                                    : 'border-warning-500/20 bg-warning-50/50'
+                                    ? 'border-success/20 bg-success-subtle/50'
+                                    : 'border-warning/20 bg-warning-subtle/50'
                                 )}
                               >
                                 <div className="flex items-center justify-between gap-2">
@@ -340,7 +340,7 @@ const HistoryPage = () => {
                                   <span
                                     className={clsx(
                                       'text-xs font-bold',
-                                      answer.isCorrect ? 'text-success-500' : 'text-warning-500'
+                                      answer.isCorrect ? 'text-success' : 'text-warning'
                                     )}
                                   >
                                     {answer.isCorrect ? 'Correct' : 'Incorrect'}
@@ -459,7 +459,7 @@ const HistoryPage = () => {
                               <span
                                 className={clsx(
                                   'text-2xl font-bold',
-                                  session.passed ? 'text-success-500' : 'text-warning-500'
+                                  session.passed ? 'text-success' : 'text-warning'
                                 )}
                               >
                                 {scorePercent}%
@@ -517,8 +517,8 @@ const HistoryPage = () => {
                                 className={clsx(
                                   'rounded-xl border p-3 text-sm',
                                   result.selfGrade === 'correct'
-                                    ? 'border-success-500/20 bg-success-50/50'
-                                    : 'border-warning-500/20 bg-warning-50/50'
+                                    ? 'border-success/20 bg-success-subtle/50'
+                                    : 'border-warning/20 bg-warning-subtle/50'
                                 )}
                               >
                                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -529,8 +529,8 @@ const HistoryPage = () => {
                                     className={clsx(
                                       'text-xs font-bold',
                                       result.selfGrade === 'correct'
-                                        ? 'text-success-500'
-                                        : 'text-warning-500'
+                                        ? 'text-success'
+                                        : 'text-warning'
                                     )}
                                   >
                                     {result.selfGrade === 'correct' ? (
@@ -772,7 +772,7 @@ const HistoryPage = () => {
                                 <span
                                   className={clsx(
                                     'text-2xl font-bold',
-                                    session.passed ? 'text-success-500' : 'text-warning-500'
+                                    session.passed ? 'text-success' : 'text-warning'
                                   )}
                                 >
                                   {scorePercent}%
@@ -902,7 +902,7 @@ const HistoryPage = () => {
                                     </span>
                                     <span
                                       className={
-                                        result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                                        result.isCorrect ? 'text-success' : 'text-warning'
                                       }
                                     >
                                       {result.isCorrect ? (

@@ -219,7 +219,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         >
           {micPermission === 'granted' ? (
             <>
-              <Mic className="h-4 w-4 text-success-500" />
+              <Mic className="h-4 w-4 text-success" />
               <span className="font-bold">Microphone ready</span>
               {showBurmese && (
                 <span className="font-myanmar text-xs">· မိုက်ခြိုဖုန်း အဆင်သင့်</span>
@@ -227,7 +227,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             </>
           ) : micPermission === 'denied' ? (
             <>
-              <MicOff className="h-4 w-4 text-warning-500" />
+              <MicOff className="h-4 w-4 text-warning" />
               <span className="font-bold">Recording unavailable - answer verbally</span>
             </>
           ) : (

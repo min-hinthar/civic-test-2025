@@ -59,12 +59,12 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
           'flex items-center justify-center gap-2',
           'min-h-[44px] px-4 py-2.5',
           'rounded-full border',
-          'bg-warning-50',
-          'border-warning-500/30',
+          'bg-warning-subtle',
+          'border-warning/30',
           'text-warning',
           'font-semibold text-sm',
           'transition-colors duration-150',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning-500 focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed'
         )}
         aria-label="Rate as Hard"
@@ -90,12 +90,12 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
           'flex items-center justify-center gap-2',
           'min-h-[44px] px-4 py-2.5',
           'rounded-full border',
-          'bg-success-50',
-          'border-success-500/30',
+          'bg-success-subtle',
+          'border-success/30',
           'text-success-700 dark:text-success',
           'font-semibold text-sm',
           'transition-colors duration-150',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success-500 focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed'
         )}
         aria-label="Rate as Easy"

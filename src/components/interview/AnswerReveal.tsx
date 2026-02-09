@@ -66,7 +66,7 @@ export function AnswerReveal({ question, audioURL, mode }: AnswerRevealProps) {
       <Card className="space-y-4">
         {/* Primary correct answer */}
         <div>
-          <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-success-500">
+          <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-success">
             {strings.interview.correct.en}
           </div>
           <p className="text-lg font-semibold text-foreground">{primaryAnswer.text_en}</p>

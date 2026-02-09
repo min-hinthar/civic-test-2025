@@ -70,6 +70,7 @@ module.exports = {
         success: {
           DEFAULT: 'hsl(var(--color-success))',
           foreground: 'hsl(var(--color-success-foreground))',
+          subtle: 'hsl(var(--color-success-subtle))',
           50: 'hsl(var(--green-50))',
           100: 'hsl(var(--green-100))',
           500: 'hsl(var(--green-500))',
@@ -78,6 +79,7 @@ module.exports = {
         warning: {
           DEFAULT: 'hsl(var(--color-warning))',
           foreground: 'hsl(var(--color-warning-foreground))',
+          subtle: 'hsl(var(--color-warning-subtle))',
           50: 'hsl(var(--amber-50))',
           100: 'hsl(var(--amber-100))',
           500: 'hsl(var(--amber-500))',

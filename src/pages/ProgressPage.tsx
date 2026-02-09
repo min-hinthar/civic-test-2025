@@ -489,7 +489,7 @@ const ProgressPage = () => {
                                                       ? 'text-success'
                                                       : accuracy.accuracy >= 50
                                                         ? 'text-warning'
-                                                        : 'text-warning-500'
+                                                        : 'text-warning'
                                                 )}
                                               >
                                                 {accuracy.total === 0

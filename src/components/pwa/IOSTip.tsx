@@ -47,7 +47,7 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
   };
 
   return (
-    <div className="relative rounded-lg border border-warning-200 bg-warning-50 p-4 shadow-lg">
+    <div className="relative rounded-lg border border-warning/40 bg-warning-subtle p-4 shadow-lg">
       {/* Close button */}
       <button
         onClick={handleDismiss}

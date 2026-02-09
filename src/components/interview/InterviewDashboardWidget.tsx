@@ -195,11 +195,11 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           <div
             className={clsx(
               'flex h-10 w-10 items-center justify-center rounded-xl',
-              lastSession.passed ? 'bg-success-50' : 'bg-primary-subtle'
+              lastSession.passed ? 'bg-success-subtle' : 'bg-primary-subtle'
             )}
           >
             {lastSession.passed ? (
-              <Trophy className="h-5 w-5 text-success-500" />
+              <Trophy className="h-5 w-5 text-success" />
             ) : (
               <Mic className="h-5 w-5 text-primary" />
             )}
@@ -217,8 +217,8 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
                 className={clsx(
                   'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold',
                   lastSession.passed
-                    ? 'bg-success-50 text-success-500'
-                    : 'bg-warning-50 text-warning-500'
+                    ? 'bg-success-subtle text-success'
+                    : 'bg-warning-subtle text-warning'
                 )}
               >
                 {lastSession.passed ? (

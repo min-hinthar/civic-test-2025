@@ -500,8 +500,8 @@ const TestPage = () => {
         {/* Progress summary */}
         <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="text-success-500 font-bold">{correctCount} correct</span>
-            <span className="text-warning-500 font-bold">{incorrectCount} incorrect</span>
+            <span className="text-success font-bold">{correctCount} correct</span>
+            <span className="text-warning font-bold">{incorrectCount} incorrect</span>
           </div>
           <p className="text-xs text-muted-foreground">12 correct or 9 incorrect ends the test</p>
         </div>
@@ -532,7 +532,7 @@ const TestPage = () => {
             <Trophy
               className={clsx(
                 'h-8 w-8',
-                correctCount >= PASS_THRESHOLD ? 'text-success-500' : 'text-warning-500'
+                correctCount >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
               )}
             />
           </motion.div>
@@ -594,18 +594,18 @@ const TestPage = () => {
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
-            <p className="text-2xl font-bold text-success-500">{correctCount}</p>
+            <p className="text-2xl font-bold text-success">{correctCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
-            <p className="text-2xl font-bold text-warning-500">{incorrectCount}</p>
+            <p className="text-2xl font-bold text-warning">{incorrectCount}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
             <p
               className={clsx(
                 'text-2xl font-bold',
-                correctCount >= PASS_THRESHOLD ? 'text-success-500' : 'text-warning-500'
+                correctCount >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
               )}
             >
               {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
@@ -726,8 +726,8 @@ const TestPage = () => {
                     className={clsx(
                       'rounded-2xl border p-3',
                       result.isCorrect
-                        ? 'border-success-500/30 bg-success-50'
-                        : 'border-warning-500/30 bg-warning-50'
+                        ? 'border-success/30 bg-success-subtle'
+                        : 'border-warning/30 bg-warning-subtle'
                     )}
                   >
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -757,7 +757,7 @@ const TestPage = () => {
                 <p
                   className={clsx(
                     'mt-3 text-sm font-semibold',
-                    result.isCorrect ? 'text-success-500' : 'text-warning-500'
+                    result.isCorrect ? 'text-success' : 'text-warning'
                   )}
                 >
                   {result.isCorrect

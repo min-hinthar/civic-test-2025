@@ -66,8 +66,8 @@ export function InterviewTimer({ duration = 15, onExpired, isActive }: Interview
         animate={{
           width: `${progress * 100}%`,
           backgroundColor: isWarning
-            ? 'var(--color-warning-500, #f59e0b)'
-            : 'var(--color-primary-500, #3b82f6)',
+            ? 'hsl(var(--color-warning))'
+            : 'hsl(var(--color-primary))',
         }}
         transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.8, ease: 'linear' }}
       />

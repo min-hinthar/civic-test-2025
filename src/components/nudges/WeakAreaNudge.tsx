@@ -48,7 +48,7 @@ export function WeakAreaNudge({
         'rounded-2xl border p-4 transition-colors',
         isUnattempted
           ? 'border-primary-500/20 bg-primary-subtle/50'
-          : 'border-warning-500/20 bg-warning-50/50'
+          : 'border-warning/20 bg-warning-subtle/50'
       )}
     >
       {/* Category name and mastery */}
@@ -61,7 +61,7 @@ export function WeakAreaNudge({
               ? 'text-primary'
               : mastery < 30
                 ? 'text-warning'
-                : 'text-warning-500'
+                : 'text-warning'
           )}
         >
           {isUnattempted ? strings.progress.notStarted.en : `${mastery}%`}

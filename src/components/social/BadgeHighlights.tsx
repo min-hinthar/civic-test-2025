@@ -134,7 +134,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
               key={badge.id}
               className={clsx(
                 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                earned ? 'border-amber-400 bg-warning-50 shadow-sm' : 'border-border/60 bg-muted/30'
+                earned ? 'border-amber-400 bg-warning-subtle shadow-sm' : 'border-border/60 bg-muted/30'
               )}
               title={showBurmese ? badge.name.my : badge.name.en}
               aria-label={showBurmese ? badge.name.my : badge.name.en}

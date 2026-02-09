@@ -137,7 +137,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
         </div>
 
         <Card className="w-full max-w-md text-center py-10">
-          <Sparkles className="h-12 w-12 text-success-500 mx-auto mb-4" />
+          <Sparkles className="h-12 w-12 text-success mx-auto mb-4" />
           <h2 className="text-xl font-bold text-foreground">All caught up!</h2>
           {showBurmese && (
             <p className="font-myanmar text-base text-muted-foreground mt-1">

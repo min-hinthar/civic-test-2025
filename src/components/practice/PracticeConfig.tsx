@@ -54,7 +54,7 @@ const categoryBorderMap: Record<string, string> = {
 
 const categoryBgMap: Record<string, string> = {
   blue: 'bg-primary-subtle',
-  amber: 'bg-warning-50',
+  amber: 'bg-warning-subtle',
   emerald: 'bg-emerald-50',
 };
 
@@ -410,7 +410,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 rounded-xl border border-amber-500/30 bg-warning-50 p-4"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-warning-subtle p-4"
         >
           <div className="flex items-start gap-3">
             <Award className="h-5 w-5 shrink-0 text-warning mt-0.5" />

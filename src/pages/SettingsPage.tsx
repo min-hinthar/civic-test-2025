@@ -328,9 +328,9 @@ export default function SettingsPage() {
             </div>
 
             {!isSubscribed && (
-              <div className="mt-2 rounded-xl border border-warning bg-warning-50 px-3 py-2">
+              <div className="mt-2 rounded-xl border border-warning bg-warning-subtle px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-warning-500" />
+                  <Bell className="h-4 w-4 text-warning" />
                   <p className="text-xs text-warning">
                     Enable push notifications above to receive reminders.
                   </p>

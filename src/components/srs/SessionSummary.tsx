@@ -139,7 +139,7 @@ export function SessionSummary({
     >
       {/* Header */}
       <motion.div variants={fadeVariants} className="text-center">
-        <Trophy className="h-12 w-12 text-success-500 mx-auto mb-3" />
+        <Trophy className="h-12 w-12 text-success mx-auto mb-3" />
         <h2 className="text-2xl font-bold text-foreground">Session Complete</h2>
         {showBurmese && (
           <p className="font-myanmar text-base text-muted-foreground mt-1">
@@ -193,7 +193,7 @@ export function SessionSummary({
         <motion.div variants={fadeVariants}>
           <Card className="p-4">
             <div className="flex items-center gap-2 mb-3">
-              <Target className="h-4 w-4 text-warning-500 shrink-0" />
+              <Target className="h-4 w-4 text-warning shrink-0" />
               <p className="text-sm font-semibold text-foreground">Practice these categories</p>
             </div>
             {showBurmese && (
@@ -211,12 +211,12 @@ export function SessionSummary({
                   className={clsx(
                     'w-full flex items-center justify-between gap-3',
                     'p-3 rounded-xl',
-                    'bg-warning-50',
-                    'border border-warning-500/20',
+                    'bg-warning-subtle',
+                    'border border-warning/20',
                     'hover:bg-warning-100 dark:hover:bg-warning/20',
                     'transition-colors duration-150',
                     'min-h-[44px]',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning-500'
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning'
                   )}
                 >
                   <div className="flex items-center gap-2.5 text-left">

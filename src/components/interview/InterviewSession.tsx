@@ -564,7 +564,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
                 'rounded-xl px-4 py-2 text-sm font-semibold',
                 'bg-warning text-white',
                 'transition-colors hover:bg-warning-600',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning-500'
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning'
               )}
             >
               {strings.interview.confirm.en}

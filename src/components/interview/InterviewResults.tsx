@@ -288,15 +288,15 @@ export function InterviewResults({
           className={clsx(
             'rounded-2xl px-6 py-5 text-center',
             passed
-              ? 'bg-gradient-to-br from-success-50 to-success-100/60'
-              : 'bg-gradient-to-br from-warning-50 to-warning-100/60'
+              ? 'bg-gradient-to-br from-success-subtle to-success-subtle/60'
+              : 'bg-gradient-to-br from-warning-subtle to-warning-subtle/60'
           )}
         >
           <div className="mb-2 flex items-center justify-center gap-2">
             {passed ? (
-              <CheckCircle2 className="h-7 w-7 text-success-500" />
+              <CheckCircle2 className="h-7 w-7 text-success" />
             ) : (
-              <XCircle className="h-7 w-7 text-warning-500" />
+              <XCircle className="h-7 w-7 text-warning" />
             )}
             <span
               className={clsx(
@@ -491,7 +491,7 @@ export function InterviewResults({
                     )}
                     {/* Correct answers */}
                     <div className="mt-2">
-                      <span className="text-xs font-semibold text-success-500">
+                      <span className="text-xs font-semibold text-success">
                         {strings.interview.correct.en}:
                       </span>
                       <p className="text-sm text-foreground">

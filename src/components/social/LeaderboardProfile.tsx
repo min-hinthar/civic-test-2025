@@ -173,7 +173,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
                 {showBurmese ? 'ဆက်တိုက်' : 'Streak'}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
-                <Flame className="h-5 w-5 text-warning-500" />
+                <Flame className="h-5 w-5 text-warning" />
                 <span className="text-2xl font-bold text-foreground tabular-nums">
                   {entry.currentStreak}
                 </span>
@@ -183,7 +183,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
 
           {/* Top badge */}
           {TopBadgeIcon && topBadgeDef && (
-            <div className="mt-4 flex items-center gap-2 rounded-full bg-warning-50 px-4 py-2">
+            <div className="mt-4 flex items-center gap-2 rounded-full bg-warning-subtle px-4 py-2">
               <TopBadgeIcon className="h-5 w-5 text-warning" />
               <span
                 className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}

@@ -140,9 +140,9 @@ export function ExplanationCard({
 
               {/* Common mistake (only when incorrect AND data exists) */}
               {hasCommonMistake && (
-                <div className="rounded-xl border border-warning-500/30 bg-warning-50 p-3">
+                <div className="rounded-xl border border-warning/30 bg-warning-subtle p-3">
                   <div className="flex items-start gap-2">
-                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-500" />
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
                     <div className="flex-1">
                       <p className="text-xs font-semibold text-foreground">
                         {strings.explanations.commonMistake.en}

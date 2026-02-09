@@ -44,9 +44,9 @@ const MEDAL_COLORS: Record<number, string> = {
 };
 
 const MEDAL_BG: Record<number, string> = {
-  1: 'bg-warning-50',
+  1: 'bg-warning-subtle',
   2: 'bg-muted',
-  3: 'bg-warning-50',
+  3: 'bg-warning-subtle',
 };
 
 // ---------------------------------------------------------------------------

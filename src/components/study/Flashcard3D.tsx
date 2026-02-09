@@ -221,12 +221,12 @@ export function Flashcard3D({
           }}
         >
           {colorStrip}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success-500/10 to-emerald-500/10" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-success-subtle0/10 to-emerald-500/10" />
           {paperTexture}
 
           <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">
             {/* Answer label */}
-            <div className="text-sm font-medium text-success-500 mb-2 shrink-0">Answer / အဖြေ</div>
+            <div className="text-sm font-medium text-success mb-2 shrink-0">Answer / အဖြေ</div>
 
             {/* Scrollable content area */}
             <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
