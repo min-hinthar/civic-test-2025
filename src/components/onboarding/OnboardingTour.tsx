@@ -7,9 +7,41 @@ import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useUserState } from '@/contexts/StateContext';
 import { totalQuestions } from '@/constants/questions';
 import { WelcomeScreen } from './WelcomeScreen';
 import { TourTooltip } from './TourTooltip';
+
+/** Inline state picker rendered inside the onboarding tour step */
+function StateSelectContent() {
+  const { selectedState, setSelectedState, allStates } = useUserState();
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-2">Select Your State</h3>
+      <p className="text-muted-foreground text-sm mb-3">
+        Choose your state to see your governor, senators, and capital in study questions.
+      </p>
+      <select
+        value={selectedState || ''}
+        onChange={e => setSelectedState(e.target.value || null)}
+        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+        <option value="">Select state...</option>
+        {allStates.map(s => (
+          <option key={s.code} value={s.code}>{s.name}</option>
+        ))}
+      </select>
+      {selectedState && (
+        <p className="text-xs text-success mt-2">
+          ✓ {allStates.find(s => s.code === selectedState)?.name} selected
+        </p>
+      )}
+      <p className="font-myanmar text-sm text-muted-foreground mt-2">
+        လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် မြို့တော်ကို ကြည့်ရှုရန် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။
+      </p>
+    </div>
+  );
+}
 
 /**
  * Dynamically import react-joyride with SSR disabled.
@@ -45,20 +77,7 @@ const tourSteps: Step[] = [
   },
   {
     target: 'body',
-    content: (
-      <div>
-        <h3 className="font-bold text-lg mb-2">Select Your State</h3>
-        <p className="text-muted-foreground text-sm">
-          Choose your state in Settings to see your governor, senators, and capital in study
-          questions.
-        </p>
-        <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် မြို့တော်ကို ကြည့်ရှုရန် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။'
-          }
-        </p>
-      </div>
-    ),
+    content: <StateSelectContent />,
     placement: 'center' as const,
     disableBeacon: true,
   },
