@@ -37,15 +37,7 @@ interface StreakHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const DAY_LABELS_MY = [
-  '',
-  'တန္လာ',
-  '',
-  'ဗုဒ္ဓ',
-  '',
-  'သော',
-  '',
-];
+const DAY_LABELS_MY = ['', 'တန္လာ', '', 'ဗုဒ္ဓ', '', 'သော', ''];
 
 const MONTH_LABELS = [
   'Jan',
@@ -212,16 +204,12 @@ export function StreakHeatmap({ activityDates, freezesUsed, className }: StreakH
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground pt-1">
-        <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? 'နည်း' : 'Less'}
-        </span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'နည်း' : 'Less'}</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-200 dark:bg-orange-900/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-400 dark:bg-orange-700/60" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-500 dark:bg-orange-600" />
-        <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? 'များ' : 'More'}
-        </span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'များ' : 'More'}</span>
         <span className="ml-2">|</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-blue-200 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600" />
         <span>{showBurmese ? 'Freeze' : 'Freeze'}</span>

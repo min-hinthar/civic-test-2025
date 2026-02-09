@@ -29,15 +29,7 @@ interface ReviewHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const DAY_LABELS_MY = [
-  '',
-  'တန္လာ',
-  '',
-  'ဗုဒ္ဓ',
-  '',
-  'သော',
-  '',
-];
+const DAY_LABELS_MY = ['', 'တန္လာ', '', 'ဗုဒ္ဓ', '', 'သော', ''];
 
 /** Color intensity classes based on review count */
 function getCellColor(count: number): string {
@@ -153,16 +145,12 @@ export function ReviewHeatmap({ deck, className }: ReviewHeatmapProps) {
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground">
-        <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? 'နည်း' : 'Less'}
-        </span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'နည်း' : 'Less'}</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-200" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-400" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-500" />
-        <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? 'များ' : 'More'}
-        </span>
+        <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'များ' : 'More'}</span>
       </div>
     </div>
   );

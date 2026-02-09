@@ -250,11 +250,7 @@ export async function renderShareCard(data: ShareCardData): Promise<Blob> {
   ctx.fillText('US Citizenship Civic Test Prep', W / 2, 960);
 
   ctx.font = '28px "Noto Sans Myanmar", system-ui, sans-serif';
-  ctx.fillText(
-    'အမေရိကန်နိုင်ငံသားရေးရာရာ စာမေးပွဲပြင်ဆင်ခြင်း',
-    W / 2,
-    1005
-  );
+  ctx.fillText('အမေရိကန်နိုင်ငံသားရေးရာရာ စာမေးပွဲပြင်ဆင်ခြင်း', W / 2, 1005);
 
   ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
   ctx.font = '22px system-ui, "Segoe UI", sans-serif';

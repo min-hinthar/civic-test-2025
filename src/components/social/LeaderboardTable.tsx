@@ -132,9 +132,7 @@ export function LeaderboardTable({
         <p className="text-muted-foreground">No participants yet. Be the first!</p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground mt-1">
-            {
-              'ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!'
-            }
+            {'ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!'}
           </p>
         )}
       </div>

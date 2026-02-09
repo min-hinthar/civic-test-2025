@@ -265,9 +265,7 @@ const SocialHubPage = () => {
           Study together, celebrate each other, and grow as a community.
           {showBurmese && (
             <span className="block font-myanmar mt-1">
-              {
-                'အတူတက်လေ့ကျင့်ပါ၍ အချင်းချင်းကို ဂုဏ်ရည်ပါ၍ အသိုင်းအဝိုင်းအဖြစ် ကြီးထွားပါ၍'
-              }
+              {'အတူတက်လေ့ကျင့်ပါ၍ အချင်းချင်းကို ဂုဏ်ရည်ပါ၍ အသိုင်းအဝိုင်းအဖြစ် ကြီးထွားပါ၍'}
             </span>
           )}
         </p>
@@ -347,9 +345,7 @@ const SocialHubPage = () => {
                         <p
                           className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                         >
-                          {showBurmese
-                            ? 'အသိုင်းမှာ ပါဝင်ပါ!'
-                            : 'Join the community!'}
+                          {showBurmese ? 'အသိုင်းမှာ ပါဝင်ပါ!' : 'Join the community!'}
                         </p>
                         <p
                           className={`text-xs text-muted-foreground mt-0.5 ${showBurmese ? 'font-myanmar' : ''}`}
@@ -383,9 +379,7 @@ const SocialHubPage = () => {
                   <p
                     className={`text-sm font-bold text-foreground mb-1 ${showBurmese ? 'font-myanmar' : ''}`}
                   >
-                    {showBurmese
-                      ? 'ပါဝင်ရန် အရင် ဝင်ရောက်ပါ'
-                      : 'Sign in to participate'}
+                    {showBurmese ? 'ပါဝင်ရန် အရင် ဝင်ရောက်ပါ' : 'Sign in to participate'}
                   </p>
                   <p
                     className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
@@ -425,9 +419,7 @@ const SocialHubPage = () => {
                     <p
                       className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                     >
-                      {showBurmese
-                        ? 'သင့်အောင်မြင်မှုများ'
-                        : 'Your Achievements'}
+                      {showBurmese ? 'သင့်အောင်မြင်မှုများ' : 'Your Achievements'}
                     </p>
                     <p
                       className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
@@ -475,9 +467,7 @@ const SocialHubPage = () => {
                   <p
                     className={`text-xs text-muted-foreground mt-1 font-bold ${showBurmese ? 'font-myanmar' : ''}`}
                   >
-                    {showBurmese
-                      ? 'အကောင်းဆုံး'
-                      : 'Longest'}
+                    {showBurmese ? 'အကောင်းဆုံး' : 'Longest'}
                   </p>
                 </Card>
 
@@ -496,9 +486,7 @@ const SocialHubPage = () => {
                 <h3
                   className={`text-sm font-bold text-foreground mb-3 ${showBurmese ? 'font-myanmar' : ''}`}
                 >
-                  {showBurmese
-                    ? 'လှုပ်ရှားမှု'
-                    : 'Activity Calendar'}
+                  {showBurmese ? 'လှုပ်ရှားမှု' : 'Activity Calendar'}
                 </h3>
                 <StreakHeatmap activityDates={activityDates} freezesUsed={freezesUsed} />
               </Card>
@@ -510,9 +498,7 @@ const SocialHubPage = () => {
                   <h3
                     className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
-                    {showBurmese
-                      ? 'Freeze အလုပ်လုပ်ပုံ'
-                      : 'How Freezes Work'}
+                    {showBurmese ? 'Freeze အလုပ်လုပ်ပုံ' : 'How Freezes Work'}
                   </h3>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">

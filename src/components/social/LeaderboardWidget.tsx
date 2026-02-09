@@ -66,9 +66,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className="text-sm text-muted-foreground">
-            {showBurmese
-              ? 'တင်နေပါသည်...'
-              : 'Loading...'}
+            {showBurmese ? 'တင်နေပါသည်...' : 'Loading...'}
           </span>
         </div>
       </div>
@@ -93,14 +91,10 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
               <p
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese
-                  ? 'ဥူးဆောင်ဘုတ်မှာ ပါဝင်ပါ!'
-                  : 'Join the leaderboard!'}
+                {showBurmese ? 'ဥူးဆောင်ဘုတ်မှာ ပါဝင်ပါ!' : 'Join the leaderboard!'}
               </p>
               <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
-                {showBurmese
-                  ? 'သင့်ရမှတ်များကို မျှဝေပြပါ'
-                  : 'Compete with fellow learners'}
+                {showBurmese ? 'သင့်ရမှတ်များကို မျှဝေပြပါ' : 'Compete with fellow learners'}
               </p>
             </div>
           </div>
@@ -159,9 +153,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
                   : 'Not ranked'}
             </p>
             <p className="text-xs text-muted-foreground">
-              {showBurmese
-                ? 'ဥူးဆောင်ဘုတ်'
-                : 'Leaderboard'}
+              {showBurmese ? 'ဥူးဆောင်ဘုတ်' : 'Leaderboard'}
             </p>
           </div>
         </div>

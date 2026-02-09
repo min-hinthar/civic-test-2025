@@ -35,9 +35,7 @@ const tourSteps: Step[] = [
           This is your home base. Track progress, see streaks, and find areas to improve.
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'ဤသည်မှာ သင့်ပင်မစာမျက်နှာဖြစ်ပါသည်။ တိုးတက်မှုကို ခြေရာခံပါ။'
-          }
+          {'ဤသည်မှာ သင့်ပင်မစာမျက်နှာဖြစ်ပါသည်။ တိုးတက်မှုကို ခြေရာခံပါ။'}
         </p>
       </div>
     ),
@@ -54,9 +52,7 @@ const tourSteps: Step[] = [
           answers!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'မေးခွန်း ၁၀၀ လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။'
-          }
+          {'မေးခွန်း ၁၀၀ လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။'}
         </p>
       </div>
     ),
@@ -73,9 +69,7 @@ const tourSteps: Step[] = [
           pass!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၁၀ ခုမှ ၆ ခုမှန်ရပါမည်။'
-          }
+          {'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၁၀ ခုမှ ၆ ခုမှန်ရပါမည်။'}
         </p>
       </div>
     ),
@@ -129,9 +123,7 @@ const tourSteps: Step[] = [
           Toggle between light and dark mode. Study comfortably day or night!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။'
-          }
+          {'အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။'}
         </p>
       </div>
     ),
@@ -147,9 +139,7 @@ const tourSteps: Step[] = [
           Every question you practice brings you closer to your citizenship. You can do this!
         </p>
         <p className="font-myanmar text-muted-foreground mt-2">
-          {
-            'သင်လေ့ကျင့်သမျှ မေးခွန်းတိုင်းက သင့်နိုင်ငံသားဖြစ်မှုနီးစေပါတယ်။ ကံကောင်းပါစေ!'
-          }
+          {'သင်လေ့ကျင့်သမျှ မေးခွန်းတိုင်းက သင့်နိုင်ငံသားဖြစ်မှုနီးစေပါတယ်။ ကံကောင်းပါစေ!'}
         </p>
         <div className="mt-4 text-4xl" role="img" aria-label="celebration">
           <span role="img" aria-hidden="true">

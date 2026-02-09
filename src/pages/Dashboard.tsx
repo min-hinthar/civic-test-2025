@@ -364,11 +364,7 @@ const Dashboard = () => {
             >
               <BookOpenCheck className="h-5 w-5" />
               <span>Study</span>
-              {showBurmese && (
-                <span className="font-myanmar text-xs opacity-80">
-                  {'လေ့လာပါ'}
-                </span>
-              )}
+              {showBurmese && <span className="font-myanmar text-xs opacity-80">{'လေ့လာပါ'}</span>}
             </button>
           </div>
           <div data-tour="test-action">
@@ -387,11 +383,7 @@ const Dashboard = () => {
             >
               <Flag className="h-5 w-5" />
               <span>Test</span>
-              {showBurmese && (
-                <span className="font-myanmar text-xs opacity-80">
-                  {'စာမေးပွဲ'}
-                </span>
-              )}
+              {showBurmese && <span className="font-myanmar text-xs opacity-80">{'စာမေးပွဲ'}</span>}
             </button>
           </div>
           <div>
@@ -411,9 +403,7 @@ const Dashboard = () => {
               <Mic className="h-5 w-5" />
               <span>Interview</span>
               {showBurmese && (
-                <span className="font-myanmar text-xs opacity-80">
-                  {'အင်တာဗျူး'}
-                </span>
+                <span className="font-myanmar text-xs opacity-80">{'အင်တာဗျူး'}</span>
               )}
             </button>
           </div>
@@ -519,11 +509,7 @@ const Dashboard = () => {
                       >
                         <Sparkles className="h-4 w-4" />
                         {showBurmese ? (
-                          <span className="font-myanmar">
-                            {
-                              'အပြည့်အစုံးကြည့်ပါ'
-                            }
-                          </span>
+                          <span className="font-myanmar">{'အပြည့်အစုံးကြည့်ပါ'}</span>
                         ) : (
                           'View Full Progress'
                         )}
@@ -621,11 +607,7 @@ const Dashboard = () => {
               </div>
               <h3 className="font-bold text-foreground text-lg mb-1">
                 {showBurmese ? (
-                  <span className="font-myanmar">
-                    {
-                      'သင့်ခရီးစတင်လိုက်ပါ!'
-                    }
-                  </span>
+                  <span className="font-myanmar">{'သင့်ခရီးစတင်လိုက်ပါ!'}</span>
                 ) : (
                   'Start your citizenship journey!'
                 )}
@@ -633,9 +615,7 @@ const Dashboard = () => {
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 {showBurmese ? (
                   <span className="font-myanmar">
-                    {
-                      'စာမေးပွဲတစ်ခုဖြေဆိုပြီး သင့်တိုးတက်မှုကို ချက်ချင်းကြည့်ပါ။'
-                    }
+                    {'စာမေးပွဲတစ်ခုဖြေဆိုပြီး သင့်တိုးတက်မှုကို ချက်ချင်းကြည့်ပါ။'}
                   </span>
                 ) : (
                   'Take a mock test to track your progress and see personalized insights.'
@@ -656,11 +636,7 @@ const Dashboard = () => {
               >
                 <Flag className="h-4 w-4" />
                 {showBurmese ? (
-                  <span className="font-myanmar">
-                    {
-                      'စာမေးပွဲစတင်ပါ'
-                    }
-                  </span>
+                  <span className="font-myanmar">{'စာမေးပွဲစတင်ပါ'}</span>
                 ) : (
                   'Take Your First Test'
                 )}

@@ -209,9 +209,7 @@ const ProgressPage = () => {
           </div>
           {showBurmese && (
             <p className="text-lg font-myanmar text-muted-foreground">
-              {
-                'ကျွမ်းကျင်မှု တိုးတက်မှု'
-              }
+              {'ကျွမ်းကျင်မှု တိုးတက်မှု'}
             </p>
           )}
         </div>
@@ -225,12 +223,7 @@ const ProgressPage = () => {
           <span>
             Back to Dashboard
             {showBurmese && (
-              <span className="font-myanmar ml-1 text-muted-foreground">
-                /
-                {
-                  'ဒက်ရှ်ဘုတ်သို့'
-                }
-              </span>
+              <span className="font-myanmar ml-1 text-muted-foreground">/{'ဒက်ရှ်ဘုတ်သို့'}</span>
             )}
           </span>
         </Link>
@@ -284,11 +277,7 @@ const ProgressPage = () => {
                         {practicedQuestionIds.size} of 100 questions practiced
                         {showBurmese && (
                           <span className="block font-myanmar mt-0.5">
-                            {'မေးခွန်း'}{' '}
-                            {practicedQuestionIds.size} / 100{' '}
-                            {
-                              'လေ့ကျင့်ပြီး'
-                            }
+                            {'မေးခွန်း'} {practicedQuestionIds.size} / 100 {'လေ့ကျင့်ပြီး'}
                           </span>
                         )}
                       </p>
@@ -318,9 +307,7 @@ const ProgressPage = () => {
                         </p>
                         {showBurmese && (
                           <p className="text-sm font-myanmar text-muted-foreground mb-4">
-                            {
-                              'သင့်ခရီးစတင်ပါ!'
-                            }
+                            {'သင့်ခရီးစတင်ပါ!'}
                           </p>
                         )}
                         <p className="text-sm text-muted-foreground max-w-xs mx-auto">
@@ -328,9 +315,7 @@ const ProgressPage = () => {
                           medals.
                           {showBurmese && (
                             <span className="block font-myanmar mt-1">
-                              {
-                                'မေးခွန်းများ လေ့ကျင့်ပြီး တံဆိပ်များ ရယူပါ။'
-                              }
+                              {'မေးခွန်းများ လေ့ကျင့်ပြီး တံဆိပ်များ ရယူပါ။'}
                             </span>
                           )}
                         </p>
@@ -608,9 +593,7 @@ const ProgressPage = () => {
                     Complete at least 2 tests to see your mastery trend chart.
                     {showBurmese && (
                       <span className="block font-myanmar mt-0.5">
-                        {
-                          "လမ်းကြောင်းချက်ကိုကြည့်ရန် အနည်းဆုံး စာမေးပွဲ '2' ခု ဖြေဆိုပါ။"
-                        }
+                        {"လမ်းကြောင်းချက်ကိုကြည့်ရန် အနည်းဆုံး စာမေးပွဲ '2' ခု ဖြေဆိုပါ။"}
                       </span>
                     )}
                   </p>

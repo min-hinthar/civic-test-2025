@@ -122,9 +122,7 @@ export function BottomTabBar() {
               style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
               role="dialog"
               aria-modal="true"
-              aria-label={
-                showBurmese ? 'နောက်ထပ်' : 'More options'
-              }
+              aria-label={showBurmese ? 'နောက်ထပ်' : 'More options'}
             >
               {/* Drag handle */}
               <div className="flex justify-center pt-3 pb-1">
@@ -196,16 +194,12 @@ export function BottomTabBar() {
                   <span className="text-sm font-medium text-foreground">
                     {theme === 'dark' ? (
                       showBurmese ? (
-                        <span className="font-myanmar">
-                          {'အလင်းမုဒ်'}
-                        </span>
+                        <span className="font-myanmar">{'အလင်းမုဒ်'}</span>
                       ) : (
                         'Light Mode'
                       )
                     ) : showBurmese ? (
-                      <span className="font-myanmar">
-                        {'အမှာင်မုဒ်'}
-                      </span>
+                      <span className="font-myanmar">{'အမှာင်မုဒ်'}</span>
                     ) : (
                       'Dark Mode'
                     )}
@@ -306,13 +300,7 @@ export function BottomTabBar() {
                     : 'text-muted-foreground'
                 }`}
               >
-                {showBurmese ? (
-                  <span className="font-myanmar">
-                    {'နောက်ထပ်'}
-                  </span>
-                ) : (
-                  'More'
-                )}
+                {showBurmese ? <span className="font-myanmar">{'နောက်ထပ်'}</span> : 'More'}
               </span>
             </motion.div>
           </button>

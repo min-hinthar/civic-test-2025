@@ -72,11 +72,7 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
         <RotateCcw className="h-4 w-4 shrink-0" />
         <span className="flex flex-col items-center leading-tight">
           <span>Hard</span>
-          {showBurmese && (
-            <span className="font-myanmar text-xs opacity-80">
-              {'ခက်သည်'}
-            </span>
-          )}
+          {showBurmese && <span className="font-myanmar text-xs opacity-80">{'ခက်သည်'}</span>}
         </span>
       </motion.button>
 
@@ -107,11 +103,7 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
         <Check className="h-4 w-4 shrink-0" />
         <span className="flex flex-col items-center leading-tight">
           <span>Easy</span>
-          {showBurmese && (
-            <span className="font-myanmar text-xs opacity-80">
-              {'လွယ်သည်'}
-            </span>
-          )}
+          {showBurmese && <span className="font-myanmar text-xs opacity-80">{'လွယ်သည်'}</span>}
         </span>
       </motion.button>
     </div>

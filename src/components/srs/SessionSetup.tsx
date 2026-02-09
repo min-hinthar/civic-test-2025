@@ -14,18 +14,7 @@ import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredL
 // Burmese numeral helper (inline to avoid circular dep)
 // ---------------------------------------------------------------------------
 
-const BURMESE_DIGITS = [
-  '၀',
-  '၁',
-  '၂',
-  '၃',
-  '၄',
-  '၅',
-  '၆',
-  '၇',
-  '၈',
-  '၉',
-];
+const BURMESE_DIGITS = ['၀', '၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉'];
 
 function toBurmeseNumeral(n: number): string {
   return String(n)
@@ -143,11 +132,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back</span>
-            {showBurmese && (
-              <span className="font-myanmar ml-1">
-                / {'နောက်သို့'}
-              </span>
-            )}
+            {showBurmese && <span className="font-myanmar ml-1">/ {'နောက်သို့'}</span>}
           </button>
         </div>
 
@@ -156,17 +141,13 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           <h2 className="text-xl font-bold text-foreground">All caught up!</h2>
           {showBurmese && (
             <p className="font-myanmar text-base text-muted-foreground mt-1">
-              {
-                'အားလုံးပြန်လှည်ပြီးပါပြီ။'
-              }
+              {'အားလုံးပြန်လှည်ပြီးပါပြီ။'}
             </p>
           )}
           <p className="text-sm text-muted-foreground mt-3">Come back later for more reviews.</p>
           {showBurmese && (
             <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
-              {
-                'နောက်မှပြန်လာပါ။'
-              }
+              {'နောက်မှပြန်လာပါ။'}
             </p>
           )}
         </Card>
@@ -190,11 +171,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
-          {showBurmese && (
-            <span className="font-myanmar ml-1">
-              / {'နောက်သို့'}
-            </span>
-          )}
+          {showBurmese && <span className="font-myanmar ml-1">/ {'နောက်သို့'}</span>}
         </button>
       </div>
 
@@ -205,9 +182,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
             <h2 className="text-xl font-bold text-foreground">Review Session</h2>
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
-                {
-                  'ပြန်လှည့်စစ်ဆေးခြင်း'
-                }
+                {'ပြန်လှည့်စစ်ဆေးခြင်း'}
               </p>
             )}
           </StaggeredItem>
@@ -219,9 +194,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               <p className="text-sm text-muted-foreground mt-1">cards due for review</p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  {
-                    'ပြန်လှည်ရမည့် ကတ်များ'
-                  }
+                  {'ပြန်လှည်ရမည့် ကတ်များ'}
                 </p>
               )}
             </div>
@@ -233,10 +206,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               Session size
               {showBurmese && (
                 <span className="font-myanmar text-muted-foreground ml-2">
-                  /{' '}
-                  {
-                    'အကြိမ်အရေအတွက်'
-                  }
+                  / {'အကြိမ်အရေအတွက်'}
                 </span>
               )}
             </p>
@@ -284,9 +254,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                   <p className="text-sm font-medium text-foreground">Enable Timer</p>
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
-                      {
-                        'အချိန်တိုင်းကိရိယာ ဖွင့်ပါ'
-                      }
+                      {'အချိန်တိုင်းကိရိယာ ဖွင့်ပါ'}
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -294,9 +262,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                   </p>
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
-                      {
-                        'အချိန်ဖိအားဖြင့် လေ့ကျင့်ပါ'
-                      }
+                      {'အချိန်ဖိအားဖြင့် လေ့ကျင့်ပါ'}
                     </p>
                   )}
                 </div>
@@ -339,11 +305,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               <span className="flex flex-col items-center">
                 <span>Start Review</span>
                 {showBurmese && (
-                  <span className="font-myanmar text-sm opacity-80">
-                    {
-                      'ပြန်လှည်ခြင်းစတင်ပါ'
-                    }
-                  </span>
+                  <span className="font-myanmar text-sm opacity-80">{'ပြန်လှည်ခြင်းစတင်ပါ'}</span>
                 )}
               </span>
             </Button>

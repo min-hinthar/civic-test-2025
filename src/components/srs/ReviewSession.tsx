@@ -27,18 +27,7 @@ import { SessionSummary, type SessionResult } from '@/components/srs/SessionSumm
 // Burmese numeral helper (inline to avoid circular dep)
 // ---------------------------------------------------------------------------
 
-const BURMESE_DIGITS = [
-  '၀',
-  '၁',
-  '၂',
-  '၃',
-  '၄',
-  '၅',
-  '၆',
-  '၇',
-  '၈',
-  '၉',
-];
+const BURMESE_DIGITS = ['၀', '၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉'];
 
 function toBurmeseNumeral(n: number): string {
   return String(n)
@@ -281,9 +270,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
         >
           <X className="h-4 w-4" />
           <span>Exit</span>
-          {showBurmese && (
-            <span className="font-myanmar ml-1">/ {'ထွက်ပါ'}</span>
-          )}
+          {showBurmese && <span className="font-myanmar ml-1">/ {'ထွက်ပါ'}</span>}
         </button>
 
         {timerEnabled && (
@@ -302,8 +289,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           </p>
           {showBurmese && (
             <p className="font-myanmar text-xs text-muted-foreground">
-              {'ကတ်'} {toBurmeseNumeral(currentIndex + 1)} /{' '}
-              {toBurmeseNumeral(sessionSize)}
+              {'ကတ်'} {toBurmeseNumeral(currentIndex + 1)} / {toBurmeseNumeral(sessionSize)}
             </p>
           )}
         </div>
@@ -362,9 +348,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           Tap card to reveal answer
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
-              {
-                'အဖြေကိုကြည့်ရန် ကတ်ကိုနှိပ်ပါ'
-              }
+              {'အဖြေကိုကြည့်ရန် ကတ်ကိုနှိပ်ပါ'}
             </span>
           )}
         </p>

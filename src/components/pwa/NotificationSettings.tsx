@@ -77,9 +77,7 @@ export function NotificationSettings() {
           Notifications are not supported in this browser.
         </p>
         <p className="font-myanmar text-sm text-gray-500 dark:text-gray-400">
-          {
-            'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'
-          }
+          {'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'}
         </p>
       </div>
     );
@@ -99,9 +97,7 @@ export function NotificationSettings() {
           To enable notifications, update your browser settings.
         </p>
         <p className="font-myanmar text-sm text-warning-600 dark:text-warning-400">
-          {
-            'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'
-          }
+          {'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'}
         </p>
       </div>
     );
@@ -117,18 +113,12 @@ export function NotificationSettings() {
         Get friendly reminders to keep studying
       </p>
       <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500 mb-4">
-        {
-          'လေ့လာရန် သတိပေးချက်များ ရယူပါ'
-        }
+        {'လေ့လာရန် သတိပေးချက်များ ရယူပါ'}
       </p>
 
       <div className="flex items-center gap-3">
         <label htmlFor="reminder-frequency" className="text-sm text-gray-700 dark:text-gray-300">
-          Frequency /{' '}
-          <span className="font-myanmar">
-            {'ကြိမ်နှုန်း'}
-          </span>
-          :
+          Frequency / <span className="font-myanmar">{'ကြိမ်နှုန်း'}</span>:
         </label>
         <select
           id="reminder-frequency"
@@ -148,11 +138,7 @@ export function NotificationSettings() {
       {isSubscribed && reminderFrequency !== 'off' && (
         <p className="mt-3 text-sm text-green-600 dark:text-green-400">
           Notifications enabled /{' '}
-          <span className="font-myanmar">
-            {
-              'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'
-            }
-          </span>
+          <span className="font-myanmar">{'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'}</span>
         </p>
       )}
     </div>

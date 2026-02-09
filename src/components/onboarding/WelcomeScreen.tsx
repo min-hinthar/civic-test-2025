@@ -81,14 +81,10 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
 
           {/* Burmese welcome text */}
           <h2 className="font-myanmar text-xl font-bold text-foreground mb-1">
-            {
-              'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'
-            }
+            {'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'}
           </h2>
           <p className="font-myanmar text-sm text-muted-foreground mb-4">
-            {
-              'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'
-            }
+            {'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'}
           </p>
 
           {/* Loading dots animation */}

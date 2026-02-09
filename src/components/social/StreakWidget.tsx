@@ -51,9 +51,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className="text-sm text-muted-foreground">
-            {showBurmese
-              ? 'တင်နေပါသည်...'
-              : 'Loading...'}
+            {showBurmese ? 'တင်နေပါသည်...' : 'Loading...'}
           </span>
         </div>
       </div>
@@ -120,9 +118,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
             {/* Main streak display */}
             <div className="flex items-center gap-2">
               <p className="text-sm font-semibold text-foreground">
-                {showBurmese
-                  ? `${currentStreak} ရက်ဆက်တိုက်`
-                  : `${currentStreak} day streak`}
+                {showBurmese ? `${currentStreak} ရက်ဆက်တိုက်` : `${currentStreak} day streak`}
               </p>
             </div>
 

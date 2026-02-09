@@ -540,10 +540,7 @@ export function InterviewResults({
             <span>
               {showBurmese ? (
                 <>
-                  Dashboard ·{' '}
-                  <span className="font-myanmar">
-                    {'ဒက်ရှ်ဘုတ်'}
-                  </span>
+                  Dashboard · <span className="font-myanmar">{'ဒက်ရှ်ဘုတ်'}</span>
                 </>
               ) : (
                 'Dashboard'

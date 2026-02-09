@@ -240,9 +240,7 @@ export default function SettingsPage() {
             label="Display Language"
             labelMy={'ပြသည့်ဘာသာ'}
             description="Bilingual or English-only"
-            descriptionMy={
-              'နှစ်ဘာသာ သို့မဟုတ် အင်္ဂလစ်သီးသန့်'
-            }
+            descriptionMy={'နှစ်ဘာသာ သို့မဟုတ် အင်္ဂလစ်သီးသန့်'}
             showBurmese={showBurmese}
             action={<LanguageToggle showLabel />}
             isLast
@@ -254,14 +252,8 @@ export default function SettingsPage() {
             </p>
             {showBurmese && (
               <p className="text-xs text-muted-foreground font-myanmar mt-1">
-                <strong>
-                  {
-                    'အင်္ဂလစ်သီးသန့်မုဒ်'
-                  }
-                </strong>
-                {
-                  'က တကယ့်USCIS အင်တာဗျူးကိုတူစေပါတယ်။'
-                }
+                <strong>{'အင်္ဂလစ်သီးသန့်မုဒ်'}</strong>
+                {'က တကယ့်USCIS အင်တာဗျူးကိုတူစေပါတယ်။'}
               </p>
             )}
           </div>
@@ -271,9 +263,7 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<Volume2 className="h-5 w-5" />}
           titleEn="Sound & Notifications"
-          titleMy={
-            'အသံနှင့် အကြောင်းကြားချက်များ'
-          }
+          titleMy={'အသံနှင့် အကြောင်းကြားချက်များ'}
           showBurmese={showBurmese}
         >
           {/* Sound Effects toggle */}
@@ -281,9 +271,7 @@ export default function SettingsPage() {
             label="Sound Effects"
             labelMy={'အသံစေဖက်များ'}
             description="Correct answers, milestones, level-ups"
-            descriptionMy={
-              'အဖြေမှန်များ၍ မိုင်းတိုင်များ'
-            }
+            descriptionMy={'အဖြေမှန်များ၍ မိုင်းတိုင်များ'}
             showBurmese={showBurmese}
             action={
               <div className="flex items-center gap-2">
@@ -308,9 +296,7 @@ export default function SettingsPage() {
               <p className="text-sm font-semibold text-foreground">Study Reminders</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
-                  {
-                    'လေ့လာရန်သတိပေးချက်'
-                  }
+                  {'လေ့လာရန်သတိပေးချက်'}
                 </span>
               )}
             </div>
@@ -324,16 +310,13 @@ export default function SettingsPage() {
               <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
-                  {
-                    'သတိပေးချက်အချိန်'
-                  }
+                  {'သတိပေးချက်အချိန်'}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-3">
               <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
-                Time /{' '}
-                <span className="font-myanmar">{'အချိန်'}</span>:
+                Time / <span className="font-myanmar">{'အချိန်'}</span>:
               </label>
               <input
                 type="time"
@@ -354,9 +337,7 @@ export default function SettingsPage() {
                 </div>
                 {showBurmese && (
                   <p className="font-myanmar text-xs text-warning-600 dark:text-warning-400 mt-1 ml-6">
-                    {
-                      'ပြန်လှည့်သတိပေးချက်များရရှိရန် push notification ဖွင့်ပါ။'
-                    }
+                    {'ပြန်လှည့်သတိပေးချက်များရရှိရန် push notification ဖွင့်ပါ။'}
                   </p>
                 )}
               </div>
@@ -377,9 +358,7 @@ export default function SettingsPage() {
               <p className="text-sm font-semibold text-foreground">Speech Speed</p>
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
-                  {
-                    'အင်တာဗျူးစကားပြောနှုန်း'
-                  }
+                  {'အင်တာဗျူးစကားပြောနှုန်း'}
                 </span>
               )}
             </div>
@@ -411,9 +390,7 @@ export default function SettingsPage() {
             </p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                {
-                  'လေ့ကျင့်စစ်သန်းများအတွင်း အင်တာဗျူးစကားပြောသည့်အမြန်ကို ထိန်းချုပ်ပါ။'
-                }
+                {'လေ့ကျင့်စစ်သန်းများအတွင်း အင်တာဗျူးစကားပြောသည့်အမြန်ကို ထိန်းချုပ်ပါ။'}
               </p>
             )}
           </div>
@@ -423,9 +400,7 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<Users className="h-5 w-5" />}
           titleEn="Social & Community"
-          titleMy={
-            'လူမှုဥရေးနှင့် အသိုင်းအဝိုင်း'
-          }
+          titleMy={'လူမှုဥရေးနှင့် အသိုင်းအဝိုင်း'}
           showBurmese={showBurmese}
         >
           <SocialSettings />
@@ -435,20 +410,14 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<RotateCcw className="h-5 w-5" />}
           titleEn="Help & Guidance"
-          titleMy={
-            'အကူအညီနှင့် လမ်းညွှန်'
-          }
+          titleMy={'အကူအညီနှင့် လမ်းညွှန်'}
           showBurmese={showBurmese}
         >
           <SettingsRow
             label="Replay Onboarding Tour"
-            labelMy={
-              'လမ်းညွှန်မှုခရီးကို ပြန်ကြည့်ရှုပါ'
-            }
+            labelMy={'လမ်းညွှန်မှုခရီးကို ပြန်ကြည့်ရှုပါ'}
             description="Walk through the guided introduction again"
-            descriptionMy={
-              'လမ်းညွှန်ပြမှုခရီးကို ထပ်မံဖြတ်သွားပါ။'
-            }
+            descriptionMy={'လမ်းညွှန်ပြမှုခရီးကို ထပ်မံဖြတ်သွားပါ။'}
             showBurmese={showBurmese}
             action={
               <button
@@ -479,9 +448,7 @@ export default function SettingsPage() {
               label="Sign Out"
               labelMy={'ထွက်ရန်'}
               description="You can sign back in anytime"
-              descriptionMy={
-                'မည်သည့်အချိန်မှာမဆို ပြန်အကောင့်ဖွင့်နိုင်ပါသည်'
-              }
+              descriptionMy={'မည်သည့်အချိန်မှာမဆို ပြန်အကောင့်ဖွင့်နိုင်ပါသည်'}
               showBurmese={showBurmese}
               action={
                 <button
@@ -504,9 +471,7 @@ export default function SettingsPage() {
               Sign in to access account actions.
               {showBurmese && (
                 <span className="block font-myanmar mt-0.5">
-                  {
-                    'အကောင့်လုပ်ဆောင်ချက်များရရှိရန် အကောင့်ဖွင့်ပါ'
-                  }
+                  {'အကောင့်လုပ်ဆောင်ချက်များရရှိရန် အကောင့်ဖွင့်ပါ'}
                 </span>
               )}
             </p>

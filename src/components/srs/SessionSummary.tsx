@@ -143,9 +143,7 @@ export function SessionSummary({
         <h2 className="text-2xl font-bold text-foreground">Session Complete</h2>
         {showBurmese && (
           <p className="font-myanmar text-base text-muted-foreground mt-1">
-            {
-              'စစ်ဆေးခြင်းပြီးပါပြီ'
-            }
+            {'စစ်ဆေးခြင်းပြီးပါပြီ'}
           </p>
         )}
       </motion.div>
@@ -158,9 +156,7 @@ export function SessionSummary({
             <p className="text-3xl font-bold text-foreground">{totalCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Reviewed</p>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">
-                {'ပြန်လှည့်ပြီး'}
-              </p>
+              <p className="font-myanmar text-xs text-muted-foreground">{'ပြန်လှည့်ပြီး'}</p>
             )}
           </Card>
 
@@ -169,9 +165,7 @@ export function SessionSummary({
             <p className="text-3xl font-bold text-success-600 dark:text-success-400">{easyCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Easy</p>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">
-                {'လွယ်သည်'}
-              </p>
+              <p className="font-myanmar text-xs text-muted-foreground">{'လွယ်သည်'}</p>
             )}
           </Card>
 
@@ -180,9 +174,7 @@ export function SessionSummary({
             <p className="text-3xl font-bold text-warning-600 dark:text-warning-400">{hardCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Hard</p>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">
-                {'ခက်သည်'}
-              </p>
+              <p className="font-myanmar text-xs text-muted-foreground">{'ခက်သည်'}</p>
             )}
           </Card>
         </div>
@@ -206,9 +198,7 @@ export function SessionSummary({
             </div>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mb-3">
-                {
-                  'ဤအမျိုးအစားများကို လေ့ကျင့်ပါ'
-                }
+                {'ဤအမျိုးအစားများကို လေ့ကျင့်ပါ'}
               </p>
             )}
 
@@ -254,11 +244,7 @@ export function SessionSummary({
           <span className="flex flex-col items-center">
             <span>Back to Deck</span>
             {showBurmese && (
-              <span className="font-myanmar text-sm opacity-80">
-                {
-                  'ကတ်များဆီသို့ပြန်သွားပါ'
-                }
-              </span>
+              <span className="font-myanmar text-sm opacity-80">{'ကတ်များဆီသို့ပြန်သွားပါ'}</span>
             )}
           </span>
         </Button>

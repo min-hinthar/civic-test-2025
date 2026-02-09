@@ -171,11 +171,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 'transition-[box-shadow,transform] duration-100'
               )}
             >
-              {showBurmese ? (
-                <span className="font-myanmar">{'စတင်ပါ'}</span>
-              ) : (
-                'Start'
-              )}
+              {showBurmese ? <span className="font-myanmar">{'စတင်ပါ'}</span> : 'Start'}
             </span>
           </div>
         </Card>
@@ -209,11 +205,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 'transition-[box-shadow,transform] duration-100'
               )}
             >
-              {showBurmese ? (
-                <span className="font-myanmar">{'စတင်ပါ'}</span>
-              ) : (
-                'Start'
-              )}
+              {showBurmese ? <span className="font-myanmar">{'စတင်ပါ'}</span> : 'Start'}
             </span>
           </div>
         </Card>
@@ -230,9 +222,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
               <Mic className="h-4 w-4 text-success-500" />
               <span className="font-bold">Microphone ready</span>
               {showBurmese && (
-                <span className="font-myanmar text-xs">
-                  · မိုက်ခြိုဖုန်း အဆင်သင့်
-                </span>
+                <span className="font-myanmar text-xs">· မိုက်ခြိုဖုန်း အဆင်သင့်</span>
               )}
             </>
           ) : micPermission === 'denied' ? (
@@ -318,9 +308,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             <p className="text-4xl mb-2">🎤</p>
             <p className="text-sm font-bold text-muted-foreground">First time? Give it a try!</p>
             <p className="mt-1 font-myanmar text-xs text-muted-foreground">
-              {
-                'ပထမဆုံးအကြိမ်လား? စမ်းကြည့်ပါ!'
-              }
+              {'ပထမဆုံးအကြိမ်လား? စမ်းကြည့်ပါ!'}
             </p>
           </Card>
         ) : (

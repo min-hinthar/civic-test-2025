@@ -89,8 +89,7 @@ export function formatSRSReminderNotification(dueCount: number): {
   url: string;
 } {
   return {
-    title:
-      'Cards Due for Review! / ပြန်လှည့်ရန် ကတ်များရှိပါတယ်!',
+    title: 'Cards Due for Review! / ပြန်လှည့်ရန် ကတ်များရှိပါတယ်!',
     body: `You have ${dueCount} card${dueCount === 1 ? '' : 's'} ready to review. / ပြန်လှည့်ရန် ကတ် ${dueCount} ခုရှိသည်။`,
     tag: 'srs-reminder',
     url: '/study#review',

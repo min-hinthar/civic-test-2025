@@ -91,9 +91,7 @@ export function SocialSettings() {
         </div>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
-            {
-              'လူမှုဥရေးလုပ်ဆောင်ချက်များကို ဖွင့်ရန် အကောင့်ဖွင့်ပါ'
-            }
+            {'လူမှုဥရေးလုပ်ဆောင်ချက်များကို ဖွင့်ရန် အကောင့်ဖွင့်ပါ'}
           </p>
         )}
       </div>
@@ -115,9 +113,7 @@ export function SocialSettings() {
               <p className="font-medium text-foreground">Leaderboard Visibility</p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  {
-                    'ဥူးဆောင်ဘုတ်ပြသခြင်း'
-                  }
+                  {'ဥူးဆောင်ဘုတ်ပြသခြင်း'}
                 </p>
               )}
             </div>
@@ -151,9 +147,7 @@ export function SocialSettings() {
               </p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                  {
-                    'သင့်ပရိုဖိုင်ကို ဥူးဆောင်ဘုတ်တွင် မြင်ရပါသည်'
-                  }
+                  {'သင့်ပရိုဖိုင်ကို ဥူးဆောင်ဘုတ်တွင် မြင်ရပါသည်'}
                 </p>
               )}
             </>
@@ -162,9 +156,7 @@ export function SocialSettings() {
               <p className="text-sm text-muted-foreground">Your profile is private</p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                  {
-                    'သင့်ပရိုဖိုင်သည် ကိုယ်ရေးဖြစ်ပါသည်'
-                  }
+                  {'သင့်ပရိုဖိုင်သည် ကိုယ်ရေးဖြစ်ပါသည်'}
                 </p>
               )}
             </>

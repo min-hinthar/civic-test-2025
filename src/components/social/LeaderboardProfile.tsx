@@ -199,9 +199,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
               <p
                 className={`text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese
-                  ? 'ရရှိထားသော တံဆိပ်များ'
-                  : 'Earned Badges'}
+                {showBurmese ? 'ရရှိထားသော တံဆိပ်များ' : 'Earned Badges'}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {earnedBadges.map(badge => {
@@ -227,9 +225,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
               <span
                 className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese
-                  ? 'တင်နေပါသည်...'
-                  : 'Loading badges...'}
+                {showBurmese ? 'တင်နေပါသည်...' : 'Loading badges...'}
               </span>
             </div>
           )}
@@ -247,11 +243,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             )}
           >
             Close
-            {showBurmese && (
-              <span className="font-myanmar ml-2 text-white/80">
-                {'ပိတ်ပါ'}
-              </span>
-            )}
+            {showBurmese && <span className="font-myanmar ml-2 text-white/80">{'ပိတ်ပါ'}</span>}
           </button>
         </div>
       </DialogContent>

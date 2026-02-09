@@ -565,9 +565,7 @@ const HistoryPage = () => {
                           <p className="mt-4 text-xs text-muted-foreground italic">
                             {showBurmese ? (
                               <span className="font-myanmar">
-                                {
-                                  'အမေးခွန်းအသေးစိတ်များ မရနိုင်ပါ၍'
-                                }
+                                {'အမေးခွန်းအသေးစိတ်များ မရနိုင်ပါ၍'}
                               </span>
                             ) : (
                               'Detailed question results not available for synced sessions.'
@@ -596,7 +594,7 @@ const HistoryPage = () => {
                   <p className="text-muted-foreground mb-6">
                     Try a mock interview to practice for your USCIS appointment!
                     {showBurmese && (
-            <span className="block font-myanmar mt-1">
+                      <span className="block font-myanmar mt-1">
                         USCIS အင်တာဗျူးအတွက် လေ့ကျင့်မှုစမ်းကြည့်ပါ!
                       </span>
                     )}
@@ -632,9 +630,7 @@ const HistoryPage = () => {
                   <p className="text-4xl font-bold text-foreground mt-1">{history.length}</p>
                   <p className="text-sm text-muted-foreground mt-1">Total synced tests</p>
                   <p className="text-xs text-muted-foreground font-myanmar">
-                    {
-                      'စာမေးပွဲ စုစုပေါင်း'
-                    }
+                    {'စာမေးပွဲ စုစုပေါင်း'}
                   </p>
                 </Card>
               </FadeIn>
@@ -647,11 +643,7 @@ const HistoryPage = () => {
                     {bestSession ? `${bestSession.score} / ${bestSession.totalQuestions}` : '-'}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">Keep chasing perfection</p>
-                  <p className="text-xs text-muted-foreground font-myanmar">
-                    {
-                      'အကောင်းဆုံးအမှတ်'
-                    }
-                  </p>
+                  <p className="text-xs text-muted-foreground font-myanmar">{'အကောင်းဆုံးအမှတ်'}</p>
                 </Card>
               </FadeIn>
               <FadeIn delay={200}>
@@ -661,11 +653,7 @@ const HistoryPage = () => {
                   </p>
                   <p className="text-4xl font-bold text-foreground mt-1">{passRate}%</p>
                   <p className="text-sm text-muted-foreground mt-1">60%+ earns a pass</p>
-                  <p className="text-xs text-muted-foreground font-myanmar">
-                    {
-                      'အောင်မြင်နှုန်း'
-                    }
-                  </p>
+                  <p className="text-xs text-muted-foreground font-myanmar">{'အောင်မြင်နှုန်း'}</p>
                 </Card>
               </FadeIn>
             </section>
@@ -677,9 +665,7 @@ const HistoryPage = () => {
                   Score trend
                 </h2>
                 <p className="font-myanmar text-sm text-muted-foreground mb-4">
-                  {
-                    'အမှတ်တိုးတက်မှု'
-                  }
+                  {'အမှတ်တိုးတက်မှု'}
                 </p>
                 <div className="h-72 w-full">
                   {chartData.length ? (
@@ -736,11 +722,7 @@ const HistoryPage = () => {
                   </h2>
                   <p className="text-sm text-muted-foreground">
                     Tap any row to review every question you answered.
-                    {showBurmese && (
-                      <span className="font-myanmar ml-1">
-                        {'မှတ်တမ်းဇယား'}
-                      </span>
-                    )}
+                    {showBurmese && <span className="font-myanmar ml-1">{'မှတ်တမ်းဇယား'}</span>}
                   </p>
                 </div>
               </div>
@@ -785,19 +767,12 @@ const HistoryPage = () => {
                                 <span className="block text-sm text-muted-foreground">
                                   {session.passed ? (
                                     <>
-                                      Passed /{' '}
-                                      <span className="font-myanmar">
-                                        {'အောင်'}
-                                      </span>
+                                      Passed / <span className="font-myanmar">{'အောင်'}</span>
                                     </>
                                   ) : (
                                     <>
                                       Keep trying /{' '}
-                                      <span className="font-myanmar">
-                                        {
-                                          'ဆက်ကြိုးစားပါ'
-                                        }
-                                      </span>
+                                      <span className="font-myanmar">{'ဆက်ကြိုးစားပါ'}</span>
                                     </>
                                   )}
                                 </span>
@@ -886,10 +861,7 @@ const HistoryPage = () => {
                                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                     <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
                                       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
-                                        Your answer ·{' '}
-                                        <span className="font-myanmar">
-                                          {'အဖြေ'}
-                                        </span>
+                                        Your answer · <span className="font-myanmar">{'အဖြေ'}</span>
                                       </p>
                                       <p className="text-sm font-bold text-foreground">
                                         {result.selectedAnswer.text_en}
@@ -901,9 +873,7 @@ const HistoryPage = () => {
                                     <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
                                       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
                                         Official answer ·{' '}
-                                        <span className="font-myanmar">
-                                          {'အဖြေမှန်'}
-                                        </span>
+                                        <span className="font-myanmar">{'အဖြေမှန်'}</span>
                                       </p>
                                       <p className="text-sm font-bold text-foreground">
                                         {result.correctAnswer.text_en}
@@ -924,17 +894,11 @@ const HistoryPage = () => {
                                     >
                                       {result.isCorrect ? (
                                         <>
-                                          Correct ·{' '}
-                                          <span className="font-myanmar">
-                                            {'မှန်'}
-                                          </span>
+                                          Correct · <span className="font-myanmar">{'မှန်'}</span>
                                         </>
                                       ) : (
                                         <>
-                                          Incorrect ·{' '}
-                                          <span className="font-myanmar">
-                                            {'မှား'}
-                                          </span>
+                                          Incorrect · <span className="font-myanmar">{'မှား'}</span>
                                         </>
                                       )}
                                     </span>
@@ -968,9 +932,7 @@ const HistoryPage = () => {
                     <p className="text-muted-foreground mb-6">
                       Take your first practice test to start tracking progress!
                       <span className="block font-myanmar mt-1">
-                        {
-                          'တိုးတက်မှုခြေရာခံဖို့ ပထမဆုံးစာမေးပွဲဖြေပါ!'
-                        }
+                        {'တိုးတက်မှုခြေရာခံဖို့ ပထမဆုံးစာမေးပွဲဖြေပါ!'}
                       </span>
                     </p>
                     <BilingualButton

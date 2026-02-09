@@ -132,12 +132,7 @@ export function ReadinessIndicator({
               {readinessScore}%
             </span>
             <span className="text-sm text-muted-foreground">
-              Readiness /{' '}
-              <span className="font-myanmar">
-                {
-                  'အဆင်သင့်ဖြစ်မှု'
-                }
-              </span>
+              Readiness / <span className="font-myanmar">{'အဆင်သင့်ဖြစ်မှု'}</span>
             </span>
           </div>
           <Progress value={readinessScore} variant={progressVariants[level]} size="lg" />

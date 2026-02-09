@@ -75,9 +75,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
-            {showBurmese
-              ? 'စာမေးပွဲများ တင်နေပါသည်...'
-              : 'Loading review cards...'}
+            {showBurmese ? 'စာမေးပွဲများ တင်နေပါသည်...' : 'Loading review cards...'}
           </span>
         </div>
       </div>
@@ -102,9 +100,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               <p
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese
-                  ? 'စာမေးပွဲကို စတင်ပါ'
-                  : 'Start your review deck'}
+                {showBurmese ? 'စာမေးပွဲကို စတင်ပါ' : 'Start your review deck'}
               </p>
               <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
@@ -155,9 +151,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               <p
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese
-                  ? 'အားလုံး ပြန်လည်ပြီးပါပြီ!'
-                  : 'All caught up!'}
+                {showBurmese ? 'အားလုံး ပြန်လည်ပြီးပါပြီ!' : 'All caught up!'}
               </p>
               {nextDueText && (
                 <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
@@ -225,9 +219,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               )}
             </div>
             <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
-              {showBurmese
-                ? 'စာမေးပွဲများကို ပြန်လည်ရန် နှိပ်ပါ'
-                : 'Tap to review your deck'}
+              {showBurmese ? 'စာမေးပွဲများကို ပြန်လည်ရန် နှိပ်ပါ' : 'Tap to review your deck'}
             </p>
           </div>
         </div>
@@ -292,9 +284,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                   <p
                     className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
                   >
-                    {showBurmese
-                      ? 'ကဏ်္ဋအလိုက်'
-                      : 'By Category'}
+                    {showBurmese ? 'ကဏ်္ဋအလိုက်' : 'By Category'}
                   </p>
                   <div className="space-y-1.5">
                     {categoryBreakdown.map(entry => {
@@ -343,9 +333,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 <p
                   className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
                 >
-                  {showBurmese
-                    ? 'ပြန်လည်ချိန် မှတ်တမ်း'
-                    : 'Review Activity'}
+                  {showBurmese ? 'ပြန်လည်ချိန် မှတ်တမ်း' : 'Review Activity'}
                 </p>
                 <ReviewHeatmap deck={deck} />
               </div>
@@ -358,9 +346,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               >
                 <BookOpen className="h-4 w-4" />
                 <span className={showBurmese ? 'font-myanmar' : ''}>
-                  {showBurmese
-                    ? 'စာမေးပွဲများ ကြည့်ရန်'
-                    : 'Go to Review Deck'}
+                  {showBurmese ? 'စာမေးပွဲများ ကြည့်ရန်' : 'Go to Review Deck'}
                 </span>
               </button>
             </div>
