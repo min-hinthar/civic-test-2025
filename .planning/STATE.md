@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 11 of 17 (Design Token Foundation)
-Plan: 3 of 7 in current phase
+Plan: 6 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-09 -- Completed 11-03-PLAN.md (JS Token Access Utility)
+Last activity: 2026-02-09 -- Completed 11-06-PLAN.md (Globals.css Tokenization)
 
-Progress: [███░░░░░░░] 3/7 plans (Phase 11)
+Progress: [██████░░░░] 6/7 plans (Phase 11)
 
 ## Completed Milestones
 
@@ -35,7 +35,7 @@ See `.planning/milestones/v1.0/` for full archive.
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11 (tokens) | 3/7 | 21min | 7min |
+| 11 (tokens) | 6/7 | 31min | 5min |
 
 *Updated after each plan completion*
 
@@ -56,6 +56,8 @@ Recent decisions affecting current work:
 - [11-02]: System preference listener defers to manual override (localStorage key exists = ignore OS changes)
 - [11-03]: getToken/getTokenColor utility kept minimal (2 functions, no deps) -- canvas/chart components import directly from @/lib/tokens
 - [11-03]: Dead code design-tokens.ts deleted (113 lines, zero imports confirmed)
+- [11-06]: Decorative gradients use approximate semantic tokens (patriotic-red, primary, secondary, accent-purple, etc.) rather than pixel-perfect rgba matching
+- [11-06]: New --green-700 primitive (142 76% 30%) and semantic active tokens (success-active, destructive-active, accent-purple-active) added to tokens.css
 
 ### Key Learnings (from v1.0)
 
@@ -72,10 +74,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 plan 03 complete, ready for plan 04
-Resume file: .planning/phases/11-design-token-foundation/11-04-PLAN.md
+Stopped at: Phase 11 plan 06 complete, ready for plan 07
+Resume file: .planning/phases/11-design-token-foundation/11-07-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-09 (11-03 JS token access utility complete)*
+*Last updated: 2026-02-09 (11-06 globals.css tokenization complete)*
