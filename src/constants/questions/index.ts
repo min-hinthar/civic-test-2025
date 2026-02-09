@@ -4,15 +4,15 @@
  * Aggregates all category-specific question modules into a single export.
  * Each category file uses stable IDs for reliable SRS tracking:
  *
- * - GOV-P## : Principles of American Democracy (16 questions)
- * - GOV-S## : System of Government (39 questions)
+ * - GOV-P## : Principles of American Democracy (17 questions)
+ * - GOV-S## : System of Government (46 questions)
  * - RR-##   : Rights and Responsibilities (13 questions)
  * - HIST-C##: American History: Colonial Period and Independence (16 questions)
  * - HIST-1##: American History: 1800s (9 questions)
  * - HIST-R##: Recent American History (12 questions)
  * - SYM-##  : Civics: Symbols and Holidays (15 questions)
  *
- * Total: 120 questions
+ * Total: 128 questions
  */
 
 import type { Question } from '@/types';
@@ -46,7 +46,7 @@ export const allQuestions: Question[] = [
   ...history1800sQuestions, // HIST-101-107 (7 questions)
   ...recentHistoryQuestions, // HIST-R01-10 (10 questions)
   ...symbolsHolidaysQuestions, // SYM-01-13 (13 questions)
-  ...uscis2025Additions, // 20 questions
+  ...uscis2025Additions, // 28 questions
 ];
 
 /** Total number of civics questions */

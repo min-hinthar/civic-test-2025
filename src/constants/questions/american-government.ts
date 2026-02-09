@@ -641,12 +641,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S06', 'GOV-S10'],
     },
   },
+  // DYNAMIC(state): Senators vary by state. Update state-representatives.json after Senate elections.
   {
     id: 'GOV-S08',
     question_en: "Who is one of your state's U.S. Senators now?",
     question_my: 'ယခု သင့်ပြည်နယ်၏ အမေရိကန် အထက်လွှတ်တော်အမတ်တစ်ဦးက မည်သူနည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Adam Schiff', text_my: 'အက်ဒမ် ရှစ်ဖ်' }],
+    dynamic: {
+      type: 'state',
+      field: 'senators',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Senate elections (staggered 6-year terms)',
+    },
     answers: [
       { text_en: 'Adam Schiff', text_my: 'အက်ဒမ် ရှစ်ဖ်', correct: true },
       {
@@ -723,12 +730,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S07', 'GOV-S14'],
     },
   },
+  // DYNAMIC(state): Representatives vary by district. Update state-representatives.json after House elections (every 2 years).
   {
     id: 'GOV-S11',
     question_en: 'Name your U.S. Representative.',
     question_my: 'သင်၏ အမေရိကန် ကိုယ်စားလှယ်ကို အမည်ပေးပါ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး' }],
+    dynamic: {
+      type: 'state',
+      field: 'representative',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'House elections (every 2 years)',
+    },
     answers: [
       { text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး', correct: true },
       { text_en: 'The Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: false },
@@ -870,12 +884,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S14', 'GOV-S16'],
     },
   },
+  // DYNAMIC: Update answer after presidential elections (every 4 years). Next check: Nov 2028.
   {
     id: 'GOV-S16',
     question_en: 'What is the name of the President of the United States now?',
     question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ သမ္မတအမည်ကား အဘယ်နည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Donald Trump', text_my: 'ဒေါ်နယ်ထရန့်' }],
+    dynamic: {
+      type: 'time',
+      field: 'president',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Presidential election (every 4 years)',
+    },
     answers: [
       { text_en: 'Joe Biden', text_my: 'ဂျိုးဘိုင်ဒင်', correct: false },
       { text_en: 'Donald Trump', text_my: 'ဒေါ်နယ်ထရန့်', correct: true },
@@ -890,12 +911,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S17', 'GOV-S34'],
     },
   },
+  // DYNAMIC: Update answer after presidential elections (every 4 years). Next check: Nov 2028.
   {
     id: 'GOV-S17',
     question_en: 'What is the name of the Vice President of the United States now?',
     question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ ဒုတိယသမ္မတအမည်ကား အဘယ်နည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ်' }],
+    dynamic: {
+      type: 'time',
+      field: 'vicePresident',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Presidential election (every 4 years)',
+    },
     answers: [
       { text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ်', correct: true },
       { text_en: 'Mike Pence', text_my: 'မိုက်ပင့်', correct: false },
@@ -1176,12 +1204,20 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S26', 'GOV-S28'],
     },
   },
+  // DYNAMIC: Update on Chief Justice retirement/death/impeachment. No fixed schedule — monitor news.
   {
     id: 'GOV-S28',
     question_en: 'Who is the Chief Justice of the United States now?',
     question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ တရားသူကြီးချုပ်သည် မည်သူနည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ်' }],
+    dynamic: {
+      type: 'time',
+      field: 'chiefJustice',
+      lastVerified: '2026-02-09',
+      updateTrigger:
+        'Supreme Court appointment (lifetime tenure, changes on retirement/death)',
+    },
     answers: [
       { text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ်', correct: true },
       { text_en: 'Clarence Thomas', text_my: 'ကလာရင့် သောမတ်', correct: false },
@@ -1274,12 +1310,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S29'],
     },
   },
+  // DYNAMIC(state): Governor varies by state. Update state-representatives.json after gubernatorial elections.
   {
     id: 'GOV-S31',
     question_en: 'Who is the Governor of your state now?',
     question_my: 'ယခု သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူးသည် မည်သူနည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးစမ်' }],
+    dynamic: {
+      type: 'state',
+      field: 'governor',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'State gubernatorial elections (varies by state)',
+    },
     answers: [
       { text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးစမ်', correct: true },
       { text_en: 'The President', text_my: 'သမ္မတ', correct: false },
@@ -1298,12 +1341,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S32'],
     },
   },
+  // DYNAMIC(state): Capital varies by state but is effectively static. No regular updates needed.
   {
     id: 'GOV-S32',
     question_en: 'What is the capital of your state?',
     question_my: 'သင်၏ပြည်နယ်၏ မြို့တော်ကား အဘယ်နည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Sacramento', text_my: 'ဆက်ကရမေန်တို' }],
+    dynamic: {
+      type: 'state',
+      field: 'capital',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Static - state capitals do not change',
+    },
     answers: [
       { text_en: 'Sacramento', text_my: 'ဆက်ကရမေန်တို', correct: true },
       { text_en: 'Washington, D.C.', text_my: 'ဝါရှင်တန်ဒီစီ', correct: false },
@@ -1356,12 +1406,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S34'],
     },
   },
+  // DYNAMIC: Update after presidential elections (every 4 years). Next check: Nov 2028.
   {
     id: 'GOV-S34',
     question_en: 'What is the political party of the President now?',
     question_my: 'ယခု သမ္မတ၏ နိုင်ငံရေးပါတီကား အဘယ်နည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Republican Party', text_my: 'ရီပတ်ဘလစ်ကန်ပါတီ' }],
+    dynamic: {
+      type: 'time',
+      field: 'presidentParty',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Presidential election (every 4 years)',
+    },
     answers: [
       { text_en: 'Democratic Party', text_my: 'ဒီမိုကရက်တစ်ပါတီ', correct: false },
       { text_en: 'Republican Party', text_my: 'ရီပတ်ဘလစ်ကန်ပါတီ', correct: true },
@@ -1376,12 +1433,19 @@ export const americanGovernmentQuestions: Question[] = [
       relatedQuestionIds: ['GOV-S16', 'GOV-S33'],
     },
   },
+  // DYNAMIC: Update each new Congress (every 2 years) or on vacancy. Next check: Jan 2027.
   {
     id: 'GOV-S35',
     question_en: 'What is the name of the Speaker of the House of Representatives now?',
     question_my: 'ယခု အောက်လွှတ်တော်ဥက္ကဋ္ဌ၏ အမည်ကား အဘယ်နည်း။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင်' }],
+    dynamic: {
+      type: 'time',
+      field: 'speakerOfHouse',
+      lastVerified: '2026-02-09',
+      updateTrigger: 'Each new Congress (every 2 years) or vacancy',
+    },
     answers: [
       { text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင်', correct: true },
       { text_en: 'Nancy Pelosi', text_my: 'နန်စီ ပလိုစီ', correct: false },

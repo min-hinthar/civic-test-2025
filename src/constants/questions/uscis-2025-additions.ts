@@ -1,9 +1,9 @@
 import type { Question } from '@/types';
 
 /**
- * USCIS 2025 Expanded Questions (20 additions)
+ * USCIS 2025 Expanded Questions (28 additions)
  *
- * These questions extend the 100-question civics bank to 120 questions,
+ * These questions extend the 100-question civics bank to 128 questions,
  * using the same category structure and stable IDs.
  */
 export const uscis2025Additions: Question[] = [
@@ -384,6 +384,315 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'the lotus', text_my: 'ကြာပန်း', correct: false },
       { text_en: 'the cherry blossom', text_my: 'ချယ်ရီပန်း', correct: false },
       { text_en: 'the lily', text_my: 'ပန်းခရမ်း', correct: false },
+    ],
+  },
+  // ============================================
+  // USCIS 2025: 8 ADDITIONAL QUESTIONS (GOV-P17, GOV-S40-S46)
+  // ============================================
+  {
+    id: 'GOV-P17',
+    question_en: 'Many documents influenced the United States Constitution. Name one.',
+    question_my:
+      'စာရွက်စာတမ်းများစွာက အမေရိကန်ဖွဲ့စည်းပုံအခြေခံဥပဒေကို လွှမ်းမိုးခဲ့သည်။ တစ်ခုကို အမည်ပေးပါ။',
+    category: 'Principles of American Democracy',
+    studyAnswers: [
+      { text_en: 'Magna Carta', text_my: 'မဂ္ဂနာကာတာ' },
+      {
+        text_en: 'Articles of Confederation',
+        text_my: 'ကွန်ဖက်ဒရေးရှင်းစာချုပ်',
+      },
+      { text_en: 'Federalist Papers', text_my: 'ဖက်ဒရယ်လစ်စာတမ်းများ' },
+      {
+        text_en: 'Anti-Federalist Papers',
+        text_my: 'ဖက်ဒရယ်လစ်ဆန့်ကျင်ရေးစာတမ်းများ',
+      },
+      {
+        text_en: 'Declaration of Independence',
+        text_my: 'လွတ်လပ်ရေးကြေညာစာတမ်း',
+      },
+      {
+        text_en: 'English Bill of Rights',
+        text_my: 'အင်္ဂလိပ်အခွင့်အရေးဥပဒေ',
+      },
+    ],
+    answers: [
+      { text_en: 'Magna Carta', text_my: 'မဂ္ဂနာကာတာ', correct: true },
+      { text_en: 'Treaty of Paris', text_my: 'ပါရီစာချုပ်', correct: false },
+      {
+        text_en: 'Monroe Doctrine',
+        text_my: 'မွန်ရိုးဝါဒ',
+        correct: false,
+      },
+      {
+        text_en: 'Gettysburg Address',
+        text_my: 'ဂက်တီးစဘတ်မိန့်ခွန်း',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S40',
+    question_en:
+      'Why do U.S. representatives serve shorter terms than U.S. senators?',
+    question_my:
+      'အမေရိကန်ကိုယ်စားလှယ်များသည် အထက်လွှတ်တော်အမတ်များထက် သက်တမ်းတိုရသည်မှာ အဘယ်ကြောင့်နည်း။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'to more closely follow public opinion',
+        text_my:
+          'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
+      },
+      {
+        text_en: 'to be more responsive to the people',
+        text_my: 'ပြည်သူများအပေါ် ပိုမိုတုံ့ပြန်နိုင်စေရန်',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'to more closely follow public opinion',
+        text_my:
+          'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
+        correct: true,
+      },
+      {
+        text_en: 'Because they have less power',
+        text_my: 'သူတို့မှာ အာဏာပိုနည်းလို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because the Constitution was amended',
+        text_my: 'ဖွဲ့စည်းပုံကို ပြင်ဆင်ခဲ့လို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because they represent fewer people',
+        text_my: 'သူတို့က လူနည်းကို ကိုယ်စားပြုလို့',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S41',
+    question_en: 'How many senators does each state have?',
+    question_my:
+      'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် ဘယ်နှစ်ဦးရှိသလဲ။',
+    category: 'System of Government',
+    studyAnswers: [{ text_en: 'Two (2)', text_my: 'နှစ် (၂)' }],
+    answers: [
+      { text_en: 'Two (2)', text_my: 'နှစ် (၂)', correct: true },
+      { text_en: 'One (1)', text_my: 'တစ် (၁)', correct: false },
+      { text_en: 'Four (4)', text_my: 'လေး (၄)', correct: false },
+      {
+        text_en: "It depends on the state's population",
+        text_my: 'ပြည်နယ်၏ လူဦးရေပေါ် မူတည်သည်',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S42',
+    question_en: 'Why does each state have two senators?',
+    question_my:
+      'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးရှိရသည်မှာ အဘယ်ကြောင့်နည်း။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'equal representation for small and large states',
+        text_my:
+          'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
+      },
+      {
+        text_en: 'so all states have equal power in the Senate',
+        text_my:
+          'ပြည်နယ်အားလုံး အထက်လွှတ်တော်တွင် အာဏာတူညီစေရန်',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'equal representation for small and large states',
+        text_my:
+          'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
+        correct: true,
+      },
+      {
+        text_en: "Because it was George Washington's idea",
+        text_my: 'ဂျော့ဝါရှင်တန်၏ အကြံဖြစ်လို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because there are two parties',
+        text_my: 'ပါတီနှစ်ခုရှိလို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because senators serve two terms',
+        text_my: 'အထက်လွှတ်တော်အမတ်များက သက်တမ်းနှစ်ခု တာဝန်ထမ်းဆောင်လို့',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S43',
+    question_en:
+      'The President of the United States can serve only two terms. Why?',
+    question_my:
+      'အမေရိကန်သမ္မတသည် သက်တမ်းနှစ်ခုသာ တာဝန်ထမ်းဆောင်နိုင်သည်။ အဘယ်ကြောင့်နည်း။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'Because of the 22nd Amendment',
+        text_my: 'ပြင်ဆင်ချက် ၂၂ ကြောင့်',
+      },
+      {
+        text_en: 'to prevent abuse of power',
+        text_my: 'အာဏာအလွဲသုံးစားမှုကို တားဆီးရန်',
+      },
+      {
+        text_en: 'to ensure peaceful transfer of power',
+        text_my: 'အာဏာလွှဲပြောင်းမှု ငြိမ်းချမ်းစွာ ဖြစ်စေရန်',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'Because of the 22nd Amendment',
+        text_my: 'ပြင်ဆင်ချက် ၂၂ ကြောင့်',
+        correct: true,
+      },
+      {
+        text_en: 'Because of the Bill of Rights',
+        text_my: 'အခွင့်အရေးဥပဒေကြမ်းကြောင့်',
+        correct: false,
+      },
+      {
+        text_en: 'Because of the Supreme Court',
+        text_my: 'တရားရုံးချုပ်ကြောင့်',
+        correct: false,
+      },
+      {
+        text_en: 'Because Congress limits it',
+        text_my: 'ကွန်ဂရက်က ကန့်သတ်လို့',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S44',
+    question_en: 'Why is the Electoral College important?',
+    question_my:
+      'ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့ (Electoral College) သည် အဘယ်ကြောင့် အရေးကြီးသနည်း။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'It decides who is elected president',
+        text_my: 'မည်သူ သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခံရမည်ကို ဆုံးဖြတ်သည်',
+      },
+      {
+        text_en:
+          'It provides a compromise between the popular vote and congressional vote',
+        text_my:
+          'ပြည်သူ့မဲနှင့် ကွန်ဂရက်မဲကြား အလျှော့အတင်းတစ်ခု ဖန်တီးပေးသည်',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'It decides who is elected president',
+        text_my:
+          'မည်သူ သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခံရမည်ကို ဆုံးဖြတ်သည်',
+        correct: true,
+      },
+      {
+        text_en: 'It trains future politicians',
+        text_my: 'အနာဂတ်နိုင်ငံရေးသမားများကို လေ့ကျင့်ပေးသည်',
+        correct: false,
+      },
+      {
+        text_en: 'It sets the budget',
+        text_my: 'ဘတ်ဂျက်သတ်မှတ်သည်',
+        correct: false,
+      },
+      {
+        text_en: 'It approves new laws',
+        text_my: 'ဥပဒေအသစ်များ အတည်ပြုသည်',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S45',
+    question_en: 'How long do Supreme Court justices serve?',
+    question_my:
+      'တရားရုံးချုပ်တရားသူကြီးများသည် ဘယ်လောက်ကြာ တာဝန်ထမ်းဆောင်သလဲ။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'They are appointed for life',
+        text_my: 'တသက်တာ ခန့်အပ်ခြင်း ခံရသည်',
+      },
+      {
+        text_en: 'until they want to retire',
+        text_my: 'အနားယူလိုသည်အထိ',
+      },
+      { text_en: 'until they die', text_my: 'သေဆုံးသည်အထိ' },
+      {
+        text_en: 'until they are impeached and convicted',
+        text_my: 'စွပ်စွဲခံရပြီး ပြစ်ဒဏ်ချခံရသည်အထိ',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'They are appointed for life',
+        text_my: 'တသက်တာ ခန့်အပ်ခြင်း ခံရသည်',
+        correct: true,
+      },
+      { text_en: '20 years', text_my: '၂၀ နှစ်', correct: false },
+      { text_en: '10 years', text_my: '၁၀ နှစ်', correct: false },
+      {
+        text_en: 'Until the next president takes office',
+        text_my: 'နောက်သမ္မတ တာဝန်ယူသည်အထိ',
+        correct: false,
+      },
+    ],
+  },
+  {
+    id: 'GOV-S46',
+    question_en: 'Why do Supreme Court justices serve for life?',
+    question_my:
+      'တရားရုံးချုပ်တရားသူကြီးများသည် အဘယ်ကြောင့် တသက်တာ တာဝန်ထမ်းဆောင်ရသနည်း။',
+    category: 'System of Government',
+    studyAnswers: [
+      {
+        text_en: 'to be independent from politics',
+        text_my: 'နိုင်ငံရေးမှ လွတ်လပ်စေရန်',
+      },
+      {
+        text_en:
+          'so they can make decisions based on the Constitution rather than popular opinion',
+        text_my:
+          'လူထုအမြင်ထက် ဖွဲ့စည်းပုံအခြေခံဥပဒေကို အခြေခံ၍ ဆုံးဖြတ်ချက်ချနိုင်စေရန်',
+      },
+    ],
+    answers: [
+      {
+        text_en: 'to be independent from politics',
+        text_my: 'နိုင်ငံရေးမှ လွတ်လပ်စေရန်',
+        correct: true,
+      },
+      {
+        text_en: 'Because they are elected by the people',
+        text_my: 'ပြည်သူများက ရွေးကောက်တင်မြှောက်လို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because the President decides',
+        text_my: 'သမ္မတက ဆုံးဖြတ်လို့',
+        correct: false,
+      },
+      {
+        text_en: 'Because Congress cannot remove them',
+        text_my: 'ကွန်ဂရက်က ဖယ်ရှားလို့ မရလို့',
+        correct: false,
+      },
     ],
   },
 ];

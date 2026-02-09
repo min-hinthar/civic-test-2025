@@ -46,6 +46,17 @@ export interface Explanation {
   commonMistake_my?: string;
 }
 
+export interface DynamicAnswerMeta {
+  /** 'time' = changes with elections/appointments; 'state' = varies by user's location */
+  type: 'time' | 'state';
+  /** Semantic field name, e.g. 'president', 'senators', 'governor', 'capital' */
+  field: string;
+  /** ISO date when this answer was last verified, e.g. '2026-02-09' */
+  lastVerified: string;
+  /** Human-readable trigger for when to update, e.g. 'presidential election (every 4 years)' */
+  updateTrigger: string;
+}
+
 export interface Question {
   id: string; // Changed from number to string for stable IDs like 'GOV-01'
   question_en: string;
@@ -54,6 +65,8 @@ export interface Question {
   studyAnswers: StudyAnswer[]; // For flip cards (all possible correct answers)
   answers: Answer[]; // For quiz (1 correct, 3+ incorrect)
   explanation?: Explanation; // Optional for gradual rollout safety
+  /** Marks questions whose answers change over time or vary by location */
+  dynamic?: DynamicAnswerMeta;
 }
 
 export interface QuestionResult {
