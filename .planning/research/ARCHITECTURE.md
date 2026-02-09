@@ -1,704 +1,705 @@
-# Architecture Research
+# Architecture Research: v2.0 Feature Integration
 
-**Domain:** Bilingual Civics Test Prep PWA (evolving existing Next.js + Supabase SPA)
-**Researched:** 2026-02-05
-**Confidence:** MEDIUM-HIGH
+**Domain:** Bilingual Civics Test Prep PWA -- v2.0 feature integration into existing Next.js + React Router DOM SPA
+**Researched:** 2026-02-09
+**Confidence:** HIGH (based on direct codebase analysis; all recommendations verified against existing source)
 
 ## Executive Summary
 
-This architecture research addresses integrating PWA capabilities, spaced repetition, and social features into an existing Next.js 15 + Supabase + React Router DOM SPA. The current architecture uses a catch-all Pages Router route delegating to client-side React Router, with Context API for state management.
+The v2.0 milestone introduces seven epics (A-G) that touch navigation, dashboard, page consolidation, design system, i18n, question bank, and security. The existing architecture (189 files, ~37.5K LOC) is well-structured with clear provider hierarchy, consistent patterns, and offline-first data layer. The v2.0 changes are primarily **reshuffling and refining** existing code, not building net-new infrastructure.
 
-**Key architectural decisions:**
-1. **Service Worker via Serwist** (next-pwa successor) for PWA/offline support
-2. **IndexedDB + Sync Queue** for offline-first data persistence
-3. **SM-2 algorithm** with PostgreSQL-backed spaced repetition state
-4. **Supabase tables** for social features (follow system, leaderboards)
-5. **Static bilingual JSON** maintained in codebase (no runtime i18n library needed)
+The riskiest integration is **Progress Hub consolidation** (merging 3 pages into 1 with tabs), which touches routing, navigation, and deep links. The safest starting point is **design token alignment** (Epic D), which has no functional dependencies and reduces visual variance before layout changes. The USCIS question bank expansion (Epic F) is structurally simple (data file + constant updates) but has the widest blast radius since `totalQuestions` flows through mastery calculations, badge thresholds, readiness scores, and UI copy.
 
-## Current Architecture Analysis
+**Key architectural principle:** No new Context providers needed. No new IndexedDB stores. No Supabase schema changes (except push subscription hardening). This is a **UI/UX layer milestone**, not an infrastructure milestone.
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         Next.js 15 (Pages Router)                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│  pages/[[...slug]].tsx ──────────────────────────────────────────────── │
-│         │                                                                │
-│         ▼                                                                │
-│  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │                     src/AppShell.tsx                              │   │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌────────────────────────┐    │   │
-│  │  │ThemeProvider│  │AuthProvider │  │ React Router <Routes>  │    │   │
-│  │  │  (Context)  │  │  (Context)  │  │   /dashboard, /test    │    │   │
-│  │  └─────────────┘  └─────────────┘  │   /study, /history     │    │   │
-│  │                                     └────────────────────────┘    │   │
-│  └──────────────────────────────────────────────────────────────────┘   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                           Supabase Backend                               │
-│  ┌────────────┐  ┌────────────┐  ┌──────────────────────┐              │
-│  │  profiles  │  │ mock_tests │  │ mock_test_responses  │              │
-│  └────────────┘  └────────────┘  └──────────────────────┘              │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+---
 
-**Current limitations:**
-- No service worker, no offline support
-- No PWA manifest, not installable
-- Questions embedded in JS bundle (civicsQuestions.ts)
-- All data requires network connectivity
-- No spaced repetition - random question selection only
-- No social features
+## Current Architecture (As-Built v1.0)
 
-## Recommended Architecture
+### Provider Hierarchy (AppShell.tsx)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                            Service Worker (Serwist)                      │
-│  ┌────────────────┐  ┌────────────────┐  ┌────────────────────────┐    │
-│  │ Asset Caching  │  │ API Caching    │  │ Background Sync        │    │
-│  │ (precache)     │  │ (stale-while-  │  │ (sync queue replay)    │    │
-│  │                │  │  revalidate)   │  │                        │    │
-│  └────────────────┘  └────────────────┘  └────────────────────────┘    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                         Next.js 15 (Pages Router)                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│  pages/[[...slug]].tsx ──► src/AppShell.tsx                             │
-│                                     │                                    │
-│                    ┌────────────────┼────────────────┐                  │
-│                    ▼                ▼                ▼                  │
-│           ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│           │ThemeProvider │  │ AuthProvider │  │  SRSProvider │         │
-│           │  (Context)   │  │  (Context)   │  │  (Context)   │         │
-│           └──────────────┘  └──────────────┘  └──────────────┘         │
-│                                     │                                    │
-│                    ┌────────────────┼────────────────┐                  │
-│                    ▼                ▼                ▼                  │
-│           ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│           │OfflineProvider│  │SocialProvider│  │React Router  │         │
-│           │  (IndexedDB)  │  │ (Context)    │  │  <Routes>    │         │
-│           └──────────────┘  └──────────────┘  └──────────────┘         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                            Data Layer                                    │
-│  ┌────────────────────────────────────────────────────────────────┐    │
-│  │                        IndexedDB (idb)                          │    │
-│  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐   │    │
-│  │  │ questions │  │srs_state  │  │sync_queue │  │  cache    │   │    │
-│  │  │  (100)    │  │(per user) │  │(pending)  │  │ (misc)    │   │    │
-│  │  └───────────┘  └───────────┘  └───────────┘  └───────────┘   │    │
-│  └────────────────────────────────────────────────────────────────┘    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                         Supabase Backend                                 │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                     Existing Tables                               │  │
-│  │  ┌────────────┐  ┌────────────┐  ┌──────────────────────┐        │  │
-│  │  │  profiles  │  │ mock_tests │  │ mock_test_responses  │        │  │
-│  │  └────────────┘  └────────────┘  └──────────────────────┘        │  │
-│  ├──────────────────────────────────────────────────────────────────┤  │
-│  │                     New Tables (SRS)                              │  │
-│  │  ┌────────────────────────────────────────────────────────┐      │  │
-│  │  │                    srs_cards                            │      │  │
-│  │  │ user_id, question_id, ease_factor, interval,           │      │  │
-│  │  │ repetitions, next_review_at, last_reviewed_at          │      │  │
-│  │  └────────────────────────────────────────────────────────┘      │  │
-│  ├──────────────────────────────────────────────────────────────────┤  │
-│  │                     New Tables (Social)                           │  │
-│  │  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐      │  │
-│  │  │  follows   │  │study_streak│  │    achievements        │      │  │
-│  │  │follower_id │  │ user_id    │  │ user_id, type, earned  │      │  │
-│  │  │followed_id │  │ current    │  │                        │      │  │
-│  │  │created_at  │  │ longest    │  │                        │      │  │
-│  │  └────────────┘  │ last_date  │  └────────────────────────┘      │  │
-│  │                  └────────────┘                                   │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────┘
+ErrorBoundary
+  LanguageProvider         <-- bilingual/english-only toggle
+    ThemeProvider           <-- dark/light mode
+      ToastProvider         <-- bilingual toast notifications
+        OfflineProvider     <-- online/offline detection, sync queue
+          AuthProvider      <-- Supabase auth, user state, testHistory
+            SocialProvider  <-- social profile, opt-in, streak sync
+              SRSProvider   <-- FSRS deck, due count, grade/add/remove
+                Router (BrowserRouter)
+                  <Head>
+                  ErrorBoundary
+                    PageTransition
+                      <Routes> ... 13 routes
+                  PWAOnboardingFlow
+                  OnboardingTour
+                  SyncStatusIndicator
+                  BottomTabBar
 ```
 
-### Component Responsibilities
+### Route Map
 
-| Component | Responsibility | Communicates With |
-|-----------|----------------|-------------------|
-| Service Worker (Serwist) | Asset precaching, API response caching, background sync | Browser cache, IndexedDB, Network |
-| AppShell | Root component, provider composition | All providers, React Router |
-| AuthProvider | Supabase auth state, user session | Supabase Auth, IndexedDB (cache) |
-| SRSProvider | Spaced repetition state, SM-2 calculations | IndexedDB (local), Supabase (remote) |
-| OfflineProvider | Online/offline detection, sync queue management | IndexedDB, Service Worker, Supabase |
-| SocialProvider | Follow state, leaderboard data, achievements | Supabase, IndexedDB (cache) |
-| IndexedDB Layer | Local persistence, offline-first storage | All providers via idb wrapper |
-| Supabase | Auth, remote persistence, realtime updates | IndexedDB (sync), Providers |
+| Route | Page Component | Protected | Navigation |
+|-------|---------------|-----------|------------|
+| `/` | LandingPage | No | Hidden from nav |
+| `/auth` | AuthPage | No | Hidden from nav |
+| `/auth/forgot` | PasswordResetPage | No | Hidden from nav |
+| `/auth/update-password` | PasswordUpdatePage | No | Hidden from nav |
+| `/op-ed` | OpEdPage | No | Hidden from nav |
+| `/dashboard` | Dashboard | Yes | Primary (mobile + desktop) |
+| `/study` | StudyGuidePage | Yes | Primary (mobile + desktop) |
+| `/test` | TestPage | Yes | Primary (mobile + desktop) |
+| `/interview` | InterviewPage | Yes | Desktop primary, mobile "More" |
+| `/progress` | ProgressPage | Yes | Desktop primary, mobile "More" |
+| `/history` | HistoryPage | Yes | Desktop primary, mobile "More" |
+| `/social` | SocialHubPage | No (partial) | Desktop primary, mobile "More" |
+| `/settings` | SettingsPage | Yes | Desktop utility, not in mobile tabs |
 
-## Recommended Project Structure
+### Navigation Split (The Core Problem)
+
+**Desktop** (`AppNavigation.tsx`): 7 nav links in a horizontal bar (Dashboard, Study, Mock Test, Interview, Progress, History, Community) + utilities (online status, language toggle, theme toggle, sign out).
+
+**Mobile** (`BottomTabBar.tsx`): 3 primary tabs (Dashboard, Study, Mock Test) + "More" sheet containing Interview, Progress, History, Community + theme toggle + sign out.
+
+**Problem:** These are two independent nav configurations with different route groupings. Desktop shows 7 items; mobile shows 3+4. This creates inconsistent mental models.
+
+### Data Flow Summary
 
 ```
-src/
-├── components/
-│   ├── ui/                    # Existing UI components
-│   ├── AppNavigation.tsx      # Existing
-│   ├── ProtectedRoute.tsx     # Existing
-│   ├── InstallPrompt.tsx      # NEW: PWA install banner
-│   ├── OfflineIndicator.tsx   # NEW: Connection status
-│   └── SyncStatus.tsx         # NEW: Sync queue status
-├── contexts/
-│   ├── SupabaseAuthContext.tsx # Existing (enhanced for offline)
-│   ├── ThemeContext.tsx        # Existing
-│   ├── SRSContext.tsx          # NEW: Spaced repetition state
-│   ├── OfflineContext.tsx      # NEW: Offline/sync management
-│   └── SocialContext.tsx       # NEW: Social features
-├── lib/
-│   ├── supabaseClient.ts       # Existing
-│   ├── db/                     # NEW: IndexedDB layer
-│   │   ├── index.ts            # idb database initialization
-│   │   ├── questions.ts        # Question store operations
-│   │   ├── srs.ts              # SRS state operations
-│   │   └── syncQueue.ts        # Sync queue operations
-│   ├── srs/                    # NEW: Spaced repetition logic
-│   │   ├── sm2.ts              # SM-2 algorithm implementation
-│   │   ├── scheduler.ts        # Review scheduling logic
-│   │   └── types.ts            # SRS type definitions
-│   └── sync/                   # NEW: Sync utilities
-│       ├── manager.ts          # Sync queue manager
-│       └── strategies.ts       # Conflict resolution
-├── pages/                      # React Router pages (existing)
-│   ├── Dashboard.tsx           # Enhanced with SRS stats
-│   ├── TestPage.tsx            # Existing
-│   ├── StudyGuidePage.tsx      # Enhanced with SRS mode
-│   ├── HistoryPage.tsx         # Existing
-│   └── LeaderboardPage.tsx     # NEW: Social leaderboard
-├── constants/
-│   └── civicsQuestions.ts      # Existing (bilingual data)
-├── types/
-│   ├── index.ts                # Existing
-│   └── srs.ts                  # NEW: SRS types
-├── hooks/                      # NEW: Custom hooks
-│   ├── useOnlineStatus.ts      # Online/offline detection
-│   ├── useSRS.ts               # SRS operations hook
-│   └── useSyncQueue.ts         # Sync queue hook
-└── styles/
-    └── globals.css             # Existing
-
-public/
-├── manifest.json               # NEW: PWA manifest
-├── sw.js                       # Generated by Serwist
-├── icons/                      # NEW: PWA icons
-│   ├── icon-192.png
-│   ├── icon-512.png
-│   └── apple-touch-icon.png
-└── offline.html                # NEW: Offline fallback page
-
-service-worker/                 # NEW: Service worker source
-└── index.ts                    # Serwist configuration
+User Actions --> React State (optimistic) --> IndexedDB (persist) --> Supabase (sync)
+                                                 ^
+                                                 |
+                                         Source of truth
 ```
 
-### Structure Rationale
+Key data stores:
+- `user.testHistory` -- from AuthProvider (Supabase-sourced, in-memory)
+- `categoryMasteries` -- computed from IndexedDB answer history via `useCategoryMastery`
+- `SRS deck` -- IndexedDB srs-cards store, synced to Supabase
+- `Streak data` -- IndexedDB streak store, synced to Supabase
+- `Badge state` -- computed in-memory from badge check data
 
-- **lib/db/**: Separates IndexedDB operations into focused modules for maintainability
-- **lib/srs/**: Isolates SM-2 algorithm logic from React components for testability
-- **lib/sync/**: Encapsulates sync logic that could be reused across features
-- **hooks/**: Custom hooks provide clean API for components to access complex functionality
-- **service-worker/**: Separate directory for service worker source (Pages Router compatible)
+---
 
-## Architectural Patterns
+## Recommended Architecture for v2.0
 
-### Pattern 1: Offline-First Data Flow
+### Principle: Surgical Changes, Not Rewrites
 
-**What:** All mutations write to IndexedDB first, then queue for sync to Supabase. The local database is the source of truth.
+Every v2.0 feature maps to modifications of existing components or creation of small new ones. No new providers, no new stores, no new external dependencies.
 
-**When to use:** Any user action that modifies data (submitting test results, updating SRS state, social actions)
+### Epic A: Unified Navigation -- Architecture
 
-**Trade-offs:**
-- PRO: Instant UI feedback, works offline
-- CON: Eventual consistency, requires conflict resolution
+**Problem:** Two separate nav configs (`primaryTabs` in BottomTabBar.tsx, `navLinks` in AppNavigation.tsx) with no shared source of truth.
 
-**Data flow:**
+**Solution:** Create a single navigation config module consumed by both navigation components.
+
+#### New Files
+
+| File | Purpose |
+|------|---------|
+| `src/lib/navigation/navConfig.ts` | Shared nav items, route grouping, hidden routes |
+| `src/lib/navigation/index.ts` | Barrel export |
+
+#### Modified Files
+
+| File | Change |
+|------|--------|
+| `src/components/AppNavigation.tsx` | Import from `navConfig.ts` instead of local `navLinks` |
+| `src/components/navigation/BottomTabBar.tsx` | Import from `navConfig.ts` instead of local `primaryTabs`/`moreNavItems` |
+| `src/AppShell.tsx` | Update routes if Progress Hub replaces `/progress`, `/history`, `/social` |
+
+#### New Route Structure
+
 ```
-User Action
-    │
-    ▼
-IndexedDB Write (optimistic)
-    │
-    ├──► UI Updates Immediately
-    │
-    ▼
-Sync Queue Entry Added
-    │
-    ├── Online? ──► Process Queue ──► Supabase API
-    │                    │
-    │                    ▼
-    │              Success? ──► Remove from queue
-    │                    │
-    │                    No ──► Retry with backoff
-    │
-    └── Offline? ──► Queue persists, retry on 'online' event
-```
+Primary tabs (both mobile and desktop):
+  /dashboard       -- Home/Dashboard
+  /study           -- Study Guide
+  /test            -- Mock Test
+  /interview       -- Interview Sim
+  /hub             -- Progress Hub (NEW, replaces /progress + /history + /social)
+  /settings        -- Settings
 
-**Example:**
-```typescript
-// lib/sync/manager.ts
-interface SyncQueueItem {
-  id: string;
-  operation: 'create' | 'update' | 'delete';
-  table: string;
-  data: Record<string, unknown>;
-  timestamp: number;
-  retryCount: number;
-}
-
-async function queueOperation(item: Omit<SyncQueueItem, 'id' | 'retryCount'>) {
-  // 1. Write to local IndexedDB first
-  await db.put(item.table, item.data);
-
-  // 2. Add to sync queue
-  await db.add('syncQueue', {
-    ...item,
-    id: crypto.randomUUID(),
-    retryCount: 0
-  });
-
-  // 3. Attempt immediate sync if online
-  if (navigator.onLine) {
-    await processSyncQueue();
-  }
-}
+Legacy redirects:
+  /progress  --> /hub#overview
+  /history   --> /hub#history
+  /social    --> /hub#community
 ```
 
-### Pattern 2: SM-2 Spaced Repetition
-
-**What:** Each question has per-user SRS state (ease factor, interval, next review date). After each review, state updates based on quality of recall.
-
-**When to use:** Study mode (not mock test mode - that remains random selection)
-
-**Trade-offs:**
-- PRO: Optimal learning efficiency, personalized review schedule
-- CON: Requires state management per user per question (100 questions x N users)
-
-**Schema:**
-```sql
--- New Supabase table
-create table public.srs_cards (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.profiles(id) on delete cascade,
-  question_id integer not null,
-  ease_factor real not null default 2.5,
-  interval integer not null default 0,
-  repetitions integer not null default 0,
-  next_review_at timestamptz not null default now(),
-  last_reviewed_at timestamptz,
-  created_at timestamptz not null default now(),
-  unique(user_id, question_id)
-);
-
-alter table public.srs_cards enable row level security;
-create policy "Users can manage their own cards" on public.srs_cards
-  using (auth.uid() = user_id);
-create policy "Users can insert their own cards" on public.srs_cards
-  for insert with check (auth.uid() = user_id);
-```
-
-**Algorithm:**
-```typescript
-// lib/srs/sm2.ts
-interface SRSCard {
-  questionId: number;
-  easeFactor: number;  // >= 1.3, default 2.5
-  interval: number;    // days
-  repetitions: number;
-  nextReviewAt: Date;
-}
-
-interface SM2Result {
-  easeFactor: number;
-  interval: number;
-  repetitions: number;
-  nextReviewAt: Date;
-}
-
-// Quality: 0-5 (0-2 = fail, 3-5 = pass)
-function sm2(card: SRSCard, quality: number): SM2Result {
-  let { easeFactor, interval, repetitions } = card;
-
-  if (quality >= 3) {
-    // Correct response
-    if (repetitions === 0) {
-      interval = 1;
-    } else if (repetitions === 1) {
-      interval = 6;
-    } else {
-      interval = Math.round(interval * easeFactor);
-    }
-    repetitions += 1;
-  } else {
-    // Incorrect - reset
-    repetitions = 0;
-    interval = 1;
-  }
-
-  // Adjust ease factor (minimum 1.3)
-  easeFactor = Math.max(1.3,
-    easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
-  );
-
-  const nextReviewAt = new Date();
-  nextReviewAt.setDate(nextReviewAt.getDate() + interval);
-
-  return { easeFactor, interval, repetitions, nextReviewAt };
-}
-```
-
-### Pattern 3: Service Worker with Serwist
-
-**What:** Serwist (next-pwa successor) configures Workbox-based service worker for precaching and runtime caching.
-
-**When to use:** Always - required for PWA installability and offline support.
-
-**Trade-offs:**
-- PRO: Zero-config PWA setup, well-maintained, Workbox-based
-- CON: Requires webpack (not Turbopack), adds build complexity
-
-**Setup:**
-```typescript
-// next.config.mjs
-import { withSerwist } from '@serwist/next';
-
-const nextConfig = {
-  reactStrictMode: true,
-  // ... existing config
-};
-
-export default withSerwist({
-  swSrc: 'service-worker/index.ts',
-  swDest: 'public/sw.js',
-  cacheOnFrontendNav: true,
-  reloadOnOnline: true,
-})(nextConfig);
-```
+#### navConfig.ts Architecture
 
 ```typescript
-// service-worker/index.ts
-import { defaultCache } from '@serwist/next/browser';
-import { Serwist } from 'serwist';
+// src/lib/navigation/navConfig.ts
+import type { BilingualString } from '@/lib/i18n/strings';
+import type { LucideIcon } from 'lucide-react';
 
-const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
-  skipWaiting: true,
-  clientsClaim: true,
-  runtimeCaching: [
-    ...defaultCache,
-    {
-      urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\/.*/i,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'supabase-api',
-        networkTimeoutSeconds: 10,
-        cacheableResponse: { statuses: [0, 200] }
-      }
-    }
-  ]
-});
+export interface NavItem {
+  href: string;
+  label: BilingualString;
+  icon: LucideIcon;
+  /** Whether this shows in primary nav (both mobile and desktop) */
+  primary: boolean;
+}
 
-serwist.addEventListeners();
+export const navItems: NavItem[] = [
+  { href: '/dashboard', label: strings.nav.dashboard, icon: Home, primary: true },
+  { href: '/study',     label: strings.nav.studyGuide, icon: BookOpen, primary: true },
+  { href: '/test',      label: strings.nav.mockTest, icon: ClipboardCheck, primary: true },
+  { href: '/interview', label: strings.nav.practiceInterview, icon: Mic, primary: true },
+  { href: '/hub',       label: { en: 'Progress', my: 'တိုးတက်မှု' }, icon: TrendingUp, primary: true },
+];
+
+export const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-password', '/op-ed'];
+
+export const primaryItems = navItems.filter(i => i.primary);
 ```
 
-### Pattern 4: Social Feature Schema
+**Impact analysis:** Both `AppNavigation` and `BottomTabBar` import this shared config. Mobile bottom bar grows from 3+1 to 5 tabs (Dashboard, Study, Test, Interview, Progress Hub). No "More" menu needed for navigation -- settings and utility actions move to the settings page or remain in the top bar on desktop.
 
-**What:** Follow system and leaderboard data stored in Supabase with RLS protection.
+**Decision:** 5 tabs on mobile bottom bar. This is the standard pattern for iOS/Android apps. The "More" sheet becomes unnecessary because all primary destinations are directly accessible.
 
-**When to use:** Social features like following users, viewing leaderboards, achievements.
+---
 
-**Trade-offs:**
-- PRO: Enables community features, gamification
-- CON: Privacy considerations, moderation needs
+### Epic B: Dashboard Redesign -- Architecture
 
-**Schema:**
-```sql
--- Follow relationship (one-way, Twitter-style)
-create table public.follows (
-  id uuid primary key default gen_random_uuid(),
-  follower_id uuid not null references public.profiles(id) on delete cascade,
-  followed_id uuid not null references public.profiles(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  unique(follower_id, followed_id),
-  constraint no_self_follow check (follower_id != followed_id)
-);
+**Problem:** Dashboard.tsx is 667 lines with 11 staggered sections, multiple CTAs, and heavy computation. Users feel overwhelmed.
 
-alter table public.follows enable row level security;
-create policy "Anyone can view follows" on public.follows for select using (true);
-create policy "Users can manage their own follows" on public.follows
-  for insert with check (auth.uid() = follower_id);
-create policy "Users can unfollow" on public.follows
-  for delete using (auth.uid() = follower_id);
+**Solution:** Extract "Next Best Action" logic into a hook, replace multi-CTA cluster with single primary CTA, and collapse secondary analytics.
 
--- Study streaks for gamification
-create table public.study_streaks (
-  user_id uuid primary key references public.profiles(id) on delete cascade,
-  current_streak integer not null default 0,
-  longest_streak integer not null default 0,
-  last_study_date date,
-  updated_at timestamptz not null default now()
-);
+#### New Files
 
-alter table public.study_streaks enable row level security;
-create policy "Streaks are publicly readable" on public.study_streaks
-  for select using (true);
-create policy "Users can manage their own streak" on public.study_streaks
-  using (auth.uid() = user_id);
+| File | Purpose |
+|------|---------|
+| `src/hooks/useNextBestAction.ts` | Computes single primary CTA based on user state |
+| `src/components/dashboard/NextBestAction.tsx` | Hero CTA component |
+| `src/components/dashboard/TodaysPlan.tsx` | 2-3 task suggestions with time estimates |
 
--- Achievements
-create table public.achievements (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.profiles(id) on delete cascade,
-  achievement_type text not null,
-  earned_at timestamptz not null default now(),
-  unique(user_id, achievement_type)
-);
+#### Modified Files
 
-create type achievement_type as enum (
-  'first_test', 'perfect_score', 'streak_7', 'streak_30',
-  'all_categories_studied', 'first_follower', 'helped_10'
-);
+| File | Change |
+|------|--------|
+| `src/pages/Dashboard.tsx` | Simplify to: Header + NextBestAction + TodaysPlan + collapsible sections |
 
-alter table public.achievements enable row level security;
-create policy "Achievements are publicly readable" on public.achievements
-  for select using (true);
-create policy "System can grant achievements" on public.achievements
-  for insert with check (auth.uid() = user_id);
+#### Next Best Action Logic
 
--- Leaderboard view (computed)
-create or replace view public.leaderboard as
-select
-  p.id as user_id,
-  p.full_name,
-  coalesce(s.current_streak, 0) as current_streak,
-  count(distinct mt.id) as total_tests,
-  coalesce(avg(mt.score::float / mt.total_questions * 100), 0) as avg_score,
-  count(distinct a.id) as achievement_count
-from public.profiles p
-left join public.study_streaks s on p.id = s.user_id
-left join public.mock_tests mt on p.id = mt.user_id
-left join public.achievements a on p.id = a.user_id
-group by p.id, p.full_name, s.current_streak;
+```typescript
+// src/hooks/useNextBestAction.ts
+type ActionType = 'start-studying' | 'continue-study' | 'take-test' | 'review-srs' | 'try-interview';
+
+interface NextBestAction {
+  type: ActionType;
+  title: BilingualString;
+  subtitle: BilingualString;
+  route: string;
+  priority: number;
+}
+
+// Decision tree:
+// 1. Never studied? --> "Start Studying"
+// 2. SRS cards due > 5? --> "Review your flashcards"
+// 3. No test taken recently (>3 days)? --> "Take a Mock Test"
+// 4. Test accuracy < 60%? --> "Practice weak areas"
+// 5. Ready (>80% readiness)? --> "Try Interview Mode"
+// 6. Default --> "Continue Studying"
 ```
 
-## Data Flow
+**Data dependencies:** This hook consumes `useSRS().dueCount`, `useAuth().user.testHistory`, `useCategoryMastery()`, and `useStreak()`. All already available in the Dashboard context. No new data fetching.
 
-### Authentication Flow (Enhanced for Offline)
+#### Dashboard Section Reduction
 
-```
-App Load
-    │
-    ├── Check IndexedDB for cached session
-    │       │
-    │       ├── Found valid ──► Hydrate user from cache
-    │       │                        │
-    │       │                        └── Background: Verify with Supabase
-    │       │
-    │       └── Not found ──► Check Supabase session
-    │
-    └── Supabase Session
-            │
-            ├── Valid ──► Cache to IndexedDB ──► Hydrate user
-            │
-            └── Invalid ──► Show auth screen
-```
+Current (11 sections):
+1. Welcome header
+2. Readiness hero
+3. Quick action buttons (3)
+4. SRS + Streak widgets (2)
+5. Interview widget
+6. Badges + Leaderboard (2)
+7. Category progress (collapsible)
+8. Suggested focus
+9. Overall accuracy
+10. Category accuracy breakdown
+11. Empty state / Milestone / Badge celebrations
 
-### Study Session Flow (SRS Mode)
+Proposed (4-5 sections):
+1. Welcome header (condensed)
+2. **Next Best Action** hero CTA (replaces readiness + quick actions)
+3. **Today's Plan** (2-3 tasks)
+4. Progress snapshot (link to Progress Hub)
+5. SRS due count badge (inline, not a section)
 
-```
-User Opens Study Mode
-    │
-    ▼
-Load SRS State from IndexedDB
-    │
-    ├── Has due cards? ──► Show due cards first (sorted by overdue)
-    │
-    └── No due cards ──► Show new cards (never studied)
-                              │
-                              ▼
-                         Present Question
-                              │
-                              ▼
-                         User Answers
-                              │
-                    ┌────────┴────────┐
-                    ▼                 ▼
-               Correct            Incorrect
-            (quality 4-5)       (quality 0-2)
-                    │                 │
-                    └────────┬────────┘
-                             ▼
-                      Run SM-2 Algorithm
-                             │
-                             ▼
-                    Update IndexedDB (immediate)
-                             │
-                             ▼
-                    Queue Supabase Sync
-                             │
-                             ▼
-                    Show Next Card
-```
+Celebrations (milestone, badge) remain as modal overlays.
 
-### Sync Queue Flow
+---
 
-```
-Mutation Occurs
-    │
-    ▼
-Write to IndexedDB ────────────────────► UI Updates
-    │
-    ▼
-Add to Sync Queue (IndexedDB)
-    │
-    ▼
-Is Online? ────────────────────────────► No: Wait for 'online' event
-    │
-    Yes
-    │
-    ▼
-Process Queue (FIFO)
-    │
-    ├── For each item:
-    │       │
-    │       ▼
-    │   Send to Supabase
-    │       │
-    │       ├── Success ──► Remove from queue
-    │       │
-    │       └── Failure ──► Increment retry count
-    │                           │
-    │                           ├── < Max retries ──► Keep in queue
-    │                           │
-    │                           └── >= Max retries ──► Move to dead letter
-    │
-    └── Continue until queue empty or offline
+### Epic C: Progress Hub -- Architecture
+
+**Problem:** Progress, History, and Community are three separate pages with overlapping concerns and independent navigation.
+
+**Solution:** Create a single `ProgressHubPage` with hash-based tabs, reusing existing components.
+
+#### New Files
+
+| File | Purpose |
+|------|---------|
+| `src/pages/ProgressHubPage.tsx` | Tabbed container: Overview, History, Community |
+| `src/components/hub/HubTabs.tsx` | Tab bar component with hash-based routing |
+
+#### Reused (Not Modified) Components
+
+These existing components move into the Progress Hub tabs wholesale:
+
+| Component | Hub Tab |
+|-----------|---------|
+| `CategoryGrid`, `CategoryRing`, `MasteryBadge`, `SkillTreePath` | Overview |
+| `ReadinessIndicator` | Overview (summary card) |
+| History list, trend chart (from HistoryPage) | History |
+| `LeaderboardTable`, `BadgeGrid`, `StreakHeatmap` | Community |
+
+#### Hash-Based Tab Routing Pattern
+
+The project already uses this pattern in `HistoryPage.tsx` and `SocialHubPage.tsx`:
+
+```typescript
+// Existing pattern (from SocialHubPage.tsx):
+// - Hash-based routing (#leaderboard, #badges, #streak)
+// - useMemo-derived activeTab (React Compiler safe)
+// - userSelectedTab with null initial -> fallback to hash-derived tab
+
+const hashTab = useMemo(() => {
+  const hash = location.hash.replace('#', '');
+  if (['overview', 'history', 'community'].includes(hash)) return hash as HubTab;
+  return 'overview';
+}, [location.hash]);
 ```
 
-## Scaling Considerations
+This pattern is React Compiler safe (no setState in effects) and already validated in the codebase.
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 0-1k users | Current architecture is fine. IndexedDB per-user, Supabase free tier. |
-| 1k-10k users | Consider Supabase Pro for realtime, add Redis for leaderboard caching if needed. |
-| 10k+ users | Evaluate PowerSync for offline sync at scale, Supabase Pro/Team tier. |
+#### Legacy Route Redirects
 
-### Scaling Priorities
+In `AppShell.tsx`, add redirects:
 
-1. **First bottleneck: Supabase free tier limits** - 500MB database, 2GB bandwidth/month
-   - Monitor usage, upgrade to Pro ($25/mo) when approaching limits
-   - Optimize queries, add pagination to leaderboard
+```typescript
+// Replace individual routes:
+<Route path="/progress" element={<Navigate to="/hub#overview" replace />} />
+<Route path="/history" element={<Navigate to="/hub#history" replace />} />
+<Route path="/social" element={<Navigate to="/hub#community" replace />} />
 
-2. **Second bottleneck: IndexedDB storage limits** - ~50% of available disk
-   - Implement data pruning for old sync queue items
-   - Warn users approaching storage limits (Safari 7-day eviction risk)
+// Add hub route:
+<Route path="/hub" element={<ProtectedRoute><ProgressHubPage /></ProtectedRoute>} />
+```
 
-## Anti-Patterns
+**Constraint:** React Router's `<Navigate>` does not natively support hash fragments. The redirect component will need to use `useEffect` + `navigate('/hub', { replace: true })` followed by `window.location.hash = '#history'`. Alternatively, the ProgressHubPage can read the original path from a query param: `/hub?from=history`.
 
-### Anti-Pattern 1: Storing All Data in React Context
+**Recommended approach:** Use a `<LegacyRedirect>` wrapper component:
 
-**What people do:** Put all offline data in React Context/state
-**Why it's wrong:** Context re-renders all consumers on any change; data lost on page refresh
-**Do this instead:** Use IndexedDB as source of truth, Context only for current UI state
+```typescript
+function LegacyRedirect({ tab }: { tab: string }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate(`/hub#${tab}`, { replace: true });
+  }, [navigate, tab]);
+  return null;
+}
+```
 
-### Anti-Pattern 2: Sync on Every Mutation
+---
 
-**What people do:** Call Supabase API directly on every user action
-**Why it's wrong:** Fails offline, creates inconsistent state, poor UX
-**Do this instead:** Write to IndexedDB first, queue sync, process queue in background
+### Epic D: Design Token System -- Architecture
 
-### Anti-Pattern 3: Complex i18n Library for 2 Languages
+**Problem:** Design tokens exist in `src/lib/design-tokens.ts` and `globals.css` but are not consistently applied. Cards, buttons, shadows, and radii vary across pages.
 
-**What people do:** Add react-i18next for bilingual support
-**Why it's wrong:** Overkill for 2 static languages, adds bundle size and complexity
-**Do this instead:** Keep bilingual data in civicsQuestions.ts, use simple conditional rendering
+**Solution:** Standardize token consumption through shared component patterns. No new infrastructure needed.
 
-### Anti-Pattern 4: Server-Side Rendering with React Router DOM
+#### Existing Token Sources
 
-**What people do:** Try to enable SSR for React Router routes
-**Why it's wrong:** React Router DOM is client-side only in this setup
-**Do this instead:** Keep SSR disabled via dynamic import, accept SPA tradeoffs
+| Source | What It Defines | Consumed By |
+|--------|----------------|-------------|
+| `globals.css` `:root` | CSS custom properties (colors, border, radius) | Tailwind via `hsl(var(--...))` |
+| `globals.css` `.dark` | Dark mode color overrides | Tailwind dark mode |
+| `tailwind.config.js` | Extended colors, radii, shadows, keyframes | All components via Tailwind classes |
+| `design-tokens.ts` | TypeScript constants (colors, spacing, timing, radius, shadows, springs) | Motion animation configs |
 
-### Anti-Pattern 5: Hard-Deleting Synced Data
+**Problem:** `design-tokens.ts` defines values that partially duplicate `globals.css` and `tailwind.config.js`. Some components use `design-tokens.ts` spring configs, others hardcode their own spring values.
 
-**What people do:** DELETE from Supabase without soft-delete
-**Why it's wrong:** Offline clients miss the deletion, data reappears
-**Do this instead:** Use _deleted boolean flag, filter deleted items in queries
+#### Standardization Approach
+
+1. **Consolidate spring configs**: Create a shared `src/lib/motion/springs.ts` that exports named spring presets consumed by all animated components.
+
+2. **Card component variants**: The existing `Card` component has `elevated` and `interactive` props. Add a `variant` prop for common card patterns (stat-card, action-card, section-card) to reduce per-page styling variance.
+
+3. **Button consistency**: The existing `Button` component already handles variants well. The issue is that Dashboard uses raw `clsx` button styles instead of the `Button` component. Migrate those inline buttons to use `Button` or `BilingualButton`.
+
+#### Modified Files for Token Alignment
+
+| File | Change |
+|------|--------|
+| `src/lib/design-tokens.ts` | Add motion spring presets as named exports |
+| `src/components/ui/Card.tsx` | Add `variant` prop for common card patterns |
+| `src/pages/Dashboard.tsx` | Replace inline button styles with `Button` component |
+| `src/pages/ProgressPage.tsx` | Apply consistent card styling |
+| `src/pages/StudyGuidePage.tsx` | Align card radius and shadow tokens |
+| `src/pages/InterviewPage.tsx` | Align card radius and shadow tokens |
+| `src/pages/TestPage.tsx` | Align card radius and shadow tokens |
+
+**No new dependencies.** This is purely internal CSS/component standardization.
+
+---
+
+### Epic E: Burmese Translation -- Architecture
+
+**Problem:** i18n system is a single `src/lib/i18n/strings.ts` file with flat BilingualString objects. Burmese translations are sometimes literal, and layouts can clip longer Burmese text.
+
+**Solution:** Extend the existing strings system with a style guide, audit top-20 strings, and add text expansion safety.
+
+#### Existing i18n Architecture
+
+```
+src/lib/i18n/strings.ts
+  --> exports `strings` object (nav, actions, dashboard, study, test, etc.)
+  --> exports `BilingualString` type { en: string; my: string }
+  --> exports helper functions (getRandomCorrectEncouragement, etc.)
+
+Consumed by:
+  --> All pages via `useLanguage().showBurmese`
+  --> Components render: showBurmese ? item.my : item.en
+  --> Some components show both (stacked English + Burmese)
+```
+
+#### New Files
+
+| File | Purpose |
+|------|---------|
+| `docs/burmese-style-guide.md` | Translation glossary, tone guide, terminology conventions |
+
+#### Modified Files
+
+| File | Change |
+|------|--------|
+| `src/lib/i18n/strings.ts` | Update top 20 strings with reviewed Burmese |
+| Various page components | Add `overflow-hidden text-ellipsis` or `break-words` where needed |
+| `src/components/navigation/BottomTabBar.tsx` | Ensure tab labels don't overflow with Burmese text |
+
+#### Text Expansion Safety Pattern
+
+Burmese text is typically 1.5-2x longer than English. The existing pattern of `font-myanmar text-xs` helps, but some layouts assume English text width.
+
+**Pattern:** For constrained containers (nav tabs, button labels, card headers):
+```css
+/* Apply to containers that hold bilingual text in constrained space */
+.bilingual-constrained {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Or for multi-line: */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+```
+
+**No structural changes needed.** The existing `showBurmese` conditional rendering pattern is correct. The work is content QA + CSS overflow safety.
+
+---
+
+### Epic F: USCIS 120-Question Bank -- Architecture
+
+**Problem:** The question bank already has 120 questions (100 original + 20 from `uscis-2025-additions.ts`). But test/interview thresholds, UI copy, and some calculations still reference "100 questions" or use old pass/fail logic.
+
+#### Already Completed
+
+- `totalQuestions` constant exists and is used throughout (120 currently)
+- 20 new questions added in `uscis-2025-additions.ts`
+- `index.ts` barrel file aggregates all questions
+
+#### What Needs Updating
+
+| Area | Current | Target | Files Affected |
+|------|---------|--------|----------------|
+| Mock test question count | 20 | 20 (unchanged) | None |
+| Pass threshold (mock test) | 12 correct | 12 correct (unchanged) | None |
+| Fail threshold (mock test) | 9 incorrect | 9 incorrect (unchanged) | None |
+| Interview question count | 20 | 20 (unchanged) | None |
+| UI copy referencing "100" | Some remain | All say "120" | Audit needed |
+| Badge thresholds | Based on 100 | Based on `totalQuestions` | `badgeDefinitions.ts` |
+| Progress calculations | Based on 100 | Based on `totalQuestions` | Verify all use constant |
+
+**Blast radius analysis:** The `totalQuestions` constant is imported by:
+- `Dashboard.tsx` (readiness score, composite score)
+- `ProgressPage.tsx` (practiced count display)
+- Badge engine calculations
+- Composite score calculations
+
+Most of these already use `totalQuestions` rather than hardcoded 100. The main work is a UI copy audit and badge threshold review.
+
+---
+
+### Epic G: Push Subscription Security -- Architecture
+
+**Problem:** Push subscription API accepts `userId` without verifying the authenticated user matches.
+
+**Solution:** Add server-side JWT validation to the push subscription endpoint.
+
+#### Existing Architecture
+
+```
+Client: usePushNotifications hook
+  --> calls Supabase Edge Function or API route to store subscription
+  --> passes userId + PushSubscription object
+```
+
+#### Security Changes
+
+| Layer | Change |
+|-------|--------|
+| API route / Edge Function | Validate `Authorization: Bearer <jwt>` header |
+| API route / Edge Function | Extract `user_id` from JWT, ignore client-sent `userId` |
+| API route / Edge Function | Add rate limiting (max 5 subscription writes per user per hour) |
+| Client hook | Include Supabase session token in request headers |
+
+**No client-side architecture changes.** The `usePushNotifications` hook already has access to the auth context. The fix is server-side validation.
+
+---
+
+## Component Dependency Map
+
+```
+v2.0 Component Dependencies:
+
+Epic D (Design Tokens)     -- INDEPENDENT, no deps
+  |
+  v
+Epic E (Burmese i18n)     -- INDEPENDENT, no deps (but benefits from D's layout fixes)
+  |
+  v
+Epic A (Unified Nav)       -- Depends on: new route for Progress Hub (/hub)
+  |
+  v
+Epic C (Progress Hub)      -- Depends on: Epic A (new route), benefits from D
+  |
+  v
+Epic B (Dashboard)         -- Depends on: Epic A (nav changes), Epic C (link to hub)
+  |                          Benefits from: Epic D (token alignment)
+  v
+Epic F (USCIS 120Q)        -- INDEPENDENT (data + constants), but audit after B/C
+  |
+  v
+Epic G (Security)          -- INDEPENDENT (server-side only)
+```
+
+---
+
+## Suggested Build Order
+
+### Phase 1: Foundation Layer (No User-Facing Changes)
+
+**Epic D1: Design token consolidation**
+- Consolidate spring configs into shared module
+- Add Card component variants
+- No visual changes yet, just infrastructure
+
+**Epic A1: Navigation config module**
+- Create `navConfig.ts` shared module
+- Do NOT rewire navigation yet -- just create the data source
+
+**Why first:** These are zero-risk infrastructure changes that all subsequent work depends on. If design tokens are inconsistent when you start building new UI, every new component will add to the inconsistency.
+
+### Phase 2: Page Restructuring
+
+**Epic C: Progress Hub page**
+- Create `ProgressHubPage.tsx` with hash-based tabs
+- Reuse existing components (CategoryGrid, SkillTreePath, etc.)
+- Add legacy route redirects
+
+**Epic A2: Rewire navigation**
+- Both `AppNavigation` and `BottomTabBar` consume `navConfig.ts`
+- Remove "More" menu from mobile
+- 5 primary tabs on mobile bottom bar
+
+**Why second:** Page restructuring must happen before dashboard redesign, because the dashboard links to Progress Hub. Build the destination before building the links.
+
+### Phase 3: Dashboard Redesign
+
+**Epic B: Dashboard simplification**
+- Implement `useNextBestAction` hook
+- Create `NextBestAction` and `TodaysPlan` components
+- Collapse Dashboard from 11 sections to 4-5
+- Link "View Progress" to `/hub`
+
+**Why third:** Dashboard redesign depends on Progress Hub existing (for deep links) and unified nav being in place (for consistent tab highlighting).
+
+### Phase 4: Polish and Content
+
+**Epic D2: Micro-interaction standardization**
+- Apply shared spring presets to all animated components
+- Ensure reduced-motion support is consistent
+
+**Epic E: Burmese translation upgrade**
+- Create style guide document
+- Audit and update top 20 strings
+- Add text expansion safety CSS
+
+**Epic F: USCIS question bank audit**
+- Verify all UI copy references 120 (not 100)
+- Review badge thresholds against `totalQuestions`
+- Test pass/fail logic correctness
+
+**Why fourth:** These are content and polish changes that should happen after structural changes are stable. Changing translations before layout changes would require double-work.
+
+### Phase 5: Security
+
+**Epic G: Push subscription hardening**
+- Add JWT validation to push subscription endpoint
+- Add rate limiting
+- Test with authenticated and unauthenticated requests
+
+**Why last:** Security changes are server-side and independent. Shipping them after UI changes means fewer moving parts during the security audit.
+
+---
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1: Creating a New Router for Hub Tabs
+
+**What people do:** Use nested `<Routes>` inside Progress Hub for tab content.
+**Why bad:** Creates URL paths like `/hub/history` which conflict with the existing hash routing pattern. Also breaks the `PageTransition` wrapper which keys on `location.pathname`.
+**Do instead:** Use hash-based tabs (`#overview`, `#history`, `#community`) with `useMemo` derived from `location.hash`. This is the established pattern in `SocialHubPage.tsx` and `HistoryPage.tsx`.
+
+### Anti-Pattern 2: Splitting Design Tokens Across Multiple Systems
+
+**What people do:** Put some tokens in CSS variables, some in Tailwind config, some in TypeScript, and try to keep them in sync.
+**Why bad:** Triple-maintenance burden, tokens drift over time.
+**Do instead:** CSS custom properties as the source of truth (already in `globals.css`), Tailwind references them via `hsl(var(--...))`, TypeScript only exports motion-specific values (springs, timing) that have no CSS equivalent.
+
+### Anti-Pattern 3: Prop Drilling for Next Best Action
+
+**What people do:** Compute "Next Best Action" in Dashboard and pass it through props.
+**Why bad:** The computation requires data from 4 different hooks. Passing all inputs through props creates a wide prop interface.
+**Do instead:** Create a `useNextBestAction` hook that internally consumes the needed hooks and returns a single action object. Dashboard just calls the hook.
+
+### Anti-Pattern 4: Full Page Rewrite for Dashboard
+
+**What people do:** Delete Dashboard.tsx and start fresh.
+**Why bad:** Loses tested behavior, introduces regressions, and the existing component structure is sound.
+**Do instead:** Extract sections into sub-components, remove the ones that move to Progress Hub, and add the new ones. The Dashboard component stays as the orchestrator.
+
+### Anti-Pattern 5: Breaking the Hash Routing Contract
+
+**What people do:** Use React Router `useSearchParams` for tab state instead of hash.
+**Why bad:** The app uses `BrowserRouter` with path-based routing. Using search params for tabs creates URL conflicts and breaks `PageTransition` which depends on `location.pathname` for animation keys.
+**Do instead:** Use `location.hash` for tab state within a page. This is the established pattern.
+
+---
 
 ## Integration Points
 
-### External Services
+### Components That Need Modification
 
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| Supabase Auth | SDK client, session persistence | Already integrated, enhance with IndexedDB caching |
-| Supabase Database | SDK client, RLS policies | Existing, add new tables for SRS/social |
-| Supabase Realtime | Optional for social features | Consider for live leaderboard updates |
-| Vercel | Static deployment, edge functions | Current deployment target |
+| Component | Epic(s) | Change Type | Risk |
+|-----------|---------|-------------|------|
+| `AppShell.tsx` | A, C | Route additions + redirects | MEDIUM -- routing changes |
+| `AppNavigation.tsx` | A | Import shared config | LOW -- data source change |
+| `BottomTabBar.tsx` | A | Import shared config, remove "More" | MEDIUM -- UX change |
+| `Dashboard.tsx` | B | Major simplification | HIGH -- most complex page |
+| `ProgressPage.tsx` | C | Content moves to Hub | LOW -- becomes redirect |
+| `HistoryPage.tsx` | C | Content moves to Hub | LOW -- becomes redirect |
+| `SocialHubPage.tsx` | C | Content moves to Hub | LOW -- becomes redirect |
+| `design-tokens.ts` | D | Add spring presets | LOW -- additive |
+| `Card.tsx` | D | Add variant prop | LOW -- additive |
+| `Button.tsx` | D | No changes needed | NONE |
+| `strings.ts` | E | Update Burmese strings | LOW -- content only |
+| `globals.css` | D | No changes needed | NONE |
+| `tailwind.config.js` | D | No changes needed | NONE |
+| `questions/index.ts` | F | Verify constants | LOW |
+| `badgeDefinitions.ts` | F | Threshold review | LOW |
 
-### Internal Boundaries
+### New Components Needed
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| Service Worker <-> Main Thread | postMessage, Background Sync API | SW cannot access DOM or React state |
-| IndexedDB <-> React Components | Custom hooks (useSRS, useSyncQueue) | Wrap idb in hooks for clean API |
-| SRS Logic <-> UI | SRSContext provides methods | Pure functions in lib/srs/, state in context |
-| Auth <-> Offline | Cached session in IndexedDB | Validate with Supabase when online |
+| Component | Epic | Purpose | Complexity |
+|-----------|------|---------|------------|
+| `navConfig.ts` | A | Shared nav configuration | LOW |
+| `ProgressHubPage.tsx` | C | Tabbed container page | MEDIUM |
+| `HubTabs.tsx` | C | Tab bar with hash routing | LOW |
+| `LegacyRedirect.tsx` | C | Route redirect helper | LOW |
+| `useNextBestAction.ts` | B | CTA decision hook | MEDIUM |
+| `NextBestAction.tsx` | B | Hero CTA component | LOW |
+| `TodaysPlan.tsx` | B | Task suggestion block | LOW |
+| `burmese-style-guide.md` | E | Translation reference doc | LOW |
 
-## Build Order Dependencies
+### Components That Move (Not Modified)
 
-Based on component dependencies, the recommended implementation order:
+These existing components are reused inside Progress Hub tabs with no code changes:
 
+| Component | Current Location | Hub Tab |
+|-----------|-----------------|---------|
+| `CategoryGrid` | Dashboard, ProgressPage | Hub > Overview |
+| `CategoryRing` | ProgressPage | Hub > Overview |
+| `MasteryBadge` | ProgressPage | Hub > Overview |
+| `SkillTreePath` | ProgressPage | Hub > Overview |
+| `LeaderboardTable` | SocialHubPage | Hub > Community |
+| `BadgeGrid` | SocialHubPage | Hub > Community |
+| `StreakHeatmap` | SocialHubPage | Hub > Community |
+| `SocialOptInFlow` | SocialHubPage | Hub > Community |
+| History list + chart | HistoryPage | Hub > History |
+
+---
+
+## Data Flow Changes
+
+### No Changes to Data Layer
+
+The v2.0 features do not modify:
+- IndexedDB stores (questions, sync, srs-cards, mastery, streak, badge, interview)
+- Supabase tables (profiles, mock_tests, mock_test_responses, srs_cards, social_profiles)
+- Context providers (Auth, SRS, Social, Language, Theme, Offline)
+- Sync queue logic
+
+### New Data Flows
+
+**useNextBestAction:**
 ```
-Phase 1: PWA Foundation
-├── manifest.json + icons
-├── Service Worker (Serwist) setup
-├── Offline fallback page
-└── InstallPrompt component
-
-Phase 2: IndexedDB Layer
-├── idb database initialization
-├── Question caching (civicsQuestions.ts → IndexedDB)
-├── OfflineContext + useOnlineStatus hook
-└── Basic sync queue infrastructure
-    │
-    └── Depends on: Phase 1 (service worker for background sync)
-
-Phase 3: Spaced Repetition
-├── Supabase srs_cards table + RLS
-├── SM-2 algorithm (lib/srs/sm2.ts)
-├── SRS IndexedDB operations
-├── SRSContext provider
-└── Study mode UI enhancements
-    │
-    └── Depends on: Phase 2 (IndexedDB layer)
-
-Phase 4: Social Features
-├── Supabase follows, study_streaks, achievements tables
-├── SocialContext provider
-├── Leaderboard page
-├── Follow/unfollow UI
-└── Achievement notifications
-    │
-    └── Depends on: Phase 2 (IndexedDB for offline caching)
-    └── Independent of: Phase 3 (can be built in parallel)
+useSRS().dueCount
+useAuth().user.testHistory      -->  useNextBestAction()  -->  { type, title, route }
+useCategoryMastery()
+useStreak().currentStreak
 ```
+
+**Progress Hub tab state:**
+```
+location.hash  -->  useMemo (derive tab)  -->  render tab content
+user click     -->  navigate('/hub#tab')  -->  location.hash updates  -->  re-derive
+```
+
+Both are purely derived state with no new persistence.
+
+---
+
+## Scalability Considerations
+
+| Concern | Current (v1.0) | After v2.0 | Notes |
+|---------|---------------|------------|-------|
+| Bundle size | ~37.5K LOC | ~38K LOC (+1-2%) | Progress Hub adds a page but removes 3 route imports |
+| Navigation re-renders | Each nav is independent | Shared config reduces duplication | No performance impact |
+| Dashboard computation | Heavy (11 sections) | Lighter (4-5 sections) | Fewer hooks called, less DOM |
+| Route count | 13 routes | 11 routes (3 become redirects) | Slightly simpler routing |
+| IndexedDB stores | 7 stores | 7 stores (unchanged) | No new storage |
+
+---
 
 ## Sources
 
-**PWA & Service Workers:**
-- [Serwist Documentation](https://serwist.pages.dev/docs/next/getting-started) - Official Serwist docs (HIGH confidence)
-- [next-pwa GitHub](https://github.com/shadowwalker/next-pwa) - Original next-pwa reference (MEDIUM confidence - maintenance status unclear)
-- [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps) - Official Next.js docs (HIGH confidence)
+**Codebase analysis:**
+- Direct reading of all 15+ source files referenced above (HIGH confidence)
+- PRD: `docs/PRD-next-milestone.md` (HIGH confidence -- project source of truth)
+- v1.0 architecture: `.planning/milestones/v1.0/` (HIGH confidence)
 
-**Offline-First & IndexedDB:**
-- [LogRocket: Offline-first frontend apps 2025](https://blog.logrocket.com/offline-first-frontend-apps-2025-indexeddb-sqlite/) - IndexedDB patterns (MEDIUM confidence)
-- [RxDB Supabase Replication](https://rxdb.info/replication-supabase.html) - Sync architecture reference (MEDIUM confidence)
-- [idb npm package](https://www.npmjs.com/package/idb) - IndexedDB wrapper (HIGH confidence - official docs)
+**React Router hash-based tabs:**
+- [Pluralsight: Handling Tabs Using Page URLs](https://www.pluralsight.com/resources/blog/guides/handling-tabs-using-page-urls-and-react-router-doms) (MEDIUM confidence)
+- [Ariakit: Tab with React Router](https://ariakit.org/examples/tab-react-router) (MEDIUM confidence)
 
-**Spaced Repetition:**
-- [SM-2 Algorithm Explanation](https://github.com/cnnrhill/sm-2) - SM-2 implementation (HIGH confidence)
-- [supermemo npm](https://www.npmjs.com/package/supermemo) - SM-2 library (HIGH confidence)
-
-**Social Features:**
-- [Leaderboard System Design](https://systemdesign.one/leaderboard-system-design/) - Architecture reference (MEDIUM confidence)
-- [PostgreSQL Follow System](https://www.geeksforgeeks.org/dbms/design-database-for-followers-following-systems-in-social-media-apps/) - Schema patterns (MEDIUM confidence)
+**Design token patterns:**
+- [Tailwind CSS Best Practices 2025-2026](https://www.frontendtools.tech/blog/tailwind-css-best-practices-design-system-patterns) (MEDIUM confidence)
+- [Tailwind CSS @theme design tokens](https://medium.com/@sureshdotariya/tailwind-css-4-theme-the-future-of-design-tokens-at-2025-guide-48305a26af06) (LOW confidence -- Tailwind v4 not yet adopted by project)
 
 ---
-*Architecture research for: Bilingual Civics Test Prep PWA*
-*Researched: 2026-02-05*
+*Architecture research for: Civic Test Prep v2.0 feature integration*
+*Researched: 2026-02-09*

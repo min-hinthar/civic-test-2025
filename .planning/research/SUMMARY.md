@@ -1,372 +1,234 @@
 # Project Research Summary
 
-**Project:** Bilingual PWA Civics Test Prep Enhancement
-**Domain:** Immigrant education web app (civics test preparation)
-**Researched:** 2026-02-05
+**Project:** Civic Test Prep 2025 - v2.0 Unified Learning Hub
+**Domain:** Bilingual (English/Burmese) civics test prep PWA for Burmese immigrants
+**Researched:** 2026-02-09
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This is a Next.js 15 + Supabase civics test prep app for Burmese-speaking immigrants preparing for US citizenship. The app already has core functionality (tests, history, bilingual flashcards, analytics) but needs PWA capabilities, offline support, and smarter learning features to compete with established apps like Citizen Now and Citizenry. The recommended approach is to build PWA foundation first (service worker, IndexedDB, installability), then layer spaced repetition for personalized learning, while maintaining the app's unique strength: true side-by-side bilingual display.
+The v2.0 milestone is a **UI/UX refinement layer** built on v1.0's proven architecture (189 files, 37.5K LOC, 348 commits). Research reveals this is primarily a reshuffling and polishing effort, not infrastructure expansion. Only 2 new npm packages are needed (@radix-ui/react-tabs, @supabase/ssr), and zero new data stores or context providers. The core changes — unified navigation, dashboard simplification, Progress Hub consolidation, and design token alignment — follow established patterns from education app leaders like Duolingo and Khan Academy.
 
-The critical architectural decision is choosing **offline-first with sync queue** over relying solely on Supabase. This requires Serwist for service worker management, idb-keyval for local persistence, and careful handling of iOS Safari's 7-day data eviction policy. The main risk is React Router + Next.js causing 404s on page refresh, which must be resolved before PWA deployment. Secondary risks include biased shuffle algorithm (currently broken), race conditions in test session saves, and Burmese font rendering failures on devices without proper Unicode support.
+The recommended approach is **surgical refactoring over rewriting**. The existing provider hierarchy, offline-first data layer, and hash-based routing patterns are sound. The riskiest integration is Progress Hub consolidation (merging 3 pages with deep links), which must preserve all existing routes, hash fragments, and push notification URLs. The safest starting point is design token alignment, which has zero functional dependencies and reduces visual variance before layout changes. Critical finding: USCIS 2025 requires **128 questions** (not 120 as stated in PRD) — the app has 120, missing 8 questions.
 
-The roadmap should prioritize technical debt fixes (shuffle, save race condition, TypeScript strictness) before adding new features, as these foundational issues will compound with offline sync complexity. Follow with PWA infrastructure, then spaced repetition (the major differentiator), and defer social features until core learning experience is validated.
+Key risks center on **continuity violations**: breaking onboarding tour targets during navigation redesign, regressing user progress metrics when expanding the question bank, and eroding trust with bad Burmese translations. The mitigation strategy is to preserve user-facing continuity while restructuring under the hood — celebrate new questions instead of showing coverage regression, redirect legacy URLs transparently, and require native speaker review for all translation changes. Security hardening (push subscription authentication) is critical before any push notification improvements.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (Next.js 15, React 19, Supabase, Tailwind) is solid and should not change. The research identifies specific additions needed for enhancement features:
+The existing v1.0 stack (Next.js 15 Pages Router, React 19, Supabase, Tailwind, motion/react, Radix UI, ts-fsrs, idb-keyval) **requires only 2 additions** for v2.0. The research validates that feature requests like unified navigation, dashboard CTAs, glass-morphism UI, and rate limiting do not require new libraries — they're achievable with existing tools plus CSS and component refactoring.
 
-**Core technologies:**
-- **@serwist/next ^9.5.4**: Service worker integration — official Next.js recommendation, actively maintained Workbox fork, works with webpack in Next.js 15
-- **idb-keyval ^6.2.1**: IndexedDB wrapper — tiny (600B), promise-based, perfect for offline persistence alongside Cache API
-- **ts-fsrs ^4.x**: Spaced repetition engine — FSRS algorithm empirically outperforms SM-2, TypeScript-native, Open Spaced Repetition standard
-- **motion ^12.x**: Animation library — formerly Framer Motion, 120fps hardware-accelerated, React 19 concurrent rendering compatible
-- **@radix-ui/react-* ^1.x**: Accessible UI primitives — Shadcn/ui foundation, WCAG compliant, used by Vercel/Linear/Supabase
-- **@tanstack/react-query ^5.x**: Data fetching/caching — better than raw Supabase hooks for social features, handles cache invalidation on realtime updates
+**Core additions:**
+- **@radix-ui/react-tabs** (^1.1.13): Accessible tab component for Progress Hub — consistent with existing Radix ecosystem (Dialog, Toast, Progress already in use), handles keyboard navigation and ARIA roles correctly
+- **@supabase/ssr** (^0.8.0): Server-side Supabase client for API route authentication — enables JWT verification in push subscription endpoint to replace current "trust the userId" vulnerability
 
-**Critical stack decisions:**
-- Do NOT use next-pwa (unmaintained since 2022, webpack conflicts)
-- Do NOT use i18n libraries (app shows both languages simultaneously, no toggle needed)
-- Do NOT use supabase-comments-extension (3 years old, deprecated dependencies)
-- Build custom social features with Supabase tables + TanStack Query
+**No library needed for:**
+- **Unified navigation**: Shared config module consumed by existing AppNavigation + BottomTabBar
+- **iOS-inspired design tokens**: CSS custom properties + Tailwind backdrop-filter (already supported)
+- **In-memory rate limiting**: 30-line Map-based token bucket (sufficient for low-traffic push endpoints)
+- **Burmese translation upgrade**: Content work on existing strings.ts centralized i18n system
 
-**Version compatibility confirmed:** All recommendations work with React 19, Next.js 15, and Vercel + Supabase free tiers.
+**Critical finding from stack research:** USCIS 2025 civics test has **128 questions** (official USCIS PDF), not 120. The app currently has 120 questions (100 original + 20 uscis2025Additions). Gap: **8 questions missing** to reach full compliance.
 
 ### Expected Features
 
-Research on civics test apps (Citizen Now, Citizenry) and immigrant education UX reveals critical gaps and opportunities:
+Seven epics identified across navigation UX, decision support, information architecture, visual design, content trust, legal compliance, and security.
 
 **Must have (table stakes):**
-- **Offline access** — Users study during commute with limited data plans; immigrants often have unreliable connectivity
-- **Answer explanations** — Every competitor provides "why" context, not just correct answers; essential for retention
-- **Category progress tracking** — Dashboard has accuracy data but lacks visual mastery indicators
-- **Installable PWA** — "App-store-ready" means users expect to install on home screen like native apps
+- **Consistent navigation across mobile/desktop** — users currently see different structures (mobile: 3 tabs + More sheet, desktop: 7 links). Standard pattern is 4-5 persistent bottom tabs (iOS HIG, Material Design)
+- **Single primary CTA on dashboard** — current dashboard has 11 sections with 3 equal-weight actions. Education apps use "Next Best Action" decision tree to reduce choice paralysis
+- **Complete 128-question USCIS 2025 bank** — legal requirement effective Oct 20, 2025. Current gap: 8 questions
+- **Push subscription authentication** — current API accepts any userId without verification, allowing subscription hijacking
 
-**Should have (competitive advantage):**
-- **True bilingual display** — Already exists and is the app's superpower; most competitors only offer language switching, not side-by-side
-- **Spaced repetition for weak areas** — AI-powered review scheduling based on forgetting curve; differentiates from "study all 100 questions" approach
-- **Anxiety-reducing design** — Target users are stressed about high-stakes test; encouraging tone, progress celebration, warm colors
-- **Interview simulation mode** — Audio-only question playback simulating interview experience; simpler than Citizenry's expensive AI interviews
+**Should have (competitive):**
+- **Progress Hub consolidation** — current data scattered across Dashboard, ProgressPage, HistoryPage, SocialHubPage. Single tabbed hub matches standard analytics pattern
+- **iOS-inspired glass effects** — frosted nav bars, translucent cards with backdrop-blur. Differentiates from dated Material Design competitors
+- **Translation trust indicators** — show verification status (verified, community-reviewed, machine). Builds trust for high-stakes legal content
 
-**Defer (v2+):**
-- **Burmese TTS** — Enhancement, not core; depends on Web Speech API voice availability
-- **Community features** — Only if users request; start with private study experience
-- **Additional language support** — After Burmese is polished and validated
-
-**Anti-features (avoid):**
-- Social leaderboards — Increases anxiety for stressed users
-- AI chatbot tutor — Expensive, risk of incorrect immigration answers
-- Gamification badges — Can feel patronizing to adult learners in high-stakes situation
-- Mandatory account creation — Barrier to cautious immigrant users
+**Defer to v2.1+:**
+- **Dynamic answer system** — questions about current officials (president, senators) need periodic updates. In-memory approach works short-term
+- **Full design system documentation** — formalize patterns after they stabilize through v2.0
+- **Translation contribution workflow** — community reporting infrastructure for scale
 
 ### Architecture Approach
 
-The current architecture is a Next.js 15 SPA with catch-all Pages Router route delegating to client-side React Router DOM, Context API for state, and Supabase backend. This must evolve to offline-first with local database as source of truth.
+The v2.0 changes fit **within the existing architecture** with no new providers, stores, or data flows. The established provider hierarchy (ErrorBoundary > Language > Theme > Toast > Offline > Auth > Social > SRS > Router) remains unchanged. All v2.0 features are UI layer modifications that consume existing context data.
 
-**Major components:**
+**Major structural changes:**
 
-1. **Service Worker (Serwist)** — Asset precaching, API response caching (stale-while-revalidate), background sync queue processing
-2. **IndexedDB Layer (idb)** — Local persistence with four stores: `questions` (100 cached), `srs_state` (per-user card data), `sync_queue` (pending mutations), `cache` (misc)
-3. **Offline-First Data Flow** — All mutations write to IndexedDB first (immediate UI update), then queue for Supabase sync; local DB is source of truth
-4. **SRS System (ts-fsrs)** — Spaced repetition scheduler with per-user per-question state; stores ease factor, interval, repetitions, next review date
-5. **Context Providers** — AuthProvider (enhanced with offline caching), SRSProvider (spaced repetition state), OfflineProvider (sync management), SocialProvider (follow/leaderboard data)
-6. **Supabase Backend** — Add `srs_cards` table (user_id, question_id, SM-2 state), `follows` table (social), `study_streaks` table (gamification), `achievements` table
+1. **Navigation config consolidation** — create single navConfig.ts shared source of truth to replace dual nav definitions (AppNavigation's navLinks + BottomTabBar's primaryTabs/moreNavItems). Mobile expands from 3+4 to 5 persistent tabs, eliminating the More menu.
 
-**Key patterns:**
-- Offline-first: IndexedDB write → UI update → sync queue → Supabase (when online)
-- Service worker handles precaching + runtime caching + background sync
-- SM-2 algorithm updates card state after each review (or use FSRS for better results)
-- React Router in Next.js resolved via catch-all route (temporary) or migrate to App Router (recommended)
+2. **Progress Hub page with hash routing** — new ProgressHubPage.tsx with tabs (Overview, History, Community) using location.hash pattern already validated in HistoryPage and SocialHubPage. Reuses existing components (CategoryGrid, SkillTreePath, LeaderboardTable) with zero modification. Legacy routes redirect: /progress → /hub#overview, /history → /hub#history, /social → /hub#community.
+
+3. **Dashboard simplification via extraction** — new useNextBestAction hook computes single CTA from existing data sources (useSRS, useAuth, useCategoryMastery, useStreak). Dashboard shrinks from 11 sections to 4-5, moving detailed analytics to Progress Hub.
+
+4. **Design token consolidation** — CSS custom properties in globals.css as single source of truth, Tailwind references them via hsl(var(--...)). Current fragmentation (globals.css, tailwind.config.js, design-tokens.ts) creates drift. TypeScript tokens kept only for motion-specific values (springs, timing).
+
+**Data flow changes:** None. All v2.0 features use derived state from existing hooks. No new IndexedDB stores, no new Supabase tables (except security hardening on existing push_subscriptions), no new context providers.
 
 ### Critical Pitfalls
 
-Based on codebase analysis and domain research, these are the highest-priority issues:
+Research identified 15 pitfalls across critical, moderate, and minor severity. Top 5 that threaten user experience or require rewrites:
 
-1. **Biased shuffle algorithm** — Current `sort(() => Math.random() - 0.5)` produces non-uniform distribution; certain questions appear more frequently. Fix: Use Fisher-Yates shuffle. This breaks actual learning outcomes and must be fixed immediately.
+1. **Navigation unification breaks onboarding tour** — OnboardingTour targets 5 data-tour attributes on Dashboard elements (study-action, test-action, srs-deck, interview-sim, theme-toggle). Navigation redesign moves/removes these, causing silent tour failures with floating tooltips or skipped steps. **Prevention:** Audit all data-tour targets before ANY navigation changes, update tour steps to match new mental model.
 
-2. **Race condition in test session save** — Sets `hasSavedSession = true` before async save completes; if save fails, users lose test results. Fix: Implement proper state machine (`idle` → `saving` → `saved` | `error`) with ref tracking. Critical data integrity issue.
+2. **Page consolidation loses hash-based deep links** — existing routes use hash routing (/history#tests, /study#review, /progress?category=X#cards) for tabs, scroll targets, and SRS entry points. Push notifications, SRS widget links, and user bookmarks depend on these URLs. **Prevention:** Map ALL routes/hashes before consolidation, implement redirects, update all navigate() calls and formatSRSReminderNotification function.
 
-3. **React Router + Next.js causes 404 on refresh** — Users bookmarking `/test` or `/dashboard` get 404 when they return. Fix: Catch-all route `pages/[[...slug]].tsx` as stopgap, or migrate to App Router for proper PWA integration. Blocks PWA deployment.
+3. **Design token migration creates visual regressions across 63+ files** — 307 occurrences of hardcoded color classes (primary-500, success-500, warning-500) across 63 files. THREE sources of truth: globals.css CSS variables, tailwind.config.js hardcoded HSL, design-tokens.ts JS exports (not consumed by Tailwind). Dark mode uses manual overrides (.dark .bg-primary-500) instead of CSS variable switching. **Prevention:** Consolidate to CSS variables first (migration pass), THEN introduce new tokens (visual pass). Use Playwright screenshot diffing.
 
-4. **iOS Safari purges data after 7 days** — IndexedDB and Cache API automatically cleared if PWA unused for 7 days. Fix: Request persistent storage, design for data loss, implement cloud sync as primary storage, prompt regular usage with notifications.
+4. **Expanding to 128 questions breaks hardcoded thresholds** — app has 120 questions, but users who practiced all 100 original questions show "100% coverage". Adding 8 more questions drops them to 83%, destroying motivation. ReadinessIndicator score drops (coverage is 50% of composite score). **Prevention:** Celebrate new questions with in-app notification, consider separate "legacy 100Q" vs "128Q" tracking during transition.
 
-5. **Burmese font rendering failures** — Myanmar Unicode vs Zawgyi encoding incompatibility causes garbled text. Fix: Embed Noto Sans Myanmar font (don't rely on system fonts), use Unicode only, test on actual Myanmar devices.
+5. **Push subscription API lacks authentication** — /api/push/subscribe accepts any userId in POST body with NO JWT verification. Uses SUPABASE_SERVICE_ROLE_KEY (admin access) and trusts client-provided userId. Attacker can hijack any user's push notifications or spam the table. **Prevention:** Verify supabase.auth.getUser() matches userId, add token-based rate limiting (5 changes/hour), validate before ANY push improvements.
 
-6. **history.pushState memory leak** — Navigation lock calls `pushState` on every `popstate`, growing history stack unbounded. Fix: Use `replaceState` instead of `pushState` in the handler.
-
-7. **PWA service worker caches stale content** — Without cache versioning, users see outdated questions after updates. Fix: Version cache names, implement stale-while-revalidate, notify users of updates.
-
-8. **SM-2 treats all cards as equally difficult initially** — "Capital of US?" gets same schedule as "Name 13 colonies." Fix: Pre-seed difficulty ratings based on question complexity, or use FSRS which handles this better.
+**Cross-cutting concern:** React Compiler ESLint rules (project uses strict rules from React 19 compiler). Common refactoring patterns violate: setState in useEffect (set-state-in-effect), ref.current in render (refs), useMemo<Type>() generics (preserve-manual-memoization). Existing workarounds validated in HistoryPage (useMemo-derived tab from location.hash) and useMasteryMilestones (lazy useState instead of useRef). **Prevention:** Follow MEMORY.md patterns, run ESLint after every component change.
 
 ## Implications for Roadmap
 
-Based on research findings, dependencies, and pitfalls, the recommended phase structure:
+Based on research findings, suggested 7-phase structure emphasizing foundation-first and continuity preservation:
 
-### Phase 1: Foundation & Technical Debt
-**Rationale:** Critical bugs and architectural issues must be fixed before adding complexity. Biased shuffle and race condition affect data integrity; loose types will compound with offline sync.
+### Phase 1: Design Token Consolidation
+**Rationale:** Zero-risk infrastructure that unblocks all UI work. If tokens are inconsistent when building new UI, every new component adds to the debt. STACK.md confirms no new library needed (CSS + Tailwind).
 
-**Delivers:**
-- Correct Fisher-Yates shuffle implementation
-- Proper async save state machine
-- history.pushState → replaceState fix
-- TypeScript strict mode enabled
-- Questions split by category (maintainability)
-- Test framework setup (Vitest + Playwright)
+**Delivers:** Single source of truth for colors/shadows/spacing, dark mode via CSS variable switching (not overrides), shared motion spring presets.
 
-**Addresses:**
-- Pitfall 1 (shuffle), 2 (save race), 3 (history leak), 9 (loose types), 10 (monolithic file), 11 (no tests)
+**Addresses:** Epic D (iOS-Inspired Design System) foundation, prevents Pitfall 3 (visual regressions).
 
-**Avoids:**
-- Adding offline sync on top of broken save logic
-- Type errors proliferating through new code
-- Regressions going unnoticed
+**Avoids:** Touching 63+ files after visual changes are in flight. Do structural consolidation with zero visual change, then layer visual polish.
 
-**Research flag:** Standard patterns, well-documented fixes. Skip `/gsd:research-phase`.
+**Research flag:** Standard patterns, skip research-phase.
 
----
+### Phase 2: USCIS 128-Question Bank Completion
+**Rationale:** Pure data work with no UI dependencies. Unblocks accurate question count messaging. Critical legal compliance gap (8 questions missing for Oct 2025 effective date).
 
-### Phase 2: PWA Infrastructure
-**Rationale:** Service worker and offline capabilities are foundational for all subsequent features. IndexedDB layer will be used by spaced repetition, social features, and sync queue.
+**Delivers:** Full 128-question bank with bilingual content, studyAnswers, and explanations. Updated mock test to 20Q/12 pass/9 fail logic (already implemented, verify alignment).
 
-**Delivers:**
-- Serwist service worker setup
-- Web manifest + PWA icons
-- IndexedDB initialization (questions, sync_queue stores)
-- Offline/online detection + sync queue manager
-- Install prompt component
-- Catch-all route fix for React Router (or App Router migration decision)
-- iOS persistent storage request
-- Cache versioning strategy
+**Addresses:** Epic F (USCIS 2025 128Q Bank), prevents Pitfall 4 (coverage regression).
 
-**Uses:**
-- @serwist/next, idb-keyval, motion (for animations)
+**Avoids:** Announcing "120 questions" in v2.0 UI when the real requirement is 128. Add celebration messaging for new questions instead of silent metric regression.
 
-**Implements:**
-- Service Worker component (ARCHITECTURE.md)
-- IndexedDB Layer component (ARCHITECTURE.md)
-- OfflineProvider (ARCHITECTURE.md)
+**Research flag:** Skip research-phase (official USCIS PDF is source of truth). Cross-reference with official 2025-Civics-Test-128-Questions-and-Answers.pdf to identify missing 8.
 
-**Addresses:**
-- Features: Offline access, installable PWA (FEATURES.md table stakes)
-- Pitfalls: 4 (iOS eviction), 3 (React Router 404s), 8 (cache staleness), 12 (Supabase free tier pause)
+### Phase 3: Push Subscription Security Hardening
+**Rationale:** Foundational security before any push notification improvements. Current vulnerability allows subscription hijacking (PITFALLS.md Critical Pitfall 5). STACK.md confirms @supabase/ssr enables proper JWT verification.
 
-**Avoids:**
-- Using next-pwa (unmaintained)
-- Assuming Supabase handles offline
-- Not requesting persistent storage on iOS
+**Delivers:** Authenticated push subscription endpoint via @supabase/ssr createServerClient, token-based rate limiting (5 changes/hour), input validation.
 
-**Research flag:** Moderate complexity. Serwist is well-documented, but offline-first patterns may need targeted research during implementation. Consider `/gsd:research-phase` if team unfamiliar with service workers.
+**Addresses:** Epic G (Security Hardening) push security, prevents Pitfall 5 (unauthenticated API).
 
----
+**Avoids:** Building new push features on insecure foundation. This is 2-hour fix that must ship before any push improvements.
 
-### Phase 3: Bilingual UX Polish
-**Rationale:** Fix Burmese rendering before adding features that depend on it (TTS, explanations). This is foundational for the app's unique value proposition.
+**Research flag:** Skip research-phase (@supabase/ssr docs are comprehensive).
 
-**Delivers:**
-- Embedded Noto Sans Myanmar font
-- Proper font fallback chain
-- Answer explanations (bilingual)
-- Enhanced bilingual typography
-- Category progress visualization
-- Anxiety-reducing design pass (microcopy, colors, animations)
+### Phase 4: Unified Navigation Structure
+**Rationale:** Structural change that everything else depends on. Dashboard redesign needs stable nav, Progress Hub needs finalized route. ARCHITECTURE.md recommends creating navConfig.ts BEFORE visual changes.
 
-**Uses:**
-- @radix-ui/react-progress (progress bars)
-- motion (celebration animations)
+**Delivers:** Single navConfig.ts consumed by both AppNavigation and BottomTabBar, 5-tab mobile bottom bar (eliminate More menu), layout component wrapper (move AppNavigation out of individual pages).
 
-**Addresses:**
-- Features: Answer explanations (table stakes), category progress (table stakes), anxiety-reducing design (differentiator)
-- Pitfall: 6 (font rendering), 14 (anxiety UX), 15 (language switcher)
+**Addresses:** Epic A (Unified Navigation), prevents Pitfall 1 (broken tour), Pitfall 12 (per-page nav pattern).
 
-**Avoids:**
-- Relying on system fonts
-- Using flags for language selection
-- Harsh/competitive UX patterns
+**Avoids:** Doing layout-level refactor AFTER visual redesign (double work). Do structural refactor first with zero visual change, then polish.
 
-**Research flag:** Standard patterns for most parts. Font embedding is well-documented. Skip `/gsd:research-phase`.
+**Research flag:** Standard patterns (hash routing validated in codebase), but audit ALL data-tour targets, push notification URLs, and navigate() calls. Medium complexity.
 
----
+### Phase 5: Progress Hub Consolidation
+**Rationale:** Depends on unified navigation for new /hub route. Establishes destination before dashboard links to it (ARCHITECTURE.md build order). Highest integration risk due to deep links.
 
-### Phase 4: Spaced Repetition System
-**Rationale:** This is the major differentiator from competitors. Depends on IndexedDB layer (Phase 2) and proper save logic (Phase 1). Complex algorithm implementation requires dedicated focus.
+**Delivers:** ProgressHubPage.tsx with tabs (Overview, History, Community), legacy route redirects (/progress, /history, /social → /hub#tab), preserved hash-based deep links.
 
-**Delivers:**
-- Supabase `srs_cards` table with RLS
-- ts-fsrs integration (or SM-2 if preferred)
-- SRS IndexedDB operations
-- SRSProvider context
-- Study mode with "due cards" scheduling
-- Pre-seeded difficulty ratings for questions
-- Dashboard showing scheduled reviews
+**Addresses:** Epic C (Progress Hub Consolidation), prevents Pitfall 2 (broken deep links), Pitfall 14 (stale localStorage keys).
 
-**Uses:**
-- ts-fsrs, @tanstack/react-query (for cache invalidation)
+**Avoids:** Breaking push notification URLs, SRS review links, user bookmarks. Map ALL existing routes/hashes before consolidation, implement redirects, update all hardcoded path strings.
 
-**Implements:**
-- SRS System component (ARCHITECTURE.md)
-- SRSProvider (ARCHITECTURE.md)
+**Research flag:** Hash routing is established pattern, but needs careful audit of ALL link sources. Medium-high complexity due to blast radius.
 
-**Addresses:**
-- Features: Spaced repetition (major differentiator)
-- Pitfall: 7 (initial difficulty calibration)
+### Phase 6: Dashboard Redesign with Next Best Action
+**Rationale:** Depends on navigation (dashboard is Home tab) and Progress Hub (dashboard links to it). FEATURES.md research confirms "Next Best Action" decision tree is standard education app pattern (Duolingo, Khan Academy).
 
-**Avoids:**
-- Using SM-2 without difficulty pre-seeding
-- Syncing on every mutation (use offline-first pattern)
+**Delivers:** useNextBestAction hook (decision tree from SRS due count, test history, mastery, streak), NextBestAction hero CTA component, simplified 4-5 sections (down from 11).
 
-**Research flag:** HIGH PRIORITY for `/gsd:research-phase`. FSRS algorithm is well-documented, but integrating with offline sync and handling edge cases (overdue reviews, conflict resolution) needs careful planning. Research during phase planning recommended.
+**Addresses:** Epic B (NBA Dashboard), prevents Pitfall 8 (removing widgets users depend on), Pitfall 11 (motion/react transform conflicts).
 
----
+**Avoids:** Decision fatigue from 3 equal-weight CTAs, overwhelming 11-section scroll. Preserve key metrics (due cards, streak, readiness) in compact form, link to Progress Hub for details.
 
-### Phase 5: Interview Simulation & Push Notifications
-**Rationale:** Builds on existing TTS and service worker infrastructure. Interview mode differentiates from basic flashcard apps; push notifications encourage regular practice (resets iOS 7-day eviction timer).
+**Research flag:** Decision logic needs design review. useNextBestAction priority order should be validated with existing users. Medium complexity.
 
-**Delivers:**
-- Interview simulation mode (audio-only questions)
-- Push notification permission flow
-- Supabase Edge Function for push (web-push library)
-- Study reminder notifications (bilingual)
-- Encouragement notifications
+### Phase 7: Burmese Translation Trust Upgrade
+**Rationale:** Can be done alongside or after Hub/Dashboard work. Requires careful content QA, not architectural changes. FEATURES.md confirms translation trust system builds confidence for high-stakes legal content.
 
-**Uses:**
-- web-push (server-side), existing TTS
+**Delivers:** Burmese style guide (glossary, tone, terminology), updated top-20 strings with native speaker review, text expansion safety (overflow-hidden, line-clamp), consistent font-myanmar line-height (1.6-1.8).
 
-**Addresses:**
-- Features: Interview simulation (differentiator), encouragement notifications (differentiator)
+**Addresses:** Epic E (Burmese Translation Trust), prevents Pitfall 6 (bad translations erode trust).
 
-**Avoids:**
-- Full AI mock interview (too expensive)
-- Annoying notification patterns
-- Voice input (complexity, privacy)
+**Avoids:** Partial updates creating mixed formality levels, scattered inline Burmese strings outside strings.ts. Audit for Myanmar Unicode (U+1000-109F) outside centralized i18n file first.
 
-**Research flag:** Moderate. Push notifications are well-documented, but notification UX for immigrant users may need cultural research. Consider targeted research on notification patterns for anxiety-prone users.
-
----
-
-### Phase 6: Social Features (Optional)
-**Rationale:** Defer until core learning experience validated. Only implement if user research shows demand for community features. Can be built independently of other phases.
-
-**Delivers:**
-- Supabase tables: `follows`, `study_streaks`, `achievements`
-- SocialProvider context
-- Leaderboard page (opt-in only)
-- Follow/unfollow UI
-- Achievement notifications (non-intrusive)
-- Privacy controls (anonymous mode)
-
-**Uses:**
-- @tanstack/react-query, Supabase Realtime (optional)
-
-**Implements:**
-- SocialProvider (ARCHITECTURE.md)
-- Social Feature Schema (ARCHITECTURE.md)
-
-**Addresses:**
-- Features: (deferred to v2+ per FEATURES.md)
-- Pitfall: 13 (privacy concerns)
-
-**Avoids:**
-- Public leaderboards by default
-- Competitive/stressful gamification
-- Exposing user activity without consent
-
-**Research flag:** Low priority. Standard social feature patterns. If implemented, skip `/gsd:research-phase` unless unusual cultural considerations arise.
-
----
+**Research flag:** Requires native Burmese speaker, not a technical research phase. Low technical complexity, high content sensitivity.
 
 ### Phase Ordering Rationale
 
-1. **Foundation first (Phase 1)** — Broken shuffle and race conditions will corrupt spaced repetition data; must fix before adding complexity
-2. **PWA infrastructure (Phase 2)** — Service worker and IndexedDB are dependencies for Phases 4-6; build once, use everywhere
-3. **Bilingual polish (Phase 3)** — Font rendering must work before explanations and TTS features; low complexity, high user impact
-4. **Spaced repetition (Phase 4)** — Highest complexity, highest value; requires Phases 1-2 complete
-5. **Interview + notifications (Phase 5)** — Builds on existing tech (TTS, service worker); can overlap with Phase 4 if resources allow
-6. **Social (Phase 6)** — Optional, independent, deferred until product-market fit validated
-
-**Critical path:** Phase 1 → Phase 2 → Phase 4 (these must be sequential)
-**Parallel opportunities:** Phase 3 can overlap with Phase 2; Phase 5 can overlap with Phase 4 once service worker is stable
+- **Foundation first (Phases 1-3)**: Design tokens, question bank, and security are independent changes with no UI dependencies. Get these stable before visible changes.
+- **Structure before visual (Phase 4-5)**: Navigation structure and Progress Hub routing established before dashboard redesign. Avoids building links to pages that don't exist yet.
+- **Visual polish last (Phase 6-7)**: Dashboard simplification and translation upgrade apply after structural changes stabilize. Changing translations before layout changes = double work.
+- **Dependencies honored**: Dashboard depends on Hub existing (for links), Hub depends on unified nav (for /hub route), unified nav depends on stable tokens (for consistent UI).
+- **Pitfall avoidance**: Security hardening before push improvements, token consolidation before visual changes, question bank expansion with celebration UX (not silent regression), translation with native speaker review.
 
 ### Research Flags
 
-**Needs `/gsd:research-phase` during planning:**
-- **Phase 4 (Spaced Repetition)** — Complex algorithm integration; offline sync conflicts; overdue review handling; FSRS vs SM-2 trade-offs need deep dive
-- **Phase 2 (PWA Infrastructure)** — IF team unfamiliar with service workers; otherwise standard patterns sufficient
-- **Phase 5 (Notifications)** — IF cultural research needed on notification UX for immigrant users
+**Phases likely needing deeper research:**
+- **Phase 6 (Dashboard):** Next Best Action decision tree priority order needs validation with existing users. What actually drives engagement? Mock decision logic against real user data.
+- **Phase 7 (Burmese):** Native speaker recruitment for translation review. Translation trust indicator UI patterns (verification badges, report flow) need UX design.
 
-**Standard patterns (skip `/gsd:research-phase`):**
-- **Phase 1 (Foundation)** — Shuffle, async state, TypeScript strictness are well-documented patterns
-- **Phase 3 (Bilingual UX)** — Font embedding, Radix UI, answer explanations are straightforward
-- **Phase 6 (Social)** — Standard Supabase patterns, only needed if feature is approved
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1 (Design Tokens):** CSS custom properties + Tailwind is established pattern. ARCHITECTURE.md confirms approach.
+- **Phase 2 (Question Bank):** Official USCIS PDF is source of truth. Data entry + schema alignment.
+- **Phase 3 (Security):** @supabase/ssr docs are comprehensive. JWT verification is standard auth pattern.
+- **Phase 4 (Navigation):** Hash routing validated in existing HistoryPage/SocialHubPage. navConfig.ts is simple data structure.
+- **Phase 5 (Progress Hub):** Reuses existing components, follows existing hash tab pattern. Main work is route mapping.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All recommendations from official docs or verified open-source projects; versions confirmed compatible |
-| Features | MEDIUM-HIGH | Based on competitor analysis (Citizen Now, Citizenry) and immigrant education UX research; user testing needed to validate priorities |
-| Architecture | HIGH | Patterns verified through LogRocket, RxDB, Serwist official docs; offline-first is well-understood domain |
-| Pitfalls | HIGH | Mix of codebase analysis (shuffle, race condition verified in code) and domain research (iOS eviction, font rendering, React Router 404s all documented) |
+| Stack | HIGH | Only 2 new packages needed (@radix-ui/react-tabs, @supabase/ssr). All other features achievable with existing stack. Verified against npm registry + official docs. |
+| Features | HIGH | 7 epics validated against Duolingo/Khan Academy patterns, iOS HIG, and education app research. USCIS 128Q requirement verified via official PDF. |
+| Architecture | HIGH | Direct codebase analysis (189 files). Existing patterns (hash routing, provider hierarchy, offline-first) are sound. No new infrastructure needed. |
+| Pitfalls | HIGH | 15 pitfalls identified via codebase audit + cross-referencing with React Compiler rules, Supabase security docs, PWA iOS patterns. Validated against MEMORY.md. |
 
 **Overall confidence:** HIGH
 
-The stack, architecture, and pitfalls are backed by authoritative sources. Feature priorities have medium-high confidence because they're based on competitor analysis and user research, but should be validated with actual Burmese immigrant users during MVP testing.
+The research is grounded in direct codebase analysis (all claims verified against source), official documentation (USCIS, Supabase, Radix, React), and established patterns from education app leaders. The "only 2 new packages" finding de-risks the milestone significantly — most complexity is refactoring existing code, not integrating new dependencies.
 
 ### Gaps to Address
 
-**Gap 1: User testing with Burmese immigrants**
-- Research assumes anxiety-reducing design and bilingual UX priorities based on general immigrant education literature
-- Validation needed: Do Burmese users actually prefer side-by-side display? Is warmth vs efficiency the right tone?
-- **How to handle:** Include user testing in Phase 3 (Bilingual UX) before finalizing design patterns
+**Question bank gap:** The app has 120 questions, but USCIS 2025 requires 128. Research confirmed the gap (8 questions missing) but did not identify WHICH specific questions are missing from the official 128. **Resolution:** Cross-reference existing question IDs (GOV-P01-P16, GOV-S01-S39, etc.) against the official USCIS 2025-Civics-Test-128-Questions-and-Answers.pdf to identify missing Qs. This is Phase 2 work, not a research blocker.
 
-**Gap 2: FSRS vs SM-2 performance comparison**
-- Research recommends ts-fsrs over SM-2 based on academic literature, but not tested in civics context
-- Validation needed: Does FSRS actually improve pass rates vs simpler SM-2 for 100-question pool?
-- **How to handle:** Phase 4 planning should include A/B test design; consider starting with SM-2 (simpler) with migration path to FSRS
+**Next Best Action priority logic:** The decision tree in FEATURES.md is based on Duolingo/Khan Academy patterns (SRS due > streak preservation > weak area > test readiness). This is sound for v2.0, but the exact thresholds (e.g., "SRS due count > 5" vs "> 10", "no test in 7 days" vs "3 days") need validation against real user behavior. **Resolution:** Start with conservative thresholds (lower false positive rate), instrument the CTA with analytics, and tune in v2.1 based on click-through data.
 
-**Gap 3: iOS persistent storage grant rate**
-- iOS Safari may deny persistent storage request; unclear how often users grant permission
-- Validation needed: What percentage of users grant persistent storage? What's the fallback UX?
-- **How to handle:** Phase 2 should include telemetry for grant rate; design "data may be cleared" notice for denied requests
+**Translation style guide scope:** FEATURES.md recommends Burmese glossary for key terms, but research did not define the exact term list or formality register. **Resolution:** Phase 7 starts with a translation audit (identify top-20 most-visible strings, catalog current inconsistencies), then draft glossary with native speaker. This is content work, not a research gap.
 
-**Gap 4: Supabase free tier scaling**
-- Research assumes free tier sufficient, but realtime + edge functions may hit limits faster than expected
-- Validation needed: What's the actual load at 100 users? 500 users?
-- **How to handle:** Phase 2 (infrastructure) should include monitoring dashboard for Supabase quota usage
-
-**Gap 5: Burmese TTS voice availability**
-- Research defers Burmese TTS to v2+, but may be critical for some users
-- Validation needed: How many target devices actually have Myanmar voices in Web Speech API?
-- **How to handle:** Phase 3 should test voice availability across devices; if <50% have support, use third-party TTS service
+**iOS safe area edge cases:** PITFALLS.md warns about safe area handling during navigation restructure, but the specific breakage scenarios depend on how the layout component refactor is implemented. **Resolution:** Phase 4 includes explicit safe area testing on iOS Safari standalone mode after EVERY layout change. Use existing --safe-area-top/bottom CSS variables, test on device with notch.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Next.js PWA Guide (official docs) — PWA setup, Serwist recommendation
-- Serwist Documentation — Service worker integration patterns
-- ts-fsrs GitHub — Spaced repetition algorithm
-- Supabase Documentation — Auth, Realtime, RLS policies
-- Motion (Framer Motion) Docs — Animation API
-- Radix UI Primitives — Accessible component patterns
-- MDN Web Docs — Service Worker, IndexedDB, Web Speech API, History API
-- Myanmar Unicode Guide for Web Developers — Font rendering, encoding
+- **Codebase Analysis:** Direct reading of AppShell.tsx, BottomTabBar.tsx, AppNavigation.tsx, Dashboard.tsx, ProgressPage.tsx, HistoryPage.tsx, SocialHubPage.tsx, globals.css, tailwind.config.js, design-tokens.ts, strings.ts, questions/index.ts (project source files)
+- **USCIS Official Docs:** [2025 Civics Test](https://www.uscis.gov/citizenship-resource-center/naturalization-test-and-study-resources/2025-civics-test), [128 Questions PDF](https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf)
+- **Official Package Docs:** [@radix-ui/react-tabs](https://www.radix-ui.com/primitives/docs/components/tabs), [@supabase/ssr](https://supabase.com/docs/guides/auth/server-side/creating-a-client), [Supabase auth.getUser()](https://supabase.com/docs/guides/auth/server-side/nextjs)
+- **React Compiler Rules:** [react-hooks/set-state-in-effect](https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect), [react-hooks/refs](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs)
+- **Project Context:** docs/PRD-next-milestone.md, .planning/milestones/v1.0/, C:/Users/minkk/.claude/projects/.../memory/MEMORY.md
 
 ### Secondary (MEDIUM confidence)
-- LogRocket: Offline-first frontend apps 2025 — IndexedDB patterns
-- RxDB Supabase Replication — Sync architecture reference
-- Citizen Now, Citizenry (competitor apps) — Feature analysis
-- USCIS Official Study Materials — Authoritative civics content
-- Phrase: Multilingual UX Design — Bilingual design patterns
-- Localization Lab: Burmese Font Issues — Real-world Myanmar text challenges
-- Building PWAs with Serwist (JavaScript Plainenglish) — Implementation examples
+- **Education App Patterns:** [Duolingo Core Tabs Redesign](https://blog.duolingo.com/core-tabs-redesign/), [Duolingo Home Screen](https://blog.duolingo.com/new-duolingo-home-screen-design/), [Next Best Action - CleverTap](https://clevertap.com/blog/next-best-action/)
+- **iOS Design:** [Apple Liquid Glass](https://en.wikipedia.org/wiki/Liquid_Glass), [Behind the Design: Duolingo](https://developer.apple.com/news/?id=jhkvppla)
+- **Translation Trust:** [Google Crowdsource](https://en.m.wikipedia.org/wiki/Crowdsource_(app)), [Crowdin Localization](https://crowdin.com/)
+- **PWA/iOS:** [PWA App Design - web.dev](https://web.dev/learn/pwa/app-design), [Supporting iOS Safe Areas](https://jipfr.nl/blog/supporting-ios-web/)
+- **Design Tokens:** [Tailwind CSS Best Practices 2025](https://www.frontendtools.tech/blog/tailwind-css-best-practices-design-system-patterns)
 
-### Tertiary (LOW confidence)
-- Metacto: True Cost of Supabase — Free tier limits (validate with actual usage)
-- SystemDesign.one: Leaderboard System — Architecture reference (if social features needed)
+### Tertiary (LOW confidence, needs validation)
+- Liquid Glass React libraries (liquid-glass-js, liquidglassui.org) — immature (2025 releases), not recommended
+- Immiva/MyAttorneyUSA USCIS guides — third-party summaries, defer to official USCIS PDF
 
 ---
-
-*Research completed: 2026-02-05*
+*Research completed: 2026-02-09*
 *Ready for roadmap: yes*
+*Key finding: Only 2 new npm packages needed. 128Q requirement (not 120). Security hardening critical.*

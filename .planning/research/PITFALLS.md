@@ -1,519 +1,426 @@
-# Pitfalls Research
+# Domain Pitfalls: v2.0 Feature Additions
 
-**Domain:** Bilingual Civics Test Prep PWA (English/Burmese) for Immigrant Users
-**Researched:** 2026-02-05
-**Confidence:** HIGH (verified through official docs, WebSearch, and codebase analysis)
+**Domain:** Adding unified navigation, dashboard redesign, Progress Hub consolidation, iOS-inspired design tokens, Burmese translation trust upgrade, USCIS 120Q bank integration, and push subscription security to an existing 37.5K LOC React/Next.js PWA
+**Researched:** 2026-02-09
+**Confidence:** HIGH (verified against codebase, official docs, and community sources)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Biased Shuffle Algorithm Produces Non-Uniform Question Distribution
+These mistakes cause rewrites, data loss, or broken user experiences for Burmese immigrant users.
 
-**What goes wrong:**
-The current shuffle implementation `[...array].sort(() => Math.random() - 0.5)` produces a biased distribution. Elements near the start of the array are more likely to remain near the start. This means certain civics questions appear more frequently than others across test sessions.
+### Pitfall 1: Navigation Unification Breaks the Onboarding Tour
 
-**Why it happens:**
-Developers reach for the shortest solution. The `sort()` comparator approach seems clever but violates the comparison contract that sort algorithms rely on - comparisons must be consistent (if A < B and B < C, then A < C).
+**What goes wrong:** The existing `OnboardingTour` component targets specific `data-tour` attributes on Dashboard elements (`study-action`, `test-action`, `srs-deck`, `interview-sim`, `theme-toggle`). If the navigation redesign moves, renames, or removes these elements, the tour silently fails -- tooltip positions go to (0,0) or the tour skips steps entirely with no error. Users see an empty tooltip floating in the corner.
 
-**How to avoid:**
-Use the Fisher-Yates (Knuth) shuffle algorithm:
-```typescript
-const shuffle = <T,>(array: T[]): T[] => {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-};
-```
+**Why it happens:** The onboarding tour uses CSS selector targeting (`[data-tour="study-action"]`), which is a fragile coupling. Navigation redesigns naturally restructure the DOM, and `data-tour` attributes are invisible in the rendered UI, so developers forget they exist. The tour also conditionally filters steps based on viewport (`theme-toggle` is filtered on mobile), adding hidden complexity.
 
-**Warning signs:**
-- Users report seeing the same questions repeatedly
-- Statistical analysis shows certain question IDs appear more frequently
-- Questions from early in the source array dominate test sessions
+**Consequences:**
+- New users get a broken first-run experience, which is devastating for Burmese immigrants who depend on guided onboarding
+- Tour may infinite-loop if a required target is missing (depends on implementation)
+- The "More" sheet in `BottomTabBar` creates a portal that may not be in DOM when tour expects it
 
-**Phase to address:**
-Technical Debt / Foundation phase - fix before any new features
+**Prevention:**
+1. Audit all 5 `data-tour` targets BEFORE redesigning any navigation or dashboard layout
+2. Create a test that validates all tour targets exist in the DOM when the tour runs
+3. If consolidating dashboard widgets, preserve `data-tour` attributes on the new container elements
+4. Update tour steps to match the new navigation mental model (the tour should teach the NEW nav, not the old one)
+
+**Detection:** Run the onboarding tour flow on a fresh account after ANY navigation/dashboard change. If steps skip or tooltips position incorrectly, data-tour targets are broken.
+
+**Phase to address:** Navigation Redesign phase -- must be done IN the same phase, not deferred
 
 ---
 
-### Pitfall 2: Race Condition in Test Session Save
+### Pitfall 2: Page Consolidation Loses Hash-Based Deep Links and Tab State
 
-**What goes wrong:**
-The current implementation sets `hasSavedSession = true` before the async `saveTestSession()` completes. If the save fails, the flag is reset to `false`, but by then another effect cycle may have started, or the user may have navigated away.
+**What goes wrong:** The existing `HistoryPage` uses hash-based tabs (`#tests`, `#practice`, `#interview`) via `location.hash` with `useMemo`. The `StudyGuidePage` uses `?category=X#cards` for deep linking. The `ProgressPage` uses `?category=X#cards` for practice navigation. Consolidating these into a "Progress Hub" will break:
+- All existing bookmarks and shared links
+- The SRS widget's link to `/study#review`
+- Push notification URLs that point to `/study#review`
+- The `WeakAreaNudge` component which navigates to specific category study pages
+- Hash-based scroll targets in `HistoryPage` (`#overview`, `#trend`, `#attempts`)
 
-**Why it happens:**
-Optimistic state updates without proper async coordination. The flag is used both to prevent duplicate saves AND as a UI indicator, conflating two concerns.
+**Why it happens:** Hash routing is invisible infrastructure. Developers consolidating pages focus on the visual redesign and forget that URLs are a public API. The existing `useEffect` in `HistoryPage` that scrolls to hash targets, the `tabFromHash` derivation, and the `SRS formatSRSReminderNotification` function all depend on specific URL patterns.
 
-**How to avoid:**
-1. Use a ref to track "save in progress" separately from "save completed"
-2. Implement proper async state machine: `idle` -> `saving` -> `saved` | `error`
-3. Consider using React Query or SWR for mutation state management
+**Consequences:**
+- Push notifications open to wrong page (notification says "Cards Due for Review" but opens a 404 or wrong tab)
+- User bookmarks stop working, eroding trust (critical for immigrant users who may not understand why)
+- The `setUserSelectedTab` pattern in `HistoryPage` (user override of hash-derived tab) creates a confusing merge if tabs move to a new page
 
-```typescript
-type SaveState = 'idle' | 'saving' | 'saved' | 'error';
-const [saveState, setSaveState] = useState<SaveState>('idle');
-const saveAttempted = useRef(false);
+**Prevention:**
+1. Map ALL existing routes and hash fragments before consolidation:
+   - `/progress` -- standalone page
+   - `/history` -- with `#tests`, `#practice`, `#interview`
+   - `/study#review` -- SRS review entry point
+   - `/study?category=X#cards` -- category-specific flashcards
+2. Implement redirects from old routes to new routes (React Router `<Navigate>` elements)
+3. Update `formatSRSReminderNotification` and all `navigate()` calls that reference old routes
+4. Search for ALL hardcoded path strings: `grep -r "'/history'" "'/progress'" "'/study#'" "'#review'"` in the codebase
+5. Use React Router's `useSearchParams` to preserve query parameters across the consolidation
 
-useEffect(() => {
-  if (!isFinished || !results.length || saveAttempted.current) return;
-  saveAttempted.current = true;
-  setSaveState('saving');
+**Detection:** After consolidation, test every push notification URL, every `navigate()` call, every `Link to=` prop, and every bookmark scenario.
 
-  saveTestSession(session)
-    .then(() => setSaveState('saved'))
-    .catch(() => setSaveState('error'));
-}, [isFinished, results]);
-```
-
-**Warning signs:**
-- Duplicate test sessions appearing in history
-- Test results occasionally lost without error message
-- "Save failed" toast appears after user navigated away
-
-**Phase to address:**
-Technical Debt / Foundation phase - critical data integrity issue
+**Phase to address:** Progress Hub Consolidation phase
 
 ---
 
-### Pitfall 3: history.pushState Memory Leak During Tests
+### Pitfall 3: Design Token Migration Creates Visual Regressions Across 63+ Files
 
-**What goes wrong:**
-The current navigation lock implementation calls `window.history.pushState(null, '', window.location.href)` on every `popstate` event. Each call adds an entry to the browser's history stack. Users pressing back repeatedly or automated tests can cause memory exhaustion.
+**What goes wrong:** The codebase has 307 occurrences of hardcoded color classes (`primary-500`, `success-500`, `warning-500`) across 63 files, plus 14 CSS custom property definitions in `globals.css`, plus a `design-tokens.ts` file that is NOT actually consumed by Tailwind (it exports JS objects but Tailwind reads from `tailwind.config.js` with hardcoded HSL values). Introducing a proper design token system means touching 63+ files, and any missed occurrence creates a visual inconsistency.
 
-**Why it happens:**
-The pattern "push state to block back navigation" is common but naive. Browsers don't limit history stack size, and continuous pushState calls in a loop compound rapidly.
+**Why it happens:** The v1.0 design system evolved organically. Colors were added in phases (Phase 3 added extended primaries, Phase 9 added Duolingo-style tokens). There are now THREE sources of truth:
+- `globals.css` `:root` variables (the actual CSS custom properties)
+- `tailwind.config.js` colors (hardcoded HSL strings, NOT referencing CSS variables for extended shades)
+- `design-tokens.ts` (JS export, only used for reference/documentation, not consumed by Tailwind)
 
-**How to avoid:**
-Use `replaceState` instead of `pushState` when blocking navigation:
-```typescript
-const handlePopState = () => {
-  window.history.replaceState(null, '', window.location.href);
-  // Show toast...
-};
-```
+**Consequences:**
+- Changing a token in one place but not the others creates subtle color mismatches
+- Dark mode overrides in `globals.css` (lines 138-183) use hardcoded HSL values that bypass the token system entirely
+- The `primary-50` through `primary-900` in `tailwind.config.js` are hardcoded light-mode values: `'primary-50': 'hsl(214 100% 97%)'` -- these DO NOT respond to dark mode, while `--primary-500` in CSS variables DOES
+- Components using `bg-primary-500` get the hardcoded light-mode value even in dark mode, only working because `globals.css` has `.dark .bg-primary-500` overrides
 
-Or use a single pushState on mount, then replaceState on popstate:
-```typescript
-useEffect(() => {
-  window.history.pushState({ testLock: true }, '', window.location.href);
-  const handlePopState = () => {
-    window.history.replaceState({ testLock: true }, '', window.location.href);
-  };
-  // ...
-}, []);
-```
+**Prevention:**
+1. First consolidate to a single source of truth: CSS custom properties in `globals.css`, referenced by Tailwind via `hsl(var(--primary-500))`
+2. Do the migration in TWO passes: first make it work identically (swap hardcoded HSL to CSS variables), THEN introduce new tokens
+3. Use visual regression testing (Playwright screenshots) before and after migration
+4. Address the dark mode override hack: `.dark .bg-primary-500 { background-color: hsl(217 85% 55%); }` must be replaced by proper CSS variable switching
+5. Do NOT introduce new token names until old ones are fully migrated
 
-**Warning signs:**
-- Browser becomes sluggish during long test sessions
-- Memory usage grows linearly with user's back-button attempts
-- Tab crashes on mobile devices with limited memory
+**Detection:** Toggle dark mode on every page after ANY token change. Check that `bg-primary-500` buttons match in both themes.
 
-**Phase to address:**
-Technical Debt / Foundation phase - affects stability
+**Phase to address:** Design Token System phase -- must be BEFORE any visual redesign work
 
 ---
 
-### Pitfall 4: React Router Inside Next.js Causes 404 on Page Refresh
+### Pitfall 4: Expanding 100 to 120 Questions Breaks Hardcoded Thresholds and Progress Calculations
 
-**What goes wrong:**
-The app uses `react-router-dom` inside Next.js. When users refresh a page like `/test` or `/dashboard`, Next.js doesn't know about these routes and returns 404. The SPA routing only works after initial page load.
+**What goes wrong:** The question bank ALREADY contains 120 questions (the index.ts barrel says "Total: 120 questions" and imports `uscis2025Additions` with 20 questions). The `totalQuestions` export is dynamic (`allQuestions.length`). However, there are hardcoded assumptions scattered through the codebase:
+- `TestPage.tsx` line 72: `.slice(0, 20)` -- selects 20 questions per test (correct, but the pool size affects coverage calculations)
+- `TestPage.tsx` line 41: `PASS_THRESHOLD = 12` -- currently 12/20 (60%), but if the test format changes for 120Q this needs updating
+- `Dashboard.tsx` line 135: `coveragePercent = (uniqueQIds.size / totalQuestions) * 100` -- coverage denominator is dynamic, BUT if questions are added gradually, coverage percentage drops for returning users
+- Comment in index.ts says "Total: 120 questions" but the barrel aggregation comment says `(47 questions)` + `(10 questions)` + `(13 questions)` + `(7 questions)` + `(10 questions)` + `(13 questions)` + `20 questions` = 120
 
-**Why it happens:**
-Next.js has its own file-based routing. React Router intercepts client-side navigation but can't handle server-side requests. This is a fundamental architectural conflict.
+**Why it happens:** The codebase was designed for 100 questions. The 2025 additions raised it to 120, and `totalQuestions` adapted via `allQuestions.length`. But the UX messaging, coverage calculations, and mastery percentages were calibrated against 100. A user who practiced all 100 original questions and shows "100% coverage" will suddenly drop to 83% when the app recognizes 120 questions.
 
-**How to avoid:**
-Two approaches:
-1. **Migrate to Next.js App Router** (recommended for PWA): Move routes to `/app/[route]/page.tsx` files. Get SSR, better SEO, and proper PWA integration.
-2. **Catch-all route workaround**: Create `pages/[[...slug]].tsx` that renders the React Router shell. All routes fall through to client-side routing.
+**Consequences:**
+- Users who had "100% coverage" see their dashboard regress to ~83%, destroying motivation
+- Mastery milestones that were earned (gold at 100%) may need re-earning
+- The ReadinessIndicator score drops because coverage weight (50% of composite) decreases
+- SRS deck completion stats change
 
-```typescript
-// pages/[[...slug]].tsx (workaround, not recommended long-term)
-export default function CatchAll() {
-  return typeof window !== 'undefined' ? <AppShell /> : null;
-}
-```
+**Prevention:**
+1. Announce new questions in-app with a celebration, not as a silent regression
+2. Implement a "new questions available" notification that positions the change positively
+3. Consider separate tracking for "legacy 100Q mastery" vs "120Q mastery" during transition
+4. Review `calculateCompositeScore` which uses `coveragePercent` -- ensure the formula accounts for growing question pools gracefully
+5. Update the `PreTestScreen` messaging if it references total question counts
 
-**Warning signs:**
-- Users bookmarking pages get 404 on return
-- Share links don't work
-- PWA "Add to Home Screen" opens to blank/error page
-- Browser refresh loses current page
+**Detection:** Load the app as a user who has practiced exactly 100 questions. Verify dashboard messaging is encouraging, not deflating.
 
-**Phase to address:**
-PWA phase - must resolve before PWA deployment
+**Phase to address:** USCIS 120Q Bank phase -- requires careful UX around the transition
 
 ---
 
-### Pitfall 5: iOS Safari PWA Data Eviction After 7 Days
+### Pitfall 5: Push Subscription API Lacks Authentication and Rate Limiting
 
-**What goes wrong:**
-iOS Safari automatically purges IndexedDB, Cache API, and localStorage for PWAs that haven't been used in 7 days. Users who study weekly lose all their offline data and test history.
+**What goes wrong:** The existing `/api/push/subscribe` endpoint (in `pages/api/push/subscribe.ts`) accepts ANY `userId` in the POST body with NO authentication verification. An attacker can:
+1. Register push subscriptions for arbitrary user IDs
+2. Overwrite legitimate subscriptions (the endpoint uses `upsert` with `onConflict: 'user_id'`)
+3. Delete any user's push subscription via the DELETE endpoint (only requires `userId`)
+4. Spam the endpoint with fake subscriptions, filling the Supabase table
 
-**Why it happens:**
-Apple's storage policy for web apps. Unlike native apps, PWAs don't get persistent storage by default on iOS.
+The endpoint uses `SUPABASE_SERVICE_ROLE_KEY` (admin-level access) with no request validation beyond "userId exists in body."
 
-**How to avoid:**
-1. **Request persistent storage** early in the app lifecycle:
-```typescript
-if (navigator.storage?.persist) {
-  const granted = await navigator.storage.persist();
-  if (!granted) {
-    // Show notice that data may be cleared after 7 days of inactivity
-  }
-}
-```
+**Why it happens:** The v1.0 push notification feature was built as a functional MVP without security hardening. The service role key bypasses RLS policies, and the API trusts the client-provided `userId` without verifying it against the authenticated session.
 
-2. **Implement cloud sync as primary storage** (Supabase)
-3. **Design for data loss**: Assume offline data is ephemeral, sync to server whenever online
-4. **Prompt regular usage**: Push notifications for daily practice to keep the 7-day clock reset
+**Consequences:**
+- Any user can hijack another user's push notifications
+- Subscription table can be polluted with garbage data
+- Legitimate users stop receiving notifications without knowing why
+- Service role key exposure risk (though it's server-side only, the endpoint has no CSRF protection)
 
-**Warning signs:**
-- iOS users report "lost progress" after vacation/break
-- Spaced repetition schedules reset unexpectedly
-- Test history disappears on iOS but not Android
+**Prevention:**
+1. Verify the authenticated user matches the provided userId:
+   ```typescript
+   const { data: { user } } = await supabaseAdmin.auth.getUser(req.headers.authorization?.replace('Bearer ', '') ?? '');
+   if (!user || user.id !== req.body.userId) return res.status(401).json({ error: 'Unauthorized' });
+   ```
+2. Add rate limiting (e.g., 5 subscription changes per hour per user)
+3. Validate the push subscription object structure
+4. Consider using Supabase RLS instead of service role key for subscription management
+5. Add CSRF token validation for the API route
 
-**Phase to address:**
-PWA phase - critical for iOS users
+**Detection:** Attempt to call `/api/push/subscribe` with a userId that doesn't match the authenticated session. If it succeeds, the endpoint is vulnerable.
 
----
-
-### Pitfall 6: Burmese (Myanmar) Font Rendering Failures
-
-**What goes wrong:**
-Burmese text appears as boxes, garbled characters, or wrong glyphs. The two encoding systems (Zawgyi and Unicode) are incompatible - text encoded in one appears corrupted in the other.
-
-**Why it happens:**
-The Zawgyi font, still widely used in Myanmar, is not Unicode-compliant. If users have Zawgyi as their system default, Unicode text won't render correctly. Additionally, some browsers on older devices lack proper Myanmar script support.
-
-**How to avoid:**
-1. **Always embed Unicode-compliant fonts** (don't rely on system fonts):
-```css
-@font-face {
-  font-family: 'Myanmar';
-  src: url('/fonts/NotoSansMyanmar-Regular.woff2') format('woff2');
-  unicode-range: U+1000-109F, U+AA60-AA7F;
-}
-
-.font-myanmar {
-  font-family: 'Myanmar', 'Padauk', 'Pyidaungsu', sans-serif;
-}
-```
-
-2. **Use Noto Sans Myanmar or Padauk** - widely tested, proper Unicode support
-3. **Test on actual Myanmar devices** - emulators may have different fonts installed
-4. **Avoid Zawgyi-encoded content** in source files - use Unicode only
-
-**Warning signs:**
-- Burmese text appears as squares or question marks
-- Characters appear in wrong order (medial vowels before consonants)
-- Text looks "stacked" incorrectly
-- Works on one device, broken on another
-
-**Phase to address:**
-Bilingual UX phase - foundational for Burmese display
+**Phase to address:** Push Subscription Security phase -- should be done BEFORE any push notification improvements
 
 ---
 
-### Pitfall 7: Spaced Repetition Algorithm Treats All Cards as Equally Difficult Initially
+### Pitfall 6: Burmese Translation "Trust Upgrade" Without Native Speaker Review Creates Worse UX Than Literal Translation
 
-**What goes wrong:**
-SM-2 and similar algorithms start all cards with the same ease factor (typically 2.5). This means "What is the capital of the United States?" gets the same initial schedule as "Name the 13 original colonies." Users waste time on easy questions while hard questions don't get enough repetition.
+**What goes wrong:** The existing Burmese translations in `strings.ts` are functional but literal (e.g., `'ဒက်ရှ်ဘုတ်'` for "Dashboard" is a transliteration, not a natural Burmese word). Improving these without a native Burmese speaker creates three failure modes:
+1. Over-localized text that uses formal register when users expect colloquial Myanmar
+2. Mixed formality levels across the app (some pages updated, some not)
+3. Technical terminology translated differently in different places (inconsistent glossary)
 
-**Why it happens:**
-Classic SRS algorithms were designed for vocabulary learning where initial difficulty is unknown. Civics questions have knowable difficulty based on complexity.
+The app has 360 occurrences of `font-myanmar` across 70 files, meaning Burmese text appears on virtually every screen. A partial update creates a jarring inconsistency.
 
-**How to avoid:**
-1. **Pre-seed difficulty ratings** based on question complexity:
-   - Simple factual (1 answer): ease 2.8
-   - Multiple valid answers: ease 2.3
-   - Historical dates/names: ease 2.0
-   - Constitutional concepts: ease 1.8
+**Why it happens:** Developers use translation tools (Google Translate, ChatGPT) that produce grammatically correct but unnatural Myanmar text. The Burmese writing system has complex rules about consonant clusters, medial vowels, and tone marks that affect readability. Additionally, Myanmar has distinct formal (literary) and informal (spoken) registers -- mixing them signals "machine translated" to native speakers, eroding trust.
 
-2. **Track community difficulty**: After enough responses, adjust initial ease based on aggregate pass rate
+**Consequences:**
+- Burmese users perceive the app as "not really for them" -- a translated English app rather than a genuinely bilingual one
+- Trust degradation is particularly harmful for immigrant users navigating a high-stakes process (citizenship test)
+- Inconsistent terminology confuses users (e.g., "progress" translated as both `တိုးတက်မှု` and `တိုင်တက်ခြင်း` in different places)
 
-3. **Consider FSRS over SM-2**: FSRS empirically outperforms SM-2 and better handles cards with pre-study history
+**Prevention:**
+1. Create a Burmese glossary document FIRST: define how key terms are translated consistently
+2. Translate in BATCHES by feature area, not scattered across the app
+3. Have a native Burmese speaker review ALL translations before shipping -- even "improved" AI translations
+4. Test with actual Burmese speakers for comprehension, not just correctness
+5. Maintain a `BilingualString` type discipline: never inline Burmese text outside the `strings.ts` centralized file
+6. Audit for hardcoded Burmese strings outside `strings.ts` (there are some in `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, etc.)
 
-**Warning signs:**
-- Users complain about reviewing "obvious" questions too often
-- Hard questions don't stabilize in memory despite many reviews
-- Pass rates vary wildly between question categories
+**Detection:** Search for Myanmar Unicode range (U+1000-109F) in files OTHER than `strings.ts` and question data files. Any hits are decentralized translations that will be missed during the upgrade.
 
-**Phase to address:**
-Spaced Repetition phase
-
----
-
-### Pitfall 8: PWA Service Worker Caches Stale Content Forever
-
-**What goes wrong:**
-Without proper cache invalidation, users see outdated civics content after updates. Worse, if the 2025 civics test questions change (as they did from the 2008 version), users study incorrect material.
-
-**Why it happens:**
-"Cache first" strategies are great for performance but terrible for frequently-updated content. Developers often implement caching without versioning.
-
-**How to avoid:**
-1. **Version your cache names**:
-```typescript
-const CACHE_VERSION = 'civics-v2.1';
-const CACHE_NAME = `${CACHE_VERSION}-assets`;
-```
-
-2. **Implement "stale while revalidate" for questions**:
-```typescript
-// Return cached immediately, but fetch fresh in background
-const cached = await caches.match(request);
-const fetchPromise = fetch(request).then(response => {
-  cache.put(request, response.clone());
-  return response;
-});
-return cached || fetchPromise;
-```
-
-3. **Notify users of updates**:
-```typescript
-// In service worker
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    clients.claim().then(() => {
-      clients.matchAll().then(clients => {
-        clients.forEach(client => client.postMessage({ type: 'UPDATE_AVAILABLE' }));
-      });
-    })
-  );
-});
-```
-
-4. **Force cache clear for critical content** like civics questions
-
-**Warning signs:**
-- Users report "old" content after you've deployed updates
-- Test questions don't match USCIS website
-- "New version available" banner never appears
-- Questions file timestamp is months old in network tab
-
-**Phase to address:**
-PWA phase
+**Phase to address:** Burmese Translation Trust Upgrade phase -- should happen as a concentrated effort, not sprinkled across phases
 
 ---
 
 ## Moderate Pitfalls
 
-### Pitfall 9: Loose TypeScript Types Hide Runtime Errors
+### Pitfall 7: Unified Navigation Doubles the Mobile "More" Menu Complexity
 
-**What goes wrong:**
-The codebase uses `any` types or overly permissive types. Bugs slip through that TypeScript should catch. Example: `Question.id` is typed as `number` but templates expect `string` for keys.
+**What goes wrong:** The current `BottomTabBar` has 3 primary tabs + "More" button (containing 4 items). The `AppNavigation` desktop bar has 7 links. These are defined in TWO separate components with TWO separate nav item arrays (`primaryTabs` and `moreNavItems` in BottomTabBar, `navLinks` in AppNavigation). Unifying navigation means maintaining a SINGLE source of truth for nav items, but the mobile and desktop presentations have different slot counts.
 
-**Prevention:**
-1. Enable strict mode in tsconfig: `"strict": true`
-2. Ban `any` via ESLint: `"@typescript-eslint/no-explicit-any": "error"`
-3. Use branded types for IDs: `type QuestionId = number & { __brand: 'QuestionId' }`
-
-**Phase to address:**
-Technical Debt / Foundation phase
-
----
-
-### Pitfall 10: Monolithic Questions File Becomes Unmaintainable
-
-**What goes wrong:**
-All 128 civics questions in one file makes collaboration difficult, causes merge conflicts, and makes it hard to update individual questions or categories.
+If the unified system adds items (e.g., Practice, SRS Review) without adjusting the mobile "More" menu, the sheet becomes too tall. If it removes items, existing muscle memory breaks.
 
 **Prevention:**
-Split by category:
-```
-/src/data/questions/
-  principles-of-democracy.ts
-  system-of-government.ts
-  rights-responsibilities.ts
-  history-colonial.ts
-  history-1800s.ts
-  recent-history.ts
-  symbols-holidays.ts
-  index.ts  // aggregates all
-```
+1. Define navigation items in ONE central config, with a `mobilePriority` field that determines which appear in the bottom bar vs. the "More" sheet
+2. Keep the bottom bar to 4-5 items maximum (iOS HIG recommendation)
+3. Test the "More" sheet height on the smallest supported screen (iPhone SE / 320px wide)
+4. Animate the transition smoothly if nav structure changes -- don't force a "learn the new nav" moment
 
-**Phase to address:**
-Technical Debt / Foundation phase
+**Detection:** Render the bottom bar and More sheet on a 320px viewport. If the sheet requires scrolling, there are too many items.
+
+**Phase to address:** Navigation Redesign phase
 
 ---
 
-### Pitfall 11: No Test Framework Means Regressions Go Unnoticed
+### Pitfall 8: Dashboard Simplification Removes Widgets Users Depend On
 
-**What goes wrong:**
-The shuffle fix, race condition fix, or any code change could break working features. Without tests, you only discover this in production.
+**What goes wrong:** The current Dashboard has 11 staggered motion sections: welcome header, readiness hero, quick actions, SRS widget, streak widget, interview widget, badges, leaderboard, category progress (collapsible), suggested focus, and accuracy. "Simplification" means removing or consolidating some of these, but each has users who rely on it as their primary engagement hook.
+
+The `SRSWidget` shows due card count and has a `data-tour="srs-deck"` attribute. The `StreakWidget` is the daily engagement driver. The `ReadinessIndicator` is the primary motivational element. Removing any of these without redirecting the user journey breaks retention patterns.
 
 **Prevention:**
-1. Add Vitest for unit tests (fast, works with Vite/Next.js)
-2. Add Playwright for E2E tests (test critical paths)
-3. Critical tests:
-   - Shuffle produces uniform distribution
-   - Test session saves correctly
-   - Navigation lock works
-   - Bilingual content renders
+1. Track which widgets are actually clicked/interacted with before deciding what to remove (add analytics events first)
+2. If consolidating, ensure the consolidated view preserves the key information: due cards count, streak count, readiness score
+3. Move removed widgets to the Progress Hub rather than deleting them
+4. Keep `data-tour` targets on whatever replaces the current widgets
 
-**Phase to address:**
-Technical Debt / Foundation phase
+**Detection:** A/B test the simplified dashboard if possible. At minimum, survey existing users about which widgets they use most.
+
+**Phase to address:** Dashboard Redesign phase
 
 ---
 
-### Pitfall 12: Supabase Free Tier 7-Day Pause Kills Production PWA
+### Pitfall 9: React Compiler ESLint Rules Reject Common Navigation Patterns
 
-**What goes wrong:**
-Supabase free tier pauses projects after 7 days of inactivity. Users open the PWA, it tries to sync, Supabase is paused, sync fails silently.
+**What goes wrong:** The project uses React Compiler ESLint rules (documented in MEMORY.md). Common patterns used during navigation redesign will trigger violations:
+- `setState` in `useEffect` to sync URL hash to tab state -- violates `react-hooks/set-state-in-effect`
+- `ref.current` access in render for scroll position restoration -- violates `react-hooks/refs`
+- `useMemo<Type>(() => ...)` generic annotation -- violates `react-hooks/preserve-manual-memoization`
+- Timer/interval resets for navigation animations -- require `key` prop pattern instead of `setState` in effect
+
+The existing `HistoryPage` already has a carefully constructed pattern to work around these rules: `tabFromHash` is derived via `useMemo` from `location.hash`, and `userSelectedTab` is a separate `useState` that overrides it. This pattern must be preserved or replicated in any consolidated page.
 
 **Prevention:**
-1. **Set up a keep-alive cron job**:
-```typescript
-// Vercel cron job every 3 days
-export const config = { schedule: '0 0 */3 * *' };
-export default async function keepAlive() {
-  await supabase.from('heartbeat').select('id').limit(1);
-}
-```
+1. Follow the established patterns from MEMORY.md:
+   - Use `useMemo` for derived state from `location.hash`, never `setState` in effect
+   - Use `useState(() => Date.now())` instead of `useRef(Date.now())` for initialization
+   - Use React `key` prop to force remount instead of `setState` in effect for timer resets
+2. Run ESLint after EVERY component change, not just at CI time
+3. Reference `useMasteryMilestones.ts` as the canonical example of React Compiler-safe patterns
 
-2. **Handle paused database gracefully**:
-```typescript
-try {
-  await supabase.from('sessions').insert(data);
-} catch (error) {
-  if (error.message.includes('Project paused')) {
-    saveToLocalStorage(data); // Queue for later
-    showToast('Syncing paused. Your data is saved locally.');
-  }
-}
-```
+**Detection:** `npx eslint src/components/navigation/ src/pages/` after any navigation-related changes.
 
-3. **Consider upgrading** for any production app with real users
-
-**Phase to address:**
-Infrastructure / PWA phase
+**Phase to address:** ALL phases -- this is a cross-cutting constraint
 
 ---
 
-### Pitfall 13: Social Features Expose User Privacy Without Consent
+### Pitfall 10: iOS Safe Area Handling Breaks During Navigation Restructure
 
-**What goes wrong:**
-Leaderboards, study groups, or progress sharing reveal user activity. Immigrants may have reasons to keep their citizenship preparation private.
+**What goes wrong:** The existing app has careful safe area handling:
+- `globals.css` defines `--safe-area-top`, `--safe-area-bottom`, `--bottom-tab-height`
+- `.page-shell` includes `padding-top: var(--safe-area-top)` and `padding-bottom: calc(var(--safe-area-bottom) + var(--bottom-tab-height) + 1rem)`
+- `BottomTabBar` uses `style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}`
+- `AppNavigation` uses `.nav-safe-area` class with `max()` CSS functions
+
+Restructuring navigation (e.g., moving `BottomTabBar` rendering, changing `page-shell` padding, introducing new layout wrappers) can cause:
+- Content hidden behind the iOS home indicator
+- Double padding (both the page-shell AND a new layout wrapper adding safe area padding)
+- `BottomTabBar` height variable (`--bottom-tab-height: 64px` at `max-width: 767px`) no longer matching actual tab bar height after redesign
 
 **Prevention:**
-1. **Opt-in only**: No social visibility by default
-2. **Anonymous option**: Allow participation without revealing identity
-3. **Clear privacy notices** in both languages
-4. **Data residency awareness**: Some users may have concerns about where data is stored
+1. Test EVERY navigation change on iOS Safari in standalone PWA mode (not just in-browser)
+2. Keep the `--bottom-tab-height` CSS variable in sync with the actual rendered height
+3. If introducing a new layout wrapper, ensure safe area padding is applied in exactly ONE place
+4. Use `dvh` (dynamic viewport height) rather than `vh` for any new viewport-height calculations
+5. The `useViewportHeight` hook sets `--app-viewport-height` -- ensure it remains functional after layout changes
 
-**Phase to address:**
-Social Features phase
+**Detection:** Open the PWA on an iPhone with a notch. Verify bottom content is visible above the home indicator. Verify top content is below the status bar. Check with keyboard open.
+
+**Phase to address:** Navigation Redesign and iOS-Inspired UI phase
 
 ---
 
-### Pitfall 14: Anxiety-Inducing UX for Test-Takers
+### Pitfall 11: motion/react (Framer Motion) Inline Transform Overrides CSS Centering
 
-**What goes wrong:**
-Countdown timers, red "wrong" feedback, or competitive elements increase anxiety. For immigrants already stressed about their citizenship interview, this harms learning.
+**What goes wrong:** Documented in MEMORY.md: `motion/react` inline `transform` overrides CSS `translateX(-50%)` centering. The Dashboard uses `motion.div` with stagger animations (`initial: { opacity: 0, y: 16 }`) on 11 sections. Adding new animations to navigation elements or redesigning dashboard layout with motion components will break centering on any element that uses `transform: translate()` for positioning.
 
 **Prevention:**
-1. **Soft time display**: Show elapsed time, not countdown (or make countdown optional)
-2. **Encouraging feedback**: "Good try! Here's the correct answer..." instead of harsh "WRONG"
-3. **Progress celebration**: Celebrate streaks, not just perfection
-4. **No public failure**: Never show others' scores unless explicitly requested
-5. **Warm color palette**: Avoid harsh reds for errors; use gentle oranges or yellows
+1. Never use CSS `translate` for centering on elements that will be animated with motion/react
+2. Use flexbox (`justify-center`, `items-center`) for centering instead
+3. If animation requires a wrapper, use a separate `motion.div` wrapper around the centered element
+4. The `Dialog` component already handles this correctly with `pointer-events-none` wrapper + `pointer-events-auto` content -- follow that pattern
 
-**Phase to address:**
-UI Polish phase
+**Detection:** After adding any `motion.div` to a centered element, verify centering in both initial and animated states.
+
+**Phase to address:** Dashboard Redesign and Navigation phases
 
 ---
 
-### Pitfall 15: Language Switcher Uses Flags or English Labels
+### Pitfall 12: AppNavigation Per-Page Pattern Prevents Layout-Level Changes
 
-**What goes wrong:**
-Using the Myanmar flag for Burmese language is politically complex (ethnic minorities). Using "Burmese" in English assumes users can read English to find their language.
+**What goes wrong:** Every page component individually imports and renders `<AppNavigation />` inside a `<div className="page-shell">` wrapper. This pattern (seen in ALL 13 pages) means:
+- Navigation changes require touching every page file
+- The `locked` and `translucent` props are per-page configuration
+- There's no shared layout component -- each page owns its own shell
+
+Introducing a unified navigation layout requires migrating from "nav inside page" to "page inside nav layout." This is a high-touch refactor: every page import of `AppNavigation` must be removed, and the `locked`/`translucent` props must be handled by a different mechanism (route-level config or context).
 
 **Prevention:**
-1. **Always label languages in their own script**:
-   - "English" and "မြန်မာ" (not "Burmese")
-2. **No flags**: Too politically charged
-3. **Consider showing both languages always** (which this app does - good!)
-4. **Default to browser language detection**
+1. Create a `Layout` component that wraps pages and renders navigation
+2. Move `<AppNavigation />` from individual pages to the layout
+3. Use route metadata or a context to pass `locked` and `translucent` states
+4. Do this refactor FIRST, before any visual navigation changes
+5. The `page-shell` class and its padding must move to the layout, not remain in individual pages
 
-**Phase to address:**
-Bilingual UX phase
+**Detection:** After the refactor, search for `import AppNavigation` -- it should only appear in the layout component, not in any page.
 
----
-
-## Technical Debt Patterns
-
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| `any` types | Faster development | Runtime errors, lost refactoring confidence | Never in production code |
-| Biased shuffle | Fewer lines of code | Non-uniform question distribution | Never for randomization |
-| Optimistic save flag | Simpler state | Lost data, duplicate saves | Never for critical data |
-| React Router in Next.js | Familiar API | 404s, PWA issues, no SSR | Only if committed to SPA-only mode |
-| Single questions file | Easy to start | Merge conflicts, hard to update | Only for <20 questions |
-| No tests | Ship faster initially | Regressions, fear of refactoring | Never past MVP |
+**Phase to address:** Navigation Redesign phase -- do the structural refactor BEFORE the visual redesign
 
 ---
 
-## Integration Gotchas
+## Minor Pitfalls
 
-| Integration | Common Mistake | Correct Approach |
-|-------------|----------------|------------------|
-| Supabase + Offline | Assuming Supabase handles offline | Use IndexedDB + sync queue; Supabase is online-only |
-| PWA + Next.js App Router | Using `next-pwa` (unmaintained) | Use Serwist or native service worker per Next.js docs |
-| Speech Synthesis + Burmese | Assuming all browsers support Myanmar | Fallback to English; many TTS engines lack Myanmar |
-| IndexedDB + iOS | Trusting data persists | Request persistent storage; design for eviction |
-| Service Worker + Auth | Caching auth-gated content | Never cache auth responses; invalidate on logout |
+### Pitfall 13: Inconsistent Icon Libraries After Navigation Redesign
 
----
+**What goes wrong:** The current `BottomTabBar` and `AppNavigation` use different icon selections from `lucide-react` for the same concepts (e.g., `History` vs `Clock` for test history, `TrendingUp` for progress in both but different strokes). An "iOS-inspired" redesign may introduce SF Symbols-style icons or change icon weights, creating inconsistency between updated and not-yet-updated sections.
 
-## Performance Traps
+**Prevention:** Establish an icon mapping document before starting the redesign. Update ALL icon usages in one pass.
 
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| All questions in initial bundle | Large JS bundle, slow FCP | Dynamic import or static JSON fetch | Immediately visible in Lighthouse |
-| Unoptimized Myanmar fonts | FOUT, large download | Subset to used glyphs, preload | Any user with slow connection |
-| Re-rendering on every timer tick | Janky UI, battery drain | Memoize components, use refs for time | Noticeable on mid-range phones |
-| Unbounded history state | Memory growth | Use replaceState | After ~50+ back attempts |
-| Full test history in memory | App slows over time | Paginate, virtualize list | After ~100 tests |
+**Phase to address:** iOS-Inspired UI phase
 
 ---
 
-## Security Mistakes
+### Pitfall 14: Stale localStorage Keys After Page Consolidation
 
-| Mistake | Risk | Prevention |
-|---------|------|------------|
-| Storing user data without consent notice | GDPR/privacy violation | Add clear consent flow, privacy policy |
-| Exposing Supabase anon key in client | Expected for client apps, but... | Implement RLS policies properly |
-| No rate limiting on save | Spam/abuse of free tier | Supabase edge functions with rate limit |
-| Caching authenticated content | Leaking data between users | Never cache user-specific responses |
+**What goes wrong:** The app uses several localStorage keys for UI state:
+- `civic-prep-dashboard-category-collapsed` (Dashboard category section)
+- `push-reminder-frequency` (push notifications)
+- `welcome-shown`, `pwa-installed` (onboarding)
+- Various SRS and social keys
 
----
+Page consolidation may render some of these keys meaningless (e.g., the collapsed state of a section that no longer exists) or create conflicts (two pages using the same collapse key).
 
-## UX Pitfalls
+**Prevention:** Audit all `localStorage.getItem`/`setItem` calls before consolidation. Remove obsolete keys with a migration function on first load of the new version.
 
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| Countdown timer always visible | Increases test anxiety | Option to hide, or show elapsed time |
-| Red/green only for right/wrong | Colorblind inaccessible | Add icons, use colorblind-friendly palette |
-| English-only error messages | Burmese users confused | Bilingual for ALL user-facing text |
-| Small tap targets | Frustration on mobile | Min 44x44px per WCAG |
-| Auto-advancing too fast | Can't read Burmese answer | Add pause, or let user control advance |
+**Phase to address:** Progress Hub Consolidation phase
 
 ---
 
-## "Looks Done But Isn't" Checklist
+### Pitfall 15: PageTransition AnimatePresence Conflicts with New Navigation Animations
 
-- [ ] **Shuffle**: Tested for uniform distribution (run 10,000 iterations, check variance)
-- [ ] **Offline mode**: Tested in airplane mode, not just DevTools throttling
-- [ ] **PWA install**: Tested on actual iOS (not just simulator)
-- [ ] **Burmese fonts**: Tested on devices without Noto Sans installed
-- [ ] **Service worker update**: Tested by deploying update, verifying users get it
-- [ ] **Test save**: Tested with network failure mid-save
-- [ ] **Navigation lock**: Tested in Safari, Firefox, not just Chrome
-- [ ] **Speech synthesis**: Tested in Safari (different API behaviors)
-- [ ] **Dark mode**: Tested all screens, especially with Myanmar text
+**What goes wrong:** The existing `PageTransition` component wraps `<Routes>` with `AnimatePresence` for page-level enter/exit animations. Adding navigation-level animations (tab bar transitions, sheet animations) can conflict -- `AnimatePresence` may try to animate a page exit while a navigation animation is still running, causing visual glitches or z-index wars.
+
+**Prevention:** Keep page transitions and navigation animations on separate z-index layers. The `BottomTabBar` already uses `z-50` for the More sheet and `z-40` for the bar itself. Ensure new navigation animations don't overlap with `PageTransition` z-indices.
+
+**Phase to address:** Navigation Redesign phase
+
+---
+
+## Phase-Specific Warnings
+
+| Phase Topic | Likely Pitfall | Severity | Mitigation |
+|-------------|---------------|----------|------------|
+| Navigation Redesign | Onboarding tour breaks (Pitfall 1) | CRITICAL | Audit all data-tour targets before and after |
+| Navigation Redesign | AppNavigation per-page pattern (Pitfall 12) | HIGH | Refactor to layout component FIRST |
+| Navigation Redesign | Mobile "More" menu overflow (Pitfall 7) | MODERATE | Test on 320px viewport |
+| Dashboard Redesign | Widget removal breaks engagement (Pitfall 8) | HIGH | Preserve key metrics in simplified view |
+| Dashboard Redesign | motion/react transform conflicts (Pitfall 11) | MODERATE | Use flexbox centering, not CSS translate |
+| Progress Hub Consolidation | Hash-based deep links break (Pitfall 2) | CRITICAL | Map all routes/hashes, implement redirects |
+| Progress Hub Consolidation | Stale localStorage keys (Pitfall 14) | LOW | Audit and migrate |
+| Design Token System | 63-file visual regression (Pitfall 3) | CRITICAL | Single source of truth first, visual testing |
+| Burmese Translation | Trust erosion from bad translation (Pitfall 6) | CRITICAL | Native speaker review, glossary-first approach |
+| USCIS 120Q Bank | Coverage regression destroys motivation (Pitfall 4) | HIGH | Celebrate new questions, don't silently regress |
+| Push Security | Unauthenticated subscription API (Pitfall 5) | CRITICAL | Auth verification before ANY push improvements |
+| iOS-Inspired UI | Safe area breakage (Pitfall 10) | HIGH | Test on real iOS devices in standalone mode |
+| ALL phases | React Compiler rule violations (Pitfall 9) | MODERATE | Follow established patterns from MEMORY.md |
+
+## Cross-Cutting Concerns
+
+### Concern 1: The 13-Page AppNavigation Import Pattern
+
+Every page individually imports `AppNavigation`. This means any navigation change is automatically a 13-file change. The risk of partial migration (some pages updated, some not) is extremely high.
+
+**Recommended order:**
+1. Extract layout component (structural change, zero visual change)
+2. Verify all pages render correctly with layout-provided navigation
+3. THEN redesign the navigation visually
+
+### Concern 2: Three Sources of Truth for Colors
+
+The design token system has fragmented into `globals.css`, `tailwind.config.js`, and `design-tokens.ts`. Any new token system must consolidate these into ONE source of truth before adding new tokens.
+
+**Recommended order:**
+1. Consolidate existing tokens (CSS variables as source of truth)
+2. Wire Tailwind to CSS variables for ALL extended colors
+3. THEN introduce new design tokens
+
+### Concern 3: Burmese Text Scattered Across Codebase
+
+Despite having a centralized `strings.ts`, Burmese text appears directly in component JSX in at least: `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, `BottomTabBar.tsx`, `AppNavigation.tsx`, and multiple component files. The translation upgrade must centralize ALL Burmese text before improving it.
+
+**Recommended order:**
+1. Extract ALL inline Burmese strings to `strings.ts`
+2. Create a Burmese glossary for key terms
+3. THEN improve translations with native speaker review
+
+---
+
+## "Looks Done But Isn't" Checklist for v2.0
+
+- [ ] **Navigation redesign**: All 5 data-tour targets still work on fresh account
+- [ ] **Navigation redesign**: AppNavigation import removed from ALL 13 pages
+- [ ] **Navigation redesign**: BottomTabBar "More" sheet fits on 320px screen
+- [ ] **Navigation redesign**: `locked` and `translucent` navigation states still work during tests
+- [ ] **Progress Hub**: Every old route (`/history`, `/progress`, `/history#interview`) redirects correctly
+- [ ] **Progress Hub**: Push notification URLs point to correct new routes
+- [ ] **Progress Hub**: SRS widget "review" link opens correct tab in consolidated view
+- [ ] **Design tokens**: Dark mode toggle produces identical colors to v1.0 (unless intentionally changed)
+- [ ] **Design tokens**: No hardcoded HSL values remain in `tailwind.config.js` extended colors
+- [ ] **120Q bank**: User with 100/100 coverage sees encouraging message, not regression
+- [ ] **120Q bank**: Mastery milestone celebrations acknowledge the expanded pool
+- [ ] **Burmese**: ALL Myanmar Unicode text lives in `strings.ts` (zero inline)
+- [ ] **Burmese**: Glossary terms are consistent across ALL pages
+- [ ] **Push security**: Unauthenticated POST to `/api/push/subscribe` returns 401
+- [ ] **Push security**: Cannot delete another user's subscription
+- [ ] **iOS safe areas**: Bottom tab bar clears home indicator in standalone PWA mode
+- [ ] **iOS safe areas**: Top navigation clears status bar/notch
+- [ ] **React Compiler**: `npx eslint src/` passes with zero violations after every phase
 
 ---
 
@@ -521,69 +428,54 @@ Bilingual UX phase
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Biased shuffle already shipped | LOW | Fix algorithm, no data migration needed |
-| Lost test sessions | MEDIUM | Add local backup, attempt recovery from IndexedDB |
-| React Router refresh 404s | MEDIUM | Add catch-all route as stopgap, plan migration |
-| PWA caching stale content | MEDIUM | Version cache, force refresh on next load |
-| Burmese font failures | LOW | Add font fallback chain, embed fonts |
-| iOS data eviction | HIGH | Cannot recover purged data; implement cloud sync |
-
----
-
-## Pitfall-to-Phase Mapping
-
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| Biased shuffle | Technical Debt (Phase 1) | Unit test with chi-square test for uniformity |
-| Race condition save | Technical Debt (Phase 1) | Integration test with simulated network failure |
-| history.pushState leak | Technical Debt (Phase 1) | Memory profiling in Chrome DevTools |
-| React Router 404s | PWA (Phase 2) | E2E test: refresh on /test route works |
-| iOS data eviction | PWA (Phase 2) | Manual test on iPhone after 7+ days |
-| Burmese font rendering | Bilingual UX (Phase 3) | Visual regression test on BrowserStack |
-| SM-2 initial difficulty | Spaced Repetition (Phase 4) | Analytics showing difficulty calibration |
-| Service worker stale cache | PWA (Phase 2) | Deploy update, verify users receive it |
-| Supabase pause | Infrastructure (Phase 1/2) | Uptime monitoring |
-| Social privacy | Social Features (Phase 5) | Security review, consent flow test |
-| Anxiety-inducing UX | UI Polish (Phase 6) | User testing with target demographic |
-| Loose TypeScript | Technical Debt (Phase 1) | `tsc --strict` passes |
-| Monolithic questions | Technical Debt (Phase 1) | File split complete |
-| No test framework | Technical Debt (Phase 1) | CI runs test suite |
+| Broken onboarding tour | LOW | Re-add data-tour attributes, update step selectors |
+| Broken deep links | MEDIUM | Add redirects; users with bookmarks need to re-bookmark |
+| Visual regression from tokens | HIGH | Revert to v1.0 tokens, re-attempt with visual testing |
+| Coverage regression for 120Q | LOW | Add celebration UI, recompute milestones |
+| Push subscription hijack | HIGH | Rotate VAPID keys, re-subscribe all users, audit logs |
+| Bad Burmese translations | MEDIUM | Revert to v1.0 translations while getting native review |
+| iOS safe area broken | MEDIUM | Revert navigation changes, retest on device |
 
 ---
 
 ## Sources
 
-**PWA & Next.js:**
-- [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps) - Official documentation (HIGH confidence)
-- [LogRocket: Next.js 16 PWA with Offline Support](https://blog.logrocket.com/nextjs-16-pwa-offline-support) - Shallow offline pitfalls (MEDIUM confidence)
-- [Safari/iOS PWA Limitations](https://vinova.sg/navigating-safari-ios-pwa-limitations/) - iOS-specific issues (MEDIUM confidence)
+**Navigation & Routing:**
+- [React Router Dynamic Tabs Discussion](https://github.com/remix-run/react-router/discussions/11040) - Tab state in URL params (MEDIUM confidence)
+- [React Navigation Bottom Tabs Overlap Issue](https://github.com/react-navigation/react-navigation/issues/12769) - Safe area overlaps (MEDIUM confidence)
 
-**Spaced Repetition:**
-- [SM-2 Algorithm Explained](https://tegaru.app/en/blog/sm2-algorithm-explained) - Algorithm details (MEDIUM confidence)
-- [Overdue Handling in SM-2](https://controlaltbackspace.org/overdue-handling/) - Known flaws (MEDIUM confidence)
-- [FSRS Algorithm](https://www.quizcat.ai/blog/fsrs-algorithm-next-gen-spaced-repetition) - Modern alternative (MEDIUM confidence)
+**Design Tokens:**
+- [Modern Design Systems for React in 2025](https://inwald.com/2025/11/modern-design-systems-for-react-in-2025-a-pragmatic-comparison/) - Token migration strategies (MEDIUM confidence)
+- [Design Tokens in React - UXPin](https://www.uxpin.com/studio/blog/what-are-design-tokens-in-react/) - Token architecture (MEDIUM confidence)
+- [Managing Global Styles with Design Tokens](https://www.uxpin.com/studio/blog/managing-global-styles-in-react-with-design-tokens/) - Single source of truth (MEDIUM confidence)
 
-**Bilingual/Myanmar:**
-- [Myanmar Unicode Guide for Web Developers](https://thanlwinsoft.github.io/www.thanlwinsoft.org/ThanLwinSoft/MyanmarUnicode/WebDevelopers/) - Authoritative (HIGH confidence)
-- [Burmese Font Issues - Localization Lab](https://www.localizationlab.org/blog/2019/3/25/burmese-font-issues-have-real-world-consequences-for-at-risk-users) - Real-world impact (HIGH confidence)
-- [Bilingual UI/UX Mistakes - Freezil](https://freezil.com/the-biggest-mistakes-in-bilingual-ui-ux-design/) - Design pitfalls (MEDIUM confidence)
+**Burmese/Myanmar:**
+- [Burmese Font Issues Have Real World Consequences](https://www.localizationlab.org/blog/2019/3/25/burmese-font-issues-have-real-world-consequences-for-at-risk-users) - Trust and security impact (HIGH confidence)
+- [Mini-Guide to UX Design in Myanmar](https://www.nexlabs.co/insight-post/a-mini-guide-to-ux-design-in-myanmar) - Cultural UX considerations (MEDIUM confidence)
+- [NLP and Burmese Localization - GALA](https://www.gala-global.org/knowledge-center/professional-development/articles/nlp-burmesemyanmar) - Linguistic challenges (MEDIUM confidence)
 
-**Social/Educational:**
-- [Education App Development Challenges 2026](https://www.appverticals.com/blog/education-app-development-challenges/) - Current trends (MEDIUM confidence)
-- [Bridging Digital Accessibility Gap for Immigrants](https://pressbooks.pub/alttexts2025/chapter/bridging-the-digital-accessibility-gap/) - UDL guidance (HIGH confidence)
+**React Compiler:**
+- [React Compiler v1.0 Blog Post](https://react.dev/blog/2025/10/07/react-compiler-1) - Official rules documentation (HIGH confidence)
+- [set-state-in-effect Rule](https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect) - Official lint rule (HIGH confidence)
+- [refs Rule](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs) - Official lint rule (HIGH confidence)
+- [Bug: set-state-in-effect overly strict?](https://github.com/facebook/react/issues/34743) - Known false positives (HIGH confidence)
 
-**React Router + Next.js:**
-- [Colin Hacks: React Router in Next.js](https://colinhacks.com/essays/building-a-spa-with-nextjs) - Why and how (MEDIUM confidence)
-- [Vercel: Common Next.js App Router Mistakes](https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them) - Official (HIGH confidence)
+**PWA & iOS:**
+- [Make PWAs Look Handsome on iOS](https://dev.to/karmasakshi/make-your-pwas-look-handsome-on-ios-1o08) - Safe area handling (MEDIUM confidence)
+- [Supporting iOS Safe Areas in Web Apps](https://jipfr.nl/blog/supporting-ios-web/) - Implementation guide (MEDIUM confidence)
+- [Next.js Discussion: Safe Area Inset Issues](https://github.com/vercel/next.js/discussions/81264) - Next.js-specific (MEDIUM confidence)
+- [Understanding Mobile Viewport Units](https://medium.com/@tharunbalaji110/understanding-mobile-viewport-units-a-complete-guide-to-svh-lvh-and-dvh-0c905d96e21a) - dvh/svh/lvh guide (MEDIUM confidence)
 
-**History API:**
-- [MDN: History pushState](https://developer.mozilla.org/en-US/docs/Web/API/History/pushState) - Official (HIGH confidence)
-- [Mozilla Bug: Rate-limiting pushState](https://bugzilla.mozilla.org/show_bug.cgi?id=1246773) - Memory issues (HIGH confidence)
+**Push Notifications:**
+- [Supabase Push Notifications Docs](https://supabase.com/docs/guides/functions/examples/push-notifications) - Official (HIGH confidence)
+- [Supabase Security 2025 Retro](https://supabase.com/blog/supabase-security-2025-retro) - Security defaults (HIGH confidence)
+- [PWA Push Notifications Guide](https://www.magicbell.com/blog/using-push-notifications-in-pwas) - Implementation patterns (MEDIUM confidence)
 
-**Supabase:**
-- [Supabase Pricing 2026](https://www.metacto.com/blogs/the-true-cost-of-supabase-a-comprehensive-guide-to-pricing-integration-and-maintenance) - Free tier limits (MEDIUM confidence)
-- [PowerSync for Supabase Offline](https://www.powersync.com/blog/bringing-offline-first-to-supabase) - Offline solutions (MEDIUM confidence)
+**Codebase Analysis:**
+- Verified against actual source files: `AppShell.tsx`, `BottomTabBar.tsx`, `AppNavigation.tsx`, `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, `TestPage.tsx`, `globals.css`, `tailwind.config.js`, `design-tokens.ts`, `strings.ts`, `questions/index.ts`, `pushNotifications.ts`, `subscribe.ts` (HIGH confidence)
 
 ---
-*Pitfalls research for: Bilingual Civics Test Prep PWA*
-*Researched: 2026-02-05*
+
+*Pitfalls research for: Civic Test Prep 2025 v2.0 Feature Additions*
+*Researched: 2026-02-09*
+*Previous version: v1.0 pitfalls archived in milestones/v1.0/*
