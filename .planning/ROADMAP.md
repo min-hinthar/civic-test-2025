@@ -69,10 +69,15 @@ Plans:
   3. App displays "Updated for USCIS 2025" indicator visible from the dashboard or study page
   4. All mastery percentages, readiness scores, badge thresholds, and "questions practiced" counters reflect a 128-question total (no user sees their mastery drop from expanding the bank)
   5. Mock test continues to draw 20 random questions with pass/fail thresholds aligned to the 128-question bank
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 12-01: TBD
+- [ ] 12-01-PLAN.md — Question type extension + 8 missing questions + dynamic metadata on 9 existing
+- [ ] 12-02-PLAN.md — State representative data JSON + StateContext provider + AppShell integration
+- [ ] 12-03-PLAN.md — Update indicator UI: UpdateBanner + WhatsNewModal components
+- [ ] 12-04-PLAN.md — State picker (Settings + onboarding) + dynamic answer display + banner placement
+- [ ] 12-05-PLAN.md — Question bank validation test suite (128Q, unique IDs, translations, categories)
+- [ ] 12-06-PLAN.md — Visual and functional verification checkpoint
 
 ### Phase 13: Security Hardening
 **Goal**: The app's API endpoints, client-side inputs, and dependency chain are hardened against known vulnerability classes
