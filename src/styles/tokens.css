@@ -33,6 +33,7 @@
   --green-100: 141 84% 86%;
   --green-500: 142 71% 45%;
   --green-600: 142 76% 36%;
+  --green-700: 142 76% 30%;
 
   /* ── Amber (warning, wrong answers) ── */
   --amber-50: 38 92% 95%;
@@ -110,15 +111,18 @@
 
   /* ── Accent Purple (achievements, badges) ── */
   --color-accent-purple: var(--purple-500);   /* Achievement badges, milestones */
+  --color-accent-purple-active: var(--purple-700); /* Purple pressed/active state */
   --color-accent-purple-foreground: 0 0% 100%; /* Text on purple surfaces */
 
   /* ── Destructive (warm coral-red, NOT bright red) ── */
   --color-destructive: var(--red-500);        /* Data-loss/destructive actions */
   --color-destructive-hover: var(--red-600);  /* Destructive hover state */
+  --color-destructive-active: var(--red-700); /* Destructive pressed/active state */
   --color-destructive-foreground: 0 0% 100%; /* Text on destructive surfaces */
 
   /* ── Success (correct answers, progress) ── */
   --color-success: var(--green-500);          /* Correct answers, completed */
+  --color-success-active: var(--green-700);   /* Success pressed/active state */
   --color-success-subtle: var(--green-50);    /* Success background tint */
   --color-success-foreground: 0 0% 100%;     /* Text on success surfaces */
 
@@ -300,14 +304,17 @@
 
   /* ── Accent Purple ── */
   --color-accent-purple: 270 65% 65%;         /* Brighter purple on dark */
+  --color-accent-purple-active: var(--purple-600); /* Purple active on dark */
 
   /* ── Destructive ── */
   --color-destructive: 10 45% 50%;            /* Brighter destructive on dark */
   --color-destructive-hover: 10 45% 55%;
+  --color-destructive-active: var(--red-600); /* Destructive active on dark */
   --color-destructive-foreground: 210 40% 98%;
 
   /* ── Success ── */
   --color-success: 142 71% 50%;              /* Brighter success on dark */
+  --color-success-active: var(--green-600);   /* Success active on dark */
   --color-success-subtle: 142 71% 15%;       /* Dark success tint */
   --color-success-foreground: 222 47% 11%;
 
