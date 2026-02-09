@@ -38,15 +38,15 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // ---------------------------------------------------------------------------
 
 const MEDAL_COLORS: Record<number, string> = {
-  1: 'text-yellow-500', // Gold
-  2: 'text-gray-400', // Silver
+  1: 'text-warning', // Gold
+  2: 'text-muted-foreground', // Silver
   3: 'text-amber-700', // Bronze
 };
 
 const MEDAL_BG: Record<number, string> = {
-  1: 'bg-yellow-50 dark:bg-yellow-900/20',
-  2: 'bg-gray-50 dark:bg-gray-900/20',
-  3: 'bg-amber-50 dark:bg-amber-900/20',
+  1: 'bg-warning-50',
+  2: 'bg-muted',
+  3: 'bg-warning-50',
 };
 
 // ---------------------------------------------------------------------------
@@ -249,10 +249,10 @@ function LeaderboardRow({
         <span className="text-sm font-medium text-foreground truncate">{entry.displayName}</span>
 
         {/* Weekly winner crown */}
-        {entry.isWeeklyWinner && <Crown className="h-3.5 w-3.5 text-yellow-500 shrink-0" />}
+        {entry.isWeeklyWinner && <Crown className="h-3.5 w-3.5 text-warning shrink-0" />}
 
         {/* Top badge icon */}
-        {BadgeIcon && <BadgeIcon className="h-3.5 w-3.5 text-amber-500 shrink-0" />}
+        {BadgeIcon && <BadgeIcon className="h-3.5 w-3.5 text-warning shrink-0" />}
       </div>
 
       {/* Score */}

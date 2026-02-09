@@ -47,7 +47,7 @@ const variants = {
     'bg-destructive text-destructive-foreground hover:bg-destructive/90',
     chunkyDestructive3D
   ),
-  success: clsx('bg-emerald-500 text-white hover:bg-emerald-600', chunkySuccess3D),
+  success: clsx('bg-success text-white hover:bg-emerald-600', chunkySuccess3D),
   // Explicit chunky variants for standalone use
   chunky: clsx(
     'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
@@ -57,7 +57,7 @@ const variants = {
     'bg-destructive text-destructive-foreground hover:bg-destructive/90',
     chunkyDestructive3D
   ),
-  'chunky-success': clsx('bg-emerald-500 text-white hover:bg-emerald-600', chunkySuccess3D),
+  'chunky-success': clsx('bg-success text-white hover:bg-emerald-600', chunkySuccess3D),
 };
 
 // Button sizes with 44px minimum for touch accessibility

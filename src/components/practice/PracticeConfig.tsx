@@ -41,9 +41,9 @@ interface PracticeConfigProps {
 type CountOption = 5 | 10 | 'full';
 
 const categoryColorMap: Record<string, string> = {
-  blue: 'text-blue-500',
-  amber: 'text-amber-500',
-  emerald: 'text-emerald-500',
+  blue: 'text-primary',
+  amber: 'text-warning',
+  emerald: 'text-success',
 };
 
 const categoryBorderMap: Record<string, string> = {
@@ -53,9 +53,9 @@ const categoryBorderMap: Record<string, string> = {
 };
 
 const categoryBgMap: Record<string, string> = {
-  blue: 'bg-blue-50 dark:bg-blue-500/10',
-  amber: 'bg-amber-50 dark:bg-amber-500/10',
-  emerald: 'bg-emerald-50 dark:bg-emerald-500/10',
+  blue: 'bg-primary-subtle',
+  amber: 'bg-warning-50',
+  emerald: 'bg-emerald-50',
 };
 
 /**
@@ -178,12 +178,12 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         className={clsx(
           'mb-6 flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors',
           selectedCategory === 'weak'
-            ? 'border-primary-500 bg-primary-50 dark:bg-primary-500/10'
+            ? 'border-primary bg-primary-subtle'
             : 'border-border hover:border-primary-400 bg-card'
         )}
       >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-500/20">
-          <Target className="h-6 w-6 text-primary-500" />
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-subtle">
+          <Target className="h-6 w-6 text-primary" />
         </div>
         <div className="flex-1">
           <p className="font-semibold text-foreground">{strings.practice.practiceAllWeak.en}</p>
@@ -193,7 +193,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             </p>
           )}
         </div>
-        <Zap className="h-5 w-5 text-primary-400" />
+        <Zap className="h-5 w-5 text-primary" />
       </motion.button>
 
       {/* Category cards */}
@@ -343,7 +343,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                   className={clsx(
                     'flex-1 rounded-xl border-2 px-3 py-2.5 text-center transition-colors',
                     isActive
-                      ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400'
+                      ? 'border-primary bg-primary-subtle text-primary'
                       : 'border-border bg-card text-foreground hover:border-primary-300'
                   )}
                 >
@@ -383,14 +383,14 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             onClick={() => setTimerEnabled(prev => !prev)}
             className={clsx(
               'relative inline-flex h-7 w-12 items-center rounded-full transition-colors',
-              timerEnabled ? 'bg-primary-500' : 'bg-muted-foreground/30'
+              timerEnabled ? 'bg-primary' : 'bg-muted-foreground/30'
             )}
             role="switch"
             aria-checked={timerEnabled}
             aria-label="Toggle timer"
           >
             <motion.span
-              className="inline-block h-5 w-5 rounded-full bg-white shadow-sm"
+              className="inline-block h-5 w-5 rounded-full bg-surface shadow-sm"
               animate={{ x: timerEnabled ? 22 : 2 }}
               transition={
                 shouldReduceMotion
@@ -410,10 +410,10 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 rounded-xl border border-amber-500/30 bg-amber-50 p-4 dark:bg-amber-500/10"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-warning-50 p-4"
         >
           <div className="flex items-start gap-3">
-            <Award className="h-5 w-5 shrink-0 text-amber-500 mt-0.5" />
+            <Award className="h-5 w-5 shrink-0 text-warning mt-0.5" />
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">
                 {strings.practice.alreadyMastered.en}
@@ -427,13 +427,13 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                 Want to practice{' '}
                 <button
                   onClick={() => handleCategorySelect(weakestCategory)}
-                  className="font-semibold text-primary-500 underline"
+                  className="font-semibold text-primary underline"
                 >
                   {USCIS_CATEGORY_NAMES[weakestCategory].en}
                 </button>{' '}
                 instead?
               </p>
-              <button onClick={handleStart} className="mt-2 text-xs font-semibold text-primary-500">
+              <button onClick={handleStart} className="mt-2 text-xs font-semibold text-primary">
                 {strings.practice.practiceAnyway.en}
                 {showBurmese && (
                   <span className="ml-1 font-myanmar">{strings.practice.practiceAnyway.my}</span>

@@ -82,7 +82,7 @@ export function QuestionAccuracyDot({ questionId }: QuestionAccuracyDotProps) {
     <span
       className={clsx(
         'inline-block h-2.5 w-2.5 rounded-full shrink-0',
-        status === 'correct' ? 'bg-success-500' : 'bg-warning-500'
+        status === 'correct' ? 'bg-success-500' : 'bg-warning'
       )}
       title={
         status === 'correct' ? 'Previously answered correctly' : 'Previously answered incorrectly'

@@ -131,7 +131,7 @@ export function SocialSettings() {
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ${
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface shadow-lg ring-0 transition-transform duration-200 ${
                 isOptedIn ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
@@ -142,7 +142,7 @@ export function SocialSettings() {
         <div className="border-t border-border pt-3">
           {isOptedIn ? (
             <>
-              <p className="text-sm text-success-600 dark:text-success-400">
+              <p className="text-sm text-success-600 dark:text-success">
                 Your profile is visible on the leaderboard
               </p>
               {showBurmese && (

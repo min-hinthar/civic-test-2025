@@ -64,7 +64,7 @@ const AppNavigation = ({
 
   const shellClasses = translucent
     ? 'bg-card/70 shadow-sm'
-    : 'bg-gradient-to-r from-primary-50/80 via-background to-primary-50/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/90 shadow-lg shadow-primary/5';
+    : 'bg-gradient-to-r from-primary-subtle/80 via-background to-primary-subtle/80 shadow-lg shadow-primary/5';
 
   return (
     <nav
@@ -101,7 +101,7 @@ const AppNavigation = ({
                 onClick={event => handleGuardedNavigation(event, link.href)}
                 className={`relative flex items-center gap-1.5 rounded-xl px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-150 ${
                   isActive
-                    ? 'bg-primary-500/12 text-primary-600 dark:text-primary-400 font-semibold'
+                    ? 'bg-primary/12 text-primary font-semibold'
                     : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
@@ -109,10 +109,10 @@ const AppNavigation = ({
               >
                 {/* Active indicator bar at bottom */}
                 {isActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-primary-500" />
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-primary" />
                 )}
                 <Icon
-                  className={`h-4 w-4 shrink-0 ${isActive ? 'text-primary-500' : ''}`}
+                  className={`h-4 w-4 shrink-0 ${isActive ? 'text-primary' : ''}`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span className="hidden lg:inline whitespace-nowrap">
@@ -123,7 +123,7 @@ const AppNavigation = ({
                   )}
                 </span>
                 {link.href === '/study' && dueCount > 0 && (
-                  <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-warning-500 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1">
+                  <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-warning text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1">
                     {dueCount > 99 ? '99+' : dueCount}
                   </span>
                 )}
@@ -168,8 +168,8 @@ const AppNavigation = ({
             <Link
               to="/auth"
               onClick={event => locked && handleGuardedNavigation(event)}
-              className={`inline-flex items-center rounded-xl bg-primary-500 px-4 py-1.5 text-sm font-semibold text-white transition-colors ${
-                locked ? 'cursor-not-allowed opacity-60' : 'hover:bg-primary-600'
+              className={`inline-flex items-center rounded-xl bg-primary px-4 py-1.5 text-sm font-semibold text-white transition-colors ${
+                locked ? 'cursor-not-allowed opacity-60' : 'hover:bg-primary'
               }`}
               aria-disabled={locked}
             >
@@ -185,7 +185,7 @@ const AppNavigation = ({
 
       {/* Lock warning bar */}
       {locked && (
-        <div className="border-t border-amber-200/60 bg-amber-50/80 px-4 py-1.5 text-center text-xs font-semibold text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+        <div className="border-t border-warning/60 bg-warning-50/80 px-4 py-1.5 text-center text-xs font-semibold text-warning">
           {lockMessage ?? 'Complete the mock test before leaving this page.'}
         </div>
       )}

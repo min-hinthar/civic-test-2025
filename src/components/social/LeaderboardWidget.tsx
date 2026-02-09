@@ -27,8 +27,8 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 // ---------------------------------------------------------------------------
 
 const MEDAL_COLORS: Record<number, string> = {
-  1: 'text-yellow-500',
-  2: 'text-gray-400',
+  1: 'text-warning',
+  2: 'text-muted-foreground',
   3: 'text-amber-700',
 };
 
@@ -64,7 +64,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <span className="text-sm text-muted-foreground">
             {showBurmese ? 'တင်နေပါသည်...' : 'Loading...'}
           </span>
@@ -84,8 +84,8 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100">
-              <Trophy className="h-5 w-5 text-primary-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle">
+              <Trophy className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p
@@ -101,7 +101,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
           <button
             type="button"
             onClick={goToLeaderboard}
-            className="flex h-9 items-center gap-1.5 rounded-full bg-primary-500 px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
+            className="flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary min-h-[44px]"
           >
             <Trophy className="h-3.5 w-3.5" />
             <span className={showBurmese ? 'font-myanmar' : ''}>
@@ -135,11 +135,11 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
           <div
             className={clsx(
               'flex h-10 w-10 items-center justify-center rounded-xl',
-              userRank ? 'bg-primary-100' : 'bg-muted'
+              userRank ? 'bg-primary-subtle' : 'bg-muted'
             )}
           >
             <Trophy
-              className={clsx('h-5 w-5', userRank ? 'text-primary-600' : 'text-muted-foreground')}
+              className={clsx('h-5 w-5', userRank ? 'text-primary' : 'text-muted-foreground')}
             />
           </div>
           <div>
@@ -181,7 +181,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
                 #{entry.rank}
               </span>
               <span className="flex-1 truncate text-foreground text-xs">{entry.displayName}</span>
-              {entry.isWeeklyWinner && <Crown className="h-3 w-3 text-yellow-500 shrink-0" />}
+              {entry.isWeeklyWinner && <Crown className="h-3 w-3 text-warning shrink-0" />}
               <span className="text-xs text-muted-foreground tabular-nums">
                 {entry.compositeScore.toLocaleString()}
               </span>

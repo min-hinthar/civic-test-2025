@@ -49,7 +49,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <span className="text-sm text-muted-foreground">
             {showBurmese ? 'တင်နေပါသည်...' : 'Loading...'}
           </span>
@@ -111,7 +111,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
         <div className="flex items-center gap-3">
           {/* Fire icon container */}
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50">
-            <Flame className="h-5 w-5 text-orange-500" />
+            <Flame className="h-5 w-5 text-accent" />
           </div>
 
           <div>
@@ -134,7 +134,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
         {/* Right side: freeze indicator */}
         <div className="flex items-center gap-2">
           {freezesAvailable > 0 && (
-            <div className="flex items-center gap-1 text-xs text-blue-400">
+            <div className="flex items-center gap-1 text-xs text-primary">
               <Snowflake className="h-3.5 w-3.5" />
               <span className="font-semibold">{freezesAvailable}</span>
             </div>

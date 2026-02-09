@@ -25,7 +25,7 @@ export interface CategoryGridProps {
  * Uses Tailwind text-{color}-500 classes.
  */
 const ringColorClasses: Record<string, string> = {
-  blue: 'text-blue-500',
+  blue: 'text-primary',
   amber: 'text-amber-500',
   emerald: 'text-emerald-500',
 };
@@ -35,9 +35,9 @@ const ringColorClasses: Record<string, string> = {
  * Uses Tailwind bg-{color}-{shade} classes.
  */
 const barColorClasses: Record<string, { bg: string; track: string }> = {
-  blue: { bg: 'bg-blue-500', track: 'bg-blue-100 dark:bg-blue-950/30' },
-  amber: { bg: 'bg-amber-500', track: 'bg-amber-100 dark:bg-amber-950/30' },
-  emerald: { bg: 'bg-emerald-500', track: 'bg-emerald-100 dark:bg-emerald-950/30' },
+  blue: { bg: 'bg-primary', track: 'bg-primary-subtle' },
+  amber: { bg: 'bg-amber-500', track: 'bg-amber-100' },
+  emerald: { bg: 'bg-emerald-500', track: 'bg-emerald-100' },
 };
 
 // Stagger animation config (matching 03-04 pattern: 80ms gap, 100ms initial delay)
@@ -108,7 +108,7 @@ export function CategoryGrid({
         const def = USCIS_CATEGORIES[category];
         const color = CATEGORY_COLORS[category];
         const mastery = categoryMasteries[category] ?? 0;
-        const ringColor = ringColorClasses[color] ?? 'text-blue-500';
+        const ringColor = ringColorClasses[color] ?? 'text-primary';
         const barColors = barColorClasses[color] ?? barColorClasses.blue;
 
         return (

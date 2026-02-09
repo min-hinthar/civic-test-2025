@@ -15,9 +15,9 @@ import type { USCISCategory } from '@/lib/mastery';
 import { clsx } from 'clsx';
 
 const miniRingColors: Record<string, string> = {
-  blue: 'text-blue-500',
-  amber: 'text-amber-500',
-  emerald: 'text-emerald-500',
+  blue: 'text-primary',
+  amber: 'text-warning',
+  emerald: 'text-success',
 };
 
 interface PreTestScreenProps {
@@ -123,9 +123,9 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
         <div className="border-t border-border/40 pt-6">
           <Link
             to="/practice"
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary-400 hover:bg-primary-50/30 dark:hover:bg-primary-500/5"
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary-400 hover:bg-primary-subtle/30"
           >
-            <BookOpen className="h-5 w-5 shrink-0 text-primary-500" />
+            <BookOpen className="h-5 w-5 shrink-0 text-primary" />
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">Practice by Category</p>
               {showBurmese && (

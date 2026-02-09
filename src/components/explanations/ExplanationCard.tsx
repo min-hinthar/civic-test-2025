@@ -78,7 +78,7 @@ export function ExplanationCard({
               : strings.explanations.showExplanation.en
           }
         >
-          <Lightbulb className="h-5 w-5 shrink-0 text-primary-500" />
+          <Lightbulb className="h-5 w-5 shrink-0 text-primary" />
           <span className="flex flex-1 flex-col">
             <span className="text-sm font-semibold text-foreground">
               {strings.explanations.why.en}
@@ -140,7 +140,7 @@ export function ExplanationCard({
 
               {/* Common mistake (only when incorrect AND data exists) */}
               {hasCommonMistake && (
-                <div className="rounded-xl border border-warning-500/30 bg-warning-50 p-3 dark:bg-warning-500/10">
+                <div className="rounded-xl border border-warning-500/30 bg-warning-50 p-3">
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-500" />
                     <div className="flex-1">
@@ -167,9 +167,9 @@ export function ExplanationCard({
 
               {/* Mnemonic / Memory tip */}
               {hasMnemonic && (
-                <div className="rounded-xl border border-primary-500/30 bg-primary-50 p-3 dark:bg-primary-500/10">
+                <div className="rounded-xl border border-primary-500/30 bg-primary-subtle p-3">
                   <div className="flex items-start gap-2">
-                    <Brain className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
+                    <Brain className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <div className="flex-1">
                       <p className="text-xs font-semibold text-foreground">
                         {strings.explanations.memoryTip.en}
@@ -204,7 +204,7 @@ export function ExplanationCard({
               {hasFunFact && (
                 <div className="rounded-xl border border-border/40 bg-muted/30 p-3">
                   <div className="flex items-start gap-2">
-                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary-400" />
+                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <div className="flex-1">
                       <p className="text-xs font-semibold text-foreground">
                         {strings.explanations.funFact.en}

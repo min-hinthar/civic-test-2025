@@ -149,7 +149,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           className="group border-2 border-transparent transition-colors hover:border-primary-400"
         >
           <div className="flex flex-col items-center gap-3 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-subtle text-primary">
               <Shield className="h-7 w-7" />
             </div>
             <div>
@@ -165,7 +165,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             {/* 3D Start button */}
             <span
               className={clsx(
-                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary-500 px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
+                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
                 'shadow-[0_4px_0_hsl(var(--primary-700))] group-hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
                 'group-active:shadow-[0_1px_0_hsl(var(--primary-800))] group-active:translate-y-[3px]',
                 'transition-[box-shadow,transform] duration-100'
@@ -199,7 +199,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             {/* 3D Start button */}
             <span
               className={clsx(
-                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary-500 px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
+                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
                 'shadow-[0_4px_0_hsl(var(--primary-700))] group-hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
                 'group-active:shadow-[0_1px_0_hsl(var(--primary-800))] group-active:translate-y-[3px]',
                 'transition-[box-shadow,transform] duration-100'
@@ -320,7 +320,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
               >
                 <span className="text-muted-foreground">{formatDate(session.date)}</span>
                 {session.mode === 'realistic' ? (
-                  <Shield className="h-3.5 w-3.5 text-primary-500" />
+                  <Shield className="h-3.5 w-3.5 text-primary" />
                 ) : (
                   <BookOpen className="h-3.5 w-3.5 text-accent-foreground" />
                 )}
@@ -331,8 +331,8 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                   className={clsx(
                     'rounded-full px-2.5 py-0.5 text-xs font-bold',
                     session.passed
-                      ? 'bg-success-100 text-success-600 dark:bg-success-500/15 dark:text-success-400'
-                      : 'bg-warning-100 text-warning-600 dark:bg-warning-500/15 dark:text-warning-400'
+                      ? 'bg-success-100 text-success-600 dark:text-success'
+                      : 'bg-warning-100 text-warning'
                   )}
                 >
                   {session.passed ? strings.interview.passed.en : strings.interview.failed.en}

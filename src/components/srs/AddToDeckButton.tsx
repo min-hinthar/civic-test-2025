@@ -114,7 +114,7 @@ export function AddToDeckButton({
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           inDeck
-            ? 'border border-primary-500/30 bg-primary-500/10 text-primary-500'
+            ? 'border border-primary-500/30 bg-primary/10 text-primary'
             : 'border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30',
           className
         )}
@@ -143,7 +143,7 @@ export function AddToDeckButton({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         inDeck
-          ? 'border border-primary-500/30 bg-primary-500/10 text-primary-500'
+          ? 'border border-primary-500/30 bg-primary/10 text-primary'
           : 'border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30',
         className
       )}

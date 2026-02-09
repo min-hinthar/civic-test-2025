@@ -177,7 +177,7 @@ export function PracticeSession({ questions, timerEnabled, onComplete }: Practic
       <div className="mb-6 flex items-center gap-4">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
               {strings.practice.practiceMode.en} {currentIndex + 1} / {questions.length}
               {showBurmese && (
                 <span className="ml-1 font-myanmar font-normal text-muted-foreground">
@@ -205,7 +205,7 @@ export function PracticeSession({ questions, timerEnabled, onComplete }: Practic
       <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
         {/* Question area */}
         <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary-500 font-semibold">
+          <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
             {currentQuestion.category}
           </p>
           <p className="mt-2 text-lg font-bold text-foreground leading-snug">
@@ -242,10 +242,10 @@ export function PracticeSession({ questions, timerEnabled, onComplete }: Practic
                   'rounded-2xl border-2 px-5 py-4 text-left w-full min-h-[56px]',
                   'font-semibold transition-all duration-100',
                   'shadow-[0_4px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[3px]',
-                  'hover:border-primary-400 hover:bg-primary-50/50 hover:shadow-[0_4px_0_hsl(var(--primary-600))]',
-                  'dark:hover:bg-primary-500/10',
+                  'hover:border-primary-400 hover:bg-primary-subtle/50 hover:shadow-[0_4px_0_hsl(var(--primary-600))]',
+                  '',
                   isSelected
-                    ? 'border-primary-500 bg-primary-50 shadow-[0_4px_0_hsl(var(--primary-600))] dark:bg-primary-500/10'
+                    ? 'border-primary bg-primary-subtle shadow-[0_4px_0_hsl(var(--primary-600))]'
                     : 'border-border bg-card'
                 )
               : undefined;

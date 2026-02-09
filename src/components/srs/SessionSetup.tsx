@@ -285,7 +285,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 <span
                   className={clsx(
                     'pointer-events-none inline-block h-5 w-5 rounded-full',
-                    'bg-white shadow-lg ring-0',
+                    'bg-surface shadow-lg ring-0',
                     'transform transition duration-200 ease-in-out',
                     timerEnabled ? 'translate-x-5' : 'translate-x-0'
                   )}

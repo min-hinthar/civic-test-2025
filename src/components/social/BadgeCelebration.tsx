@@ -106,11 +106,11 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
               className={clsx(
                 'flex items-center justify-center',
                 'h-20 w-20 rounded-full',
-                'bg-amber-100 dark:bg-amber-900/30',
-                'ring-4 ring-amber-300/50 dark:ring-amber-600/30'
+                'bg-amber-100',
+                'ring-4 ring-warning/50'
               )}
             >
-              <IconComponent className="h-10 w-10 text-amber-600 dark:text-amber-400" />
+              <IconComponent className="h-10 w-10 text-warning" />
             </motion.div>
 
             {/* Congrats heading */}
@@ -151,8 +151,8 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
               className={clsx(
                 'mt-6 px-6 py-2.5 rounded-full',
                 'text-sm font-semibold',
-                'bg-primary-500 text-white',
-                'hover:bg-primary-600 active:bg-primary-700',
+                'bg-primary text-white',
+                'hover:bg-primary active:bg-primary-700',
                 'transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
               )}

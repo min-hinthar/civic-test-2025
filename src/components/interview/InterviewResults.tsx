@@ -61,18 +61,18 @@ const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = 
 /** Color classes for each USCIS category */
 const CATEGORY_COLOR_CLASSES: Record<string, { bg: string; text: string; bar: string }> = {
   blue: {
-    bg: 'bg-blue-50 dark:bg-blue-500/10',
-    text: 'text-blue-700 dark:text-blue-300',
+    bg: 'bg-primary-subtle',
+    text: 'text-primary',
     bar: 'default' as const,
   },
   amber: {
-    bg: 'bg-amber-50 dark:bg-amber-500/10',
-    text: 'text-amber-700 dark:text-amber-300',
+    bg: 'bg-warning-50',
+    text: 'text-amber-700',
     bar: 'warning' as const,
   },
   emerald: {
-    bg: 'bg-emerald-50 dark:bg-emerald-500/10',
-    text: 'text-emerald-700 dark:text-emerald-300',
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
     bar: 'success' as const,
   },
 };
@@ -297,8 +297,8 @@ export function InterviewResults({
               className={clsx(
                 'text-2xl font-bold',
                 passed
-                  ? 'text-success-600 dark:text-success-400'
-                  : 'text-warning-600 dark:text-warning-400'
+                  ? 'text-success-600 dark:text-success'
+                  : 'text-warning'
               )}
             >
               {passed ? strings.interview.passed.en : strings.interview.failed.en}
@@ -309,8 +309,8 @@ export function InterviewResults({
               className={clsx(
                 'font-myanmar text-sm',
                 passed
-                  ? 'text-success-600/80 dark:text-success-400/80'
-                  : 'text-warning-600/80 dark:text-warning-400/80'
+                  ? 'text-success-600/80 dark:text-success/80'
+                  : 'text-warning/80/80'
               )}
             >
               {passed ? strings.interview.passed.my : strings.interview.failed.my}

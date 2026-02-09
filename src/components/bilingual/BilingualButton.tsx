@@ -24,12 +24,12 @@ const chunky3D = [
 
 const variants = {
   primary:
-    'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 shadow-lg shadow-primary-500/25',
+    'bg-primary text-white hover:bg-primary active:bg-primary-700 shadow-lg shadow-primary-500/25',
   secondary:
-    'bg-primary-100 text-primary-700 hover:bg-primary-200 dark:bg-primary-900 dark:text-primary-100',
-  outline: 'border-2 border-primary-500 text-primary-600 hover:bg-primary-50 dark:text-primary-400',
-  ghost: 'text-primary-600 hover:bg-primary-100 dark:text-primary-400',
-  chunky: `bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 ${chunky3D}`,
+    'bg-primary-subtle text-primary hover:bg-primary-200',
+  outline: 'border-2 border-primary text-primary hover:bg-primary-subtle',
+  ghost: 'text-primary hover:bg-primary-subtle',
+  chunky: `bg-primary text-white hover:bg-primary active:bg-primary-700 ${chunky3D}`,
 };
 
 const sizes = {

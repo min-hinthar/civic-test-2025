@@ -162,7 +162,7 @@ export function SessionSummary({
 
           {/* Easy */}
           <Card className="text-center py-4 px-2">
-            <p className="text-3xl font-bold text-success-600 dark:text-success-400">{easyCount}</p>
+            <p className="text-3xl font-bold text-success-600 dark:text-success">{easyCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Easy</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">{'လွယ်သည်'}</p>
@@ -171,7 +171,7 @@ export function SessionSummary({
 
           {/* Hard */}
           <Card className="text-center py-4 px-2">
-            <p className="text-3xl font-bold text-warning-600 dark:text-warning-400">{hardCount}</p>
+            <p className="text-3xl font-bold text-warning">{hardCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Hard</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">{'ခက်သည်'}</p>
@@ -211,16 +211,16 @@ export function SessionSummary({
                   className={clsx(
                     'w-full flex items-center justify-between gap-3',
                     'p-3 rounded-xl',
-                    'bg-warning-50 dark:bg-warning-500/10',
+                    'bg-warning-50',
                     'border border-warning-500/20',
-                    'hover:bg-warning-100 dark:hover:bg-warning-500/20',
+                    'hover:bg-warning-100 dark:hover:bg-warning/20',
                     'transition-colors duration-150',
                     'min-h-[44px]',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning-500'
                   )}
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <BookOpen className="h-4 w-4 text-warning-600 dark:text-warning-400 shrink-0" />
+                    <BookOpen className="h-4 w-4 text-warning shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-foreground">{name.en}</p>
                       {showBurmese && (
@@ -228,7 +228,7 @@ export function SessionSummary({
                       )}
                     </div>
                   </div>
-                  <span className="text-xs font-semibold text-warning-600 dark:text-warning-400 whitespace-nowrap">
+                  <span className="text-xs font-semibold text-warning whitespace-nowrap">
                     {count} hard
                   </span>
                 </button>

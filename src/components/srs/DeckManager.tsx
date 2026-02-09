@@ -224,7 +224,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
       <div className="grid grid-cols-4 gap-3 mb-6">
         <StatCard label="Total" labelMy="စုစုပေါင်း" value={stats.total} color="text-foreground" />
         <StatCard label="Due" labelMy="ပြန်လည်ရန်" value={stats.due} color="text-warning-500" />
-        <StatCard label="New" labelMy="အသစ်" value={stats.new} color="text-blue-500" />
+        <StatCard label="New" labelMy="အသစ်" value={stats.new} color="text-primary" />
         <StatCard label="Done" labelMy="ပြီးဆုံး" value={stats.reviewed} color="text-success-500" />
       </div>
 
@@ -325,8 +325,8 @@ function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
               className={clsx(
                 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full',
                 status.color,
-                status.label === 'New' && 'bg-blue-500/10',
-                status.label === 'Due' && 'bg-warning-500/10',
+                status.label === 'New' && 'bg-primary/10',
+                status.label === 'Due' && 'bg-warning/10',
                 status.label === 'Done' && 'bg-success-500/10'
               )}
             >

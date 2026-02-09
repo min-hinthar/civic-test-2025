@@ -363,7 +363,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
       {mode === 'practice' && !isGreeting && (
         <div className="mb-4 h-1 w-full overflow-hidden rounded-full bg-muted/30">
           <motion.div
-            className="h-full rounded-full bg-primary-500"
+            className="h-full rounded-full bg-primary"
             initial={{ width: 0 }}
             animate={{ width: `${((currentIndex + 1) / QUESTIONS_PER_SESSION) * 100}%` }}
             transition={{ duration: 0.3 }}
@@ -492,9 +492,9 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
                   onClick={handleShowAnswer}
                   whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
                   className={clsx(
-                    'flex items-center gap-2 rounded-xl bg-primary-500 px-6 py-3',
+                    'flex items-center gap-2 rounded-xl bg-primary px-6 py-3',
                     'text-sm font-semibold text-white',
-                    'transition-colors hover:bg-primary-600',
+                    'transition-colors hover:bg-primary',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
                   )}
                 >
@@ -562,7 +562,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
               onClick={handleQuit}
               className={clsx(
                 'rounded-xl px-4 py-2 text-sm font-semibold',
-                'bg-warning-500 text-white',
+                'bg-warning text-white',
                 'transition-colors hover:bg-warning-600',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning-500'
               )}

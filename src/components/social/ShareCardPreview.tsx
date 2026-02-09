@@ -149,7 +149,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
               >
                 <div className="flex flex-col items-center gap-3">
                   <svg
-                    className="h-8 w-8 animate-spin text-primary-500"
+                    className="h-8 w-8 animate-spin text-primary"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -200,7 +200,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
             type="button"
             onClick={handleShare}
             disabled={!blob || isSharing}
-            className="flex-1 rounded-full bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSharing ? (
               <span className="flex items-center justify-center gap-2">

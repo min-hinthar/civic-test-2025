@@ -46,8 +46,8 @@ export function AnswerFeedback({
           className={clsx(
             'rounded-2xl p-4 border',
             isCorrect
-              ? 'bg-success-50 border-success-500 dark:bg-success-500/10'
-              : 'bg-warning-50 border-warning-500 dark:bg-warning-500/10'
+              ? 'bg-success-50 border-success-500'
+              : 'bg-warning-50 border-warning-500'
           )}
         >
           <div className="flex items-start gap-3">
@@ -72,7 +72,7 @@ export function AnswerFeedback({
                 transition={
                   shouldReduceMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' }
                 }
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning-500 text-white"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning text-white"
               >
                 <X className="h-5 w-5" />
               </motion.div>
@@ -146,10 +146,10 @@ export function getAnswerOptionClasses(
   if (isCorrect === null) {
     return clsx(
       'border-2 rounded-2xl p-4 transition-all cursor-pointer',
-      'hover:border-primary-400 hover:bg-primary-50/50 hover:shadow-md',
-      'dark:hover:bg-primary-500/10',
+      'hover:border-primary-400 hover:bg-primary-subtle/50 hover:shadow-md',
+      '',
       isSelected
-        ? 'border-primary-500 bg-primary-50 shadow-md dark:bg-primary-500/10'
+        ? 'border-primary bg-primary-subtle shadow-md'
         : 'border-border bg-card'
     );
   }
@@ -158,7 +158,7 @@ export function getAnswerOptionClasses(
   if (isCorrect) {
     return clsx(
       'border-2 rounded-2xl p-4',
-      'border-success-500 bg-success-50 dark:bg-success-500/10'
+      'border-success-500 bg-success-50'
     );
   }
 
@@ -166,7 +166,7 @@ export function getAnswerOptionClasses(
   if (isSelected && !isCorrect) {
     return clsx(
       'border-2 rounded-2xl p-4',
-      'border-warning-500 bg-warning-50 dark:bg-warning-500/10'
+      'border-warning-500 bg-warning-50'
     );
   }
 

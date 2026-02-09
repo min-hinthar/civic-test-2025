@@ -183,7 +183,7 @@ export function SuggestedFocus({ categoryMasteries, answerHistory }: SuggestedFo
         <div className="rounded-3xl border border-border/60 bg-card shadow-sm overflow-hidden">
           {/* Section header */}
           <div className="flex items-center gap-2 p-5 pb-0">
-            <Lightbulb className="h-5 w-5 text-primary-500 shrink-0" />
+            <Lightbulb className="h-5 w-5 text-primary shrink-0" />
             <SectionHeading text={strings.progress.suggestedFocus} className="mb-0" />
           </div>
 
@@ -202,13 +202,13 @@ export function SuggestedFocus({ categoryMasteries, answerHistory }: SuggestedFo
                 <div
                   className={clsx(
                     'rounded-2xl border border-primary-500/20 p-4',
-                    'bg-gradient-to-br from-primary-50/80 to-primary-100/40',
-                    'dark:from-primary-500/5 dark:to-primary-500/10'
+                    'bg-gradient-to-br from-primary-subtle/80 to-primary-100/40',
+                    '/5/10'
                   )}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Zap className="h-4 w-4 text-primary-500" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-primary-500">
+                    <Zap className="h-4 w-4 text-primary" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                       Level Up Mode
                     </span>
                   </div>
@@ -228,7 +228,7 @@ export function SuggestedFocus({ categoryMasteries, answerHistory }: SuggestedFo
                       className={clsx(
                         'inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5',
                         'text-sm font-semibold transition-colors min-h-[44px]',
-                        'bg-primary-500 text-white hover:bg-primary-600'
+                        'bg-primary text-white hover:bg-primary'
                       )}
                     >
                       {strings.progress.practiceNow.en}

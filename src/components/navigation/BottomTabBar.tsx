@@ -154,17 +154,17 @@ export function BottomTabBar() {
                         onClick={() => handleMoreNavigation(item.href)}
                         className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-3 min-h-[72px] transition-colors ${
                           isActive
-                            ? 'bg-primary-100 dark:bg-primary-900/30'
+                            ? 'bg-primary-subtle'
                             : 'hover:bg-muted/50 active:bg-muted/70'
                         }`}
                       >
                         <Icon
-                          className={`h-5 w-5 ${isActive ? 'text-primary-500' : 'text-muted-foreground'}`}
+                          className={`h-5 w-5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
                           strokeWidth={isActive ? 2.5 : 2}
                         />
                         <span
                           className={`text-[11px] leading-tight text-center ${
-                            isActive ? 'font-semibold text-primary-500' : 'text-muted-foreground'
+                            isActive ? 'font-semibold text-primary' : 'text-muted-foreground'
                           } ${showBurmese ? 'font-myanmar' : ''}`}
                         >
                           {showBurmese ? item.label.my : item.label.en}
@@ -187,7 +187,7 @@ export function BottomTabBar() {
                   className="flex items-center gap-3 rounded-xl px-3 py-3 min-h-[44px] text-left hover:bg-muted/50 active:bg-muted/70 transition-colors w-full"
                 >
                   {theme === 'dark' ? (
-                    <Sun className="h-5 w-5 text-amber-500" />
+                    <Sun className="h-5 w-5 text-warning" />
                   ) : (
                     <Moon className="h-5 w-5 text-muted-foreground" />
                   )}
@@ -252,18 +252,18 @@ export function BottomTabBar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-colors ${
-                    isActive ? 'bg-primary-100 dark:bg-primary-900/30' : ''
+                    isActive ? 'bg-primary-subtle' : ''
                   }`}
                 >
                   <Icon
                     className={`h-5 w-5 transition-colors ${
-                      isActive ? 'text-primary-500' : 'text-muted-foreground'
+                      isActive ? 'text-primary' : 'text-muted-foreground'
                     }`}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
                   <span
                     className={`text-[10px] leading-tight transition-colors ${
-                      isActive ? 'font-semibold text-primary-500' : 'text-muted-foreground'
+                      isActive ? 'font-semibold text-primary' : 'text-muted-foreground'
                     } ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese ? tab.label.my : tab.label.en}
@@ -284,19 +284,19 @@ export function BottomTabBar() {
             <motion.div
               whileTap={{ scale: 0.9 }}
               className={`relative flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-colors ${
-                isMoreOpen || isMoreRouteActive ? 'bg-primary-100 dark:bg-primary-900/30' : ''
+                isMoreOpen || isMoreRouteActive ? 'bg-primary-subtle' : ''
               }`}
             >
               <MoreHorizontal
                 className={`h-5 w-5 transition-colors ${
-                  isMoreOpen || isMoreRouteActive ? 'text-primary-500' : 'text-muted-foreground'
+                  isMoreOpen || isMoreRouteActive ? 'text-primary' : 'text-muted-foreground'
                 }`}
                 strokeWidth={isMoreOpen || isMoreRouteActive ? 2.5 : 2}
               />
               <span
                 className={`text-[10px] leading-tight transition-colors ${
                   isMoreOpen || isMoreRouteActive
-                    ? 'font-semibold text-primary-500'
+                    ? 'font-semibold text-primary'
                     : 'text-muted-foreground'
                 }`}
               >

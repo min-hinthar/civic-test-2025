@@ -47,8 +47,8 @@ export function WeakAreaNudge({
       className={clsx(
         'rounded-2xl border p-4 transition-colors',
         isUnattempted
-          ? 'border-primary-500/20 bg-primary-50/50 dark:bg-primary-500/5'
-          : 'border-warning-500/20 bg-warning-50/50 dark:bg-warning-500/5'
+          ? 'border-primary-500/20 bg-primary-subtle/50'
+          : 'border-warning-500/20 bg-warning-50/50'
       )}
     >
       {/* Category name and mastery */}
@@ -58,9 +58,9 @@ export function WeakAreaNudge({
           className={clsx(
             'text-xs font-semibold tabular-nums whitespace-nowrap',
             isUnattempted
-              ? 'text-primary-500'
+              ? 'text-primary'
               : mastery < 30
-                ? 'text-warning-600 dark:text-warning-400'
+                ? 'text-warning'
                 : 'text-warning-500'
           )}
         >
@@ -81,8 +81,8 @@ export function WeakAreaNudge({
             'text-xs font-semibold transition-colors',
             'min-h-[44px]',
             isUnattempted
-              ? 'bg-primary-500 text-white hover:bg-primary-600'
-              : 'bg-warning-500 text-white hover:bg-warning-600'
+              ? 'bg-primary text-white hover:bg-primary'
+              : 'bg-warning text-white hover:bg-warning-600'
           )}
         >
           <Play className="h-3.5 w-3.5" />

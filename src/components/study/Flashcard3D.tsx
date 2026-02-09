@@ -19,7 +19,7 @@ interface Flashcard3DProps {
   category?: string;
   /** USCIS main category color: 'blue' | 'amber' | 'emerald' */
   categoryColor?: 'blue' | 'amber' | 'emerald';
-  /** Sub-category strip background class (e.g. 'bg-blue-600') - overrides categoryColor */
+  /** Sub-category strip background class (e.g. 'bg-primary') - overrides categoryColor */
   subCategoryStripBg?: string;
   /** Optional explanation to show on back of card */
   explanation?: Explanation;
@@ -33,7 +33,7 @@ interface Flashcard3DProps {
 
 // Category color header strip classes (fallback when subCategoryStripBg not provided)
 const CATEGORY_STRIP_COLORS: Record<string, string> = {
-  blue: 'bg-blue-500',
+  blue: 'bg-primary',
   amber: 'bg-amber-500',
   emerald: 'bg-emerald-500',
 };
@@ -108,7 +108,7 @@ export function Flashcard3D({
     e.stopPropagation();
   }, []);
 
-  const gradient = category ? categoryGradients[category] : 'from-primary-500/10 to-primary-600/10';
+  const gradient = category ? categoryGradients[category] : 'from-primary/10 to-primary-600/10';
 
   // Prefer sub-category strip color, fall back to main category color
   const stripColorClass =
@@ -185,7 +185,7 @@ export function Flashcard3D({
             )}
 
             {/* Question label */}
-            <div className="text-sm font-medium text-primary-500 mb-2">Question / မေးခွန်း</div>
+            <div className="text-sm font-medium text-primary mb-2">Question / မေးခွန်း</div>
 
             {/* Question text */}
             <div className="flex-1 flex flex-col justify-center">

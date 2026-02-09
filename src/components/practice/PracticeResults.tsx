@@ -51,7 +51,7 @@ export function PracticeResults({
   results,
   categoryName,
   previousMastery,
-  categoryColor = 'text-primary-500',
+  categoryColor = 'text-primary',
   onDone,
 }: PracticeResultsProps) {
   const { showBurmese } = useLanguage();
@@ -133,9 +133,9 @@ export function PracticeResults({
                 ? { duration: 0 }
                 : { type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }
             }
-            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20"
+            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-subtle"
           >
-            <Trophy className="h-7 w-7 text-primary-500" />
+            <Trophy className="h-7 w-7 text-primary" />
           </motion.div>
 
           <BilingualHeading
@@ -292,8 +292,8 @@ export function PracticeResults({
                     className={clsx(
                       'rounded-2xl border p-3',
                       result.isCorrect
-                        ? 'border-success-500/30 bg-success-50 dark:bg-success-500/10'
-                        : 'border-warning-500/30 bg-warning-50 dark:bg-warning-500/10'
+                        ? 'border-success-500/30 bg-success-50'
+                        : 'border-warning-500/30 bg-warning-50'
                     )}
                   >
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">

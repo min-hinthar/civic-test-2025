@@ -28,9 +28,9 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  default: 'bg-primary-500',
+  default: 'bg-primary',
   success: 'bg-success-500',
-  warning: 'bg-warning-500',
+  warning: 'bg-warning',
 };
 
 /**

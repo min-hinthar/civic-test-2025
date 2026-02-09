@@ -114,7 +114,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
             {showBurmese ? 'တင်နေပါသည်...' : 'Loading...'}
           </span>
@@ -137,8 +137,8 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100">
-              <Mic className="h-5 w-5 text-primary-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-subtle">
+              <Mic className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p
@@ -156,7 +156,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           <button
             type="button"
             onClick={goToInterview}
-            className="flex h-9 items-center gap-1.5 rounded-full bg-primary-500 px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 min-h-[44px]"
+            className="flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-sm font-medium text-white transition-colors hover:bg-primary min-h-[44px]"
           >
             <Mic className="h-3.5 w-3.5" />
             <span className={showBurmese ? 'font-myanmar' : ''}>
@@ -195,13 +195,13 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           <div
             className={clsx(
               'flex h-10 w-10 items-center justify-center rounded-xl',
-              lastSession.passed ? 'bg-success-50' : 'bg-primary-100'
+              lastSession.passed ? 'bg-success-50' : 'bg-primary-subtle'
             )}
           >
             {lastSession.passed ? (
               <Trophy className="h-5 w-5 text-success-500" />
             ) : (
-              <Mic className="h-5 w-5 text-primary-600" />
+              <Mic className="h-5 w-5 text-primary" />
             )}
           </div>
           <div>

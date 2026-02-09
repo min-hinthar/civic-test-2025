@@ -130,11 +130,11 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             className={clsx(
               'flex items-center justify-center',
               'h-16 w-16 rounded-full',
-              'bg-primary-100 dark:bg-primary-900/30',
+              'bg-primary-subtle',
               'ring-4 ring-primary/20'
             )}
           >
-            <Trophy className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+            <Trophy className="h-8 w-8 text-primary" />
           </div>
 
           {/* Display name */}
@@ -183,8 +183,8 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
 
           {/* Top badge */}
           {TopBadgeIcon && topBadgeDef && (
-            <div className="mt-4 flex items-center gap-2 rounded-full bg-amber-50 dark:bg-amber-900/20 px-4 py-2">
-              <TopBadgeIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            <div className="mt-4 flex items-center gap-2 rounded-full bg-warning-50 px-4 py-2">
+              <TopBadgeIcon className="h-5 w-5 text-warning" />
               <span
                 className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
@@ -207,10 +207,10 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
                   return (
                     <div
                       key={badge.id}
-                      className="flex items-center justify-center h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30"
+                      className="flex items-center justify-center h-10 w-10 rounded-full bg-amber-100"
                       title={badge.name.en}
                     >
-                      <IconComp className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                      <IconComp className="h-5 w-5 text-warning" />
                     </div>
                   );
                 })}
@@ -221,7 +221,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
           {/* Badges loading indicator */}
           {badgesLoading && (
             <div className="mt-4 flex items-center gap-2">
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               <span
                 className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
@@ -236,8 +236,8 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             className={clsx(
               'mt-6 px-6 py-2.5 rounded-full w-full max-w-xs',
               'text-sm font-semibold',
-              'bg-primary-500 text-white',
-              'hover:bg-primary-600 active:bg-primary-700',
+              'bg-primary text-white',
+              'hover:bg-primary active:bg-primary-700',
               'transition-colors min-h-[44px]',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
             )}

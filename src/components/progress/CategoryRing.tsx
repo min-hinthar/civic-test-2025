@@ -7,7 +7,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 export interface CategoryRingProps {
   /** Progress percentage (0-100) */
   percentage: number;
-  /** Tailwind color class for the progress stroke (e.g., 'text-blue-500') */
+  /** Tailwind color class for the progress stroke (e.g., 'text-primary') */
   color: string;
   /** Diameter in pixels (default: 100) */
   size?: number;
@@ -32,7 +32,7 @@ export interface CategoryRingProps {
  *
  * Usage:
  * ```tsx
- * <CategoryRing percentage={75} color="text-blue-500">
+ * <CategoryRing percentage={75} color="text-primary">
  *   <span className="text-xl font-bold">75%</span>
  * </CategoryRing>
  * ```

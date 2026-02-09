@@ -99,7 +99,7 @@ function RelatedQuestionItem({ question }: { question: Question }) {
           <ChevronRight className="h-3 w-3 shrink-0 text-muted-foreground" />
         </motion.span>
         <span className="flex flex-1 flex-col">
-          <span className="text-xs text-primary-600 dark:text-primary-400 leading-snug">
+          <span className="text-xs text-primary leading-snug">
             {question.question_en}
           </span>
           {showBurmese && (

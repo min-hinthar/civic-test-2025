@@ -84,9 +84,9 @@ export function ShareButton({ data, variant = 'default', className }: ShareButto
           className={clsx(
             'inline-flex items-center gap-2 rounded-full px-5',
             'min-h-[44px]',
-            'bg-primary-500 text-white shadow-lg shadow-primary-500/25',
+            'bg-primary text-white shadow-lg shadow-primary-500/25',
             'transition-colors duration-150',
-            'hover:bg-primary-600',
+            'hover:bg-primary',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
             className
           )}

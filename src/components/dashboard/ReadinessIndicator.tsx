@@ -92,9 +92,9 @@ export function ReadinessIndicator({
 
   const levelColors: Record<ReadinessLevel, string> = {
     'not-ready': 'text-muted-foreground',
-    'getting-there': 'text-amber-500',
-    'almost-ready': 'text-primary-500',
-    ready: 'text-emerald-500',
+    'getting-there': 'text-warning',
+    'almost-ready': 'text-primary',
+    ready: 'text-success',
   };
 
   // Map readiness levels to available Progress variant types
@@ -115,9 +115,9 @@ export function ReadinessIndicator({
             transition={{ duration: 2, repeat: Infinity }}
           >
             {level === 'ready' ? (
-              <Sparkles className="h-6 w-6 text-emerald-500" />
+              <Sparkles className="h-6 w-6 text-success" />
             ) : level === 'almost-ready' ? (
-              <CheckCircle className="h-6 w-6 text-primary-500" />
+              <CheckCircle className="h-6 w-6 text-primary" />
             ) : (
               <AlertCircle className="h-6 w-6 text-muted-foreground" />
             )}

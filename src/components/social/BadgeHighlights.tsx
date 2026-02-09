@@ -134,13 +134,13 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
               key={badge.id}
               className={clsx(
                 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                earned ? 'border-amber-400 bg-amber-50 shadow-sm' : 'border-border/60 bg-muted/30'
+                earned ? 'border-amber-400 bg-warning-50 shadow-sm' : 'border-border/60 bg-muted/30'
               )}
               title={showBurmese ? badge.name.my : badge.name.en}
               aria-label={showBurmese ? badge.name.my : badge.name.en}
             >
               {earned ? (
-                <IconComponent className="h-5 w-5 text-amber-600" />
+                <IconComponent className="h-5 w-5 text-warning" />
               ) : (
                 <Lock className="h-4 w-4 text-muted-foreground" />
               )}

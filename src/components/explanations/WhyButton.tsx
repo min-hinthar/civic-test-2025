@@ -77,7 +77,7 @@ export function WhyButton({
             : strings.explanations.showExplanation.en
         }
       >
-        <Lightbulb className={clsx('shrink-0 text-primary-500', compact ? 'h-4 w-4' : 'h-5 w-5')} />
+        <Lightbulb className={clsx('shrink-0 text-primary', compact ? 'h-4 w-4' : 'h-5 w-5')} />
         <span className="flex flex-1 flex-col">
           <span className={clsx('font-semibold text-foreground', compact ? 'text-xs' : 'text-sm')}>
             {strings.explanations.why.en}

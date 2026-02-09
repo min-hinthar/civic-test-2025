@@ -53,7 +53,7 @@ export function SyncStatusIndicator() {
             {syncFailed ? (
               <CloudOff className="h-4 w-4 text-warning-500" aria-hidden="true" />
             ) : (
-              <Cloud className="h-4 w-4 text-primary-500 animate-pulse" aria-hidden="true" />
+              <Cloud className="h-4 w-4 text-primary animate-pulse" aria-hidden="true" />
             )}
             <motion.span
               key={pendingSyncCount}

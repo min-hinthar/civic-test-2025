@@ -154,13 +154,13 @@ function BadgeCard({
       <div
         className={clsx(
           'flex items-center justify-center h-12 w-12 rounded-full mb-3',
-          isEarned ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted grayscale'
+          isEarned ? 'bg-amber-100' : 'bg-muted grayscale'
         )}
       >
         <IconComponent
           className={clsx(
             'h-6 w-6',
-            isEarned ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'
+            isEarned ? 'text-warning' : 'text-muted-foreground'
           )}
         />
       </div>

@@ -157,7 +157,7 @@ export function ReviewCard({
             className="absolute left-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
             style={{ opacity: hardLabelOpacity }}
           >
-            <div className="flex flex-col items-center text-warning-600 dark:text-warning-400 font-bold">
+            <div className="flex flex-col items-center text-warning font-bold">
               <span className="text-lg">Hard</span>
               {showBurmese && <span className="font-myanmar text-sm">{'ခက်သည်'}</span>}
             </div>
@@ -168,7 +168,7 @@ export function ReviewCard({
             className="absolute right-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
             style={{ opacity: easyLabelOpacity }}
           >
-            <div className="flex flex-col items-center text-success-600 dark:text-success-400 font-bold">
+            <div className="flex flex-col items-center text-success-600 dark:text-success font-bold">
               <span className="text-lg">Easy</span>
               {showBurmese && <span className="font-myanmar text-sm">{'လွယ်သည်'}</span>}
             </div>
@@ -220,8 +220,8 @@ export function ReviewCard({
                 className={clsx(
                   'text-lg font-bold',
                   showRatingFeedback.isEasy
-                    ? 'text-success-600 dark:text-success-400'
-                    : 'text-warning-600 dark:text-warning-400'
+                    ? 'text-success-600 dark:text-success'
+                    : 'text-warning'
                 )}
               >
                 Next review: {showRatingFeedback.intervalText.en}
@@ -231,8 +231,8 @@ export function ReviewCard({
                   className={clsx(
                     'font-myanmar text-base mt-1',
                     showRatingFeedback.isEasy
-                      ? 'text-success-600 dark:text-success-400'
-                      : 'text-warning-600 dark:text-warning-400'
+                      ? 'text-success-600 dark:text-success'
+                      : 'text-warning'
                   )}
                 >
                   {'နောက်ပြန်လှည့်'}: {showRatingFeedback.intervalText.my}

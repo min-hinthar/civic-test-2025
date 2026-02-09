@@ -52,7 +52,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
               {Array.from({ length: 13 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`flex-1 ${i % 2 === 0 ? 'bg-[hsl(0,72%,51%)]' : 'bg-white'}`}
+                  className={`flex-1 ${i % 2 === 0 ? 'bg-[hsl(0,72%,51%)]' : 'bg-surface'}`}
                 />
               ))}
             </div>

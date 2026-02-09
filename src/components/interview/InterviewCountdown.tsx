@@ -77,7 +77,7 @@ export function InterviewCountdown({ onComplete }: InterviewCountdownProps) {
             className="select-none"
           >
             <span
-              className={`block font-bold text-primary-500 ${
+              className={`block font-bold text-primary ${
                 currentStep === 'Begin' ? 'text-4xl sm:text-5xl' : 'text-7xl sm:text-8xl'
               }`}
             >

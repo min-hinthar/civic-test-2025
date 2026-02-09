@@ -45,16 +45,16 @@ const levelStyles: Record<MilestoneLevel, { bg: string; icon: string }> = {
     icon: 'text-muted-foreground/40',
   },
   bronze: {
-    bg: 'bg-amber-100 dark:bg-amber-950/30',
-    icon: 'text-amber-600 dark:text-amber-500',
+    bg: 'bg-amber-100',
+    icon: 'text-warning',
   },
   silver: {
-    bg: 'bg-slate-100 dark:bg-slate-800/40',
-    icon: 'text-slate-400 dark:text-slate-300',
+    bg: 'bg-muted',
+    icon: 'text-muted-foreground',
   },
   gold: {
-    bg: 'bg-yellow-100 dark:bg-yellow-950/30 ring-1 ring-yellow-300/50',
-    icon: 'text-yellow-500 dark:text-yellow-400',
+    bg: 'bg-warning-100 ring-1 ring-warning/50',
+    icon: 'text-warning',
   },
 };
 

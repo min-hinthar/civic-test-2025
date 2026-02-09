@@ -36,7 +36,7 @@ function getCellColor(count: number): string {
   if (count === 0) return 'bg-muted/40';
   if (count <= 2) return 'bg-primary-200';
   if (count <= 5) return 'bg-primary-400';
-  return 'bg-primary-500';
+  return 'bg-primary';
 }
 
 // ---------------------------------------------------------------------------
@@ -149,7 +149,7 @@ export function ReviewHeatmap({ deck, className }: ReviewHeatmapProps) {
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-200" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-400" />
-        <div className="h-2.5 w-2.5 rounded-sm bg-primary-500" />
+        <div className="h-2.5 w-2.5 rounded-sm bg-primary" />
         <span className={showBurmese ? 'font-myanmar' : ''}>{showBurmese ? 'များ' : 'More'}</span>
       </div>
     </div>
