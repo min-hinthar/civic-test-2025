@@ -105,17 +105,17 @@ export function LeaderboardTable({
           <span
             className={`w-8 text-xs font-medium text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
           >
-            {showBurmese ? '\u1021\u1006\u1004\u1037\u103A' : 'Rank'}
+            {showBurmese ? 'အဆင့်' : 'Rank'}
           </span>
           <span
             className={`flex-1 text-xs font-medium text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
           >
-            {showBurmese ? '\u1021\u1019\u100A\u103A' : 'Name'}
+            {showBurmese ? 'အမည်' : 'Name'}
           </span>
           <span
             className={`w-16 text-xs font-medium text-muted-foreground text-right ${showBurmese ? 'font-myanmar' : ''}`}
           >
-            {showBurmese ? '\u101B\u1019\u103E\u1010\u103A' : 'Score'}
+            {showBurmese ? 'ရမှတ်' : 'Score'}
           </span>
         </div>
         <SkeletonRow />
@@ -133,7 +133,7 @@ export function LeaderboardTable({
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground mt-1">
             {
-              '\u1015\u102B\u101D\u1004\u103A\u101E\u1030\u1019\u103B\u102C\u1038 \u1019\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B\u104B \u1015\u1011\u1019\u1006\u102F\u1036\u1038 \u1016\u103C\u1005\u103A\u1015\u102B!'
+              'ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!'
             }
           </p>
         )}
@@ -148,17 +148,17 @@ export function LeaderboardTable({
         <span
           className={`w-8 text-xs font-medium text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
         >
-          {showBurmese ? '\u1021\u1006\u1004\u1037\u103A' : 'Rank'}
+          {showBurmese ? 'အဆင့်' : 'Rank'}
         </span>
         <span
           className={`flex-1 text-xs font-medium text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
         >
-          {showBurmese ? '\u1021\u1019\u100A\u103A' : 'Name'}
+          {showBurmese ? 'အမည်' : 'Name'}
         </span>
         <span
           className={`w-16 text-xs font-medium text-muted-foreground text-right ${showBurmese ? 'font-myanmar' : ''}`}
         >
-          {showBurmese ? '\u101B\u1019\u103E\u1010\u103A' : 'Score'}
+          {showBurmese ? 'ရမှတ်' : 'Score'}
         </span>
       </div>
 
@@ -196,7 +196,7 @@ export function LeaderboardTable({
               <span
                 className={`flex-1 text-sm font-medium text-foreground truncate ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese ? '\u101E\u1004\u103A' : 'You'}
+                {showBurmese ? 'သင်' : 'You'}
               </span>
               <span className="text-sm text-muted-foreground tabular-nums">--</span>
             </div>

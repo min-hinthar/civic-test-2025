@@ -99,24 +99,24 @@ export function SessionSummary({
     if (totalCount === 0) {
       return {
         en: 'No cards reviewed this session.',
-        my: '\u1024\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038\u1010\u103D\u1004\u103A \u1000\u1010\u103A\u1019\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1015\u102B\u104B',
+        my: 'ဤစစ်ဆေးခြင်းတွင် ကတ်မပြန်လှည်ပါ။',
       };
     }
     if (hardCount === 0) {
       return {
         en: 'Great memory! Keep it up!',
-        my: '\u1019\u103E\u1010\u103A\u1009\u102C\u100F\u103A\u1000\u1031\u102C\u1004\u103A\u1038\u1010\u101A\u103A! \u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B!',
+        my: 'မှတ်ဉာဏ်ကောင်းတယ်! ဆက်ကြိုးစားပါ!',
       };
     }
     if (easyCount === 0) {
       return {
         en: 'Every review helps! Keep going!',
-        my: '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1010\u102D\u102F\u1004\u103A\u1038\u1000 \u1021\u1000\u1030\u1021\u100A\u102E\u1015\u1031\u1038\u1010\u101A\u103A! \u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B!',
+        my: 'ပြန်လှည့်တိုင်းက အကူအညီပေးတယ်! ဆက်ကြိုးစားပါ!',
       };
     }
     return {
       en: 'Good effort! Review builds strength.',
-      my: '\u1000\u1031\u102C\u1004\u103A\u1038\u1010\u1032\u1037\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1019\u103E\u102F! \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1001\u103C\u1004\u103A\u1038\u1000 \u1021\u102C\u1038\u1010\u100A\u103A\u1006\u1031\u102C\u1000\u103A\u1015\u1031\u1038\u1010\u101A\u103A!',
+      my: 'ကောင်းတဲ့ကြိုးစားမှု! ပြန်လှည့်ခြင်းက အားတည်ဆောက်ပေးတယ်!',
     };
   }, [totalCount, hardCount, easyCount]);
 
@@ -144,7 +144,7 @@ export function SessionSummary({
         {showBurmese && (
           <p className="font-myanmar text-base text-muted-foreground mt-1">
             {
-              '\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E'
+              'စစ်ဆေးခြင်းပြီးပါပြီ'
             }
           </p>
         )}
@@ -159,7 +159,7 @@ export function SessionSummary({
             <p className="text-xs text-muted-foreground mt-1">Reviewed</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">
-                {'\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1015\u103C\u102E\u1038'}
+                {'ပြန်လှည့်ပြီး'}
               </p>
             )}
           </Card>
@@ -170,7 +170,7 @@ export function SessionSummary({
             <p className="text-xs text-muted-foreground mt-1">Easy</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">
-                {'\u101C\u103D\u101A\u103A\u101E\u100A\u103A'}
+                {'လွယ်သည်'}
               </p>
             )}
           </Card>
@@ -181,7 +181,7 @@ export function SessionSummary({
             <p className="text-xs text-muted-foreground mt-1">Hard</p>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground">
-                {'\u1001\u1000\u103A\u101E\u100A\u103A'}
+                {'ခက်သည်'}
               </p>
             )}
           </Card>
@@ -207,7 +207,7 @@ export function SessionSummary({
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mb-3">
                 {
-                  '\u1024\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                  'ဤအမျိုးအစားများကို လေ့ကျင့်ပါ'
                 }
               </p>
             )}
@@ -256,7 +256,7 @@ export function SessionSummary({
             {showBurmese && (
               <span className="font-myanmar text-sm opacity-80">
                 {
-                  '\u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1006\u102E\u101E\u102D\u102F\u1037\u1015\u103C\u1014\u103A\u101E\u103D\u102C\u1038\u1015\u102B'
+                  'ကတ်များဆီသို့ပြန်သွားပါ'
                 }
               </span>
             )}

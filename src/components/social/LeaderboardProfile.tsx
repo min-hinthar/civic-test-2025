@@ -146,7 +146,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             Rank #{entry.rank}
             {showBurmese && (
               <span className="font-myanmar ml-1 text-muted-foreground">
-                / {'\u1021\u1006\u1004\u1037\u103A'} #{entry.rank}
+                / {'အဆင့်'} #{entry.rank}
               </span>
             )}
           </p>
@@ -158,7 +158,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
               <p
                 className={`text-xs text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese ? '\u101B\u1019\u103E\u1010\u103A' : 'Score'}
+                {showBurmese ? 'ရမှတ်' : 'Score'}
               </p>
               <p className="text-2xl font-bold text-foreground tabular-nums mt-1">
                 {entry.compositeScore.toLocaleString()}
@@ -170,7 +170,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
               <p
                 className={`text-xs text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese ? '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A' : 'Streak'}
+                {showBurmese ? 'ဆက်တိုက်' : 'Streak'}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
                 <Flame className="h-5 w-5 text-warning-500" />
@@ -200,7 +200,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
                 className={`text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? '\u101B\u101B\u103E\u102D\u1011\u102C\u1038\u101E\u1031\u102C \u1010\u1036\u1006\u102D\u1015\u103A\u1019\u103B\u102C\u1038'
+                  ? 'ရရှိထားသော တံဆိပ်များ'
                   : 'Earned Badges'}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -228,7 +228,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
                 className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+                  ? 'တင်နေပါသည်...'
                   : 'Loading badges...'}
               </span>
             </div>
@@ -249,7 +249,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             Close
             {showBurmese && (
               <span className="font-myanmar ml-2 text-white/80">
-                {'\u1015\u102D\u1010\u103A\u1015\u102B'}
+                {'ပိတ်ပါ'}
               </span>
             )}
           </button>

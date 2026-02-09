@@ -566,7 +566,7 @@ const HistoryPage = () => {
                             {showBurmese ? (
                               <span className="font-myanmar">
                                 {
-                                  '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u104D'
+                                  'အမေးခွန်းအသေးစိတ်များ မရနိုင်ပါ၍'
                                 }
                               </span>
                             ) : (
@@ -586,7 +586,7 @@ const HistoryPage = () => {
                   <BilingualHeading
                     text={{
                       en: 'No interview sessions yet',
-                      my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103B\u102C\u1038 \u1019\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B',
+                      my: 'အင်တာဗျူးများ မရှိသေးပါ',
                     }}
                     level={2}
                     size="lg"
@@ -596,10 +596,8 @@ const HistoryPage = () => {
                   <p className="text-muted-foreground mb-6">
                     Try a mock interview to practice for your USCIS appointment!
                     {showBurmese && (
-                      <span className="block font-myanmar mt-1">
-                        USCIS
-                        \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1021\u1010\u103D\u1000\u103A
-                        \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1019\u103E\u102F\u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B!
+            <span className="block font-myanmar mt-1">
+                        USCIS အင်တာဗျူးအတွက် လေ့ကျင့်မှုစမ်းကြည့်ပါ!
                       </span>
                     )}
                   </p>
@@ -635,7 +633,7 @@ const HistoryPage = () => {
                   <p className="text-sm text-muted-foreground mt-1">Total synced tests</p>
                   <p className="text-xs text-muted-foreground font-myanmar">
                     {
-                      '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038'
+                      'စာမေးပွဲ စုစုပေါင်း'
                     }
                   </p>
                 </Card>
@@ -651,7 +649,7 @@ const HistoryPage = () => {
                   <p className="text-sm text-muted-foreground mt-1">Keep chasing perfection</p>
                   <p className="text-xs text-muted-foreground font-myanmar">
                     {
-                      '\u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038\u1021\u1019\u103E\u1010\u103A'
+                      'အကောင်းဆုံးအမှတ်'
                     }
                   </p>
                 </Card>
@@ -665,7 +663,7 @@ const HistoryPage = () => {
                   <p className="text-sm text-muted-foreground mt-1">60%+ earns a pass</p>
                   <p className="text-xs text-muted-foreground font-myanmar">
                     {
-                      '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1014\u103E\u102F\u1014\u103A\u1038'
+                      'အောင်မြင်နှုန်း'
                     }
                   </p>
                 </Card>
@@ -680,7 +678,7 @@ const HistoryPage = () => {
                 </h2>
                 <p className="font-myanmar text-sm text-muted-foreground mb-4">
                   {
-                    '\u1021\u1019\u103E\u1010\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F'
+                    'အမှတ်တိုးတက်မှု'
                   }
                 </p>
                 <div className="h-72 w-full">
@@ -740,7 +738,7 @@ const HistoryPage = () => {
                     Tap any row to review every question you answered.
                     {showBurmese && (
                       <span className="font-myanmar ml-1">
-                        {'\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1007\u101A\u102C\u1038'}
+                        {'မှတ်တမ်းဇယား'}
                       </span>
                     )}
                   </p>
@@ -789,7 +787,7 @@ const HistoryPage = () => {
                                     <>
                                       Passed /{' '}
                                       <span className="font-myanmar">
-                                        {'\u1021\u1031\u102C\u1004\u103A'}
+                                        {'အောင်'}
                                       </span>
                                     </>
                                   ) : (
@@ -797,7 +795,7 @@ const HistoryPage = () => {
                                       Keep trying /{' '}
                                       <span className="font-myanmar">
                                         {
-                                          '\u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B'
+                                          'ဆက်ကြိုးစားပါ'
                                         }
                                       </span>
                                     </>
@@ -890,7 +888,7 @@ const HistoryPage = () => {
                                       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
                                         Your answer ·{' '}
                                         <span className="font-myanmar">
-                                          {'\u1021\u1016\u103C\u1031'}
+                                          {'အဖြေ'}
                                         </span>
                                       </p>
                                       <p className="text-sm font-bold text-foreground">
@@ -904,7 +902,7 @@ const HistoryPage = () => {
                                       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
                                         Official answer ·{' '}
                                         <span className="font-myanmar">
-                                          {'\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A'}
+                                          {'အဖြေမှန်'}
                                         </span>
                                       </p>
                                       <p className="text-sm font-bold text-foreground">
@@ -928,14 +926,14 @@ const HistoryPage = () => {
                                         <>
                                           Correct ·{' '}
                                           <span className="font-myanmar">
-                                            {'\u1019\u103E\u1014\u103A'}
+                                            {'မှန်'}
                                           </span>
                                         </>
                                       ) : (
                                         <>
                                           Incorrect ·{' '}
                                           <span className="font-myanmar">
-                                            {'\u1019\u103E\u102C\u1038'}
+                                            {'မှား'}
                                           </span>
                                         </>
                                       )}
@@ -960,7 +958,7 @@ const HistoryPage = () => {
                     <BilingualHeading
                       text={{
                         en: "You haven't taken any tests yet",
-                        my: '\u101E\u1004\u103A\u1019\u100A\u103A\u101E\u100A\u1037\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103E\u1016\u103C\u1031\u1006\u102D\u102F\u101B\u101E\u1031\u1038\u1015\u102B',
+                        my: 'သင်မည်သည့်စာမေးပွဲမှဖြေဆိုရသေးပါ',
                       }}
                       level={2}
                       size="lg"
@@ -971,7 +969,7 @@ const HistoryPage = () => {
                       Take your first practice test to start tracking progress!
                       <span className="block font-myanmar mt-1">
                         {
-                          '\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1001\u103C\u1031\u101B\u102C\u1001\u1036\u1016\u102D\u102F\u1037 \u1015\u1011\u1019\u1006\u102F\u1036\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1016\u103C\u1031\u1015\u102B!'
+                          'တိုးတက်မှုခြေရာခံဖို့ ပထမဆုံးစာမေးပွဲဖြေပါ!'
                         }
                       </span>
                     </p>

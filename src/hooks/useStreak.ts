@@ -91,7 +91,7 @@ export function useStreak(): UseStreakReturn {
 
             showInfo({
               en: 'Streak freeze used! Your streak is safe.',
-              my: 'Streak freeze \u101E\u102F\u1036\u1038\u1015\u103C\u102E\u1038! \u101E\u1004\u103A\u1037 streak \u1018\u1031\u1038\u1000\u1004\u103A\u1038\u1015\u102B\u1010\u101A\u103A\u104D',
+              my: 'Streak freeze သုံးပြီး! သင့် streak ဘေးကင်းပါတယ်၍',
             });
 
             // Re-load data after freeze application

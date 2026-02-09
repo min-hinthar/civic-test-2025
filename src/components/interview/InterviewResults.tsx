@@ -542,7 +542,7 @@ export function InterviewResults({
                 <>
                   Dashboard ·{' '}
                   <span className="font-myanmar">
-                    {'\u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A'}
+                    {'ဒက်ရှ်ဘုတ်'}
                   </span>
                 </>
               ) : (

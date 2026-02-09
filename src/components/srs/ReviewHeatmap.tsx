@@ -31,11 +31,11 @@ interface ReviewHeatmapProps {
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 const DAY_LABELS_MY = [
   '',
-  '\u1010\u1014\u1039\u101C\u102C',
+  'တန္လာ',
   '',
-  '\u1017\u102F\u1012\u1039\u1013',
+  'ဗုဒ္ဓ',
   '',
-  '\u101E\u1031\u102C',
+  'သော',
   '',
 ];
 
@@ -154,14 +154,14 @@ export function ReviewHeatmap({ deck, className }: ReviewHeatmapProps) {
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground">
         <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}
+          {showBurmese ? 'နည်း' : 'Less'}
         </span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-200" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-400" />
         <div className="h-2.5 w-2.5 rounded-sm bg-primary-500" />
         <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}
+          {showBurmese ? 'များ' : 'More'}
         </span>
       </div>
     </div>

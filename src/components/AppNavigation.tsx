@@ -82,7 +82,7 @@ const AppNavigation = ({
           <span className="text-lg font-extrabold tracking-tight">Civic Test Prep</span>
           {showBurmese && (
             <span className="font-myanmar text-xs text-muted-foreground hidden lg:inline">
-              \u1021\u1019\u1031\u101B\u102D\u1000\u1014\u103A\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u101B\u1031\u1038
+              အမေရိကန်နိုင်ငံသားရေး
             </span>
           )}
         </Link>

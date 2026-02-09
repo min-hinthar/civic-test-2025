@@ -39,11 +39,11 @@ interface StreakHeatmapProps {
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 const DAY_LABELS_MY = [
   '',
-  '\u1010\u1014\u1039\u101C\u102C',
+  'တန္လာ',
   '',
-  '\u1017\u102F\u1012\u1039\u1013',
+  'ဗုဒ္ဓ',
   '',
-  '\u101E\u1031\u102C',
+  'သော',
   '',
 ];
 
@@ -62,18 +62,18 @@ const MONTH_LABELS = [
   'Dec',
 ];
 const MONTH_LABELS_MY = [
-  '\u1007\u1014\u103A',
-  '\u1016\u1031',
-  '\u1019\u1010\u103A',
-  '\u1027',
-  '\u1019\u1031',
-  '\u1007\u103D\u1014\u103A',
-  '\u1007\u1030',
-  '\u1029',
-  '\u1005\u1000\u103A',
-  '\u1021\u1031\u102C\u1000\u103A',
-  '\u1014\u102D\u102F',
-  '\u1012\u102E',
+  'ဇန်',
+  'ဖေ',
+  'မတ်',
+  'ဧ',
+  'မေ',
+  'ဇွန်',
+  'ဇူ',
+  'ဩ',
+  'စက်',
+  'အောက်',
+  'နို',
+  'ဒီ',
 ];
 
 // ---------------------------------------------------------------------------
@@ -213,14 +213,14 @@ export function StreakHeatmap({ activityDates, freezesUsed, className }: StreakH
       {/* Legend */}
       <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground pt-1">
         <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? '\u1014\u100A\u103A\u1038' : 'Less'}
+          {showBurmese ? 'နည်း' : 'Less'}
         </span>
         <div className="h-2.5 w-2.5 rounded-sm bg-muted/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-200 dark:bg-orange-900/40" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-400 dark:bg-orange-700/60" />
         <div className="h-2.5 w-2.5 rounded-sm bg-orange-500 dark:bg-orange-600" />
         <span className={showBurmese ? 'font-myanmar' : ''}>
-          {showBurmese ? '\u1019\u103B\u102C\u1038' : 'More'}
+          {showBurmese ? 'များ' : 'More'}
         </span>
         <span className="ml-2">|</span>
         <div className="h-2.5 w-2.5 rounded-sm bg-blue-200 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600" />
@@ -316,7 +316,7 @@ function HeatmapGrid({
               ? ''
               : isFreezeDay
                 ? showBurmese
-                  ? `${dateStr}: Streak Freeze \u1021\u101E\u102F\u1036\u1038\u1015\u103C\u102F`
+                  ? `${dateStr}: Streak Freeze အသုံးပြု`
                   : `${dateStr}: Streak Freeze`
                 : `${dateStr}: ${count} activit${count !== 1 ? 'ies' : 'y'}`;
 

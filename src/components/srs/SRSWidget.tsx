@@ -76,7 +76,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
             {showBurmese
-              ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038 \u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+              ? 'စာမေးပွဲများ တင်နေပါသည်...'
               : 'Loading review cards...'}
           </span>
         </div>
@@ -103,12 +103,12 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1000\u102D\u102F \u1005\u1010\u1004\u103A\u1015\u102B'
+                  ? 'စာမေးပွဲကို စတင်ပါ'
                   : 'Start your review deck'}
               </p>
               <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
-                  ? '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038 \u1011\u100A\u103A\u1037\u101E\u103D\u1004\u103A\u1038\u104A \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A \u1005\u1010\u1004\u103A\u1015\u102B!'
+                  ? 'မေးခွန်းများ ထည့်သွင်း၊ ပြန်လည်ရန် စတင်ပါ!'
                   : 'Add questions to start reviewing!'}
               </p>
             </div>
@@ -120,7 +120,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
           >
             <Plus className="h-3.5 w-3.5" />
             <span className={showBurmese ? 'font-myanmar' : ''}>
-              {showBurmese ? '\u1011\u100A\u103A\u1037\u1015\u102B' : 'Add'}
+              {showBurmese ? 'ထည့်ပါ' : 'Add'}
             </span>
           </button>
         </div>
@@ -156,13 +156,13 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!'
+                  ? 'အားလုံး ပြန်လည်ပြီးပါပြီ!'
                   : 'All caught up!'}
               </p>
               {nextDueText && (
                 <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                   {showBurmese
-                    ? `\u1014\u1031\u102C\u1000\u103A\u101C\u102C\u1019\u100A\u103A\u1037 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1001\u103B\u102D\u1014\u103A: ${nextDueText.my}`
+                    ? `နောက်လာမည့် ပြန်လည်ချိန်: ${nextDueText.my}`
                     : `Next review: ${nextDueText.en}`}
                 </p>
               )}
@@ -191,10 +191,17 @@ export function SRSWidget({ className }: SRSWidgetProps) {
       )}
     >
       {/* Compact header - always visible */}
-      <button
-        type="button"
-        className="flex w-full items-center justify-between p-5 text-left min-h-[44px] hover:bg-muted/20 transition-colors"
+      <div
+        role="button"
+        tabIndex={0}
+        className="flex w-full items-center justify-between p-5 text-left min-h-[44px] hover:bg-muted/20 transition-colors cursor-pointer"
         onClick={isExpanded ? toggleExpanded : navigateToStudy}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            (isExpanded ? toggleExpanded : navigateToStudy)(e as unknown as React.MouseEvent);
+          }
+        }}
         aria-expanded={isExpanded}
       >
         <div className="flex items-center gap-3">
@@ -207,7 +214,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? `\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A ${dueCount} \u1001\u102F`
+                  ? `ပြန်လည်ရန် ${dueCount} ခု`
                   : `${dueCount} card${dueCount !== 1 ? 's' : ''} due`}
               </p>
               {reviewStreak > 0 && (
@@ -219,7 +226,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
             </div>
             <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
               {showBurmese
-                ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A \u1014\u103E\u102D\u1015\u103A\u1015\u102B'
+                ? 'စာမေးပွဲများကို ပြန်လည်ရန် နှိပ်ပါ'
                 : 'Tap to review your deck'}
             </p>
           </div>
@@ -238,7 +245,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
             )}
           />
         </button>
-      </button>
+      </div>
 
       {/* Expanded content */}
       <AnimatePresence initial={false}>
@@ -259,7 +266,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                     className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? `${reviewStreak} \u101B\u1000\u103A\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A!`
+                      ? `${reviewStreak} ရက်ဆက်တိုက် ပြန်လည်နေပါသည်!`
                       : `${reviewStreak} day streak! Keep going!`}
                   </span>
                 </div>
@@ -273,7 +280,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                     className={`text-sm font-medium text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? `\u1021\u102C\u1038\u101C\u102F\u1036\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E! \u1014\u1031\u102C\u1000\u103A: ${nextDueText.my}`
+                      ? `အားလုံး ပြန်လည်ပြီးပါပြီ! နောက်: ${nextDueText.my}`
                       : `All caught up! Next review: ${nextDueText.en}`}
                   </span>
                 </div>
@@ -286,7 +293,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                     className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A'
+                      ? 'ကဏ်္ဋအလိုက်'
                       : 'By Category'}
                   </p>
                   <div className="space-y-1.5">
@@ -337,7 +344,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                   className={`text-xs font-medium text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
                 >
                   {showBurmese
-                    ? '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1001\u103B\u102D\u1014\u103A \u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038'
+                    ? 'ပြန်လည်ချိန် မှတ်တမ်း'
                     : 'Review Activity'}
                 </p>
                 <ReviewHeatmap deck={deck} />
@@ -352,7 +359,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
                 <BookOpen className="h-4 w-4" />
                 <span className={showBurmese ? 'font-myanmar' : ''}>
                   {showBurmese
-                    ? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038 \u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A'
+                    ? 'စာမေးပွဲများ ကြည့်ရန်'
                     : 'Go to Review Deck'}
                 </span>
               </button>

@@ -229,19 +229,19 @@ const SocialHubPage = () => {
     {
       key: 'leaderboard' as const,
       en: 'Community Learners',
-      my: '\u101E\u1004\u103A\u101A\u1030\u101E\u1030\u1016\u1031\u102C\u103A\u1019\u103B\u102C\u1038',
+      my: 'သင်ယူသူဖော်များ',
       icon: Users,
     },
     {
       key: 'badges' as const,
       en: 'Achievements',
-      my: '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038',
+      my: 'အောင်မြင်မှုများ',
       icon: Award,
     },
     {
       key: 'streak' as const,
       en: 'Streak',
-      my: '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A',
+      my: 'ဆက်တိုက်',
       icon: Flame,
     },
   ];
@@ -257,7 +257,7 @@ const SocialHubPage = () => {
         <PageTitle
           text={{
             en: 'Community',
-            my: '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1021\u101D\u102D\u102F\u1004\u103A\u1038',
+            my: 'အသိုင်းအဝိုင်း',
           }}
         />
 
@@ -266,7 +266,7 @@ const SocialHubPage = () => {
           {showBurmese && (
             <span className="block font-myanmar mt-1">
               {
-                '\u1021\u1010\u1030\u1010\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B\u104D \u1021\u1001\u103B\u1004\u103A\u1038\u1001\u103B\u1004\u103A\u1038\u1000\u102D\u102F \u1002\u102F\u100F\u103A\u101B\u100A\u103A\u1015\u102B\u104D \u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1021\u101D\u102D\u102F\u1004\u103A\u1038\u1021\u1016\u103C\u1005\u103A \u1000\u103C\u102E\u1038\u1011\u103D\u102C\u1038\u1015\u102B\u104D'
+                'အတူတက်လေ့ကျင့်ပါ၍ အချင်းချင်းကို ဂုဏ်ရည်ပါ၍ အသိုင်းအဝိုင်းအဖြစ် ကြီးထွားပါ၍'
               }
             </span>
           )}
@@ -317,7 +317,7 @@ const SocialHubPage = () => {
                   )}
                 >
                   <span className={showBurmese ? 'font-myanmar' : ''}>
-                    {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
+                    {showBurmese ? 'အားလုံး' : 'All Time'}
                   </span>
                 </button>
                 <button
@@ -330,7 +330,7 @@ const SocialHubPage = () => {
                   )}
                 >
                   <span className={showBurmese ? 'font-myanmar' : ''}>
-                    {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
+                    {showBurmese ? 'အပတ်စဥ်' : 'Weekly'}
                   </span>
                 </button>
               </div>
@@ -348,14 +348,14 @@ const SocialHubPage = () => {
                           className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                         >
                           {showBurmese
-                            ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
+                            ? 'အသိုင်းမှာ ပါဝင်ပါ!'
                             : 'Join the community!'}
                         </p>
                         <p
                           className={`text-xs text-muted-foreground mt-0.5 ${showBurmese ? 'font-myanmar' : ''}`}
                         >
                           {showBurmese
-                            ? '\u101E\u1004\u1037\u103A\u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u1015\u102B'
+                            ? 'သင့်ရမှတ်များကို မျှဝေပြပါ'
                             : 'Share your journey and encourage others'}
                         </p>
                       </div>
@@ -369,7 +369,7 @@ const SocialHubPage = () => {
                       )}
                     >
                       <span className={showBurmese ? 'font-myanmar' : ''}>
-                        {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                        {showBurmese ? 'ပါဝင်ပါ' : 'Join'}
                       </span>
                     </button>
                   </div>
@@ -384,14 +384,14 @@ const SocialHubPage = () => {
                     className={`text-sm font-bold text-foreground mb-1 ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? '\u1015\u102B\u101D\u1004\u103A\u101B\u1014\u103A \u1021\u101B\u1004\u103A \u101D\u1004\u103A\u101B\u1031\u102C\u1000\u103A\u1015\u102B'
+                      ? 'ပါဝင်ရန် အရင် ဝင်ရောက်ပါ'
                       : 'Sign in to participate'}
                   </p>
                   <p
                     className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u103C\u102E\u1038 \u1021\u1010\u1030\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B'
+                      ? 'အသိုင်းမှာ ပါဝင်ပြီး အတူလေ့ကျင့်ပါ'
                       : 'Join the community and learn together'}
                   </p>
                 </Card>
@@ -426,14 +426,14 @@ const SocialHubPage = () => {
                       className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                     >
                       {showBurmese
-                        ? '\u101E\u1004\u1037\u103A\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038'
+                        ? 'သင့်အောင်မြင်မှုများ'
                         : 'Your Achievements'}
                     </p>
                     <p
                       className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                     >
                       {showBurmese
-                        ? `\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F ${earnedBadges.length} \u1001\u102F \u101B\u101B\u103E\u102D\u1015\u103C\u102E\u1038 \u104D \u1006\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B!`
+                        ? `အောင်မြင်မှု ${earnedBadges.length} ခု ရရှိပြီး ၍ ဆက်လေ့ကျင့်ပါ!`
                         : `${earnedBadges.length} earned - keep learning!`}
                     </p>
                   </div>
@@ -462,7 +462,7 @@ const SocialHubPage = () => {
                   <p
                     className={`text-xs text-muted-foreground mt-1 font-bold ${showBurmese ? 'font-myanmar' : ''}`}
                   >
-                    {showBurmese ? '\u101C\u1000\u103A\u101B\u103E\u102D' : 'Current'}
+                    {showBurmese ? 'လက်ရှိ' : 'Current'}
                   </p>
                 </Card>
 
@@ -476,7 +476,7 @@ const SocialHubPage = () => {
                     className={`text-xs text-muted-foreground mt-1 font-bold ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? '\u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038'
+                      ? 'အကောင်းဆုံး'
                       : 'Longest'}
                   </p>
                 </Card>
@@ -497,7 +497,7 @@ const SocialHubPage = () => {
                   className={`text-sm font-bold text-foreground mb-3 ${showBurmese ? 'font-myanmar' : ''}`}
                 >
                   {showBurmese
-                    ? '\u101C\u103E\u102F\u1015\u103A\u101B\u103E\u102C\u1038\u1019\u103E\u102F'
+                    ? 'လှုပ်ရှားမှု'
                     : 'Activity Calendar'}
                 </h3>
                 <StreakHeatmap activityDates={activityDates} freezesUsed={freezesUsed} />
@@ -511,7 +511,7 @@ const SocialHubPage = () => {
                     className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
                   >
                     {showBurmese
-                      ? 'Freeze \u1021\u101C\u102F\u1015\u103A\u101C\u102F\u1015\u103A\u1015\u102F\u1036'
+                      ? 'Freeze အလုပ်လုပ်ပုံ'
                       : 'How Freezes Work'}
                   </h3>
                 </div>
@@ -522,7 +522,7 @@ const SocialHubPage = () => {
                 {showBurmese && (
                   <p className="font-myanmar text-sm text-muted-foreground leading-relaxed mt-2">
                     {
-                      '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1021\u1015\u103C\u100A\u1037\u103A \u101E\u102D\u102F\u1037\u1019\u103F\u101F\u102F\u1010\u103A SRS \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1019\u103E\u102F \u1041\u1040+ \u1001\u102F \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u102B\u1000 freeze \u101B\u101B\u103E\u102D\u1015\u102B\u101E\u100A\u103A\u104D Freeze \u1019\u103B\u102C\u1038\u101E\u100A\u103A \u101E\u1004\u103A \u1010\u101B\u1000\u103A\u101C\u103D\u1032\u101E\u1031\u102C\u1014\u1031\u1037 streak \u1000\u102D\u102F \u1000\u102C\u1000\u103D\u101A\u103A\u1015\u102B\u101E\u100A\u103A (\u1021\u1019\u103B\u102C\u1038\u1006\u102F\u1036\u1038 \u1043 \u1001\u102F)\u104D'
+                      'လေ့ကျင့်စာမေးပွဲ အပြည့် သို့မဿဟုတ် SRS ပြန်လည်မှု ၁၀+ ခု ပြီးဆုံးပါက freeze ရရှိပါသည်၍ Freeze များသည် သင် တရက်လွဲသောနေ့ streak ကို ကာကွယ်ပါသည် (အများဆုံး ၃ ခု)၍'
                     }
                   </p>
                 )}

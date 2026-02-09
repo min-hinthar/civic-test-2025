@@ -139,7 +139,7 @@ interface ErrorFallbackProps {
 function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) {
   const message = errorMessage ?? {
     en: 'Something went wrong. Please try again.',
-    my: '\u1010\u1005\u103a\u1001\u102f\u1001\u102f \u1019\u103e\u102c\u1038\u101a\u103d\u1004\u103a\u1038\u101e\u103d\u102c\u1038\u101e\u100a\u103a\u104b \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+    my: 'တစ်ခုခု မှားယွင်းသွားသည်။ ထပ်ကြိုးစားပါ။',
   };
 
   return (

@@ -28,16 +28,16 @@ import { SessionSummary, type SessionResult } from '@/components/srs/SessionSumm
 // ---------------------------------------------------------------------------
 
 const BURMESE_DIGITS = [
-  '\u1040',
-  '\u1041',
-  '\u1042',
-  '\u1043',
-  '\u1044',
-  '\u1045',
-  '\u1046',
-  '\u1047',
-  '\u1048',
-  '\u1049',
+  '၀',
+  '၁',
+  '၂',
+  '၃',
+  '၄',
+  '၅',
+  '၆',
+  '၇',
+  '၈',
+  '၉',
 ];
 
 function toBurmeseNumeral(n: number): string {
@@ -151,7 +151,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           isEasy,
           intervalText: {
             en: 'Scheduling...',
-            my: '\u1021\u1005\u102E\u1021\u1005\u1009\u103A\u1006\u103D\u1032\u1014\u1031\u1015\u102B\u101E\u100A\u103A...',
+            my: 'အစီအစဉ်ဆွဲနေပါသည်...',
           },
         });
 
@@ -282,7 +282,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           <X className="h-4 w-4" />
           <span>Exit</span>
           {showBurmese && (
-            <span className="font-myanmar ml-1">/ {'\u1011\u103D\u1000\u103A\u1015\u102B'}</span>
+            <span className="font-myanmar ml-1">/ {'ထွက်ပါ'}</span>
           )}
         </button>
 
@@ -302,7 +302,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           </p>
           {showBurmese && (
             <p className="font-myanmar text-xs text-muted-foreground">
-              {'\u1000\u1010\u103A'} {toBurmeseNumeral(currentIndex + 1)} /{' '}
+              {'ကတ်'} {toBurmeseNumeral(currentIndex + 1)} /{' '}
               {toBurmeseNumeral(sessionSize)}
             </p>
           )}
@@ -363,7 +363,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
               {
-                '\u1021\u1016\u103C\u1031\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1000\u1010\u103A\u1000\u102D\u102F\u1014\u103E\u102D\u1015\u103A\u1015\u102B'
+                'အဖြေကိုကြည့်ရန် ကတ်ကိုနှိပ်ပါ'
               }
             </span>
           )}

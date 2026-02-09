@@ -62,16 +62,16 @@ export function isDue(card: Card): boolean {
 // ---------------------------------------------------------------------------
 
 const BURMESE_DIGITS = [
-  '\u1040', // 0
-  '\u1041', // 1
-  '\u1042', // 2
-  '\u1043', // 3
-  '\u1044', // 4
-  '\u1045', // 5
-  '\u1046', // 6
-  '\u1047', // 7
-  '\u1048', // 8
-  '\u1049', // 9
+  '၀', // 0
+  '၁', // 1
+  '၂', // 2
+  '၃', // 3
+  '၄', // 4
+  '၅', // 5
+  '၆', // 6
+  '၇', // 7
+  '၈', // 8
+  '၉', // 9
 ];
 
 function toBurmeseNumeral(n: number): string {
@@ -95,32 +95,32 @@ export function getNextReviewText(card: Card): { en: string; my: string } {
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays <= 0) {
-    return { en: 'Now', my: '\u101A\u1001\u102F' }; // ယခု
+    return { en: 'Now', my: 'ယခု' }; // ယခု
   }
   if (diffDays === 1) {
     return {
       en: '1 day',
-      my: `${toBurmeseNumeral(1)} \u101B\u1000\u103A`, // ၁ ရက်
+      my: `${toBurmeseNumeral(1)} ရက်`, // ၁ ရက်
     };
   }
   if (diffDays < 7) {
     return {
       en: `${diffDays} days`,
-      my: `${toBurmeseNumeral(diffDays)} \u101B\u1000\u103A`, // X ရက်
+      my: `${toBurmeseNumeral(diffDays)} ရက်`, // X ရက်
     };
   }
   if (diffDays < 30) {
     const weeks = Math.round(diffDays / 7);
     return {
       en: `${weeks} week${weeks > 1 ? 's' : ''}`,
-      my: `${toBurmeseNumeral(weeks)} \u1015\u1010\u103A`, // X ပတ်
+      my: `${toBurmeseNumeral(weeks)} ပတ်`, // X ပတ်
     };
   }
 
   const months = Math.round(diffDays / 30);
   return {
     en: `${months} month${months > 1 ? 's' : ''}`,
-    my: `${toBurmeseNumeral(months)} \u101C`, // X လ
+    my: `${toBurmeseNumeral(months)} လ`, // X လ
   };
 }
 
@@ -143,20 +143,20 @@ export function getCardStatusLabel(card: Card): {
   if (card.state === State.New && card.reps === 0) {
     return {
       label: 'New',
-      labelMy: '\u1021\u101E\u1005\u103A', // အသစ်
+      labelMy: 'အသစ်', // အသစ်
       color: 'text-blue-500',
     };
   }
   if (card.due <= new Date()) {
     return {
       label: 'Due',
-      labelMy: '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A', // ပြန်လည်ရန်
+      labelMy: 'ပြန်လည်ရန်', // ပြန်လည်ရန်
       color: 'text-warning-500',
     };
   }
   return {
     label: 'Done',
-    labelMy: '\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038', // ပြီးဆုံး
+    labelMy: 'ပြီးဆုံး', // ပြီးဆုံး
     color: 'text-success-500',
   };
 }

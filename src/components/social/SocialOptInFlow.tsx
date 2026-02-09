@@ -96,7 +96,7 @@ export function SocialOptInFlow({ open, onComplete, onCancel }: SocialOptInFlowP
           {showBurmese && (
             <span className="block font-myanmar text-base font-normal text-muted-foreground mt-1">
               {
-                '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038'
+                'လူမှုဥရေးလုပ်ဆောင်ချက်များ'
               }
             </span>
           )}
@@ -203,7 +203,7 @@ function StepPrivacyNotice({
           <span className="font-myanmar text-sm text-muted-foreground">
             /{' '}
             {
-              '\u1000\u102D\u102F\u101A\u103A\u101B\u1031\u1038\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A'
+              'ကိုယ်ရေးသတိပေးချက်'
             }
           </span>
         )}
@@ -217,7 +217,7 @@ function StepPrivacyNotice({
       {showBurmese && (
         <p className="font-myanmar text-sm text-muted-foreground leading-relaxed">
           {
-            '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u103D\u1004\u1037\u103A\u1001\u103C\u1004\u103A\u1038\u1016\u103C\u1004\u1037\u103A \u101E\u1004\u1037\u103A\u1015\u103C\u101E\u1019\u100A\u1037\u103A\u1021\u1019\u100A\u103A\u1014\u103E\u1004\u1037\u103A \u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1019\u103C\u1004\u103A\u101B\u1015\u102B\u1019\u100A\u103A\u104B Settings \u1019\u103E \u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103D\u1031\u1038 \u1015\u102D\u1010\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A\u104B'
+            'လူမှုဥရေးလုပ်ဆောင်ချက်များကို ဖွင့်ခြင်းဖြင့် သင့်ပြသမည့်အမည်နှင့် ရမှတ်များကို ဥူးဆောင်ဘုတ်တွင် မြင်ရပါမည်။ Settings မှ အချိန်မရွေး ပိတ်နိုင်ပါသည်။'
           }
         </p>
       )}
@@ -269,7 +269,7 @@ function StepDisplayName({
         <span className="font-semibold">Display Name</span>
         {showBurmese && (
           <span className="font-myanmar text-sm text-muted-foreground">
-            / {'\u1015\u103C\u101E\u1019\u100A\u1037\u103A\u1021\u1019\u100A\u103A'}
+            / {'ပြသမည့်အမည်'}
           </span>
         )}
       </div>
@@ -280,7 +280,7 @@ function StepDisplayName({
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
               {
-                '\u1024\u1021\u1019\u100A\u103A\u101E\u100A\u103A \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u1031\u102B\u103A\u101C\u102C\u1015\u102B\u1019\u100A\u103A'
+                'ဤအမည်သည် ဥူးဆောင်ဘုတ်တွင် ပေါ်လာပါမည်'
               }
             </span>
           )}
@@ -351,7 +351,7 @@ function StepConfirm({
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
             {
-              '\u101E\u1004\u1037\u103A\u1015\u101B\u102D\u102F\u1016\u102D\u102F\u1004\u103A\u1000\u102D\u102F \u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1010\u103D\u1004\u103A \u1015\u103C\u101E\u1015\u102B\u1019\u100A\u103A\u104B'
+              'သင့်ပရိုဖိုင်ကို ဥူးဆောင်ဘုတ်တွင် ပြသပါမည်။'
             }
           </p>
         )}
@@ -370,7 +370,7 @@ function StepConfirm({
               <span>Enable Social</span>
               <span className="font-myanmar text-xs opacity-80 font-normal">
                 {
-                  '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038 \u1016\u103D\u1004\u1037\u103A\u1015\u102B'
+                  'လူမှုဥရေး ဖွင့်ပါ'
                 }
               </span>
             </span>

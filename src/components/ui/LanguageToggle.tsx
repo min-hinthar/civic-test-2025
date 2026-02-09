@@ -79,7 +79,7 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
             showBurmese ? 'text-primary' : 'text-muted-foreground'
           )}
         >
-          {'\u1019\u103C\u1014\u103A\u1019\u102C'}
+          {'မြန်မာ'}
         </span>
       </div>
 

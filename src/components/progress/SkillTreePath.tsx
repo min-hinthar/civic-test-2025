@@ -17,8 +17,8 @@ const SKILL_NODES: {
   emoji: string;
   color: 'blue' | 'amber' | 'emerald';
 }[] = [
-  { subCategory: 'Principles of American Democracy', emoji: '\u2696\uFE0F', color: 'blue' },
-  { subCategory: 'System of Government', emoji: '\u{1F3DB}\uFE0F', color: 'blue' },
+  { subCategory: 'Principles of American Democracy', emoji: '⚖️', color: 'blue' },
+  { subCategory: 'System of Government', emoji: '\u{1F3DB}️', color: 'blue' },
   { subCategory: 'Rights and Responsibilities', emoji: '\u{1F4DC}', color: 'blue' },
   {
     subCategory: 'American History: Colonial Period and Independence',
@@ -68,9 +68,9 @@ function getMedalLevel(mastery: number): MedalLevel {
 /** Medal label text */
 const MEDAL_LABELS: Record<MedalLevel, { en: string; my: string } | null> = {
   none: null,
-  bronze: { en: 'Bronze', my: '\u1000\u103C\u1031\u1038\u1010\u1036\u1006\u102D\u1015\u103A' },
-  silver: { en: 'Silver', my: '\u1004\u103D\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
-  gold: { en: 'Gold', my: '\u101B\u103D\u103E\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
+  bronze: { en: 'Bronze', my: 'ကြေးတံဆိပ်' },
+  silver: { en: 'Silver', my: 'ငွေတံဆိပ်' },
+  gold: { en: 'Gold', my: 'ရွှေတံဆိပ်' },
 };
 
 export interface SkillTreePathProps {

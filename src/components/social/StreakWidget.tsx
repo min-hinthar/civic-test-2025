@@ -52,7 +52,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className="text-sm text-muted-foreground">
             {showBurmese
-              ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+              ? 'တင်နေပါသည်...'
               : 'Loading...'}
           </span>
         </div>
@@ -77,12 +77,12 @@ export function StreakWidget({ className }: StreakWidgetProps) {
             <div>
               <p className="text-sm font-semibold text-foreground">
                 {showBurmese
-                  ? '\u101C\u1031\u1037\u101C\u102C\u1005\u1010\u1004\u103A\u1015\u103C\u102E\u1038 streak \u1010\u100A\u103A\u1006\u1031\u102C\u1000\u103A\u1015\u102B!'
+                  ? 'လေ့လာစတင်ပြီး streak တည်ဆောက်ပါ!'
                   : 'Start studying to build your streak!'}
               </p>
               <p className="text-xs text-muted-foreground">
                 {showBurmese
-                  ? '\u1014\u1031\u1037\u1005\u1025\u103A \u101C\u1031\u1037\u101C\u102C\u101B\u1004\u103A \u101B\u1000\u103A\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A \u1010\u102D\u102F\u1038\u101C\u102C\u1015\u102B\u101C\u102D\u1019\u103A\u1037\u1019\u101A\u103A'
+                  ? 'နေ့စဥ် လေ့လာရင် ရက်ဆက်တိုက် တိုးလာပါလိမ့်မယ်'
                   : 'Study daily to grow your streak'}
               </p>
             </div>
@@ -121,7 +121,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
             <div className="flex items-center gap-2">
               <p className="text-sm font-semibold text-foreground">
                 {showBurmese
-                  ? `${currentStreak} \u101B\u1000\u103A\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A`
+                  ? `${currentStreak} ရက်ဆက်တိုက်`
                   : `${currentStreak} day streak`}
               </p>
             </div>
@@ -129,7 +129,7 @@ export function StreakWidget({ className }: StreakWidgetProps) {
             {/* Dual display: current vs best */}
             <p className="text-xs text-muted-foreground">
               {showBurmese
-                ? `\u101C\u1000\u103A\u101B\u103E\u102D: ${currentStreak} \u101B\u1000\u103A | \u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038: ${longestStreak} \u101B\u1000\u103A`
+                ? `လက်ရှိ: ${currentStreak} ရက် | အကောင်းဆုံး: ${longestStreak} ရက်`
                 : `Current: ${currentStreak} days | Best: ${longestStreak} days`}
             </p>
           </div>

@@ -39,9 +39,9 @@ const SPEECH_RATE_KEY = 'civic-prep-speech-rate';
 type SpeechRate = 'slow' | 'normal' | 'fast';
 
 const SPEECH_RATE_OPTIONS: { value: SpeechRate; en: string; my: string }[] = [
-  { value: 'slow', en: 'Slow', my: '\u1014\u103E\u1031\u1038' },
-  { value: 'normal', en: 'Normal', my: '\u1015\u102F\u1036\u1019\u103E\u1014\u103A' },
-  { value: 'fast', en: 'Fast', my: '\u1019\u103C\u1014\u103A' },
+  { value: 'slow', en: 'Slow', my: 'နှေး' },
+  { value: 'normal', en: 'Normal', my: 'ပုံမှန်' },
+  { value: 'fast', en: 'Fast', my: 'မြန်' },
 ];
 
 /** Reusable toggle switch component */
@@ -219,7 +219,7 @@ export default function SettingsPage() {
               <h1 className="text-lg font-extrabold text-foreground">Settings</h1>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground leading-tight">
-                  {'\u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103B\u102C\u1038'}
+                  {'ဆက်တင်များ'}
                 </p>
               )}
             </div>
@@ -233,15 +233,15 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<Palette className="h-5 w-5" />}
           titleEn="Appearance"
-          titleMy={'\u1021\u101E\u103D\u1004\u103A\u1021\u1015\u103C\u1004\u103A'}
+          titleMy={'အသွင်အပြင်'}
           showBurmese={showBurmese}
         >
           <SettingsRow
             label="Display Language"
-            labelMy={'\u1015\u103C\u101E\u100A\u103A\u1037\u1018\u102C\u101E\u102C'}
+            labelMy={'ပြသည့်ဘာသာ'}
             description="Bilingual or English-only"
             descriptionMy={
-              '\u1014\u103E\u1005\u103A\u1018\u102C\u101E\u102C \u101E\u102D\u102F\u1037\u1019\u101F\u102F\u1010\u103A \u1021\u1004\u103A\u1039\u1002\u101C\u1005\u103A\u101E\u102E\u1038\u101E\u1014\u103A\u1037'
+              'နှစ်ဘာသာ သို့မဟုတ် အင်္ဂလစ်သီးသန့်'
             }
             showBurmese={showBurmese}
             action={<LanguageToggle showLabel />}
@@ -256,11 +256,11 @@ export default function SettingsPage() {
               <p className="text-xs text-muted-foreground font-myanmar mt-1">
                 <strong>
                   {
-                    '\u1021\u1004\u103A\u1039\u1002\u101C\u1005\u103A\u101E\u102E\u1038\u101E\u1014\u103A\u1037\u1019\u102F\u1012\u103A'
+                    'အင်္ဂလစ်သီးသန့်မုဒ်'
                   }
                 </strong>
                 {
-                  '\u1000 \u1010\u1000\u101A\u103A\u1037USCIS \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1000\u102D\u102F\u1010\u1030\u1005\u1031\u1015\u102B\u1010\u101A\u103A\u104B'
+                  'က တကယ့်USCIS အင်တာဗျူးကိုတူစေပါတယ်။'
                 }
               </p>
             )}
@@ -272,17 +272,17 @@ export default function SettingsPage() {
           icon={<Volume2 className="h-5 w-5" />}
           titleEn="Sound & Notifications"
           titleMy={
-            '\u1021\u101E\u1036\u1014\u103E\u1004\u1037\u103A \u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038'
+            'အသံနှင့် အကြောင်းကြားချက်များ'
           }
           showBurmese={showBurmese}
         >
           {/* Sound Effects toggle */}
           <SettingsRow
             label="Sound Effects"
-            labelMy={'\u1021\u101E\u1036\u1005\u1031\u1016\u1000\u103A\u1019\u103B\u102C\u1038'}
+            labelMy={'အသံစေဖက်များ'}
             description="Correct answers, milestones, level-ups"
             descriptionMy={
-              '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A\u1019\u103B\u102C\u1038\u104D \u1019\u102D\u102F\u1004\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1019\u103B\u102C\u1038'
+              'အဖြေမှန်များ၍ မိုင်းတိုင်များ'
             }
             showBurmese={showBurmese}
             action={
@@ -309,7 +309,7 @@ export default function SettingsPage() {
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
                   {
-                    '\u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A'
+                    'လေ့လာရန်သတိပေးချက်'
                   }
                 </span>
               )}
@@ -325,7 +325,7 @@ export default function SettingsPage() {
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
                   {
-                    '\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1021\u1001\u103B\u102D\u1014\u103A'
+                    'သတိပေးချက်အချိန်'
                   }
                 </span>
               )}
@@ -333,7 +333,7 @@ export default function SettingsPage() {
             <div className="flex items-center gap-3">
               <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
                 Time /{' '}
-                <span className="font-myanmar">{'\u1021\u1001\u103B\u102D\u1014\u103A'}</span>:
+                <span className="font-myanmar">{'အချိန်'}</span>:
               </label>
               <input
                 type="time"
@@ -355,7 +355,7 @@ export default function SettingsPage() {
                 {showBurmese && (
                   <p className="font-myanmar text-xs text-warning-600 dark:text-warning-400 mt-1 ml-6">
                     {
-                      '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u101B\u101B\u103E\u102D\u101B\u1014\u103A push notification \u1016\u103D\u1004\u1037\u103A\u1015\u102B\u104B'
+                      'ပြန်လှည့်သတိပေးချက်များရရှိရန် push notification ဖွင့်ပါ။'
                     }
                   </p>
                 )}
@@ -368,7 +368,7 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<Mic className="h-5 w-5" />}
           titleEn="Interview"
-          titleMy={'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038'}
+          titleMy={'အင်တာဗျူး'}
           showBurmese={showBurmese}
         >
           <div className="py-3">
@@ -378,7 +378,7 @@ export default function SettingsPage() {
               {showBurmese && (
                 <span className="font-myanmar text-xs text-muted-foreground">
                   {
-                    '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
+                    'အင်တာဗျူးစကားပြောနှုန်း'
                   }
                 </span>
               )}
@@ -412,7 +412,7 @@ export default function SettingsPage() {
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
                 {
-                  '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1005\u1005\u103A\u101E\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1021\u1010\u103D\u1004\u103A\u1038 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u101E\u100A\u1037\u103A\u1021\u1019\u103C\u1014\u103A\u1000\u102D\u102F \u1011\u102D\u1014\u103A\u1038\u1001\u103B\u102F\u1015\u103A\u1015\u102B\u104B'
+                  'လေ့ကျင့်စစ်သန်းများအတွင်း အင်တာဗျူးစကားပြောသည့်အမြန်ကို ထိန်းချုပ်ပါ။'
                 }
               </p>
             )}
@@ -424,7 +424,7 @@ export default function SettingsPage() {
           icon={<Users className="h-5 w-5" />}
           titleEn="Social & Community"
           titleMy={
-            '\u101C\u1030\u1019\u103E\u102F\u1025\u101B\u1031\u1038\u1014\u103E\u1004\u1037\u103A \u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1021\u101D\u102D\u102F\u1004\u103A\u1038'
+            'လူမှုဥရေးနှင့် အသိုင်းအဝိုင်း'
           }
           showBurmese={showBurmese}
         >
@@ -436,18 +436,18 @@ export default function SettingsPage() {
           icon={<RotateCcw className="h-5 w-5" />}
           titleEn="Help & Guidance"
           titleMy={
-            '\u1021\u1000\u1030\u1021\u100A\u102E\u1014\u103E\u1004\u1037\u103A \u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A'
+            'အကူအညီနှင့် လမ်းညွှန်'
           }
           showBurmese={showBurmese}
         >
           <SettingsRow
             label="Replay Onboarding Tour"
             labelMy={
-              '\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u1019\u103E\u102F\u1001\u101B\u102E\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u1000\u103C\u100A\u1037\u103A\u101B\u103E\u102F\u1015\u102B'
+              'လမ်းညွှန်မှုခရီးကို ပြန်ကြည့်ရှုပါ'
             }
             description="Walk through the guided introduction again"
             descriptionMy={
-              '\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u1015\u103C\u1019\u103E\u102F\u1001\u101B\u102E\u1038\u1000\u102D\u102F \u1011\u1015\u103A\u1019\u1036\u1016\u103C\u1010\u103A\u101E\u103D\u102C\u1038\u1015\u102B\u104B'
+              'လမ်းညွှန်ပြမှုခရီးကို ထပ်မံဖြတ်သွားပါ။'
             }
             showBurmese={showBurmese}
             action={
@@ -470,17 +470,17 @@ export default function SettingsPage() {
         <SettingsSection
           icon={<Trash2 className="h-5 w-5" />}
           titleEn="Danger Zone"
-          titleMy={'\u1021\u1014\u1039\u1010\u101B\u102C\u101A\u103A\u1007\u102F\u1014\u103A'}
+          titleMy={'အန္တရာယ်ဇုန်'}
           showBurmese={showBurmese}
           variant="danger"
         >
           {user && (
             <SettingsRow
               label="Sign Out"
-              labelMy={'\u1011\u103D\u1000\u103A\u101B\u1014\u103A'}
+              labelMy={'ထွက်ရန်'}
               description="You can sign back in anytime"
               descriptionMy={
-                '\u1019\u100A\u103A\u101E\u100A\u103A\u1037\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u103E\u102C\u1019\u1006\u102D\u102F \u1015\u103C\u1014\u103A\u1021\u1000\u1031\u102C\u1004\u1037\u103A\u1016\u103D\u1004\u1037\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A'
+                'မည်သည့်အချိန်မှာမဆို ပြန်အကောင့်ဖွင့်နိုင်ပါသည်'
               }
               showBurmese={showBurmese}
               action={
@@ -505,7 +505,7 @@ export default function SettingsPage() {
               {showBurmese && (
                 <span className="block font-myanmar mt-0.5">
                   {
-                    '\u1021\u1000\u1031\u102C\u1004\u1037\u103A\u101C\u102F\u1015\u103A\u1006\u1031\u102C\u1004\u103A\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u101B\u101B\u103E\u102D\u101B\u1014\u103A \u1021\u1000\u1031\u102C\u1004\u1037\u103A\u1016\u103D\u1004\u1037\u103A\u1015\u102B'
+                    'အကောင့်လုပ်ဆောင်ချက်များရရှိရန် အကောင့်ဖွင့်ပါ'
                   }
                 </span>
               )}

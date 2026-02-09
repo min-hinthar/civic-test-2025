@@ -161,7 +161,7 @@ export function ReviewCard({
               <span className="text-lg">Hard</span>
               {showBurmese && (
                 <span className="font-myanmar text-sm">
-                  {'\u1001\u1000\u103A\u101E\u100A\u103A'}
+                  {'ခက်သည်'}
                 </span>
               )}
             </div>
@@ -176,7 +176,7 @@ export function ReviewCard({
               <span className="text-lg">Easy</span>
               {showBurmese && (
                 <span className="font-myanmar text-sm">
-                  {'\u101C\u103D\u101A\u103A\u101E\u100A\u103A'}
+                  {'လွယ်သည်'}
                 </span>
               )}
             </div>
@@ -244,7 +244,7 @@ export function ReviewCard({
                   )}
                 >
                   {
-                    '\u1014\u1031\u102C\u1000\u103A\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037'
+                    'နောက်ပြန်လှည့်'
                   }
                   : {showRatingFeedback.intervalText.my}
                 </p>
@@ -259,7 +259,7 @@ export function ReviewCard({
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-foreground/60 mt-0.5">
                       {
-                        '\u1006\u1000\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B \u101E\u1004\u103A\u101C\u102F\u1015\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1010\u101A\u103A\u104B'
+                        'ဆက်ကြိုးစားပါ။ သင်လုပ်နိုင်ပါတယ်။'
                       }
                     </p>
                   )}

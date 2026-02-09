@@ -147,10 +147,10 @@ const typeStyles: Record<ToastType, string> = {
  * Icons for each toast type (using CSS for simplicity).
  */
 const typeIcons: Record<ToastType, string> = {
-  error: '\u26A0\uFE0F', // Warning sign
-  success: '\u2713', // Check mark
-  info: '\u2139\uFE0F', // Info symbol
-  warning: '\u26A0', // Warning triangle
+  error: '⚠️', // Warning sign
+  success: '✓', // Check mark
+  info: 'ℹ️', // Info symbol
+  warning: '⚠', // Warning triangle
 };
 
 /**
@@ -228,7 +228,7 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
       {/* Message content - English on top, Burmese below */}
       <div className="min-w-0 flex-1">
         <p className="font-medium leading-snug">{toast.message.en}</p>
-        <p className="mt-1 text-sm leading-snug opacity-90">{toast.message.my}</p>
+        <p className="font-myanmar mt-1 text-sm leading-snug opacity-90">{toast.message.my}</p>
       </div>
 
       {/* Dismiss button */}

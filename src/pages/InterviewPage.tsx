@@ -82,7 +82,7 @@ const InterviewPage = () => {
     <div className="page-shell">
       <AppNavigation
         locked={phase === 'session' && mode === 'realistic'}
-        lockMessage="Complete the interview before leaving this page. · \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1015\u103C\u102E\u1038\u1019\u103E \u1011\u103D\u1000\u103A\u1015\u102B"
+        lockMessage="Complete the interview before leaving this page. · အင်တာဗျူးပြီးမှ ထွက်ပါ"
       />
       {phase === 'setup' && <InterviewSetup onStart={handleStart} />}
       {phase === 'countdown' && <InterviewCountdown onComplete={handleCountdownComplete} />}

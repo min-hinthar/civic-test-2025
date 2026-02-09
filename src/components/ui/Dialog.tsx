@@ -90,42 +90,42 @@ export const DialogContent = forwardRef<
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content asChild ref={ref} {...props}>
-        <motion.div
-          variants={contentVariants}
-          initial={shouldReduceMotion ? 'visible' : 'hidden'}
-          animate="visible"
-          exit={shouldReduceMotion ? 'visible' : 'hidden'}
-          transition={springTransition}
-          className={clsx(
-            // Positioning
-            'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
-            // Sizing
-            'w-[90vw] max-w-lg max-h-[85vh] overflow-auto',
-            // Styling
-            'rounded-2xl bg-card border border-border/60 p-6',
-            'shadow-2xl shadow-black/20',
-            // Focus
-            'focus:outline-none',
-            className
-          )}
-        >
-          {children}
-          {showCloseButton && (
-            <DialogPrimitive.Close
-              className={clsx(
-                'absolute right-4 top-4',
-                'rounded-full p-2',
-                'text-muted-foreground hover:text-foreground',
-                'hover:bg-muted/50',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
-                'transition-colors'
-              )}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
-          )}
-        </motion.div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <motion.div
+            variants={contentVariants}
+            initial={shouldReduceMotion ? 'visible' : 'hidden'}
+            animate="visible"
+            exit={shouldReduceMotion ? 'visible' : 'hidden'}
+            transition={springTransition}
+            className={clsx(
+              // Sizing & pointer restore
+              'pointer-events-auto w-full max-w-lg max-h-[85vh] overflow-auto',
+              // Styling
+              'rounded-2xl bg-card border border-border/60 p-6',
+              'shadow-2xl shadow-black/20',
+              // Focus
+              'focus:outline-none',
+              className
+            )}
+          >
+            {children}
+            {showCloseButton && (
+              <DialogPrimitive.Close
+                className={clsx(
+                  'absolute right-4 top-4',
+                  'rounded-full p-2',
+                  'text-muted-foreground hover:text-foreground',
+                  'hover:bg-muted/50',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
+                  'transition-colors'
+                )}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </DialogPrimitive.Close>
+            )}
+          </motion.div>
+        </div>
       </DialogPrimitive.Content>
     </DialogPortal>
   );

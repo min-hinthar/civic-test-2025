@@ -155,10 +155,10 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
           >
             {hasEarnedBadges
               ? showBurmese
-                ? `${earnedRecords.length} \u1018\u1000\u103A\u1001\u103A \u101B\u101B\u103E\u102D\u1015\u103C\u102E\u1038`
+                ? `${earnedRecords.length} ဘက်ခ် ရရှိပြီး`
                 : `${earnedRecords.length} badge${earnedRecords.length !== 1 ? 's' : ''} earned`
               : showBurmese
-                ? '\u1006\u1000\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B!'
+                ? 'ဆက်လေ့လာပါ!'
                 : 'Keep studying!'}
           </p>
         </div>

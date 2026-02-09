@@ -45,19 +45,19 @@ const COLLAPSE_KEY = 'civic-prep-dashboard-category-collapsed';
 const MOTIVATIONAL_MESSAGES = {
   ready: {
     en: 'You are ready to pass! Keep up the amazing work!',
-    my: '\u101E\u1004\u103A\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1016\u102D\u102F\u1037\u1021\u1006\u1004\u103A\u101E\u1004\u1037\u103A\u1016\u103C\u1005\u103A\u1015\u102B\u1015\u103C\u102E!',
+    my: 'သင်အောင်မြင်ဖို့အဆင်သင့်ဖြစ်ပါပြီ!',
   },
   almostReady: {
     en: 'Almost there! A few more study sessions and you will be confident.',
-    my: '\u1014\u102E\u1038\u1015\u102B\u1015\u103C\u102E! \u1014\u100A\u103A\u1038\u1014\u100A\u103A\u1038\u101C\u1031\u1037\u101C\u102C\u101B\u1004\u103A \u101A\u102F\u1036\u1000\u103C\u100A\u103A\u1019\u103E\u102F\u101B\u1015\u102B\u1019\u101A\u103A\u104B',
+    my: 'နီးပါပြီ! နည်းနည်းလေ့လာရင် ယုံကြည်မှုရပါမယ်။',
   },
   gettingThere: {
     en: 'Great progress! Every question brings you closer to citizenship.',
-    my: '\u1000\u1031\u102C\u1004\u103A\u1038\u1019\u103D\u1014\u103A\u1005\u103D\u102C\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1014\u1031\u1015\u102B\u1010\u101A\u103A! \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1038\u1000 \u101E\u1004\u1037\u103A\u1000\u102D\u102F \u1014\u102E\u1038\u1005\u1031\u1015\u102B\u1010\u101A\u103A\u104B',
+    my: 'ကောင်းမွန်စွာတိုးတက်နေပါတယ်! မေးခွန်းတိုင်းက သင့်ကို နီးစေပါတယ်။',
   },
   notReady: {
     en: 'Welcome! Start studying and you will be ready in no time.',
-    my: '\u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A! \u101C\u1031\u1037\u101C\u102C\u1005\u1010\u1004\u103A\u101B\u1004\u103A \u1019\u1000\u103C\u102C\u1001\u1004\u103A\u1019\u103E\u102C \u1021\u1006\u1004\u103A\u101E\u1004\u1037\u103A\u1016\u103C\u1005\u103A\u101C\u102C\u1015\u102B\u1019\u101A\u103A\u104B',
+    my: 'ကြိုဆိုပါတယ်! လေ့လာစတင်ရင် မကြာခင်မှာ အဆင်သင့်ဖြစ်လာပါမယ်။',
   },
 };
 
@@ -275,7 +275,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="page-shell" data-tour="dashboard">
+    <div className="page-shell">
       <AppNavigation />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
         {/* Welcome header with patriotic emojis */}
@@ -286,17 +286,17 @@ const Dashboard = () => {
                 {showBurmese ? (
                   <>
                     <span className="font-myanmar">
-                      {`\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C\u1000\u102D\u102F \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A\u104D ${user?.name?.split(' ')[0] ?? '\u101E\u1004\u103A\u101A\u1030\u101E\u1030'}!`}
+                      {`ပြန်လာတာကို ကြိုဆိုပါတယ်၍ ${user?.name?.split(' ')[0] ?? 'သင်ယူသူ'}!`}
                     </span>
                     <span className="ml-2" aria-hidden="true">
-                      {'\uD83D\uDDFD'}
+                      {'🗽'}
                     </span>
                   </>
                 ) : (
                   <>
                     <span>{`Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`}</span>
                     <span className="ml-2" aria-hidden="true">
-                      {'\uD83D\uDDFD'}
+                      {'🗽'}
                     </span>
                   </>
                 )}
@@ -311,7 +311,7 @@ const Dashboard = () => {
             <Link
               to="/settings"
               className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
-              aria-label="Settings \u00B7 \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103B\u102C\u1038"
+              aria-label="Settings · ဆက်တင်များ"
             >
               <Settings className="h-5 w-5" />
             </Link>
@@ -326,13 +326,13 @@ const Dashboard = () => {
               className="absolute top-3 right-3 text-2xl opacity-30 select-none"
               aria-hidden="true"
             >
-              {'\u2B50\uFE0F'}
+              {'⭐️'}
             </div>
             <div
               className="absolute bottom-3 left-3 text-lg opacity-20 select-none"
               aria-hidden="true"
             >
-              {'\uD83D\uDDFD'}
+              {'🗽'}
             </div>
             <div className="p-5 sm:p-6">
               <ReadinessIndicator
@@ -366,7 +366,7 @@ const Dashboard = () => {
               <span>Study</span>
               {showBurmese && (
                 <span className="font-myanmar text-xs opacity-80">
-                  {'\u101C\u1031\u1037\u101C\u102C\u1015\u102B'}
+                  {'လေ့လာပါ'}
                 </span>
               )}
             </button>
@@ -389,7 +389,7 @@ const Dashboard = () => {
               <span>Test</span>
               {showBurmese && (
                 <span className="font-myanmar text-xs opacity-80">
-                  {'\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032'}
+                  {'စာမေးပွဲ'}
                 </span>
               )}
             </button>
@@ -412,7 +412,7 @@ const Dashboard = () => {
               <span>Interview</span>
               {showBurmese && (
                 <span className="font-myanmar text-xs opacity-80">
-                  {'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038'}
+                  {'အင်တာဗျူး'}
                 </span>
               )}
             </button>
@@ -447,7 +447,7 @@ const Dashboard = () => {
                   Badges
                   {showBurmese && (
                     <span className="font-myanmar text-xs text-muted-foreground ml-2">
-                      {'\u1018\u1000\u103A\u1001\u103B\u1019\u103B\u102C\u1038'}
+                      {'ဘက်ချများ'}
                     </span>
                   )}
                 </h3>
@@ -521,7 +521,7 @@ const Dashboard = () => {
                         {showBurmese ? (
                           <span className="font-myanmar">
                             {
-                              '\u1021\u1015\u103C\u100A\u103A\u1037\u1021\u1005\u102F\u1036\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B'
+                              'အပြည့်အစုံးကြည့်ပါ'
                             }
                           </span>
                         ) : (
@@ -550,7 +550,7 @@ const Dashboard = () => {
               <ProgressWithLabel
                 value={accuracy}
                 labelEn="Overall Accuracy"
-                labelMy="\u1005\u102F\u1005\u102F\u1015\u1031\u102B\u1004\u103A\u1038\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F"
+                labelMy="စုစုပေါင်းမှန်ကန်မှု"
                 variant="success"
                 size="lg"
               />
@@ -569,7 +569,7 @@ const Dashboard = () => {
               <SectionHeading
                 text={{
                   en: 'Category Accuracy',
-                  my: '\u1000\u100f\u103a\u1039\u100b\u1021\u101C\u102D\u102F\u1000\u103A\u1010\u102D\u1000\u103B\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1019\u103E\u102F',
+                  my: 'ကဏ်္ဋအလိုက်တိကျမှန်ကန်မှု',
                 }}
                 className="mb-0"
               />
@@ -617,13 +617,13 @@ const Dashboard = () => {
           <motion.section className="mb-6" {...stagger(10)}>
             <div className="rounded-2xl border-2 border-dashed border-border/60 bg-card/50 p-8 text-center">
               <div className="text-4xl mb-3" aria-hidden="true">
-                {'\uD83D\uDDFD \uD83D\uDCDA'}
+                {'🗽 📚'}
               </div>
               <h3 className="font-bold text-foreground text-lg mb-1">
                 {showBurmese ? (
                   <span className="font-myanmar">
                     {
-                      '\u101E\u1004\u1037\u103A\u1001\u101B\u102E\u1038\u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B!'
+                      'သင့်ခရီးစတင်လိုက်ပါ!'
                     }
                   </span>
                 ) : (
@@ -634,7 +634,7 @@ const Dashboard = () => {
                 {showBurmese ? (
                   <span className="font-myanmar">
                     {
-                      '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1010\u1005\u103A\u1001\u102F\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038 \u101E\u1004\u1037\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1001\u103B\u1000\u103A\u1001\u103B\u1004\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B\u104B'
+                      'စာမေးပွဲတစ်ခုဖြေဆိုပြီး သင့်တိုးတက်မှုကို ချက်ချင်းကြည့်ပါ။'
                     }
                   </span>
                 ) : (
@@ -658,7 +658,7 @@ const Dashboard = () => {
                 {showBurmese ? (
                   <span className="font-myanmar">
                     {
-                      '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1005\u1010\u1004\u103A\u1015\u102B'
+                      'စာမေးပွဲစတင်ပါ'
                     }
                   </span>
                 ) : (

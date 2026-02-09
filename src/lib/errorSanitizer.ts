@@ -35,7 +35,7 @@ const ERROR_PATTERNS: Array<{
     ],
     message: {
       en: 'Connection problem. Please check your internet.',
-      my: '\u1021\u1004\u103a\u1010\u102c\u1014\u1000\u103a \u1015\u103c\u103e\u1014\u102c\u101b\u1015\u103d\u1014\u103a\u101b\u103e\u102d\u1015\u102b\u101e\u100a\u103a\u104b \u101e\u1004\u103a\u1037\u1021\u1004\u103a\u1010\u102c\u1014\u1000\u103a\u1000\u102d\u102f \u1005\u1005\u103a\u1006\u1031\u1038\u1015\u102b\u104b',
+      my: 'အင်တာနက် ပြှနာရပွန်ရှိပါသည်။ သင့်အင်တာနက်ကို စစ်ဆေးပါ။',
     },
   },
   // Authentication/session errors
@@ -54,7 +54,7 @@ const ERROR_PATTERNS: Array<{
     ],
     message: {
       en: 'Session expired. Please sign in again.',
-      my: '\u1005\u1000\u103a\u101b\u103e\u1004\u103a \u1000\u102f\u1014\u103a\u1006\u102f\u1036\u1038\u101e\u103d\u102c\u1038\u1015\u102b\u1015\u103c\u102e\u104b \u1000\u103b\u1031\u1038\u1007\u1030\u1038\u1015\u103c\u102e\u1038 \u101d\u1004\u103a\u101b\u1031\u102c\u1000\u103a\u1015\u102b\u104b',
+      my: 'စက်ရှင် ကုန်ဆုံးသွားပါပြီ။ ကျေးဇူးပြီး ဝင်ရောက်ပါ။',
     },
   },
   // Permission/authorization errors
@@ -62,7 +62,7 @@ const ERROR_PATTERNS: Array<{
     patterns: [/forbidden/i, /permission denied/i, /not allowed/i, /access denied/i, /403/],
     message: {
       en: 'You do not have permission to do this.',
-      my: '\u101e\u1004\u103a\u1037\u1010\u103d\u1004\u103a \u1012\u102e\u101c\u102f\u1015\u103a\u1006\u1031\u102c\u1004\u103a\u1001\u103b\u1000\u103a \u1001\u103d\u1004\u103a\u1037\u1015\u103c\u102f\u1001\u1039\u103b\u1004\u103a \u1019\u101b\u103e\u102d\u1015\u102b\u104b',
+      my: 'သင့်တွင် ဒီလုပ်ဆောင်ချက် ခွင့်ပြုခ္ျင် မရှိပါ။',
     },
   },
   // Rate limiting
@@ -70,7 +70,7 @@ const ERROR_PATTERNS: Array<{
     patterns: [/rate limit/i, /too many requests/i, /throttle/i, /429/],
     message: {
       en: 'Too many requests. Please wait a moment and try again.',
-      my: '\u1010\u1031\u102c\u1004\u103a\u1038\u1006\u102d\u102f\u1001\u103b\u1000\u103a\u1019\u103b\u102c\u1038\u101c\u103d\u1014\u103a\u1038\u1014\u1031\u101e\u100a\u103a\u104b \u1001\u100f\u1014\u102c\u1005\u1031\u102c\u1004\u103a\u1037\u1015\u103c\u102e\u1038 \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+      my: 'တောင်းဆိုချက်များလွန်းနေသည်။ ခဏနာစောင့်ပြီး ထပ်ကြိုးစားပါ။',
     },
   },
   // Supabase-specific errors (catch before generic database)
@@ -78,7 +78,7 @@ const ERROR_PATTERNS: Array<{
     patterns: [/supabase/i, /postgrest/i, /pgrst/i],
     message: {
       en: 'Something went wrong. Please try again.',
-      my: '\u1010\u1005\u103a\u1001\u102f\u1001\u102f \u1019\u103e\u102c\u1038\u101a\u103d\u1004\u103a\u1038\u101e\u103d\u102c\u1038\u101e\u100a\u103a\u104b \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+      my: 'တစ်ခုခု မှားယွင်းသွားသည်။ ထပ်ကြိုးစားပါ။',
     },
   },
   // Database errors (generic)
@@ -96,7 +96,7 @@ const ERROR_PATTERNS: Array<{
     ],
     message: {
       en: 'Something went wrong. Please try again.',
-      my: '\u1010\u1005\u103a\u1001\u102f\u1001\u102f \u1019\u103e\u102c\u1038\u101a\u103d\u1004\u103a\u1038\u101e\u103d\u102c\u1038\u101e\u100a\u103a\u104b \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+      my: 'တစ်ခုခု မှားယွင်းသွားသည်။ ထပ်ကြိုးစားပါ။',
     },
   },
   // Validation errors
@@ -104,7 +104,7 @@ const ERROR_PATTERNS: Array<{
     patterns: [/validation/i, /invalid.*input/i, /required field/i, /missing.*field/i],
     message: {
       en: 'Please check your input and try again.',
-      my: '\u101e\u1004\u103a\u1037\u1011\u100a\u103a\u1037\u101e\u103d\u1004\u103a\u1038\u1019\u103e\u102f\u1000\u102d\u102f \u1005\u1005\u103a\u1006\u1031\u1038\u1015\u103c\u102e\u1038 \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+      my: 'သင့်ထည့်သွင်းမှုကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။',
     },
   },
   // Server errors
@@ -112,7 +112,7 @@ const ERROR_PATTERNS: Array<{
     patterns: [/internal server/i, /500/, /502/, /503/, /504/],
     message: {
       en: 'Server error. Please try again later.',
-      my: '\u1006\u102c\u1017\u102c \u1021\u1019\u103e\u102c\u1038\u1021\u101a\u103d\u1004\u103a\u1038\u104b \u1014\u1031\u102c\u1000\u103a\u1019\u103e \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+      my: 'ဆာဗာ အမှားအယွင်း။ နောက်မှ ထပ်ကြိုးစားပါ။',
     },
   },
 ];
@@ -122,7 +122,7 @@ const ERROR_PATTERNS: Array<{
  */
 const DEFAULT_ERROR_MESSAGE: BilingualMessage = {
   en: 'An unexpected error occurred. Please try again.',
-  my: '\u1019\u1019\u103e\u103a\u1031\u102c\u103a\u101c\u1004\u103a\u1037\u101e\u1031\u102c \u1021\u1019\u103e\u102c\u1038\u1010\u1005\u103a\u1001\u102f \u1016\u103c\u1005\u103a\u1015\u103d\u102c\u1038\u1001\u1032\u1037\u101e\u100a\u103a\u104b \u1011\u1015\u103a\u1000\u103c\u102d\u102f\u1038\u1005\u102c\u1038\u1015\u102b\u104b',
+  my: 'မမှ်ော်လင့်သော အမှားတစ်ခု ဖြစ်ပွားခဲ့သည်။ ထပ်ကြိုးစားပါ။',
 };
 
 /**

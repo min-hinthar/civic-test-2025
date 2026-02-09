@@ -123,7 +123,7 @@ export function BottomTabBar() {
               role="dialog"
               aria-modal="true"
               aria-label={
-                showBurmese ? '\u1014\u1031\u102C\u1000\u103A\u1011\u1015\u103A' : 'More options'
+                showBurmese ? 'နောက်ထပ်' : 'More options'
               }
             >
               {/* Drag handle */}
@@ -197,14 +197,14 @@ export function BottomTabBar() {
                     {theme === 'dark' ? (
                       showBurmese ? (
                         <span className="font-myanmar">
-                          {'\u1021\u101C\u1004\u103A\u1038\u1019\u102F\u1012\u103A'}
+                          {'အလင်းမုဒ်'}
                         </span>
                       ) : (
                         'Light Mode'
                       )
                     ) : showBurmese ? (
                       <span className="font-myanmar">
-                        {'\u1021\u1019\u103E\u102C\u1004\u103A\u1019\u102F\u1012\u103A'}
+                        {'အမှာင်မုဒ်'}
                       </span>
                     ) : (
                       'Dark Mode'
@@ -308,7 +308,7 @@ export function BottomTabBar() {
               >
                 {showBurmese ? (
                   <span className="font-myanmar">
-                    {'\u1014\u1031\u102C\u1000\u103A\u1011\u1015\u103A'}
+                    {'နောက်ထပ်'}
                   </span>
                 ) : (
                   'More'

@@ -24,15 +24,15 @@ export interface ShareCardData {
 const SESSION_LABELS: Record<ShareCardData['sessionType'], { en: string; my: string }> = {
   test: {
     en: 'Mock Test Results',
-    my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+    my: 'စမ်းသပ်စာမေးပွဲ ရလဒ်များ',
   },
   practice: {
     en: 'Practice Results',
-    my: '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1001\u1014\u103A\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+    my: 'လေ့ကျင့်ခန်း ရလဒ်များ',
   },
   interview: {
     en: 'Interview Results',
-    my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038 \u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038',
+    my: 'အင်တာဗျူး ရလဒ်များ',
   },
 };
 
@@ -251,7 +251,7 @@ export async function renderShareCard(data: ShareCardData): Promise<Blob> {
 
   ctx.font = '28px "Noto Sans Myanmar", system-ui, sans-serif';
   ctx.fillText(
-    '\u1021\u1019\u1031\u101B\u102D\u1000\u1014\u103A\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u101B\u1031\u1038\u101B\u102C\u101B\u102C \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1015\u103C\u1004\u103A\u1006\u1004\u103A\u1001\u103C\u1004\u103A\u1038',
+    'အမေရိကန်နိုင်ငံသားရေးရာရာ စာမေးပွဲပြင်ဆင်ခြင်း',
     W / 2,
     1005
   );

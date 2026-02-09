@@ -34,7 +34,7 @@ function getContextualSuggestion(sessions: InterviewSession[]): Suggestion {
   if (sessions.length === 0) {
     return {
       en: 'Try your first mock interview!',
-      my: '\u1015\u1011\u1019\u1006\u102F\u1036\u1038 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1019\u103A\u1038\u1005\u1005\u103A\u1001\u103B\u1000\u103A \u1005\u1010\u1004\u103A\u1015\u102B!',
+      my: 'ပထမဆုံး အင်တာဗျူးစမ်းစစ်ချက် စတင်ပါ!',
     };
   }
 
@@ -45,27 +45,27 @@ function getContextualSuggestion(sessions: InterviewSession[]): Suggestion {
   if (hasOnlyPracticed) {
     return {
       en: 'Try realistic mode for the real experience',
-      my: '\u1010\u1000\u101A\u103A\u1021\u1010\u102D\u102F\u1004\u103A\u1038 \u1021\u1010\u103D\u1000\u103A\u1021\u1000\u103C\u102F\u1036\u1021\u1010\u103D\u1000\u103A \u101C\u1000\u103A\u1010\u103D\u1031\u1037\u1019\u102F\u1012\u103A\u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1015\u102B',
+      my: 'တကယ်အတိုင်း အတွက်အကြုံအတွက် လက်တွေ့မုဒ်စမ်းကြည့်ပါ',
     };
   }
 
   if (!hasTriedRealistic) {
     return {
       en: 'Ready to try a realistic interview?',
-      my: '\u101C\u1000\u103A\u1010\u103D\u1031\u1037\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038 \u1005\u1019\u103A\u1038\u1000\u103C\u100A\u103A\u1037\u1019\u101C\u102C\u1038?',
+      my: 'လက်တွေ့အင်တာဗျူး စမ်းကြည့်မလား?',
     };
   }
 
   if (!last.passed) {
     return {
       en: "Keep practicing! You're improving.",
-      my: '\u1006\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B! \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A\u104D',
+      my: 'ဆက်လေ့ကျင့်ပါ! တိုးတက်နေပါသည်၍',
     };
   }
 
   return {
     en: 'Great job! Try to beat your score.',
-    my: '\u1000\u103B\u103D\u1019\u103A\u1038\u101E\u100A\u103A\u104D \u101E\u1004\u103A\u1021\u1019\u103E\u1010\u103A\u1000\u102D\u102F \u1000\u103B\u1031\u102C\u103A\u1015\u102B\u104D',
+    my: 'ကျွမ်းသည်၍ သင်အမှတ်ကို ကျော်ပါ၍',
   };
 }
 
@@ -117,7 +117,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
             {showBurmese
-              ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+              ? 'တင်နေပါသည်...'
               : 'Loading...'}
           </span>
         </div>
@@ -162,7 +162,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
           >
             <Mic className="h-3.5 w-3.5" />
             <span className={showBurmese ? 'font-myanmar' : ''}>
-              {showBurmese ? '\u1005\u1010\u1004\u103A\u1015\u102B' : 'Start'}
+              {showBurmese ? 'စတင်ပါ' : 'Start'}
             </span>
           </button>
         </div>
@@ -212,7 +212,7 @@ export function InterviewDashboardWidget({ className }: InterviewDashboardWidget
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? `\u1014\u1031\u102C\u1000\u103A\u1006\u102F\u1036\u1038: ${lastSession.score}/${lastSession.totalQuestions}`
+                  ? `နောက်ဆုံး: ${lastSession.score}/${lastSession.totalQuestions}`
                   : `Last Interview: ${lastSession.score}/${lastSession.totalQuestions}`}
               </p>
               <span

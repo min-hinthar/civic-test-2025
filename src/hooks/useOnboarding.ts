@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const ONBOARDING_KEY = 'civic-test-onboarding-complete';
 
@@ -18,7 +18,8 @@ export interface OnboardingState {
  * Features:
  * - Persists completion to localStorage
  * - Can be reset for testing
- * - SSR-safe lazy initialization
+ * - Hydration-safe: initializes to `true` (matching SSR),
+ *   then syncs from localStorage after mount (like ThemeContext).
  *
  * Usage:
  * ```tsx
@@ -26,31 +27,29 @@ export interface OnboardingState {
  * ```
  */
 export function useOnboarding(): OnboardingState {
-  // SSR-safe lazy initialization
-  const [hasCompleted, setHasCompleted] = useState(() => {
-    if (typeof window === 'undefined') return true; // SSR: assume complete
-    return localStorage.getItem(ONBOARDING_KEY) === 'true';
-  });
+  // Initialize to true (complete) to match SSR output — prevents hydration mismatch
+  const [hasCompleted, setHasCompleted] = useState(true);
+
+  // Sync from localStorage after mount
+  useEffect(() => {
+    const stored = localStorage.getItem(ONBOARDING_KEY) === 'true';
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: hydrate from localStorage on mount
+    setHasCompleted(stored);
+  }, []);
 
   const complete = useCallback(() => {
     setHasCompleted(true);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(ONBOARDING_KEY, 'true');
-    }
+    localStorage.setItem(ONBOARDING_KEY, 'true');
   }, []);
 
   const skip = useCallback(() => {
     setHasCompleted(true);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(ONBOARDING_KEY, 'true');
-    }
+    localStorage.setItem(ONBOARDING_KEY, 'true');
   }, []);
 
   const reset = useCallback(() => {
     setHasCompleted(false);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(ONBOARDING_KEY);
-    }
+    localStorage.removeItem(ONBOARDING_KEY);
   }, []);
 
   return {

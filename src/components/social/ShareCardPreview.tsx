@@ -93,17 +93,17 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
       if (result === 'shared') {
         showSuccess({
           en: 'Shared successfully!',
-          my: '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1005\u103D\u102C \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+          my: 'အောင်မြင်စွာ မျှဝေပြီးပါပြီ!',
         });
       } else if (result === 'copied') {
         showSuccess({
           en: 'Copied to clipboard!',
-          my: '\u1000\u101C\u1005\u103A\u1018\u102F\u1010\u103A\u101E\u102D\u102F\u1037 \u1000\u1030\u1038\u101A\u1030\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+          my: 'ကလစ်ဘုတ်သို့ ကူးယူပြီးပါပြီ!',
         });
       } else {
         showSuccess({
           en: 'Image downloaded!',
-          my: '\u1015\u102F\u1036\u1000\u102C\u1038 \u1012\u1031\u102B\u1004\u103A\u1038\u101C\u102F\u1012\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E!',
+          my: 'ပုံကား ဒေါင်းလုဒ်ပြီးပါပြီ!',
         });
       }
 
@@ -195,7 +195,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
           >
             <span>Close</span>
             <span className="ml-1 font-myanmar text-xs opacity-80">
-              {'\u1015\u102D\u1010\u103A\u1015\u102B'}
+              {'ပိတ်ပါ'}
             </span>
           </button>
           <button
@@ -226,7 +226,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
               <>
                 <span>Share</span>
                 <span className="ml-1 font-myanmar text-xs opacity-80">
-                  {'\u1019\u103B\u103E\u101D\u1031\u1015\u102B'}
+                  {'မျှဝေပါ'}
                 </span>
               </>
             )}

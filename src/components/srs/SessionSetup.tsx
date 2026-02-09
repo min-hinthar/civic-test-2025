@@ -15,16 +15,16 @@ import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredL
 // ---------------------------------------------------------------------------
 
 const BURMESE_DIGITS = [
-  '\u1040',
-  '\u1041',
-  '\u1042',
-  '\u1043',
-  '\u1044',
-  '\u1045',
-  '\u1046',
-  '\u1047',
-  '\u1048',
-  '\u1049',
+  '၀',
+  '၁',
+  '၂',
+  '၃',
+  '၄',
+  '၅',
+  '၆',
+  '၇',
+  '၈',
+  '၉',
 ];
 
 function toBurmeseNumeral(n: number): string {
@@ -93,7 +93,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
       options.push({
         value: 10,
         labelEn: '10 Cards',
-        labelMy: `\u1000\u1010\u103A ${toBurmeseNumeral(10)}`,
+        labelMy: `ကတ် ${toBurmeseNumeral(10)}`,
       });
     }
 
@@ -101,7 +101,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
       options.push({
         value: 20,
         labelEn: '20 Cards',
-        labelMy: `\u1000\u1010\u103A ${toBurmeseNumeral(20)}`,
+        labelMy: `ကတ် ${toBurmeseNumeral(20)}`,
       });
     }
 
@@ -109,7 +109,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
       options.push({
         value: totalDue,
         labelEn: `All (${totalDue}) Cards`,
-        labelMy: `\u1021\u102C\u1038\u101C\u102F\u1036\u1038 (${toBurmeseNumeral(totalDue)}) \u1000\u1010\u103A`,
+        labelMy: `အားလုံး (${toBurmeseNumeral(totalDue)}) ကတ်`,
       });
     }
 
@@ -145,7 +145,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
             <span>Back</span>
             {showBurmese && (
               <span className="font-myanmar ml-1">
-                / {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}
+                / {'နောက်သို့'}
               </span>
             )}
           </button>
@@ -157,7 +157,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           {showBurmese && (
             <p className="font-myanmar text-base text-muted-foreground mt-1">
               {
-                '\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E\u104B'
+                'အားလုံးပြန်လှည်ပြီးပါပြီ။'
               }
             </p>
           )}
@@ -165,7 +165,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           {showBurmese && (
             <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
               {
-                '\u1014\u1031\u102C\u1000\u103A\u1019\u103E\u1015\u103C\u1014\u103A\u101C\u102C\u1015\u102B\u104B'
+                'နောက်မှပြန်လာပါ။'
               }
             </p>
           )}
@@ -192,7 +192,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           <span>Back</span>
           {showBurmese && (
             <span className="font-myanmar ml-1">
-              / {'\u1014\u1031\u102C\u1000\u103A\u101E\u102D\u102F\u1037'}
+              / {'နောက်သို့'}
             </span>
           )}
         </button>
@@ -206,7 +206,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
                 {
-                  '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038'
+                  'ပြန်လှည့်စစ်ဆေးခြင်း'
                 }
               </p>
             )}
@@ -220,7 +220,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
                   {
-                    '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u101B\u1019\u100A\u103A\u1037 \u1000\u1010\u103A\u1019\u103B\u102C\u1038'
+                    'ပြန်လှည်ရမည့် ကတ်များ'
                   }
                 </p>
               )}
@@ -235,7 +235,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 <span className="font-myanmar text-muted-foreground ml-2">
                   /{' '}
                   {
-                    '\u1021\u1000\u103C\u102D\u1019\u103A\u1021\u101B\u1031\u1021\u1010\u103D\u1000\u103A'
+                    'အကြိမ်အရေအတွက်'
                   }
                 </span>
               )}
@@ -285,7 +285,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
                       {
-                        '\u1021\u1001\u103B\u102D\u1014\u103A\u1010\u102D\u102F\u1004\u103A\u1038\u1000\u102D\u101B\u102D\u101A\u102C \u1016\u103D\u1004\u103A\u1037\u1015\u102B'
+                        'အချိန်တိုင်းကိရိယာ ဖွင့်ပါ'
                       }
                     </p>
                   )}
@@ -295,7 +295,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                   {showBurmese && (
                     <p className="font-myanmar text-xs text-muted-foreground">
                       {
-                        '\u1021\u1001\u103B\u102D\u1014\u103A\u1016\u102D\u1021\u102C\u1038\u1016\u103C\u1004\u103A\u1037 \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                        'အချိန်ဖိအားဖြင့် လေ့ကျင့်ပါ'
                       }
                     </p>
                   )}
@@ -341,7 +341,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 {showBurmese && (
                   <span className="font-myanmar text-sm opacity-80">
                     {
-                      '\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1001\u103C\u1004\u103A\u1038\u1005\u1010\u1004\u103A\u1015\u102B'
+                      'ပြန်လှည်ခြင်းစတင်ပါ'
                     }
                   </span>
                 )}

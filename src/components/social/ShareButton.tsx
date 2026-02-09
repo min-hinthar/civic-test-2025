@@ -32,7 +32,7 @@ export interface ShareButtonProps {
 
 const LABEL = {
   en: 'Share Results',
-  my: '\u101B\u101C\u1012\u103A\u1019\u103B\u102C\u1038 \u1019\u103B\u103E\u101D\u1031\u1015\u102B',
+  my: 'ရလဒ်များ မျှဝေပါ',
 };
 
 /**

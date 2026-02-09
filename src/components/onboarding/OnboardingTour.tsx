@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { Step, CallBackProps } from 'react-joyride';
 import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
@@ -27,7 +27,7 @@ const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
  */
 const tourSteps: Step[] = [
   {
-    target: '[data-tour="dashboard"]',
+    target: 'body',
     content: (
       <div>
         <h3 className="font-bold text-lg mb-2">Your Dashboard</h3>
@@ -36,12 +36,12 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1024\u101E\u100A\u103A\u1019\u103E\u102C \u101E\u1004\u103A\u1037\u1015\u1004\u103A\u1019\u1005\u102C\u1019\u103B\u1000\u103A\u1014\u103E\u102C\u1016\u103C\u1005\u103A\u1015\u102B\u101E\u100A\u103A\u104B \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1001\u103C\u1031\u101B\u102C\u1001\u1036\u1015\u102B\u104B'
+            'ဤသည်မှာ သင့်ပင်မစာမျက်နှာဖြစ်ပါသည်။ တိုးတက်မှုကို ခြေရာခံပါ။'
           }
         </p>
       </div>
     ),
-    placement: 'bottom',
+    placement: 'center',
     disableBeacon: true,
   },
   {
@@ -55,7 +55,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038 \u1041\u1040\u1040 \u101C\u102F\u1036\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u101C\u103E\u100A\u1037\u103A\u1015\u102B\u104B'
+            'မေးခွန်း ၁၀၀ လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။'
           }
         </p>
       </div>
@@ -74,7 +74,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1010\u1000\u101A\u103A\u1037\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1014\u103E\u1004\u1037\u103A\u1021\u1010\u1030\u1010\u1030 \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1016\u103C\u1031\u1015\u102B\u104B \u1041\u1040 \u1001\u102F\u1019\u103E \u1046 \u1001\u102F\u1019\u103E\u1014\u103A\u101B\u1015\u102B\u1019\u100A\u103A\u104B'
+            'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၁၀ ခုမှ ၆ ခုမှန်ရပါမည်။'
           }
         </p>
       </div>
@@ -93,7 +93,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1005\u1014\u1005\u103A\u1016\u103C\u1004\u1037\u103A \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u1015\u102B\u104B \u101E\u1004\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u101B\u1019\u100A\u1037\u103A\u1021\u101B\u102C\u1000\u102D\u102F \u1021\u102C\u101B\u102F\u1036\u1005\u102D\u102F\u1000\u103A\u1015\u102B\u101E\u100A\u103A\u104B'
+            'အချိန်မှန်ကန်သုံးသပ်စနစ်ဖြင့် ကတ်များကို ပြန်လှည့်ပါ။ သင်လေ့ကျင့်ရမည့်အရာကို အာရုံစိုက်ပါသည်။'
           }
         </p>
       </div>
@@ -112,7 +112,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1010\u1000\u101A\u103A\u1021\u1004\u103A USCIS \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1000\u1032\u1037\u101E\u102D\u102F\u1037 \u1021\u101E\u1036\u1011\u103D\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B\u104B \u101E\u1004\u103A\u1037\u1021\u1016\u103C\u1031\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1021\u101E\u1036\u1011\u103D\u1000\u103A\u1015\u103C\u102E\u1038 \u101A\u102F\u1036\u1000\u103C\u100A\u103A\u1019\u103E\u102F\u1010\u100A\u103A\u1006\u1031\u102C\u1000\u103A\u1015\u102B\u104B'
+            'တကယ်အင် USCIS အင်တာဗျူးကဲ့သို့ အသံထွက်လေ့ကျင့်ပါ။ သင့်အဖြေများကို အသံထွက်ပြီး ယုံကြည်မှုတည်ဆောက်ပါ။'
           }
         </p>
       </div>
@@ -130,7 +130,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            '\u1021\u101C\u1004\u103A\u1038\u1014\u103E\u1004\u1037\u103A \u1021\u1019\u103E\u102C\u1004\u103A\u1019\u102F\u1012\u103A \u1015\u103C\u1031\u102C\u1004\u103A\u1038\u101C\u1032\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A\u104B'
+            'အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။'
           }
         </p>
       </div>
@@ -148,7 +148,7 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-muted-foreground mt-2">
           {
-            '\u101E\u1004\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u101E\u1019\u103B\u103E \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1038\u1000 \u101E\u1004\u1037\u103A\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1016\u103C\u1005\u103A\u1019\u103E\u102F\u1014\u102E\u1038\u1005\u1031\u1015\u102B\u1010\u101A\u103A\u104B \u1000\u1036\u1000\u1031\u102C\u1004\u103A\u1038\u1015\u102B\u1005\u1031!'
+            'သင်လေ့ကျင့်သမျှ မေးခွန်းတိုင်းက သင့်နိုင်ငံသားဖြစ်မှုနီးစေပါတယ်။ ကံကောင်းပါစေ!'
           }
         </p>
         <div className="mt-4 text-4xl" role="img" aria-label="celebration">
@@ -206,6 +206,15 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
+  // Filter out theme-toggle step on mobile — its target is inside desktop-only nav (hidden md:block)
+  const steps = useMemo(
+    () =>
+      typeof window !== 'undefined' && !window.matchMedia('(min-width: 768px)').matches
+        ? tourSteps.filter(s => s.target !== '[data-tour="theme-toggle"]')
+        : tourSteps,
+    []
+  );
+
   // Delay start after welcome completes to ensure DOM targets are mounted
   // Dashboard widgets use staggered motion animations (80ms * ~10 items)
   const handleWelcomeComplete = useCallback(() => {
@@ -259,7 +268,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     <>
       {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
       <Joyride
-        steps={tourSteps}
+        steps={steps}
         stepIndex={stepIndex}
         run={run}
         continuous

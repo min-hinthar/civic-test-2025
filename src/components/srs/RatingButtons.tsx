@@ -74,7 +74,7 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
           <span>Hard</span>
           {showBurmese && (
             <span className="font-myanmar text-xs opacity-80">
-              {'\u1001\u1000\u103A\u101E\u100A\u103A'}
+              {'ခက်သည်'}
             </span>
           )}
         </span>
@@ -109,7 +109,7 @@ export function RatingButtons({ onRate, disabled = false, className }: RatingBut
           <span>Easy</span>
           {showBurmese && (
             <span className="font-myanmar text-xs opacity-80">
-              {'\u101C\u103D\u101A\u103A\u101E\u100A\u103A'}
+              {'လွယ်သည်'}
             </span>
           )}
         </span>

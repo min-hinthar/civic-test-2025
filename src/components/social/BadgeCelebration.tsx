@@ -119,7 +119,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
                 {
-                  '\u1010\u1036\u1006\u102D\u1015\u103A\u101B\u101B\u103E\u102D\u1015\u103C\u102E\u0021'
+                  'တံဆိပ်ရရှိပြီ!'
                 }
               </p>
             )}
@@ -162,7 +162,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
               Continue
               {showBurmese && (
                 <span className="font-myanmar ml-2 text-white/80">
-                  {'\u1006\u1000\u103A\u101C\u102F\u1015\u103A\u1015\u102B'}
+                  {'ဆက်လုပ်ပါ'}
                 </span>
               )}
             </button>

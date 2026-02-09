@@ -67,7 +67,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           <span className="text-sm text-muted-foreground">
             {showBurmese
-              ? '\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...'
+              ? 'တင်နေပါသည်...'
               : 'Loading...'}
           </span>
         </div>
@@ -94,12 +94,12 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese
-                  ? '\u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
+                  ? 'ဥူးဆောင်ဘုတ်မှာ ပါဝင်ပါ!'
                   : 'Join the leaderboard!'}
               </p>
               <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
-                  ? '\u101E\u1004\u1037\u103A\u101B\u1019\u103E\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1019\u103B\u103E\u101D\u1031\u1015\u103C\u1015\u102B'
+                  ? 'သင့်ရမှတ်များကို မျှဝေပြပါ'
                   : 'Compete with fellow learners'}
               </p>
             </div>
@@ -111,7 +111,7 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
           >
             <Trophy className="h-3.5 w-3.5" />
             <span className={showBurmese ? 'font-myanmar' : ''}>
-              {showBurmese ? '\u1000\u103C\u100A\u1037\u103A\u1015\u102B' : 'View'}
+              {showBurmese ? 'ကြည့်ပါ' : 'View'}
             </span>
           </button>
         </div>
@@ -152,15 +152,15 @@ export function LeaderboardWidget({ className }: LeaderboardWidgetProps) {
             <p className="text-sm font-semibold text-foreground">
               {userRank
                 ? showBurmese
-                  ? `${'\u101E\u1004\u1037\u103A\u1021\u1006\u1004\u1037\u103A'}: #${userRank}`
+                  ? `${'သင့်အဆင့်'}: #${userRank}`
                   : `Your Rank: #${userRank}`
                 : showBurmese
-                  ? '\u1021\u1006\u1004\u1037\u103A\u1019\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B'
+                  ? 'အဆင့်မရှိသေးပါ'
                   : 'Not ranked'}
             </p>
             <p className="text-xs text-muted-foreground">
               {showBurmese
-                ? '\u1025\u1030\u1038\u1006\u1031\u102C\u1004\u103A\u1018\u102F\u1010\u103A'
+                ? 'ဥူးဆောင်ဘုတ်'
                 : 'Leaderboard'}
             </p>
           </div>

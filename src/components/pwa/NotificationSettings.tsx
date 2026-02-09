@@ -18,18 +18,18 @@ const FREQUENCY_OPTIONS: { value: ReminderFrequency; labelEn: string; labelMy: s
   {
     value: 'daily',
     labelEn: 'Daily',
-    labelMy: '\u1014\u1031\u1037\u1010\u102D\u102F\u1004\u103A\u1038',
+    labelMy: 'နေ့တိုင်း',
   },
   {
     value: 'every2days',
     labelEn: 'Every 2 days',
-    labelMy: '\u1042 \u101B\u1000\u103A\u1010\u1005\u103A\u1000\u103C\u102D\u1019\u103A',
+    labelMy: '၂ ရက်တစ်ကြိမ်',
   },
-  { value: 'weekly', labelEn: 'Weekly', labelMy: '\u1021\u1015\u1010\u103A\u1005\u1009\u103A' },
+  { value: 'weekly', labelEn: 'Weekly', labelMy: 'အပတ်စဉ်' },
   {
     value: 'off',
     labelEn: 'Off',
-    labelMy: '\u1015\u102D\u1010\u103A\u1011\u102C\u1038\u1015\u102B',
+    labelMy: 'ပိတ်ထားပါ',
   },
 ];
 
@@ -78,7 +78,7 @@ export function NotificationSettings() {
         </p>
         <p className="font-myanmar text-sm text-gray-500 dark:text-gray-400">
           {
-            '\u1024\u1018\u101B\u1031\u102C\u1004\u103A\u1007\u102C\u1010\u103D\u1004\u103A \u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1019\u1015\u1036\u1037\u1015\u102D\u102F\u1038\u1015\u102B\u104B'
+            'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'
           }
         </p>
       </div>
@@ -100,7 +100,7 @@ export function NotificationSettings() {
         </p>
         <p className="font-myanmar text-sm text-warning-600 dark:text-warning-400">
           {
-            '\u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038 \u1015\u102D\u1010\u103A\u1011\u102C\u1038\u1015\u102B\u101E\u100A\u103A\u104B \u1018\u101B\u1031\u102C\u1004\u103A\u1007\u102C \u1006\u1000\u103A\u1010\u1004\u103A\u1019\u103E \u1015\u103C\u1004\u103A\u1006\u1004\u103A\u1015\u102B\u104B'
+            'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'
           }
         </p>
       </div>
@@ -118,7 +118,7 @@ export function NotificationSettings() {
       </p>
       <p className="font-myanmar text-sm text-gray-500 dark:text-gray-500 mb-4">
         {
-          '\u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A \u101E\u1010\u102D\u1015\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038 \u101B\u101A\u1030\u1015\u102B'
+          'လေ့လာရန် သတိပေးချက်များ ရယူပါ'
         }
       </p>
 
@@ -126,7 +126,7 @@ export function NotificationSettings() {
         <label htmlFor="reminder-frequency" className="text-sm text-gray-700 dark:text-gray-300">
           Frequency /{' '}
           <span className="font-myanmar">
-            {'\u1000\u103C\u102D\u1019\u103A\u1014\u103E\u102F\u1014\u103A\u1038'}
+            {'ကြိမ်နှုန်း'}
           </span>
           :
         </label>
@@ -150,7 +150,7 @@ export function NotificationSettings() {
           Notifications enabled /{' '}
           <span className="font-myanmar">
             {
-              '\u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038 \u1016\u103D\u1004\u1037\u103A\u1011\u102C\u1038\u1015\u102B\u1015\u103C\u102E'
+              'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'
             }
           </span>
         </p>
