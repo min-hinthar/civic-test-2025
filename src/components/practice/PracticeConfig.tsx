@@ -47,9 +47,9 @@ const categoryColorMap: Record<string, string> = {
 };
 
 const categoryBorderMap: Record<string, string> = {
-  blue: 'border-blue-500/30 hover:border-blue-500/50',
-  amber: 'border-amber-500/30 hover:border-amber-500/50',
-  emerald: 'border-emerald-500/30 hover:border-emerald-500/50',
+  blue: 'border-primary/30 hover:border-primary/50',
+  amber: 'border-warning/30 hover:border-warning/50',
+  emerald: 'border-success/30 hover:border-success/50',
 };
 
 const categoryBgMap: Record<string, string> = {

@@ -138,9 +138,9 @@ export function useToast(): ToastContextValue {
  */
 const typeStyles: Record<ToastType, string> = {
   error: 'bg-destructive text-white border-destructive/80',
-  success: 'bg-green-600 text-white border-green-700',
-  info: 'bg-primary text-white border-blue-700',
-  warning: 'bg-warning text-white border-warning-600',
+  success: 'bg-success text-white border-success/80',
+  info: 'bg-primary text-white border-primary/80',
+  warning: 'bg-warning text-white border-warning/80',
 };
 
 /**
