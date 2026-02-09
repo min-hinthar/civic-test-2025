@@ -52,6 +52,8 @@ Recent decisions affecting current work:
 - [11-01]: Backward compat aliases added in tokens.css for all old CSS variable names (--background, --card, --primary-700, etc.) to avoid big-bang component migration
 - [11-01]: Border radius --radius alias now points to --radius-xl (1.25rem) instead of old 0.85rem
 - [11-01]: Dark mode override blocks removed from globals.css -- token system handles dark mode automatically via .dark semantic overrides
+- [11-02]: Theme transition uses temporary CSS class (theme-transitioning) on html/body/page-shell only, removed after 500ms -- avoids global * transition jank
+- [11-02]: System preference listener defers to manual override (localStorage key exists = ignore OS changes)
 - [11-03]: getToken/getTokenColor utility kept minimal (2 functions, no deps) -- canvas/chart components import directly from @/lib/tokens
 - [11-03]: Dead code design-tokens.ts deleted (113 lines, zero imports confirmed)
 
