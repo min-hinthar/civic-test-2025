@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, BookOpen, Megaphone, Shield, Share2, Users } from 'lucide-react';
-import AppNavigation from '@/components/AppNavigation';
+import { GlassHeader } from '@/components/navigation/GlassHeader';
 
 const opEdShareUrl = 'https://civic-test-2025.vercel.app/op-ed';
 const opEdShareText =
@@ -21,7 +21,7 @@ const OpEdPage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation />
+      <GlassHeader showBack backHref="/" />
       <main className="mx-auto max-w-4xl px-6 py-10 space-y-10">
         <header className="glass-panel relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-[hsl(var(--color-background))] via-[hsl(var(--color-surface))] to-[hsl(var(--color-background))] p-8 text-white shadow-2xl shadow-primary/25">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-[100px]" />

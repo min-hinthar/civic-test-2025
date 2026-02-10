@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AppNavigation from '@/components/AppNavigation';
+
 import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
@@ -59,7 +59,6 @@ const PasswordUpdatePage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation translucent />
       <div className="mx-auto max-w-md px-4 pb-16 pt-12">
         <FadeIn>
           <div className="text-center">

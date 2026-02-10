@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sparkles, ChevronRight, Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
-import AppNavigation from '@/components/AppNavigation';
+import { useNavigation } from '@/components/navigation/NavigationProvider';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
@@ -55,6 +55,7 @@ const TestPage = () => {
   const { stateInfo } = useUserState();
   const { showBurmese } = useLanguage();
   const { showSuccess, showWarning } = useToast();
+  const { setLock } = useNavigation();
   const [showPreTest, setShowPreTest] = useState(true);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -69,8 +70,16 @@ const TestPage = () => {
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingResultRef = useRef<QuestionResult | null>(null);
   const hasSavedSessionRef = useRef(false);
-  const lockMessage =
-    'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ · Complete the mock test before leaving · ';
+  const lockMessage = 'Complete or exit the test first';
+
+  // Navigation lock via context: lock when test is active (not pre-test, not finished)
+  useEffect(() => {
+    const shouldLock = !showPreTest && !isFinished;
+    setLock(shouldLock, lockMessage);
+  }, [showPreTest, isFinished, setLock]);
+
+  // Release lock on unmount
+  useEffect(() => () => setLock(false), [setLock]);
 
   const questions = useMemo(
     () =>
@@ -346,7 +355,6 @@ const TestPage = () => {
   if (showPreTest) {
     return (
       <div className="page-shell" data-tour="mock-test">
-        <AppNavigation />
         <UpdateBanner showBurmese={showBurmese} />
         <PreTestScreen
           questionCount={20}
@@ -360,7 +368,6 @@ const TestPage = () => {
   if (!currentQuestion && !isFinished) {
     return (
       <div className="page-shell" data-tour="mock-test">
-        <AppNavigation locked lockMessage={lockMessage} />
         <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">
           Preparing your next question...
         </div>
@@ -803,7 +810,6 @@ const TestPage = () => {
 
   return (
     <div className="page-shell" data-tour="mock-test">
-      <AppNavigation locked={!isFinished} lockMessage={lockMessage} />
       {isFinished ? resultView : activeView}
     </div>
   );

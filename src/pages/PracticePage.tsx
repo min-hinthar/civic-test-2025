@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import AppNavigation from '@/components/AppNavigation';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigation } from '@/components/navigation/NavigationProvider';
 import { PracticeConfig, type PracticeConfigType } from '@/components/practice/PracticeConfig';
 import { PracticeSession } from '@/components/practice/PracticeSession';
 import { PracticeResults } from '@/components/practice/PracticeResults';
@@ -30,6 +30,7 @@ const categoryColorToTailwind: Record<string, string> = {
  * - results: Post-practice celebration with playLevelUp(), 3D done button
  */
 const PracticePage = () => {
+  const { setLock } = useNavigation();
   const [phase, setPhase] = useState<PracticePhase>('config');
   const [practiceQuestions, setPracticeQuestions] = useState<Question[]>([]);
   const [practiceResults, setPracticeResults] = useState<QuestionResult[]>([]);
@@ -121,9 +122,16 @@ const PracticePage = () => {
     setPhase('config');
   }, []);
 
+  // Navigation lock via context: lock during active practice session
+  useEffect(() => {
+    setLock(phase === 'session', 'Complete or exit the practice first');
+  }, [phase, setLock]);
+
+  // Release lock on unmount
+  useEffect(() => () => setLock(false), [setLock]);
+
   return (
     <div className="page-shell">
-      <AppNavigation locked={phase === 'session'} />
       {phase === 'config' && <PracticeConfig onStart={handleStart} />}
       {phase === 'session' && practiceQuestions.length > 0 && (
         <PracticeSession

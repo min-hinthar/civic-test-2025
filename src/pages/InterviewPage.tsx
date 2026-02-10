@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import AppNavigation from '@/components/AppNavigation';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigation } from '@/components/navigation/NavigationProvider';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { InterviewSetup } from '@/components/interview/InterviewSetup';
@@ -27,6 +27,7 @@ type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
  */
 const InterviewPage = () => {
   const { showBurmese } = useLanguage();
+  const { setLock } = useNavigation();
   const [phase, setPhase] = useState<InterviewPhase>('setup');
   const [mode, setMode] = useState<InterviewMode>('practice');
   const [micPermission, setMicPermission] = useState(false);
@@ -81,12 +82,16 @@ const InterviewPage = () => {
     setPhase('countdown');
   }, []);
 
+  // Navigation lock via context: lock during active interview session
+  useEffect(() => {
+    setLock(phase === 'session', 'Complete or exit the interview first');
+  }, [phase, setLock]);
+
+  // Release lock on unmount
+  useEffect(() => () => setLock(false), [setLock]);
+
   return (
     <div className="page-shell">
-      <AppNavigation
-        locked={phase === 'session' && mode === 'realistic'}
-        lockMessage="Complete the interview before leaving this page. · အင်တာဗျူးပြီးမှ ထွက်ပါ"
-      />
       {phase === 'setup' && (
         <>
           <UpdateBanner showBurmese={showBurmese} />

@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
-import AppNavigation from '@/components/AppNavigation';
+
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/animations/StaggeredList';
@@ -54,7 +54,6 @@ const AuthPage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation translucent />
       <div className="mx-auto flex max-w-md flex-col gap-6 px-4 pb-16 pt-10">
         <FadeIn>
           {/* Bilingual flags header */}

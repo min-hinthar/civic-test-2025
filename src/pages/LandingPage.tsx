@@ -12,7 +12,7 @@ import {
   Trophy,
   WifiOff,
 } from 'lucide-react';
-import AppNavigation from '@/components/AppNavigation';
+import { GlassHeader } from '@/components/navigation/GlassHeader';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
@@ -68,7 +68,7 @@ const LandingPage = () => {
 
   return (
     <div className="page-shell overflow-hidden">
-      <AppNavigation translucent />
+      <GlassHeader showSignIn />
 
       {/* Hero Section */}
       <header className="relative mx-auto max-w-4xl px-4 pb-14 pt-14 text-center sm:px-6 sm:pt-20 md:pb-20">
