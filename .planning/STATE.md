@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 13 of 17 (Security Hardening)
-Plan: 4 of 5 in current phase (13-01 + 13-02 + 13-03 + 13-04 complete)
-Status: In progress
-Last activity: 2026-02-10 -- Completed 13-02-PLAN.md (CSP Headers)
+Plan: 5 of 5 in current phase (Phase 13 COMPLETE)
+Status: Phase complete
+Last activity: 2026-02-10 -- Completed 13-05-PLAN.md (Verification Checkpoint)
 
-Progress: [██░░░░░░░░] 2/7 phases (v2.0)
-Phase 13: [████████░░] 4/5 plans
+Progress: [███░░░░░░░] 3/7 phases (v2.0)
+Phase 13: [██████████] 5/5 plans
 
 ## Completed Milestones
 
@@ -38,6 +38,7 @@ See `.planning/milestones/v1.0/` for full archive.
 |-------|-------|-------|----------|
 | 11 (tokens) | 7/7 | ~90min | ~13min |
 | 12 (USCIS 2025) | 6/6 | ~48min | ~8min |
+| 13 (security) | 5/5 | ~113min | ~23min |
 
 *Updated after each plan completion*
 
@@ -80,6 +81,9 @@ Recent decisions affecting current work:
 - [13-02]: CSP nonce passed via x-nonce request header from middleware to _document getInitialProps
 - [13-02]: CSP set in middleware.ts only (not next.config.mjs) to support per-request nonces
 - [13-02]: style-src 'unsafe-inline' required for Tailwind + motion/react inline styles
+- [13-05]: Dev mode CSP adds unsafe-eval for webpack HMR; prod remains nonce-only
+- [13-05]: blob: in worker-src for Sentry Replay; accounts.google.com in style-src + connect-src for Google Sign-In
+- [13-05]: apple-mobile-web-app-capable replaced with standards-compliant mobile-web-app-capable
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -97,10 +101,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Phase 13, Plans 01 + 02 + 03 + 04 complete; Plan 05 remaining
-Resume file: .planning/phases/13-security-hardening/13-02-SUMMARY.md
+Stopped at: Phase 13 COMPLETE (all 5 plans); ready for Phase 14
+Resume file: .planning/phases/13-security-hardening/13-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 13, Plan 02 complete)*
+*Last updated: 2026-02-10 (Phase 13 complete)*
