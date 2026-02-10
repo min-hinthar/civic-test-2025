@@ -2,4 +2,4 @@
 
 | Topic | File | Last Updated |
 |-------|------|-------------|
-| Provider Ordering | `provider-ordering.md` | 2026-02-08 |
+| Provider Ordering | `provider-ordering.md` | 2026-02-10 |

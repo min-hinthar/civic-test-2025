@@ -7,7 +7,7 @@
 
 Correct order in `src/AppShell.tsx`:
 ```
-ErrorBoundary > LanguageProvider > ThemeProvider > ToastProvider > OfflineProvider > AuthProvider > SocialProvider > SRSProvider
+ErrorBoundary > LanguageProvider > ThemeProvider > ToastProvider > OfflineProvider > AuthProvider > SocialProvider > SRSProvider > StateProvider
 ```
 
 **Why it hid:** The old `use-toast.ts` (deleted in Phase 10-02) used `console.warn` with a no-op fallback. The replacement `BilingualToast.tsx` throws, making this a crash instead of a warning. The crash only triggers when offline sync completes — rare in dev/test.
