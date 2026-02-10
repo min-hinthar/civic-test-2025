@@ -91,11 +91,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 13-01-PLAN.md -- Push API JWT authentication + rate limiting + Sentry logging
-- [ ] 13-02-PLAN.md -- CSP middleware with nonce-based inline scripts + security headers
-- [ ] 13-03-PLAN.md -- Supabase RLS audit + push_subscriptions table + documentation
-- [ ] 13-04-PLAN.md -- Next.js upgrade + dependency pruning + Dependabot + CI audit
-- [ ] 13-05-PLAN.md -- Integration verification checkpoint
+- [x] 13-01-PLAN.md — Push API JWT authentication + rate limiting + Sentry logging
+- [x] 13-02-PLAN.md — CSP middleware with nonce-based inline scripts + security headers
+- [x] 13-03-PLAN.md — Supabase RLS audit + push_subscriptions table + documentation
+- [x] 13-04-PLAN.md — Next.js upgrade + dependency pruning + Dependabot + CI audit
+- [x] 13-05-PLAN.md — Integration verification checkpoint
 
 ### Phase 14: Unified Navigation
 **Goal**: Users see the same navigation structure everywhere -- 5 persistent tabs on mobile, matching sidebar on desktop -- with no hidden "More" menu
@@ -166,7 +166,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 |-------|-----------|----------------|--------|-----------|
 | 11. Design Token Foundation | v2.0 | 7/7 | Complete | 2026-02-09 |
 | 12. USCIS 2025 Question Bank | v2.0 | 6/6 | Complete | 2026-02-10 |
-| 13. Security Hardening | v2.0 | 0/TBD | Not started | - |
+| 13. Security Hardening | v2.0 | 5/5 | Complete | 2026-02-10 |
 | 14. Unified Navigation | v2.0 | 0/TBD | Not started | - |
 | 15. Progress Hub | v2.0 | 0/TBD | Not started | - |
 | 16. Dashboard Next Best Action | v2.0 | 0/TBD | Not started | - |
@@ -175,7 +175,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | 13/TBD | 6/29 | In progress |
+| v2.0 | 7 | 18/TBD | 10/29 | In progress |
 
 ---
 
