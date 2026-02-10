@@ -33,6 +33,7 @@ import type { BadgeCheckData } from '@/lib/social';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
+import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 import { useOnboarding } from '@/hooks/useOnboarding';
 
 const studyCardsLink = (category?: string): To => ({
@@ -283,9 +284,11 @@ const Dashboard = () => {
       <AppNavigation />
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
-        {/* Welcome header with patriotic emojis */}
+        {/* Welcome header with flag and patriotic emojis */}
         <motion.header className="mb-6" {...stagger(0)}>
           <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+            <AmericanFlag size="sm" className="mt-1 hidden sm:block" />
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">
                 {showBurmese ? (
@@ -312,6 +315,7 @@ const Dashboard = () => {
                   <span className="block font-myanmar mt-0.5">{motivationalMessage.my}</span>
                 )}
               </p>
+            </div>
             </div>
             <Link
               to="/settings"

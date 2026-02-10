@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
+import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 
 interface WelcomeScreenProps {
   /** Called when the user taps the continue button */
@@ -32,26 +33,8 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
           transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
           className="relative mx-4 max-w-md w-full text-center"
         >
-          {/* CSS-only American Flag Motif */}
-          <div className="relative mx-auto mb-6 h-32 w-48 overflow-hidden rounded-xl shadow-lg">
-            {/* Red and white stripes */}
-            <div className="absolute inset-0 flex flex-col">
-              {Array.from({ length: 13 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`flex-1 ${i % 2 === 0 ? 'bg-[hsl(0,72%,51%)]' : 'bg-surface'}`}
-                />
-              ))}
-            </div>
-            {/* Blue canton with stars */}
-            <div className="absolute left-0 top-0 flex h-[54%] w-[40%] flex-wrap items-center justify-center gap-[2px] bg-[hsl(217,91%,35%)] p-1">
-              {Array.from({ length: 15 }).map((_, i) => (
-                <span key={i} className="text-[6px] leading-none text-white" aria-hidden="true">
-                  &#9733;
-                </span>
-              ))}
-            </div>
-          </div>
+          {/* American Flag Motif */}
+          <AmericanFlag size="lg" className="mx-auto mb-6" />
 
           {/* Patriotic emoji header */}
           <div className="mb-4 text-3xl" aria-hidden="true">

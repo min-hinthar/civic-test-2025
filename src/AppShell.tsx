@@ -36,6 +36,7 @@ import SocialHubPage from '@/pages/SocialHubPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
 import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
 import { WhatsNewModal, useWhatsNew } from '@/components/update/WhatsNewModal';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { BottomTabBar } from '@/components/navigation/BottomTabBar';
 
 /**
@@ -124,20 +125,19 @@ const WELCOME_SESSION_KEY = 'civic-prep-welcome-shown-session';
 /**
  * Greeting flow: Welcome → What's New → (then tour runs independently).
  *
- * - Welcome shows once per session (sessionStorage) on the dashboard.
+ * - Welcome shows once per session (sessionStorage) for signed-in users.
  * - After welcome is dismissed, What's New shows if eligible (one-time, localStorage).
  * - The onboarding tour runs after both are done (it gates on localStorage independently).
  */
 function GreetingFlow() {
+  const { user } = useAuth();
   const { showWhatsNew, dismissWhatsNew } = useWhatsNew();
 
-  // Welcome: per-session, only on dashboard for signed-in users
+  // Welcome: per-session for signed-in users
   const [showWelcome, setShowWelcome] = useState(() => {
     if (typeof window === 'undefined') return false;
-    // Only show if not already shown this session and user has app data (signed in before)
     const shownThisSession = sessionStorage.getItem(WELCOME_SESSION_KEY) === 'true';
-    const hasAppData = Object.keys(localStorage).some(k => k.startsWith('civic-prep-') || k.startsWith('civic-test-'));
-    return !shownThisSession && hasAppData;
+    return !shownThisSession;
   });
 
   // What's New: only after welcome is dismissed
@@ -149,7 +149,8 @@ function GreetingFlow() {
     setWelcomeDismissed(true);
   };
 
-  if (showWelcome) {
+  // Only show for signed-in users
+  if (showWelcome && user) {
     return <WelcomeScreen onComplete={handleWelcomeDismiss} />;
   }
 

@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { totalQuestions } from '@/constants/questions';
+import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 
 const features = [
   {
@@ -60,12 +61,6 @@ const LandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Mark welcome as shown this session — the landing page IS the welcome for unauthenticated users,
-  // so after sign-in they go straight to dashboard without a duplicate welcome screen.
-  if (typeof window !== 'undefined') {
-    sessionStorage.setItem('civic-prep-welcome-shown-session', 'true');
-  }
-
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -80,6 +75,9 @@ const LandingPage = () => {
         <div className="pointer-events-none absolute inset-x-0 top-[-120px] mx-auto h-[350px] w-[500px] rounded-full bg-gradient-to-r from-primary/30 via-accent-500/20 to-success/20 blur-[100px]" />
 
         <FadeIn>
+          {/* American Flag */}
+          <AmericanFlag size="md" className="mx-auto mb-4" />
+
           {/* Patriotic mascot emojis */}
           <div
             className="mb-4 flex items-center justify-center gap-3 text-4xl sm:text-5xl"
