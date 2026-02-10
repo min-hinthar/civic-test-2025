@@ -103,6 +103,13 @@ export const NAV_TABS: NavTab[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Sidebar dimensions (shared between Sidebar and NavigationShell)
+// ---------------------------------------------------------------------------
+
+export const SIDEBAR_EXPANDED_W = 240;
+export const SIDEBAR_COLLAPSED_W = 64;
+
+// ---------------------------------------------------------------------------
 // Hidden routes (where nav is not shown)
 // ---------------------------------------------------------------------------
 

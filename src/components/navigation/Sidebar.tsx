@@ -24,7 +24,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
-import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
+import { NAV_TABS, HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -36,8 +36,6 @@ import { useToast } from '@/components/BilingualToast';
 // Constants
 // ---------------------------------------------------------------------------
 
-const EXPANDED_WIDTH = 240;
-const COLLAPSED_WIDTH = 64;
 const SPRING_CONFIG = { type: 'spring' as const, stiffness: 300, damping: 24 };
 const SHAKE_ANIMATION = {
   x: [0, -6, 6, -4, 4, 0],
@@ -98,8 +96,8 @@ export function Sidebar() {
     <motion.aside
       ref={sidebarRef}
       animate={{
-        width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
-        x: navVisible ? 0 : -EXPANDED_WIDTH,
+        width: isExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W,
+        x: tier === 'desktop' || navVisible ? 0 : -SIDEBAR_EXPANDED_W,
       }}
       transition={SPRING_CONFIG}
       className="glass-nav fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col overflow-hidden"

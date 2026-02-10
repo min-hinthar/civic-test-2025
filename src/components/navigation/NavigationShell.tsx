@@ -1,21 +1,22 @@
 'use client';
 
 /**
- * NavigationShell -- Orchestrates which nav surface to show based on route.
+ * NavigationShell -- Orchestrates nav surfaces and content layout.
  *
- * Renders Sidebar (md+) and BottomTabBar (below md) for all routes
- * except public/auth routes listed in HIDDEN_ROUTES.
- *
- * Both components internally handle their own responsive visibility:
- * - Sidebar: `hidden md:flex`
- * - BottomTabBar: `md:hidden`
+ * Renders Sidebar (md+) and BottomTabBar (below md) for app routes.
+ * On md+, wraps children with animated marginLeft so the sidebar
+ * pushes content instead of overlapping it.
  */
 
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { HIDDEN_ROUTES } from './navConfig';
+import { motion } from 'motion/react';
+import { HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
+import { useNavigation } from './NavigationProvider';
 import { Sidebar } from './Sidebar';
 import { BottomTabBar } from './BottomTabBar';
+
+const SPRING = { type: 'spring' as const, stiffness: 300, damping: 24 };
 
 interface NavigationShellProps {
   children: ReactNode;
@@ -23,12 +24,24 @@ interface NavigationShellProps {
 
 export function NavigationShell({ children }: NavigationShellProps) {
   const location = useLocation();
+  const { isExpanded, tier } = useNavigation();
   const isPublicRoute = HIDDEN_ROUTES.includes(location.pathname);
+
+  // On tablet/desktop, push content to make room for the sidebar.
+  // Mobile uses BottomTabBar, no margin needed.
+  const marginLeft =
+    !isPublicRoute && tier !== 'mobile'
+      ? isExpanded
+        ? SIDEBAR_EXPANDED_W
+        : SIDEBAR_COLLAPSED_W
+      : 0;
 
   return (
     <>
       {!isPublicRoute && <Sidebar />}
-      {children}
+      <motion.div animate={{ marginLeft }} transition={SPRING}>
+        {children}
+      </motion.div>
       {!isPublicRoute && <BottomTabBar />}
     </>
   );
