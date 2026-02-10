@@ -23,7 +23,6 @@ import AuthPage from '@/pages/AuthPage';
 import Dashboard from '@/pages/Dashboard';
 import TestPage from '@/pages/TestPage';
 import StudyGuidePage from '@/pages/StudyGuidePage';
-import HistoryPage from '@/pages/HistoryPage';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
@@ -32,12 +31,12 @@ import SettingsPage from '@/pages/SettingsPage';
 import ProgressPage from '@/pages/ProgressPage';
 import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
-import SocialHubPage from '@/pages/SocialHubPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
 import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
 import { WhatsNewModal, useWhatsNew } from '@/components/update/WhatsNewModal';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { BottomTabBar } from '@/components/navigation/BottomTabBar';
+import { NavigationProvider } from '@/components/navigation/NavigationProvider';
+import { NavigationShell } from '@/components/navigation/NavigationShell';
 
 /**
  * Hook to detect if running on client side.
@@ -121,6 +120,19 @@ function PWAOnboardingFlow() {
 }
 
 /**
+ * Redirect helper that shows a brief loading spinner before navigating.
+ * Used for old routes that redirect to hash-based destinations (e.g. /history -> /hub#history).
+ */
+function RedirectWithLoading({ to }: { to: string }) {
+  return (
+    <div className="flex h-screen items-center justify-center bg-background">
+      <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+      <Navigate to={to} replace />
+    </div>
+  );
+}
+
+/**
  * Greeting flow: Welcome → What's New → (then tour runs independently).
  *
  * - Welcome shows on every sign-in (detects user transition from null → non-null).
@@ -181,98 +193,104 @@ const AppShell = () => {
                   <SRSProvider>
                     <StateProvider>
                       <Router>
-                        <Head>
-                          <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
-                          <meta
-                            name="description"
-                            content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
-                          />
-                        </Head>
-                        <ErrorBoundary>
-                          <PageTransition>
-                            <Routes>
-                              <Route path="/" element={<LandingPage />} />
-                              <Route path="/auth" element={<AuthPage />} />
-                              <Route path="/auth/forgot" element={<PasswordResetPage />} />
-                              <Route
-                                path="/auth/update-password"
-                                element={<PasswordUpdatePage />}
-                              />
-                              <Route path="/op-ed" element={<OpEdPage />} />
-                              <Route
-                                path="/dashboard"
-                                element={
-                                  <ProtectedRoute>
-                                    <Dashboard />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/test"
-                                element={
-                                  <ProtectedRoute>
-                                    <TestPage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/study"
-                                element={
-                                  <ProtectedRoute>
-                                    <StudyGuidePage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/history"
-                                element={
-                                  <ProtectedRoute>
-                                    <HistoryPage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/progress"
-                                element={
-                                  <ProtectedRoute>
-                                    <ProgressPage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/practice"
-                                element={
-                                  <ProtectedRoute>
-                                    <PracticePage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route
-                                path="/interview"
-                                element={
-                                  <ProtectedRoute>
-                                    <InterviewPage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route path="/social" element={<SocialHubPage />} />
-                              <Route
-                                path="/settings"
-                                element={
-                                  <ProtectedRoute>
-                                    <SettingsPage />
-                                  </ProtectedRoute>
-                                }
-                              />
-                              <Route path="*" element={<Navigate to="/" replace />} />
-                            </Routes>
-                          </PageTransition>
-                        </ErrorBoundary>
-                        <PWAOnboardingFlow />
-                        <OnboardingTour />
-                        <GreetingFlow />
-                        <SyncStatusIndicator />
-                        <BottomTabBar />
+                        <NavigationProvider>
+                          <Head>
+                            <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
+                            <meta
+                              name="description"
+                              content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
+                            />
+                          </Head>
+                          <ErrorBoundary>
+                            <NavigationShell>
+                              <PageTransition>
+                                <Routes>
+                                  <Route path="/" element={<LandingPage />} />
+                                  <Route path="/auth" element={<AuthPage />} />
+                                  <Route path="/auth/forgot" element={<PasswordResetPage />} />
+                                  <Route
+                                    path="/auth/update-password"
+                                    element={<PasswordUpdatePage />}
+                                  />
+                                  <Route path="/op-ed" element={<OpEdPage />} />
+
+                                  {/* New canonical routes */}
+                                  <Route
+                                    path="/home"
+                                    element={
+                                      <ProtectedRoute>
+                                        <Dashboard />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+                                  <Route
+                                    path="/hub"
+                                    element={
+                                      <ProtectedRoute>
+                                        <ProgressPage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+
+                                  {/* Redirects from old routes to new canonical routes */}
+                                  <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+                                  <Route path="/progress" element={<Navigate to="/hub" replace />} />
+                                  <Route path="/history" element={<RedirectWithLoading to="/hub#history" />} />
+                                  <Route path="/social" element={<RedirectWithLoading to="/hub#social" />} />
+
+                                  {/* Existing routes (unchanged) */}
+                                  <Route
+                                    path="/test"
+                                    element={
+                                      <ProtectedRoute>
+                                        <TestPage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+                                  <Route
+                                    path="/study"
+                                    element={
+                                      <ProtectedRoute>
+                                        <StudyGuidePage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+                                  <Route
+                                    path="/practice"
+                                    element={
+                                      <ProtectedRoute>
+                                        <PracticePage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+                                  <Route
+                                    path="/interview"
+                                    element={
+                                      <ProtectedRoute>
+                                        <InterviewPage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+                                  <Route
+                                    path="/settings"
+                                    element={
+                                      <ProtectedRoute>
+                                        <SettingsPage />
+                                      </ProtectedRoute>
+                                    }
+                                  />
+
+                                  {/* Catch-all */}
+                                  <Route path="*" element={<Navigate to="/" replace />} />
+                                </Routes>
+                              </PageTransition>
+                            </NavigationShell>
+                          </ErrorBoundary>
+                          <PWAOnboardingFlow />
+                          <OnboardingTour />
+                          <GreetingFlow />
+                          <SyncStatusIndicator />
+                        </NavigationProvider>
                       </Router>
                     </StateProvider>
                   </SRSProvider>
