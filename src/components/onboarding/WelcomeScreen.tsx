@@ -1,32 +1,19 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { clsx } from 'clsx';
 
 interface WelcomeScreenProps {
-  /** Called after 2-second auto-transition to start the tour */
+  /** Called when the user taps the continue button */
   onComplete: () => void;
 }
 
 /**
  * CSS-only American flag motif welcome screen.
  * Full bilingual (English + Burmese) with patriotic emojis.
- * Auto-transitions to the onboarding tour after 2 seconds (no button).
+ * Shows on every sign-in session. Dismissed by tapping "Get Started".
  */
 export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const handleComplete = useCallback(() => {
-    onComplete();
-  }, [onComplete]);
-
-  useEffect(() => {
-    timerRef.current = setTimeout(handleComplete, 2000);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [handleComplete]);
-
   return (
     <AnimatePresence>
       <motion.div
@@ -83,25 +70,26 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
           <h2 className="font-myanmar text-xl font-bold text-foreground mb-1">
             {'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'}
           </h2>
-          <p className="font-myanmar text-sm text-muted-foreground mb-4">
+          <p className="font-myanmar text-sm text-muted-foreground mb-6">
             {'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'}
           </p>
 
-          {/* Loading dots animation */}
-          <div className="flex items-center justify-center gap-1.5">
-            {[0, 1, 2].map(i => (
-              <motion.div
-                key={i}
-                className="h-2 w-2 rounded-full bg-primary"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{
-                  duration: 1.2,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-              />
-            ))}
-          </div>
+          {/* Get Started button */}
+          <button
+            onClick={onComplete}
+            className={clsx(
+              'px-8 py-3 rounded-full',
+              'text-base font-bold',
+              'bg-primary text-white',
+              'hover:bg-primary/90 active:scale-95',
+              'transition-all',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+              'min-h-[48px]'
+            )}
+          >
+            Get Started
+            <span className="font-myanmar ml-2 text-white/80">{'စတင်ပါ'}</span>
+          </button>
         </motion.div>
       </motion.div>
     </AnimatePresence>

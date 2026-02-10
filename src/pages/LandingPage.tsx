@@ -60,6 +60,12 @@ const LandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Mark welcome as shown this session — the landing page IS the welcome for unauthenticated users,
+  // so after sign-in they go straight to dashboard without a duplicate welcome screen.
+  if (typeof window !== 'undefined') {
+    sessionStorage.setItem('civic-prep-welcome-shown-session', 'true');
+  }
+
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }

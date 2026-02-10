@@ -9,7 +9,6 @@ import { useOnboarding } from '@/hooks/useOnboarding';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useUserState } from '@/contexts/StateContext';
 import { totalQuestions } from '@/constants/questions';
-import { WelcomeScreen } from './WelcomeScreen';
 import { TourTooltip } from './TourTooltip';
 
 /** Inline state picker rendered inside the onboarding tour step */
@@ -222,35 +221,23 @@ interface OnboardingTourProps {
  * - (theme step uses body-centered placement, no target needed)
  */
 export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
-  const { shouldShow, complete, skip } = useOnboarding();
+  const { complete, skip } = useOnboarding();
   const shouldReduceMotion = useReducedMotion();
   const location = useLocation();
 
   const isOnDashboard = location.pathname === '/dashboard';
-  const shouldRun = forceRun || shouldShow;
-
-  // Initial state: show welcome screen when tour should run on dashboard
-  // Settings replay clears localStorage and navigates to /dashboard,
-  // so shouldShow becomes true on fresh mount (no need for useEffect).
-  const [showWelcome, setShowWelcome] = useState(shouldRun && isOnDashboard);
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
   const steps = tourSteps;
 
-  // Delay start after welcome completes to ensure DOM targets are mounted
-  // Dashboard widgets use staggered motion animations (80ms * ~10 items)
-  const handleWelcomeComplete = useCallback(() => {
-    setShowWelcome(false);
-  }, []);
-
-  // Single effect to start the tour. Checks localStorage directly (not shouldRun)
-  // to handle replay from Settings where useOnboarding state is stale.
-  // Only fires when welcome is dismissed and tour isn't already running.
+  // Start the tour when on dashboard and onboarding not yet complete.
+  // Checks localStorage directly to handle replay from Settings (stale hook state).
+  // Delay ensures DOM targets are mounted after dashboard animations.
   useEffect(() => {
-    if (showWelcome || run || !isOnDashboard) return;
+    if (run || !isOnDashboard) return;
     const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
-    if (isComplete) return;
+    if (isComplete && !forceRun) return;
 
     const timer = setTimeout(() => {
       setRun(true);
@@ -258,7 +245,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [showWelcome, run, isOnDashboard]);
+  }, [run, isOnDashboard, forceRun]);
 
   const handleCallback = useCallback(
     (data: CallBackProps) => {
@@ -287,12 +274,11 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   // Only render on dashboard
   if (!isOnDashboard) return null;
 
-  // Not eligible to show
-  if (!shouldRun && !run && !showWelcome) return null;
+  // Not running and not pending
+  if (!run) return null;
 
   return (
     <>
-      {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
       <Joyride
         steps={steps}
         stepIndex={stepIndex}

@@ -34,6 +34,7 @@ import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
 import SocialHubPage from '@/pages/SocialHubPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
+import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
 import { WhatsNewModal, useWhatsNew } from '@/components/update/WhatsNewModal';
 import { BottomTabBar } from '@/components/navigation/BottomTabBar';
 
@@ -118,16 +119,47 @@ function PWAOnboardingFlow() {
   );
 }
 
+const WELCOME_SESSION_KEY = 'civic-prep-welcome-shown-session';
+
 /**
- * What's New modal flow for returning users.
- * Shows once after the USCIS 2025 update, then dismisses permanently.
- * Waits for onboarding to complete before showing to avoid overlay conflicts.
+ * Greeting flow: Welcome → What's New → (then tour runs independently).
+ *
+ * - Welcome shows once per session (sessionStorage) on the dashboard.
+ * - After welcome is dismissed, What's New shows if eligible (one-time, localStorage).
+ * - The onboarding tour runs after both are done (it gates on localStorage independently).
  */
-function WhatsNewFlow() {
+function GreetingFlow() {
   const { showWhatsNew, dismissWhatsNew } = useWhatsNew();
+
+  // Welcome: per-session, only on dashboard for signed-in users
+  const [showWelcome, setShowWelcome] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    // Only show if not already shown this session and user has app data (signed in before)
+    const shownThisSession = sessionStorage.getItem(WELCOME_SESSION_KEY) === 'true';
+    const hasAppData = Object.keys(localStorage).some(k => k.startsWith('civic-prep-') || k.startsWith('civic-test-'));
+    return !shownThisSession && hasAppData;
+  });
+
+  // What's New: only after welcome is dismissed
+  const [welcomeDismissed, setWelcomeDismissed] = useState(!showWelcome);
+
+  const handleWelcomeDismiss = () => {
+    sessionStorage.setItem(WELCOME_SESSION_KEY, 'true');
+    setShowWelcome(false);
+    setWelcomeDismissed(true);
+  };
+
+  if (showWelcome) {
+    return <WelcomeScreen onComplete={handleWelcomeDismiss} />;
+  }
+
+  // Show What's New after welcome, if eligible and onboarding is done
   const isOnboardingComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
-  if (!showWhatsNew || !isOnboardingComplete) return null;
-  return <WhatsNewModal onClose={dismissWhatsNew} />;
+  if (welcomeDismissed && showWhatsNew && isOnboardingComplete) {
+    return <WhatsNewModal onClose={dismissWhatsNew} />;
+  }
+
+  return null;
 }
 
 const AppShell = () => {
@@ -236,7 +268,7 @@ const AppShell = () => {
                       </ErrorBoundary>
                       <PWAOnboardingFlow />
                       <OnboardingTour />
-                      <WhatsNewFlow />
+                      <GreetingFlow />
                       <SyncStatusIndicator />
                       <BottomTabBar />
                       </Router>
