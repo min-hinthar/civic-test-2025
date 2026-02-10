@@ -88,6 +88,10 @@ Recent decisions affecting current work:
 - [14-01]: Sidebar state persisted to localStorage under key 'sidebar-expanded' (Claude discretion)
 - [14-01]: Single-state object pattern for sidebar tier sync avoids React Compiler setState-in-effect violation
 - [14-01]: SW update check uses setTimeout(0) to avoid synchronous setState in effect body
+- [14-02]: Hooks placed before HIDDEN_ROUTES early return to satisfy React rules-of-hooks
+- [14-02]: SidebarUtilityButton extracted as separate function component for utility controls
+- [14-02]: CSS tooltips via [data-tooltip]::after in globals.css (no JS tooltip library)
+- [14-02]: GlassHeader uses sticky (not fixed) with z-30 to stay below sidebar z-40
 - [14-03]: lockMessage not destructured at BottomTabBar level -- NavItem handles lock tap internally
 
 ### Key Learnings (from v2.0 Phase 11)
