@@ -12,9 +12,13 @@ export interface BilingualString {
 
 export const strings = {
   // Navigation
+  // Note: navConfig.ts uses inline labels for the unified nav tabs.
+  // Existing keys below are kept for backward compatibility with page headers
+  // and AppNavigation (to be removed in Plan 05).
   nav: {
     home: { en: 'Home', my: 'ပင်မ' },
     dashboard: { en: 'Dashboard', my: 'ဒက်ရှ်ဘုတ်' },
+    progressHub: { en: 'Progress Hub', my: 'တိုးတက်မှုဗဟို' },
     studyGuide: { en: 'Study Guide', my: 'လေ့လာမှုအညွှန်း' },
     mockTest: { en: 'Mock Test', my: 'စမ်းသပ်စာမေးပွဲ' },
     testHistory: { en: 'Test History', my: 'စာမေးပွဲမှတ်တမ်း' },
