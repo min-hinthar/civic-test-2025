@@ -229,7 +229,6 @@ const StudyGuidePage = () => {
   if (isReviewView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -243,7 +242,6 @@ const StudyGuidePage = () => {
   if (isDeckView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -260,7 +258,6 @@ const StudyGuidePage = () => {
   if (isCardsView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -293,7 +290,6 @@ const StudyGuidePage = () => {
 
     return (
       <div className="page-shell" data-tour="study-guide">
-
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}

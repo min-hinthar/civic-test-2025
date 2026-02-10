@@ -233,10 +233,22 @@ const AppShell = () => {
                                   />
 
                                   {/* Redirects from old routes to new canonical routes */}
-                                  <Route path="/dashboard" element={<Navigate to="/home" replace />} />
-                                  <Route path="/progress" element={<Navigate to="/hub" replace />} />
-                                  <Route path="/history" element={<RedirectWithLoading to="/hub#history" />} />
-                                  <Route path="/social" element={<RedirectWithLoading to="/hub#social" />} />
+                                  <Route
+                                    path="/dashboard"
+                                    element={<Navigate to="/home" replace />}
+                                  />
+                                  <Route
+                                    path="/progress"
+                                    element={<Navigate to="/hub" replace />}
+                                  />
+                                  <Route
+                                    path="/history"
+                                    element={<RedirectWithLoading to="/hub#history" />}
+                                  />
+                                  <Route
+                                    path="/social"
+                                    element={<RedirectWithLoading to="/hub#social" />}
+                                  />
 
                                   {/* Existing routes (unchanged) */}
                                   <Route

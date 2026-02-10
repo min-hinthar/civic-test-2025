@@ -4,8 +4,7 @@ import { NextResponse } from 'next/server';
 // Nonce-based approach doesn't work reliably in Pages Router on Vercel
 // (middleware x-nonce header not forwarded to _document getInitialProps).
 // Hash is stable because the theme script content is hardcoded.
-const THEME_SCRIPT_HASH =
-  "'sha256-NKQrmMd/nbWq2Iv4I0YgtUOgn8XHk35ntdeRQ/aIx5A='";
+const THEME_SCRIPT_HASH = "'sha256-NKQrmMd/nbWq2Iv4I0YgtUOgn8XHk35ntdeRQ/aIx5A='";
 
 export function middleware() {
   const isDev = process.env.NODE_ENV === 'development';

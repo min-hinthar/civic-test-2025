@@ -57,7 +57,8 @@ export const NAV_TABS: NavTab[] = [
     id: 'study',
     href: '/study',
     label: 'Study Guide',
-    labelMy: '\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u1021\u100A\u103D\u103E\u1014\u103A\u1038',
+    labelMy:
+      '\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u1021\u100A\u103D\u103E\u1014\u103A\u1038',
     icon: BookOpen,
     order: 1,
     badgeKey: 'studyDueCount',
@@ -67,7 +68,8 @@ export const NAV_TABS: NavTab[] = [
     id: 'test',
     href: '/test',
     label: 'Mock Test',
-    labelMy: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032',
+    labelMy:
+      '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032',
     icon: ClipboardCheck,
     order: 2,
     dataTour: 'nav-test',
@@ -113,13 +115,7 @@ export const SIDEBAR_COLLAPSED_W = 64;
 // Hidden routes (where nav is not shown)
 // ---------------------------------------------------------------------------
 
-export const HIDDEN_ROUTES = [
-  '/',
-  '/auth',
-  '/auth/forgot',
-  '/auth/update-password',
-  '/op-ed',
-];
+export const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-password', '/op-ed'];
 
 // ---------------------------------------------------------------------------
 // Slide direction helper

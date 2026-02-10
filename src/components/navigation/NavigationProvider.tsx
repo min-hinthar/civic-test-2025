@@ -202,11 +202,7 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     ]
   );
 
-  return (
-    <NavigationContext.Provider value={value}>
-      {children}
-    </NavigationContext.Provider>
-  );
+  return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;
 }
 
 // ---------------------------------------------------------------------------

@@ -69,7 +69,9 @@ export function Sidebar() {
   const handleLockedTap = useCallback(() => {
     showWarning({
       en: lockMessage ?? 'Complete or exit the test first',
-      my: lockMessage ?? '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1000\u102D\u102F \u1021\u101B\u1004\u103A \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038 \u101E\u102D\u102F\u1037\u1019\u101F\u102F\u1010\u103A \u1011\u103D\u1000\u103A\u1015\u102B',
+      my:
+        lockMessage ??
+        '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1000\u102D\u102F \u1021\u101B\u1004\u103A \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038 \u101E\u102D\u102F\u1037\u1019\u101F\u102F\u1010\u103A \u1011\u103D\u1000\u103A\u1015\u102B',
     });
   }, [showWarning, lockMessage]);
 
@@ -139,11 +141,7 @@ export function Sidebar() {
             className="flex items-center gap-2 px-3 py-2 mx-2 mt-2 rounded-lg bg-warning/15 text-warning overflow-hidden"
           >
             <AlertTriangle className="h-4 w-4 shrink-0" />
-            {isExpanded && (
-              <span className="text-xs font-medium truncate">
-                Test in progress
-              </span>
-            )}
+            {isExpanded && <span className="text-xs font-medium truncate">Test in progress</span>}
           </motion.div>
         )}
       </AnimatePresence>
@@ -158,14 +156,8 @@ export function Sidebar() {
           return (
             <motion.div
               key={tab.id}
-              animate={
-                isLocked && !isActive ? SHAKE_ANIMATION : undefined
-              }
-              whileTap={
-                isLocked && !isActive
-                  ? { x: [0, -6, 6, -4, 4, 0] }
-                  : undefined
-              }
+              animate={isLocked && !isActive ? SHAKE_ANIMATION : undefined}
+              whileTap={isLocked && !isActive ? { x: [0, -6, 6, -4, 4, 0] } : undefined}
             >
               <NavItem
                 tab={tab}
@@ -175,11 +167,7 @@ export function Sidebar() {
                 variant={isExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}
                 badges={badges}
                 onLockedTap={handleLockedTap}
-                onClick={
-                  tier === 'tablet' && !isExpanded
-                    ? handleNavItemClick
-                    : undefined
-                }
+                onClick={tier === 'tablet' && !isExpanded ? handleNavItemClick : undefined}
               />
             </motion.div>
           );
@@ -234,11 +222,7 @@ export function Sidebar() {
           data-tooltip={!isExpanded ? 'Expand sidebar' : undefined}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
         >
-          {isExpanded ? (
-            <ChevronLeft className="h-5 w-5" />
-          ) : (
-            <ChevronRight className="h-5 w-5" />
-          )}
+          {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
           <AnimatePresence>
             {isExpanded && (
               <motion.span

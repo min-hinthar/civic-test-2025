@@ -121,8 +121,12 @@ export function BottomTabBar() {
               } text-muted-foreground`}
             >
               {showBurmese
-                ? (theme === 'dark' ? '\u1021\u101C\u1004\u103A\u1038' : '\u1021\u1019\u103E\u102C\u1004\u103A')
-                : (theme === 'dark' ? 'Light' : 'Dark')}
+                ? theme === 'dark'
+                  ? '\u1021\u101C\u1004\u103A\u1038'
+                  : '\u1021\u1019\u103E\u102C\u1004\u103A'
+                : theme === 'dark'
+                  ? 'Light'
+                  : 'Dark'}
             </span>
           </motion.div>
         </button>

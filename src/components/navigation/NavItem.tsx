@@ -30,17 +30,11 @@ function TabBadge({ tab, badges }: { tab: NavTab; badges: NavBadges }) {
 
   switch (tab.badgeKey) {
     case 'studyDueCount':
-      return (
-        <NavBadge type="count" count={badges.studyDueCount} color="warning" />
-      );
+      return <NavBadge type="count" count={badges.studyDueCount} color="warning" />;
     case 'hubHasUpdate':
-      return (
-        <NavBadge type="dot" color="primary" visible={badges.hubHasUpdate} />
-      );
+      return <NavBadge type="dot" color="primary" visible={badges.hubHasUpdate} />;
     case 'settingsHasUpdate':
-      return (
-        <NavBadge type="dot" color="primary" visible={badges.settingsHasUpdate} />
-      );
+      return <NavBadge type="dot" color="primary" visible={badges.settingsHasUpdate} />;
     default:
       return null;
   }
@@ -79,12 +73,8 @@ export function NavItem({
 
   const innerClasses = (() => {
     const base = 'flex items-center transition-all';
-    const activeStyle = isActive
-      ? 'bg-primary/20 shadow-sm shadow-primary/15'
-      : '';
-    const hoverStyle = !isActive && !isLocked
-      ? 'hover:bg-primary/10 hover:scale-[1.02]'
-      : '';
+    const activeStyle = isActive ? 'bg-primary/20 shadow-sm shadow-primary/15' : '';
+    const hoverStyle = !isActive && !isLocked ? 'hover:bg-primary/10 hover:scale-[1.02]' : '';
     const lockedStyle = isLocked ? 'opacity-60 cursor-not-allowed' : '';
 
     switch (variant) {
@@ -128,10 +118,7 @@ export function NavItem({
   );
 
   // --- Tooltip for collapsed sidebar ---
-  const tooltipAttrs =
-    variant === 'sidebar-collapsed'
-      ? { 'data-tooltip': tab.label }
-      : {};
+  const tooltipAttrs = variant === 'sidebar-collapsed' ? { 'data-tooltip': tab.label } : {};
 
   // --- Content wrapper (motion for tap animation) ---
   const content = (
