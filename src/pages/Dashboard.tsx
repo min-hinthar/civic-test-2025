@@ -33,6 +33,7 @@ import type { BadgeCheckData } from '@/lib/social';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
+import { useOnboarding } from '@/hooks/useOnboarding';
 
 const studyCardsLink = (category?: string): To => ({
   pathname: '/study',
@@ -68,6 +69,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
+  const { shouldShow: isOnboarding } = useOnboarding();
 
   // Category mastery data
   const {
@@ -648,12 +650,12 @@ const Dashboard = () => {
           </motion.section>
         )}
 
-        {/* Milestone celebration modal */}
-        <MasteryMilestone milestone={currentMilestone} onDismiss={dismissMilestone} />
+        {/* Milestone celebration modal — suppressed during onboarding to avoid overlay conflicts */}
+        <MasteryMilestone milestone={isOnboarding ? null : currentMilestone} onDismiss={dismissMilestone} />
 
-        {/* Badge celebration modal */}
+        {/* Badge celebration modal — suppressed during onboarding */}
         <BadgeCelebration
-          badge={newlyEarnedBadge}
+          badge={isOnboarding ? null : newlyEarnedBadge}
           onDismiss={() => {
             if (newlyEarnedBadge) {
               dismissCelebration(newlyEarnedBadge.id);
