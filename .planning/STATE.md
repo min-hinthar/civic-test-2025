@@ -10,11 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 13 of 17 (Security Hardening)
-Plan: 0 of TBD in current phase
-Status: Not started
-Last activity: 2026-02-10 -- Completed Phase 12 (USCIS 2025 Question Bank)
+Plan: 3 of 5 in current phase
+Status: In progress
+Last activity: 2026-02-10 -- Completed 13-03-PLAN.md (RLS Audit & push_subscriptions)
 
 Progress: [██░░░░░░░░] 2/7 phases (v2.0)
+Phase 13: [██████░░░░] 3/5 plans
 
 ## Completed Milestones
 
@@ -67,6 +68,9 @@ Recent decisions affecting current work:
 - [12-04]: Onboarding state step targets body with center placement (no dashboard anchor element yet)
 - [12-04]: UpdateBanner in StudyGuidePage embedded in pageHeader constant for all view modes
 - [12-05]: 16-case validation test suite as regression guard; exact category distribution counts as snapshot
+- [13-03]: display_name validated at DB level with CHECK constraints (no-HTML + length) rather than runtime sanitization
+- [13-03]: No DOMPurify needed: zero dangerouslySetInnerHTML with user content, React JSX auto-escapes all text rendering
+- [13-03]: Redundant INSERT policies on streak_data and earned_badges documented for future cleanup (not harmful)
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -84,10 +88,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Phase 12 complete; ready for Phase 13
-Resume file: .planning/phases/12-uscis-2025-question-bank/12-VERIFICATION.md
+Stopped at: Phase 13, Plan 3 of 5 complete
+Resume file: .planning/phases/13-security-hardening/13-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 12 complete)*
+*Last updated: 2026-02-10 (Phase 13, Plan 3 complete)*
