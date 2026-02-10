@@ -1,5 +1,8 @@
-import Document, { DocumentContext, Html, Head, Main, NextScript } from 'next/document';
+import { Html, Head, Main, NextScript } from 'next/document';
 
+// IMPORTANT: If you change this script, you must update the SHA-256 hash
+// in middleware.ts (THEME_SCRIPT_HASH). The browser console will show the
+// new hash in the CSP violation error message.
 const THEME_SCRIPT = `
 (function() {
   try {
@@ -14,41 +17,30 @@ const THEME_SCRIPT = `
 })();
 `;
 
-class MyDocument extends Document<{ nonce?: string }> {
-  static async getInitialProps(ctx: DocumentContext) {
-    const initialProps = await Document.getInitialProps(ctx);
-    const nonce = (ctx.req?.headers?.['x-nonce'] as string) || undefined;
-    return { ...initialProps, nonce };
-  }
+export default function Document() {
+  return (
+    <Html lang="en">
+      <Head>
+        {/* Blocking theme script - prevents FOUC by applying theme before React hydrates */}
+        {/* CSP allowlisted via hash in middleware.ts (not nonce — Pages Router limitation) */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
 
-  render() {
-    const { nonce } = this.props;
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
 
-    return (
-      <Html lang="en">
-        <Head nonce={nonce}>
-          {/* Blocking theme script - prevents FOUC by applying theme before React hydrates */}
-          <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Theme color for browser chrome */}
+        <meta name="theme-color" content="#002868" />
 
-          {/* PWA Manifest */}
-          <link rel="manifest" href="/manifest.json" />
-
-          {/* Theme color for browser chrome */}
-          <meta name="theme-color" content="#002868" />
-
-          {/* Apple-specific PWA settings */}
-          <meta name="mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-          <meta name="apple-mobile-web-app-title" content="US Civics" />
-          <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-        </Head>
-        <body>
-          <Main />
-          <NextScript nonce={nonce} />
-        </body>
-      </Html>
-    );
-  }
+        {/* Apple-specific PWA settings */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="US Civics" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </Head>
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
-
-export default MyDocument;
