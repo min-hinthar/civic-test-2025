@@ -53,23 +53,34 @@ function StateSelectContent() {
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
 
 /**
- * 7-step tour -- all targets are on the Dashboard page.
+ * Responsive placement helper for nav item steps.
+ * Desktop sidebar is on the left, so placement is 'right'.
+ * Mobile bottom bar is at the bottom, so placement is 'top'.
+ */
+function getNavPlacement(): 'right' | 'top' {
+  if (typeof window === 'undefined') return 'top';
+  return window.innerWidth >= 768 ? 'right' : 'top';
+}
+
+/**
+ * 7-step tour (0-6) -- targets nav items instead of dashboard widgets.
  * Each step uses disableBeacon: true for immediate display.
  *
- * All steps use either dashboard data-tour targets or body-centered
- * placement for consistent display across mobile and desktop.
+ * Steps 0-1: body-centered (welcome + state picker)
+ * Steps 2-5: nav item highlights (study, test, interview, hub)
+ * Step 6: body-centered celebration
  */
 const tourSteps: Step[] = [
   {
     target: 'body',
     content: (
       <div>
-        <h3 className="font-bold text-lg mb-2">Your Dashboard</h3>
+        <h3 className="font-bold text-lg mb-2">Welcome to Your Home</h3>
         <p className="text-muted-foreground text-sm">
           This is your home base. Track progress, see streaks, and find areas to improve.
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'ဤသည်မှာ သင့်ပင်မစာမျက်နှာဖြစ်ပါသည်။ တိုးတက်မှုကို ခြေရာခံပါ။'}
+          {'\u1024\u101E\u100A\u103A\u1019\u103E\u102C \u101E\u1004\u103A\u1037\u1015\u1004\u103A\u1019\u1005\u102C\u1019\u103B\u1000\u103A\u1014\u103E\u102C\u1016\u103C\u1005\u103A\u1015\u102B\u101E\u100A\u103A\u104B \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1001\u103C\u1031\u101B\u102C\u1001\u103E\u1015\u102B\u104B'}
         </p>
       </div>
     ),
@@ -83,24 +94,24 @@ const tourSteps: Step[] = [
     disableBeacon: true,
   },
   {
-    target: '[data-tour="study-action"]',
+    target: '[data-tour="nav-study"]',
     content: (
       <div>
         <h3 className="font-bold text-lg mb-2">Study with Flashcards</h3>
         <p className="text-muted-foreground text-sm">
-          Flip through bilingual flashcards to learn all {totalQuestions} civics questions. Tap to
-          reveal answers!
+          Flip through bilingual flashcards to learn all {totalQuestions} civics questions. The
+          spaced repetition system remembers what you know and focuses on what you need to practice.
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {`မေးခွန်း ${totalQuestions} လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။`}
+          {`\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038 ${totalQuestions} \u101C\u102F\u1036\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u101C\u103E\u1014\u103A\u1037\u1015\u102B\u104B \u1021\u1001\u103B\u102D\u1014\u103A\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1005\u1014\u1005\u103A\u1016\u103C\u1004\u103A\u1037 \u101E\u1004\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u101B\u1019\u100A\u103A\u1037\u1021\u101B\u102C\u1000\u102D\u102F \u1021\u102C\u101B\u102F\u1036\u1005\u102D\u102F\u1000\u103A\u1015\u102B\u101E\u100A\u103A\u104B`}
         </p>
       </div>
     ),
-    placement: 'bottom',
+    placement: getNavPlacement(),
     disableBeacon: true,
   },
   {
-    target: '[data-tour="test-action"]',
+    target: '[data-tour="nav-test"]',
     content: (
       <div>
         <h3 className="font-bold text-lg mb-2">Practice with Mock Tests</h3>
@@ -109,34 +120,15 @@ const tourSteps: Step[] = [
           pass!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'တကယ့်အင်တာဗျူးနှင့်အတူတူ စာမေးပွဲဖြေပါ။ ၂၀ ခုမှ ၁၂ ခုမှန်ရပါမည်။'}
+          {'\u1010\u1000\u101A\u103A\u1037\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1014\u103E\u1004\u103A\u1037\u1021\u1010\u1030\u1010\u1030 \u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1016\u103C\u1031\u1015\u102B\u104B \u1042\u1040 \u1001\u102F\u1019\u103E \u1041\u1042 \u1001\u102F\u1019\u103E\u1014\u103A\u101B\u1015\u102B\u1019\u100A\u103A\u104B'}
         </p>
       </div>
     ),
-    placement: 'bottom',
+    placement: getNavPlacement(),
     disableBeacon: true,
   },
   {
-    target: '[data-tour="srs-deck"]',
-    content: (
-      <div>
-        <h3 className="font-bold text-lg mb-2">Spaced Repetition Review</h3>
-        <p className="text-muted-foreground text-sm">
-          Review cards at the perfect time using spaced repetition. The system remembers what you
-          know and focuses on what you need to practice.
-        </p>
-        <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {
-            'အချိန်မှန်ကန်သုံးသပ်စနစ်ဖြင့် ကတ်များကို ပြန်လှည့်ပါ။ သင်လေ့ကျင့်ရမည့်အရာကို အာရုံစိုက်ပါသည်။'
-          }
-        </p>
-      </div>
-    ),
-    placement: 'top',
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="interview-sim"]',
+    target: '[data-tour="nav-interview"]',
     content: (
       <div>
         <h3 className="font-bold text-lg mb-2">Interview Simulation</h3>
@@ -146,29 +138,31 @@ const tourSteps: Step[] = [
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {
-            'တကယ်အင် USCIS အင်တာဗျူးကဲ့သို့ အသံထွက်လေ့ကျင့်ပါ။ သင့်အဖြေများကို အသံထွက်ပြီး ယုံကြည်မှုတည်ဆောက်ပါ။'
+            '\u1010\u1000\u101A\u103A\u1021\u1004\u103A USCIS \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1000\u1032\u1037\u101E\u102D\u102F\u1037 \u1021\u101E\u1036\u1011\u103D\u1000\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B\u104B \u101E\u1004\u103A\u1037\u1021\u1016\u103C\u1031\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1021\u101E\u1036\u1011\u103D\u1000\u103A\u1015\u103C\u102E\u1038 \u101A\u102F\u1036\u1000\u103C\u100A\u103A\u1019\u103E\u102F\u1010\u100A\u103A\u1006\u1031\u102C\u1000\u103A\u1015\u102B\u104B'
           }
         </p>
       </div>
     ),
-    placement: 'top',
+    placement: getNavPlacement(),
     disableBeacon: true,
   },
   {
-    target: 'body',
+    target: '[data-tour="nav-hub"]',
     content: (
       <div>
-        <h3 className="font-bold text-lg mb-2">Customize Your Experience</h3>
+        <h3 className="font-bold text-lg mb-2">Track Your Progress</h3>
         <p className="text-muted-foreground text-sm">
-          Use the top navigation bar to toggle between light and dark mode, switch languages, and
-          more. Study comfortably day or night!
+          View your study progress, test history, and connect with the community. Everything you
+          need to track your journey is here.
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'အပေါ်ဘားမှ အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။ ဘာသာစကားလည်း ပြောင်းနိုင်ပါသည်။'}
+          {
+            '\u101E\u1004\u103A\u1037\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u104D \u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u104D \u1014\u103E\u1004\u103A\u1037 \u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1021\u101D\u102D\u102F\u1004\u103A\u1038\u1014\u103E\u1004\u103A\u1037 \u1001\u103B\u102D\u1010\u103A\u1006\u1000\u103A\u1015\u102B\u104B'
+          }
         </p>
       </div>
     ),
-    placement: 'center',
+    placement: getNavPlacement(),
     disableBeacon: true,
   },
   {
@@ -180,7 +174,7 @@ const tourSteps: Step[] = [
           Every question you practice brings you closer to your citizenship. You can do this!
         </p>
         <p className="font-myanmar text-muted-foreground mt-2">
-          {'သင်လေ့ကျင့်သမျှ မေးခွန်းတိုင်းက သင့်နိုင်ငံသားဖြစ်မှုနီးစေပါတယ်။ ကံကောင်းပါစေ!'}
+          {'\u101E\u1004\u103A\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u101E\u1019\u103B\u103E \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1038\u1000 \u101E\u1004\u103A\u1037\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1016\u103C\u1005\u103A\u1019\u103E\u102F\u1014\u102E\u1038\u1005\u1031\u1015\u102B\u1010\u101A\u103A\u104B \u1000\u1036\u1000\u1031\u102C\u1004\u103A\u1038\u1015\u102B\u1005\u1031\u104A'}
         </p>
         <div className="mt-4 text-4xl" role="img" aria-label="celebration">
           <span role="img" aria-hidden="true">
@@ -205,39 +199,37 @@ interface OnboardingTourProps {
  * Flow:
  * 1. WelcomeScreen renders first (CSS-only flag motif, bilingual)
  * 2. After 2s auto-transition, waits 800ms for DOM targets to mount
- * 3. 7 steps highlighting Dashboard features (single-page, no navigation)
+ * 3. 7 steps highlighting nav items (single-page, no navigation)
  * 4. Custom TourTooltip with progress dots and 3D chunky buttons
- * 5. Tour only runs on /dashboard route
+ * 5. Tour only runs on /home route
  *
  * Fixes applied:
  * - Dynamic import for react-joyride (SSR-safe with Next.js)
  * - 800ms delay after welcome for staggered animations to complete
  * - disableScrollParentFix for better target positioning
  *
- * data-tour targets required on Dashboard:
- * - data-tour="dashboard" (page shell)
- * - data-tour="study-action" (study button)
- * - data-tour="test-action" (test button)
- * - data-tour="srs-deck" (SRS widget)
- * - data-tour="interview-sim" (interview widget)
- * - (theme step uses body-centered placement, no target needed)
+ * data-tour targets required on nav items:
+ * - data-tour="nav-study" (Study tab)
+ * - data-tour="nav-test" (Mock Test tab)
+ * - data-tour="nav-interview" (Interview tab)
+ * - data-tour="nav-hub" (Progress Hub tab)
  */
 export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const { complete, skip } = useOnboarding();
   const shouldReduceMotion = useReducedMotion();
   const location = useLocation();
 
-  const isOnDashboard = location.pathname === '/dashboard';
+  const isOnHome = location.pathname === '/home';
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
   const steps = tourSteps;
 
-  // Start the tour when on dashboard and onboarding not yet complete.
+  // Start the tour when on home and onboarding not yet complete.
   // Checks localStorage directly to handle replay from Settings (stale hook state).
-  // Delay ensures DOM targets are mounted after dashboard animations.
+  // Delay ensures DOM targets are mounted after page animations.
   useEffect(() => {
-    if (run || !isOnDashboard) return;
+    if (run || !isOnHome) return;
     const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
     if (isComplete && !forceRun) return;
 
@@ -250,7 +242,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     }, 800);
 
     return () => clearInterval(timer);
-  }, [run, isOnDashboard, forceRun]);
+  }, [run, isOnHome, forceRun]);
 
   const handleCallback = useCallback(
     (data: CallBackProps) => {
@@ -276,8 +268,8 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     [complete, skip]
   );
 
-  // Only render on dashboard
-  if (!isOnDashboard) return null;
+  // Only render on home page
+  if (!isOnHome) return null;
 
   // Not running and not pending
   if (!run) return null;

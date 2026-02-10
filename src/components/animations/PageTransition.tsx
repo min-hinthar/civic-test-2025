@@ -1,25 +1,17 @@
 'use client';
 
-import { ReactNode, cloneElement, isValidElement } from 'react';
+import { ReactNode, cloneElement, isValidElement, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { getSlideDirection } from '@/components/navigation/navConfig';
 
-// Page transition variants - slide + fade per user decision
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    x: 20,
-  },
-  enter: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: {
-    opacity: 0,
-    x: -20,
-  },
-};
+// Direction-aware slide + fade variants
+const getVariants = (dir: 'left' | 'right') => ({
+  initial: { opacity: 0, x: dir === 'left' ? 30 : -30 },
+  enter: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: dir === 'left' ? -30 : 30 },
+});
 
 // Snappy timing per user decision (150-250ms)
 const pageTransition = {
@@ -40,8 +32,9 @@ interface PageTransitionProps {
 }
 
 /**
- * Page transition wrapper with slide+fade animation.
+ * Page transition wrapper with direction-aware slide+fade animation.
  *
+ * Slides left/right based on tab order (higher tab = slide left, lower = slide right).
  * Wraps a <Routes> component and provides animated page transitions.
  * Passes location to the Routes child for proper exit animation support.
  *
@@ -58,6 +51,16 @@ export function PageTransition({ children }: PageTransitionProps) {
   const location = useLocation();
   const shouldReduceMotion = useReducedMotion();
 
+  // Track previous pathname and direction using "adjust state when props change" pattern
+  // to avoid React Compiler issues with ref access during render
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  const [direction, setDirection] = useState<'left' | 'right'>('right');
+
+  if (prevPath !== location.pathname) {
+    setDirection(getSlideDirection(prevPath, location.pathname));
+    setPrevPath(location.pathname);
+  }
+
   // Pass location prop to Routes child for exit animation support
   const routesWithLocation = isValidElement(children)
     ? cloneElement(children, { location } as Record<string, unknown>)
@@ -67,7 +70,7 @@ export function PageTransition({ children }: PageTransitionProps) {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={location.pathname}
-        variants={shouldReduceMotion ? reducedMotionVariants : pageVariants}
+        variants={shouldReduceMotion ? reducedMotionVariants : getVariants(direction)}
         initial="initial"
         animate="enter"
         exit="exit"
