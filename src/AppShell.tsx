@@ -121,10 +121,12 @@ function PWAOnboardingFlow() {
 /**
  * What's New modal flow for returning users.
  * Shows once after the USCIS 2025 update, then dismisses permanently.
+ * Waits for onboarding to complete before showing to avoid overlay conflicts.
  */
 function WhatsNewFlow() {
   const { showWhatsNew, dismissWhatsNew } = useWhatsNew();
-  if (!showWhatsNew) return null;
+  const isOnboardingComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
+  if (!showWhatsNew || !isOnboardingComplete) return null;
   return <WhatsNewModal onClose={dismissWhatsNew} />;
 }
 

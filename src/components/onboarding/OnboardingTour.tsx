@@ -244,32 +244,17 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     setShowWelcome(false);
   }, []);
 
-  // Handle replay from Settings: detect when localStorage was cleared externally.
-  // useOnboarding syncs only on mount, so it can't see the Settings page removing the key.
-  // This effect re-checks localStorage directly when navigating to dashboard.
+  // Single effect to start the tour. Checks localStorage directly (not shouldRun)
+  // to handle replay from Settings where useOnboarding state is stale.
+  // Only fires when welcome is dismissed and tour isn't already running.
   useEffect(() => {
-    if (!isOnDashboard || showWelcome || run) return;
-    const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
-    if (!isComplete) {
-      const timer = setTimeout(() => {
-        setShowWelcome(true);
-        setStepIndex(0);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isOnDashboard, showWelcome, run]);
-
-  // Start tour after welcome screen closes with a delay for DOM readiness.
-  // Checks localStorage directly (not shouldRun) to handle replay from Settings
-  // where useOnboarding state is stale.
-  useEffect(() => {
-    if (showWelcome || run) return;
-    if (!isOnDashboard) return;
+    if (showWelcome || run || !isOnDashboard) return;
     const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
     if (isComplete) return;
 
     const timer = setTimeout(() => {
       setRun(true);
+      setStepIndex(0);
     }, 800);
 
     return () => clearTimeout(timer);
