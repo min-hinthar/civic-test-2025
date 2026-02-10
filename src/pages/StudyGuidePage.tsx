@@ -6,7 +6,7 @@ import { ChevronLeft, Search, BookOpen, Layers, GraduationCap } from 'lucide-rea
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { allQuestions } from '@/constants/questions';
-import AppNavigation from '@/components/AppNavigation';
+
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
@@ -229,7 +229,7 @@ const StudyGuidePage = () => {
   if (isReviewView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-        <AppNavigation />
+
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -243,7 +243,7 @@ const StudyGuidePage = () => {
   if (isDeckView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-        <AppNavigation />
+
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -260,7 +260,7 @@ const StudyGuidePage = () => {
   if (isCardsView) {
     return (
       <div className="page-shell" data-tour="study-guide">
-        <AppNavigation />
+
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -293,7 +293,7 @@ const StudyGuidePage = () => {
 
     return (
       <div className="page-shell" data-tour="study-guide">
-        <AppNavigation />
+
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
@@ -488,7 +488,6 @@ const StudyGuidePage = () => {
   // Default: Category overview with hash routing
   return (
     <div className="page-shell" data-tour="study-guide">
-      <AppNavigation />
       <div className="mx-auto max-w-6xl px-4 py-8">
         {pageHeader}
         {tabBar}

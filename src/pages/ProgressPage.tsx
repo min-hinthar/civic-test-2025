@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import { ChevronLeft, ChevronDown, ChevronRight, TrendingUp, Trophy } from 'lucide-react';
 import clsx from 'clsx';
-import AppNavigation from '@/components/AppNavigation';
+
 import { SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -203,7 +203,6 @@ const ProgressPage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation />
       <div className="mx-auto max-w-4xl px-4 py-10">
         {/* Page header with trophy -- Duolingo bold style */}
         <div className="mb-6 text-center">

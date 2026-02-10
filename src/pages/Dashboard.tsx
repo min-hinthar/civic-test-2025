@@ -5,7 +5,7 @@ import { Link, useNavigate, type To } from 'react-router-dom';
 import { BookOpenCheck, ChevronDown, Flag, Mic, Settings, Sparkles, Trophy } from 'lucide-react';
 import clsx from 'clsx';
 import { motion } from 'motion/react';
-import AppNavigation from '@/components/AppNavigation';
+
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { QuestionResult } from '@/types';
 import { SectionHeading } from '@/components/bilingual/BilingualHeading';
@@ -282,7 +282,6 @@ const Dashboard = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation />
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
         {/* Welcome header — US flag left, Myanmar flag right */}

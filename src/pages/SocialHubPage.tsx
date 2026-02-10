@@ -23,7 +23,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Trophy, Award, Flame, Snowflake, Users, Heart, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
-import AppNavigation from '@/components/AppNavigation';
+
 import { PageTitle } from '@/components/bilingual/BilingualHeading';
 import { Card } from '@/components/ui/Card';
 import { FadeIn } from '@/components/animations/StaggeredList';
@@ -252,7 +252,6 @@ const SocialHubPage = () => {
 
   return (
     <div className="page-shell">
-      <AppNavigation />
       <div className="mx-auto max-w-6xl px-4 py-10">
         <PageTitle
           text={{

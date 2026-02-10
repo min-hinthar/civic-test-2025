@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 import { ChevronDown, ChevronUp, Layers3, ClipboardList, Mic2, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
-import AppNavigation from '@/components/AppNavigation';
+
 import SpeechButton from '@/components/ui/SpeechButton';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import type { TestEndReason, InterviewSession } from '@/types';
@@ -214,7 +214,6 @@ const HistoryPage = () => {
 
   return (
     <div className="page-shell" data-tour="test-history">
-      <AppNavigation />
       <div className="mx-auto max-w-6xl px-4 py-10">
         <PageTitle text={strings.nav.testHistory} />
 
