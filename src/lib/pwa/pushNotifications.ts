@@ -3,6 +3,8 @@
  *
  * Handles subscribing/unsubscribing to push notifications via the
  * Push API and communicating subscription data to the server.
+ *
+ * All API calls include a Supabase access token in the Authorization header.
  */
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -21,7 +23,7 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
 export type ReminderFrequency = 'daily' | 'every2days' | 'weekly' | 'off';
 
 export async function subscribeToPush(
-  userId: string,
+  accessToken: string,
   reminderFrequency: ReminderFrequency
 ): Promise<boolean> {
   if (!VAPID_PUBLIC_KEY) {
@@ -37,16 +39,23 @@ export async function subscribeToPush(
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
 
-    // Send subscription to server
+    // Send subscription to server with Authorization header
     const response = await fetch('/api/push/subscribe', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify({
         subscription: subscription.toJSON(),
-        userId,
         reminderFrequency,
       }),
     });
+
+    if (response.status === 401) {
+      console.warn('Push subscribe auth failed - session may be expired');
+      return false;
+    }
 
     return response.ok;
   } catch (error) {
@@ -55,7 +64,7 @@ export async function subscribeToPush(
   }
 }
 
-export async function unsubscribeFromPush(userId: string): Promise<boolean> {
+export async function unsubscribeFromPush(accessToken: string): Promise<boolean> {
   try {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.getSubscription();
@@ -64,12 +73,20 @@ export async function unsubscribeFromPush(userId: string): Promise<boolean> {
       await subscription.unsubscribe();
     }
 
-    // Notify server to remove subscription
+    // Notify server to remove subscription with Authorization header
     const response = await fetch('/api/push/subscribe', {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({}),
     });
+
+    if (response.status === 401) {
+      console.warn('Push unsubscribe auth failed - session may be expired');
+      return false;
+    }
 
     return response.ok;
   } catch (error) {

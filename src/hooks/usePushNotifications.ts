@@ -5,6 +5,7 @@ import {
   getSubscriptionStatus,
 } from '@/lib/pwa/pushNotifications';
 import type { ReminderFrequency } from '@/lib/pwa/pushNotifications';
+import { supabase } from '@/lib/supabaseClient';
 
 export type { ReminderFrequency };
 
@@ -19,6 +20,15 @@ interface UsePushNotificationsResult {
 }
 
 const FREQUENCY_KEY = 'push-reminder-frequency';
+
+async function getAccessToken(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  if (!data.session?.access_token) {
+    console.warn('No active session - cannot authenticate push request');
+    return null;
+  }
+  return data.session.access_token;
+}
 
 export function usePushNotifications(userId: string | null): UsePushNotificationsResult {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -46,8 +56,11 @@ export function usePushNotifications(userId: string | null): UsePushNotification
     async (frequency: ReminderFrequency): Promise<boolean> => {
       if (!userId) return false;
 
+      const accessToken = await getAccessToken();
+      if (!accessToken) return false;
+
       setIsLoading(true);
-      const success = await subscribeToPush(userId, frequency);
+      const success = await subscribeToPush(accessToken, frequency);
       if (success) {
         setIsSubscribed(true);
         setReminderFrequency(frequency);
@@ -62,8 +75,11 @@ export function usePushNotifications(userId: string | null): UsePushNotification
   const unsubscribe = useCallback(async (): Promise<boolean> => {
     if (!userId) return false;
 
+    const accessToken = await getAccessToken();
+    if (!accessToken) return false;
+
     setIsLoading(true);
-    const success = await unsubscribeFromPush(userId);
+    const success = await unsubscribeFromPush(accessToken);
     if (success) {
       setIsSubscribed(false);
       setReminderFrequency('off');
@@ -81,8 +97,11 @@ export function usePushNotifications(userId: string | null): UsePushNotification
         return unsubscribe();
       }
 
+      const accessToken = await getAccessToken();
+      if (!accessToken) return false;
+
       setIsLoading(true);
-      const success = await subscribeToPush(userId, frequency);
+      const success = await subscribeToPush(accessToken, frequency);
       if (success) {
         setReminderFrequency(frequency);
         localStorage.setItem(FREQUENCY_KEY, frequency);
