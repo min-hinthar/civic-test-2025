@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 14 of 17 (Unified Navigation)
-Plan: 5 of 7 in current phase
+Plan: 6 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-10 -- Completed 14-05-PLAN.md (Page Migration)
+Last activity: 2026-02-10 -- Completed 14-06-PLAN.md (Finishing Touches)
 
 Progress: [███░░░░░░░] 3/7 phases (v2.0)
-Phase 14: [█████░░░░░] 5/7 plans
+Phase 14: [██████░░░░] 6/7 plans
 
 ## Completed Milestones
 
@@ -39,7 +39,7 @@ See `.planning/milestones/v1.0/` for full archive.
 | 11 (tokens) | 7/7 | ~90min | ~13min |
 | 12 (USCIS 2025) | 6/6 | ~48min | ~8min |
 | 13 (security) | 5/5 | ~113min | ~23min |
-| 14 (navigation) | 5/7 | ~26min | ~5min |
+| 14 (navigation) | 6/7 | ~32min | ~5min |
 
 *Updated after each plan completion*
 
@@ -99,6 +99,9 @@ Recent decisions affecting current work:
 - [14-05]: Lock all interview phases (not just realistic mode) via setLock -- consistent with test/practice lock behavior
 - [14-05]: Lock message simplified to English-only string -- NavigationProvider/NavItem handles bilingual toast internally
 - [14-05]: Unmount cleanup effect on all lock pages ensures lock is always released even on unexpected navigation
+- [14-06]: useState "adjust state when props change" pattern for PageTransition direction tracking (avoids React Compiler ref-in-render)
+- [14-06]: Tour reduced from 8 to 7 steps: SRS deck merged into Study tab step, theme customization step removed
+- [14-06]: getNavPlacement() uses window.innerWidth >= 768 for responsive tour step placement
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -110,16 +113,16 @@ Recent decisions affecting current work:
 ### Blockers/Concerns
 
 - USCIS 128Q: RESOLVED (12-01) -- 8 missing questions identified and added (GOV-P17, GOV-S40-S46), bank now at 128
-- Navigation restructure will break onboarding tour targets (data-tour attributes) -- must audit before changes
+- Navigation restructure will break onboarding tour targets (data-tour attributes) -- RESOLVED (14-06): tour now targets nav items
 - Progress Hub consolidation must preserve all hash-based deep links used by push notifications and SRS
 
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Phase 14 plan 05 complete; ready for plan 06 (Onboarding Tour)
-Resume file: .planning/phases/14-unified-navigation/14-05-SUMMARY.md
+Stopped at: Phase 14 plan 06 complete; ready for plan 07 (Verification)
+Resume file: .planning/phases/14-unified-navigation/14-06-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 14 plan 05 complete)*
+*Last updated: 2026-02-10 (Phase 14 plan 06 complete)*
