@@ -219,9 +219,7 @@ export function ReviewCard({
               <p
                 className={clsx(
                   'text-lg font-bold',
-                  showRatingFeedback.isEasy
-                    ? 'text-success-600 dark:text-success'
-                    : 'text-warning'
+                  showRatingFeedback.isEasy ? 'text-success-600 dark:text-success' : 'text-warning'
                 )}
               >
                 Next review: {showRatingFeedback.intervalText.en}

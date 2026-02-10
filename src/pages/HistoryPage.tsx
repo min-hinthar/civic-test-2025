@@ -901,9 +901,7 @@ const HistoryPage = () => {
                                       {result.category}
                                     </span>
                                     <span
-                                      className={
-                                        result.isCorrect ? 'text-success' : 'text-warning'
-                                      }
+                                      className={result.isCorrect ? 'text-success' : 'text-warning'}
                                     >
                                       {result.isCorrect ? (
                                         <>

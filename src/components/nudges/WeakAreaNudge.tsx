@@ -57,11 +57,7 @@ export function WeakAreaNudge({
         <span
           className={clsx(
             'text-xs font-semibold tabular-nums whitespace-nowrap',
-            isUnattempted
-              ? 'text-primary'
-              : mastery < 30
-                ? 'text-warning'
-                : 'text-warning'
+            isUnattempted ? 'text-primary' : mastery < 30 ? 'text-warning' : 'text-warning'
           )}
         >
           {isUnattempted ? strings.progress.notStarted.en : `${mastery}%`}

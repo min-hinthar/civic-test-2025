@@ -158,10 +158,7 @@ function BadgeCard({
         )}
       >
         <IconComponent
-          className={clsx(
-            'h-6 w-6',
-            isEarned ? 'text-warning' : 'text-muted-foreground'
-          )}
+          className={clsx('h-6 w-6', isEarned ? 'text-warning' : 'text-muted-foreground')}
         />
       </div>
 

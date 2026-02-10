@@ -1215,8 +1215,7 @@ export const americanGovernmentQuestions: Question[] = [
       type: 'time',
       field: 'chiefJustice',
       lastVerified: '2026-02-09',
-      updateTrigger:
-        'Supreme Court appointment (lifetime tenure, changes on retirement/death)',
+      updateTrigger: 'Supreme Court appointment (lifetime tenure, changes on retirement/death)',
     },
     answers: [
       { text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ်', correct: true },

@@ -27,7 +27,9 @@ function StateSelectContent() {
       >
         <option value="">Select state...</option>
         {allStates.map(s => (
-          <option key={s.code} value={s.code}>{s.name}</option>
+          <option key={s.code} value={s.code}>
+            {s.name}
+          </option>
         ))}
       </select>
       {selectedState && (
@@ -36,7 +38,8 @@ function StateSelectContent() {
         </p>
       )}
       <p className="font-myanmar text-sm text-muted-foreground mt-2">
-        လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် မြို့တော်ကို ကြည့်ရှုရန် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။
+        လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် မြို့တော်ကို
+        ကြည့်ရှုရန် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။
       </p>
     </div>
   );
@@ -86,8 +89,7 @@ const tourSteps: Step[] = [
         <h3 className="font-bold text-lg mb-2">Study with Flashcards</h3>
         <p className="text-muted-foreground text-sm">
           Flip through bilingual flashcards to learn all {totalQuestions} civics questions. Tap to
-          reveal
-          answers!
+          reveal answers!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
           {`မေးခွန်း ${totalQuestions} လုံးကို လေ့လာရန် ကတ်များလှည့်ပါ။`}

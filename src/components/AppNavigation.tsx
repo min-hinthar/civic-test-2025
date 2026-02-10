@@ -152,7 +152,12 @@ const AppNavigation = ({
                     }`}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
-                  <NavLabel en={link.label.en} my={link.label.my} isActive={isActive} showBurmese={showBurmese} />
+                  <NavLabel
+                    en={link.label.en}
+                    my={link.label.my}
+                    isActive={isActive}
+                    showBurmese={showBurmese}
+                  />
                   {link.href === '/study' && dueCount > 0 && (
                     <span className="absolute top-0.5 right-0.5 inline-flex items-center justify-center rounded-full bg-warning text-white text-[9px] font-bold min-w-[16px] h-[16px] px-0.5">
                       {dueCount > 99 ? '99+' : dueCount}
@@ -175,12 +180,7 @@ const AppNavigation = ({
           >
             <div className="flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all hover:bg-primary/10 active:bg-primary/15">
               <Languages className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
-              <NavLabel
-                en="မြန်မာ"
-                my="English"
-                isActive={false}
-                showBurmese={showBurmese}
-              />
+              <NavLabel en="မြန်မာ" my="English" isActive={false} showBurmese={showBurmese} />
             </div>
           </button>
 

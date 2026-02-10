@@ -18,11 +18,7 @@
  */
 export function getToken(name: string, fallback = ''): string {
   if (typeof window === 'undefined') return fallback;
-  return (
-    getComputedStyle(document.documentElement)
-      .getPropertyValue(name)
-      .trim() || fallback
-  );
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 
 /**

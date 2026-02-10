@@ -634,7 +634,10 @@ const Dashboard = () => {
         )}
 
         {/* Milestone celebration modal — suppressed during onboarding to avoid overlay conflicts */}
-        <MasteryMilestone milestone={isOnboarding ? null : currentMilestone} onDismiss={dismissMilestone} />
+        <MasteryMilestone
+          milestone={isOnboarding ? null : currentMilestone}
+          onDismiss={dismissMilestone}
+        />
 
         {/* Badge celebration modal — suppressed during onboarding */}
         <BadgeCelebration

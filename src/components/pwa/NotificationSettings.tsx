@@ -90,9 +90,7 @@ export function NotificationSettings() {
       <div className="rounded-lg border border-warning/40 bg-warning-subtle p-4">
         <div className="flex items-center gap-2">
           <BellOff className="h-5 w-5 text-warning" />
-          <p className="font-medium text-warning-800">
-            Notifications blocked
-          </p>
+          <p className="font-medium text-warning-800">Notifications blocked</p>
         </div>
         <p className="mt-1 text-sm text-warning-700">
           To enable notifications, update your browser settings.
@@ -110,9 +108,7 @@ export function NotificationSettings() {
         <Bell className="h-5 w-5 text-primary" />
         <h3 className="font-medium text-foreground">Study Reminders</h3>
       </div>
-      <p className="text-sm text-muted-foreground mb-1">
-        Get friendly reminders to keep studying
-      </p>
+      <p className="text-sm text-muted-foreground mb-1">Get friendly reminders to keep studying</p>
       <p className="font-myanmar text-sm text-muted-foreground mb-4">
         {'လေ့လာရန် သတိပေးချက်များ ရယူပါ'}
       </p>

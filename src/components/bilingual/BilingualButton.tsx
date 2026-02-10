@@ -25,8 +25,7 @@ const chunky3D = [
 const variants = {
   primary:
     'bg-primary text-white hover:bg-primary active:bg-primary-700 shadow-lg shadow-primary-500/25',
-  secondary:
-    'bg-primary-subtle text-primary hover:bg-primary-200',
+  secondary: 'bg-primary-subtle text-primary hover:bg-primary-200',
   outline: 'border-2 border-primary text-primary hover:bg-primary-subtle',
   ghost: 'text-primary hover:bg-primary-subtle',
   chunky: `bg-primary text-white hover:bg-primary active:bg-primary-700 ${chunky3D}`,

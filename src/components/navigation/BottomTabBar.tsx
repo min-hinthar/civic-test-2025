@@ -117,9 +117,7 @@ export function BottomTabBar() {
               <motion.div
                 whileTap={{ scale: 0.9 }}
                 className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all ${
-                  isActive
-                    ? 'bg-primary/20 shadow-sm shadow-primary/15'
-                    : 'active:bg-primary/10'
+                  isActive ? 'bg-primary/20 shadow-sm shadow-primary/15' : 'active:bg-primary/10'
                 }`}
               >
                 <Icon
@@ -128,7 +126,12 @@ export function BottomTabBar() {
                   }`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
-                <NavLabel en={tab.label.en} my={tab.label.my} isActive={isActive} showBurmese={showBurmese} />
+                <NavLabel
+                  en={tab.label.en}
+                  my={tab.label.my}
+                  isActive={isActive}
+                  showBurmese={showBurmese}
+                />
               </motion.div>
             </Link>
           );
@@ -149,12 +152,7 @@ export function BottomTabBar() {
             className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-primary/10"
           >
             <Languages className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
-            <NavLabel
-              en="မြန်မာ"
-              my="English"
-              isActive={false}
-              showBurmese={showBurmese}
-            />
+            <NavLabel en="မြန်မာ" my="English" isActive={false} showBurmese={showBurmese} />
           </motion.div>
         </button>
 
@@ -191,7 +189,12 @@ export function BottomTabBar() {
               className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-destructive/10"
             >
               <LogOut className="h-4 w-4 text-destructive/70" strokeWidth={2} />
-              <NavLabel en={strings.nav.signOut.en} my={strings.nav.signOut.my} isActive={false} showBurmese={showBurmese} />
+              <NavLabel
+                en={strings.nav.signOut.en}
+                my={strings.nav.signOut.my}
+                isActive={false}
+                showBurmese={showBurmese}
+              />
             </motion.div>
           </button>
         )}

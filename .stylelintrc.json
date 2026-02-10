@@ -3,12 +3,29 @@
   "rules": {
     "color-no-hex": true,
     "color-named": "never",
-    "at-rule-no-unknown": [true, {
-      "ignoreAtRules": ["tailwind", "apply", "layer", "config"]
-    }],
-    "function-no-unknown": [true, {
-      "ignoreFunctions": ["theme", "hsl", "var", "env", "calc", "max", "min", "rgb", "radial-gradient", "linear-gradient"]
-    }],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "apply", "layer", "config"]
+      }
+    ],
+    "function-no-unknown": [
+      true,
+      {
+        "ignoreFunctions": [
+          "theme",
+          "hsl",
+          "var",
+          "env",
+          "calc",
+          "max",
+          "min",
+          "rgb",
+          "radial-gradient",
+          "linear-gradient"
+        ]
+      }
+    ],
     "import-notation": null,
     "no-descending-specificity": null,
     "selector-class-pattern": null,
@@ -19,10 +36,5 @@
     "declaration-block-no-redundant-longhand-properties": null,
     "length-zero-no-unit": null
   },
-  "ignoreFiles": [
-    "node_modules/**",
-    ".next/**",
-    "out/**",
-    "src/styles/tokens.css"
-  ]
+  "ignoreFiles": ["node_modules/**", ".next/**", "out/**", "src/styles/tokens.css"]
 }

@@ -98,8 +98,8 @@ const LandingPage = () => {
             pass with confidence.
           </p>
           <p className="mx-auto mt-1.5 max-w-xl font-myanmar text-sm leading-relaxed text-muted-foreground sm:text-base">
-            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို ကျွမ်းကျင်စွာလေ့လာပါ။
-            ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
+            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို
+            ကျွမ်းကျင်စွာလေ့လာပါ။ ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
           </p>
         </FadeIn>
 

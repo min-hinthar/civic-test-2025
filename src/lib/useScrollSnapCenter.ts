@@ -17,8 +17,7 @@ export function useScrollSnapCenter(pathname: string) {
     const active = container.querySelector<HTMLElement>('[aria-current="page"]');
     if (!active) return;
 
-    const scrollLeft =
-      active.offsetLeft - container.offsetWidth / 2 + active.offsetWidth / 2;
+    const scrollLeft = active.offsetLeft - container.offsetWidth / 2 + active.offsetWidth / 2;
 
     // Instant on first render, smooth on subsequent navigations
     container.scrollTo({

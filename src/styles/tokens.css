@@ -81,86 +81,86 @@
 
 :root {
   /* ── Surfaces ── */
-  --color-background: var(--slate-50);        /* Main app background */
-  --color-surface: 0 0% 100%;                /* Card/panel backgrounds */
-  --color-surface-raised: 0 0% 100%;         /* Elevated surfaces (modals, popovers) */
-  --color-surface-muted: var(--slate-100);    /* Subtle/muted backgrounds */
-  --color-overlay: 0 0% 0%;                  /* Backdrop overlay (use with /50 alpha) */
+  --color-background: var(--slate-50); /* Main app background */
+  --color-surface: 0 0% 100%; /* Card/panel backgrounds */
+  --color-surface-raised: 0 0% 100%; /* Elevated surfaces (modals, popovers) */
+  --color-surface-muted: var(--slate-100); /* Subtle/muted backgrounds */
+  --color-overlay: 0 0% 0%; /* Backdrop overlay (use with /50 alpha) */
 
   /* ── Text ── */
-  --color-text-primary: var(--slate-900);     /* Main body text */
-  --color-text-secondary: var(--slate-500);   /* Muted/helper text */
-  --color-text-on-primary: 0 0% 100%;        /* Text on primary-colored surfaces */
-  --color-text-on-destructive: 0 0% 100%;    /* Text on destructive-colored surfaces */
+  --color-text-primary: var(--slate-900); /* Main body text */
+  --color-text-secondary: var(--slate-500); /* Muted/helper text */
+  --color-text-on-primary: 0 0% 100%; /* Text on primary-colored surfaces */
+  --color-text-on-destructive: 0 0% 100%; /* Text on destructive-colored surfaces */
 
   /* ── Primary (blue) ── */
-  --color-primary: var(--blue-500);           /* Primary buttons, links, actions */
-  --color-primary-hover: var(--blue-600);     /* Primary hover state */
-  --color-primary-active: var(--blue-700);    /* Primary pressed/active state */
-  --color-primary-disabled: var(--blue-300);  /* Primary disabled state */
-  --color-primary-subtle: var(--blue-50);     /* Light primary background */
-  --color-primary-50a: 217 91% 60% / 0.12;   /* Semi-transparent primary overlay */
+  --color-primary: var(--blue-500); /* Primary buttons, links, actions */
+  --color-primary-hover: var(--blue-600); /* Primary hover state */
+  --color-primary-active: var(--blue-700); /* Primary pressed/active state */
+  --color-primary-disabled: var(--blue-300); /* Primary disabled state */
+  --color-primary-subtle: var(--blue-50); /* Light primary background */
+  --color-primary-50a: 217 91% 60% / 0.12; /* Semi-transparent primary overlay */
 
   /* ── Secondary (cyan) ── */
-  --color-secondary: var(--cyan-300);         /* Secondary accent color */
+  --color-secondary: var(--cyan-300); /* Secondary accent color */
   --color-secondary-foreground: 210 40% 15%; /* Text on secondary surfaces */
 
   /* ── Accent (orange) ── */
-  --color-accent: var(--orange-400);          /* Accent highlights */
-  --color-accent-foreground: 210 40% 10%;    /* Text on accent surfaces */
+  --color-accent: var(--orange-400); /* Accent highlights */
+  --color-accent-foreground: 210 40% 10%; /* Text on accent surfaces */
 
   /* ── Accent Purple (achievements, badges) ── */
-  --color-accent-purple: var(--purple-500);   /* Achievement badges, milestones */
+  --color-accent-purple: var(--purple-500); /* Achievement badges, milestones */
   --color-accent-purple-active: var(--purple-700); /* Purple pressed/active state */
   --color-accent-purple-foreground: 0 0% 100%; /* Text on purple surfaces */
 
   /* ── Destructive (warm coral-red, NOT bright red) ── */
-  --color-destructive: var(--red-500);        /* Data-loss/destructive actions */
-  --color-destructive-hover: var(--red-600);  /* Destructive hover state */
+  --color-destructive: var(--red-500); /* Data-loss/destructive actions */
+  --color-destructive-hover: var(--red-600); /* Destructive hover state */
   --color-destructive-active: var(--red-700); /* Destructive pressed/active state */
   --color-destructive-foreground: 0 0% 100%; /* Text on destructive surfaces */
 
   /* ── Success (correct answers, progress) ── */
-  --color-success: var(--green-500);          /* Correct answers, completed */
-  --color-success-active: var(--green-700);   /* Success pressed/active state */
-  --color-success-subtle: var(--green-50);    /* Success background tint */
-  --color-success-foreground: 0 0% 100%;     /* Text on success surfaces */
+  --color-success: var(--green-500); /* Correct answers, completed */
+  --color-success-active: var(--green-700); /* Success pressed/active state */
+  --color-success-subtle: var(--green-50); /* Success background tint */
+  --color-success-foreground: 0 0% 100%; /* Text on success surfaces */
 
   /* ── Warning (wrong answers, caution) ── */
-  --color-warning: var(--amber-500);          /* Wrong answers, warnings */
-  --color-warning-subtle: var(--amber-50);    /* Warning background tint */
-  --color-warning-foreground: 0 0% 100%;     /* Text on warning surfaces */
+  --color-warning: var(--amber-500); /* Wrong answers, warnings */
+  --color-warning-subtle: var(--amber-50); /* Warning background tint */
+  --color-warning-foreground: 0 0% 100%; /* Text on warning surfaces */
 
   /* ── Borders ── */
-  --color-border: var(--slate-200);           /* Default borders */
-  --color-border-muted: var(--slate-100);     /* Subtle/light borders */
-  --color-input: var(--slate-200);            /* Input field borders */
+  --color-border: var(--slate-200); /* Default borders */
+  --color-border-muted: var(--slate-100); /* Subtle/light borders */
+  --color-input: var(--slate-200); /* Input field borders */
 
   /* ── Focus ── */
-  --color-ring: var(--blue-500);              /* Focus ring color */
+  --color-ring: var(--blue-500); /* Focus ring color */
 
   /* ── Decorative ── */
   --color-patriotic-red: var(--patriotic-red); /* Stars, stripes, banners only */
 
   /* ── Status indicators ── */
-  --color-status-online: var(--green-500);    /* Online/connected */
-  --color-status-offline: var(--slate-400);   /* Offline/disconnected */
-  --color-status-syncing: var(--blue-400);    /* Syncing in progress */
-  --color-status-error: var(--red-500);       /* Error state */
+  --color-status-online: var(--green-500); /* Online/connected */
+  --color-status-offline: var(--slate-400); /* Offline/disconnected */
+  --color-status-syncing: var(--blue-400); /* Syncing in progress */
+  --color-status-error: var(--red-500); /* Error state */
 
   /* ── Chart colors (data viz, 3 main categories) ── */
-  --color-chart-blue: var(--blue-500);        /* Government category */
-  --color-chart-amber: var(--amber-500);      /* History category */
-  --color-chart-emerald: var(--green-500);    /* Civics category */
+  --color-chart-blue: var(--blue-500); /* Government category */
+  --color-chart-amber: var(--amber-500); /* History category */
+  --color-chart-emerald: var(--green-500); /* Civics category */
 
   /* ── Sub-category colors (data viz, stable across themes) ── */
-  --color-category-democracy: var(--rose-500);    /* Democracy sub-category */
-  --color-category-government: var(--blue-500);   /* Government sub-category */
-  --color-category-rights: var(--green-500);      /* Rights sub-category */
-  --color-category-colonial: var(--amber-500);    /* Colonial sub-category */
-  --color-category-1800s: var(--fuchsia-500);     /* 1800s sub-category */
-  --color-category-recent: var(--sky-500);        /* Recent history sub-category */
-  --color-category-symbols: var(--slate-500);     /* Symbols sub-category */
+  --color-category-democracy: var(--rose-500); /* Democracy sub-category */
+  --color-category-government: var(--blue-500); /* Government sub-category */
+  --color-category-rights: var(--green-500); /* Rights sub-category */
+  --color-category-colonial: var(--amber-500); /* Colonial sub-category */
+  --color-category-1800s: var(--fuchsia-500); /* 1800s sub-category */
+  --color-category-recent: var(--sky-500); /* Recent history sub-category */
+  --color-category-symbols: var(--slate-500); /* Symbols sub-category */
 }
 
 /* ═══════════════════════════════════════════════════
@@ -219,22 +219,22 @@
 
 :root {
   /* ── Spacing (informational, Tailwind handles these) ── */
-  --space-1: 0.25rem;   /* 4px */
-  --space-2: 0.5rem;    /* 8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
 
   /* ── Border Radius ── */
-  --radius-sm: 0.5rem;    /* 8px - small elements */
-  --radius-md: 0.75rem;   /* 12px - buttons */
-  --radius-lg: 1rem;      /* 16px - inputs */
-  --radius-xl: 1.25rem;   /* 20px - cards */
-  --radius-2xl: 1.5rem;   /* 24px */
-  --radius-3xl: 2rem;     /* 32px - large cards */
-  --radius-full: 9999px;  /* Pill shapes */
+  --radius-sm: 0.5rem; /* 8px - small elements */
+  --radius-md: 0.75rem; /* 12px - buttons */
+  --radius-lg: 1rem; /* 16px - inputs */
+  --radius-xl: 1.25rem; /* 20px - cards */
+  --radius-2xl: 1.5rem; /* 24px */
+  --radius-3xl: 2rem; /* 32px - large cards */
+  --radius-full: 9999px; /* Pill shapes */
 
   /* Backward compat: old --radius -> --radius-xl (was 0.85rem, bumped to 1.25rem) */
   --radius: var(--radius-xl);
@@ -276,23 +276,23 @@
 
 .dark {
   /* ── Surfaces (soft dark, deep navy) ── */
-  --color-background: 222 47% 11%;            /* Main dark background */
-  --color-surface: 222 47% 14%;              /* Card backgrounds */
-  --color-surface-raised: 222 47% 17%;       /* Elevated surfaces */
-  --color-surface-muted: 217 33% 17%;        /* Subtle dark backgrounds */
+  --color-background: 222 47% 11%; /* Main dark background */
+  --color-surface: 222 47% 14%; /* Card backgrounds */
+  --color-surface-raised: 222 47% 17%; /* Elevated surfaces */
+  --color-surface-muted: 217 33% 17%; /* Subtle dark backgrounds */
 
   /* ── Text ── */
-  --color-text-primary: 210 40% 98%;         /* Light text on dark */
-  --color-text-secondary: 215 20% 65%;       /* Muted text on dark */
-  --color-text-on-primary: 222 47% 11%;      /* Dark text on primary buttons */
+  --color-text-primary: 210 40% 98%; /* Light text on dark */
+  --color-text-secondary: 215 20% 65%; /* Muted text on dark */
+  --color-text-on-primary: 222 47% 11%; /* Dark text on primary buttons */
 
   /* ── Primary (brighter blue for dark bg) ── */
-  --color-primary: var(--blue-400);           /* Brighter primary on dark */
+  --color-primary: var(--blue-400); /* Brighter primary on dark */
   --color-primary-hover: var(--blue-300);
   --color-primary-active: var(--blue-200);
   --color-primary-disabled: var(--blue-700);
-  --color-primary-subtle: 224 71% 15%;        /* Dark primary background */
-  --color-primary-50a: 213 94% 68% / 0.15;   /* Semi-transparent on dark */
+  --color-primary-subtle: 224 71% 15%; /* Dark primary background */
+  --color-primary-50a: 213 94% 68% / 0.15; /* Semi-transparent on dark */
 
   /* ── Secondary ── */
   --color-secondary: 200 45% 18%;
@@ -303,24 +303,24 @@
   --color-accent-foreground: 210 40% 98%;
 
   /* ── Accent Purple ── */
-  --color-accent-purple: 270 65% 65%;         /* Brighter purple on dark */
+  --color-accent-purple: 270 65% 65%; /* Brighter purple on dark */
   --color-accent-purple-active: var(--purple-600); /* Purple active on dark */
 
   /* ── Destructive ── */
-  --color-destructive: 10 45% 50%;            /* Brighter destructive on dark */
+  --color-destructive: 10 45% 50%; /* Brighter destructive on dark */
   --color-destructive-hover: 10 45% 55%;
   --color-destructive-active: var(--red-600); /* Destructive active on dark */
   --color-destructive-foreground: 210 40% 98%;
 
   /* ── Success ── */
-  --color-success: 142 71% 50%;              /* Brighter success on dark */
-  --color-success-active: var(--green-600);   /* Success active on dark */
-  --color-success-subtle: 142 71% 15%;       /* Dark success tint */
+  --color-success: 142 71% 50%; /* Brighter success on dark */
+  --color-success-active: var(--green-600); /* Success active on dark */
+  --color-success-subtle: 142 71% 15%; /* Dark success tint */
   --color-success-foreground: 222 47% 11%;
 
   /* ── Warning ── */
-  --color-warning: 32 95% 58%;               /* Brighter warning on dark */
-  --color-warning-subtle: 32 95% 20%;        /* Dark warning tint */
+  --color-warning: 32 95% 58%; /* Brighter warning on dark */
+  --color-warning-subtle: 32 95% 20%; /* Dark warning tint */
   --color-warning-foreground: 222 47% 11%;
 
   /* ── Borders ── */

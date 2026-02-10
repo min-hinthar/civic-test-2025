@@ -1,6 +1,14 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from 'react';
 import rawStateData from '@/data/state-representatives.json';
 
 const STATE_KEY = 'civic-prep-user-state';
@@ -44,9 +52,7 @@ function toStateInfo(raw: RawStateEntry): StateInfo {
     name: raw.name,
     capital: raw.capital,
     governor: raw.governor,
-    senators: raw.senators && raw.senators.length === 2
-      ? [raw.senators[0], raw.senators[1]]
-      : null,
+    senators: raw.senators && raw.senators.length === 2 ? [raw.senators[0], raw.senators[1]] : null,
     lastUpdated: raw.lastUpdated,
   };
 }
@@ -104,11 +110,7 @@ export function StateProvider({ children }: { children: ReactNode }) {
     [selectedState, setSelectedState, stateInfo]
   );
 
-  return (
-    <StateContext.Provider value={value}>
-      {children}
-    </StateContext.Provider>
-  );
+  return <StateContext.Provider value={value}>{children}</StateContext.Provider>;
 }
 
 /**

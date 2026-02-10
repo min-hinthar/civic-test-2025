@@ -45,9 +45,7 @@ export function AnswerFeedback({
           transition={{ duration: 0.2 }}
           className={clsx(
             'rounded-2xl p-4 border',
-            isCorrect
-              ? 'bg-success-subtle border-success'
-              : 'bg-warning-subtle border-warning'
+            isCorrect ? 'bg-success-subtle border-success' : 'bg-warning-subtle border-warning'
           )}
         >
           <div className="flex items-start gap-3">
@@ -148,26 +146,18 @@ export function getAnswerOptionClasses(
       'border-2 rounded-2xl p-4 transition-all cursor-pointer',
       'hover:border-primary-400 hover:bg-primary-subtle/50 hover:shadow-md',
       '',
-      isSelected
-        ? 'border-primary bg-primary-subtle shadow-md'
-        : 'border-border bg-card'
+      isSelected ? 'border-primary bg-primary-subtle shadow-md' : 'border-border bg-card'
     );
   }
 
   // After answer - correct option
   if (isCorrect) {
-    return clsx(
-      'border-2 rounded-2xl p-4',
-      'border-success bg-success-subtle'
-    );
+    return clsx('border-2 rounded-2xl p-4', 'border-success bg-success-subtle');
   }
 
   // After answer - incorrect selected option
   if (isSelected && !isCorrect) {
-    return clsx(
-      'border-2 rounded-2xl p-4',
-      'border-warning bg-warning-subtle'
-    );
+    return clsx('border-2 rounded-2xl p-4', 'border-warning bg-warning-subtle');
   }
 
   // After answer - other options (dimmed)

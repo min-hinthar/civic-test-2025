@@ -316,9 +316,7 @@ export function Flashcard3D({
               </div>
 
               {/* Dynamic answer note for time/state-varying questions */}
-              {dynamic && (
-                <DynamicAnswerNote dynamic={dynamic} stateInfo={stateInfo} />
-              )}
+              {dynamic && <DynamicAnswerNote dynamic={dynamic} stateInfo={stateInfo} />}
 
               {/* Explanation card - stopPropagation prevents flip on interact */}
               {explanation && (

@@ -27,7 +27,11 @@ export const uscis2025Additions: Question[] = [
         text_my: 'အစိုးရအာဏာ၏ အရင်းအမြစ်မှာ ပြည်သူများဖြစ်သည်',
         correct: true,
       },
-      { text_en: 'the courts are the source of power', text_my: 'တရားရုံးများက အာဏာပေးသည်', correct: false },
+      {
+        text_en: 'the courts are the source of power',
+        text_my: 'တရားရုံးများက အာဏာပေးသည်',
+        correct: false,
+      },
       { text_en: 'the army is the source of power', text_my: 'စစ်တပ်က အာဏာပေးသည်', correct: false },
       { text_en: 'a king is the source of power', text_my: 'ဘုရင်က အာဏာပေးသည်', correct: false },
     ],
@@ -71,9 +75,21 @@ export const uscis2025Additions: Question[] = [
         text_my: 'ပြည်သူများက မဲပေးခြင်းဖြင့် အစိုးရအား အာဏာပေးသည်',
         correct: true,
       },
-      { text_en: 'judges choose the government', text_my: 'တရားသူကြီးများက အစိုးရကို ရွေးသည်', correct: false },
-      { text_en: 'the military chooses the government', text_my: 'စစ်တပ်က အစိုးရကို ရွေးသည်', correct: false },
-      { text_en: 'the government chooses the people', text_my: 'အစိုးရက ပြည်သူကို ရွေးသည်', correct: false },
+      {
+        text_en: 'judges choose the government',
+        text_my: 'တရားသူကြီးများက အစိုးရကို ရွေးသည်',
+        correct: false,
+      },
+      {
+        text_en: 'the military chooses the government',
+        text_my: 'စစ်တပ်က အစိုးရကို ရွေးသည်',
+        correct: false,
+      },
+      {
+        text_en: 'the government chooses the people',
+        text_my: 'အစိုးရက ပြည်သူကို ရွေးသည်',
+        correct: false,
+      },
     ],
   },
   {
@@ -82,8 +98,14 @@ export const uscis2025Additions: Question[] = [
     question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ဘယ်လိုနည်းလမ်းနှစ်မျိုးနဲ့ ပြင်ဆင်နိုင်သလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
-      { text_en: 'Congress proposes and states ratify', text_my: 'ကွန်ဂရက်က အဆိုတင်ပြီး ပြည်နယ်များက အတည်ပြုသည်' },
-      { text_en: 'a constitutional convention called by the states', text_my: 'ပြည်နယ်များခေါ်သော ဖွဲ့စည်းပုံညီလာခံဖြင့်' },
+      {
+        text_en: 'Congress proposes and states ratify',
+        text_my: 'ကွန်ဂရက်က အဆိုတင်ပြီး ပြည်နယ်များက အတည်ပြုသည်',
+      },
+      {
+        text_en: 'a constitutional convention called by the states',
+        text_my: 'ပြည်နယ်များခေါ်သော ဖွဲ့စည်းပုံညီလာခံဖြင့်',
+      },
     ],
     answers: [
       {
@@ -91,9 +113,17 @@ export const uscis2025Additions: Question[] = [
         text_my: 'ကွန်ဂရက်က အဆိုတင်ပြီး ပြည်နယ်များက အတည်ပြုသည်',
         correct: true,
       },
-      { text_en: 'the President signs an executive order', text_my: 'သမ္မတက အမိန့်စာထုတ်သည်', correct: false },
+      {
+        text_en: 'the President signs an executive order',
+        text_my: 'သမ္မတက အမိန့်စာထုတ်သည်',
+        correct: false,
+      },
       { text_en: 'the Supreme Court votes', text_my: 'တရားရုံးချုပ်က မဲပေးသည်', correct: false },
-      { text_en: 'state governors approve by themselves', text_my: 'ပြည်နယ်အုပ်ချုပ်ရေးမှူးများက ကိုယ်တိုင် အတည်ပြုသည်', correct: false },
+      {
+        text_en: 'state governors approve by themselves',
+        text_my: 'ပြည်နယ်အုပ်ချုပ်ရေးမှူးများက ကိုယ်တိုင် အတည်ပြုသည်',
+        correct: false,
+      },
     ],
   },
   // ============================================
@@ -108,10 +138,22 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'to lead the House of Representatives', text_my: 'အောက်လွှတ်တော်ကို ဦးဆောင်ရန်' },
     ],
     answers: [
-      { text_en: 'to lead the House of Representatives', text_my: 'အောက်လွှတ်တော်ကို ဦးဆောင်ရန်', correct: true },
-      { text_en: 'to lead the Supreme Court', text_my: 'တရားရုံးချုပ်ကို ဦးဆောင်ရန်', correct: false },
+      {
+        text_en: 'to lead the House of Representatives',
+        text_my: 'အောက်လွှတ်တော်ကို ဦးဆောင်ရန်',
+        correct: true,
+      },
+      {
+        text_en: 'to lead the Supreme Court',
+        text_my: 'တရားရုံးချုပ်ကို ဦးဆောင်ရန်',
+        correct: false,
+      },
       { text_en: 'to command the military', text_my: 'စစ်တပ်ကို အမိန့်ပေးရန်', correct: false },
-      { text_en: 'to sign treaties', text_my: 'အပြည်ပြည်ဆိုင်ရာ သဘောတူစာချုပ် လက်မှတ်ထိုးရန်', correct: false },
+      {
+        text_en: 'to sign treaties',
+        text_my: 'အပြည်ပြည်ဆိုင်ရာ သဘောတူစာချုပ် လက်မှတ်ထိုးရန်',
+        correct: false,
+      },
     ],
   },
   {
@@ -133,13 +175,24 @@ export const uscis2025Additions: Question[] = [
     question_my: 'တရားရုံးပြန်လည်သုံးသပ်မှု (judicial review) ဆိုတာ ဘာကို ဆိုလိုသလဲ။',
     category: 'System of Government',
     studyAnswers: [
-      { text_en: 'courts can decide if a law is constitutional', text_my: 'ဥပဒေသည် ဖွဲ့စည်းပုံနှင့် ကိုက်ညီမှုရှိ/မရှိကို တရားရုံးများက ဆုံးဖြတ်နိုင်သည်' },
+      {
+        text_en: 'courts can decide if a law is constitutional',
+        text_my: 'ဥပဒေသည် ဖွဲ့စည်းပုံနှင့် ကိုက်ညီမှုရှိ/မရှိကို တရားရုံးများက ဆုံးဖြတ်နိုင်သည်',
+      },
     ],
     answers: [
-      { text_en: 'courts can decide if a law is constitutional', text_my: 'ဥပဒေသည် ဖွဲ့စည်းပုံနှင့် ကိုက်ညီမှုရှိ/မရှိကို တရားရုံးများက ဆုံးဖြတ်နိုင်သည်', correct: true },
+      {
+        text_en: 'courts can decide if a law is constitutional',
+        text_my: 'ဥပဒေသည် ဖွဲ့စည်းပုံနှင့် ကိုက်ညီမှုရှိ/မရှိကို တရားရုံးများက ဆုံးဖြတ်နိုင်သည်',
+        correct: true,
+      },
       { text_en: 'Congress writes the laws', text_my: 'ကွန်ဂရက်က ဥပဒေစာရေးသည်', correct: false },
       { text_en: 'the President collects taxes', text_my: 'သမ္မတက အခွန်ကောက်သည်', correct: false },
-      { text_en: 'states choose senators', text_my: 'ပြည်နယ်များက အထက်လွှတ်တော်အမတ်များကို ရွေးသည်', correct: false },
+      {
+        text_en: 'states choose senators',
+        text_my: 'ပြည်နယ်များက အထက်လွှတ်တော်အမတ်များကို ရွေးသည်',
+        correct: false,
+      },
     ],
   },
   {
@@ -164,14 +217,29 @@ export const uscis2025Additions: Question[] = [
     question_my: 'သစ္စာဆိုစာတွင် သင်က ဘယ်လိုကတိတစ်ခု ပြုသလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
-      { text_en: 'give up loyalty to other countries', text_my: 'အခြားနိုင်ငံများへの သစ္စာကို စွန့်လွှတ်မည်' },
+      {
+        text_en: 'give up loyalty to other countries',
+        text_my: 'အခြားနိုင်ငံများへの သစ္စာကို စွန့်လွှတ်မည်',
+      },
       { text_en: 'defend the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ကာကွယ်မည်' },
       { text_en: 'obey the laws of the United States', text_my: 'အမေရိကန်ဥပဒေများကို လိုက်နာမည်' },
     ],
     answers: [
-      { text_en: 'defend the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ကာကွယ်မည်', correct: true },
-      { text_en: 'become a member of Congress', text_my: 'ကွန်ဂရက်အဖွဲ့ဝင်ဖြစ်မည်', correct: false },
-      { text_en: 'own property in every state', text_my: 'ပြည်နယ်တိုင်းတွင် အိမ်ခြံမြေပိုင်ဆိုင်မည်', correct: false },
+      {
+        text_en: 'defend the Constitution',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ကာကွယ်မည်',
+        correct: true,
+      },
+      {
+        text_en: 'become a member of Congress',
+        text_my: 'ကွန်ဂရက်အဖွဲ့ဝင်ဖြစ်မည်',
+        correct: false,
+      },
+      {
+        text_en: 'own property in every state',
+        text_my: 'ပြည်နယ်တိုင်းတွင် အိမ်ခြံမြေပိုင်ဆိုင်မည်',
+        correct: false,
+      },
       { text_en: 'serve as President', text_my: 'သမ္မတဖြစ်မည်', correct: false },
     ],
   },
@@ -186,9 +254,17 @@ export const uscis2025Additions: Question[] = [
     ],
     answers: [
       { text_en: 'obey the law', text_my: 'ဥပဒေကို လိုက်နာရန်', correct: true },
-      { text_en: 'vote in federal elections', text_my: 'ဖက်ဒရယ်ရွေးကောက်ပွဲတွင် မဲပေးရန်', correct: false },
+      {
+        text_en: 'vote in federal elections',
+        text_my: 'ဖက်ဒရယ်ရွေးကောက်ပွဲတွင် မဲပေးရန်',
+        correct: false,
+      },
       { text_en: 'run for federal office', text_my: 'ဖက်ဒရယ်ရုံးအတွက် အရွေးခံရန်', correct: false },
-      { text_en: 'serve as a juror every year', text_my: 'နှစ်တိုင်း ဂျူရီတာဝန်ထမ်းဆောင်ရန်', correct: false },
+      {
+        text_en: 'serve as a juror every year',
+        text_my: 'နှစ်တိုင်း ဂျူရီတာဝန်ထမ်းဆောင်ရန်',
+        correct: false,
+      },
     ],
   },
   {
@@ -203,7 +279,11 @@ export const uscis2025Additions: Question[] = [
     ],
     answers: [
       { text_en: 'serve in the military', text_my: 'စစ်တပ်တွင် တာဝန်ထမ်းဆောင်ရန်', correct: true },
-      { text_en: 'move to another country', text_my: 'အခြားနိုင်ငံသို့ ပြောင်းရွှေ့ရန်', correct: false },
+      {
+        text_en: 'move to another country',
+        text_my: 'အခြားနိုင်ငံသို့ ပြောင်းရွှေ့ရန်',
+        correct: false,
+      },
       { text_en: 'skip jury duty', text_my: 'ဂျူရီတာဝန်ရှောင်ရန်', correct: false },
       { text_en: 'refuse to vote', text_my: 'မဲမပေးရန်', correct: false },
     ],
@@ -228,9 +308,21 @@ export const uscis2025Additions: Question[] = [
         text_my: 'ဗြိတိသျှအခွန်ဆန့်ကျင်မှုအတွက် လက်ဖက်ရည်ကို ဆိပ်ကမ်းထဲ ပစ်ချခဲ့သည့် ဆန္ဒပြမှု',
         correct: true,
       },
-      { text_en: 'the signing of the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ လက်မှတ်ရေးထိုးခြင်း', correct: false },
-      { text_en: 'a meeting to elect the President', text_my: 'သမ္မတရွေးချယ်ရန် အစည်းအဝေး', correct: false },
-      { text_en: 'a treaty to end the Civil War', text_my: 'ပြည်တွင်းစစ်ကို အဆုံးသတ်ရန် သဘောတူစာချုပ်', correct: false },
+      {
+        text_en: 'the signing of the Constitution',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ လက်မှတ်ရေးထိုးခြင်း',
+        correct: false,
+      },
+      {
+        text_en: 'a meeting to elect the President',
+        text_my: 'သမ္မတရွေးချယ်ရန် အစည်းအဝေး',
+        correct: false,
+      },
+      {
+        text_en: 'a treaty to end the Civil War',
+        text_my: 'ပြည်တွင်းစစ်ကို အဆုံးသတ်ရန် သဘောတူစာချုပ်',
+        correct: false,
+      },
     ],
   },
   {
@@ -306,8 +398,16 @@ export const uscis2025Additions: Question[] = [
         correct: true,
       },
       { text_en: 'the first subway system', text_my: 'ပထမဆုံး မြေအောက်ရထားစနစ်', correct: false },
-      { text_en: 'a railroad that carried soldiers', text_my: 'စစ်သားများကို သယ်ဆောင်သည့် ရထားလမ်း', correct: false },
-      { text_en: 'a plan to build factories', text_my: 'စက်ရုံများဆောက်ရန် စီမံကိန်း', correct: false },
+      {
+        text_en: 'a railroad that carried soldiers',
+        text_my: 'စစ်သားများကို သယ်ဆောင်သည့် ရထားလမ်း',
+        correct: false,
+      },
+      {
+        text_en: 'a plan to build factories',
+        text_my: 'စက်ရုံများဆောက်ရန် စီမံကိန်း',
+        correct: false,
+      },
     ],
   },
   // ============================================
@@ -330,8 +430,16 @@ export const uscis2025Additions: Question[] = [
         text_my: 'စစ်အေးကာလတွင် အရှေ့နှင့် အနောက်ဘာလင်ကို ခွဲထားသော နံရံ',
         correct: true,
       },
-      { text_en: 'a wall around the White House', text_my: 'အိမ်ဖြူတော်ပတ်လည်နံရံ', correct: false },
-      { text_en: 'a wall that marked the U.S.-Mexico border', text_my: 'အမေရိကန်-မက်ကဆီကို နယ်စပ်နံရံ', correct: false },
+      {
+        text_en: 'a wall around the White House',
+        text_my: 'အိမ်ဖြူတော်ပတ်လည်နံရံ',
+        correct: false,
+      },
+      {
+        text_en: 'a wall that marked the U.S.-Mexico border',
+        text_my: 'အမေရိကန်-မက်ကဆီကို နယ်စပ်နံရံ',
+        correct: false,
+      },
       { text_en: 'a wall around the Capitol', text_my: 'ကက်ပီတိုလ်ပတ်လည်နံရံ', correct: false },
     ],
   },
@@ -343,16 +451,22 @@ export const uscis2025Additions: Question[] = [
     studyAnswers: [
       {
         text_en: 'an international organization where countries work together for peace',
-        text_my: 'နိုင်ငံများ ပူးပေါင်း၍ ငြိမ်းချမ်းရေးအတွက် လုပ်ဆောင်သော အပြည်ပြည်ဆိုင်ရာ အဖွဲ့အစည်း',
+        text_my:
+          'နိုင်ငံများ ပူးပေါင်း၍ ငြိမ်းချမ်းရေးအတွက် လုပ်ဆောင်သော အပြည်ပြည်ဆိုင်ရာ အဖွဲ့အစည်း',
       },
     ],
     answers: [
       {
         text_en: 'an international organization where countries work together for peace',
-        text_my: 'နိုင်ငံများ ပူးပေါင်း၍ ငြိမ်းချမ်းရေးအတွက် လုပ်ဆောင်သော အပြည်ပြည်ဆိုင်ရာ အဖွဲ့အစည်း',
+        text_my:
+          'နိုင်ငံများ ပူးပေါင်း၍ ငြိမ်းချမ်းရေးအတွက် လုပ်ဆောင်သော အပြည်ပြည်ဆိုင်ရာ အဖွဲ့အစည်း',
         correct: true,
       },
-      { text_en: 'a U.S. state legislature', text_my: 'အမေရိကန်ပြည်နယ် ဥပဒေပြုအဖွဲ့', correct: false },
+      {
+        text_en: 'a U.S. state legislature',
+        text_my: 'အမေရိကန်ပြည်နယ် ဥပဒေပြုအဖွဲ့',
+        correct: false,
+      },
       { text_en: 'a federal court', text_my: 'ဖက်ဒရယ်တရားရုံး', correct: false },
       { text_en: 'a private company', text_my: 'ပုဂ္ဂလိကကုမ္ပဏီ', correct: false },
     ],
@@ -432,16 +546,14 @@ export const uscis2025Additions: Question[] = [
   },
   {
     id: 'GOV-S40',
-    question_en:
-      'Why do U.S. representatives serve shorter terms than U.S. senators?',
+    question_en: 'Why do U.S. representatives serve shorter terms than U.S. senators?',
     question_my:
       'အမေရိကန်ကိုယ်စားလှယ်များသည် အထက်လွှတ်တော်အမတ်များထက် သက်တမ်းတိုရသည်မှာ အဘယ်ကြောင့်နည်း။',
     category: 'System of Government',
     studyAnswers: [
       {
         text_en: 'to more closely follow public opinion',
-        text_my:
-          'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
+        text_my: 'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
       },
       {
         text_en: 'to be more responsive to the people',
@@ -451,8 +563,7 @@ export const uscis2025Additions: Question[] = [
     answers: [
       {
         text_en: 'to more closely follow public opinion',
-        text_my:
-          'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
+        text_my: 'ပြည်သူ့အမြင်ကို ပိုမိုနီးကပ်စွာ လိုက်နာနိုင်စေရန်',
         correct: true,
       },
       {
@@ -475,8 +586,7 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'GOV-S41',
     question_en: 'How many senators does each state have?',
-    question_my:
-      'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် ဘယ်နှစ်ဦးရှိသလဲ။',
+    question_my: 'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် ဘယ်နှစ်ဦးရှိသလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Two (2)', text_my: 'နှစ် (၂)' }],
     answers: [
@@ -493,26 +603,22 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'GOV-S42',
     question_en: 'Why does each state have two senators?',
-    question_my:
-      'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးရှိရသည်မှာ အဘယ်ကြောင့်နည်း။',
+    question_my: 'ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးရှိရသည်မှာ အဘယ်ကြောင့်နည်း။',
     category: 'System of Government',
     studyAnswers: [
       {
         text_en: 'equal representation for small and large states',
-        text_my:
-          'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
+        text_my: 'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
       },
       {
         text_en: 'so all states have equal power in the Senate',
-        text_my:
-          'ပြည်နယ်အားလုံး အထက်လွှတ်တော်တွင် အာဏာတူညီစေရန်',
+        text_my: 'ပြည်နယ်အားလုံး အထက်လွှတ်တော်တွင် အာဏာတူညီစေရန်',
       },
     ],
     answers: [
       {
         text_en: 'equal representation for small and large states',
-        text_my:
-          'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
+        text_my: 'ပြည်နယ်ငယ်များနှင့် ပြည်နယ်ကြီးများအတွက် တန်းတူကိုယ်စားပြုမှု',
         correct: true,
       },
       {
@@ -534,10 +640,8 @@ export const uscis2025Additions: Question[] = [
   },
   {
     id: 'GOV-S43',
-    question_en:
-      'The President of the United States can serve only two terms. Why?',
-    question_my:
-      'အမေရိကန်သမ္မတသည် သက်တမ်းနှစ်ခုသာ တာဝန်ထမ်းဆောင်နိုင်သည်။ အဘယ်ကြောင့်နည်း။',
+    question_en: 'The President of the United States can serve only two terms. Why?',
+    question_my: 'အမေရိကန်သမ္မတသည် သက်တမ်းနှစ်ခုသာ တာဝန်ထမ်းဆောင်နိုင်သည်။ အဘယ်ကြောင့်နည်း။',
     category: 'System of Government',
     studyAnswers: [
       {
@@ -579,8 +683,7 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'GOV-S44',
     question_en: 'Why is the Electoral College important?',
-    question_my:
-      'ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့ (Electoral College) သည် အဘယ်ကြောင့် အရေးကြီးသနည်း။',
+    question_my: 'ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့ (Electoral College) သည် အဘယ်ကြောင့် အရေးကြီးသနည်း။',
     category: 'System of Government',
     studyAnswers: [
       {
@@ -588,17 +691,14 @@ export const uscis2025Additions: Question[] = [
         text_my: 'မည်သူ သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခံရမည်ကို ဆုံးဖြတ်သည်',
       },
       {
-        text_en:
-          'It provides a compromise between the popular vote and congressional vote',
-        text_my:
-          'ပြည်သူ့မဲနှင့် ကွန်ဂရက်မဲကြား အလျှော့အတင်းတစ်ခု ဖန်တီးပေးသည်',
+        text_en: 'It provides a compromise between the popular vote and congressional vote',
+        text_my: 'ပြည်သူ့မဲနှင့် ကွန်ဂရက်မဲကြား အလျှော့အတင်းတစ်ခု ဖန်တီးပေးသည်',
       },
     ],
     answers: [
       {
         text_en: 'It decides who is elected president',
-        text_my:
-          'မည်သူ သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခံရမည်ကို ဆုံးဖြတ်သည်',
+        text_my: 'မည်သူ သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခံရမည်ကို ဆုံးဖြတ်သည်',
         correct: true,
       },
       {
@@ -621,8 +721,7 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'GOV-S45',
     question_en: 'How long do Supreme Court justices serve?',
-    question_my:
-      'တရားရုံးချုပ်တရားသူကြီးများသည် ဘယ်လောက်ကြာ တာဝန်ထမ်းဆောင်သလဲ။',
+    question_my: 'တရားရုံးချုပ်တရားသူကြီးများသည် ဘယ်လောက်ကြာ တာဝန်ထမ်းဆောင်သလဲ။',
     category: 'System of Government',
     studyAnswers: [
       {
@@ -657,8 +756,7 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'GOV-S46',
     question_en: 'Why do Supreme Court justices serve for life?',
-    question_my:
-      'တရားရုံးချုပ်တရားသူကြီးများသည် အဘယ်ကြောင့် တသက်တာ တာဝန်ထမ်းဆောင်ရသနည်း။',
+    question_my: 'တရားရုံးချုပ်တရားသူကြီးများသည် အဘယ်ကြောင့် တသက်တာ တာဝန်ထမ်းဆောင်ရသနည်း။',
     category: 'System of Government',
     studyAnswers: [
       {
@@ -666,10 +764,8 @@ export const uscis2025Additions: Question[] = [
         text_my: 'နိုင်ငံရေးမှ လွတ်လပ်စေရန်',
       },
       {
-        text_en:
-          'so they can make decisions based on the Constitution rather than popular opinion',
-        text_my:
-          'လူထုအမြင်ထက် ဖွဲ့စည်းပုံအခြေခံဥပဒေကို အခြေခံ၍ ဆုံးဖြတ်ချက်ချနိုင်စေရန်',
+        text_en: 'so they can make decisions based on the Constitution rather than popular opinion',
+        text_my: 'လူထုအမြင်ထက် ဖွဲ့စည်းပုံအခြေခံဥပဒေကို အခြေခံ၍ ဆုံးဖြတ်ချက်ချနိုင်စေရန်',
       },
     ],
     answers: [

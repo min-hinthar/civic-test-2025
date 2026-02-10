@@ -95,8 +95,7 @@ function SettingsSection({
   children: React.ReactNode;
   variant?: 'default' | 'danger';
 }) {
-  const borderColor =
-    variant === 'danger' ? 'border-destructive/30' : 'border-border/60';
+  const borderColor = variant === 'danger' ? 'border-destructive/30' : 'border-border/60';
   const bgColor = variant === 'danger' ? 'bg-destructive/5' : 'bg-card';
 
   return (
@@ -273,7 +272,9 @@ export default function SettingsPage() {
             label="Your State"
             labelMy={'သင့်ပြည်နယ်'}
             description="Used for governor, senator, and capital questions"
-            descriptionMy={'အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်နှင့် မြို့တော်မေးခွန်းများအတွက် အသုံးပြုသည်'}
+            descriptionMy={
+              'အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်နှင့် မြို့တော်မေးခွန်းများအတွက် အသုံးပြုသည်'
+            }
             showBurmese={showBurmese}
             action={
               <select
@@ -282,9 +283,7 @@ export default function SettingsPage() {
                 className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[44px] min-w-[140px]"
                 aria-label="Select your state or territory"
               >
-                <option value="">
-                  {showBurmese ? 'ပြည်နယ်ရွေးချယ်ပါ...' : 'Select state...'}
-                </option>
+                <option value="">{showBurmese ? 'ပြည်နယ်ရွေးချယ်ပါ...' : 'Select state...'}</option>
                 {allStates.map(s => (
                   <option key={s.code} value={s.code}>
                     {s.name}

@@ -549,8 +549,15 @@ const ProgressPage = () => {
                             data={trendData}
                             margin={{ left: 0, right: 10, top: 10, bottom: 0 }}
                           >
-                            <CartesianGrid strokeDasharray="3 3" stroke={getTokenColor('--color-border', 0.3)} />
-                            <XAxis dataKey="date" stroke={getTokenColor('--color-text-secondary')} fontSize={12} />
+                            <CartesianGrid
+                              strokeDasharray="3 3"
+                              stroke={getTokenColor('--color-border', 0.3)}
+                            />
+                            <XAxis
+                              dataKey="date"
+                              stroke={getTokenColor('--color-text-secondary')}
+                              fontSize={12}
+                            />
                             <YAxis
                               domain={[0, 100]}
                               tickFormatter={value => `${value}%`}

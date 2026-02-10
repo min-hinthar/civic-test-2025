@@ -177,7 +177,10 @@ const StudyGuidePage = () => {
   // Page header with bold title and patriotic emoji
   const pageHeader = (
     <div className="mb-8">
-      <UpdateBanner showBurmese={showBurmese} className="mb-4 -mx-4 sm:-mx-0 rounded-none sm:rounded-xl" />
+      <UpdateBanner
+        showBurmese={showBurmese}
+        className="mb-4 -mx-4 sm:-mx-0 rounded-none sm:rounded-xl"
+      />
       <motion.h1
         className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight"
         initial={{ opacity: 0, y: -10 }}

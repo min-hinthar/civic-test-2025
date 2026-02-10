@@ -48,9 +48,7 @@ export function useWhatsNew(): { showWhatsNew: boolean; dismissWhatsNew: () => v
     if (alreadySeen) return true;
 
     // Check if user is a returning user (has any civic-prep-* key in localStorage)
-    const isReturningUser = Object.keys(localStorage).some((key) =>
-      key.startsWith('civic-prep-'),
-    );
+    const isReturningUser = Object.keys(localStorage).some(key => key.startsWith('civic-prep-'));
 
     // Brand-new users don't need What's New
     if (!isReturningUser) return true;
@@ -76,8 +74,7 @@ const features = [
     titleEn: '128 Questions',
     titleMy: 'မေးခွန်း ၁၂၈ ခု',
     descEn: '8 new civics questions added to match the official USCIS 2025 test.',
-    descMy:
-      'USCIS 2025 စာမေးပွဲနှင့် ကိုက်ညီရန် နိုင်ငံသားရေးရာမေးခွန်း ၈ ခု ထပ်ထည့်ထားသည်။',
+    descMy: 'USCIS 2025 စာမေးပွဲနှင့် ကိုက်ညီရန် နိုင်ငံသားရေးရာမေးခွန်း ၈ ခု ထပ်ထည့်ထားသည်။',
     iconBg: 'bg-primary-subtle',
     iconColor: 'text-primary',
   },
@@ -147,7 +144,7 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
 
         {/* Feature cards */}
         <div className="mb-6 space-y-4">
-          {features.map((feature) => (
+          {features.map(feature => (
             <div key={feature.titleEn} className="flex items-start gap-3">
               <div
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${feature.iconBg}`}

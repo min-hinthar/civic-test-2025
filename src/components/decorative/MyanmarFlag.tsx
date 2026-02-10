@@ -47,8 +47,20 @@ function FlagSVG() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
       <rect x={0} y={0} width={W} height={Math.ceil(STRIPE_H) + 1} fill={YELLOW} />
-      <rect x={0} y={Math.round(STRIPE_H)} width={W} height={Math.ceil(STRIPE_H) + 1} fill={GREEN} />
-      <rect x={0} y={Math.round(STRIPE_H * 2)} width={W} height={Math.ceil(STRIPE_H) + 1} fill={RED_MY} />
+      <rect
+        x={0}
+        y={Math.round(STRIPE_H)}
+        width={W}
+        height={Math.ceil(STRIPE_H) + 1}
+        fill={GREEN}
+      />
+      <rect
+        x={0}
+        y={Math.round(STRIPE_H * 2)}
+        width={W}
+        height={Math.ceil(STRIPE_H) + 1}
+        fill={RED_MY}
+      />
       <polygon points={STAR_POLY} fill={WHITE} />
     </svg>
   );

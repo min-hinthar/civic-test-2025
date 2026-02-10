@@ -63,9 +63,7 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
         </div>
         <div>
           {/* Friendly tip - not a warning */}
-          <p className="text-sm font-medium text-warning-800">
-            Quick tip for the best experience
-          </p>
+          <p className="text-sm font-medium text-warning-800">Quick tip for the best experience</p>
           <p className="font-myanmar text-sm text-warning-700">
             အကောင်းဆုံး အတွေ့အကြုံအတွက် အကြံပြုချက်
           </p>

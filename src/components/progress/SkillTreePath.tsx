@@ -132,7 +132,11 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
   }, [nodeStates]);
 
   return (
-    <div className="relative mx-auto w-full max-w-md pt-4 pb-6" role="list" aria-label="Skill tree path">
+    <div
+      className="relative mx-auto w-full max-w-md pt-4 pb-6"
+      role="list"
+      aria-label="Skill tree path"
+    >
       {SKILL_NODES.map((node, index) => {
         const state = nodeStates[index];
         const name = SUB_CATEGORY_NAMES[node.subCategory];

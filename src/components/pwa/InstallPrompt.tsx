@@ -105,9 +105,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
               <p className="text-sm text-foreground">
                 1. Tap the <Share className="inline h-4 w-4" aria-hidden="true" /> Share button
               </p>
-              <p className="text-sm text-foreground">
-                2. Select &quot;Add to Home Screen&quot;
-              </p>
+              <p className="text-sm text-foreground">2. Select &quot;Add to Home Screen&quot;</p>
               <p className="font-myanmar text-sm text-muted-foreground">
                 ၁။ Share ခလုတ်ကို နှိပ်ပါ
               </p>

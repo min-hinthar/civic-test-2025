@@ -74,12 +74,8 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
 
         {/* Welcome header */}
         <h2 className="mb-1 text-2xl font-bold text-foreground">Welcome!</h2>
-        <p className="font-myanmar mb-1 text-xl font-bold text-foreground">
-          ကြိုဆိုပါတယ်!
-        </p>
-        <p className="mb-6 text-muted-foreground">
-          Your app is ready. Here are some tips:
-        </p>
+        <p className="font-myanmar mb-1 text-xl font-bold text-foreground">ကြိုဆိုပါတယ်!</p>
+        <p className="mb-6 text-muted-foreground">Your app is ready. Here are some tips:</p>
 
         {/* Tips */}
         <div className="mb-6 space-y-4">
@@ -90,9 +86,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
             </div>
             <div>
               <p className="font-medium text-foreground">Works offline</p>
-              <p className="text-sm text-muted-foreground">
-                Study anytime, even without internet.
-              </p>
+              <p className="text-sm text-muted-foreground">Study anytime, even without internet.</p>
               <p className="font-myanmar text-sm text-muted-foreground">
                 အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
               </p>

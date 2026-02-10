@@ -43,10 +43,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     // Update PWA theme-color meta tag for browser chrome
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute(
-        'content',
-        theme === 'dark' ? '#1a1f36' : '#002868'
-      );
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#1a1f36' : '#002868');
     }
 
     // Remove transitioning class after animation completes

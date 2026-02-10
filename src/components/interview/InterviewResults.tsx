@@ -304,9 +304,7 @@ export function InterviewResults({
             <span
               className={clsx(
                 'text-2xl font-bold',
-                passed
-                  ? 'text-success-600'
-                  : 'text-warning-600'
+                passed ? 'text-success-600' : 'text-warning-600'
               )}
             >
               {passed ? strings.interview.passed.en : strings.interview.failed.en}
@@ -316,9 +314,7 @@ export function InterviewResults({
             <p
               className={clsx(
                 'font-myanmar text-sm',
-                passed
-                  ? 'text-success-600/80'
-                  : 'text-warning-600/80'
+                passed ? 'text-success-600/80' : 'text-warning-600/80'
               )}
             >
               {passed ? strings.interview.passed.my : strings.interview.failed.my}
