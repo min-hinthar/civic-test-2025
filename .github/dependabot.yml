@@ -13,5 +13,5 @@ updates:
         dependency-type: development
     ignore:
       # Don't auto-update major versions (review manually)
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
