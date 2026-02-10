@@ -33,7 +33,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. The v1.0
 - [ ] **Phase 11: Design Token Foundation** - Consolidate design tokens into single CSS variable source of truth
 - [ ] **Phase 12: USCIS 2025 Question Bank** - Expand to full 128-question bank with updated thresholds
 - [ ] **Phase 13: Security Hardening** - Authenticate push subscriptions, add CSP headers, audit RLS and dependencies
-- [ ] **Phase 14: Unified Navigation** - Single 5-tab navigation structure across mobile and desktop
+- [ ] **Phase 14: Unified Navigation** - 6-tab navigation with desktop sidebar and mobile bottom bar
 - [ ] **Phase 15: Progress Hub** - Consolidate progress, history, and achievements into one tabbed page
 - [ ] **Phase 16: Dashboard Next Best Action** - Simplify dashboard to single contextual CTA with compact stats
 - [ ] **Phase 17: UI System Polish** - Apply glass-morphism, micro-interactions, touch targets, and dark mode polish
@@ -98,19 +98,25 @@ Plans:
 - [x] 13-05-PLAN.md — Integration verification checkpoint
 
 ### Phase 14: Unified Navigation
-**Goal**: Users see the same navigation structure everywhere -- 5 persistent tabs on mobile, matching sidebar on desktop -- with no hidden "More" menu
+**Goal**: Users see a consistent 6-tab navigation (Home, Study Guide, Mock Test, Interview, Progress Hub, Settings) on desktop sidebar and mobile bottom bar, with glass-morphism styling, badge indicators, spring animations, test lock behavior, and updated onboarding tour
 **Depends on**: Phase 11 (design tokens for consistent styling)
 **Requirements**: NAV-01, NAV-02, NAV-03, NAV-04, NAV-05
 **Success Criteria** (what must be TRUE):
-  1. User sees exactly 5 tabs on mobile bottom bar and the same 5 sections in the desktop sidebar, with all primary features reachable in one tap
+  1. User sees exactly 6 tabs on mobile bottom bar and the same 6 sections in the desktop sidebar, with all primary features reachable in one tap
   2. Badge dots appear on relevant tabs showing SRS due count and unread notifications (counts update in real time)
   3. Tab switches animate smoothly with clear active state indicators (highlighted icon, label, or underline)
   4. Navigation is locked during an active mock test session (tabs are visually disabled, tapping them does nothing)
   5. The onboarding tour still functions correctly after navigation restructuring (all tour targets exist and are visible)
-**Plans**: TBD
+**Plans**: 7 plans
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01-PLAN.md — Nav foundation: config, hooks, shared components, provider, glass CSS
+- [ ] 14-02-PLAN.md — Sidebar component + GlassHeader for public pages
+- [ ] 14-03-PLAN.md — BottomTabBar refactor to use shared nav foundation
+- [ ] 14-04-PLAN.md — NavigationShell + AppShell rewire + route redirects + i18n
+- [ ] 14-05-PLAN.md — Remove AppNavigation from all 14 pages + migrate lock behavior
+- [ ] 14-06-PLAN.md — Page transitions + onboarding tour + Settings appearance + delete AppNavigation
+- [ ] 14-07-PLAN.md — Build verification + visual/functional checkpoint
 
 ### Phase 15: Progress Hub
 **Goal**: Users find all their progress data -- overview, category mastery, test history, achievements, and leaderboard -- in one tabbed page instead of scattered across three separate pages
@@ -167,7 +173,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | 11. Design Token Foundation | v2.0 | 7/7 | Complete | 2026-02-09 |
 | 12. USCIS 2025 Question Bank | v2.0 | 6/6 | Complete | 2026-02-10 |
 | 13. Security Hardening | v2.0 | 5/5 | Complete | 2026-02-10 |
-| 14. Unified Navigation | v2.0 | 0/TBD | Not started | - |
+| 14. Unified Navigation | v2.0 | 0/7 | Not started | - |
 | 15. Progress Hub | v2.0 | 0/TBD | Not started | - |
 | 16. Dashboard Next Best Action | v2.0 | 0/TBD | Not started | - |
 | 17. UI System Polish | v2.0 | 0/TBD | Not started | - |
@@ -175,7 +181,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | 18/TBD | 10/29 | In progress |
+| v2.0 | 7 | 25/TBD | 10/29 | In progress |
 
 ---
 
