@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 13 of 17 (Security Hardening)
-Plan: 3 of 5 in current phase
+Plan: 1 of 5 in current phase (13-01 + 13-03 complete)
 Status: In progress
-Last activity: 2026-02-10 -- Completed 13-03-PLAN.md (RLS Audit & push_subscriptions)
+Last activity: 2026-02-10 -- Completed 13-01-PLAN.md (Push Subscribe Auth Hardening)
 
 Progress: [██░░░░░░░░] 2/7 phases (v2.0)
-Phase 13: [██████░░░░] 3/5 plans
+Phase 13: [████░░░░░░] 2/5 plans
 
 ## Completed Milestones
 
@@ -71,6 +71,9 @@ Recent decisions affecting current work:
 - [13-03]: display_name validated at DB level with CHECK constraints (no-HTML + length) rather than runtime sanitization
 - [13-03]: No DOMPurify needed: zero dangerouslySetInnerHTML with user content, React JSX auto-escapes all text rendering
 - [13-03]: Redundant INSERT policies on streak_data and earned_badges documented for future cleanup (not harmful)
+- [13-01]: Per-request Supabase client with user Bearer token for JWT verification (not service role key)
+- [13-01]: In-memory Map rate limiting appropriate for single-instance Vercel deployment
+- [13-01]: getAccessToken() helper extracted outside hook to avoid React Compiler async issues
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -88,10 +91,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Phase 13, Plan 3 of 5 complete
-Resume file: .planning/phases/13-security-hardening/13-03-SUMMARY.md
+Stopped at: Phase 13, Plans 01 + 03 complete; Plans 02, 04, 05 remaining
+Resume file: .planning/phases/13-security-hardening/13-01-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 13, Plan 3 complete)*
+*Last updated: 2026-02-10 (Phase 13, Plan 01 complete)*
