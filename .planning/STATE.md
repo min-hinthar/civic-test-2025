@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.0 Unified Learning Hub -- Phase 13 (Security Hardening)
+**Current focus:** v2.0 Unified Learning Hub -- Phase 14 (Unified Navigation)
 
 ## Current Position
 
-Phase: 13 of 17 (Security Hardening)
-Plan: 5 of 5 in current phase (Phase 13 COMPLETE)
-Status: Phase complete
-Last activity: 2026-02-10 -- Completed 13-05-PLAN.md (Verification Checkpoint)
+Phase: 14 of 17 (Unified Navigation)
+Plan: 1 of 7 in current phase
+Status: In progress
+Last activity: 2026-02-10 -- Completed 14-01-PLAN.md (Navigation Foundation)
 
 Progress: [███░░░░░░░] 3/7 phases (v2.0)
-Phase 13: [██████████] 5/5 plans
+Phase 14: [█░░░░░░░░░] 1/7 plans
 
 ## Completed Milestones
 
@@ -39,6 +39,7 @@ See `.planning/milestones/v1.0/` for full archive.
 | 11 (tokens) | 7/7 | ~90min | ~13min |
 | 12 (USCIS 2025) | 6/6 | ~48min | ~8min |
 | 13 (security) | 5/5 | ~113min | ~23min |
+| 14 (navigation) | 1/7 | ~7min | ~7min |
 
 *Updated after each plan completion*
 
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - [13-05]: Dev mode CSP adds unsafe-eval for webpack HMR; prod remains nonce-only
 - [13-05]: blob: in worker-src for Sentry Replay; accounts.google.com in style-src + connect-src for Google Sign-In
 - [13-05]: apple-mobile-web-app-capable replaced with standards-compliant mobile-web-app-capable
+- [14-01]: Sidebar state persisted to localStorage under key 'sidebar-expanded' (Claude discretion)
+- [14-01]: Single-state object pattern for sidebar tier sync avoids React Compiler setState-in-effect violation
+- [14-01]: SW update check uses setTimeout(0) to avoid synchronous setState in effect body
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -101,10 +105,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Phase 13 COMPLETE (all 5 plans); ready for Phase 14
-Resume file: .planning/phases/13-security-hardening/13-05-SUMMARY.md
+Stopped at: Phase 14 plan 01 complete; ready for plan 02 (Sidebar)
+Resume file: .planning/phases/14-unified-navigation/14-01-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 13 complete)*
+*Last updated: 2026-02-10 (Phase 14 plan 01 complete)*
