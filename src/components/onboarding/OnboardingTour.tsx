@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import type { Step, CallBackProps } from 'react-joyride';
 import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
@@ -54,9 +54,8 @@ const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
  * 7-step tour -- all targets are on the Dashboard page.
  * Each step uses disableBeacon: true for immediate display.
  *
- * Note: The theme-toggle step targets AppNavigation which is
- * hidden on mobile (md:block). On mobile, this step will be
- * skipped by react-joyride when the target is not found.
+ * All steps use either dashboard data-tour targets or body-centered
+ * placement for consistent display across mobile and desktop.
  */
 const tourSteps: Step[] = [
   {
@@ -155,19 +154,20 @@ const tourSteps: Step[] = [
     disableBeacon: true,
   },
   {
-    target: '[data-tour="theme-toggle"]',
+    target: 'body',
     content: (
       <div>
         <h3 className="font-bold text-lg mb-2">Customize Your Experience</h3>
         <p className="text-muted-foreground text-sm">
-          Toggle between light and dark mode. Study comfortably day or night!
+          Use the top navigation bar to toggle between light and dark mode, switch languages, and
+          more. Study comfortably day or night!
         </p>
         <p className="font-myanmar text-sm text-muted-foreground mt-2">
-          {'အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။'}
+          {'အပေါ်ဘားမှ အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲနိုင်ပါသည်။ ဘာသာစကားလည်း ပြောင်းနိုင်ပါသည်။'}
         </p>
       </div>
     ),
-    placement: 'bottom',
+    placement: 'center',
     disableBeacon: true,
   },
   {
@@ -219,7 +219,7 @@ interface OnboardingTourProps {
  * - data-tour="test-action" (test button)
  * - data-tour="srs-deck" (SRS widget)
  * - data-tour="interview-sim" (interview widget)
- * - data-tour="theme-toggle" (in AppNavigation, desktop only)
+ * - (theme step uses body-centered placement, no target needed)
  */
 export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const { shouldShow, complete, skip } = useOnboarding();
@@ -236,14 +236,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
-  // Filter out theme-toggle step on mobile — its target is inside desktop-only nav (hidden md:block)
-  const steps = useMemo(
-    () =>
-      typeof window !== 'undefined' && !window.matchMedia('(min-width: 768px)').matches
-        ? tourSteps.filter(s => s.target !== '[data-tour="theme-toggle"]')
-        : tourSteps,
-    []
-  );
+  const steps = tourSteps;
 
   // Delay start after welcome completes to ensure DOM targets are mounted
   // Dashboard widgets use staggered motion animations (80ms * ~10 items)
