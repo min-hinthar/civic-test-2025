@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { NotificationSettings } from '@/components/pwa/NotificationSettings';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
@@ -169,6 +170,7 @@ function SettingsRow({
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
   const { isSubscribed } = usePushNotifications(user?.id ?? null);
   const [reminderTime, setReminderTime] = React.useState(() => {
@@ -245,6 +247,20 @@ export default function SettingsPage() {
             descriptionMy={'နှစ်ဘာသာ သို့မဟုတ် အင်္ဂလစ်သီးသန့်'}
             showBurmese={showBurmese}
             action={<LanguageToggle showLabel />}
+          />
+          <SettingsRow
+            label="Theme"
+            labelMy={'အပြင်အဆင်'}
+            description="Switch between light and dark mode"
+            descriptionMy={'အလင်းနှင့် အမှာင်မုဒ် ပြောင်းလဲပါ'}
+            showBurmese={showBurmese}
+            action={
+              <ToggleSwitch
+                checked={theme === 'dark'}
+                onChange={toggleTheme}
+                ariaLabel="Toggle dark mode"
+              />
+            }
             isLast
           />
           <div className="mt-2 rounded-xl bg-muted/30 p-3">
@@ -460,7 +476,7 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => {
                   localStorage.removeItem('civic-test-onboarding-complete');
-                  navigate('/dashboard');
+                  navigate('/home');
                 }}
                 className="rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px]"
               >
