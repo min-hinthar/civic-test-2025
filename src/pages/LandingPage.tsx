@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/Button';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { totalQuestions } from '@/constants/questions';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
+import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 
 const features = [
   {
@@ -70,24 +71,19 @@ const LandingPage = () => {
       <AppNavigation translucent />
 
       {/* Hero Section */}
-      <header className="relative mx-auto max-w-4xl px-4 pb-12 pt-12 text-center sm:px-6 sm:pt-16 md:pb-16">
+      <header className="relative mx-auto max-w-4xl px-4 pb-14 pt-14 text-center sm:px-6 sm:pt-20 md:pb-20">
         {/* Decorative gradient blob */}
         <div className="pointer-events-none absolute inset-x-0 top-[-120px] mx-auto h-[350px] w-[500px] rounded-full bg-gradient-to-r from-primary/30 via-accent-500/20 to-success/20 blur-[100px]" />
 
+        {/* Bilingual flags — outside FadeIn so their own animations play */}
+        <div className="mb-8 flex items-center justify-center gap-5 sm:mb-10 sm:gap-8">
+          <AmericanFlag size="lg" animated className="sm:hidden" />
+          <MyanmarFlag size="lg" animated className="sm:hidden" />
+          <AmericanFlag size="xl" animated className="hidden sm:block" />
+          <MyanmarFlag size="xl" animated className="hidden sm:block" />
+        </div>
+
         <FadeIn>
-          {/* American Flag */}
-          <AmericanFlag size="md" className="mx-auto mb-4" />
-
-          {/* Patriotic mascot emojis */}
-          <div
-            className="mb-4 flex items-center justify-center gap-3 text-4xl sm:text-5xl"
-            aria-hidden="true"
-          >
-            <span>🦅</span>
-            <span>🗽</span>
-            <span>⭐</span>
-          </div>
-
           {/* Main headline */}
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
             U.S. Citizenship Test Prep
@@ -97,11 +93,11 @@ const LandingPage = () => {
           </p>
 
           {/* Bilingual tagline */}
-          <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Master all {totalQuestions} USCIS civics questions in English and Burmese. Study smart,
             pass with confidence.
           </p>
-          <p className="mx-auto mt-1 max-w-xl font-myanmar text-sm text-muted-foreground sm:text-base">
+          <p className="mx-auto mt-1.5 max-w-xl font-myanmar text-sm leading-relaxed text-muted-foreground sm:text-base">
             အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို ကျွမ်းကျင်စွာလေ့လာပါ။
             ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
           </p>
@@ -109,7 +105,7 @@ const LandingPage = () => {
 
         {/* CTA Buttons */}
         <FadeIn delay={200}>
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Button
               size="lg"
               onClick={() => navigate('/auth')}
@@ -282,10 +278,11 @@ const LandingPage = () => {
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
           <FadeIn>
-            <div className="flex justify-center text-4xl" aria-hidden="true">
-              <span>🗽</span>
+            <div className="mb-4 flex items-center justify-center gap-4">
+              <AmericanFlag size="sm" animated />
+              <MyanmarFlag size="sm" animated />
             </div>
-            <h2 className="mt-4 text-2xl font-extrabold text-foreground sm:text-3xl">
+            <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
               Ready to Start Your Journey?
             </h2>
             <p className="mt-1 font-myanmar text-base text-muted-foreground">

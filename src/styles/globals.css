@@ -226,6 +226,18 @@ html.theme-transitioning .page-shell {
 }
 
 /* ═══════════════════════════════════════════════════
+   SCROLL UTILITIES
+   ═══════════════════════════════════════════════════ */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════════════════ */
 

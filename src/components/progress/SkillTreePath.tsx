@@ -132,7 +132,7 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
   }, [nodeStates]);
 
   return (
-    <div className="relative mx-auto w-full max-w-md py-4" role="list" aria-label="Skill tree path">
+    <div className="relative mx-auto w-full max-w-md pt-4 pb-6" role="list" aria-label="Skill tree path">
       {SKILL_NODES.map((node, index) => {
         const state = nodeStates[index];
         const name = SUB_CATEGORY_NAMES[node.subCategory];
@@ -214,14 +214,14 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
                   {node.emoji}
                 </span>
 
-                {/* Mastery percentage badge */}
+                {/* Mastery percentage badge — sits below the circle */}
                 {state.isUnlocked && (
                   <span
                     className={clsx(
-                      'absolute -bottom-1 left-1/2 -translate-x-1/2',
+                      'absolute -bottom-3.5 left-1/2 -translate-x-1/2',
                       'rounded-full px-1.5 py-0.5 text-[10px] font-bold',
                       'bg-card text-foreground border border-border/60',
-                      'tabular-nums shadow-sm'
+                      'tabular-nums shadow-sm pointer-events-none'
                     )}
                   >
                     {state.mastery}%
@@ -231,7 +231,7 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
                 {/* Lock icon for locked nodes */}
                 {!state.isUnlocked && (
                   <span
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs"
+                    className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 text-xs pointer-events-none"
                     aria-hidden="true"
                   >
                     {'\u{1F512}'}

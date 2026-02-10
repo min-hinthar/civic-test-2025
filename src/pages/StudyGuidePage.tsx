@@ -192,7 +192,7 @@ const StudyGuidePage = () => {
 
   // Tab navigation bar
   const tabBar = (
-    <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+    <div className="flex gap-2 mb-6 overflow-x-auto pt-2 pb-1">
       {TABS.map(tab => {
         const isActive = activeTab === tab.id;
         const Icon = tab.icon;

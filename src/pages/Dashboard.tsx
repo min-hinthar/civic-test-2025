@@ -34,6 +34,7 @@ import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
+import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 import { useOnboarding } from '@/hooks/useOnboarding';
 
 const studyCardsLink = (category?: string): To => ({
@@ -284,31 +285,29 @@ const Dashboard = () => {
       <AppNavigation />
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
-        {/* Welcome header with flag and patriotic emojis */}
+        {/* Welcome header — US flag left, Myanmar flag right */}
         <motion.header className="mb-6" {...stagger(0)}>
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-4">
-            <AmericanFlag size="sm" className="mt-1 hidden sm:block" />
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">
-                {showBurmese ? (
-                  <>
+          <div className="flex items-center gap-3 sm:gap-5">
+            <AmericanFlag size="sm" animated className="shrink-0" />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">
+                  {showBurmese ? (
                     <span className="font-myanmar">
                       {`ပြန်လာတာကို ကြိုဆိုပါတယ်၍ ${user?.name?.split(' ')[0] ?? 'သင်ယူသူ'}!`}
                     </span>
-                    <span className="ml-2" aria-hidden="true">
-                      {'🗽'}
-                    </span>
-                  </>
-                ) : (
-                  <>
+                  ) : (
                     <span>{`Welcome back, ${user?.name?.split(' ')[0] ?? 'Learner'}!`}</span>
-                    <span className="ml-2" aria-hidden="true">
-                      {'🗽'}
-                    </span>
-                  </>
-                )}
-              </h1>
+                  )}
+                </h1>
+                <Link
+                  to="/settings"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
+                  aria-label="Settings · ဆက်တင်များ"
+                >
+                  <Settings className="h-5 w-5" />
+                </Link>
+              </div>
               <p className="mt-1 text-sm text-muted-foreground max-w-md">
                 {motivationalMessage.en}
                 {showBurmese && (
@@ -316,33 +315,13 @@ const Dashboard = () => {
                 )}
               </p>
             </div>
-            </div>
-            <Link
-              to="/settings"
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
-              aria-label="Settings · ဆက်တင်များ"
-            >
-              <Settings className="h-5 w-5" />
-            </Link>
+            <MyanmarFlag size="sm" animated className="shrink-0" />
           </div>
         </motion.header>
 
         {/* HERO: Readiness Score - The most prominent element */}
         <motion.section className="mb-6" {...stagger(1)}>
           <div className="relative overflow-hidden rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-primary-subtle via-surface to-primary-subtle shadow-xl shadow-primary/20">
-            {/* Patriotic decorative stars */}
-            <div
-              className="absolute top-3 right-3 text-2xl opacity-30 select-none"
-              aria-hidden="true"
-            >
-              {'⭐️'}
-            </div>
-            <div
-              className="absolute bottom-3 left-3 text-lg opacity-20 select-none"
-              aria-hidden="true"
-            >
-              {'🗽'}
-            </div>
             <div className="p-5 sm:p-6">
               <ReadinessIndicator
                 correctCount={masteredCount}

@@ -10,7 +10,7 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 const GoogleOneTapSignIn = () => {
   const { user, loginWithGoogleIdToken } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [gsiReady, setGsiReady] = useState(false);
@@ -22,10 +22,6 @@ const GoogleOneTapSignIn = () => {
       if (!credential) return;
       try {
         await loginWithGoogleIdToken(credential);
-        showSuccess({
-          en: 'Signed in with Google',
-          my: 'Google ဖြင့် ဝင်ရောက်ပြီးပါပြီ',
-        });
       } catch (error) {
         console.error('Google One Tap failed', error);
         showError({
@@ -34,7 +30,7 @@ const GoogleOneTapSignIn = () => {
         });
       }
     },
-    [loginWithGoogleIdToken, showSuccess, showError]
+    [loginWithGoogleIdToken, showError]
   );
 
   const shouldAutoPrompt = useMemo(

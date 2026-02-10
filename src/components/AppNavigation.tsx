@@ -11,14 +11,18 @@ import {
   History,
   Users,
   TrendingUp,
+  Settings,
+  Sun,
+  Moon,
+  Languages,
 } from 'lucide-react';
-import ThemeToggle from '@/components/ThemeToggle';
-import { LanguageToggleCompact } from '@/components/ui/LanguageToggle';
-import { OnlineStatusIndicator } from '@/components/pwa/OnlineStatusIndicator';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useSRS } from '@/contexts/SRSContext';
 import { useToast } from '@/components/BilingualToast';
 import { strings } from '@/lib/i18n/strings';
+import { useScrollDirection } from '@/lib/useScrollDirection';
+import { useScrollSnapCenter } from '@/lib/useScrollSnapCenter';
+import { useThemeContext } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AppNavigationProps {
@@ -35,7 +39,31 @@ const navLinks = [
   { href: '/progress', label: strings.nav.progress, icon: TrendingUp },
   { href: '/history', label: strings.nav.testHistory, icon: History },
   { href: '/social', label: strings.nav.socialHub, icon: Users },
+  { href: '/settings', label: strings.nav.settings, icon: Settings },
 ];
+
+/** Single-line nav label — Myanmar when bilingual mode, English otherwise */
+function NavLabel({
+  en,
+  my,
+  isActive,
+  showBurmese,
+}: {
+  en: string;
+  my: string;
+  isActive: boolean;
+  showBurmese: boolean;
+}) {
+  return (
+    <span
+      className={`text-[11px] whitespace-nowrap transition-colors ${
+        showBurmese ? 'font-myanmar' : ''
+      } ${isActive ? 'font-semibold text-primary' : 'text-muted-foreground'}`}
+    >
+      {showBurmese ? my : en}
+    </span>
+  );
+}
 
 const AppNavigation = ({
   translucent = false,
@@ -47,7 +75,10 @@ const AppNavigation = ({
   const { showWarning } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
-  const { showBurmese } = useLanguage();
+  const { theme, toggleTheme } = useThemeContext();
+  const { showBurmese, toggleMode } = useLanguage();
+  const navVisible = useScrollDirection();
+  const scrollRef = useScrollSnapCenter(location.pathname);
 
   const handleGuardedNavigation = (
     event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
@@ -62,33 +93,36 @@ const AppNavigation = ({
     });
   };
 
-  const shellClasses = translucent
-    ? 'bg-card/70 shadow-sm'
-    : 'bg-gradient-to-r from-primary-subtle/80 via-background to-primary-subtle/80 shadow-lg shadow-primary/5';
+  const handleSignOut = (event: MouseEvent<HTMLButtonElement>) => {
+    if (locked) {
+      handleGuardedNavigation(event);
+      return;
+    }
+    logout().then(() => navigate('/'));
+  };
+
+  const shellClasses = translucent ? 'bg-card/70 shadow-sm' : 'bg-card/95 shadow-sm';
+
+  const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
   return (
     <nav
-      className={`hidden md:block nav-safe-area sticky top-0 z-30 border-b border-border/40 backdrop-blur-xl ${shellClasses}`}
+      className={`hidden md:block nav-safe-area sticky top-0 z-30 border-b border-border/40 backdrop-blur-xl transition-transform duration-300 ${navVisible ? 'translate-y-0' : '-translate-y-full'} ${shellClasses}`}
     >
       {/* Main nav row */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 lg:px-6 h-14">
-        {/* Logo / title area */}
+      <div className="mx-auto flex max-w-7xl items-center px-4 lg:px-6 h-16">
+        {/* Logo */}
         <Link
           to="/"
-          className={`flex items-center gap-2 text-foreground shrink-0 ${locked ? 'cursor-not-allowed opacity-70' : 'hover:opacity-80 transition-opacity'}`}
+          className={`flex items-center gap-2 text-foreground shrink-0 mr-4 ${locked ? 'cursor-not-allowed opacity-70' : 'hover:opacity-80 transition-opacity'}`}
           onClick={event => locked && handleGuardedNavigation(event)}
           aria-disabled={locked}
         >
           <span className="text-lg font-extrabold tracking-tight">Civic Test Prep</span>
-          {showBurmese && (
-            <span className="font-myanmar text-xs text-muted-foreground hidden lg:inline">
-              အမေရိကန်နိုင်ငံသားရေး
-            </span>
-          )}
         </Link>
 
-        {/* Navigation links - centered */}
-        <div className="flex items-center gap-0.5 lg:gap-1">
+        {/* Scrollable tabs — nav links + theme + signout */}
+        <div ref={scrollRef} className="flex items-center overflow-x-auto scrollbar-hide min-w-0">
           {navLinks.map(link => {
             const isActive =
               location.pathname === link.href ||
@@ -99,85 +133,111 @@ const AppNavigation = ({
                 key={link.href}
                 to={link.href}
                 onClick={event => handleGuardedNavigation(event, link.href)}
-                className={`relative flex items-center gap-1.5 rounded-xl px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-150 ${
-                  isActive
-                    ? 'bg-primary/20 text-primary font-semibold shadow-sm shadow-primary/10'
-                    : 'text-muted-foreground hover:bg-primary/10 hover:text-primary active:bg-primary/15'
+                className={`relative flex shrink-0 flex-col items-center justify-center py-1 px-2 min-w-[64px] min-h-[52px] transition-all duration-150 ${
+                  locked && link.href !== '/test' ? 'cursor-not-allowed opacity-60' : ''
                 }`}
                 aria-current={isActive ? 'page' : undefined}
                 aria-disabled={locked && link.href !== '/test'}
               >
-                {/* Active indicator bar at bottom */}
-                {isActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-primary" />
-                )}
-                <Icon
-                  className={`h-4 w-4 shrink-0 ${isActive ? 'text-primary' : ''}`}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <span className="hidden lg:inline whitespace-nowrap">
-                  {showBurmese ? (
-                    <span className="font-myanmar">{link.label.my}</span>
-                  ) : (
-                    link.label.en
+                <div
+                  className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all ${
+                    isActive
+                      ? 'bg-primary/20 shadow-sm shadow-primary/15'
+                      : 'hover:bg-primary/10 active:bg-primary/15'
+                  }`}
+                >
+                  <Icon
+                    className={`h-4 w-4 shrink-0 transition-colors ${
+                      isActive ? 'text-primary' : 'text-muted-foreground'
+                    }`}
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                  <NavLabel en={link.label.en} my={link.label.my} isActive={isActive} showBurmese={showBurmese} />
+                  {link.href === '/study' && dueCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 inline-flex items-center justify-center rounded-full bg-warning text-white text-[9px] font-bold min-w-[16px] h-[16px] px-0.5">
+                      {dueCount > 99 ? '99+' : dueCount}
+                    </span>
                   )}
-                </span>
-                {link.href === '/study' && dueCount > 0 && (
-                  <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-warning text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1">
-                    {dueCount > 99 ? '99+' : dueCount}
-                  </span>
-                )}
+                </div>
               </Link>
             );
           })}
-        </div>
 
-        {/* Right side: utilities */}
-        <div className="flex items-center gap-1.5">
-          <OnlineStatusIndicator />
-          <LanguageToggleCompact />
-          <div data-tour="theme-toggle">
-            <ThemeToggle />
-          </div>
+          {/* Separator */}
+          <div className="shrink-0 mx-1.5 h-8 w-px bg-border/40" />
+
+          {/* Language toggle */}
+          <button
+            type="button"
+            onClick={toggleMode}
+            className="flex shrink-0 flex-col items-center justify-center py-1 px-2 min-w-[64px] min-h-[52px]"
+            aria-label={showBurmese ? 'Switch to English' : 'Switch to Myanmar'}
+          >
+            <div className="flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all hover:bg-primary/10 active:bg-primary/15">
+              <Languages className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
+              <NavLabel
+                en="မြန်မာ"
+                my="English"
+                isActive={false}
+                showBurmese={showBurmese}
+              />
+            </div>
+          </button>
+
+          {/* Theme toggle */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex shrink-0 flex-col items-center justify-center py-1 px-2 min-w-[64px] min-h-[52px]"
+            data-tour="theme-toggle"
+          >
+            <div className="flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all hover:bg-primary/10 active:bg-primary/15">
+              <ThemeIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
+              <NavLabel
+                en={theme === 'dark' ? 'Light' : 'Dark'}
+                my={theme === 'dark' ? 'အလင်း' : 'အမှာင်'}
+                isActive={false}
+                showBurmese={showBurmese}
+              />
+            </div>
+          </button>
+
+          {/* Sign out / Sign in */}
           {user ? (
             <button
-              onClick={event => {
-                if (locked) {
-                  handleGuardedNavigation(event);
-                  return;
-                }
-                logout().then(() => navigate('/'));
-              }}
-              className={`inline-flex items-center gap-1.5 rounded-xl border border-border/60 px-3 py-1.5 text-sm text-muted-foreground transition-colors ${
-                locked
-                  ? 'cursor-not-allowed opacity-60'
-                  : 'hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
+              type="button"
+              onClick={handleSignOut}
+              className={`flex shrink-0 flex-col items-center justify-center py-1 px-2 min-w-[64px] min-h-[52px] ${
+                locked ? 'cursor-not-allowed opacity-60' : ''
               }`}
               aria-disabled={locked}
             >
-              <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden lg:inline">
-                {showBurmese ? (
-                  <span className="font-myanmar">{strings.nav.signOut.my}</span>
-                ) : (
-                  strings.nav.signOut.en
-                )}
-              </span>
+              <div className="flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all hover:bg-destructive/10 active:bg-destructive/15">
+                <LogOut className="h-4 w-4 text-destructive/70" strokeWidth={2} />
+                <NavLabel
+                  en={strings.nav.signOut.en}
+                  my={strings.nav.signOut.my}
+                  isActive={false}
+                  showBurmese={showBurmese}
+                />
+              </div>
             </button>
           ) : (
             <Link
               to="/auth"
               onClick={event => locked && handleGuardedNavigation(event)}
-              className={`inline-flex items-center rounded-xl bg-primary px-4 py-1.5 text-sm font-semibold text-white transition-colors ${
-                locked ? 'cursor-not-allowed opacity-60' : 'hover:bg-primary'
-              }`}
+              className="flex shrink-0 flex-col items-center justify-center py-1 px-2 min-w-[64px] min-h-[52px]"
               aria-disabled={locked}
             >
-              {showBurmese ? (
-                <span className="font-myanmar">{strings.nav.signIn.my}</span>
-              ) : (
-                strings.nav.signIn.en
-              )}
+              <div className="flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all hover:bg-primary/10 active:bg-primary/15">
+                <LogOut className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
+                <NavLabel
+                  en={strings.nav.signIn.en}
+                  my={strings.nav.signIn.my}
+                  isActive={false}
+                  showBurmese={showBurmese}
+                />
+              </div>
             </Link>
           )}
         </div>

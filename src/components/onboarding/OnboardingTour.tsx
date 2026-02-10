@@ -239,12 +239,15 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
     if (isComplete && !forceRun) return;
 
-    const timer = setTimeout(() => {
+    // Poll until welcome/what's-new screens are dismissed before starting
+    const timer = setInterval(() => {
+      if (document.querySelector('[aria-label="Welcome to Civic Test Prep"]')) return;
+      clearInterval(timer);
       setRun(true);
       setStepIndex(0);
     }, 800);
 
-    return () => clearTimeout(timer);
+    return () => clearInterval(timer);
   }, [run, isOnDashboard, forceRun]);
 
   const handleCallback = useCallback(

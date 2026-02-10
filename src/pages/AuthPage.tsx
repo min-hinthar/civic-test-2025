@@ -8,6 +8,8 @@ import AppNavigation from '@/components/AppNavigation';
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/animations/StaggeredList';
+import { AmericanFlag } from '@/components/decorative/AmericanFlag';
+import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 
 const AuthPage = () => {
   const { login, register, authError, user, sendPasswordReset } = useAuth();
@@ -22,10 +24,6 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         await login(form.email, form.password);
-        showSuccess({
-          en: 'Welcome back!',
-          my: 'ကြိုဆိုပါတယ်! သင့်အကောင့်သို့ ဝင်ရောက်ပြီးပါပြီ',
-        });
       } else if (mode === 'register') {
         await register(form.name, form.email, form.password);
         showSuccess({
@@ -59,14 +57,11 @@ const AuthPage = () => {
       <AppNavigation translucent />
       <div className="mx-auto flex max-w-md flex-col gap-6 px-4 pb-16 pt-10">
         <FadeIn>
-          {/* Patriotic header */}
+          {/* Bilingual flags header */}
           <div className="text-center">
-            <div
-              className="mb-3 flex items-center justify-center gap-2 text-3xl"
-              aria-hidden="true"
-            >
-              <span>🦅</span>
-              <span>🗽</span>
+            <div className="mb-3 flex items-center justify-center gap-3">
+              <AmericanFlag size="sm" animated />
+              <MyanmarFlag size="sm" animated />
             </div>
             <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">
               {mode === 'login' && 'Welcome Back'}
