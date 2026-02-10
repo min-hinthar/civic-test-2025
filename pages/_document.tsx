@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import Document, { DocumentContext, Html, Head, Main, NextScript } from 'next/document';
 
 const THEME_SCRIPT = `
 (function() {
@@ -14,29 +14,41 @@ const THEME_SCRIPT = `
 })();
 `;
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head>
-        {/* Blocking theme script - prevents FOUC by applying theme before React hydrates */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+class MyDocument extends Document<{ nonce?: string }> {
+  static async getInitialProps(ctx: DocumentContext) {
+    const initialProps = await Document.getInitialProps(ctx);
+    const nonce = (ctx.req?.headers?.['x-nonce'] as string) || undefined;
+    return { ...initialProps, nonce };
+  }
 
-        {/* PWA Manifest */}
-        <link rel="manifest" href="/manifest.json" />
+  render() {
+    const { nonce } = this.props;
 
-        {/* Theme color for browser chrome */}
-        <meta name="theme-color" content="#002868" />
+    return (
+      <Html lang="en">
+        <Head nonce={nonce}>
+          {/* Blocking theme script - prevents FOUC by applying theme before React hydrates */}
+          <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
 
-        {/* Apple-specific PWA settings */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="US Civics" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-      </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+          {/* PWA Manifest */}
+          <link rel="manifest" href="/manifest.json" />
+
+          {/* Theme color for browser chrome */}
+          <meta name="theme-color" content="#002868" />
+
+          {/* Apple-specific PWA settings */}
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="US Civics" />
+          <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        </Head>
+        <body>
+          <Main />
+          <NextScript nonce={nonce} />
+        </body>
+      </Html>
+    );
+  }
 }
+
+export default MyDocument;
