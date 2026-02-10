@@ -251,18 +251,36 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     setShowWelcome(false);
   }, []);
 
-  // Start tour after welcome screen closes with a delay for DOM readiness
+  // Handle replay from Settings: detect when localStorage was cleared externally.
+  // useOnboarding syncs only on mount, so it can't see the Settings page removing the key.
+  // This effect re-checks localStorage directly when navigating to dashboard.
+  useEffect(() => {
+    if (!isOnDashboard || showWelcome || run) return;
+    const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
+    if (!isComplete) {
+      const timer = setTimeout(() => {
+        setShowWelcome(true);
+        setStepIndex(0);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isOnDashboard, showWelcome, run]);
+
+  // Start tour after welcome screen closes with a delay for DOM readiness.
+  // Checks localStorage directly (not shouldRun) to handle replay from Settings
+  // where useOnboarding state is stale.
   useEffect(() => {
     if (showWelcome || run) return;
-    if (!shouldRun || !isOnDashboard) return;
+    if (!isOnDashboard) return;
+    const isComplete = localStorage.getItem('civic-test-onboarding-complete') === 'true';
+    if (isComplete) return;
 
-    // Only start if welcome was just dismissed (shouldRun is true but we're not running yet)
     const timer = setTimeout(() => {
       setRun(true);
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [showWelcome, run, shouldRun, isOnDashboard]);
+  }, [showWelcome, run, isOnDashboard]);
 
   const handleCallback = useCallback(
     (data: CallBackProps) => {
@@ -292,7 +310,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   if (!isOnDashboard) return null;
 
   // Not eligible to show
-  if (!shouldRun && !run) return null;
+  if (!shouldRun && !run && !showWelcome) return null;
 
   return (
     <>
