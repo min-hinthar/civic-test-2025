@@ -72,12 +72,12 @@ Plans:
 **Plans**: 6 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Question type extension + 8 missing questions + dynamic metadata on 9 existing
-- [ ] 12-02-PLAN.md — State representative data JSON + StateContext provider + AppShell integration
-- [ ] 12-03-PLAN.md — Update indicator UI: UpdateBanner + WhatsNewModal components
-- [ ] 12-04-PLAN.md — State picker (Settings + onboarding) + dynamic answer display + banner placement
-- [ ] 12-05-PLAN.md — Question bank validation test suite (128Q, unique IDs, translations, categories)
-- [ ] 12-06-PLAN.md — Visual and functional verification checkpoint
+- [x] 12-01-PLAN.md — Question type extension + 8 missing questions + dynamic metadata on 9 existing
+- [x] 12-02-PLAN.md — State representative data JSON + StateContext provider + AppShell integration
+- [x] 12-03-PLAN.md — Update indicator UI: UpdateBanner + WhatsNewModal components
+- [x] 12-04-PLAN.md — State picker (Settings + onboarding) + dynamic answer display + banner placement
+- [x] 12-05-PLAN.md — Question bank validation test suite (128Q, unique IDs, translations, categories)
+- [x] 12-06-PLAN.md — Visual and functional verification checkpoint
 
 ### Phase 13: Security Hardening
 **Goal**: The app's API endpoints, client-side inputs, and dependency chain are hardened against known vulnerability classes
@@ -161,7 +161,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 11. Design Token Foundation | v2.0 | 7/7 | Complete | 2026-02-09 |
-| 12. USCIS 2025 Question Bank | v2.0 | 0/TBD | Not started | - |
+| 12. USCIS 2025 Question Bank | v2.0 | 6/6 | Complete | 2026-02-10 |
 | 13. Security Hardening | v2.0 | 0/TBD | Not started | - |
 | 14. Unified Navigation | v2.0 | 0/TBD | Not started | - |
 | 15. Progress Hub | v2.0 | 0/TBD | Not started | - |
@@ -171,7 +171,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | 7/TBD | 1/29 | In progress |
+| v2.0 | 7 | 13/TBD | 6/29 | In progress |
 
 ---
 
