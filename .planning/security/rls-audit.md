@@ -186,3 +186,51 @@ No Supabase Edge Functions are deployed. Nothing to audit.
 4. **push_subscriptions keys column:** The `keys` JSONB column stores sensitive push subscription cryptographic keys (`p256dh`, `auth`). These are only accessible to the owning user via RLS (or service role). No additional encryption is needed since these are browser-generated keys, not user secrets.
 
 5. **mock_test_responses subquery policy:** The subquery-based RLS policy on `mock_test_responses` is correct but may have performance implications at scale. If the table grows large, consider adding a denormalized `user_id` column with a direct RLS policy. Not urgent for current scale.
+
+## Input Sanitization & XSS Assessment (SEC-03)
+
+**Assessment Date:** 2026-02-10
+**Overall XSS Risk:** LOW
+
+### Defense Layers
+
+1. **React JSX auto-escaping:** All user-visible text is rendered via JSX expressions (`{variable}`) which auto-escape HTML entities. No user-controlled content passes through `dangerouslySetInnerHTML`.
+2. **CSP nonce-based script-src (Plan 13-02):** Even if an XSS payload were stored, CSP blocks execution of inline scripts without a valid nonce.
+3. **Database CHECK constraints (Plan 13-03):** `display_name` rejects `<` and `>` characters at the PostgreSQL level, preventing HTML tag storage.
+
+### dangerouslySetInnerHTML Audit
+
+One usage found in `pages/_document.tsx`:
+- **Content:** `THEME_SCRIPT` -- a hardcoded constant string for FOUC prevention (applies dark/light theme before React hydrates)
+- **User-controlled?** No. The script content is a static string defined at build time. The nonce attribute is set from an HTTP header, not user input.
+- **Risk:** NONE
+
+### User Input Surface Inventory
+
+| Input Field | Location | Component | Stored? | Rendered To Others? | Sanitization | Risk |
+|-------------|----------|-----------|---------|---------------------|--------------|------|
+| display_name | social_profiles | `SocialOptInFlow.tsx`, `SocialSettings.tsx` | Yes (Supabase) | Yes (leaderboard) | Client: 2-30 char limit; DB CHECK: 2-30 chars, no `<>` chars; React JSX auto-escape on render | LOW |
+| full_name | profiles (auth signup) | `AuthPage.tsx` | Yes (Supabase) | No (only shown to self) | Managed by Supabase Auth; React JSX auto-escape | NONE |
+| email | auth (Supabase) | `AuthPage.tsx`, `PasswordResetPage.tsx` | Yes (Supabase Auth) | No (only shown to self) | Managed by Supabase Auth; email format validation | NONE |
+| password | auth (Supabase) | `AuthPage.tsx`, `PasswordUpdatePage.tsx` | Yes (Supabase Auth) | No (never rendered) | Managed by Supabase Auth, min 12 chars enforced | NONE |
+| test answers | mock_test_responses | `TestPage.tsx` | Yes (Supabase) | No (only shown to self) | Stored as selected answer text from predefined options, not free-form input | NONE |
+| study guide search | client-side filter | `StudyGuidePage.tsx` | No (client only) | No | Not stored; filters predefined question list; React JSX auto-escape | NONE |
+| SRS reminder time | client-side setting | `SettingsPage.tsx` | No (localStorage) | No | HTML `type="time"` input; value used as time string only | NONE |
+| reminder frequency | push_subscriptions | `SettingsPage.tsx` | Yes (Supabase) | No | DB CHECK constraint: must be one of `('daily', 'every2days', 'weekly', 'off')` | NONE |
+
+### Removed/Absent XSS Vectors
+
+- **`marked` library:** NOT present in `package.json`. No markdown-to-HTML rendering exists anywhere in the codebase. This eliminates a common XSS vector entirely.
+- **`DOMPurify`:** Not needed and not installed. No raw HTML rendering of user content occurs.
+- **`contentEditable`:** Not used anywhere in the codebase.
+- **No `<textarea>` elements:** All text inputs use `<input type="text">` with predefined max lengths.
+
+### Conclusion
+
+No additional runtime sanitization library (e.g., DOMPurify) is needed because:
+
+1. **No user input is rendered as raw HTML** -- zero instances of `dangerouslySetInnerHTML` with user-controlled content
+2. **The only user text visible to others** (`display_name`) has database-level character restrictions rejecting `<` and `>`, plus client-side length validation
+3. **CSP provides defense-in-depth** against any hypothetical stored XSS payloads (nonce-based script-src blocks unauthorized script execution)
+4. **No markdown rendering** -- the `marked` library is not installed, eliminating HTML injection via markdown
+5. **All user inputs** are either managed by Supabase Auth (email, password), constrained to predefined options (test answers, reminder frequency), or client-side only (search filter, time picker)
