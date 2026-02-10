@@ -1,76 +1,27 @@
 'use client';
 
+/**
+ * Mobile bottom tab bar -- 6 tabs + 3 utility controls.
+ *
+ * Consumes the shared nav foundation (navConfig, NavItem, NavigationProvider)
+ * for consistent rendering with the Sidebar. Applies glass-morphism styling,
+ * horizontal scroll with snap-center, and scroll-hide/show behavior.
+ */
+
 import { useCallback } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Home,
-  BookOpen,
-  ClipboardCheck,
-  Mic,
-  TrendingUp,
-  Clock,
-  Users,
-  Settings,
-  Sun,
-  Moon,
-  LogOut,
-  Languages,
-} from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Sun, Moon, LogOut, Languages } from 'lucide-react';
 import { motion } from 'motion/react';
-import type { BilingualString } from '@/lib/i18n/strings';
-import { strings } from '@/lib/i18n/strings';
-import { useScrollDirection } from '@/lib/useScrollDirection';
+import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
+import { NavItem } from './NavItem';
+import { useNavigation } from './NavigationProvider';
 import { useScrollSnapCenter } from '@/lib/useScrollSnapCenter';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-interface TabItem {
-  href: string;
-  label: BilingualString;
-  icon: typeof Home;
-}
-
-/** All nav tabs shown in the scrollable bottom bar */
-const allTabs: TabItem[] = [
-  { href: '/dashboard', label: strings.nav.dashboard, icon: Home },
-  { href: '/study', label: strings.nav.studyGuide, icon: BookOpen },
-  { href: '/test', label: strings.nav.mockTest, icon: ClipboardCheck },
-  { href: '/interview', label: strings.nav.practiceInterview, icon: Mic },
-  { href: '/progress', label: strings.nav.progress, icon: TrendingUp },
-  { href: '/history', label: strings.nav.testHistory, icon: Clock },
-  { href: '/social', label: strings.nav.socialHub, icon: Users },
-  { href: '/settings', label: strings.nav.settings, icon: Settings },
-];
-
-/** Routes where the bottom tab bar should NOT be shown */
-const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-password', '/op-ed'];
-
-/** Single-line nav label — Myanmar when bilingual mode, English otherwise */
-function NavLabel({
-  en,
-  my,
-  isActive,
-  showBurmese,
-}: {
-  en: string;
-  my: string;
-  isActive: boolean;
-  showBurmese: boolean;
-}) {
-  return (
-    <span
-      className={`text-[10px] whitespace-nowrap transition-colors ${
-        showBurmese ? 'font-myanmar' : ''
-      } ${isActive ? 'font-semibold text-primary' : 'text-muted-foreground'}`}
-    >
-      {showBurmese ? my : en}
-    </span>
-  );
-}
-
 /**
- * Mobile bottom tab bar with all nav items + theme toggle + sign out
+ * Mobile bottom tab bar with 6 nav items + utility controls
  * in a horizontally scrollable row.
  * Hides on scroll down, shows on scroll up.
  */
@@ -80,12 +31,17 @@ export function BottomTabBar() {
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
   const { showBurmese, toggleMode } = useLanguage();
-  const navVisible = useScrollDirection();
+  const { isLocked, navVisible, badges } = useNavigation();
   const scrollRef = useScrollSnapCenter(location.pathname);
 
   const handleSignOut = useCallback(() => {
     logout().then(() => navigate('/'));
   }, [logout, navigate]);
+
+  const handleLockedTap = useCallback(() => {
+    // NavItem handles the shake animation; we could show a toast here
+    // but the lock message is available from NavigationProvider if needed.
+  }, []);
 
   // Hide on public/auth routes
   if (HIDDEN_ROUTES.includes(location.pathname)) {
@@ -96,49 +52,32 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-border/60 bg-card/95 backdrop-blur-xl transition-transform duration-300 ${navVisible ? 'translate-y-0' : 'translate-y-full'}`}
+      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden glass-nav transition-transform duration-300 ${navVisible ? 'translate-y-0' : 'translate-y-full'}`}
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       aria-label="Main navigation"
     >
       <div ref={scrollRef} className="flex items-center overflow-x-auto scrollbar-hide px-1">
-        {allTabs.map(tab => {
+        {NAV_TABS.map(tab => {
           const isActive =
             location.pathname === tab.href ||
             (tab.href === '/study' && location.pathname.startsWith('/study'));
-          const Icon = tab.icon;
 
           return (
-            <Link
-              key={tab.href}
-              to={tab.href}
-              className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <motion.div
-                whileTap={{ scale: 0.9 }}
-                className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all ${
-                  isActive ? 'bg-primary/20 shadow-sm shadow-primary/15' : 'active:bg-primary/10'
-                }`}
-              >
-                <Icon
-                  className={`h-4 w-4 transition-colors ${
-                    isActive ? 'text-primary' : 'text-muted-foreground'
-                  }`}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <NavLabel
-                  en={tab.label.en}
-                  my={tab.label.my}
-                  isActive={isActive}
-                  showBurmese={showBurmese}
-                />
-              </motion.div>
-            </Link>
+            <NavItem
+              key={tab.id}
+              tab={tab}
+              isActive={isActive}
+              isLocked={isLocked}
+              showBurmese={showBurmese}
+              variant="mobile"
+              badges={badges}
+              onLockedTap={handleLockedTap}
+            />
           );
         })}
 
         {/* Separator */}
-        <div className="shrink-0 mx-1 h-8 w-px bg-border/40" />
+        <div className="shrink-0 mx-1.5 h-8 w-px bg-border/40" />
 
         {/* Language toggle */}
         <button
@@ -149,10 +88,17 @@ export function BottomTabBar() {
         >
           <motion.div
             whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-primary/10"
           >
-            <Languages className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
-            <NavLabel en="မြန်မာ" my="English" isActive={false} showBurmese={showBurmese} />
+            <Languages className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+            <span
+              className={`text-xs whitespace-nowrap transition-colors ${
+                showBurmese ? 'font-myanmar' : ''
+              } text-muted-foreground`}
+            >
+              {showBurmese ? 'English' : '\u1019\u103C\u1014\u103A\u1019\u102C'}
+            </span>
           </motion.div>
         </button>
 
@@ -165,15 +111,19 @@ export function BottomTabBar() {
         >
           <motion.div
             whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-primary/10"
           >
-            <ThemeIcon className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
-            <NavLabel
-              en={theme === 'dark' ? 'Light' : 'Dark'}
-              my={theme === 'dark' ? 'အလင်း' : 'အမှာင်'}
-              isActive={false}
-              showBurmese={showBurmese}
-            />
+            <ThemeIcon className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+            <span
+              className={`text-xs whitespace-nowrap transition-colors ${
+                showBurmese ? 'font-myanmar' : ''
+              } text-muted-foreground`}
+            >
+              {showBurmese
+                ? (theme === 'dark' ? '\u1021\u101C\u1004\u103A\u1038' : '\u1021\u1019\u103E\u102C\u1004\u103A')
+                : (theme === 'dark' ? 'Light' : 'Dark')}
+            </span>
           </motion.div>
         </button>
 
@@ -186,15 +136,17 @@ export function BottomTabBar() {
           >
             <motion.div
               whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-destructive/10"
             >
-              <LogOut className="h-4 w-4 text-destructive/70" strokeWidth={2} />
-              <NavLabel
-                en={strings.nav.signOut.en}
-                my={strings.nav.signOut.my}
-                isActive={false}
-                showBurmese={showBurmese}
-              />
+              <LogOut className="h-6 w-6 text-destructive/70" strokeWidth={2} />
+              <span
+                className={`text-xs whitespace-nowrap transition-colors ${
+                  showBurmese ? 'font-myanmar' : ''
+                } text-muted-foreground`}
+              >
+                {showBurmese ? '\u1011\u103D\u1000\u103A\u101B\u1014\u103A' : 'Sign Out'}
+              </span>
             </motion.div>
           </button>
         )}
