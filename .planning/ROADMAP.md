@@ -88,10 +88,14 @@ Plans:
   2. Content Security Policy headers are configured and active for all pages, allowing only Supabase, Sentry, and PWA service worker origins
   3. All Supabase tables have Row Level Security policies reviewed and documented (no table allows unrestricted public access)
   4. Running `npm audit` shows zero critical or high severity vulnerabilities
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 13-01: TBD
+- [ ] 13-01-PLAN.md -- Push API JWT authentication + rate limiting + Sentry logging
+- [ ] 13-02-PLAN.md -- CSP middleware with nonce-based inline scripts + security headers
+- [ ] 13-03-PLAN.md -- Supabase RLS audit + push_subscriptions table + documentation
+- [ ] 13-04-PLAN.md -- Next.js upgrade + dependency pruning + Dependabot + CI audit
+- [ ] 13-05-PLAN.md -- Integration verification checkpoint
 
 ### Phase 14: Unified Navigation
 **Goal**: Users see the same navigation structure everywhere -- 5 persistent tabs on mobile, matching sidebar on desktop -- with no hidden "More" menu
