@@ -207,6 +207,32 @@ create policy "Users can update own social profile" on public.social_profiles
 create index if not exists social_profiles_score_idx
   on public.social_profiles (composite_score desc) where social_opt_in = true;
 
+-- Add display_name length constraint if not exists
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'social_profiles_display_name_length'
+  ) then
+    alter table public.social_profiles
+      add constraint social_profiles_display_name_length
+      check (char_length(display_name) between 2 and 30);
+  end if;
+end $$;
+
+-- Add display_name no-HTML constraint if not exists (SEC-03: XSS prevention)
+-- Rejects any value containing < or > characters, preventing HTML/script injection.
+-- React JSX auto-escapes on render, but defense-in-depth means we also sanitize at storage.
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'social_profiles_display_name_no_html'
+  ) then
+    alter table public.social_profiles
+      add constraint social_profiles_display_name_no_html
+      check (display_name !~ '[<>]');
+  end if;
+end $$;
+
 -- Streak data for cross-device streak sync
 create table if not exists public.streak_data (
   user_id uuid primary key references public.profiles (id) on delete cascade,
@@ -256,7 +282,47 @@ create policy "Users can insert own badges" on public.earned_badges
 create index if not exists earned_badges_user_idx
   on public.earned_badges (user_id);
 
--- Leaderboard ranking function (server-side for security)
+-- ============================================================
+-- Push Notification Subscriptions (Phase 2 - PWA)
+-- ============================================================
+-- NOTE: This table was originally created manually in Supabase.
+-- Added to schema.sql in Phase 13 (Security Hardening) with RLS policies.
+-- The subscribe API (pages/api/push/subscribe.ts) uses SUPABASE_SERVICE_ROLE_KEY
+-- to bypass RLS for upsert/delete operations AFTER verifying the user's JWT.
+-- Cron endpoints (send.ts, srs-reminder.ts, weak-area-nudge.ts) also use
+-- service role key to read all subscriptions for cross-user notification delivery.
+
+create table if not exists public.push_subscriptions (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  endpoint text not null,
+  keys jsonb not null,
+  reminder_frequency text not null default 'daily'
+    check (reminder_frequency in ('daily', 'every2days', 'weekly', 'off')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.push_subscriptions enable row level security;
+
+-- Users can read their own push subscription status
+drop policy if exists "Users can view own push subscription" on public.push_subscriptions;
+create policy "Users can view own push subscription" on public.push_subscriptions
+  for select using (auth.uid() = user_id);
+
+-- Users can manage their own push subscription (insert/update/delete)
+drop policy if exists "Users can manage own push subscription" on public.push_subscriptions;
+create policy "Users can manage own push subscription" on public.push_subscriptions
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- ============================================================
+-- Leaderboard Functions (Phase 7)
+-- ============================================================
+
+-- security definer: Required because leaderboard queries all opted-in social_profiles,
+-- not just the calling user's row. RLS would restrict to auth.uid() = user_id only.
+-- Safe because: only returns display_name, score, streak, badge of opted-in users.
+-- Granted to: authenticated, anon (public leaderboard is intentional).
 create or replace function public.get_leaderboard(
   board_type text default 'all-time',
   result_limit int default 25
@@ -292,7 +358,10 @@ begin
 end;
 $$;
 
--- Get authenticated user's rank among opted-in users
+-- security definer: Required to compute rank across all opted-in users.
+-- RLS would restrict to auth.uid() = user_id only, preventing ranking calculation.
+-- Safe because: only returns a single bigint rank number, no PII.
+-- Granted to: authenticated only (user must be logged in to see their rank).
 create or replace function public.get_user_rank(target_user_id uuid)
 returns bigint
 language plpgsql
