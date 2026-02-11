@@ -4,7 +4,7 @@
  * HistoryTab
  *
  * Displays mock test and interview session history in two sections.
- * Migrated from HistoryPage tests + interview tabs into the unified Hub.
+ * Consolidated test and interview history into the unified Hub.
  *
  * Features:
  * - Mock Tests section (top) with expandable per-question results, share buttons

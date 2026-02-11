@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           JSON.stringify({
             title: message.title,
             body: message.body,
-            url: '/',
+            url: '/home',
             tag: 'study-reminder',
           })
         );

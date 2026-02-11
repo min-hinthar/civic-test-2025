@@ -109,7 +109,7 @@ export default function HubPage() {
     };
   }, []);
 
-  // Build BadgeCheckData (same pattern as SocialHubPage)
+  // Build BadgeCheckData for badge detection
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
 
   const badgeCheckData: BadgeCheckData | null = useMemo(() => {

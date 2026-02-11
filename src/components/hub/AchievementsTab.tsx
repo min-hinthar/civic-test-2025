@@ -102,7 +102,7 @@ const DISPLAY_CATEGORIES: DisplayCategory[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Opt-in dismissed key (matches SocialHubPage)
+// Opt-in dismissed key (shared with social opt-in flow)
 // ---------------------------------------------------------------------------
 
 const OPT_IN_DISMISSED_KEY = 'civic-prep-social-optin-dismissed';
