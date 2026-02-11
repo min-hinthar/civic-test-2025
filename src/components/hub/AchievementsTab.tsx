@@ -1,0 +1,613 @@
+'use client';
+
+/**
+ * AchievementsTab - Badge gallery and leaderboard for the Progress Hub.
+ *
+ * Combines:
+ * 1. Badge Gallery - Grouped by display categories (Study, Test, Social, Streak)
+ *    with earned badge glow/shimmer effects and locked badge greyscale
+ * 2. Leaderboard - Top 5 with expand to 25, all-time/weekly toggle
+ *
+ * Layout:
+ * - Desktop (lg:): side-by-side grid (badges 3/5 cols, leaderboard 2/5 cols)
+ * - Mobile: stacked vertically (badges on top, leaderboard below)
+ *
+ * All text is bilingual (EN + MY) via useLanguage().
+ */
+
+import { useCallback, useMemo, useState } from 'react';
+import clsx from 'clsx';
+import {
+  BookOpen,
+  Target,
+  Users,
+  Flame,
+  Trophy,
+  Lock,
+  Heart,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  type LucideIcon,
+} from 'lucide-react';
+import { Award, Star, BookCheck } from 'lucide-react';
+import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { GlassCard } from '@/components/hub/GlassCard';
+import { LeaderboardTable } from '@/components/social/LeaderboardTable';
+import { LeaderboardProfile } from '@/components/social/LeaderboardProfile';
+import { BadgeCelebration } from '@/components/social/BadgeCelebration';
+import { SocialOptInFlow } from '@/components/social/SocialOptInFlow';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useSocial } from '@/contexts/SocialContext';
+import { useLeaderboard } from '@/hooks/useLeaderboard';
+import type { LeaderboardEntry } from '@/hooks/useLeaderboard';
+import type { BadgeDefinition, BadgeCheckData } from '@/lib/social/badgeDefinitions';
+import { totalQuestions } from '@/constants/questions';
+
+// ---------------------------------------------------------------------------
+// Badge icon map (shared with BadgeCelebration/BadgeGrid)
+// ---------------------------------------------------------------------------
+
+const BADGE_ICON_MAP: Record<string, LucideIcon> = {
+  Flame,
+  Target,
+  Star,
+  BookCheck,
+  Award,
+};
+
+// ---------------------------------------------------------------------------
+// Display category mapping (NOT modifying badgeDefinitions.ts)
+// ---------------------------------------------------------------------------
+
+interface DisplayCategory {
+  key: string;
+  en: string;
+  my: string;
+  icon: LucideIcon;
+  /** Maps from badgeDefinitions category field */
+  sourceCategory: string | null;
+}
+
+const DISPLAY_CATEGORIES: DisplayCategory[] = [
+  {
+    key: 'study',
+    en: 'Study',
+    my: '\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F',
+    icon: BookOpen,
+    sourceCategory: 'coverage',
+  },
+  {
+    key: 'test',
+    en: 'Test',
+    my: '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032',
+    icon: Target,
+    sourceCategory: 'accuracy',
+  },
+  {
+    key: 'social',
+    en: 'Social',
+    my: '\u101C\u1030\u1019\u103E\u102F\u101B\u1031\u1038',
+    icon: Users,
+    sourceCategory: null,
+  },
+  {
+    key: 'streak',
+    en: 'Streak',
+    my: '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A',
+    icon: Flame,
+    sourceCategory: 'streak',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Opt-in dismissed key (matches SocialHubPage)
+// ---------------------------------------------------------------------------
+
+const OPT_IN_DISMISSED_KEY = 'civic-prep-social-optin-dismissed';
+
+// ---------------------------------------------------------------------------
+// Badge progress helpers
+// ---------------------------------------------------------------------------
+
+function getBadgeProgress(
+  badge: BadgeDefinition,
+  data: BadgeCheckData | null
+): { current: number; target: number } {
+  if (!data) return { current: 0, target: 1 };
+
+  switch (badge.id) {
+    case 'streak-7':
+      return { current: Math.min(Math.max(data.currentStreak, data.longestStreak), 7), target: 7 };
+    case 'streak-14':
+      return {
+        current: Math.min(Math.max(data.currentStreak, data.longestStreak), 14),
+        target: 14,
+      };
+    case 'streak-30':
+      return {
+        current: Math.min(Math.max(data.currentStreak, data.longestStreak), 30),
+        target: 30,
+      };
+    case 'accuracy-90':
+      return { current: Math.min(Math.round(data.bestTestAccuracy), 90), target: 90 };
+    case 'accuracy-100':
+      return { current: Math.min(Math.round(data.bestTestAccuracy), 100), target: 100 };
+    case 'coverage-all':
+      return {
+        current: Math.min(data.uniqueQuestionsAnswered, totalQuestions),
+        target: totalQuestions,
+      };
+    case 'coverage-mastered':
+      return {
+        current: Math.min(data.categoriesMastered, data.totalCategories || 1),
+        target: data.totalCategories || 1,
+      };
+    default:
+      return { current: 0, target: 1 };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
+
+export interface AchievementsTabProps {
+  earnedBadges: BadgeDefinition[];
+  lockedBadges: BadgeDefinition[];
+  badgeCheckData: BadgeCheckData | null;
+  newlyEarnedBadge: BadgeDefinition | null;
+  dismissCelebration: (id: string) => void;
+  isLoading: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export function AchievementsTab({
+  earnedBadges,
+  lockedBadges,
+  badgeCheckData,
+  newlyEarnedBadge,
+  dismissCelebration,
+  isLoading,
+}: AchievementsTabProps) {
+  const { showBurmese } = useLanguage();
+  const { user } = useAuth();
+  const { isOptedIn, isLoading: socialLoading } = useSocial();
+
+  // -------------------------------------------------------------------------
+  // Leaderboard state
+  // -------------------------------------------------------------------------
+
+  const [boardType, setBoardType] = useState<'all-time' | 'weekly'>('all-time');
+  const [leaderboardLimit, setLeaderboardLimit] = useState(5);
+  const {
+    entries,
+    userRank,
+    isLoading: leaderboardLoading,
+    refresh: refreshLeaderboard,
+  } = useLeaderboard(boardType, leaderboardLimit);
+
+  const [selectedEntry, setSelectedEntry] = useState<LeaderboardEntry | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const handleRowClick = useCallback((entry: LeaderboardEntry) => {
+    setSelectedEntry(entry);
+    setProfileOpen(true);
+  }, []);
+
+  const handleProfileClose = useCallback(() => {
+    setProfileOpen(false);
+  }, []);
+
+  const toggleLeaderboardExpand = useCallback(() => {
+    setLeaderboardLimit(prev => (prev === 5 ? 25 : 5));
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Social opt-in
+  // -------------------------------------------------------------------------
+
+  const [optInClosed, setOptInClosed] = useState(false);
+
+  const optInDismissed: boolean = useMemo(() => {
+    try {
+      return localStorage.getItem(OPT_IN_DISMISSED_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const showOptIn: boolean = useMemo(
+    () => !!user?.id && !socialLoading && !isOptedIn && !optInDismissed && !optInClosed,
+    [user?.id, socialLoading, isOptedIn, optInDismissed, optInClosed]
+  );
+
+  const handleOptInComplete = useCallback(() => {
+    setOptInClosed(true);
+    refreshLeaderboard();
+  }, [refreshLeaderboard]);
+
+  const handleOptInCancel = useCallback(() => {
+    setOptInClosed(true);
+    try {
+      localStorage.setItem(OPT_IN_DISMISSED_KEY, 'true');
+    } catch {
+      // localStorage not available
+    }
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Badge grouping by display category
+  // -------------------------------------------------------------------------
+
+  const earnedIds: Set<string> = useMemo(
+    () => new Set(earnedBadges.map(b => b.id)),
+    [earnedBadges]
+  );
+
+  const allBadges: BadgeDefinition[] = useMemo(() => {
+    const all = [...earnedBadges, ...lockedBadges];
+    // Deduplicate
+    const seen = new Set<string>();
+    return all.filter(b => {
+      if (seen.has(b.id)) return false;
+      seen.add(b.id);
+      return true;
+    });
+  }, [earnedBadges, lockedBadges]);
+
+  const groupedByDisplay = useMemo(() => {
+    const groups: Record<string, BadgeDefinition[]> = {};
+    for (const cat of DISPLAY_CATEGORIES) {
+      groups[cat.key] = [];
+    }
+    for (const badge of allBadges) {
+      const displayCat = DISPLAY_CATEGORIES.find(c => c.sourceCategory === badge.category);
+      if (displayCat) {
+        groups[displayCat.key].push(badge);
+      }
+    }
+    return groups;
+  }, [allBadges]);
+
+  // -------------------------------------------------------------------------
+  // Empty state check
+  // -------------------------------------------------------------------------
+
+  const hasAnyBadges = earnedBadges.length > 0;
+
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
+
+  return (
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* ================================================================= */}
+        {/* Badge Gallery (left / top) */}
+        {/* ================================================================= */}
+        <div className="lg:col-span-3 space-y-6">
+          <FadeIn>
+            {/* Empty state welcome message */}
+            {!hasAnyBadges && !isLoading && (
+              <GlassCard className="mb-6">
+                <div className="flex items-center gap-3 p-1">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-purple/20">
+                    <Sparkles className="h-5 w-5 text-accent-purple" />
+                  </div>
+                  <div>
+                    <p
+                      className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
+                      {showBurmese ? 'တံဆိပ်များ စတင်ရယူပါ!' : 'Start earning badges!'}
+                    </p>
+                    <p
+                      className={`text-xs text-muted-foreground mt-0.5 ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
+                      {showBurmese
+                        ? 'မေးခွန်း ၁၀ ခု လေ့လာပြီး ပထမဆုံး တံဆိပ်ရယူပါ'
+                        : 'Study 10 questions to earn your first badge'}
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
+            )}
+
+            {/* Badge categories */}
+            {DISPLAY_CATEGORIES.map(cat => {
+              const badges = groupedByDisplay[cat.key] ?? [];
+              const CatIcon = cat.icon;
+
+              return (
+                <div key={cat.key}>
+                  {/* Category section header */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <CatIcon className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">{cat.en}</h3>
+                    {showBurmese && (
+                      <span className="text-xs font-myanmar text-muted-foreground">/ {cat.my}</span>
+                    )}
+                  </div>
+
+                  {/* Social category: coming soon */}
+                  {cat.sourceCategory === null && badges.length === 0 && (
+                    <GlassCard className="mb-2">
+                      <p
+                        className={`text-sm text-muted-foreground text-center py-4 ${showBurmese ? 'font-myanmar' : ''}`}
+                      >
+                        {showBurmese
+                          ? 'လူမှုရေး တံဆိပ်များ မကြာမီ လာမည်!'
+                          : 'Social badges coming soon!'}
+                      </p>
+                    </GlassCard>
+                  )}
+
+                  {/* Badge grid */}
+                  {badges.length > 0 && (
+                    <StaggeredList
+                      className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-2"
+                      stagger={60}
+                      delay={80}
+                    >
+                      {badges.map(badge => {
+                        const isEarned = earnedIds.has(badge.id);
+                        const progress = getBadgeProgress(badge, badgeCheckData);
+                        return (
+                          <StaggeredItem key={badge.id}>
+                            <BadgeCard
+                              badge={badge}
+                              isEarned={isEarned}
+                              progress={progress}
+                              showBurmese={showBurmese}
+                            />
+                          </StaggeredItem>
+                        );
+                      })}
+                    </StaggeredList>
+                  )}
+                </div>
+              );
+            })}
+          </FadeIn>
+        </div>
+
+        {/* ================================================================= */}
+        {/* Leaderboard (right / bottom) */}
+        {/* ================================================================= */}
+        <div className="lg:col-span-2 space-y-4">
+          <FadeIn delay={100}>
+            {/* Leaderboard header */}
+            <div className="flex items-center gap-2 mb-3">
+              <Trophy className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
+              {showBurmese && (
+                <span className="text-xs font-myanmar text-muted-foreground">
+                  / {'\u1021\u1006\u1004\u1037\u103A\u1007\u101A\u102C\u1038'}
+                </span>
+              )}
+            </div>
+
+            {/* All-time / Weekly toggle */}
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => setBoardType('all-time')}
+                className={clsx(
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[36px]',
+                  boardType === 'all-time'
+                    ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
+                    : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
+                )}
+              >
+                <span className={showBurmese ? 'font-myanmar' : ''}>
+                  {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
+                </span>
+              </button>
+              <button
+                onClick={() => setBoardType('weekly')}
+                className={clsx(
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[36px]',
+                  boardType === 'weekly'
+                    ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
+                    : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
+                )}
+              >
+                <span className={showBurmese ? 'font-myanmar' : ''}>
+                  {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
+                </span>
+              </button>
+            </div>
+
+            {/* Social opt-in CTA */}
+            {user && !isOptedIn && !showOptIn && (
+              <GlassCard className="mb-3">
+                <div className="flex items-center justify-between gap-3 p-1">
+                  <div className="flex items-center gap-2">
+                    <Heart className="h-4 w-4 text-primary" />
+                    <p
+                      className={`text-xs font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                    >
+                      {showBurmese
+                        ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
+                        : 'Join the community!'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setOptInClosed(false)}
+                    className={clsx(
+                      'shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white min-h-[36px]',
+                      'shadow-[0_2px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[1px]',
+                      'transition-all'
+                    )}
+                  >
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                    </span>
+                  </button>
+                </div>
+              </GlassCard>
+            )}
+
+            {/* Leaderboard table */}
+            <LeaderboardTable
+              entries={entries}
+              userRank={userRank}
+              currentUserId={user?.id ?? null}
+              onRowClick={handleRowClick}
+              isLoading={leaderboardLoading}
+            />
+
+            {/* Show more / Show less button */}
+            {!leaderboardLoading && entries.length > 0 && (
+              <button
+                onClick={toggleLeaderboardExpand}
+                className={clsx(
+                  'flex items-center justify-center gap-1 w-full py-2 mt-2',
+                  'text-xs font-medium text-muted-foreground hover:text-foreground',
+                  'transition-colors rounded-lg hover:bg-muted/30'
+                )}
+              >
+                {leaderboardLimit === 5 ? (
+                  <>
+                    <ChevronDown className="h-3.5 w-3.5" />
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese
+                        ? '\u1015\u102D\u102F\u1019\u102D\u102F\u1015\u103C\u1015\u102B'
+                        : 'Show more'}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronUp className="h-3.5 w-3.5" />
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese
+                        ? '\u101C\u103B\u103E\u1031\u1037\u1015\u103C\u1015\u102B'
+                        : 'Show less'}
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
+          </FadeIn>
+        </div>
+      </div>
+
+      {/* Profile dialog */}
+      <LeaderboardProfile entry={selectedEntry} open={profileOpen} onClose={handleProfileClose} />
+
+      {/* Badge celebration modal */}
+      {newlyEarnedBadge && (
+        <BadgeCelebration
+          badge={newlyEarnedBadge}
+          onDismiss={() => dismissCelebration(newlyEarnedBadge.id)}
+        />
+      )}
+
+      {/* Social opt-in flow */}
+      {showOptIn && user && (
+        <SocialOptInFlow
+          open={showOptIn}
+          onComplete={handleOptInComplete}
+          onCancel={handleOptInCancel}
+        />
+      )}
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Badge card with earned glow/shimmer and locked greyscale
+// ---------------------------------------------------------------------------
+
+function BadgeCard({
+  badge,
+  isEarned,
+  progress,
+  showBurmese,
+}: {
+  badge: BadgeDefinition;
+  isEarned: boolean;
+  progress: { current: number; target: number };
+  showBurmese: boolean;
+}) {
+  const IconComponent = BADGE_ICON_MAP[badge.icon] ?? Award;
+  const progressPct =
+    progress.target > 0 ? Math.min((progress.current / progress.target) * 100, 100) : 0;
+
+  return (
+    <GlassCard
+      className={clsx(
+        'relative flex flex-col items-center text-center p-4 overflow-hidden',
+        isEarned && 'shadow-[0_0_20px_hsl(var(--primary)/0.3)]'
+      )}
+    >
+      {/* Shimmer overlay for earned badges */}
+      {isEarned && <div className="badge-shimmer" aria-hidden="true" />}
+
+      {/* Icon container */}
+      <div className="relative">
+        <div
+          className={clsx(
+            'flex items-center justify-center h-12 w-12 rounded-full mb-3',
+            isEarned ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted grayscale opacity-50'
+          )}
+        >
+          <IconComponent
+            className={clsx('h-6 w-6', isEarned ? 'text-warning' : 'text-muted-foreground')}
+          />
+        </div>
+
+        {/* Lock overlay for unearned */}
+        {!isEarned && (
+          <div className="absolute inset-0 flex items-center justify-center mb-3">
+            <div className="flex items-center justify-center h-6 w-6 rounded-full bg-muted/80">
+              <Lock className="h-3 w-3 text-muted-foreground" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Badge name */}
+      <p
+        className={clsx(
+          'text-xs font-semibold leading-tight',
+          isEarned ? 'text-foreground' : 'text-muted-foreground'
+        )}
+      >
+        {badge.name.en}
+      </p>
+      {showBurmese && (
+        <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
+          {badge.name.my}
+        </p>
+      )}
+
+      {/* Progress bar */}
+      <div className="w-full mt-2">
+        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className={clsx(
+              'h-full rounded-full transition-all duration-500',
+              isEarned ? 'bg-primary' : 'bg-muted-foreground/40'
+            )}
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+        <p className="text-[10px] text-muted-foreground mt-1 tabular-nums">
+          {progress.current}/{progress.target}
+        </p>
+      </div>
+
+      {/* Criteria hint for locked badges */}
+      {!isEarned && (
+        <p className="text-[10px] text-muted-foreground mt-1 leading-tight italic">
+          {badge.requirement.en}
+          {showBurmese && <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>}
+        </p>
+      )}
+    </GlassCard>
+  );
+}
