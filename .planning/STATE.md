@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 17 of 17 (UI System Polish)
-Plan: 1 of 11 in current phase
+Plan: 2 of 11 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 17-01-PLAN.md (CSS Foundation)
+Last activity: 2026-02-11 -- Completed 17-02-PLAN.md (Motion Config + GlassCard Tiers)
 
 Progress: [██████░░░░] 6/7 phases (v2.0)
-Phase 17: [█░░░░░░░░░░] 1/11 plans
+Phase 17: [██░░░░░░░░░] 2/11 plans
 
 ## Completed Milestones
 
@@ -147,6 +147,10 @@ Recent decisions affecting current work:
 - [17-01]: glass-nav keeps heavy-tier backdrop-filter as default for backward compat; composable with tier classes for Plan 03 refactor
 - [17-01]: Mesh background shifted from patriotic-red to accent-purple + primary (brand consistency)
 - [17-01]: @supports fallback uses blur(1px) test for reliable feature detection
+- [17-02]: Glass tier CSS uses custom property tokens (--glass-light-blur etc.) from tokens.css rather than hardcoded values
+- [17-02]: Prismatic border styles in dedicated prismatic-border.css (animated conic-gradient via @property) imported by globals.css
+- [17-02]: glass-card class retained as backward-compat alias mapped to glass-light tier
+- [17-02]: Component migration pattern: create in ui/, re-export from old hub/ path
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -164,10 +168,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 17, Plan 01 complete; ready for Plan 02
-Resume file: .planning/phases/17-ui-system-polish/17-01-SUMMARY.md
+Stopped at: Phase 17, Plan 02 complete; ready for Plan 03
+Resume file: .planning/phases/17-ui-system-polish/17-02-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 17 Plan 01 complete -- CSS foundation)*
+*Last updated: 2026-02-11 (Phase 17 Plan 02 complete -- motion config + GlassCard tiers)*
