@@ -8,7 +8,7 @@
  *
  * Hidden below md breakpoint (`hidden md:flex`).
  * Desktop (>=1280px): auto-expanded. Tablet (768-1279px): auto-collapsed icon-rail.
- * Hides on scroll-down, shows on scroll-up via spring x translation.
+ * Always visible on md+ (scroll-hide only applies to mobile BottomTabBar).
  */
 
 import { useCallback } from 'react';
@@ -31,16 +31,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
 const SPRING_CONFIG = { type: 'spring' as const, stiffness: 300, damping: 24 };
-const SHAKE_ANIMATION = {
-  x: [0, -6, 6, -4, 4, 0],
-  transition: { duration: 0.4 },
-};
 
 // ---------------------------------------------------------------------------
 // Sidebar component
@@ -56,7 +53,6 @@ export function Sidebar() {
     tier,
     isLocked,
     lockMessage,
-    navVisible,
     badges,
     sidebarRef,
   } = useNavigation();
@@ -64,6 +60,8 @@ export function Sidebar() {
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
   const { showWarning } = useToast();
+  const shouldReduceMotion = useReducedMotion();
+  const spring = shouldReduceMotion ? { duration: 0 } : SPRING_CONFIG;
 
   // --- Locked tap handler ---
   const handleLockedTap = useCallback(() => {
@@ -97,11 +95,8 @@ export function Sidebar() {
   return (
     <motion.aside
       ref={sidebarRef}
-      animate={{
-        width: isExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W,
-        x: tier === 'desktop' || navVisible ? 0 : -SIDEBAR_EXPANDED_W,
-      }}
-      transition={SPRING_CONFIG}
+      animate={{ width: isExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W }}
+      transition={spring}
       className="glass-nav fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col overflow-hidden"
       aria-label="Sidebar navigation"
     >
@@ -117,7 +112,7 @@ export function Sidebar() {
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: 'auto' }}
               exit={{ opacity: 0, width: 0 }}
-              transition={SPRING_CONFIG}
+              transition={spring}
               className="ml-3 font-extrabold text-foreground text-sm whitespace-nowrap overflow-hidden"
             >
               Civic Test Prep
@@ -137,7 +132,7 @@ export function Sidebar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={SPRING_CONFIG}
+            transition={spring}
             className="flex items-center gap-2 px-3 py-2 mx-2 mt-2 rounded-lg bg-warning/15 text-warning overflow-hidden"
           >
             <AlertTriangle className="h-4 w-4 shrink-0" />
@@ -157,8 +152,11 @@ export function Sidebar() {
           return (
             <motion.div
               key={tab.id}
-              animate={isLocked && !isActive ? SHAKE_ANIMATION : undefined}
-              whileTap={isLocked && !isActive ? { x: [0, -6, 6, -4, 4, 0] } : undefined}
+              whileTap={
+                isLocked && !isActive && !shouldReduceMotion
+                  ? { x: [0, -6, 6, -4, 4, 0], transition: { duration: 0.4 } }
+                  : undefined
+              }
             >
               <NavItem
                 tab={tab}
@@ -187,6 +185,7 @@ export function Sidebar() {
           isExpanded={isExpanded}
           onClick={toggleMode}
           tooltip={showBurmese ? 'English' : 'Myanmar'}
+          spring={spring}
         />
 
         {/* Theme toggle */}
@@ -196,6 +195,7 @@ export function Sidebar() {
           isExpanded={isExpanded}
           onClick={toggleTheme}
           tooltip={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          spring={spring}
         />
 
         {/* Logout */}
@@ -207,6 +207,7 @@ export function Sidebar() {
             onClick={handleSignOut}
             tooltip="Sign Out"
             destructive
+            spring={spring}
           />
         )}
       </div>
@@ -219,7 +220,7 @@ export function Sidebar() {
         <button
           type="button"
           onClick={toggleSidebar}
-          className="flex items-center justify-center w-full h-10 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-all group/collapse"
+          className="flex items-center justify-center w-full h-10 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-colors group/collapse"
           data-tooltip={!isExpanded ? 'Expand sidebar' : undefined}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
         >
@@ -231,7 +232,7 @@ export function Sidebar() {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
-                transition={SPRING_CONFIG}
+                transition={spring}
                 className="ml-2 text-sm whitespace-nowrap overflow-hidden"
               >
                 Collapse
@@ -255,6 +256,7 @@ interface SidebarUtilityButtonProps {
   onClick: () => void;
   tooltip: string;
   destructive?: boolean;
+  spring: Record<string, unknown>;
 }
 
 function SidebarUtilityButton({
@@ -264,6 +266,7 @@ function SidebarUtilityButton({
   onClick,
   tooltip,
   destructive,
+  spring,
 }: SidebarUtilityButtonProps) {
   const colorClass = destructive
     ? 'text-destructive/70 hover:text-destructive hover:bg-destructive/10'
@@ -273,7 +276,7 @@ function SidebarUtilityButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center w-full rounded-full transition-all ${colorClass} ${
+      className={`flex items-center w-full rounded-full transition-colors ${colorClass} ${
         isExpanded ? 'gap-3 py-2.5 px-3' : 'justify-center w-12 h-12 mx-auto group/navitem'
       }`}
       data-tooltip={!isExpanded ? tooltip : undefined}
@@ -287,7 +290,7 @@ function SidebarUtilityButton({
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: 'auto' }}
             exit={{ opacity: 0, width: 0 }}
-            transition={SPRING_CONFIG}
+            transition={spring}
             className="text-sm whitespace-nowrap overflow-hidden"
           >
             {label}

@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.0 Unified Learning Hub -- Phase 15 (Progress Hub)
+**Current focus:** v2.0 Unified Learning Hub -- Phase 16 (Dashboard Next Best Action)
 
 ## Current Position
 
-Phase: 15 of 17 (Progress Hub)
-Plan: 5 of 6 in current phase
-Status: In progress
-Last activity: 2026-02-11 -- Completed 15-05-PLAN.md (Interaction Polish & Cleanup)
+Phase: 16 of 17 (Dashboard Next Best Action)
+Plan: 0 of TBD in current phase
+Status: Not started
+Last activity: 2026-02-11 -- Phase 15 (Progress Hub) completed
 
-Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 15: [████████░░] 5/6 plans
+Progress: [█████░░░░░] 5/7 phases (v2.0)
+Phase 16: [░░░░░░░░░░] 0/TBD plans
 
 ## Completed Milestones
 
@@ -40,6 +40,7 @@ See `.planning/milestones/v1.0/` for full archive.
 | 12 (USCIS 2025) | 6/6 | ~48min | ~8min |
 | 13 (security) | 5/5 | ~113min | ~23min |
 | 14 (navigation) | 7/7 | ~38min | ~5min |
+| 15 (progress hub) | 6/6 | -- | -- |
 
 *Updated after each plan completion*
 
@@ -123,6 +124,9 @@ Recent decisions affecting current work:
 - [15-05]: rAF-based scroll restoration to avoid race condition with AnimatePresence render cycle
 - [15-05]: 50px swipe threshold with 0.2 dragElastic for natural rubber-band feel
 - [15-05]: ProgressPage, HistoryPage, SocialHubPage deleted (2137 lines) -- all content migrated to Hub tabs
+- [15-06]: Nav label shortened from "Progress Hub" to "Hub" for compact bottom bar fit
+- [15-06]: Hub page title made dynamic with user's first name greeting
+- [15-06]: Bottom nav pill highlights standardized: icon-only pill, removed motion scale, font-medium labels
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -140,10 +144,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 plan 05 complete; ready for 15-06 (Final Verification)
-Resume file: .planning/phases/15-progress-hub/15-05-SUMMARY.md
+Stopped at: Phase 15 complete (all 6 plans executed and verified); ready for Phase 16 (Dashboard Next Best Action)
+Resume file: .planning/phases/15-progress-hub/15-06-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 plan 05 complete)*
+*Last updated: 2026-02-11 (Phase 15 complete)*

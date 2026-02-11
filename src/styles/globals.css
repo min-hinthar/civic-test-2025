@@ -237,6 +237,10 @@ html.theme-transitioning .page-shell {
   display: none;
 }
 
+.tap-highlight-none {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ═══════════════════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════════════════ */

@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import type { NavTab, NavBadges } from './navConfig';
 import { NavBadge } from './NavBadge';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface NavItemProps {
   tab: NavTab;
@@ -52,6 +53,7 @@ export function NavItem({
 }: NavItemProps) {
   const label = showBurmese ? tab.labelMy : tab.label;
   const Icon = tab.icon;
+  const shouldReduceMotion = useReducedMotion();
 
   // --- Locked state ---
   const handleLockedClick = (e: React.MouseEvent) => {
@@ -80,9 +82,9 @@ export function NavItem({
       case 'mobile':
         return `flex flex-col items-center gap-0.5 ${lockedStyle}`;
       case 'sidebar-expanded':
-        return `flex items-center transition-all gap-3 py-2.5 px-3 rounded-full w-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
+        return `flex items-center transition gap-3 py-2.5 px-3 rounded-full w-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
       case 'sidebar-collapsed':
-        return `flex items-center transition-all justify-center w-12 h-12 rounded-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
+        return `flex items-center transition justify-center w-12 h-12 rounded-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
     }
   })();
 
@@ -94,13 +96,13 @@ export function NavItem({
     const fontClass = showBurmese ? 'font-myanmar' : '';
     const activeColor = isActive
       ? variant === 'mobile'
-        ? 'font-medium text-primary'
+        ? 'text-primary'
         : 'font-semibold text-primary'
       : 'text-muted-foreground';
 
     return (
       <span
-        className={`${textSize} whitespace-nowrap transition-colors ${fontClass} ${activeColor}`}
+        className={`${textSize} whitespace-nowrap transition-colors duration-200 ${fontClass} ${activeColor}`}
       >
         {label}
       </span>
@@ -127,23 +129,30 @@ export function NavItem({
   const content =
     variant === 'mobile' ? (
       <div className={innerClasses}>
-        {/* Icon pill — fixed size highlight behind icon only */}
+        {/* Icon pill — layoutId-animated highlight slides between tabs */}
         <span
-          className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 ${
-            isActive
-              ? 'bg-primary/20 shadow-sm shadow-primary/15'
-              : !isLocked
-                ? 'hover:bg-primary/10'
-                : ''
+          className={`relative flex h-8 w-12 items-center justify-center rounded-full ${
+            !isActive && !isLocked ? 'hover:bg-primary/10 transition-colors duration-200' : ''
           }`}
         >
+          {isActive && (
+            <motion.span
+              layoutId="mobile-nav-pill"
+              className="absolute inset-0 rounded-full bg-primary/20 shadow-sm shadow-primary/15"
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { type: 'spring', stiffness: 500, damping: 30 }
+              }
+            />
+          )}
           {iconElement}
         </span>
         {labelElement}
       </div>
     ) : (
       <motion.div
-        whileTap={isLocked ? undefined : { scale: 0.92 }}
+        whileTap={isLocked || shouldReduceMotion ? undefined : { scale: 0.92 }}
         transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         className={innerClasses}
         {...tooltipAttrs}
