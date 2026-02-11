@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 15 of 17 (Progress Hub)
-Plan: 1 of 6 in current phase
+Plan: 2 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 15-01-PLAN.md (Hub Shell + Tab Bar + Routes)
+Last activity: 2026-02-11 -- Completed 15-02-PLAN.md (Overview Tab)
 
 Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 15: [█░░░░░░░░░] 1/6 plans
+Phase 15: [██░░░░░░░░] 2/6 plans
 
 ## Completed Milestones
 
@@ -106,6 +106,11 @@ Recent decisions affecting current work:
 - [15-01]: Conditional tab rendering (not Outlet) inside AnimatePresence for proper key-based exit/enter animations
 - [15-01]: Prefix-based active state matching added to BottomTabBar, Sidebar, getSlideDirection for /hub sub-paths
 - [15-01]: Glass-card CSS utility in globals.css with @supports fallback for no-backdrop-filter browsers
+- [15-02]: CategoryDonut uses mastery-gradient interpolated stroke color (not categorical blue/amber/emerald)
+- [15-02]: getMasteryColor utility exported from CategoryDonut for red->amber->green HSL interpolation
+- [15-02]: Weak subcategories (<50%) tappable to study guide; strong ones are not
+- [15-02]: useSRSWidget added to HubPage for SRS due count in overview stat cards
+- [15-02]: Brand new user detection: practicedCount === 0 shows WelcomeState instead of stats
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -123,10 +128,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 plan 01 complete; ready for 15-02 (Overview Tab)
-Resume file: .planning/phases/15-progress-hub/15-01-SUMMARY.md
+Stopped at: Phase 15 plan 02 complete; ready for 15-03 (History Tab)
+Resume file: .planning/phases/15-progress-hub/15-02-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 plan 01 complete)*
+*Last updated: 2026-02-11 (Phase 15 plan 02 complete)*
