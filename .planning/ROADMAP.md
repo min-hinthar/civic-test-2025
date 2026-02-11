@@ -166,14 +166,15 @@ Plans:
   2. All interactive elements (buttons, tabs, cards, toggles) meet a 44px minimum touch target size
   3. Primary actions have visible micro-interactions: button press scales, tab switches animate, progress bars fill with spring physics
   4. Dark mode uses frosted glass card variants with subtle border glow, distinct from simply inverting light mode colors
-**Plans**: 10 plans
+**Plans**: 11 plans
 
 Plans:
-- [ ] 17-01-PLAN.md -- CSS foundation: prismatic borders, glass tiers, mesh background
+- [ ] 17-01-PLAN.md -- CSS foundation: prismatic borders, glass tiers, mesh background, glass-nav simplification
 - [ ] 17-02-PLAN.md -- Shared spring configs + GlassCard tier component
 - [ ] 17-03-PLAN.md -- Navigation glass + prismatic borders (Sidebar, BottomTabBar, GlassHeader)
 - [ ] 17-04-PLAN.md -- Button/Card/Tab/Toggle micro-interactions
-- [ ] 17-05-PLAN.md -- Progress Hub glass tiers, spring progress, prismatic skeleton
+- [ ] 17-05-PLAN.md -- Progress Hub OverviewTab: glass tiers, spring progress rings/bars
+- [ ] 17-05B-PLAN.md -- Progress Hub History/Achievements: staggered springs, prismatic skeleton
 - [ ] 17-06-PLAN.md -- Flashcard spring flip, badge celebration, dashboard glass
 - [ ] 17-07-PLAN.md -- Staggered list bounce, page transitions, interview/test micro-interactions
 - [ ] 17-08-PLAN.md -- Touch target audit and fix across all pages
@@ -194,12 +195,12 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | 14. Unified Navigation | v2.0 | 7/7 | Complete | 2026-02-10 |
 | 15. Progress Hub | v2.0 | 6/6 | Complete | 2026-02-11 |
 | 16. Dashboard Next Best Action | v2.0 | 5/5 | Complete | 2026-02-11 |
-| 17. UI System Polish | v2.0 | 0/10 | Not started | - |
+| 17. UI System Polish | v2.0 | 0/11 | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | 36/46 | 25/29 | In progress |
+| v2.0 | 7 | 36/47 | 25/29 | In progress |
 
 ---
 
