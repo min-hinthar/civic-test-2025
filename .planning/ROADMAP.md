@@ -128,10 +128,15 @@ Plans:
   3. History tab displays the full test session timeline (identical content to the old /history page)
   4. Achievements tab shows the complete badge gallery and leaderboard (identical content to the old achievements/social pages)
   5. Visiting /progress, /history, or /social redirects to /hub with the correct tab pre-selected (no broken bookmarks or push notification links)
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 15-01: TBD
+- [ ] 15-01-PLAN.md — Hub shell, tab bar, GlassCard, route wiring + redirects
+- [ ] 15-02-PLAN.md — Overview tab: readiness ring, stat cards, category mastery donuts
+- [ ] 15-03-PLAN.md — History tab: mock tests + interviews, expandable detail, share
+- [ ] 15-04-PLAN.md — Achievements tab: categorized badge gallery + leaderboard
+- [ ] 15-05-PLAN.md — Polish: scroll memory, swipe, hub badge dot, push URL, delete old pages
+- [ ] 15-06-PLAN.md — Build verification + visual/functional checkpoint
 
 ### Phase 16: Dashboard Next Best Action
 **Goal**: Users open the app to a clear, single recommendation of what to do next, instead of an overwhelming wall of 11 sections and 3 competing CTAs
@@ -174,7 +179,7 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | 12. USCIS 2025 Question Bank | v2.0 | 6/6 | Complete | 2026-02-10 |
 | 13. Security Hardening | v2.0 | 5/5 | Complete | 2026-02-10 |
 | 14. Unified Navigation | v2.0 | 0/7 | Not started | - |
-| 15. Progress Hub | v2.0 | 0/TBD | Not started | - |
+| 15. Progress Hub | v2.0 | 0/6 | Not started | - |
 | 16. Dashboard Next Best Action | v2.0 | 0/TBD | Not started | - |
 | 17. UI System Polish | v2.0 | 0/TBD | Not started | - |
 
