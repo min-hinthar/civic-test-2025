@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.0 Unified Learning Hub -- Phase 16 (Dashboard Next Best Action)
+**Current focus:** v2.0 Unified Learning Hub -- Phase 17 (UI Polish)
 
 ## Current Position
 
-Phase: 16 of 17 (Dashboard Next Best Action)
-Plan: 4 of 5 in current phase
-Status: In progress
-Last activity: 2026-02-11 -- Completed 16-04-PLAN.md
+Phase: 16 of 17 (Dashboard Next Best Action) -- COMPLETE
+Plan: 5 of 5 in current phase
+Status: Phase complete
+Last activity: 2026-02-11 -- Completed 16-05-PLAN.md (Phase 16 complete)
 
-Progress: [█████░░░░░] 5/7 phases (v2.0)
-Phase 16: [████████░░] 4/5 plans
+Progress: [██████░░░░] 6/7 phases (v2.0)
+Phase 16: [██████████] 5/5 plans
 
 ## Completed Milestones
 
@@ -142,6 +142,8 @@ Recent decisions affecting current work:
 - [16-04]: uniqueQuestionsCount loaded via getAnswerHistory (same as HubPage) rather than exposing useNextBestAction internals
 - [16-04]: 7 orphaned component files noted but NOT deleted (ReadinessIndicator, CategoryGrid, SuggestedFocus, InterviewDashboardWidget, StreakWidget, BadgeHighlights, LeaderboardWidget)
 - [16-04]: Old data-tour attributes safely removed -- onboarding tour already targets nav items since Phase 14-06
+- [16-05]: BadgeHighlights presence on Dashboard accepted as intentional (post-plan polish commit 1733576, user-driven)
+- [16-05]: All 8 automated verification checks pass; all 5 DASH requirements verified; visual checkpoint user-approved
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -159,10 +161,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 16 plan 04 complete; ready for plan 05
-Resume file: .planning/phases/16-dashboard-next-best-action/16-04-SUMMARY.md
+Stopped at: Phase 16 complete; ready for Phase 17
+Resume file: .planning/phases/16-dashboard-next-best-action/16-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 16 plan 04 complete)*
+*Last updated: 2026-02-11 (Phase 16 complete -- all 5 plans, all 5 DASH requirements)*
