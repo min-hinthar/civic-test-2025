@@ -28,7 +28,7 @@ import PasswordResetPage from '@/pages/PasswordResetPage';
 import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
 import OpEdPage from '@/pages/OpEdPage';
 import SettingsPage from '@/pages/SettingsPage';
-import ProgressPage from '@/pages/ProgressPage';
+import HubPage from '@/pages/HubPage';
 import PracticePage from '@/pages/PracticePage';
 import InterviewPage from '@/pages/InterviewPage';
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
@@ -224,10 +224,10 @@ const AppShell = () => {
                                     }
                                   />
                                   <Route
-                                    path="/hub"
+                                    path="/hub/*"
                                     element={
                                       <ProtectedRoute>
-                                        <ProgressPage />
+                                        <HubPage />
                                       </ProtectedRoute>
                                     }
                                   />
@@ -239,15 +239,15 @@ const AppShell = () => {
                                   />
                                   <Route
                                     path="/progress"
-                                    element={<Navigate to="/hub" replace />}
+                                    element={<Navigate to="/hub/overview" replace />}
                                   />
                                   <Route
                                     path="/history"
-                                    element={<RedirectWithLoading to="/hub#history" />}
+                                    element={<RedirectWithLoading to="/hub/history" />}
                                   />
                                   <Route
                                     path="/social"
-                                    element={<RedirectWithLoading to="/hub#social" />}
+                                    element={<RedirectWithLoading to="/hub/achievements" />}
                                   />
 
                                   {/* Existing routes (unchanged) */}

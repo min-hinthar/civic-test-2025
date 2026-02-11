@@ -127,8 +127,10 @@ export const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-passwo
  * Returns 'right' for unknown routes (default).
  */
 export function getSlideDirection(from: string, to: string): 'left' | 'right' {
-  const fromTab = NAV_TABS.find(t => t.href === from);
-  const toTab = NAV_TABS.find(t => t.href === to);
+  const matchTab = (path: string) =>
+    NAV_TABS.find(t => path === t.href || path.startsWith(t.href + '/'));
+  const fromTab = matchTab(from);
+  const toTab = matchTab(to);
   if (!fromTab || !toTab) return 'right';
   return toTab.order > fromTab.order ? 'left' : 'right';
 }

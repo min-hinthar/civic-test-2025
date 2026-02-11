@@ -60,7 +60,8 @@ export function BottomTabBar() {
         {NAV_TABS.map(tab => {
           const isActive =
             location.pathname === tab.href ||
-            (tab.href === '/study' && location.pathname.startsWith('/study'));
+            (tab.href === '/study' && location.pathname.startsWith('/study')) ||
+            (tab.href === '/hub' && location.pathname.startsWith('/hub'));
 
           return (
             <NavItem
