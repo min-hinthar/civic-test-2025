@@ -16,6 +16,7 @@ import { HubTabBar } from '@/components/hub/HubTabBar';
 import { OverviewTab } from '@/components/hub/OverviewTab';
 import { HistoryTab } from '@/components/hub/HistoryTab';
 import { AchievementsTab } from '@/components/hub/AchievementsTab';
+import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 
 // ---------------------------------------------------------------------------
 // Tab configuration
@@ -246,6 +247,14 @@ export default function HubPage() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Badge celebration modal rendered outside AnimatePresence to persist across tab switches */}
+      {newlyEarnedBadge && (
+        <BadgeCelebration
+          badge={newlyEarnedBadge}
+          onDismiss={() => dismissCelebration(newlyEarnedBadge.id)}
+        />
+      )}
     </div>
   );
 }
