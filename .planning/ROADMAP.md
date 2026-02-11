@@ -151,11 +151,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — NBA types, bilingual strings, and pure determination function (TDD)
-- [ ] 16-02-PLAN.md — CompactStatRow, CategoryPreviewCard, and RecentActivityCard components
-- [ ] 16-03-PLAN.md — useNextBestAction hook and NBAHeroCard component
-- [ ] 16-04-PLAN.md — Dashboard.tsx rewrite with NBA-focused layout
-- [ ] 16-05-PLAN.md — Build verification and visual/functional checkpoint
+- [x] 16-01-PLAN.md — NBA types, bilingual strings, and pure determination function (TDD)
+- [x] 16-02-PLAN.md — CompactStatRow, CategoryPreviewCard, and RecentActivityCard components
+- [x] 16-03-PLAN.md — useNextBestAction hook and NBAHeroCard component
+- [x] 16-04-PLAN.md — Dashboard.tsx rewrite with NBA-focused layout
+- [x] 16-05-PLAN.md — Build verification and visual/functional checkpoint
 
 ### Phase 17: UI System Polish
 **Goal**: The entire app feels premium and iOS-inspired with consistent glass effects, responsive micro-interactions, proper touch targets, and polished dark mode
@@ -184,13 +184,13 @@ Phases execute in numeric order: 11 > 12 > 13 > 14 > 15 > 16 > 17
 | 13. Security Hardening | v2.0 | 5/5 | Complete | 2026-02-10 |
 | 14. Unified Navigation | v2.0 | 7/7 | Complete | 2026-02-10 |
 | 15. Progress Hub | v2.0 | 6/6 | Complete | 2026-02-11 |
-| 16. Dashboard Next Best Action | v2.0 | 0/TBD | Not started | - |
+| 16. Dashboard Next Best Action | v2.0 | 5/5 | Complete | 2026-02-11 |
 | 17. UI System Polish | v2.0 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
-| v2.0 | 7 | 31/TBD | 20/29 | In progress |
+| v2.0 | 7 | 36/TBD | 25/29 | In progress |
 
 ---
 
