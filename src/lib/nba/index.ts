@@ -28,5 +28,5 @@ export type {
 export { getNBAContent } from './nbaStrings';
 export type { NBAContent } from './nbaStrings';
 
-// Determination function (will be added in Task 2)
-// export { determineNextBestAction } from './determineNBA';
+// Determination function
+export { determineNextBestAction } from './determineNBA';

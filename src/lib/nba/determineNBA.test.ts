@@ -340,13 +340,15 @@ describe('determineNextBestAction', () => {
   // 7. Test ready
   // -----------------------------------------------------------------------
   describe('test-ready state', () => {
-    it('returns test-ready when readiness >= 70% with recent test', () => {
+    it('returns test-ready when readiness >= 70% with recent test but mastery < 60', () => {
+      // overallMastery < 60 avoids celebration check; readiness still high from
+      // test accuracy + coverage + streak
       const result = determineNextBestAction(
         emptyInput({
           currentStreak: 5,
           activityDates: [TODAY],
           srsDueCount: 0,
-          overallMastery: 75,
+          overallMastery: 55,
           categoryMasteries: {
             'American Government': 80,
             'American History': 70,
@@ -366,12 +368,14 @@ describe('determineNextBestAction', () => {
     });
 
     it('suggests interview when readiness >= 80% and has passed mock test', () => {
+      // overallMastery < 60 avoids celebration; high streak + accuracy + coverage
+      // gives readiness >= 80%
       const result = determineNextBestAction(
         emptyInput({
-          currentStreak: 10,
+          currentStreak: 5,
           activityDates: [TODAY],
           srsDueCount: 0,
-          overallMastery: 90,
+          overallMastery: 55,
           categoryMasteries: {
             'American Government': 90,
             'American History': 88,
@@ -392,12 +396,13 @@ describe('determineNextBestAction', () => {
     });
 
     it('does NOT suggest interview when no passed test despite high readiness', () => {
+      // overallMastery < 60 avoids celebration
       const result = determineNextBestAction(
         emptyInput({
-          currentStreak: 10,
+          currentStreak: 5,
           activityDates: [TODAY],
           srsDueCount: 0,
-          overallMastery: 90,
+          overallMastery: 55,
           categoryMasteries: {
             'American Government': 90,
             'American History': 88,
