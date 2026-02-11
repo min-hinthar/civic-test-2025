@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 16 of 17 (Dashboard Next Best Action)
-Plan: 0 of TBD in current phase
-Status: Not started
-Last activity: 2026-02-11 -- Phase 15 (Progress Hub) completed
+Plan: 2 of 5 in current phase
+Status: In progress
+Last activity: 2026-02-11 -- Completed 16-02-PLAN.md
 
 Progress: [█████░░░░░] 5/7 phases (v2.0)
-Phase 16: [░░░░░░░░░░] 0/TBD plans
+Phase 16: [██░░░░░░░░] 1/5 plans
 
 ## Completed Milestones
 
@@ -127,6 +127,9 @@ Recent decisions affecting current work:
 - [15-06]: Nav label shortened from "Progress Hub" to "Hub" for compact bottom bar fit
 - [15-06]: Hub page title made dynamic with user's first name greeting
 - [15-06]: Bottom nav pill highlights standardized: icon-only pill, removed motion scale, font-medium labels
+- [16-02]: formatRelativeDate duplicated locally in RecentActivityCard (HistoryTab version not exported)
+- [16-02]: CountUp preserveValue prop used to avoid re-animation on every render
+- [16-02]: Data-driven STAT_DEFS array with render overrides for complex display (practiced X/Y)
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -144,10 +147,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 complete (all 6 plans executed and verified); ready for Phase 16 (Dashboard Next Best Action)
-Resume file: .planning/phases/15-progress-hub/15-06-SUMMARY.md
+Stopped at: Phase 16 plan 02 complete; continuing Phase 16 (Dashboard Next Best Action)
+Resume file: .planning/phases/16-dashboard-next-best-action/16-02-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 complete)*
+*Last updated: 2026-02-11 (Phase 16 plan 02 complete)*
