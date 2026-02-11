@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 15 of 17 (Progress Hub)
-Plan: 2 of 6 in current phase
+Plan: 3 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 15-02-PLAN.md (Overview Tab)
+Last activity: 2026-02-11 -- Completed 15-03-PLAN.md (History Tab)
 
 Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 15: [██░░░░░░░░] 2/6 plans
+Phase 15: [████░░░░░░] 4/6 plans
 
 ## Completed Milestones
 
@@ -111,6 +111,9 @@ Recent decisions affecting current work:
 - [15-02]: Weak subcategories (<50%) tappable to study guide; strong ones are not
 - [15-02]: useSRSWidget added to HubPage for SRS due count in overview stat cards
 - [15-02]: Brand new user detection: practicedCount === 0 shows WelcomeState instead of stats
+- [15-03]: GlassCard extended with HTMLAttributes<HTMLDivElement> for onClick support via rest spread
+- [15-03]: Interview history fetched internally in HistoryTab (tab-specific, not lifted to HubPage)
+- [15-03]: Flat chronological dates with formatRelativeDate helper (Today, Yesterday, X days ago, MMM D)
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -128,10 +131,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 plan 02 complete; ready for 15-03 (History Tab)
-Resume file: .planning/phases/15-progress-hub/15-02-SUMMARY.md
+Stopped at: Phase 15 plan 03 complete; ready for 15-05 (Route Migration)
+Resume file: .planning/phases/15-progress-hub/15-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 plan 02 complete)*
+*Last updated: 2026-02-11 (Phase 15 plan 03 complete)*
