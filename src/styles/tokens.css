@@ -258,6 +258,14 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
+  /* ── Glass Tiers (blur + opacity for glass-morphism) ── */
+  --glass-light-blur: 16px;
+  --glass-light-opacity: 0.65;
+  --glass-medium-blur: 24px;
+  --glass-medium-opacity: 0.55;
+  --glass-heavy-blur: 32px;
+  --glass-heavy-opacity: 0.45;
+
   /* ── Typography ── */
   --font-sans: 'Inter', 'Noto Sans Myanmar', system-ui, -apple-system, sans-serif;
   --font-myanmar: 'Noto Sans Myanmar', 'Inter', system-ui, -apple-system, sans-serif;
@@ -333,6 +341,11 @@
 
   /* ── Decorative ── */
   --color-patriotic-red: var(--patriotic-red); /* Same in both themes */
+
+  /* ── Glass Tiers (lower opacity for dark backgrounds) ── */
+  --glass-light-opacity: 0.5;
+  --glass-medium-opacity: 0.4;
+  --glass-heavy-opacity: 0.3;
 
   /* ── Shadows (darker for dark mode) ── */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
