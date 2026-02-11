@@ -1,10 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useStreak } from '@/hooks/useStreak';
+import { useBadges } from '@/hooks/useBadges';
+import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useSRSWidget } from '@/hooks/useSRSWidget';
+import { getAnswerHistory } from '@/lib/mastery';
+import { totalQuestions } from '@/constants/questions';
+import type { BadgeCheckData } from '@/lib/social/badgeDefinitions';
 import { HubTabBar } from '@/components/hub/HubTabBar';
+import { OverviewTab } from '@/components/hub/OverviewTab';
+import { HistoryTab } from '@/components/hub/HistoryTab';
+import { AchievementsTab } from '@/components/hub/AchievementsTab';
 
 // ---------------------------------------------------------------------------
 // Tab configuration
@@ -58,6 +69,92 @@ export default function HubPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const { user, isLoading: isLoadingAuth } = useAuth();
+
+  // -------------------------------------------------------------------------
+  // Shared data hooks (lifted to HubPage to avoid waterfall loads)
+  // -------------------------------------------------------------------------
+
+  const {
+    categoryMasteries,
+    subCategoryMasteries,
+    overallMastery,
+    isLoading: masteryLoading,
+  } = useCategoryMastery();
+  const { currentStreak, longestStreak, isLoading: streakLoading } = useStreak();
+  const { dueCount: srsDueCount, isLoading: srsLoading } = useSRSWidget();
+
+  // Unique questions count from answer history
+  const [uniqueQuestionsCount, setUniqueQuestionsCount] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    getAnswerHistory()
+      .then(answers => {
+        if (!cancelled) {
+          const unique = new Set(answers.map(a => a.questionId));
+          setUniqueQuestionsCount(unique.size);
+        }
+      })
+      .catch(() => {
+        // IndexedDB not available
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Build BadgeCheckData (same pattern as SocialHubPage)
+  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+
+  const badgeCheckData: BadgeCheckData | null = useMemo(() => {
+    if (streakLoading) return null;
+
+    const bestTest = history.reduce<{ accuracy: number; score: number }>(
+      (best, session) => {
+        const accuracy =
+          session.totalQuestions > 0 ? (session.score / session.totalQuestions) * 100 : 0;
+        return {
+          accuracy: Math.max(best.accuracy, accuracy),
+          score: Math.max(best.score, session.score),
+        };
+      },
+      { accuracy: 0, score: 0 }
+    );
+
+    const catValues = Object.values(categoryMasteries);
+    const categoriesMastered = catValues.filter(v => v >= 100).length;
+
+    return {
+      currentStreak,
+      longestStreak,
+      bestTestAccuracy: bestTest.accuracy,
+      bestTestScore: bestTest.score,
+      totalTestsTaken: history.length,
+      uniqueQuestionsAnswered: uniqueQuestionsCount,
+      categoriesMastered,
+      totalCategories: catValues.length,
+    };
+  }, [
+    streakLoading,
+    currentStreak,
+    longestStreak,
+    history,
+    uniqueQuestionsCount,
+    categoryMasteries,
+  ]);
+
+  // Badge state
+  const {
+    earnedBadges,
+    lockedBadges,
+    newlyEarnedBadge,
+    dismissCelebration,
+    isLoading: isLoadingBadges,
+  } = useBadges(badgeCheckData);
+
+  // -------------------------------------------------------------------------
+  // Tab navigation
+  // -------------------------------------------------------------------------
 
   const currentTab = getTabFromPath(location.pathname);
 
@@ -121,23 +218,29 @@ export default function HubPage() {
               transition={tabTransition}
             >
               {currentTab === 'overview' && (
-                <div className="rounded-2xl border border-border/30 bg-surface/50 p-8 text-center">
-                  <p className="text-lg font-medium text-text-secondary">
-                    Overview Tab Coming Soon
-                  </p>
-                </div>
+                <OverviewTab
+                  overallMastery={overallMastery}
+                  categoryMasteries={categoryMasteries}
+                  subCategoryMasteries={subCategoryMasteries}
+                  currentStreak={currentStreak}
+                  srsDueCount={srsDueCount}
+                  practicedCount={uniqueQuestionsCount}
+                  totalQuestions={totalQuestions}
+                  isLoading={masteryLoading || streakLoading || srsLoading}
+                />
               )}
               {currentTab === 'history' && (
-                <div className="rounded-2xl border border-border/30 bg-surface/50 p-8 text-center">
-                  <p className="text-lg font-medium text-text-secondary">History Tab Coming Soon</p>
-                </div>
+                <HistoryTab testHistory={history} isLoading={isLoadingAuth} />
               )}
               {currentTab === 'achievements' && (
-                <div className="rounded-2xl border border-border/30 bg-surface/50 p-8 text-center">
-                  <p className="text-lg font-medium text-text-secondary">
-                    Achievements Tab Coming Soon
-                  </p>
-                </div>
+                <AchievementsTab
+                  earnedBadges={earnedBadges}
+                  lockedBadges={lockedBadges}
+                  badgeCheckData={badgeCheckData}
+                  newlyEarnedBadge={newlyEarnedBadge}
+                  dismissCelebration={dismissCelebration}
+                  isLoading={isLoadingBadges}
+                />
               )}
             </motion.div>
           </AnimatePresence>
