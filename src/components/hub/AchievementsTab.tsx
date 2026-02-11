@@ -35,7 +35,6 @@ import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/St
 import { GlassCard } from '@/components/hub/GlassCard';
 import { LeaderboardTable } from '@/components/social/LeaderboardTable';
 import { LeaderboardProfile } from '@/components/social/LeaderboardProfile';
-import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 import { SocialOptInFlow } from '@/components/social/SocialOptInFlow';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -157,8 +156,6 @@ export interface AchievementsTabProps {
   earnedBadges: BadgeDefinition[];
   lockedBadges: BadgeDefinition[];
   badgeCheckData: BadgeCheckData | null;
-  newlyEarnedBadge: BadgeDefinition | null;
-  dismissCelebration: (id: string) => void;
   isLoading: boolean;
 }
 
@@ -170,8 +167,6 @@ export function AchievementsTab({
   earnedBadges,
   lockedBadges,
   badgeCheckData,
-  newlyEarnedBadge,
-  dismissCelebration,
   isLoading,
 }: AchievementsTabProps) {
   const { showBurmese } = useLanguage();
@@ -497,14 +492,6 @@ export function AchievementsTab({
 
       {/* Profile dialog */}
       <LeaderboardProfile entry={selectedEntry} open={profileOpen} onClose={handleProfileClose} />
-
-      {/* Badge celebration modal */}
-      {newlyEarnedBadge && (
-        <BadgeCelebration
-          badge={newlyEarnedBadge}
-          onDismiss={() => dismissCelebration(newlyEarnedBadge.id)}
-        />
-      )}
 
       {/* Social opt-in flow */}
       {showOptIn && user && (

@@ -238,8 +238,6 @@ export default function HubPage() {
                   earnedBadges={earnedBadges}
                   lockedBadges={lockedBadges}
                   badgeCheckData={badgeCheckData}
-                  newlyEarnedBadge={newlyEarnedBadge}
-                  dismissCelebration={dismissCelebration}
                   isLoading={isLoadingBadges}
                 />
               )}
