@@ -86,7 +86,7 @@ export const NAV_TABS: NavTab[] = [
   {
     id: 'hub',
     href: '/hub',
-    label: 'Progress Hub',
+    label: 'Hub',
     labelMy: '\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F',
     icon: BarChart3,
     order: 4,

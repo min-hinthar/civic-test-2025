@@ -11,7 +11,6 @@
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sun, Moon, LogOut, Languages } from 'lucide-react';
-import { motion } from 'motion/react';
 import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
@@ -87,12 +86,10 @@ export function BottomTabBar() {
           className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           aria-label={showBurmese ? 'Switch to English' : 'Switch to Myanmar'}
         >
-          <motion.div
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-            className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-primary/10"
-          >
-            <Languages className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
+              <Languages className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+            </span>
             <span
               className={`text-xs whitespace-nowrap transition-colors ${
                 showBurmese ? 'font-myanmar' : ''
@@ -100,7 +97,7 @@ export function BottomTabBar() {
             >
               {showBurmese ? 'English' : '\u1019\u103C\u1014\u103A\u1019\u102C'}
             </span>
-          </motion.div>
+          </div>
         </button>
 
         {/* Theme toggle */}
@@ -110,12 +107,10 @@ export function BottomTabBar() {
           className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           data-tour="theme-toggle"
         >
-          <motion.div
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-            className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-primary/10"
-          >
-            <ThemeIcon className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
+              <ThemeIcon className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+            </span>
             <span
               className={`text-xs whitespace-nowrap transition-colors ${
                 showBurmese ? 'font-myanmar' : ''
@@ -129,7 +124,7 @@ export function BottomTabBar() {
                   ? 'Light'
                   : 'Dark'}
             </span>
-          </motion.div>
+          </div>
         </button>
 
         {/* Sign out */}
@@ -139,12 +134,10 @@ export function BottomTabBar() {
             onClick={handleSignOut}
             className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           >
-            <motion.div
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-              className="flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all active:bg-destructive/10"
-            >
-              <LogOut className="h-6 w-6 text-destructive/70" strokeWidth={2} />
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-destructive/10">
+                <LogOut className="h-6 w-6 text-destructive/70" strokeWidth={2} />
+              </span>
               <span
                 className={`text-xs whitespace-nowrap transition-colors ${
                   showBurmese ? 'font-myanmar' : ''
@@ -152,7 +145,7 @@ export function BottomTabBar() {
               >
                 {showBurmese ? '\u1011\u103D\u1000\u103A\u101B\u1014\u103A' : 'Sign Out'}
               </span>
-            </motion.div>
+            </div>
           </button>
         )}
       </div>

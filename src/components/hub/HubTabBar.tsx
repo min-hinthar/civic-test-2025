@@ -32,44 +32,50 @@ interface HubTabBarProps {
  */
 export function HubTabBar({ activeTab, onTabChange }: HubTabBarProps) {
   const { showBurmese } = useLanguage();
+  const activeIndex = Math.max(
+    0,
+    HUB_TABS.findIndex(t => t.id === activeTab)
+  );
 
   return (
     <div className="sticky top-0 z-20 -mx-4 mb-6 px-4 pt-2 pb-0">
       <nav
-        className="flex gap-1 rounded-2xl border border-border/40 bg-surface/80 p-1 backdrop-blur-lg"
+        className="rounded-2xl border border-border/40 bg-surface/80 p-1 backdrop-blur-lg"
         role="tablist"
-        aria-label="Progress Hub tabs"
+        aria-label="Hub tabs"
       >
-        {HUB_TABS.map(tab => {
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`hub-tabpanel-${tab.id}`}
-              onClick={() => onTabChange(tab.id)}
-              className={clsx(
-                'relative flex min-h-[44px] flex-1 flex-col items-center justify-center rounded-xl px-2 py-2 text-sm font-medium transition-colors duration-200',
-                isActive ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
-              )}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="hub-tab-indicator"
-                  className="absolute inset-0 rounded-xl bg-primary/10 shadow-sm"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10 leading-tight">{tab.label}</span>
-              {showBurmese && (
-                <span className="font-myanmar relative z-10 mt-0.5 text-[10px] leading-tight opacity-70">
-                  {tab.labelMy}
-                </span>
-              )}
-            </button>
-          );
-        })}
+        <div className="relative grid grid-cols-3">
+          {/* Sliding pill — fixed width (1 grid cell), translateX by own width */}
+          <motion.div
+            className="absolute inset-y-0 rounded-xl bg-primary/10 shadow-sm"
+            style={{ width: `${100 / HUB_TABS.length}%` }}
+            animate={{ x: `${activeIndex * 100}%` }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          />
+          {HUB_TABS.map(tab => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`hub-tabpanel-${tab.id}`}
+                onClick={() => onTabChange(tab.id)}
+                className={clsx(
+                  'relative z-10 flex min-h-[44px] flex-col items-center justify-center rounded-xl px-2 py-2 text-sm font-medium transition-colors duration-200',
+                  isActive ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+                )}
+              >
+                <span className="leading-tight">{tab.label}</span>
+                {showBurmese && (
+                  <span className="font-myanmar mt-0.5 text-[10px] leading-tight opacity-70">
+                    {tab.labelMy}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </nav>
     </div>
   );

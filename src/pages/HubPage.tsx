@@ -269,10 +269,12 @@ export default function HubPage() {
       <div className="mx-auto max-w-6xl px-4 pt-6 pb-8">
         {/* Page header */}
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-text-primary">{strings.hub.pageTitle.en}</h1>
+          <h1 className="text-2xl font-bold text-text-primary">
+            {user?.name ? `${user.name.split(' ')[0]}'s Progress` : strings.hub.pageTitle.en}
+          </h1>
           {showBurmese && (
             <p className="font-myanmar mt-0.5 text-sm text-text-secondary">
-              {strings.hub.pageTitle.my}
+              {user?.name ? `${user.name.split(' ')[0]} ၏ တိုးတက်မှု` : strings.hub.pageTitle.my}
             </p>
           )}
         </div>

@@ -72,18 +72,17 @@ export function NavItem({
   })();
 
   const innerClasses = (() => {
-    const base = 'flex items-center transition-all';
     const activeStyle = isActive ? 'bg-primary/20 shadow-sm shadow-primary/15' : '';
     const hoverStyle = !isActive && !isLocked ? 'hover:bg-primary/10 hover:scale-[1.02]' : '';
     const lockedStyle = isLocked ? 'opacity-60 cursor-not-allowed' : '';
 
     switch (variant) {
       case 'mobile':
-        return `${base} flex-col gap-0.5 rounded-full px-2.5 py-1.5 ${activeStyle} ${hoverStyle} ${lockedStyle}`;
+        return `flex flex-col items-center gap-0.5 ${lockedStyle}`;
       case 'sidebar-expanded':
-        return `${base} gap-3 py-2.5 px-3 rounded-full w-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
+        return `flex items-center transition-all gap-3 py-2.5 px-3 rounded-full w-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
       case 'sidebar-collapsed':
-        return `${base} justify-center w-12 h-12 rounded-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
+        return `flex items-center transition-all justify-center w-12 h-12 rounded-full ${activeStyle} ${hoverStyle} ${lockedStyle}`;
     }
   })();
 
@@ -93,7 +92,11 @@ export function NavItem({
 
     const textSize = variant === 'mobile' ? 'text-xs' : 'text-sm';
     const fontClass = showBurmese ? 'font-myanmar' : '';
-    const activeColor = isActive ? 'font-semibold text-primary' : 'text-muted-foreground';
+    const activeColor = isActive
+      ? variant === 'mobile'
+        ? 'font-medium text-primary'
+        : 'font-semibold text-primary'
+      : 'text-muted-foreground';
 
     return (
       <span
@@ -108,10 +111,10 @@ export function NavItem({
   const iconElement = (
     <span className="relative">
       <Icon
-        className={`h-6 w-6 shrink-0 transition-colors ${
+        className={`h-6 w-6 shrink-0 transition-colors duration-200 ${
           isActive ? 'text-primary' : 'text-muted-foreground'
         }`}
-        strokeWidth={isActive ? 2.5 : 2}
+        strokeWidth={2}
       />
       <TabBadge tab={tab} badges={badges} />
     </span>
@@ -121,17 +124,34 @@ export function NavItem({
   const tooltipAttrs = variant === 'sidebar-collapsed' ? { 'data-tooltip': tab.label } : {};
 
   // --- Content wrapper (motion for tap animation) ---
-  const content = (
-    <motion.div
-      whileTap={isLocked ? undefined : { scale: 0.92 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-      className={innerClasses}
-      {...tooltipAttrs}
-    >
-      {iconElement}
-      {labelElement}
-    </motion.div>
-  );
+  const content =
+    variant === 'mobile' ? (
+      <div className={innerClasses}>
+        {/* Icon pill — fixed size highlight behind icon only */}
+        <span
+          className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 ${
+            isActive
+              ? 'bg-primary/20 shadow-sm shadow-primary/15'
+              : !isLocked
+                ? 'hover:bg-primary/10'
+                : ''
+          }`}
+        >
+          {iconElement}
+        </span>
+        {labelElement}
+      </div>
+    ) : (
+      <motion.div
+        whileTap={isLocked ? undefined : { scale: 0.92 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+        className={innerClasses}
+        {...tooltipAttrs}
+      >
+        {iconElement}
+        {labelElement}
+      </motion.div>
+    );
 
   // --- Render as button (locked) or Link (normal) ---
   if (isLocked) {
