@@ -198,12 +198,10 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
             <ClipboardList className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-foreground">Mock Tests</h2>
+            <h2 className="text-lg font-bold text-foreground">{strings.hub.mockTests.en}</h2>
             {showBurmese && (
               <p className="text-sm text-muted-foreground font-myanmar">
-                {
-                  '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038'
-                }
+                {strings.hub.mockTests.my}
               </p>
             )}
           </div>
@@ -452,13 +450,9 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                     'shadow-[0_3px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[2px]'
                   )}
                 >
-                  Load more
+                  {strings.hub.loadMore.en}
                   {showBurmese && (
-                    <span className="font-myanmar ml-2">
-                      {
-                        '\u1015\u102D\u102F\u1019\u102D\u102F\u1019\u103B\u102C\u1038\u1015\u103C\u1015\u102B'
-                      }
-                    </span>
+                    <span className="font-myanmar ml-2">{strings.hub.loadMore.my}</span>
                   )}
                 </button>
               </div>
@@ -507,10 +501,10 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
             <Mic2 className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-foreground">Interviews</h2>
+            <h2 className="text-lg font-bold text-foreground">{strings.hub.interviews.en}</h2>
             {showBurmese && (
               <p className="text-sm text-muted-foreground font-myanmar">
-                {'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103B\u102C\u1038'}
+                {strings.hub.interviews.my}
               </p>
             )}
           </div>
@@ -699,13 +693,9 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                     'shadow-[0_3px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[2px]'
                   )}
                 >
-                  Load more
+                  {strings.hub.loadMore.en}
                   {showBurmese && (
-                    <span className="font-myanmar ml-2">
-                      {
-                        '\u1015\u102D\u102F\u1019\u102D\u102F\u1019\u103B\u102C\u1038\u1015\u103C\u1015\u102B'
-                      }
-                    </span>
+                    <span className="font-myanmar ml-2">{strings.hub.loadMore.my}</span>
                   )}
                 </button>
               </div>

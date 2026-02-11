@@ -14,6 +14,7 @@ import { OverviewSkeleton } from '@/components/hub/HubSkeleton';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { strings } from '@/lib/i18n/strings';
 import { USCIS_CATEGORIES, SUB_CATEGORY_NAMES } from '@/lib/mastery';
 import type { USCISCategory } from '@/lib/mastery';
 
@@ -166,12 +167,12 @@ export function OverviewTab({
       {/* Category Mastery section */}
       <StaggeredItem>
         <section ref={categoriesSectionRef}>
-          <h3 className="mb-3 text-lg font-bold text-text-primary">Category Mastery</h3>
+          <h3 className="mb-3 text-lg font-bold text-text-primary">
+            {strings.hub.categoryMastery.en}
+          </h3>
           {showBurmese && (
             <p className="font-myanmar -mt-2 mb-3 text-xs text-text-secondary">
-              {
-                '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u101C\u102D\u102F\u1000\u103A \u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F'
-              }
+              {strings.hub.categoryMastery.my}
             </p>
           )}
 

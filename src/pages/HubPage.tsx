@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -11,6 +11,7 @@ import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useSRSWidget } from '@/hooks/useSRSWidget';
 import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
+import { strings } from '@/lib/i18n/strings';
 import type { BadgeCheckData } from '@/lib/social/badgeDefinitions';
 import { HubTabBar } from '@/components/hub/HubTabBar';
 import { OverviewTab } from '@/components/hub/OverviewTab';
@@ -22,8 +23,12 @@ import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 // Tab configuration
 // ---------------------------------------------------------------------------
 
+const TAB_LIST = ['overview', 'history', 'achievements'] as const;
 const TAB_ORDER: Record<string, number> = { overview: 0, history: 1, achievements: 2 };
 const VALID_TABS = new Set(Object.keys(TAB_ORDER));
+
+/** Minimum horizontal drag distance (px) to trigger a tab switch */
+const SWIPE_THRESHOLD = 50;
 
 /** Derive the tab key from the current pathname */
 function getTabFromPath(pathname: string): string {
@@ -177,11 +182,82 @@ export default function HubPage() {
     setPrevTabIndex(currentIndex);
   }
 
-  const handleTabChange = (tabId: string) => {
-    if (tabId !== currentTab) {
-      navigate(`/hub/${tabId}`);
+  // -------------------------------------------------------------------------
+  // Scroll position memory (useState, not useRef -- React Compiler safe)
+  // -------------------------------------------------------------------------
+
+  const [scrollPositions, setScrollPositions] = useState<Map<string, number>>(new Map());
+
+  const handleTabChange = useCallback(
+    (tabId: string) => {
+      if (tabId !== currentTab) {
+        // Save current scroll position before navigating
+        setScrollPositions(prev => {
+          const next = new Map(prev);
+          next.set(currentTab, window.scrollY);
+          return next;
+        });
+        navigate(`/hub/${tabId}`);
+      }
+    },
+    [currentTab, navigate]
+  );
+
+  // Restore scroll position for the active tab after render
+  useEffect(() => {
+    if (!currentTab) return;
+    const savedY = scrollPositions.get(currentTab) ?? 0;
+    // Use rAF to wait for layout to settle before restoring scroll
+    const rafId = requestAnimationFrame(() => {
+      window.scrollTo(0, savedY);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [currentTab, scrollPositions]);
+
+  // -------------------------------------------------------------------------
+  // Swipe gestures for tab switching
+  // -------------------------------------------------------------------------
+
+  const handleDragEnd = useCallback(
+    (_event: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number } }) => {
+      const { x } = info.offset;
+      const idx = TAB_ORDER[currentTab] ?? 0;
+
+      if (x < -SWIPE_THRESHOLD && idx < TAB_LIST.length - 1) {
+        // Swiped left -> next tab
+        handleTabChange(TAB_LIST[idx + 1]);
+      } else if (x > SWIPE_THRESHOLD && idx > 0) {
+        // Swiped right -> previous tab
+        handleTabChange(TAB_LIST[idx - 1]);
+      }
+    },
+    [currentTab, handleTabChange]
+  );
+
+  // -------------------------------------------------------------------------
+  // Badge count sync to localStorage for useNavBadges
+  // -------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (!isLoadingBadges) {
+      try {
+        localStorage.setItem('civic-prep-earned-badge-count', String(earnedBadges.length));
+      } catch {
+        // localStorage not available
+      }
     }
-  };
+  }, [earnedBadges.length, isLoadingBadges]);
+
+  // When Achievements tab is active, mark badges as seen
+  useEffect(() => {
+    if (currentTab === 'achievements' && !isLoadingBadges) {
+      try {
+        localStorage.setItem('civic-prep-seen-badge-count', String(earnedBadges.length));
+      } catch {
+        // localStorage not available
+      }
+    }
+  }, [currentTab, earnedBadges.length, isLoadingBadges]);
 
   // Don't render content until we have a valid tab (redirect in progress)
   if (!currentTab) {
@@ -193,12 +269,10 @@ export default function HubPage() {
       <div className="mx-auto max-w-6xl px-4 pt-6 pb-8">
         {/* Page header */}
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-text-primary">My Progress</h1>
+          <h1 className="text-2xl font-bold text-text-primary">{strings.hub.pageTitle.en}</h1>
           {showBurmese && (
             <p className="font-myanmar mt-0.5 text-sm text-text-secondary">
-              {
-                '\u1000\u103B\u103D\u1014\u103A\u102F\u1015\u103A\u101B\u1032\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F'
-              }
+              {strings.hub.pageTitle.my}
             </p>
           )}
         </div>
@@ -217,6 +291,10 @@ export default function HubPage() {
               animate="center"
               exit="exit"
               transition={tabTransition}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
             >
               {currentTab === 'overview' && (
                 <OverviewTab

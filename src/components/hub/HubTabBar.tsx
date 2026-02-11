@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { strings } from '@/lib/i18n/strings';
 
 /** Tab definition with bilingual labels */
 interface HubTab {
@@ -12,14 +13,9 @@ interface HubTab {
 }
 
 const HUB_TABS: HubTab[] = [
-  { id: 'overview', label: 'Overview', labelMy: '\u1021\u1001\u103C\u1031\u1021\u1014\u1031' },
-  { id: 'history', label: 'History', labelMy: '\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038' },
-  {
-    id: 'achievements',
-    label: 'Achievements',
-    labelMy:
-      '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038',
-  },
+  { id: 'overview', label: strings.hub.overview.en, labelMy: strings.hub.overview.my },
+  { id: 'history', label: strings.hub.history.en, labelMy: strings.hub.history.my },
+  { id: 'achievements', label: strings.hub.achievements.en, labelMy: strings.hub.achievements.my },
 ];
 
 interface HubTabBarProps {

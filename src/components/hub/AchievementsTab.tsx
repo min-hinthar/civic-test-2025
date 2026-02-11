@@ -37,6 +37,7 @@ import { LeaderboardTable } from '@/components/social/LeaderboardTable';
 import { LeaderboardProfile } from '@/components/social/LeaderboardProfile';
 import { SocialOptInFlow } from '@/components/social/SocialOptInFlow';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { strings } from '@/lib/i18n/strings';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useSocial } from '@/contexts/SocialContext';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
@@ -378,10 +379,12 @@ export function AchievementsTab({
             {/* Leaderboard header */}
             <div className="flex items-center gap-2 mb-3">
               <Trophy className="h-4 w-4 text-muted-foreground" />
-              <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
+              <h3 className="text-sm font-semibold text-foreground">
+                {strings.hub.leaderboard.en}
+              </h3>
               {showBurmese && (
                 <span className="text-xs font-myanmar text-muted-foreground">
-                  / {'\u1021\u1006\u1004\u1037\u103A\u1007\u101A\u102C\u1038'}
+                  / {strings.hub.leaderboard.my}
                 </span>
               )}
             </div>
@@ -469,18 +472,14 @@ export function AchievementsTab({
                   <>
                     <ChevronDown className="h-3.5 w-3.5" />
                     <span className={showBurmese ? 'font-myanmar' : ''}>
-                      {showBurmese
-                        ? '\u1015\u102D\u102F\u1019\u102D\u102F\u1015\u103C\u1015\u102B'
-                        : 'Show more'}
+                      {showBurmese ? strings.hub.showMore.my : strings.hub.showMore.en}
                     </span>
                   </>
                 ) : (
                   <>
                     <ChevronUp className="h-3.5 w-3.5" />
                     <span className={showBurmese ? 'font-myanmar' : ''}>
-                      {showBurmese
-                        ? '\u101C\u103B\u103E\u1031\u1037\u1015\u103C\u1015\u102B'
-                        : 'Show less'}
+                      {showBurmese ? strings.hub.showLess.my : strings.hub.showLess.en}
                     </span>
                   </>
                 )}
