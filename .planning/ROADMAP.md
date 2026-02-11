@@ -148,10 +148,14 @@ Plans:
   3. User sees bilingual (English + Burmese) reasoning text explaining why this action is recommended
   4. A compact stat summary row below the NBA card shows current streak, overall mastery percentage, and SRS due count
   5. Dashboard shows compact preview cards that link to the Progress Hub for detailed analytics (no duplicate full-size widgets)
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 16-01: TBD
+- [ ] 16-01-PLAN.md — NBA types, bilingual strings, and pure determination function (TDD)
+- [ ] 16-02-PLAN.md — CompactStatRow, CategoryPreviewCard, and RecentActivityCard components
+- [ ] 16-03-PLAN.md — useNextBestAction hook and NBAHeroCard component
+- [ ] 16-04-PLAN.md — Dashboard.tsx rewrite with NBA-focused layout
+- [ ] 16-05-PLAN.md — Build verification and visual/functional checkpoint
 
 ### Phase 17: UI System Polish
 **Goal**: The entire app feels premium and iOS-inspired with consistent glass effects, responsive micro-interactions, proper touch targets, and polished dark mode
