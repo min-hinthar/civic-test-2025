@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 15 of 17 (Progress Hub)
-Plan: 3 of 6 in current phase
+Plan: 4 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 15-03-PLAN.md (History Tab)
+Last activity: 2026-02-11 -- Completed 15-04-PLAN.md (Achievements Tab)
 
 Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 15: [████░░░░░░] 4/6 plans
+Phase 15: [██████░░░░] 4/6 plans
 
 ## Completed Milestones
 
@@ -114,6 +114,11 @@ Recent decisions affecting current work:
 - [15-03]: GlassCard extended with HTMLAttributes<HTMLDivElement> for onClick support via rest spread
 - [15-03]: Interview history fetched internally in HistoryTab (tab-specific, not lifted to HubPage)
 - [15-03]: Flat chronological dates with formatRelativeDate helper (Today, Yesterday, X days ago, MMM D)
+- [15-04]: Display category mapping at component level (coverage->Study, accuracy->Test, streak->Streak) without modifying badgeDefinitions.ts
+- [15-04]: Social category shown with "Coming soon" placeholder since no social badges exist yet
+- [15-04]: Badge celebration rendered at HubPage level outside AnimatePresence for tab-switch persistence
+- [15-04]: Leaderboard starts at limit:5 (not 25) with toggle to expand; appropriate for side-panel layout
+- [15-04]: Badge progress computed per-badge from BadgeCheckData with Math.min capping at target
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -131,10 +136,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 plan 03 complete; ready for 15-05 (Route Migration)
-Resume file: .planning/phases/15-progress-hub/15-03-SUMMARY.md
+Stopped at: Phase 15 plan 04 complete; ready for 15-05 (Route Migration)
+Resume file: .planning/phases/15-progress-hub/15-04-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 plan 03 complete)*
+*Last updated: 2026-02-11 (Phase 15 plan 04 complete)*
