@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.0 Unified Learning Hub -- Phase 14 (Unified Navigation)
+**Current focus:** v2.0 Unified Learning Hub -- Phase 15 (Progress Hub)
 
 ## Current Position
 
-Phase: 14 of 17 (Unified Navigation)
-Plan: 7 of 7 in current phase
-Status: Phase complete (pending human verification sign-off)
-Last activity: 2026-02-10 -- Completed 14-07-PLAN.md (Verification)
+Phase: 15 of 17 (Progress Hub)
+Plan: 1 of 6 in current phase
+Status: In progress
+Last activity: 2026-02-11 -- Completed 15-01-PLAN.md (Hub Shell + Tab Bar + Routes)
 
 Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 14: [██████████] 7/7 plans
+Phase 15: [█░░░░░░░░░] 1/6 plans
 
 ## Completed Milestones
 
@@ -103,6 +103,9 @@ Recent decisions affecting current work:
 - [14-06]: Tour reduced from 8 to 7 steps: SRS deck merged into Study tab step, theme customization step removed
 - [14-06]: getNavPlacement() uses window.innerWidth >= 768 for responsive tour step placement
 - [14-07]: All 8 automated verification checks passed on first run -- zero code fixes needed
+- [15-01]: Conditional tab rendering (not Outlet) inside AnimatePresence for proper key-based exit/enter animations
+- [15-01]: Prefix-based active state matching added to BottomTabBar, Sidebar, getSlideDirection for /hub sub-paths
+- [15-01]: Glass-card CSS utility in globals.css with @supports fallback for no-backdrop-filter browsers
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -119,11 +122,11 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-10
-Stopped at: Phase 14 complete (all 7 plans); pending human visual verification sign-off
-Resume file: .planning/phases/14-unified-navigation/14-07-SUMMARY.md
+Last session: 2026-02-11
+Stopped at: Phase 15 plan 01 complete; ready for 15-02 (Overview Tab)
+Resume file: .planning/phases/15-progress-hub/15-01-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-10 (Phase 14 plan 07 complete)*
+*Last updated: 2026-02-11 (Phase 15 plan 01 complete)*
