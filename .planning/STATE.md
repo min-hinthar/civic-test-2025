@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 15 of 17 (Progress Hub)
-Plan: 4 of 6 in current phase
+Plan: 5 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 15-04-PLAN.md (Achievements Tab)
+Last activity: 2026-02-11 -- Completed 15-05-PLAN.md (Interaction Polish & Cleanup)
 
 Progress: [████░░░░░░] 4/7 phases (v2.0)
-Phase 15: [██████░░░░] 4/6 plans
+Phase 15: [████████░░] 5/6 plans
 
 ## Completed Milestones
 
@@ -119,6 +119,10 @@ Recent decisions affecting current work:
 - [15-04]: Badge celebration rendered at HubPage level outside AnimatePresence for tab-switch persistence
 - [15-04]: Leaderboard starts at limit:5 (not 25) with toggle to expand; appropriate for side-panel layout
 - [15-04]: Badge progress computed per-badge from BadgeCheckData with Math.min capping at target
+- [15-05]: localStorage bridge (civic-prep-earned-badge-count / civic-prep-seen-badge-count) for nav badge dot -- avoids importing useBadges into NavigationProvider
+- [15-05]: rAF-based scroll restoration to avoid race condition with AnimatePresence render cycle
+- [15-05]: 50px swipe threshold with 0.2 dragElastic for natural rubber-band feel
+- [15-05]: ProgressPage, HistoryPage, SocialHubPage deleted (2137 lines) -- all content migrated to Hub tabs
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -131,15 +135,15 @@ Recent decisions affecting current work:
 
 - USCIS 128Q: RESOLVED (12-01) -- 8 missing questions identified and added (GOV-P17, GOV-S40-S46), bank now at 128
 - Navigation restructure will break onboarding tour targets (data-tour attributes) -- RESOLVED (14-06): tour now targets nav items
-- Progress Hub consolidation must preserve all hash-based deep links used by push notifications and SRS
+- Progress Hub consolidation must preserve all hash-based deep links used by push notifications and SRS -- RESOLVED (15-05): push URL updated to /home, SRS link /study#review unchanged
 
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 15 plan 04 complete; ready for 15-05 (Route Migration)
-Resume file: .planning/phases/15-progress-hub/15-04-SUMMARY.md
+Stopped at: Phase 15 plan 05 complete; ready for 15-06 (Final Verification)
+Resume file: .planning/phases/15-progress-hub/15-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 15 plan 04 complete)*
+*Last updated: 2026-02-11 (Phase 15 plan 05 complete)*
