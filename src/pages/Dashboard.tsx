@@ -20,6 +20,7 @@ import { RecentActivityCard } from '@/components/dashboard/RecentActivityCard';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { BadgeCelebration } from '@/components/social/BadgeCelebration';
+import { BadgeHighlights } from '@/components/social/BadgeHighlights';
 import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
@@ -39,7 +40,12 @@ const Dashboard = () => {
   const { nbaState } = useNextBestAction();
 
   // Category mastery for stat row + preview + badge checks
-  const { categoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
+  const {
+    categoryMasteries,
+    subCategoryMasteries,
+    overallMastery,
+    isLoading: masteryLoading,
+  } = useCategoryMastery();
   const { currentMilestone, dismissMilestone } = useMasteryMilestones(categoryMasteries);
 
   // Streak and SRS for stat row + badge checks
@@ -156,8 +162,13 @@ const Dashboard = () => {
           {nbaState ? <NBAHeroCard nbaState={nbaState} /> : <NBAHeroSkeleton />}
         </motion.section>
 
-        {/* Compact Stat Row */}
+        {/* Achievements — motivational badge grid right after NBA */}
         <motion.section className="mb-6" {...stagger(1)}>
+          <BadgeHighlights />
+        </motion.section>
+
+        {/* Compact Stat Row */}
+        <motion.section className="mb-6" {...stagger(2)}>
           <CompactStatRow
             streak={currentStreak}
             mastery={overallMastery}
@@ -169,8 +180,12 @@ const Dashboard = () => {
         </motion.section>
 
         {/* Preview Cards */}
-        <motion.div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4" {...stagger(2)}>
-          <CategoryPreviewCard categoryMasteries={categoryMasteries} isLoading={masteryLoading} />
+        <motion.div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4" {...stagger(3)}>
+          <CategoryPreviewCard
+            categoryMasteries={categoryMasteries}
+            subCategoryMasteries={subCategoryMasteries}
+            isLoading={masteryLoading}
+          />
           <RecentActivityCard testHistory={history} isLoading={authLoading} />
         </motion.div>
 

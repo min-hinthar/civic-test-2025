@@ -4,8 +4,13 @@ import { useMemo } from 'react';
 import { BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { GlassCard } from '@/components/hub/GlassCard';
+import { SubcategoryBar } from '@/components/hub/SubcategoryBar';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getMasteryColor } from '@/components/hub/CategoryDonut';
+import {
+  USCIS_CATEGORIES,
+  SUB_CATEGORY_NAMES,
+  type USCISCategory,
+} from '@/lib/mastery/categoryMapping';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -13,8 +18,15 @@ import { getMasteryColor } from '@/components/hub/CategoryDonut';
 
 interface CategoryPreviewCardProps {
   categoryMasteries: Record<string, number>;
+  subCategoryMasteries: Record<string, number>;
   isLoading: boolean;
 }
+
+const CATEGORIES_ORDER: USCISCategory[] = [
+  'American Government',
+  'American History',
+  'Integrated Civics',
+];
 
 // ---------------------------------------------------------------------------
 // Skeleton (loading state)
@@ -45,38 +57,35 @@ function CategorySkeleton() {
 // ---------------------------------------------------------------------------
 
 /**
- * Compact preview card showing the top 3 weakest study categories.
+ * Preview card showing all 3 USCIS categories with their subcategories.
  *
  * Features:
- * - Sorted by mastery ascending (weakest first)
- * - Mastery-colored progress bars (red -> amber -> green)
- * - Tappable to navigate to Hub Overview tab
+ * - Groups subcategories under main category headers
+ * - Animated striped progress bars via SubcategoryBar
+ * - Weak subcategories (<50%) are clickable to study guide
  * - Loading/empty states handled
  * - Bilingual heading via useLanguage
+ * - Footer links to Hub Categories tab
  */
-export function CategoryPreviewCard({ categoryMasteries, isLoading }: CategoryPreviewCardProps) {
+export function CategoryPreviewCard({
+  categoryMasteries,
+  subCategoryMasteries,
+  isLoading,
+}: CategoryPreviewCardProps) {
   const { showBurmese } = useLanguage();
   const navigate = useNavigate();
 
-  // Get top 3 weakest categories
-  const weakest = useMemo(() => {
-    const entries = Object.entries(categoryMasteries);
-    if (entries.length === 0) return [];
-    return entries.sort(([, a], [, b]) => a - b).slice(0, 3);
+  const hasData = useMemo(() => {
+    const values = Object.values(categoryMasteries);
+    return values.length > 0 && values.some(v => v > 0);
   }, [categoryMasteries]);
-
-  const hasData = weakest.length > 0 && weakest.some(([, v]) => v > 0);
 
   if (isLoading) {
     return <CategorySkeleton />;
   }
 
-  const handleClick = () => {
-    navigate('/hub/overview');
-  };
-
   return (
-    <GlassCard interactive className="cursor-pointer rounded-2xl p-0" onClick={handleClick}>
+    <GlassCard className="rounded-2xl p-0">
       <div className="p-5">
         {/* Header */}
         <div className="flex items-center gap-2 mb-4">
@@ -106,25 +115,40 @@ export function CategoryPreviewCard({ categoryMasteries, isLoading }: CategoryPr
             )}
           </p>
         ) : (
-          <div className="space-y-3">
-            {weakest.map(([category, mastery]) => {
-              const clampedMastery = Math.max(0, Math.min(100, Math.round(mastery)));
-              const barColor = getMasteryColor(clampedMastery);
+          <div className="space-y-4">
+            {CATEGORIES_ORDER.map(category => {
+              const def = USCIS_CATEGORIES[category];
+
               return (
-                <div key={category} className="flex items-center gap-3">
-                  <span className="w-24 truncate text-xs text-text-secondary">{category}</span>
-                  <div className="relative h-2 flex-1 rounded-full bg-text-secondary/10">
-                    <div
-                      className="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
-                      style={{
-                        width: `${clampedMastery}%`,
-                        backgroundColor: barColor,
-                      }}
-                    />
+                <div key={category}>
+                  {/* Category header */}
+                  <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">
+                    {def.name.en}
+                    {showBurmese && (
+                      <span className="font-myanmar text-[9px] font-normal lowercase tracking-normal ml-2">
+                        {def.name.my}
+                      </span>
+                    )}
+                  </h4>
+
+                  {/* Subcategory bars */}
+                  <div className="space-y-2">
+                    {def.subCategories.map(subCategory => {
+                      const subMastery = subCategoryMasteries[subCategory] ?? 0;
+                      const subName = SUB_CATEGORY_NAMES[subCategory];
+
+                      return (
+                        <SubcategoryBar
+                          key={subCategory}
+                          percentage={subMastery}
+                          label={subName ?? { en: subCategory, my: subCategory }}
+                          onClick={() =>
+                            navigate(`/study?category=${encodeURIComponent(subCategory)}#cards`)
+                          }
+                        />
+                      );
+                    })}
                   </div>
-                  <span className="w-8 text-right text-xs font-semibold tabular-nums text-text-primary">
-                    {clampedMastery}%
-                  </span>
                 </div>
               );
             })}
@@ -132,7 +156,15 @@ export function CategoryPreviewCard({ categoryMasteries, isLoading }: CategoryPr
         )}
 
         {/* Footer */}
-        {hasData && <p className="mt-4 text-xs font-medium text-primary">View all in Hub &rarr;</p>}
+        {hasData && (
+          <button
+            type="button"
+            className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+            onClick={() => navigate('/hub/categories')}
+          >
+            View all in Hub &rarr;
+          </button>
+        )}
       </div>
     </GlassCard>
   );

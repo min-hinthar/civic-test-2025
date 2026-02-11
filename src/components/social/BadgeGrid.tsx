@@ -13,10 +13,13 @@
 
 import { useMemo } from 'react';
 import { clsx } from 'clsx';
+import { motion } from 'motion/react';
 import { Flame, Target, Star, BookCheck, Award, type LucideIcon } from 'lucide-react';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
+import { getBadgeColors } from '@/lib/social/badgeColors';
 
 // ---------------------------------------------------------------------------
 // Icon map (shared with BadgeCelebration)
@@ -141,26 +144,39 @@ function BadgeCard({
   showBurmese: boolean;
 }) {
   const IconComponent = ICON_MAP[badge.icon] ?? Award;
+  const colors = getBadgeColors(badge.id);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div
+    <motion.div
       className={clsx(
-        'flex flex-col items-center text-center p-4 rounded-xl',
+        'flex flex-col items-center text-center p-4 rounded-xl cursor-pointer',
         'border border-border/60 bg-card',
         isEarned ? '' : 'opacity-60'
       )}
+      whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -4 }}
+      whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
-      {/* Icon container */}
-      <div
+      {/* Icon container with hover wiggle */}
+      <motion.div
         className={clsx(
-          'flex items-center justify-center h-12 w-12 rounded-full mb-3',
-          isEarned ? 'bg-amber-100' : 'bg-muted grayscale'
+          'relative flex items-center justify-center h-12 w-12 rounded-full mb-3',
+          isEarned ? `${colors.bgLight} ${colors.bgDark}` : 'bg-muted grayscale'
         )}
+        whileHover={
+          shouldReduceMotion ? {} : isEarned ? { rotate: [0, -10, 10, -5, 5, 0] } : { scale: 1.1 }
+        }
+        transition={{ duration: 0.5 }}
       >
         <IconComponent
-          className={clsx('h-6 w-6', isEarned ? 'text-warning' : 'text-muted-foreground')}
+          className={clsx(
+            'h-6 w-6',
+            isEarned ? `${colors.icon} ${colors.glow} filter saturate-150` : 'text-muted-foreground'
+          )}
         />
-      </div>
+        {isEarned && <div className="badge-gold-shimmer absolute inset-0 rounded-full" />}
+      </motion.div>
 
       {/* Badge name */}
       <p className="text-sm font-semibold text-foreground leading-tight">{badge.name.en}</p>
@@ -182,6 +198,6 @@ function BadgeCard({
           {showBurmese && <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }

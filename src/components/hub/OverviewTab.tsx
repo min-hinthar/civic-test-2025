@@ -226,13 +226,8 @@ export function OverviewTab({
                             key={subCategory}
                             percentage={subMastery}
                             label={subName ?? { en: subCategory, my: subCategory }}
-                            onClick={
-                              subMastery < 50
-                                ? () =>
-                                    navigate(
-                                      `/study?category=${encodeURIComponent(subCategory)}#cards`
-                                    )
-                                : undefined
+                            onClick={() =>
+                              navigate(`/study?category=${encodeURIComponent(subCategory)}#cards`)
                             }
                           />
                         );

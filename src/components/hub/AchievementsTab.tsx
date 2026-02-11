@@ -15,7 +15,8 @@
  * All text is bilingual (EN + MY) via useLanguage().
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   BookOpen,
@@ -43,6 +44,9 @@ import { useSocial } from '@/contexts/SocialContext';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import type { LeaderboardEntry } from '@/hooks/useLeaderboard';
 import type { BadgeDefinition, BadgeCheckData } from '@/lib/social/badgeDefinitions';
+import { getBadgeColors } from '@/lib/social/badgeColors';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { motion } from 'motion/react';
 import { totalQuestions } from '@/constants/questions';
 
 // ---------------------------------------------------------------------------
@@ -173,6 +177,35 @@ export function AchievementsTab({
   const { showBurmese } = useLanguage();
   const { user } = useAuth();
   const { isOptedIn, isLoading: socialLoading } = useSocial();
+  const location = useLocation();
+
+  // Scroll-to-badge when navigated from dashboard with focusBadge state
+  // Derive focus target from navigation state (useMemo avoids setState-in-effect)
+  const focusBadgeFromNav = useMemo(() => {
+    const state = location.state as { focusBadge?: string } | null;
+    return state?.focusBadge ?? null;
+  }, [location.state]);
+
+  const [focusDismissed, setFocusDismissed] = useState(false);
+
+  const focusedBadgeId =
+    focusBadgeFromNav && !focusDismissed && !isLoading ? focusBadgeFromNav : null;
+
+  useEffect(() => {
+    if (!focusBadgeFromNav || isLoading) return;
+
+    // Scroll to badge after render
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`badge-${focusBadgeFromNav}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    // Clear highlight after 2 seconds
+    const timer = setTimeout(() => setFocusDismissed(true), 2000);
+    return () => clearTimeout(timer);
+  }, [focusBadgeFromNav, isLoading]);
 
   // -------------------------------------------------------------------------
   // Leaderboard state
@@ -359,6 +392,7 @@ export function AchievementsTab({
                               isEarned={isEarned}
                               progress={progress}
                               showBurmese={showBurmese}
+                              isFocused={focusedBadgeId === badge.id}
                             />
                           </StaggeredItem>
                         );
@@ -513,87 +547,102 @@ function BadgeCard({
   isEarned,
   progress,
   showBurmese,
+  isFocused,
 }: {
   badge: BadgeDefinition;
   isEarned: boolean;
   progress: { current: number; target: number };
   showBurmese: boolean;
+  isFocused: boolean;
 }) {
   const IconComponent = BADGE_ICON_MAP[badge.icon] ?? Award;
+  const colors = getBadgeColors(badge.id);
+  const shouldReduceMotion = useReducedMotion();
   const progressPct =
     progress.target > 0 ? Math.min((progress.current / progress.target) * 100, 100) : 0;
 
   return (
-    <GlassCard
-      className={clsx(
-        'relative flex flex-col items-center text-center p-4 overflow-hidden',
-        isEarned && 'shadow-[0_0_20px_hsl(var(--primary)/0.3)]'
-      )}
+    <motion.div
+      id={`badge-${badge.id}`}
+      whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -4 }}
+      whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
-      {/* Shimmer overlay for earned badges */}
-      {isEarned && <div className="badge-shimmer" aria-hidden="true" />}
-
-      {/* Icon container */}
-      <div className="relative">
-        <div
-          className={clsx(
-            'flex items-center justify-center h-12 w-12 rounded-full mb-3',
-            isEarned ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted grayscale opacity-50'
-          )}
-        >
-          <IconComponent
-            className={clsx('h-6 w-6', isEarned ? 'text-warning' : 'text-muted-foreground')}
-          />
-        </div>
-
-        {/* Lock overlay for unearned */}
-        {!isEarned && (
-          <div className="absolute inset-0 flex items-center justify-center mb-3">
-            <div className="flex items-center justify-center h-6 w-6 rounded-full bg-muted/80">
-              <Lock className="h-3 w-3 text-muted-foreground" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Badge name */}
-      <p
+      <GlassCard
         className={clsx(
-          'text-xs font-semibold leading-tight',
-          isEarned ? 'text-foreground' : 'text-muted-foreground'
+          'relative flex flex-col items-center text-center p-4 overflow-hidden cursor-pointer',
+          isFocused && 'ring-2 ring-primary ring-offset-2 ring-offset-surface-primary'
         )}
       >
-        {badge.name.en}
-      </p>
-      {showBurmese && (
-        <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
-          {badge.name.my}
-        </p>
-      )}
+        {/* Icon container */}
+        <motion.div
+          className={clsx(
+            'relative flex items-center justify-center h-12 w-12 rounded-full mb-3',
+            isEarned ? `${colors.bgLight} ${colors.bgDark}` : 'bg-muted grayscale'
+          )}
+          whileHover={
+            shouldReduceMotion ? {} : isEarned ? { rotate: [0, -10, 10, -5, 5, 0] } : { scale: 1.1 }
+          }
+          transition={{ duration: 0.5 }}
+        >
+          {isEarned ? (
+            <IconComponent
+              className={clsx('h-6 w-6 filter saturate-150', colors.icon, colors.glow)}
+            />
+          ) : (
+            <Lock className="h-5 w-5 text-muted-foreground" />
+          )}
+          {isEarned && <div className="badge-gold-shimmer absolute inset-0 rounded-full" />}
+        </motion.div>
 
-      {/* Progress bar */}
-      <div className="w-full mt-2">
-        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-          <div
-            className={clsx(
-              'h-full rounded-full transition-all duration-500',
-              isEarned ? 'bg-primary' : 'bg-muted-foreground/40'
-            )}
-            style={{ width: `${progressPct}%` }}
-          />
+        {/* Badge name */}
+        <p
+          className={clsx(
+            'text-xs font-semibold leading-tight',
+            isEarned ? 'text-foreground' : 'text-muted-foreground'
+          )}
+        >
+          {badge.name.en}
+        </p>
+        {showBurmese && (
+          <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
+            {badge.name.my}
+          </p>
+        )}
+
+        {/* Progress bar with per-badge color */}
+        <div className="w-full mt-2">
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className={clsx(
+                'h-full rounded-full transition-all duration-500',
+                isEarned ? colors.bar : 'bg-muted-foreground/40'
+              )}
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-1 tabular-nums">
+            {progress.current}/{progress.target}
+          </p>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-1 tabular-nums">
-          {progress.current}/{progress.target}
-        </p>
-      </div>
 
-      {/* Criteria hint for locked badges */}
-      {!isEarned && (
-        <p className="text-[10px] text-muted-foreground mt-1 leading-tight italic">
-          {badge.requirement.en}
-          {showBurmese && <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>}
-        </p>
-      )}
-    </GlassCard>
+        {/* Description (earned) or requirement hint (locked) */}
+        {isEarned ? (
+          <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+            {badge.description.en}
+            {showBurmese && (
+              <span className="block font-myanmar mt-0.5">{badge.description.my}</span>
+            )}
+          </p>
+        ) : (
+          <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed italic">
+            {badge.requirement.en}
+            {showBurmese && (
+              <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>
+            )}
+          </p>
+        )}
+      </GlassCard>
+    </motion.div>
   );
 }

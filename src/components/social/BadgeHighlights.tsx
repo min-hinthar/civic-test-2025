@@ -1,27 +1,29 @@
 'use client';
 
 /**
- * BadgeHighlights - Horizontal scrollable row of top earned badges.
+ * BadgeHighlights - Dashboard badge showcase matching Hub achievements style.
  *
- * Shows up to 5 earned badges with icons, or locked placeholders if
- * no badges have been earned yet. Tapping navigates to /social#badges.
- *
- * Uses getEarnedBadges from badgeStore and matches against BADGE_DEFINITIONS.
+ * Shows ALL 7 badges in a responsive grid using the same card layout as
+ * BadgeGrid (icon circle, name, description/requirement). Wrapped in a
+ * GlassCard with header, count pill, and footer link.
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Target, Star, BookCheck, Award, Lock } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Flame, Target, Star, BookCheck, Award, Lock, Trophy } from 'lucide-react';
 import clsx from 'clsx';
 
+import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getEarnedBadges } from '@/lib/social/badgeStore';
 import type { EarnedBadge } from '@/lib/social/badgeStore';
 import { BADGE_DEFINITIONS } from '@/lib/social/badgeDefinitions';
-import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
+import { getBadgeColors } from '@/lib/social/badgeColors';
 
 // ---------------------------------------------------------------------------
-// Icon mapping (lucide-react icon name -> component)
+// Icon mapping
 // ---------------------------------------------------------------------------
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -51,13 +53,12 @@ interface BadgeHighlightsProps {
 export function BadgeHighlights({ className }: BadgeHighlightsProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
   const [earnedRecords, setEarnedRecords] = useState<EarnedBadge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load earned badges from IndexedDB
   useEffect(() => {
     let cancelled = false;
-
     getEarnedBadges()
       .then(records => {
         if (!cancelled) {
@@ -68,103 +69,159 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
       .catch(() => {
         if (!cancelled) setIsLoading(false);
       });
-
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Match earned records to badge definitions (top 5)
-  const displayBadges: Array<{ badge: BadgeDefinition; earned: boolean }> = useMemo(() => {
-    const earnedIds = new Set(earnedRecords.map(r => r.badgeId));
-
-    // Get earned badges, sorted by earn date (newest first)
-    const earned = BADGE_DEFINITIONS.filter(b => earnedIds.has(b.id))
-      .slice(0, 5)
-      .map(badge => ({ badge, earned: true }));
-
-    if (earned.length > 0) {
-      return earned;
-    }
-
-    // Show 3 locked placeholders if no badges earned
-    return BADGE_DEFINITIONS.slice(0, 3).map(badge => ({
-      badge,
-      earned: false,
-    }));
-  }, [earnedRecords]);
+  const earnedIds = useMemo(() => new Set(earnedRecords.map(r => r.badgeId)), [earnedRecords]);
 
   const goToBadges = useCallback(() => {
-    navigate({ pathname: '/social', hash: '#badges' });
+    navigate('/hub/achievements');
   }, [navigate]);
 
-  // Loading state - minimal skeleton
-  if (isLoading) {
-    return (
-      <div className={clsx('flex gap-2 overflow-x-auto py-1', className)}>
-        {[0, 1, 2].map(i => (
-          <div key={i} className="h-12 w-12 shrink-0 animate-pulse rounded-full bg-muted/40" />
-        ))}
-      </div>
-    );
-  }
+  const goToBadge = useCallback(
+    (badgeId: string) => {
+      navigate('/hub/achievements', { state: { focusBadge: badgeId } });
+    },
+    [navigate]
+  );
 
   const hasEarnedBadges = earnedRecords.length > 0;
 
-  return (
-    <div className={clsx('space-y-1', className)}>
-      {/* Badge row */}
-      <div
-        className="flex items-center gap-2 overflow-x-auto py-1 cursor-pointer"
-        onClick={goToBadges}
-        role="button"
-        tabIndex={0}
-        onKeyDown={e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            goToBadges();
-          }
-        }}
-      >
-        {displayBadges.map(({ badge, earned }) => {
-          const IconComponent = getBadgeIcon(badge.icon);
-
-          return (
-            <div
-              key={badge.id}
-              className={clsx(
-                'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                earned
-                  ? 'border-amber-400 bg-warning-subtle shadow-sm'
-                  : 'border-border/60 bg-muted/30'
-              )}
-              title={showBurmese ? badge.name.my : badge.name.en}
-              aria-label={showBurmese ? badge.name.my : badge.name.en}
-            >
-              {earned ? (
-                <IconComponent className="h-5 w-5 text-warning" />
-              ) : (
-                <Lock className="h-4 w-4 text-muted-foreground" />
-              )}
-            </div>
-          );
-        })}
-
-        {/* Message next to badges */}
-        <div className="shrink-0 pl-1">
-          <p
-            className={`text-xs text-muted-foreground whitespace-nowrap ${showBurmese ? 'font-myanmar' : ''}`}
-          >
-            {hasEarnedBadges
-              ? showBurmese
-                ? `${earnedRecords.length} ဘက်ခ် ရရှိပြီး`
-                : `${earnedRecords.length} badge${earnedRecords.length !== 1 ? 's' : ''} earned`
-              : showBurmese
-                ? 'ဆက်လေ့လာပါ!'
-                : 'Keep studying!'}
-          </p>
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <GlassCard className={clsx('rounded-2xl p-5', className)}>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="h-5 w-5 animate-pulse rounded bg-text-secondary/20" />
+          <div className="h-4 w-28 animate-pulse rounded bg-text-secondary/20" />
         </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-2 p-4">
+              <div className="h-12 w-12 animate-pulse rounded-full bg-text-secondary/10" />
+              <div className="h-3 w-16 animate-pulse rounded bg-text-secondary/10" />
+              <div className="h-2 w-20 animate-pulse rounded bg-text-secondary/10" />
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+    );
+  }
+
+  return (
+    <GlassCard className={clsx('rounded-2xl p-0', className)}>
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-4">
+          <Trophy className="h-5 w-5 text-warning" />
+          <div>
+            <h3 className="text-sm font-semibold text-text-primary">Achievements</h3>
+            {showBurmese && (
+              <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
+                {
+                  '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038'
+                }
+              </span>
+            )}
+          </div>
+          <span className="ml-auto rounded-full bg-warning/10 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-warning">
+            {earnedRecords.length}/{BADGE_DEFINITIONS.length}
+          </span>
+        </div>
+
+        {/* Badge card grid — each card navigates to its badge in Hub */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {BADGE_DEFINITIONS.map((badge, index) => {
+            const earned = earnedIds.has(badge.id);
+            const IconComponent = getBadgeIcon(badge.icon);
+            const colors = getBadgeColors(badge.id);
+
+            return (
+              <motion.div
+                key={badge.id}
+                className={clsx(
+                  'flex flex-col items-center text-center p-3 rounded-xl cursor-pointer',
+                  'border border-border/60 bg-card',
+                  earned ? '' : 'opacity-60'
+                )}
+                initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.8 }}
+                animate={{ opacity: earned ? 1 : 0.6, scale: 1 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -4 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: 'spring', stiffness: 260, damping: 20, delay: index * 0.05 }
+                }
+                onClick={() => goToBadge(badge.id)}
+              >
+                {/* Icon circle with hover rotation */}
+                <motion.div
+                  className={clsx(
+                    'relative flex items-center justify-center h-12 w-12 rounded-full mb-2',
+                    earned ? `${colors.bgLight} ${colors.bgDark}` : 'bg-muted grayscale'
+                  )}
+                  whileHover={
+                    shouldReduceMotion
+                      ? {}
+                      : earned
+                        ? { rotate: [0, -10, 10, -5, 5, 0] }
+                        : { scale: 1.1 }
+                  }
+                  transition={{ duration: 0.5 }}
+                >
+                  {earned ? (
+                    <IconComponent
+                      className={clsx('h-6 w-6 filter saturate-150', colors.icon, colors.glow)}
+                    />
+                  ) : (
+                    <Lock className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  {earned && <div className="badge-gold-shimmer absolute inset-0 rounded-full" />}
+                </motion.div>
+
+                {/* Badge name */}
+                <p className="text-xs font-semibold text-foreground leading-tight">
+                  {badge.name.en}
+                </p>
+                {showBurmese && (
+                  <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
+                    {badge.name.my}
+                  </p>
+                )}
+
+                {/* Description (earned) or Requirement (locked) */}
+                {earned ? (
+                  <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                    {badge.description.en}
+                  </p>
+                ) : (
+                  <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed italic">
+                    {badge.requirement.en}
+                  </p>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <button
+          type="button"
+          className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+          onClick={goToBadges}
+        >
+          {hasEarnedBadges
+            ? showBurmese
+              ? `${earnedRecords.length} ဘက်ခ် ရရှိပြီး — အားလုံးကြည့်ရန် →`
+              : `${earnedRecords.length} badge${earnedRecords.length !== 1 ? 's' : ''} earned — View all →`
+            : showBurmese
+              ? 'ဆက်လေ့လာပြီး ဘက်ခ်များ ရယူပါ →'
+              : 'Keep studying to earn badges →'}
+        </button>
       </div>
-    </div>
+    </GlassCard>
   );
 }

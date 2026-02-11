@@ -24,6 +24,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/compone
 import { Confetti } from '@/components/celebrations/Confetti';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
+import { getBadgeColors } from '@/lib/social/badgeColors';
 
 // ---------------------------------------------------------------------------
 // Icon map - maps badge icon string to lucide-react component
@@ -81,6 +82,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
   }
 
   const IconComponent = ICON_MAP[badge.icon] ?? Award;
+  const colors = getBadgeColors(badge.id);
 
   return (
     <>
@@ -89,10 +91,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
 
       {/* Celebration dialog */}
       <Dialog open={isOpen} onOpenChange={open => !open && onDismiss()}>
-        <DialogContent
-          className="ring-2 ring-yellow-400/50 shadow-yellow-200/20"
-          showCloseButton={false}
-        >
+        <DialogContent className={clsx('ring-2 shadow-lg', colors.ring)} showCloseButton={false}>
           <div className="flex flex-col items-center text-center py-4">
             {/* Badge icon with spring scale-in animation */}
             <motion.div
@@ -104,13 +103,18 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
                 damping: 17,
               }}
               className={clsx(
-                'flex items-center justify-center',
+                'relative flex items-center justify-center',
                 'h-20 w-20 rounded-full',
-                'bg-amber-100',
-                'ring-4 ring-warning/50'
+                colors.bgLight,
+                colors.bgDark,
+                'ring-4',
+                colors.ring
               )}
             >
-              <IconComponent className="h-10 w-10 text-warning" />
+              <IconComponent
+                className={clsx('h-10 w-10 filter saturate-150', colors.icon, colors.glow)}
+              />
+              <div className="badge-gold-shimmer absolute inset-0 rounded-full" />
             </motion.div>
 
             {/* Congrats heading */}
