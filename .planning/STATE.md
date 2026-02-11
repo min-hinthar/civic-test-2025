@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 16 of 17 (Dashboard Next Best Action)
-Plan: 3 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 16-03-PLAN.md
+Last activity: 2026-02-11 -- Completed 16-04-PLAN.md
 
 Progress: [█████░░░░░] 5/7 phases (v2.0)
-Phase 16: [██████░░░░] 3/5 plans
+Phase 16: [████████░░] 4/5 plans
 
 ## Completed Milestones
 
@@ -138,6 +138,10 @@ Recent decisions affecting current work:
 - [16-03]: Link from react-router-dom for CTA/skip navigation (accessible anchor semantics)
 - [16-03]: Gradient overlay fixed opacity-15 class (not per-state) to keep glassmorphism clean
 - [16-03]: Separate icon color map from icon bg map for independent theming of stroke vs background tint
+- [16-04]: Badge check data and composite score sync preserved verbatim from old Dashboard (critical for leaderboard)
+- [16-04]: uniqueQuestionsCount loaded via getAnswerHistory (same as HubPage) rather than exposing useNextBestAction internals
+- [16-04]: 7 orphaned component files noted but NOT deleted (ReadinessIndicator, CategoryGrid, SuggestedFocus, InterviewDashboardWidget, StreakWidget, BadgeHighlights, LeaderboardWidget)
+- [16-04]: Old data-tour attributes safely removed -- onboarding tour already targets nav items since Phase 14-06
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -155,10 +159,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Phase 16 plan 03 complete; ready for plans 04-05
-Resume file: .planning/phases/16-dashboard-next-best-action/16-03-SUMMARY.md
+Stopped at: Phase 16 plan 04 complete; ready for plan 05
+Resume file: .planning/phases/16-dashboard-next-best-action/16-04-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 16 plan 03 complete)*
+*Last updated: 2026-02-11 (Phase 16 plan 04 complete)*
