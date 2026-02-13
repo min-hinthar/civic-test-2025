@@ -387,10 +387,10 @@ html.theme-transitioning .page-shell {
       transform 0.3s ease;
   }
 
-  /* Dark mode variants for all three tiers */
+  /* Dark mode variants for all three tiers - purple tint for frosted glass personality */
   .dark .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0 0% 100% / 0.05),
       0 6px 16px -3px hsl(var(--color-overlay) / 0.25);
@@ -398,7 +398,7 @@ html.theme-transitioning .page-shell {
 
   .dark .glass-medium {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0 0% 100% / 0.05),
       0 10px 28px -5px hsl(var(--color-overlay) / 0.3);
@@ -406,7 +406,7 @@ html.theme-transitioning .page-shell {
 
   .dark .glass-heavy {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0 0% 100% / 0.05),
       0 14px 44px -10px hsl(var(--color-overlay) / 0.35);
@@ -430,7 +430,7 @@ html.theme-transitioning .page-shell {
 
   .dark .glass-card {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0 0% 100% / 0.05),
       0 6px 16px -3px hsl(var(--color-overlay) / 0.25);
@@ -530,7 +530,7 @@ html.theme-transitioning .page-shell {
   }
 
   .dark .glass-nav {
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
       inset 0 1px 0 0 hsl(0 0% 100% / 0.08),
       1px 0 0 0 hsl(var(--color-border) / 0.3);

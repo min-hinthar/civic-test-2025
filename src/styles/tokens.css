@@ -283,10 +283,10 @@
    ═══════════════════════════════════════════════════ */
 
 .dark {
-  /* ── Surfaces (soft dark, deep navy) ── */
+  /* ── Surfaces (soft dark, deep navy with elevation hierarchy) ── */
   --color-background: 222 47% 11%; /* Main dark background */
-  --color-surface: 222 47% 14%; /* Card backgrounds */
-  --color-surface-raised: 222 47% 17%; /* Elevated surfaces */
+  --color-surface: 222 47% 14%; /* Card backgrounds (elevation 1) */
+  --color-surface-raised: 222 47% 19%; /* Elevated surfaces (elevation 2) */
   --color-surface-muted: 217 33% 17%; /* Subtle dark backgrounds */
 
   /* ── Text ── */
@@ -342,7 +342,15 @@
   /* ── Decorative ── */
   --color-patriotic-red: var(--patriotic-red); /* Same in both themes */
 
-  /* ── Glass Tiers (lower opacity for dark backgrounds) ── */
+  /* ── Surface elevation hierarchy (lighter at higher elevation) ── */
+  --color-surface-elevated-1: 222 47% 16%; /* Cards */
+  --color-surface-elevated-2: 222 47% 19%; /* Modals, popovers */
+  --color-surface-elevated-3: 222 47% 22%; /* Dropdowns on modals */
+
+  /* ── Glass Tiers (lower opacity for dark backgrounds, increased blur for depth) ── */
+  --glass-light-blur: 18px; /* Slightly more than light mode's 16px */
+  --glass-medium-blur: 28px; /* More than light mode's 24px */
+  --glass-heavy-blur: 36px; /* More than light mode's 32px */
   --glass-light-opacity: 0.5;
   --glass-medium-opacity: 0.4;
   --glass-heavy-opacity: 0.3;

@@ -81,7 +81,7 @@
 .dark .prismatic-border:hover::before,
 .dark .prismatic-border:focus-within::before {
   padding: 1.5px;
-  filter: blur(0.5px) brightness(1.4);
+  filter: blur(0.5px) brightness(1.5);
 }
 
 /* ── Reduced motion: static diagonal gradient ── */
