@@ -253,7 +253,7 @@ interface SidebarUtilityButtonProps {
   icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   label: string;
   isExpanded: boolean;
-  onClick: () => void;
+  onClick: (event?: React.MouseEvent) => void;
   tooltip: string;
   destructive?: boolean;
   spring: Record<string, unknown>;
@@ -275,7 +275,7 @@ function SidebarUtilityButton({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={e => onClick(e)}
       className={`flex items-center w-full rounded-full transition-colors ${colorClass} ${
         isExpanded ? 'gap-3 py-2.5 px-3' : 'justify-center w-12 h-12 mx-auto group/navitem'
       }`}

@@ -103,7 +103,7 @@ export function BottomTabBar() {
         {/* Theme toggle */}
         <button
           type="button"
-          onClick={toggleTheme}
+          onClick={e => toggleTheme(e)}
           className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           data-tour="theme-toggle"
         >

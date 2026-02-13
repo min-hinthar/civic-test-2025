@@ -12,7 +12,7 @@ const ThemeToggle = () => {
     <motion.button
       type="button"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      onClick={toggleTheme}
+      onClick={e => toggleTheme(e)}
       whileTap={{ scale: 0.9 }}
       transition={SPRING_BOUNCY}
       className="relative inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface/80 shadow-sm transition hover:-translate-y-0.5 hover:bg-surface-muted"

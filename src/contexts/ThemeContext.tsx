@@ -1,13 +1,14 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 type Theme = 'light' | 'dark';
 
 interface ThemeContextValue {
   theme: Theme;
   setTheme: (value: Theme) => void;
-  toggleTheme: () => void;
+  toggleTheme: (event?: React.MouseEvent) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
@@ -32,8 +33,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     if (!mounted) return;
     const root = document.documentElement;
 
-    // Add transitioning class for smooth theme switch
-    root.classList.add('theme-transitioning');
+    // Fallback transitioning class for browsers without View Transitions API
+    if (!document.startViewTransition) {
+      root.classList.add('theme-transitioning');
+    }
 
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
@@ -46,7 +49,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       metaThemeColor.setAttribute('content', theme === 'dark' ? '#1a1f36' : '#002868');
     }
 
-    // Remove transitioning class after animation completes
+    // Remove transitioning class after animation completes (fallback path only)
     const timer = setTimeout(() => {
       root.classList.remove('theme-transitioning');
     }, 500);
@@ -70,13 +73,66 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     return () => mql.removeEventListener('change', handleChange);
   }, [mounted]);
 
+  const toggleTheme = useCallback(
+    (event?: React.MouseEvent) => {
+      const newTheme = theme === 'light' ? 'dark' : 'light';
+
+      // Fallback: instant switch for browsers without View Transitions API
+      // or when prefers-reduced-motion is active
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!document.startViewTransition || prefersReduced) {
+        setTheme(newTheme);
+        return;
+      }
+
+      // Get toggle button position for circular reveal origin
+      const x = event?.clientX ?? window.innerWidth / 2;
+      const y = event?.clientY ?? 0;
+      const maxRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      try {
+        const transition = document.startViewTransition(() => {
+          flushSync(() => setTheme(newTheme));
+        });
+
+        transition.ready.then(() => {
+          // Asymmetric: dark expands as circle, light dissolves
+          const clipPathStart =
+            newTheme === 'dark'
+              ? `circle(0px at ${x}px ${y}px)`
+              : `circle(${maxRadius}px at ${x}px ${y}px)`;
+          const clipPathEnd =
+            newTheme === 'dark'
+              ? `circle(${maxRadius}px at ${x}px ${y}px)`
+              : `circle(0px at ${x}px ${y}px)`;
+
+          document.documentElement.animate(
+            { clipPath: [clipPathStart, clipPathEnd] },
+            {
+              duration: 500,
+              easing: 'ease-in-out',
+              pseudoElement: '::view-transition-new(root)',
+            }
+          );
+        });
+      } catch {
+        // Fallback on error: just set theme directly
+        setTheme(newTheme);
+      }
+    },
+    [theme]
+  );
+
   const value = useMemo(
     () => ({
       theme,
       setTheme,
-      toggleTheme: () => setTheme(prev => (prev === 'light' ? 'dark' : 'light')),
+      toggleTheme,
     }),
-    [theme]
+    [theme, toggleTheme]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
