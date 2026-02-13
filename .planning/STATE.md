@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 17 of 17 (UI System Polish)
-Plan: 2 of 11 in current phase
+Plan: 3 of 11 in current phase
 Status: In progress
-Last activity: 2026-02-11 -- Completed 17-02-PLAN.md (Motion Config + GlassCard Tiers)
+Last activity: 2026-02-13 -- Completed 17-03-PLAN.md (Navigation Glass-Morphism)
 
 Progress: [██████░░░░] 6/7 phases (v2.0)
-Phase 17: [██░░░░░░░░░] 2/11 plans
+Phase 17: [███░░░░░░░░] 3/11 plans
 
 ## Completed Milestones
 
@@ -151,6 +151,9 @@ Recent decisions affecting current work:
 - [17-02]: Prismatic border styles in dedicated prismatic-border.css (animated conic-gradient via @property) imported by globals.css
 - [17-02]: glass-card class retained as backward-compat alias mapped to glass-light tier
 - [17-02]: Component migration pattern: create in ui/, re-export from old hub/ path
+- [17-03]: BottomTabBar gets rounded-none alongside prismatic-border for edge-to-edge mobile bar
+- [17-03]: Icon pop uses scale keyframes [0.85, 1.08, 1] with SPRING_SNAPPY for shrink-overshoot-settle feel
+- [17-03]: Mobile nav pill layoutId animation uses shared SPRING_SNAPPY constant (replaced inline spring config)
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -167,11 +170,11 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Phase 17, Plan 02 complete; ready for Plan 03
-Resume file: .planning/phases/17-ui-system-polish/17-02-SUMMARY.md
+Last session: 2026-02-13
+Stopped at: Phase 17, Plan 03 complete; ready for Plan 04
+Resume file: .planning/phases/17-ui-system-polish/17-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-11 (Phase 17 Plan 02 complete -- motion config + GlassCard tiers)*
+*Last updated: 2026-02-13 (Phase 17 Plan 03 complete -- navigation glass-morphism)*
