@@ -47,7 +47,7 @@ const SpeechButton = ({
       onClick={handleClick}
       disabled={!isSupported || !text?.trim()}
       className={clsx(
-        'inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm transition hover:-translate-y-0.5 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-xs font-semibold text-foreground shadow-sm transition hover:-translate-y-0.5 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60 min-h-[44px]',
         className
       )}
     >

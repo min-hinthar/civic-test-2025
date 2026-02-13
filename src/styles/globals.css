@@ -519,14 +519,10 @@ html.theme-transitioning .page-shell {
     }
   }
 
-  /* Glass-morphism for navigation surfaces (Sidebar + BottomTabBar)
-     Gradient overlay + box-shadow. Includes heavy-tier blur as default
-     so existing .glass-nav usage works standalone. Composable with tier
-     classes (e.g. "glass-heavy glass-nav") -- tier blur will take priority. */
+  /* Glass-morphism overlay for navigation surfaces (Sidebar + BottomTabBar + GlassHeader).
+     Provides gradient overlay + box-shadow only. Must be composed with a tier class
+     (e.g. "glass-heavy prismatic-border glass-nav") which provides blur + background. */
   .glass-nav {
-    background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
-    backdrop-filter: blur(var(--glass-heavy-blur));
-    -webkit-backdrop-filter: blur(var(--glass-heavy-blur));
     background-image: linear-gradient(to bottom, hsl(var(--color-surface) / 0.15), transparent);
     box-shadow:
       inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
@@ -534,7 +530,6 @@ html.theme-transitioning .page-shell {
   }
 
   .dark .glass-nav {
-    background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.03), transparent);
     box-shadow:
       inset 0 1px 0 0 hsl(0 0% 100% / 0.08),

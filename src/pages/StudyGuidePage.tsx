@@ -506,7 +506,7 @@ const StudyGuidePage = () => {
                   interactive
                   onClick={() => handleCategorySelect(cat)}
                   className={clsx(
-                    'min-h-[44px] p-0 overflow-hidden border-l-4',
+                    'min-h-[56px] p-0 overflow-hidden border-l-4 glass-light',
                     catColors.borderAccent
                   )}
                 >
@@ -573,7 +573,7 @@ const StudyGuidePage = () => {
                     'border border-border/60 bg-background text-sm text-foreground',
                     'placeholder:text-muted-foreground/60',
                     'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-                    'transition-colors min-h-[44px]'
+                    'transition-colors min-h-[48px]'
                   )}
                 />
               </div>
@@ -582,7 +582,7 @@ const StudyGuidePage = () => {
                 className={clsx(
                   'rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm font-medium',
                   'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-                  'transition-colors min-h-[44px]'
+                  'transition-colors min-h-[48px]'
                 )}
                 value={category}
                 onChange={event => handleCategoryChange(event.target.value)}

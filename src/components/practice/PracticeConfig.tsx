@@ -176,7 +176,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         transition={{ delay: staggerDelay(0) }}
         onClick={() => handleCategorySelect('weak')}
         className={clsx(
-          'mb-6 flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors',
+          'mb-6 flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors min-h-[56px]',
           selectedCategory === 'weak'
             ? 'border-primary bg-primary-subtle'
             : 'border-border hover:border-primary-400 bg-card'
@@ -217,7 +217,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
               <button
                 onClick={() => handleCategorySelect(cat)}
                 className={clsx(
-                  'flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors',
+                  'flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors min-h-[56px]',
                   isSelected
                     ? `${categoryBorderMap[color]} ${categoryBgMap[color]} border-2`
                     : 'border-border bg-card hover:border-border/80'
@@ -248,7 +248,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                     e.stopPropagation();
                     toggleExpanded(cat);
                   }}
-                  className="p-1 rounded-lg hover:bg-muted/50 transition-colors"
+                  className="p-2.5 rounded-lg hover:bg-muted/50 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                   aria-label={`Expand ${cat} sub-categories`}
                 >
                   <motion.div
@@ -273,7 +273,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                         key={sub}
                         onClick={() => handleCategorySelect(sub)}
                         className={clsx(
-                          'flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors',
+                          'flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors min-h-[44px]',
                           isSubSelected
                             ? `${categoryBorderMap[color]} ${categoryBgMap[color]}`
                             : 'border-border/60 bg-card/50 hover:border-border'
@@ -341,7 +341,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                   key={String(option)}
                   onClick={() => setCountOption(option)}
                   className={clsx(
-                    'flex-1 rounded-xl border-2 px-3 py-2.5 text-center transition-colors',
+                    'flex-1 rounded-xl border-2 px-3 py-2.5 text-center transition-colors min-h-[44px]',
                     isActive
                       ? 'border-primary bg-primary-subtle text-primary'
                       : 'border-border bg-card text-foreground hover:border-primary-300'
@@ -427,13 +427,16 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                 Want to practice{' '}
                 <button
                   onClick={() => handleCategorySelect(weakestCategory)}
-                  className="font-semibold text-primary underline"
+                  className="inline-flex items-center rounded-full px-3 py-1 min-h-[36px] bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors"
                 >
                   {USCIS_CATEGORY_NAMES[weakestCategory].en}
                 </button>{' '}
                 instead?
               </p>
-              <button onClick={handleStart} className="mt-2 text-xs font-semibold text-primary">
+              <button
+                onClick={handleStart}
+                className="mt-2 inline-flex items-center rounded-full px-4 py-2 min-h-[36px] bg-primary/10 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+              >
                 {strings.practice.practiceAnyway.en}
                 {showBurmese && (
                   <span className="ml-1 font-myanmar">{strings.practice.practiceAnyway.my}</span>
