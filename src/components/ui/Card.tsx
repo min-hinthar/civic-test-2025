@@ -4,13 +4,7 @@ import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { clsx } from 'clsx';
-
-// Spring physics for hover effect
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 300,
-  damping: 20,
-};
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   elevated?: boolean;
@@ -83,7 +77,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         variants={motionVariants}
         initial="idle"
         whileHover="hover"
-        transition={springTransition}
+        transition={SPRING_GENTLE}
         className={clsx(baseClasses, 'cursor-pointer')}
         onClick={onClick}
         onKeyDown={onKeyDown}

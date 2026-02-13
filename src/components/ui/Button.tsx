@@ -4,34 +4,29 @@ import { forwardRef, ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { clsx } from 'clsx';
-
-// Spring physics for Duolingo-style tactile feedback
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 400,
-  damping: 17,
-};
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 
 // 3D chunky shadow classes (CSS transition handles shadow + translateY on active)
+// Prismatic glow flare added on press for triple feedback (scale + glow + brightness)
 const chunky3D = [
   'shadow-[0_4px_0_hsl(var(--primary-700))]',
   'hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
-  'active:shadow-[0_1px_0_hsl(var(--primary-800))] active:translate-y-[3px]',
-  'transition-[box-shadow,transform] duration-100',
+  'active:shadow-[0_1px_0_hsl(var(--primary-800)),0_0_20px_hsl(var(--color-primary)/0.4)] active:translate-y-[3px] active:brightness-110',
+  'transition-[box-shadow,transform,filter] duration-100',
 ].join(' ');
 
 const chunkyDestructive3D = [
   'shadow-[0_4px_0_hsl(10_45%_35%)]',
   'hover:shadow-[0_4px_0_hsl(10_40%_30%)]',
-  'active:shadow-[0_1px_0_hsl(10_40%_30%)] active:translate-y-[3px]',
-  'transition-[box-shadow,transform] duration-100',
+  'active:shadow-[0_1px_0_hsl(10_40%_30%),0_0_20px_hsl(var(--color-destructive)/0.4)] active:translate-y-[3px] active:brightness-110',
+  'transition-[box-shadow,transform,filter] duration-100',
 ].join(' ');
 
 const chunkySuccess3D = [
   'shadow-[0_4px_0_hsl(142_76%_30%)]',
   'hover:shadow-[0_4px_0_hsl(142_76%_25%)]',
-  'active:shadow-[0_1px_0_hsl(142_76%_25%)] active:translate-y-[3px]',
-  'transition-[box-shadow,transform] duration-100',
+  'active:shadow-[0_1px_0_hsl(142_76%_25%),0_0_20px_hsl(var(--color-success)/0.4)] active:translate-y-[3px] active:brightness-110',
+  'transition-[box-shadow,transform,filter] duration-100',
 ].join(' ');
 
 // Button variants using theme tokens with 3D depth
@@ -112,7 +107,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const motionVariants = {
       idle: { scale: 1 },
       hover: shouldReduceMotion ? {} : { scale: 1.03 },
-      tap: shouldReduceMotion ? {} : { scale: 0.97 },
+      tap: shouldReduceMotion ? {} : { scale: 0.95 },
     };
 
     const isDisabled = disabled || loading;
@@ -124,7 +119,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         initial="idle"
         whileHover={isDisabled ? undefined : 'hover'}
         whileTap={isDisabled ? undefined : 'tap'}
-        transition={springTransition}
+        transition={SPRING_BOUNCY}
         disabled={isDisabled}
         className={clsx(
           // Base styles with bold font
