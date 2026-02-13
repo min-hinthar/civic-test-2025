@@ -25,9 +25,10 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-import { GlassCard } from '@/components/hub/GlassCard';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 import type { NBAState, NBAStateType } from '@/lib/nba';
 
 // ---------------------------------------------------------------------------
@@ -112,16 +113,16 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
     <AnimatePresence mode="wait">
       <motion.div
         key={nbaState.type}
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        transition={SPRING_GENTLE}
       >
-        <GlassCard className="relative overflow-hidden rounded-2xl p-6">
-          {/* Gradient overlay */}
+        <GlassCard tier="medium" className="relative overflow-hidden rounded-2xl p-6">
+          {/* Gradient overlay -- deeper/more saturated in dark mode */}
           <div
             className={clsx(
-              'pointer-events-none absolute inset-0 bg-gradient-to-br opacity-15',
+              'pointer-events-none absolute inset-0 bg-gradient-to-br opacity-15 dark:opacity-25',
               nbaState.gradient
             )}
           />
@@ -215,7 +216,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
  */
 export function NBAHeroSkeleton() {
   return (
-    <GlassCard className="relative overflow-hidden rounded-2xl p-6">
+    <GlassCard tier="medium" className="relative overflow-hidden rounded-2xl p-6">
       <div className="animate-pulse">
         {/* Recommended label skeleton */}
         <div className="mb-3 flex items-center gap-1.5">

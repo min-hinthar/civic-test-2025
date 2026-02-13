@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { GlassCard } from '@/components/hub/GlassCard';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { SubcategoryBar } from '@/components/hub/SubcategoryBar';
 import { useLanguage } from '@/contexts/LanguageContext';
 import {

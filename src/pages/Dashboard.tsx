@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { motion } from 'motion/react';
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -11,12 +10,12 @@ import { useStreak } from '@/hooks/useStreak';
 import { useSRSWidget } from '@/hooks/useSRSWidget';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { useBadges } from '@/hooks/useBadges';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { NBAHeroCard, NBAHeroSkeleton } from '@/components/dashboard/NBAHeroCard';
 import { CompactStatRow } from '@/components/dashboard/CompactStatRow';
 import { CategoryPreviewCard } from '@/components/dashboard/CategoryPreviewCard';
 import { RecentActivityCard } from '@/components/dashboard/RecentActivityCard';
+import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { BadgeCelebration } from '@/components/social/BadgeCelebration';
@@ -33,7 +32,6 @@ import type { BadgeCheckData } from '@/lib/social';
 const Dashboard = () => {
   const { user, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
-  const shouldReduceMotion = useReducedMotion();
   const { shouldShow: isOnboarding } = useOnboarding();
 
   // NBA recommendation
@@ -141,53 +139,43 @@ const Dashboard = () => {
     });
   }, [user?.id, user?.testHistory, badgeCheckData, currentStreak, earnedBadges]);
 
-  // Stagger animation delay helper
-  const stagger = (index: number) => {
-    if (shouldReduceMotion) {
-      return {};
-    }
-    return {
-      initial: { opacity: 0, y: 16 } as const,
-      animate: { opacity: 1, y: 0 } as const,
-      transition: { delay: index * 0.08, duration: 0.4, ease: 'easeOut' as const },
-    };
-  };
-
   return (
     <div className="page-shell">
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
-        {/* NBA Hero Card */}
-        <motion.section className="mb-6" {...stagger(0)}>
-          {nbaState ? <NBAHeroCard nbaState={nbaState} /> : <NBAHeroSkeleton />}
-        </motion.section>
+        <StaggeredList delay={80} stagger={80}>
+          {/* NBA Hero Card */}
+          <StaggeredItem className="mb-6">
+            {nbaState ? <NBAHeroCard nbaState={nbaState} /> : <NBAHeroSkeleton />}
+          </StaggeredItem>
 
-        {/* Achievements — motivational badge grid right after NBA */}
-        <motion.section className="mb-6" {...stagger(1)}>
-          <BadgeHighlights />
-        </motion.section>
+          {/* Achievements — motivational badge grid right after NBA */}
+          <StaggeredItem className="mb-6">
+            <BadgeHighlights />
+          </StaggeredItem>
 
-        {/* Compact Stat Row */}
-        <motion.section className="mb-6" {...stagger(2)}>
-          <CompactStatRow
-            streak={currentStreak}
-            mastery={overallMastery}
-            srsDue={srsDueCount}
-            practiced={uniqueQuestionsCount}
-            totalQuestions={totalQuestions}
-            isLoading={masteryLoading || streakLoading || srsLoading}
-          />
-        </motion.section>
+          {/* Compact Stat Row */}
+          <StaggeredItem className="mb-6">
+            <CompactStatRow
+              streak={currentStreak}
+              mastery={overallMastery}
+              srsDue={srsDueCount}
+              practiced={uniqueQuestionsCount}
+              totalQuestions={totalQuestions}
+              isLoading={masteryLoading || streakLoading || srsLoading}
+            />
+          </StaggeredItem>
 
-        {/* Preview Cards */}
-        <motion.div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4" {...stagger(3)}>
-          <CategoryPreviewCard
-            categoryMasteries={categoryMasteries}
-            subCategoryMasteries={subCategoryMasteries}
-            isLoading={masteryLoading}
-          />
-          <RecentActivityCard testHistory={history} isLoading={authLoading} />
-        </motion.div>
+          {/* Preview Cards */}
+          <StaggeredItem className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CategoryPreviewCard
+              categoryMasteries={categoryMasteries}
+              subCategoryMasteries={subCategoryMasteries}
+              isLoading={masteryLoading}
+            />
+            <RecentActivityCard testHistory={history} isLoading={authLoading} />
+          </StaggeredItem>
+        </StaggeredList>
 
         {/* Milestone celebration modal -- suppressed during onboarding */}
         <MasteryMilestone

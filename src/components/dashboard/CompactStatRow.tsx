@@ -2,10 +2,11 @@
 
 import { useMemo } from 'react';
 import CountUp from 'react-countup';
+import { motion } from 'motion/react';
 import { Flame, TrendingUp, BookOpen, CheckCircle, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
-import { GlassCard } from '@/components/hub/GlassCard';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -171,6 +172,32 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
     );
   }
 
+  // Streak pulse when alive, SRS badge pulse when due > 0
+  const shouldPulseIcon =
+    !shouldReduceMotion &&
+    ((def.id === 'streak' && value > 0) || (def.id === 'srs-due' && value > 0));
+
+  const iconElement = shouldPulseIcon ? (
+    <motion.div
+      animate={{ scale: [1, 1.15, 1], opacity: [1, 0.8, 1] }}
+      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <Icon
+        className={clsx(
+          'h-5 w-5',
+          def.id === 'streak' && value > 0 ? 'text-orange-500' : 'text-primary'
+        )}
+      />
+    </motion.div>
+  ) : (
+    <Icon
+      className={clsx(
+        'h-5 w-5',
+        def.id === 'streak' && value > 0 ? 'text-orange-500' : 'text-primary'
+      )}
+    />
+  );
+
   return (
     <GlassCard interactive className="min-w-0 flex-1 rounded-2xl p-0">
       <button
@@ -178,7 +205,7 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
         className="flex w-full min-h-[44px] flex-col items-center gap-1.5 px-2 py-4"
         onClick={handleClick}
       >
-        <Icon className="h-5 w-5 text-primary" />
+        {iconElement}
         <span className={clsx('text-2xl font-extrabold tabular-nums', colorClass)}>
           {numberContent}
         </span>

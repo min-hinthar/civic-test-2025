@@ -1,9 +1,11 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { Clock, CheckCircle, XCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { GlassCard } from '@/components/hub/GlassCard';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -96,6 +98,7 @@ function ActivitySkeleton() {
 export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCardProps) {
   const { showBurmese } = useLanguage();
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   // Show last 3 sessions (already sorted newest first)
   const recentSessions = testHistory.slice(0, 3);
@@ -143,8 +146,19 @@ export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCar
             {recentSessions.map((session, index) => {
               const passed =
                 session.totalQuestions > 0 ? session.score / session.totalQuestions >= 0.6 : false;
+              const itemProps = shouldReduceMotion
+                ? {}
+                : {
+                    initial: { opacity: 0, x: -8 } as const,
+                    animate: { opacity: 1, x: 0 } as const,
+                    transition: { delay: index * 0.08, duration: 0.3 },
+                  };
               return (
-                <div key={`${session.date}-${index}`} className="flex items-center justify-between">
+                <motion.div
+                  key={`${session.date}-${index}`}
+                  className="flex items-center justify-between"
+                  {...itemProps}
+                >
                   <div className="flex items-center gap-2">
                     {passed ? (
                       <CheckCircle className="h-4 w-4 text-success" />
@@ -158,7 +172,7 @@ export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCar
                   <span className="text-sm font-semibold tabular-nums text-text-primary">
                     {session.score}/{session.totalQuestions}
                   </span>
-                </div>
+                </motion.div>
               );
             })}
           </div>
