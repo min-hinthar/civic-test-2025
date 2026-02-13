@@ -16,9 +16,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, ChevronUp, ClipboardList, Mic2 } from 'lucide-react';
 import clsx from 'clsx';
 
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 import SpeechButton from '@/components/ui/SpeechButton';
 import type { TestSession, TestEndReason, InterviewSession } from '@/types';
 import { getInterviewHistory } from '@/lib/interview';
@@ -333,106 +335,116 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                         />
                       </div>
 
-                      {/* Expanded detail: per-question results */}
-                      {isExpanded && (
-                        <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
-                          {session.results.map(result => (
-                            <div
-                              key={`${sessionId}-${result.questionId}`}
-                              className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
-                            >
-                              <p className="text-sm font-bold text-foreground">
-                                {result.questionText_en}
-                              </p>
-                              {showBurmese && (
-                                <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                                  {result.questionText_my}
-                                </p>
-                              )}
-                              <div className="mt-2 flex flex-wrap gap-2">
-                                <SpeechButton
-                                  text={result.questionText_en}
-                                  label="Play English question"
-                                  ariaLabel={`Play English question audio for ${result.questionText_en}`}
-                                  stopPropagation
-                                />
-                                <SpeechButton
-                                  text={result.correctAnswer.text_en}
-                                  label="Play official answer"
-                                  ariaLabel={`Play official English answer for ${result.questionText_en}`}
-                                  stopPropagation
-                                />
-                              </div>
-                              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                                <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
-                                    Your answer
-                                    {showBurmese && (
-                                      <span className="font-myanmar ml-1">
-                                        {'\u1021\u1016\u103C\u1031'}
-                                      </span>
-                                    )}
-                                  </p>
-                                  <p className="text-sm font-bold text-foreground">
-                                    {result.selectedAnswer.text_en}
-                                  </p>
-                                  {showBurmese && (
-                                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                                      {result.selectedAnswer.text_my}
-                                    </p>
-                                  )}
-                                </div>
-                                <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
-                                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
-                                    Official answer
-                                    {showBurmese && (
-                                      <span className="font-myanmar ml-1">
-                                        {'\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A'}
-                                      </span>
-                                    )}
-                                  </p>
-                                  <p className="text-sm font-bold text-foreground">
-                                    {result.correctAnswer.text_en}
-                                  </p>
-                                  {showBurmese && (
-                                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                                      {result.correctAnswer.text_my}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold">
-                                <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
-                                  {result.category}
-                                </span>
-                                <span
-                                  className={result.isCorrect ? 'text-success' : 'text-warning'}
+                      {/* Expanded detail: per-question results with spring animation */}
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={SPRING_BOUNCY}
+                            className="overflow-hidden"
+                          >
+                            <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
+                              {session.results.map(result => (
+                                <div
+                                  key={`${sessionId}-${result.questionId}`}
+                                  className="rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/60 to-muted/50 p-4 shadow-sm"
                                 >
-                                  {result.isCorrect ? (
-                                    <>
-                                      Correct
-                                      {showBurmese && (
-                                        <span className="font-myanmar ml-1">
-                                          {'\u1019\u103E\u1014\u103A'}
-                                        </span>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <>
-                                      Incorrect
-                                      {showBurmese && (
-                                        <span className="font-myanmar ml-1">
-                                          {'\u1019\u103E\u102C\u1038'}
-                                        </span>
-                                      )}
-                                    </>
+                                  <p className="text-sm font-bold text-foreground">
+                                    {result.questionText_en}
+                                  </p>
+                                  {showBurmese && (
+                                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                      {result.questionText_my}
+                                    </p>
                                   )}
-                                </span>
-                              </div>
+                                  <div className="mt-2 flex flex-wrap gap-2">
+                                    <SpeechButton
+                                      text={result.questionText_en}
+                                      label="Play English question"
+                                      ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                                      stopPropagation
+                                    />
+                                    <SpeechButton
+                                      text={result.correctAnswer.text_en}
+                                      label="Play official answer"
+                                      ariaLabel={`Play official English answer for ${result.questionText_en}`}
+                                      stopPropagation
+                                    />
+                                  </div>
+                                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                    <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                                        Your answer
+                                        {showBurmese && (
+                                          <span className="font-myanmar ml-1">
+                                            {'\u1021\u1016\u103C\u1031'}
+                                          </span>
+                                        )}
+                                      </p>
+                                      <p className="text-sm font-bold text-foreground">
+                                        {result.selectedAnswer.text_en}
+                                      </p>
+                                      {showBurmese && (
+                                        <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                          {result.selectedAnswer.text_my}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div className="rounded-2xl border border-border/60 bg-card/80 p-3">
+                                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                                        Official answer
+                                        {showBurmese && (
+                                          <span className="font-myanmar ml-1">
+                                            {'\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A'}
+                                          </span>
+                                        )}
+                                      </p>
+                                      <p className="text-sm font-bold text-foreground">
+                                        {result.correctAnswer.text_en}
+                                      </p>
+                                      {showBurmese && (
+                                        <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                                          {result.correctAnswer.text_my}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold">
+                                    <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                                      {result.category}
+                                    </span>
+                                    <span
+                                      className={result.isCorrect ? 'text-success' : 'text-warning'}
+                                    >
+                                      {result.isCorrect ? (
+                                        <>
+                                          Correct
+                                          {showBurmese && (
+                                            <span className="font-myanmar ml-1">
+                                              {'\u1019\u103E\u1014\u103A'}
+                                            </span>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <>
+                                          Incorrect
+                                          {showBurmese && (
+                                            <span className="font-myanmar ml-1">
+                                              {'\u1019\u103E\u102C\u1038'}
+                                            </span>
+                                          )}
+                                        </>
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </GlassCard>
                   </StaggeredItem>
                 );
@@ -621,61 +633,73 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                         />
                       </div>
 
-                      {/* Expanded detail: per-question results */}
-                      {isExpanded && session.results.length > 0 && (
-                        <div className="mt-4 max-h-72 space-y-2 overflow-y-auto pr-1">
-                          {session.results.map((result, rIdx) => (
-                            <div
-                              key={`${sessionId}-${rIdx}`}
-                              className={clsx(
-                                'rounded-xl border p-3 text-sm',
-                                result.selfGrade === 'correct'
-                                  ? 'border-success/20 bg-success-subtle/50'
-                                  : 'border-warning/20 bg-warning-subtle/50'
-                              )}
-                            >
-                              <div className="flex items-center justify-between gap-2 mb-1">
-                                <span className="text-muted-foreground font-mono text-xs">
-                                  {result.questionId}
-                                </span>
-                                <span
-                                  className={clsx(
-                                    'text-xs font-bold',
-                                    result.selfGrade === 'correct' ? 'text-success' : 'text-warning'
-                                  )}
-                                >
-                                  {result.selfGrade === 'correct'
-                                    ? showBurmese
-                                      ? strings.interview.correct.my
-                                      : 'Correct'
-                                    : showBurmese
-                                      ? strings.interview.incorrect.my
-                                      : 'Incorrect'}
-                                </span>
+                      {/* Expanded detail: per-question results with spring animation */}
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={SPRING_BOUNCY}
+                            className="overflow-hidden"
+                          >
+                            {session.results.length > 0 ? (
+                              <div className="mt-4 max-h-72 space-y-2 overflow-y-auto pr-1">
+                                {session.results.map((result, rIdx) => (
+                                  <div
+                                    key={`${sessionId}-${rIdx}`}
+                                    className={clsx(
+                                      'rounded-xl border p-3 text-sm',
+                                      result.selfGrade === 'correct'
+                                        ? 'border-success/20 bg-success-subtle/50'
+                                        : 'border-warning/20 bg-warning-subtle/50'
+                                    )}
+                                  >
+                                    <div className="flex items-center justify-between gap-2 mb-1">
+                                      <span className="text-muted-foreground font-mono text-xs">
+                                        {result.questionId}
+                                      </span>
+                                      <span
+                                        className={clsx(
+                                          'text-xs font-bold',
+                                          result.selfGrade === 'correct'
+                                            ? 'text-success'
+                                            : 'text-warning'
+                                        )}
+                                      >
+                                        {result.selfGrade === 'correct'
+                                          ? showBurmese
+                                            ? strings.interview.correct.my
+                                            : 'Correct'
+                                          : showBurmese
+                                            ? strings.interview.incorrect.my
+                                            : 'Incorrect'}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm font-medium text-foreground">
+                                      {result.questionText_en}
+                                    </p>
+                                    {showBurmese && (
+                                      <p className="text-xs text-muted-foreground font-myanmar mt-0.5">
+                                        {result.questionText_my}
+                                      </p>
+                                    )}
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      {result.correctAnswers.map(a => a.text_en).join(' / ')}
+                                    </p>
+                                  </div>
+                                ))}
                               </div>
-                              <p className="text-sm font-medium text-foreground">
-                                {result.questionText_en}
+                            ) : (
+                              <p className="mt-4 text-xs text-muted-foreground italic">
+                                {showBurmese
+                                  ? '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1034'
+                                  : 'Detailed question results not available for synced sessions.'}
                               </p>
-                              {showBurmese && (
-                                <p className="text-xs text-muted-foreground font-myanmar mt-0.5">
-                                  {result.questionText_my}
-                                </p>
-                              )}
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {result.correctAnswers.map(a => a.text_en).join(' / ')}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {isExpanded && session.results.length === 0 && (
-                        <p className="mt-4 text-xs text-muted-foreground italic">
-                          {showBurmese
-                            ? '\u1021\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u101E\u1031\u1038\u1005\u102D\u1010\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1034'
-                            : 'Detailed question results not available for synced sessions.'}
-                        </p>
-                      )}
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </GlassCard>
                   </StaggeredItem>
                 );

@@ -484,13 +484,15 @@ export function AchievementsTab({
             )}
 
             {/* Leaderboard table */}
-            <LeaderboardTable
-              entries={entries}
-              userRank={userRank}
-              currentUserId={user?.id ?? null}
-              onRowClick={handleRowClick}
-              isLoading={leaderboardLoading}
-            />
+            <GlassCard className="p-0 overflow-hidden">
+              <LeaderboardTable
+                entries={entries}
+                userRank={userRank}
+                currentUserId={user?.id ?? null}
+                onRowClick={handleRowClick}
+                isLoading={leaderboardLoading}
+              />
+            </GlassCard>
 
             {/* Show more / Show less button */}
             {!leaderboardLoading && entries.length > 0 && (

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useStreak } from '@/hooks/useStreak';
@@ -57,7 +58,7 @@ const tabVariants = {
   }),
 };
 
-const tabTransition = { type: 'spring' as const, stiffness: 300, damping: 30 };
+const tabTransition = SPRING_SNAPPY;
 
 // ---------------------------------------------------------------------------
 // HubPage component
