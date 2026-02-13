@@ -111,7 +111,7 @@ export function NavItem({
   })();
 
   // --- Icon rendering (with spring pop on active) ---
-  const iconPop = shouldReduceMotion || !isActive ? undefined : { scale: [0.85, 1.08, 1] };
+  const iconPop = shouldReduceMotion || !isActive ? undefined : { scale: [0.9, 1] };
 
   const iconElement = (
     <motion.span

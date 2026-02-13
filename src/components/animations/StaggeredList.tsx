@@ -69,9 +69,8 @@ export function StaggeredList({
   const shouldReduceMotion = useReducedMotion();
 
   const customContainerVariants: Variants = {
-    hidden: { opacity: 0 },
+    hidden: {},
     visible: {
-      opacity: 1,
       transition: {
         staggerChildren: stagger / 1000,
         delayChildren: delay / 1000,
