@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 17 of 17 (UI System Polish)
-Plan: 07 of 11 in current phase
+Plan: 06 of 11 in current phase
 Status: In progress
-Last activity: 2026-02-13 -- Completed 17-07-PLAN.md (Stagger, Transitions, Micro-Interactions)
+Last activity: 2026-02-13 -- Completed 17-06-PLAN.md (Flashcard, Badge, Dashboard Micro-interactions)
 
 Progress: [██████░░░░] 6/7 phases (v2.0)
-Phase 17: [████████░░░] 8/11 plans
+Phase 17: [█████████░░] 9/11 plans
 
 ## Completed Milestones
 
@@ -166,6 +166,11 @@ Recent decisions affecting current work:
 - [17-05B]: SPRING_BOUNCY for expand/collapse (visible overshoot matches playful personality)
 - [17-05B]: SPRING_SNAPPY replaces hardcoded tab transition config in HubPage
 - [17-05B]: LeaderboardTable wrapped in GlassCard with p-0 overflow-hidden to preserve table layout
+- [17-06]: FLIP_SPRING (stiffness:250, damping:18, mass:0.8) for flashcard overshoot past 180 degrees
+- [17-06]: glass-light + prismatic-border on both flashcard faces per user decision "glass flashcard"
+- [17-06]: NBAHeroCard upgraded to GlassCard tier="medium" with dark:opacity-25 gradient overlay
+- [17-06]: Streak fire icon text-orange-500 with pulse when alive; SRS badge pulses when due > 0
+- [17-06]: StaggeredList/StaggeredItem replaces Dashboard inline stagger helper (delay:80, stagger:80)
 - [17-07]: Per-variant transitions replace global pageTransition constant for independent enter/exit timing
 - [17-07]: SPRING_SNAPPY for page enter (springy), tween 0.15s for page exit (quick departure)
 - [17-07]: Typing indicator dots use repeating y-bounce [0,-6,0] with staggered delay per dot
@@ -188,10 +193,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Phase 17, Plan 07 complete; ready for Plan 06/09/10
-Resume file: .planning/phases/17-ui-system-polish/17-07-SUMMARY.md
+Stopped at: Phase 17, Plan 06 complete; ready for Plan 09/10
+Resume file: .planning/phases/17-ui-system-polish/17-06-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-13 (Phase 17 Plan 07 complete -- stagger, transitions, micro-interactions)*
+*Last updated: 2026-02-13 (Phase 17 Plan 06 complete -- flashcard, badge, dashboard micro-interactions)*
