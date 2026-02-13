@@ -21,7 +21,7 @@ interface GlassHeaderProps {
 
 export function GlassHeader({ showSignIn, showBack, backHref = '/' }: GlassHeaderProps) {
   return (
-    <header className="glass-nav sticky top-0 z-30 w-full">
+    <header className="glass-medium prismatic-border glass-nav rounded-none sticky top-0 z-30 w-full">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link

@@ -97,7 +97,7 @@ export function Sidebar() {
       ref={sidebarRef}
       animate={{ width: isExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W }}
       transition={spring}
-      className="glass-nav fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col overflow-hidden"
+      className="glass-heavy prismatic-border glass-nav rounded-none fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col overflow-hidden"
       aria-label="Sidebar navigation"
     >
       {/* --- Header: Logo --- */}
