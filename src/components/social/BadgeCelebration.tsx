@@ -93,29 +93,45 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
       <Dialog open={isOpen} onOpenChange={open => !open && onDismiss()}>
         <DialogContent className={clsx('ring-2 shadow-lg', colors.ring)} showCloseButton={false}>
           <div className="flex flex-col items-center text-center py-4">
-            {/* Badge icon with spring scale-in animation */}
-            <motion.div
-              initial={{ scale: 0, rotate: -20 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{
-                type: 'spring',
-                stiffness: 400,
-                damping: 17,
-              }}
-              className={clsx(
-                'relative flex items-center justify-center',
-                'h-20 w-20 rounded-full',
-                colors.bgLight,
-                colors.bgDark,
-                'ring-4',
-                colors.ring
-              )}
-            >
-              <IconComponent
-                className={clsx('h-10 w-10 filter saturate-150', colors.icon, colors.glow)}
+            {/* Prismatic ripple expanding outward behind the badge */}
+            <div className="relative flex items-center justify-center">
+              <motion.div
+                className="absolute rounded-full"
+                style={{
+                  width: 80,
+                  height: 80,
+                  background:
+                    'conic-gradient(from 0deg, hsl(0 80% 60% / 0.3), hsl(120 80% 60% / 0.3), hsl(240 80% 60% / 0.3), hsl(0 80% 60% / 0.3))',
+                }}
+                initial={{ scale: 0, opacity: 0.8 }}
+                animate={{ scale: 3, opacity: 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
               />
-              <div className="badge-gold-shimmer absolute inset-0 rounded-full" />
-            </motion.div>
+
+              {/* Badge icon with spring scale-in animation */}
+              <motion.div
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 17,
+                }}
+                className={clsx(
+                  'relative flex items-center justify-center',
+                  'h-20 w-20 rounded-full',
+                  colors.bgLight,
+                  colors.bgDark,
+                  'ring-4',
+                  colors.ring
+                )}
+              >
+                <IconComponent
+                  className={clsx('h-10 w-10 filter saturate-150', colors.icon, colors.glow)}
+                />
+                <div className="badge-gold-shimmer absolute inset-0 rounded-full" />
+              </motion.div>
+            </div>
 
             {/* Congrats heading */}
             <DialogTitle className="mt-5 text-xl">Badge Earned!</DialogTitle>

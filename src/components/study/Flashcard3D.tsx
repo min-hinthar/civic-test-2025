@@ -9,6 +9,13 @@ import SpeechButton from '@/components/ui/SpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
 
+/**
+ * Spring config for the flashcard flip: slight overshoot past 180 degrees.
+ * Lower damping (18) compared to standard SPRING_BOUNCY (15) gives
+ * a visible settle at the target while stiffness 250 keeps it snappy.
+ */
+const FLIP_SPRING = { type: 'spring' as const, stiffness: 250, damping: 18, mass: 0.8 };
+
 interface Flashcard3DProps {
   /** Question text (front of card) */
   questionEn: string;
@@ -191,11 +198,11 @@ export function Flashcard3D({
   const stripColorClass =
     subCategoryStripBg ?? (categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null);
 
-  // Common card styles
+  // Common card styles -- glass-light + prismatic-border for frosted glass flashcard
   const cardFaceClasses = clsx(
     'absolute inset-0 w-full h-full',
-    'rounded-2xl border border-border/60',
-    'bg-card',
+    'rounded-2xl',
+    'glass-light prismatic-border',
     'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
     'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
     'flex flex-col overflow-hidden',
@@ -240,9 +247,7 @@ export function Flashcard3D({
         animate={{
           rotateY: isFlipped ? 180 : 0,
         }}
-        transition={
-          shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 25 }
-        }
+        transition={shouldReduceMotion ? { duration: 0 } : FLIP_SPRING}
       >
         {/* Front - Question */}
         <div

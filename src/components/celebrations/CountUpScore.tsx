@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
-import { motion } from 'motion/react';
+import { motion, useAnimationControls } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { clsx } from 'clsx';
 
@@ -55,6 +55,7 @@ export function CountUpScore({
 }: CountUpScoreProps) {
   const shouldReduceMotion = useReducedMotion();
   const [hasStarted, setHasStarted] = useState(false);
+  const controls = useAnimationControls();
 
   useEffect(() => {
     const timer = setTimeout(() => setHasStarted(true), delay);
@@ -63,6 +64,17 @@ export function CountUpScore({
 
   const percentage = Math.round((score / total) * 100);
   const isPassing = percentage >= 60; // 6/10 = 60% to pass
+
+  /** Trigger a subtle scale pop when count-up finishes */
+  const handleCountEnd = () => {
+    if (!shouldReduceMotion) {
+      controls.start({
+        scale: [1, 1.12, 1],
+        transition: { duration: 0.35, ease: 'easeOut' },
+      });
+    }
+    onComplete?.();
+  };
 
   // Reduced motion: show final score immediately
   if (shouldReduceMotion) {
@@ -89,7 +101,8 @@ export function CountUpScore({
       transition={{ delay: delay / 1000, type: 'spring', stiffness: 200 }}
       className="flex flex-col items-center"
     >
-      <span
+      <motion.span
+        animate={controls}
         className={clsx(
           'font-bold tabular-nums',
           sizeClasses[size],
@@ -102,14 +115,14 @@ export function CountUpScore({
             end={showPercentage ? percentage : score}
             duration={duration}
             suffix={showPercentage ? '%' : ''}
-            onEnd={onComplete}
+            onEnd={handleCountEnd}
           />
         ) : showPercentage ? (
           '0%'
         ) : (
           '0'
         )}
-      </span>
+      </motion.span>
       {!showPercentage && <span className="text-xl text-muted-foreground">/ {total}</span>}
     </motion.div>
   );
