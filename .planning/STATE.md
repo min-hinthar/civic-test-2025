@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 17 of 17 (UI System Polish)
-Plan: 06 of 11 in current phase
+Plan: 09 of 11 in current phase
 Status: In progress
-Last activity: 2026-02-13 -- Completed 17-06-PLAN.md (Flashcard, Badge, Dashboard Micro-interactions)
+Last activity: 2026-02-13 -- Completed 17-09-PLAN.md (Dark Mode & Theme Toggle)
 
 Progress: [██████░░░░] 6/7 phases (v2.0)
-Phase 17: [█████████░░] 9/11 plans
+Phase 17: [██████████░] 10/11 plans
 
 ## Completed Milestones
 
@@ -176,6 +176,10 @@ Recent decisions affecting current work:
 - [17-07]: Typing indicator dots use repeating y-bounce [0,-6,0] with staggered delay per dot
 - [17-07]: Color pulse uses HSL with animating alpha (0.3->0) for green/orange flash on answer feedback
 - [17-07]: ReviewCard dragTransition uses SPRING_BOUNCY stiffness/damping for snap-back feel
+- [17-09]: Removed custom Document.startViewTransition type declaration -- TypeScript already has built-in ViewTransition types
+- [17-09]: SidebarUtilityButton onClick prop widened to (event?: React.MouseEvent) => void for event forwarding
+- [17-09]: Dark surface-raised uses elevation-2 (19% lightness) directly instead of var() indirection
+- [17-09]: Mesh gradient dark mode kept at existing 0.8/0.7 opacity -- higher-saturation blobs need less opacity
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -193,10 +197,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Phase 17, Plan 06 complete; ready for Plan 09/10
-Resume file: .planning/phases/17-ui-system-polish/17-06-SUMMARY.md
+Stopped at: Phase 17, Plan 09 complete; ready for Plan 10
+Resume file: .planning/phases/17-ui-system-polish/17-09-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-13 (Phase 17 Plan 06 complete -- flashcard, badge, dashboard micro-interactions)*
+*Last updated: 2026-02-13 (Phase 17 Plan 09 complete -- circular reveal theme toggle, dark mode frosted glass)*
