@@ -6,6 +6,7 @@ import { Check, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { BilingualText } from '@/components/bilingual/BilingualText';
 import { strings } from '@/lib/i18n/strings';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface SelfGradeButtonsProps {
@@ -63,7 +64,8 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
           type="button"
           onClick={() => handleGrade('correct')}
           disabled={disabled}
-          whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.93 }}
+          transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
           className={clsx(
             'flex flex-1 items-center justify-center gap-2 rounded-xl px-4',
             'min-h-[48px]',
@@ -86,7 +88,8 @@ export function SelfGradeButtons({ onGrade, disabled = false }: SelfGradeButtons
           type="button"
           onClick={() => handleGrade('incorrect')}
           disabled={disabled}
-          whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.93 }}
+          transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
           className={clsx(
             'flex flex-1 items-center justify-center gap-2 rounded-xl px-4',
             'min-h-[48px]',

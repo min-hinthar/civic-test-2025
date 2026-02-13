@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RotateCcw, Eye, LogOut } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 import { InterviewerAvatar } from '@/components/interview/InterviewerAvatar';
 import { InterviewTimer } from '@/components/interview/InterviewTimer';
 import { SelfGradeButtons } from '@/components/interview/SelfGradeButtons';
@@ -421,14 +422,14 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
         {/* Question area */}
         {!isGreeting && !isTransition && currentQuestion && (
           <div className="w-full space-y-4">
-            {/* Question text - appears after TTS finishes */}
+            {/* Question text - appears after TTS finishes with prismatic glow */}
             <AnimatePresence>
               {textVisible && (
                 <motion.div
-                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="text-center"
+                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={shouldReduceMotion ? { duration: 0 } : SPRING_GENTLE}
+                  className="prismatic-border glass-light rounded-2xl p-4 text-center"
                 >
                   <p className="text-lg font-semibold text-foreground">
                     {currentQuestion.question_en}
@@ -442,10 +443,21 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
               )}
             </AnimatePresence>
 
-            {/* Reading indicator (question not yet visible) */}
+            {/* Typing indicator dots (question not yet visible) */}
             {!textVisible && questionPhase === 'reading' && (
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground">{strings.interview.listening.en}</p>
+              <div className="flex items-center justify-center gap-1.5 p-3">
+                {[0, 1, 2].map(i => (
+                  <motion.span
+                    key={i}
+                    className="h-2.5 w-2.5 rounded-full bg-primary/60"
+                    animate={shouldReduceMotion ? {} : { y: [0, -6, 0] }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { repeat: Infinity, duration: 0.6, delay: i * 0.15 }
+                    }
+                  />
+                ))}
               </div>
             )}
 

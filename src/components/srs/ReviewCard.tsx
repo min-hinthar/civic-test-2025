@@ -3,6 +3,7 @@
 import { useMemo, useCallback } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Flashcard3D } from '@/components/study/Flashcard3D';
@@ -140,7 +141,7 @@ export function ReviewCard({
   }
 
   return (
-    <div className={clsx('relative', className)}>
+    <div className={clsx('relative glass-light prismatic-border rounded-2xl', className)}>
       {/* Swipe color gradient overlay */}
       {!shouldReduceMotion && (
         <motion.div
@@ -182,6 +183,11 @@ export function ReviewCard({
         drag={shouldReduceMotion || showRatingFeedback ? false : 'x'}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.3}
+        dragTransition={{
+          bounceStiffness: SPRING_BOUNCY.stiffness,
+          bounceDamping: SPRING_BOUNCY.damping,
+        }}
+        whileTap={shouldReduceMotion || showRatingFeedback ? {} : { scale: 0.98 }}
         onDragEnd={handleDragEnd}
         className={clsx(
           !shouldReduceMotion && !showRatingFeedback && 'cursor-grab active:cursor-grabbing'

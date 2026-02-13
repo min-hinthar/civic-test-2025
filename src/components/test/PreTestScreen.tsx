@@ -46,7 +46,7 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
   const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center glass-medium rounded-2xl mx-4 my-6 py-8">
       {/* Breathing animation circle - runs until user clicks I'm Ready */}
       <motion.div
         className={clsx(

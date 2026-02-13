@@ -10,6 +10,7 @@ import { BilingualText } from '@/components/bilingual/BilingualText';
 import { InterviewerAvatar } from '@/components/interview/InterviewerAvatar';
 import { getInterviewHistory } from '@/lib/interview';
 import { strings } from '@/lib/i18n/strings';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { InterviewMode, InterviewSession } from '@/types';
@@ -125,7 +126,12 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8">
+    <motion.div
+      className="mx-auto w-full max-w-2xl px-4 py-8"
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={shouldReduceMotion ? { duration: 0 } : SPRING_GENTLE}
+    >
       {/* Page title */}
       <BilingualHeading
         text={strings.interview.practiceInterview}
@@ -146,7 +152,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         <Card
           interactive
           onClick={() => onStart('realistic')}
-          className="group border-2 border-transparent transition-colors hover:border-primary-400"
+          className="group glass-light prismatic-border border-2 border-transparent transition-colors hover:border-primary-400"
         >
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-subtle text-primary">
@@ -180,7 +186,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         <Card
           interactive
           onClick={() => onStart('practice')}
-          className="group border-2 border-transparent transition-colors hover:border-accent"
+          className="group glass-light prismatic-border border-2 border-transparent transition-colors hover:border-accent"
         >
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/20 text-accent-foreground">
@@ -342,6 +348,6 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

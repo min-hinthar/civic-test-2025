@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, X, Star } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getRandomCorrectEncouragement, getRandomIncorrectEncouragement } from '@/lib/i18n/strings';
 
@@ -44,21 +45,31 @@ export function AnswerFeedback({
           exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
           className={clsx(
-            'rounded-2xl p-4 border',
+            'relative overflow-hidden rounded-2xl p-4 border glass-light',
             isCorrect ? 'bg-success-subtle border-success' : 'bg-warning-subtle border-warning'
           )}
         >
-          <div className="flex items-start gap-3">
+          {/* Color pulse flash overlay */}
+          {!shouldReduceMotion && (
+            <motion.div
+              className="pointer-events-none absolute inset-0 rounded-2xl"
+              initial={{
+                backgroundColor: isCorrect ? 'hsl(142 71% 45% / 0.3)' : 'hsl(25 95% 53% / 0.3)',
+              }}
+              animate={{
+                backgroundColor: isCorrect ? 'hsl(142 71% 45% / 0)' : 'hsl(25 95% 53% / 0)',
+              }}
+              transition={{ duration: 0.6 }}
+            />
+          )}
+
+          <div className="relative flex items-start gap-3">
             {/* Animated icon */}
             {isCorrect ? (
               <motion.div
                 initial={shouldReduceMotion ? {} : { scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={
-                  shouldReduceMotion
-                    ? { duration: 0 }
-                    : { type: 'spring', stiffness: 400, damping: 12 }
-                }
+                animate={shouldReduceMotion ? {} : { scale: [0, 1.2, 1], rotate: 0 }}
+                transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success text-white"
               >
                 <Star className="h-5 w-5 fill-current" />
@@ -66,9 +77,9 @@ export function AnswerFeedback({
             ) : (
               <motion.div
                 initial={shouldReduceMotion ? {} : { x: 0 }}
-                animate={shouldReduceMotion ? {} : { x: [0, -4, 4, -3, 3, -1, 0] }}
+                animate={shouldReduceMotion ? {} : { x: [0, -5, 5, -3, 3, 0] }}
                 transition={
-                  shouldReduceMotion ? { duration: 0 } : { duration: 0.5, ease: 'easeInOut' }
+                  shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: 'easeInOut' }
                 }
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning text-white"
               >
@@ -89,11 +100,9 @@ export function AnswerFeedback({
                 {isCorrect && (
                   <motion.div
                     initial={shouldReduceMotion ? {} : { scale: 0 }}
-                    animate={{ scale: 1 }}
+                    animate={shouldReduceMotion ? {} : { scale: [0, 1.3, 1] }}
                     transition={
-                      shouldReduceMotion
-                        ? { duration: 0 }
-                        : { delay: 0.2, type: 'spring', stiffness: 500, damping: 15 }
+                      shouldReduceMotion ? { duration: 0 } : { ...SPRING_BOUNCY, delay: 0.2 }
                     }
                   >
                     <Check className="h-5 w-5 text-success" />
