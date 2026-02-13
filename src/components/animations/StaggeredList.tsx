@@ -3,22 +3,21 @@
 import { ReactNode, Children } from 'react';
 import { motion, Variants } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_BOUNCY, STAGGER_DEFAULT } from '@/lib/motion-config';
 import { clsx } from 'clsx';
 
-// Item variants - fade + slide up
+// Item variants - bouncy spring pop entrance (scale 0.9→1 + y 20→0)
 const itemVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 10,
+    y: 20,
+    scale: 0.9,
   },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 300,
-      damping: 24,
-    },
+    scale: 1,
+    transition: SPRING_BOUNCY,
   },
 };
 
@@ -65,7 +64,7 @@ export function StaggeredList({
   children,
   className,
   delay = 100,
-  stagger = 80,
+  stagger = STAGGER_DEFAULT * 1000,
 }: StaggeredListProps) {
   const shouldReduceMotion = useReducedMotion();
 

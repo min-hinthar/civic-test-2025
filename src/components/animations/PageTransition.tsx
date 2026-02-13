@@ -5,20 +5,30 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getSlideDirection } from '@/components/navigation/navConfig';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 
-// Direction-aware slide + fade variants
+// Direction-aware slide + scale variants
+// Incoming: slide in from side + slight scale up (0.97→1) with spring
+// Outgoing: scale down (→0.95) + short slide + quick tween fade
 const getVariants = (dir: 'left' | 'right') => ({
-  initial: { opacity: 0, x: dir === 'left' ? 30 : -30 },
-  enter: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: dir === 'left' ? -30 : 30 },
+  initial: {
+    opacity: 0,
+    scale: 0.97,
+    x: dir === 'left' ? 30 : -30,
+  },
+  enter: {
+    opacity: 1,
+    scale: 1,
+    x: 0,
+    transition: SPRING_SNAPPY,
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    x: dir === 'left' ? -15 : 15,
+    transition: { type: 'tween' as const, ease: 'easeIn' as const, duration: 0.15 },
+  },
 });
-
-// Snappy timing per user decision (150-250ms)
-const pageTransition = {
-  type: 'tween' as const,
-  ease: 'easeInOut' as const,
-  duration: 0.2,
-};
 
 // Reduced motion variants - instant transition
 const reducedMotionVariants = {
@@ -74,7 +84,7 @@ export function PageTransition({ children }: PageTransitionProps) {
         initial="initial"
         animate="enter"
         exit="exit"
-        transition={shouldReduceMotion ? { duration: 0 } : pageTransition}
+        transition={shouldReduceMotion ? { duration: 0 } : undefined}
       >
         {routesWithLocation}
       </motion.div>
