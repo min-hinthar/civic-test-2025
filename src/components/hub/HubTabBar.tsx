@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { strings } from '@/lib/i18n/strings';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 
 /** Tab definition with bilingual labels */
 interface HubTab {
@@ -47,10 +48,10 @@ export function HubTabBar({ activeTab, onTabChange }: HubTabBarProps) {
         <div className="relative grid grid-cols-3">
           {/* Sliding pill — fixed width (1 grid cell), translateX by own width */}
           <motion.div
-            className="absolute inset-y-0 rounded-xl bg-primary/10 shadow-sm"
+            className="absolute inset-y-0 rounded-xl bg-primary/10 dark:bg-primary/20 shadow-sm"
             style={{ width: `${100 / HUB_TABS.length}%` }}
             animate={{ x: `${activeIndex * 100}%` }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            transition={SPRING_SNAPPY}
           />
           {HUB_TABS.map(tab => {
             const isActive = activeTab === tab.id;
@@ -66,11 +67,21 @@ export function HubTabBar({ activeTab, onTabChange }: HubTabBarProps) {
                   isActive ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
                 )}
               >
-                <span className="leading-tight">{tab.label}</span>
+                <motion.span
+                  className="leading-tight"
+                  animate={{ scale: isActive ? 1.05 : 1 }}
+                  transition={SPRING_SNAPPY}
+                >
+                  {tab.label}
+                </motion.span>
                 {showBurmese && (
-                  <span className="font-myanmar mt-0.5 text-[10px] leading-tight opacity-70">
+                  <motion.span
+                    className="font-myanmar mt-0.5 text-[10px] leading-tight opacity-70"
+                    animate={{ scale: isActive ? 1.05 : 1 }}
+                    transition={SPRING_SNAPPY}
+                  >
                     {tab.labelMy}
-                  </span>
+                  </motion.span>
                 )}
               </button>
             );

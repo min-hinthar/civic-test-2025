@@ -2,17 +2,20 @@
 
 import { motion } from 'motion/react';
 import { useThemeContext } from '@/contexts/ThemeContext';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useThemeContext();
   const isDark = theme === 'dark';
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       onClick={toggleTheme}
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/80 shadow-sm transition hover:-translate-y-0.5 hover:bg-surface-muted"
+      whileTap={{ scale: 0.9 }}
+      transition={SPRING_BOUNCY}
+      className="relative inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface/80 shadow-sm transition hover:-translate-y-0.5 hover:bg-surface-muted"
     >
       <motion.svg
         width="20"
@@ -24,7 +27,7 @@ const ThemeToggle = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         animate={{ rotate: isDark ? 360 : 0 }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        transition={SPRING_BOUNCY}
       >
         {/* Sun rays - scale to 0 in dark mode */}
         <motion.g
@@ -63,7 +66,7 @@ const ThemeToggle = () => {
           fill="hsl(var(--color-surface))"
         />
       </motion.svg>
-    </button>
+    </motion.button>
   );
 };
 

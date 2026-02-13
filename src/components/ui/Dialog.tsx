@@ -6,6 +6,7 @@ import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 
 // Animation variants for bottom-sheet style modal
 const overlayVariants = {
@@ -16,12 +17,6 @@ const overlayVariants = {
 const contentVariants = {
   hidden: { opacity: 0, y: 50, scale: 0.95 },
   visible: { opacity: 1, y: 0, scale: 1 },
-};
-
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 300,
-  damping: 25,
 };
 
 export interface DialogProps {
@@ -96,12 +91,13 @@ export const DialogContent = forwardRef<
             initial={shouldReduceMotion ? 'visible' : 'hidden'}
             animate="visible"
             exit={shouldReduceMotion ? 'visible' : 'hidden'}
-            transition={springTransition}
+            transition={SPRING_BOUNCY}
             className={clsx(
               // Sizing & pointer restore
               'pointer-events-auto w-full max-w-lg max-h-[85vh] overflow-auto',
-              // Styling
+              // Styling — glass-heavy tier with prismatic border
               'rounded-2xl bg-card border border-border/60 p-6',
+              'glass-heavy prismatic-border',
               'shadow-2xl shadow-black/20',
               // Focus
               'focus:outline-none',

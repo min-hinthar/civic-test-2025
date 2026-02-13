@@ -5,6 +5,7 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { motion } from 'motion/react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 export interface ProgressProps {
   /** Current value (0 to max) */
@@ -60,11 +61,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
             <motion.div
               initial={shouldReduceMotion ? { width: `${percentage}%` } : { width: 0 }}
               animate={{ width: `${percentage}%` }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { type: 'spring', stiffness: 100, damping: 20 }
-              }
+              transition={shouldReduceMotion ? { duration: 0 } : SPRING_GENTLE}
               className={clsx('h-full rounded-full', variantClasses[variant])}
             />
           </ProgressPrimitive.Indicator>

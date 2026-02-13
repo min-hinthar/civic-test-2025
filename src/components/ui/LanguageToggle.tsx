@@ -5,6 +5,7 @@ import { Languages } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 
 interface LanguageToggleProps {
   /** Size variant */
@@ -23,19 +24,22 @@ interface LanguageToggleProps {
  * - Visual indicator of current mode
  * - Tooltip explaining the feature
  * - Animated switch with spring physics
+ * - 48px minimum touch target
  */
 export function LanguageToggle({ size = 'md', showLabel = false, className }: LanguageToggleProps) {
   const { showBurmese, toggleMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
 
   const sizeClasses = {
-    sm: 'h-8 px-2',
-    md: 'h-10 px-3',
+    sm: 'min-h-[48px] px-2',
+    md: 'min-h-[48px] px-3',
   };
 
   return (
-    <button
+    <motion.button
       onClick={toggleMode}
+      whileTap={{ scale: 0.9 }}
+      transition={SPRING_BOUNCY}
       className={clsx(
         'relative inline-flex items-center gap-2 rounded-full',
         'bg-muted/50 hover:bg-muted transition-colors',
@@ -68,9 +72,7 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
             animate={{
               left: showBurmese ? 18 : 2,
             }}
-            transition={
-              shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 30 }
-            }
+            transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
           />
         </div>
         <span
@@ -79,7 +81,7 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
             showBurmese ? 'text-primary' : 'text-muted-foreground'
           )}
         >
-          {'မြန်မာ'}
+          {'\u1019\u103C\u1014\u103A\u1019\u102C'}
         </span>
       </div>
 
@@ -88,22 +90,25 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
           {showBurmese ? 'Bilingual' : 'English only'}
         </span>
       )}
-    </button>
+    </motion.button>
   );
 }
 
 /**
  * Compact language toggle for mobile header.
  * Icon-only with dot indicator when in English-only mode.
+ * 48px touch target with spring press feedback.
  */
 export function LanguageToggleCompact({ className }: { className?: string }) {
   const { showBurmese, toggleMode } = useLanguage();
 
   return (
-    <button
+    <motion.button
       onClick={toggleMode}
+      whileTap={{ scale: 0.9 }}
+      transition={SPRING_BOUNCY}
       className={clsx(
-        'relative flex h-10 w-10 items-center justify-center rounded-full',
+        'relative flex h-12 w-12 items-center justify-center rounded-full',
         'bg-muted/50 hover:bg-muted transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className
@@ -114,6 +119,6 @@ export function LanguageToggleCompact({ className }: { className?: string }) {
       {!showBurmese && (
         <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-background bg-warning" />
       )}
-    </button>
+    </motion.button>
   );
 }
