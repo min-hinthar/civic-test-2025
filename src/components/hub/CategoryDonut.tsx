@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Mastery-level color interpolation (red -> amber -> green)
@@ -50,7 +51,7 @@ export interface CategoryDonutProps {
  *
  * Features:
  * - Stroke color interpolated from red -> amber -> green based on mastery percentage
- * - Animated fill from 0 on first render using motion.circle
+ * - Animated fill from 0 on first render using motion.circle with SPRING_GENTLE
  * - Percentage number displayed inside the ring
  * - Respects prefers-reduced-motion
  */
@@ -104,11 +105,7 @@ export function CategoryDonut({
           strokeDasharray={circumference}
           initial={shouldReduceMotion ? { strokeDashoffset } : { strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
-          transition={
-            shouldReduceMotion
-              ? { duration: 0 }
-              : { type: 'spring', stiffness: 80, damping: 20, delay: 0.3 }
-          }
+          transition={shouldReduceMotion ? { duration: 0 } : { ...SPRING_GENTLE, delay: 0.3 }}
         />
       </svg>
 

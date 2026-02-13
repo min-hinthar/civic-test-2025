@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getMasteryColor } from '@/components/hub/CategoryDonut';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // SubcategoryBar component
@@ -24,7 +25,7 @@ export interface SubcategoryBarProps {
  * Features:
  * - Bar fill color uses mastery gradient (red -> amber -> green based on percentage)
  * - Animated striped candy-bar pattern using stripe-move keyframes from globals.css
- * - Animates width from 0 on first render
+ * - Animates width from 0 on first render with SPRING_GENTLE physics
  * - Shows percentage value on the right
  * - Bilingual label with useLanguage
  * - Tappable when onClick provided (for navigating to study guide)
@@ -84,11 +85,7 @@ export function SubcategoryBar({ percentage, label, onClick }: SubcategoryBarPro
           }}
           initial={shouldReduceMotion ? { width: `${clampedPercentage}%` } : { width: '0%' }}
           animate={{ width: `${clampedPercentage}%` }}
-          transition={
-            shouldReduceMotion
-              ? { duration: 0 }
-              : { type: 'spring', stiffness: 80, damping: 20, delay: 0.4 }
-          }
+          transition={shouldReduceMotion ? { duration: 0 } : { ...SPRING_GENTLE, delay: 0.4 }}
         />
       </div>
     </Wrapper>

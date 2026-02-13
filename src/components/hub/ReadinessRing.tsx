@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Motivational tier configuration
@@ -88,7 +89,7 @@ export interface ReadinessRingProps {
  * - SVG linearGradient stroke (red -> amber -> green)
  * - Inner glow: blurred radial gradient div behind ring, color matches percentage tier
  * - Center content: percentage number + bilingual motivational text
- * - Animates fill from 0 on first render via motion.circle pathLength
+ * - Animates fill from 0 on first render via motion.circle with SPRING_GENTLE
  * - Respects prefers-reduced-motion
  */
 export function ReadinessRing({ percentage, size = 180, strokeWidth = 14 }: ReadinessRingProps) {
@@ -156,11 +157,7 @@ export function ReadinessRing({ percentage, size = 180, strokeWidth = 14 }: Read
           strokeDasharray={circumference}
           initial={shouldReduceMotion ? { strokeDashoffset } : { strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
-          transition={
-            shouldReduceMotion
-              ? { duration: 0 }
-              : { type: 'spring', stiffness: 60, damping: 20, delay: 0.2 }
-          }
+          transition={shouldReduceMotion ? { duration: 0 } : { ...SPRING_GENTLE, delay: 0.2 }}
         />
       </svg>
 
