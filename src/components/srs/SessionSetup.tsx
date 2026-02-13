@@ -268,28 +268,35 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 </div>
               </div>
 
-              {/* Toggle switch */}
+              {/* Toggle switch with 48px touch target */}
               <button
                 type="button"
                 role="switch"
                 aria-checked={timerEnabled}
                 onClick={() => setTimerEnabled(prev => !prev)}
                 className={clsx(
-                  'relative inline-flex h-6 w-11 shrink-0 rounded-full',
-                  'border-2 border-transparent cursor-pointer',
-                  'transition-colors duration-200 ease-in-out',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-                  timerEnabled ? 'bg-primary' : 'bg-muted'
+                  'relative inline-flex min-h-[48px] min-w-[48px] shrink-0 items-center justify-center',
+                  'cursor-pointer',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2'
                 )}
               >
                 <span
                   className={clsx(
-                    'pointer-events-none inline-block h-5 w-5 rounded-full',
-                    'bg-surface shadow-lg ring-0',
-                    'transform transition duration-200 ease-in-out',
-                    timerEnabled ? 'translate-x-5' : 'translate-x-0'
+                    'inline-flex h-6 w-11 items-center rounded-full',
+                    'border-2 border-transparent',
+                    'transition-colors duration-200 ease-in-out',
+                    timerEnabled ? 'bg-primary' : 'bg-muted'
                   )}
-                />
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 rounded-full',
+                      'bg-surface shadow-lg ring-0',
+                      'transform transition duration-200 ease-in-out',
+                      timerEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </span>
               </button>
             </div>
           </StaggeredItem>

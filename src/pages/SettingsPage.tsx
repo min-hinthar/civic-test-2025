@@ -67,15 +67,19 @@ function ToggleSwitch({
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={onChange}
-      className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? 'bg-primary' : 'bg-muted'
-      }`}
+      className="relative inline-flex min-h-[48px] min-w-[48px] shrink-0 cursor-pointer items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <span
-        className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-surface shadow-md ring-0 transition-transform duration-200 ${
-          checked ? 'translate-x-5' : 'translate-x-0'
+        className={`inline-flex h-7 w-12 items-center rounded-full border-2 border-transparent transition-colors duration-200 ${
+          checked ? 'bg-primary' : 'bg-muted'
         }`}
-      />
+      >
+        <span
+          className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-surface shadow-md ring-0 transition-transform duration-200 ${
+            checked ? 'translate-x-5' : 'translate-x-0'
+          }`}
+        />
+      </span>
     </button>
   );
 }
@@ -148,7 +152,7 @@ function SettingsRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between py-3 min-h-[44px] ${
+      className={`flex items-center justify-between py-3 min-h-[48px] ${
         !isLast ? 'border-b border-border/40' : ''
       }`}
     >
@@ -212,7 +216,7 @@ export default function SettingsPage() {
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
           <button
             onClick={() => navigate(-1)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted/40 transition-colors"
+            className="flex h-12 w-12 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted/40 transition-colors"
             aria-label="Go back"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -296,7 +300,7 @@ export default function SettingsPage() {
               <select
                 value={selectedState ?? ''}
                 onChange={e => setSelectedState(e.target.value || null)}
-                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[44px] min-w-[140px]"
+                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px] min-w-[140px]"
                 aria-label="Select your state or territory"
               >
                 <option value="">{showBurmese ? 'ပြည်နယ်ရွေးချယ်ပါ...' : 'Select state...'}</option>
@@ -375,7 +379,7 @@ export default function SettingsPage() {
                 id="srs-reminder-time"
                 value={reminderTime}
                 onChange={handleReminderTimeChange}
-                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[44px]"
+                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px]"
               />
             </div>
 
