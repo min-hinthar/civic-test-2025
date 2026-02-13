@@ -1,8 +1,11 @@
 'use client';
 
 import { type LucideIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,6 +40,7 @@ export interface StatCardProps {
  */
 export function StatCard({ icon: Icon, label, value, onClick, badge }: StatCardProps) {
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const content = (
     <div className="flex min-w-0 flex-col items-center gap-1.5 px-2 py-4 text-center">
@@ -56,19 +60,29 @@ export function StatCard({ icon: Icon, label, value, onClick, badge }: StatCardP
     </div>
   );
 
-  if (onClick) {
-    return (
-      <GlassCard interactive className="min-w-0 flex-1 rounded-2xl p-0">
-        <button
-          type="button"
-          className="flex w-full items-center justify-center min-h-[44px]"
-          onClick={onClick}
-        >
-          {content}
-        </button>
-      </GlassCard>
-    );
-  }
+  const card = onClick ? (
+    <GlassCard interactive tier="light" className="min-w-0 flex-1 rounded-2xl p-0">
+      <button
+        type="button"
+        className="flex w-full items-center justify-center min-h-[44px]"
+        onClick={onClick}
+      >
+        {content}
+      </button>
+    </GlassCard>
+  ) : (
+    <GlassCard tier="light" className="min-w-0 flex-1 rounded-2xl p-0">
+      {content}
+    </GlassCard>
+  );
 
-  return <GlassCard className="min-w-0 flex-1 rounded-2xl p-0">{content}</GlassCard>;
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
+    >
+      {card}
+    </motion.div>
+  );
 }

@@ -116,9 +116,9 @@ export function OverviewTab({
     <StaggeredList className="space-y-6" delay={100} stagger={80}>
       {/* Hero section: Readiness Ring */}
       <StaggeredItem>
-        <div className="flex justify-center py-2">
+        <GlassCard tier="medium" className="flex justify-center rounded-2xl py-6">
           <ReadinessRing percentage={overallMastery} size={180} strokeWidth={14} />
-        </div>
+        </GlassCard>
       </StaggeredItem>
 
       {/* Stat cards grid */}
@@ -183,7 +183,7 @@ export function OverviewTab({
               const isCollapsed = collapsedCategories.has(category);
 
               return (
-                <GlassCard key={category} className="rounded-2xl p-5">
+                <GlassCard key={category} tier="light" className="rounded-2xl p-5">
                   {/* Category header */}
                   <button
                     type="button"
