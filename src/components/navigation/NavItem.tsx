@@ -13,6 +13,7 @@ import { motion } from 'motion/react';
 import type { NavTab, NavBadges } from './navConfig';
 import { NavBadge } from './NavBadge';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 
 interface NavItemProps {
   tab: NavTab;
@@ -109,9 +110,16 @@ export function NavItem({
     );
   })();
 
-  // --- Icon rendering ---
+  // --- Icon rendering (with spring pop on active) ---
+  const iconPop = shouldReduceMotion || !isActive ? undefined : { scale: [0.85, 1.08, 1] };
+
   const iconElement = (
-    <span className="relative">
+    <motion.span
+      className="relative"
+      animate={iconPop}
+      transition={SPRING_SNAPPY}
+      key={`${tab.id}-${isActive}`}
+    >
       <Icon
         className={`h-6 w-6 shrink-0 transition-colors duration-200 ${
           isActive ? 'text-primary' : 'text-muted-foreground'
@@ -119,7 +127,7 @@ export function NavItem({
         strokeWidth={2}
       />
       <TabBadge tab={tab} badges={badges} />
-    </span>
+    </motion.span>
   );
 
   // --- Tooltip for collapsed sidebar ---
@@ -139,11 +147,7 @@ export function NavItem({
             <motion.span
               layoutId="mobile-nav-pill"
               className="absolute inset-0 rounded-full bg-primary/20 shadow-sm shadow-primary/15"
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { type: 'spring', stiffness: 500, damping: 30 }
-              }
+              transition={shouldReduceMotion ? { duration: 0 } : SPRING_SNAPPY}
             />
           )}
           {iconElement}

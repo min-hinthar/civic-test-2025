@@ -51,7 +51,7 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden glass-nav transition-transform duration-300 ${navVisible ? 'translate-y-0' : 'translate-y-full'}`}
+      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden glass-heavy prismatic-border glass-nav rounded-none transition-transform duration-300 ${navVisible ? 'translate-y-0' : 'translate-y-full'}`}
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       aria-label="Main navigation"
     >
