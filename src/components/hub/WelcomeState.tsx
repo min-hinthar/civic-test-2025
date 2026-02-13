@@ -3,9 +3,12 @@
 import { BookOpen, ClipboardCheck, GraduationCap } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Step configuration
@@ -74,30 +77,37 @@ const GUIDED_STEPS: GuidedStep[] = [
 export function WelcomeState() {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="space-y-6">
-      {/* Welcome message */}
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-text-primary">Welcome to Your Progress Hub!</h2>
-        {showBurmese && (
-          <p className="font-myanmar mt-1 text-sm text-text-secondary">
-            {
-              '\u101E\u1004\u103A\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F \u1017\u1000\u103A\u101E\u102D\u102F\u1037 \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u101E\u100A\u103A!'
-            }
+      {/* Welcome message with glass-medium and gentle entrance */}
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={shouldReduceMotion ? { duration: 0 } : SPRING_GENTLE}
+      >
+        <GlassCard tier="medium" className="text-center">
+          <h2 className="text-xl font-bold text-text-primary">Welcome to Your Progress Hub!</h2>
+          {showBurmese && (
+            <p className="font-myanmar mt-1 text-sm text-text-secondary">
+              {
+                '\u101E\u1004\u103A\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F \u1017\u1000\u103A\u101E\u102D\u102F\u1037 \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u101E\u100A\u103A!'
+              }
+            </p>
+          )}
+          <p className="mx-auto mt-2 max-w-sm text-sm text-text-secondary">
+            Start your journey to citizenship test readiness. Here are some great first steps:
           </p>
-        )}
-        <p className="mx-auto mt-2 max-w-sm text-sm text-text-secondary">
-          Start your journey to citizenship test readiness. Here are some great first steps:
-        </p>
-        {showBurmese && (
-          <p className="font-myanmar mx-auto mt-1 max-w-sm text-xs text-text-secondary/70">
-            {
-              '\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u101B\u1014\u103A \u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B'
-            }
-          </p>
-        )}
-      </div>
+          {showBurmese && (
+            <p className="font-myanmar mx-auto mt-1 max-w-sm text-xs text-text-secondary/70">
+              {
+                '\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u101B\u1014\u103A \u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B'
+              }
+            </p>
+          )}
+        </GlassCard>
+      </motion.div>
 
       {/* Guided steps */}
       <StaggeredList className="space-y-3" delay={200} stagger={100}>
