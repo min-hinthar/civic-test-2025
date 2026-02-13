@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 17 of 17 (UI System Polish)
-Plan: 4 of 11 in current phase
+Plan: 5 of 11 in current phase
 Status: In progress
-Last activity: 2026-02-13 -- Completed 17-04-PLAN.md (Micro-Interactions)
+Last activity: 2026-02-13 -- Completed 17-05-PLAN.md (Hub Overview Spring Animations)
 
 Progress: [██████░░░░] 6/7 phases (v2.0)
-Phase 17: [████░░░░░░░] 4/11 plans
+Phase 17: [█████░░░░░░] 5/11 plans
 
 ## Completed Milestones
 
@@ -158,6 +158,8 @@ Recent decisions affecting current work:
 - [17-04]: LanguageToggle knob unified to SPRING_BOUNCY (was inline stiffness/damping)
 - [17-04]: Progress bar uses SPRING_GENTLE (large element fill) rather than SPRING_BOUNCY
 - [17-04]: Icon-only buttons (ThemeToggle, LanguageToggleCompact) use h-12 w-12 for 48px touch targets
+- [17-05]: SPRING_GENTLE (stiffness:200, damping:20) with staggered delays (0.2/0.3/0.4s) for progress ring/donut/bar fill animations
+- [17-05]: Spread syntax { ...SPRING_GENTLE, delay: N } pattern for per-component timing offsets on shared spring config
 
 ### Key Learnings (from v2.0 Phase 11)
 
@@ -175,10 +177,10 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Phase 17, Plan 04 complete; ready for Plan 05
-Resume file: .planning/phases/17-ui-system-polish/17-04-SUMMARY.md
+Stopped at: Phase 17, Plan 05 complete; ready for Plan 05B
+Resume file: .planning/phases/17-ui-system-polish/17-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-13 (Phase 17 Plan 04 complete -- micro-interactions on all primary components)*
+*Last updated: 2026-02-13 (Phase 17 Plan 05 complete -- hub overview spring animations)*
