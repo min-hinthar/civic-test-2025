@@ -162,16 +162,16 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
   useEffect(() => {
     if (!isExpanded || tier === 'desktop') return;
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handlePointerDown = (e: PointerEvent) => {
       const sidebar = sidebarRef.current;
       if (sidebar && !sidebar.contains(e.target as Node)) {
         setSidebarState(prev => ({ ...prev, expanded: false, isManual: true }));
       }
     };
 
-    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('pointerdown', handlePointerDown);
     return () => {
-      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('pointerdown', handlePointerDown);
     };
   }, [isExpanded, tier]);
 

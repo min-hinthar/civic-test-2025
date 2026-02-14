@@ -25,6 +25,11 @@ export default function Document() {
         {/* CSP allowlisted via hash in middleware.ts (not nonce — Pages Router limitation) */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
 
+        {/* Viewport: initial-scale=1 prevents iOS auto-zoom; viewport-fit=cover
+            enables env(safe-area-inset-*) for notch/home-indicator padding.
+            Next.js deduplicates by name, so this replaces the auto-generated default. */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
@@ -33,7 +38,7 @@ export default function Document() {
 
         {/* Apple-specific PWA settings */}
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="US Civics" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </Head>
