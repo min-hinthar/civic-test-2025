@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 18 of 25 (Language Mode)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-13 -- Roadmap created for v2.1 (8 phases, 51 requirements)
+Plan: 1 of 7 in current phase
+Status: In progress
+Last activity: 2026-02-14 -- Completed 18-01-PLAN.md (Language Mode Foundation)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 14% (1/7 plans)
 
 ## Completed Milestones
 
@@ -30,13 +30,19 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: Not started
+- v2.1: 1 plan in 10 min
 
 ## Accumulated Context
 
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 18 decisions:**
+- Exported LanguageMode type for downstream consumers (additive, non-breaking)
+- HTML lang set to 'en-my' for bilingual, 'en' for english-only
+- Used SPRING_BOUNCY for tap animation (WAAPI 3-keyframe arrays unsupported)
+- Analytics stub uses console.debug (intentional no-console warning)
 
 ### Research Notes
 
@@ -48,15 +54,15 @@ All decisions archived in PROJECT.md Key Decisions table.
 
 ### Blockers/Concerns
 
-None -- clean slate for v2.1.
+None.
 
 ## Session Continuity
 
-Last session: 2026-02-13
-Stopped at: Roadmap created for v2.1 milestone
-Next step: `/gsd:plan-phase 18` (Language Mode)
+Last session: 2026-02-14
+Stopped at: Completed 18-01 (Language Mode Foundation)
+Next step: Execute 18-02 (Navigation Integration)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-13 (v2.1 roadmap created)*
+*Last updated: 2026-02-14 (18-01 Language Mode Foundation complete)*
