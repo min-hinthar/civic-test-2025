@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 18: Language Mode
+**Current focus:** v2.1 Quality & Polish -- Phase 18: Language Mode (gap closure complete)
 
 ## Current Position
 
 Phase: 18 of 25 (Language Mode)
-Plan: 7 of 7 in current phase
-Status: Phase complete
-Last activity: 2026-02-14 -- Completed 18-03-PLAN.md (Settings Page FlagToggle)
+Plan: 7 of 7 in current phase + gap closure
+Status: Phase complete (gaps closed)
+Last activity: 2026-02-14 -- Closed verification gaps in TestPage.tsx, StudyGuidePage.tsx
 
-Progress: [##########] 100% (7/7 plans)
+Progress: [##########] 100% (7/7 plans + gap closure)
 
 ## Completed Milestones
 
@@ -55,6 +55,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Tooltip only shows in sidebar expanded mode (collapsed too narrow for popover)
 - Settings page: custom div layout for Display Language row (better FlagToggle alignment)
 - Old LanguageToggle has zero consumers after migration -- ready for deletion
+- SRSWidget and AchievementsTab already used conditional class pattern (showBurmese ? 'font-myanmar' : '') -- no changes needed
+- TestPage and StudyGuidePage required wrapping font-myanmar blocks with {showBurmese && (...)}
 
 ### Research Notes
 
@@ -71,10 +73,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 18-03 (Settings Page FlagToggle) -- Phase 18 complete
+Stopped at: Phase 18 gap closure complete (TestPage, StudyGuidePage showBurmese guards added)
 Next step: Begin Phase 19
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (18-03 Settings Page FlagToggle complete -- Phase 18 done)*
+*Last updated: 2026-02-14 (Phase 18 gap closure -- showBurmese guards for TestPage + StudyGuidePage)*
