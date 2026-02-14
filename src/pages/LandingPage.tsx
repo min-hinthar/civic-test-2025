@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { GlassHeader } from '@/components/navigation/GlassHeader';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { totalQuestions } from '@/constants/questions';
@@ -60,6 +61,7 @@ const stats = [
 
 const LandingPage = () => {
   const { user } = useAuth();
+  const { showBurmese } = useLanguage();
   const navigate = useNavigate();
 
   if (user) {
@@ -88,19 +90,23 @@ const LandingPage = () => {
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
             U.S. Citizenship Test Prep
           </h1>
-          <p className="mt-2 font-myanmar text-lg text-muted-foreground sm:text-xl">
-            အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး
-          </p>
+          {showBurmese && (
+            <p className="mt-2 font-myanmar text-lg text-muted-foreground sm:text-xl">
+              အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး
+            </p>
+          )}
 
           {/* Bilingual tagline */}
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Master all {totalQuestions} USCIS civics questions in English and Burmese. Study smart,
             pass with confidence.
           </p>
-          <p className="mx-auto mt-1.5 max-w-xl font-myanmar text-sm leading-relaxed text-muted-foreground sm:text-base">
-            အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို
-            ကျွမ်းကျင်စွာလေ့လာပါ။ ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
-          </p>
+          {showBurmese && (
+            <p className="mx-auto mt-1.5 max-w-xl font-myanmar text-sm leading-relaxed text-muted-foreground sm:text-base">
+              အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို
+              ကျွမ်းကျင်စွာလေ့လာပါ။ ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
+            </p>
+          )}
         </FadeIn>
 
         {/* CTA Buttons */}
@@ -122,9 +128,11 @@ const LandingPage = () => {
               Browse Questions
             </Button>
           </div>
-          <p className="mt-3 font-myanmar text-sm text-muted-foreground">
-            အခမဲ့စတင်ပါ - အကောင့်ဖွင့်ရန်မလိုပါ
-          </p>
+          {showBurmese && (
+            <p className="mt-3 font-myanmar text-sm text-muted-foreground">
+              အခမဲ့စတင်ပါ - အကောင့်ဖွင့်ရန်မလိုပါ
+            </p>
+          )}
         </FadeIn>
 
         {/* Stats badges */}
@@ -139,7 +147,9 @@ const LandingPage = () => {
                   {stat.emoji}
                 </span>
                 <span className="text-foreground">{stat.labelEn}</span>
-                <span className="font-myanmar text-xs text-muted-foreground">{stat.labelMy}</span>
+                {showBurmese && (
+                  <span className="font-myanmar text-xs text-muted-foreground">{stat.labelMy}</span>
+                )}
               </div>
             ))}
           </div>
@@ -154,9 +164,11 @@ const LandingPage = () => {
               <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
                 Everything You Need to Pass
               </h2>
-              <p className="mt-1 font-myanmar text-base text-muted-foreground">
-                အောင်မြင်ရန် လိုအပ်သမျှအားလုံး
-              </p>
+              {showBurmese && (
+                <p className="mt-1 font-myanmar text-base text-muted-foreground">
+                  အောင်မြင်ရန် လိုအပ်သမျှအားလုံး
+                </p>
+              )}
             </div>
           </FadeIn>
 
@@ -171,13 +183,19 @@ const LandingPage = () => {
                     <h3 className="text-base font-bold text-foreground sm:text-lg">
                       {feature.titleEn}
                     </h3>
-                    <p className="mt-0.5 font-myanmar text-sm text-primary/80">{feature.titleMy}</p>
+                    {showBurmese && (
+                      <p className="mt-0.5 font-myanmar text-sm text-primary/80">
+                        {feature.titleMy}
+                      </p>
+                    )}
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {feature.descEn}
                     </p>
-                    <p className="mt-1 font-myanmar text-xs leading-relaxed text-muted-foreground">
-                      {feature.descMy}
-                    </p>
+                    {showBurmese && (
+                      <p className="mt-1 font-myanmar text-xs leading-relaxed text-muted-foreground">
+                        {feature.descMy}
+                      </p>
+                    )}
                   </div>
                 </div>
               </StaggeredItem>
@@ -194,9 +212,11 @@ const LandingPage = () => {
               <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
                 Built for Burmese Learners
               </h2>
-              <p className="mt-1 font-myanmar text-base text-muted-foreground">
-                မြန်မာလေ့လာသူများအတွက် အထူးပြုလုပ်ထားသည်
-              </p>
+              {showBurmese && (
+                <p className="mt-1 font-myanmar text-base text-muted-foreground">
+                  မြန်မာလေ့လာသူများအတွက် အထူးပြုလုပ်ထားသည်
+                </p>
+              )}
             </div>
           </FadeIn>
 
@@ -207,9 +227,11 @@ const LandingPage = () => {
                   <GraduationCap className="h-7 w-7 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Study Your Way</h3>
-                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                  သင့်ပုံစံနဲ့ လေ့လာပါ
-                </p>
+                {showBurmese && (
+                  <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                    သင့်ပုံစံနဲ့ လေ့လာပါ
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-muted-foreground">
                   Flashcards, tests, interviews, and practice modes for every learning style.
                 </p>
@@ -222,9 +244,11 @@ const LandingPage = () => {
                   <Smartphone className="h-7 w-7 text-accent" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Works on Any Device</h3>
-                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                  မည်သည့်စက်ပစ္စည်းတွင်မဆို
-                </p>
+                {showBurmese && (
+                  <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                    မည်သည့်စက်ပစ္စည်းတွင်မဆို
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-muted-foreground">
                   Mobile-first design with offline support. Study anywhere, anytime.
                 </p>
@@ -237,9 +261,11 @@ const LandingPage = () => {
                   <Trophy className="h-7 w-7 text-success" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">Track Your Progress</h3>
-                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                  တိုးတက်မှုကို ခြေရာခံပါ
-                </p>
+                {showBurmese && (
+                  <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                    တိုးတက်မှုကို ခြေရာခံပါ
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-muted-foreground">
                   Streaks, badges, mastery levels, and leaderboards to keep you motivated.
                 </p>
@@ -261,9 +287,11 @@ const LandingPage = () => {
                 <h3 className="text-lg font-bold text-foreground">
                   Study Offline, Sync When Ready
                 </h3>
-                <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
-                  အင်တာနက်မရှိလည်း လေ့လာနိုင်ပြီး ပြန်ချိတ်ဆက်သောအခါ အလိုအလျောက်ချိတ်ဆက်ပေးပါသည်
-                </p>
+                {showBurmese && (
+                  <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+                    အင်တာနက်မရှိလည်း လေ့လာနိုင်ပြီး ပြန်ချိတ်ဆက်သောအခါ အလိုအလျောက်ချိတ်ဆက်ပေးပါသည်
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-muted-foreground">
                   All questions are cached on your device. Your progress syncs automatically when
                   you reconnect.
@@ -285,9 +313,11 @@ const LandingPage = () => {
             <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl">
               Ready to Start Your Journey?
             </h2>
-            <p className="mt-1 font-myanmar text-base text-muted-foreground">
-              သင့်ခရီးစတင်ဖို့ အဆင်သင့်ဖြစ်ပြီလား
-            </p>
+            {showBurmese && (
+              <p className="mt-1 font-myanmar text-base text-muted-foreground">
+                သင့်ခရီးစတင်ဖို့ အဆင်သင့်ဖြစ်ပြီလား
+              </p>
+            )}
             <p className="mt-3 text-muted-foreground">
               Join learners preparing for the U.S. citizenship test with confidence.
             </p>
@@ -311,9 +341,11 @@ const LandingPage = () => {
           <p>
             Civic Test Prep 2025 &mdash; Free bilingual study tool for the U.S. citizenship test
           </p>
-          <p className="mt-1 font-myanmar text-xs">
-            အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲအတွက် အခမဲ့နှစ်ဘာသာလေ့လာရေးကိရိယာ
-          </p>
+          {showBurmese && (
+            <p className="mt-1 font-myanmar text-xs">
+              အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲအတွက် အခမဲ့နှစ်ဘာသာလေ့လာရေးကိရိယာ
+            </p>
+          )}
         </div>
       </footer>
     </div>

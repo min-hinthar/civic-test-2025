@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +15,7 @@ import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 const AuthPage = () => {
   const { login, register, authError, user, sendPasswordReset } = useAuth();
   const { showSuccess, showInfo } = useToast();
+  const { showBurmese } = useLanguage();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
@@ -67,11 +69,13 @@ const AuthPage = () => {
               {mode === 'register' && 'Join Us'}
               {mode === 'forgot' && 'Reset Password'}
             </h1>
-            <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-              {mode === 'login' && 'ပြန်လာတာကို ကြိုဆိုပါတယ်'}
-              {mode === 'register' && 'ကျွန်ုပ်တို့နှင့်ပူးပေါင်းပါ'}
-              {mode === 'forgot' && 'လျှို့ဝှက်စာနံပါတ်ပြန်လည်သတ်မှတ်ပါ'}
-            </p>
+            {showBurmese && (
+              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                {mode === 'login' && 'ပြန်လာတာကို ကြိုဆိုပါတယ်'}
+                {mode === 'register' && 'ကျွန်ုပ်တို့နှင့်ပူးပေါင်းပါ'}
+                {mode === 'forgot' && 'လျှို့ဝှက်စာနံပါတ်ပြန်လည်သတ်မှတ်ပါ'}
+              </p>
+            )}
           </div>
         </FadeIn>
 
@@ -107,7 +111,7 @@ const AuthPage = () => {
                   <span className="h-px flex-1 bg-border" />
                   <span>
                     or use email
-                    <span className="font-myanmar"> · သို့မဟုတ် အီးမေးလ်</span>
+                    {showBurmese && <span className="font-myanmar"> · သို့မဟုတ် အီးမေးလ်</span>}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -120,9 +124,11 @@ const AuthPage = () => {
                 <div>
                   <label className="text-sm font-semibold text-foreground">
                     Full name{' '}
-                    <span className="font-myanmar text-xs text-muted-foreground">
-                      အမည်အပြည့်အစုံ
-                    </span>
+                    {showBurmese && (
+                      <span className="font-myanmar text-xs text-muted-foreground">
+                        အမည်အပြည့်အစုံ
+                      </span>
+                    )}
                   </label>
                   <input
                     className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -135,7 +141,10 @@ const AuthPage = () => {
               )}
               <div>
                 <label className="text-sm font-semibold text-foreground">
-                  Email <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                  Email{' '}
+                  {showBurmese && (
+                    <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                  )}
                 </label>
                 <input
                   className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -151,9 +160,11 @@ const AuthPage = () => {
                   <div className="flex items-center justify-between">
                     <label className="text-sm font-semibold text-foreground">
                       Password{' '}
-                      <span className="font-myanmar text-xs text-muted-foreground">
-                        လျှို့ဝှက်စာနံပါတ်
-                      </span>
+                      {showBurmese && (
+                        <span className="font-myanmar text-xs text-muted-foreground">
+                          လျှို့ဝှက်စာနံပါတ်
+                        </span>
+                      )}
                     </label>
                     {mode === 'login' && (
                       <button
@@ -201,15 +212,17 @@ const AuthPage = () => {
               {mode === 'register' && (
                 <p className="text-center text-xs text-muted-foreground">
                   You will receive a confirmation email.{' '}
-                  <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>
+                  {showBurmese && <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>}
                 </p>
               )}
               {mode === 'forgot' && (
                 <p className="text-center text-xs text-muted-foreground">
                   We will send a secure reset link.{' '}
-                  <span className="font-myanmar">
-                    လျှို့ဝှက်လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
-                  </span>
+                  {showBurmese && (
+                    <span className="font-myanmar">
+                      လျှို့ဝှက်လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
+                    </span>
+                  )}
                 </p>
               )}
             </form>
@@ -218,7 +231,7 @@ const AuthPage = () => {
               <Link className="font-semibold text-primary" to="/">
                 Back to home
               </Link>
-              <span className="font-myanmar text-xs"> · ပင်မသို့ပြန်ပါ</span>
+              {showBurmese && <span className="font-myanmar text-xs"> · ပင်မသို့ပြန်ပါ</span>}
             </p>
           </div>
         </FadeIn>

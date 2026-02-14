@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom';
 
 import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/animations/StaggeredList';
 
 const PasswordResetPage = () => {
   const { sendPasswordReset, authError } = useAuth();
   const { showSuccess } = useToast();
+  const { showBurmese } = useLanguage();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,9 +46,11 @@ const PasswordResetPage = () => {
               <span>🗽</span>
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">Forgot Password</h1>
-            <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-              လျှို့ဝှက်စာနံပါတ် မေ့နေပါသလား
-            </p>
+            {showBurmese && (
+              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                လျှို့ဝှက်စာနံပါတ် မေ့နေပါသလား
+              </p>
+            )}
           </div>
         </FadeIn>
 
@@ -54,14 +58,19 @@ const PasswordResetPage = () => {
           <div className="mt-6 rounded-2xl border border-border/60 bg-card p-6 shadow-lg">
             <p className="mb-4 text-sm text-muted-foreground">
               We will email you a recovery link that redirects back to this app.{' '}
-              <span className="font-myanmar">
-                ပြန်လည်ရယူရန် လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
-              </span>
+              {showBurmese && (
+                <span className="font-myanmar">
+                  ပြန်လည်ရယူရန် လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
+                </span>
+              )}
             </p>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="text-sm font-semibold text-foreground">
-                  Email <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                  Email{' '}
+                  {showBurmese && (
+                    <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                  )}
                 </label>
                 <input
                   className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-3 min-h-[44px] text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -88,7 +97,9 @@ const PasswordResetPage = () => {
               <Link className="font-semibold text-primary" to="/auth">
                 Sign in
               </Link>
-              <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာမှတ်မိပါသလား</span>
+              {showBurmese && (
+                <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာမှတ်မိပါသလား</span>
+              )}
             </p>
           </div>
         </FadeIn>
