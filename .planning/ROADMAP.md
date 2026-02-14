@@ -50,12 +50,16 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
   3. Interview simulation always runs in English-only mode regardless of the user's global language toggle
   4. User can switch language mode via a compact toggle without leaving their current screen
   5. Mock test in English-only mode displays a USCIS simulation message explaining English-only behavior
-**Plans**: TBD
+**Plans**: 7 plans
 
 Plans:
-- [ ] 18-01: TBD
-- [ ] 18-02: TBD
-- [ ] 18-03: TBD
+- [ ] 18-01-PLAN.md — Core: LanguageContext enhancements + Flag SVG + FlagToggle component
+- [ ] 18-02-PLAN.md — Navigation: Sidebar + BottomTabBar flag toggle integration + tooltip
+- [ ] 18-03-PLAN.md — Settings: Enhanced language section with FlagToggle + mode descriptions
+- [ ] 18-04-PLAN.md — Toast language mode fix + USCIS simulation messages
+- [ ] 18-05-PLAN.md — Interview language mode consistency + analytics
+- [ ] 18-06-PLAN.md — Font-myanmar audit: study, test, SRS, social, UI components
+- [ ] 18-07-PLAN.md — Font-myanmar audit: PWA, onboarding, auth, landing pages
 
 ### Phase 19: TTS Core Extraction
 **Goal**: TTS logic lives in a single shared module so all future TTS improvements apply uniformly across test, practice, interview, and study contexts
@@ -180,7 +184,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-------|-----------|----------------|--------|-----------|
 | 1-10 | v1.0 | 72/72 | Complete | 2026-02-08 |
 | 11-17 | v2.0 | 47/47 | Complete | 2026-02-13 |
-| 18. Language Mode | v2.1 | 0/TBD | Not started | - |
+| 18. Language Mode | v2.1 | 0/7 | Planned | - |
 | 19. TTS Core Extraction | v2.1 | 0/TBD | Not started | - |
 | 20. Session Persistence | v2.1 | 0/TBD | Not started | - |
 | 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
