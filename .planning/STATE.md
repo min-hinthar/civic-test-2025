@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 18 of 25 (Language Mode)
-Plan: 1 of 7 in current phase
+Plan: 5 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 18-01-PLAN.md (Language Mode Foundation)
+Last activity: 2026-02-14 -- Completed 18-05-PLAN.md (Interview Language Mode)
 
-Progress: [█░░░░░░░░░] 14% (1/7 plans)
+Progress: [██░░░░░░░░] 29% (2/7 plans)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 1 plan in 10 min
+- v2.1: 2 plans, ~25 min total
 
 ## Accumulated Context
 
@@ -43,6 +43,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - HTML lang set to 'en-my' for bilingual, 'en' for english-only
 - Used SPRING_BOUNCY for tap animation (WAAPI 3-keyframe arrays unsupported)
 - Analytics stub uses console.debug (intentional no-console warning)
+- Interview TTS/STT stays English regardless of language mode (USCIS simulation)
+- AnswerReveal needed no changes (all Burmese already gated)
 
 ### Research Notes
 
@@ -59,10 +61,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 18-01 (Language Mode Foundation)
-Next step: Execute 18-02 (Navigation Integration)
+Stopped at: Completed 18-05 (Interview Language Mode)
+Next step: Continue Phase 18 (remaining plans: 02-04, 06-07)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (18-01 Language Mode Foundation complete)*
+*Last updated: 2026-02-14 (18-05 Interview Language Mode complete)*
