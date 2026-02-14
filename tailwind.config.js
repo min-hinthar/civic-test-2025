@@ -116,6 +116,9 @@ module.exports = {
           amber: 'hsl(var(--color-chart-amber))',
           emerald: 'hsl(var(--color-chart-emerald))',
         },
+        /* ── TTS speaking color ── */
+        tts: 'hsl(var(--color-tts))',
+
         category: {
           democracy: 'hsl(var(--color-category-democracy))',
           government: 'hsl(var(--color-category-government))',
@@ -162,10 +165,15 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: 0 },
         },
+        'pulse-subtle': {
+          '0%, 100%': { borderColor: 'hsl(var(--color-tts))' },
+          '50%': { borderColor: 'hsl(var(--color-tts) / 0.5)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
       },
     },
   },

@@ -139,6 +139,9 @@
   /* ── Focus ── */
   --color-ring: var(--blue-500); /* Focus ring color */
 
+  /* ── TTS Speaking (dedicated indigo-purple for active speech) ── */
+  --color-tts: 250 70% 55%; /* TTS speaking indicator */
+
   /* ── Decorative ── */
   --color-patriotic-red: var(--patriotic-red); /* Stars, stripes, banners only */
 
@@ -338,6 +341,9 @@
 
   /* ── Focus (brighter ring for dark visibility) ── */
   --color-ring: var(--blue-400);
+
+  /* ── TTS Speaking (brighter indigo for dark backgrounds) ── */
+  --color-tts: 250 80% 70%; /* TTS speaking indicator on dark */
 
   /* ── Decorative ── */
   --color-patriotic-red: var(--patriotic-red); /* Same in both themes */
