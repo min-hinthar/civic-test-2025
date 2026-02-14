@@ -5,6 +5,7 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { motion } from 'motion/react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { SPRING_GENTLE } from '@/lib/motion-config';
 
 export interface ProgressProps {
@@ -87,6 +88,7 @@ export function ProgressWithLabel({
   labelMy,
   ...props
 }: ProgressProps & { labelEn?: string; labelMy?: string }) {
+  const { showBurmese } = useLanguage();
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
 
   return (
@@ -95,7 +97,9 @@ export function ProgressWithLabel({
         <div className="flex justify-between text-sm">
           <span className="text-foreground">
             {labelEn}
-            {labelMy && <span className="ml-2 text-muted-foreground font-myanmar">{labelMy}</span>}
+            {showBurmese && labelMy && (
+              <span className="ml-2 text-muted-foreground font-myanmar">{labelMy}</span>
+            )}
           </span>
           <span className="text-muted-foreground">{Math.round(percentage)}%</span>
         </div>

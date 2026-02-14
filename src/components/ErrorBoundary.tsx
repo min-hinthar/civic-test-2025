@@ -137,6 +137,13 @@ interface ErrorFallbackProps {
  * Displays a friendly, bilingual error message with recovery options.
  */
 function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) {
+  // Read language mode directly from localStorage to avoid dependency on context
+  // (ErrorBoundary may catch errors from context providers themselves)
+  const showBurmese =
+    typeof window !== 'undefined'
+      ? localStorage.getItem('civic-test-language-mode') !== 'english-only'
+      : true;
+
   const message = errorMessage ?? {
     en: 'Something went wrong. Please try again.',
     my: 'တစ်ခုခု မှားယွင်းသွားသည်။ ထပ်ကြိုးစားပါ။',
@@ -154,7 +161,7 @@ function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) 
         <h2 className="mb-2 text-xl font-semibold text-foreground">{message.en}</h2>
 
         {/* Burmese message */}
-        <p className="mb-8 text-lg text-foreground font-myanmar">{message.my}</p>
+        {showBurmese && <p className="mb-8 text-lg text-foreground font-myanmar">{message.my}</p>}
 
         {/* Action buttons */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">

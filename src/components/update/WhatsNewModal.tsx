@@ -18,6 +18,7 @@
 
 import { useState, useCallback } from 'react';
 import { X, Sparkles, BookOpen, ShieldCheck, MapPin } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const WHATS_NEW_KEY = 'civic-prep-whats-new-2025-seen';
 
@@ -111,6 +112,8 @@ const features = [
  * ```
  */
 export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
+  const { showBurmese } = useLanguage();
+
   return (
     <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -138,7 +141,9 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
           </div>
           <div>
             <h2 className="text-lg font-bold text-foreground">What&apos;s New</h2>
-            <p className="font-myanmar text-sm text-muted-foreground">ဘာအသစ်တွေရှိလဲ</p>
+            {showBurmese && (
+              <p className="font-myanmar text-sm text-muted-foreground">ဘာအသစ်တွေရှိလဲ</p>
+            )}
           </div>
         </div>
 
@@ -153,13 +158,17 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
               </div>
               <div className="min-w-0">
                 <p className="font-semibold text-foreground">{feature.titleEn}</p>
-                <p className="font-myanmar text-sm font-medium text-foreground/80">
-                  {feature.titleMy}
-                </p>
+                {showBurmese && (
+                  <p className="font-myanmar text-sm font-medium text-foreground/80">
+                    {feature.titleMy}
+                  </p>
+                )}
                 <p className="mt-0.5 text-sm text-muted-foreground">{feature.descEn}</p>
-                <p className="font-myanmar mt-0.5 text-sm text-muted-foreground">
-                  {feature.descMy}
-                </p>
+                {showBurmese && (
+                  <p className="font-myanmar mt-0.5 text-sm text-muted-foreground">
+                    {feature.descMy}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -170,7 +179,13 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
           onClick={onClose}
           className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
-          Got it! / <span className="font-myanmar">ရပြီ!</span>
+          Got it!
+          {showBurmese && (
+            <>
+              {' '}
+              / <span className="font-myanmar">ရပြီ!</span>
+            </>
+          )}
         </button>
       </div>
     </div>
