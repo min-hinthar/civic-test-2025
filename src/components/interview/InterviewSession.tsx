@@ -18,7 +18,8 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/Dialog';
-import { useInterviewTTS } from '@/hooks/useInterviewTTS';
+import { useTTS } from '@/hooks/useTTS';
+import { TTSCancelledError } from '@/lib/ttsTypes';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { playChime } from '@/lib/interview/audioChime';
 import { getRandomGreeting } from '@/lib/interview/interviewGreetings';
@@ -78,7 +79,7 @@ interface InterviewSessionProps {
 export function InterviewSession({ mode, onComplete, micPermission }: InterviewSessionProps) {
   const { showBurmese, mode: languageMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
+  const { speak, cancel: cancelTTS, isSpeaking } = useTTS();
   const {
     startRecording,
     stopRecording,
@@ -113,16 +114,85 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
 
   const currentQuestion = questions[currentIndex];
 
+  // --- Safe speak wrapper: async/await with status return ---
+  const safeSpeakLocal = useCallback(
+    async (text: string) => {
+      try {
+        await speak(text);
+        return 'completed' as const;
+      } catch (err) {
+        if (err instanceof TTSCancelledError) return 'cancelled' as const;
+        return 'error' as const;
+      }
+    },
+    [speak]
+  );
+
+  // --- 4 named handler functions for TTS sequencing ---
+
+  // GREETING: speak greeting, then transition to chime after 1s
+  const handleGreeting = useCallback(
+    async (greetingText: string) => {
+      const result = await safeSpeakLocal(greetingText);
+      if (result === 'completed') {
+        transitionTimerRef.current = setTimeout(() => {
+          setQuestionPhase('chime');
+        }, 1000);
+      }
+    },
+    [safeSpeakLocal]
+  );
+
+  // READING: speak question text, then transition to responding
+  const handleReading = useCallback(
+    async (questionText: string) => {
+      const result = await safeSpeakLocal(questionText);
+      if (result === 'completed') {
+        setTextVisible(true);
+        if (micPermission) {
+          startRecording();
+        }
+        setQuestionPhase('responding');
+      }
+    },
+    [safeSpeakLocal, micPermission, startRecording]
+  );
+
+  // GRADING: read correct answer aloud (no state transition -- stays in grading)
+  const handleGrading = useCallback(
+    async (answerText: string) => {
+      await safeSpeakLocal(answerText);
+    },
+    [safeSpeakLocal]
+  );
+
+  // REPLAY: replay question with 1s pause, restart recording after
+  const handleReplay = useCallback(
+    async (questionText: string) => {
+      if (replaysUsed >= MAX_REPLAYS) return;
+      stopRecording();
+      setReplaysUsed(prev => prev + 1);
+
+      // 1s pause before replay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await safeSpeakLocal(questionText);
+      if (result === 'completed' && micPermission) {
+        startRecording();
+      }
+    },
+    [replaysUsed, stopRecording, safeSpeakLocal, micPermission, startRecording]
+  );
+
   // --- Cleanup on unmount ---
+  // useTTS auto-cancels speech on unmount; only clean up recorder and timers here
   useEffect(() => {
     return () => {
-      cancelTTS();
       cleanupRecorder();
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
       }
     };
-  }, [cancelTTS, cleanupRecorder]);
+  }, [cleanupRecorder]);
 
   // --- Phase effects ---
 
@@ -136,29 +206,25 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
     });
 
     const greeting = getRandomGreeting();
-    speakWithCallback(greeting, {
-      onEnd: () => {
-        // Wait 1s after greeting, then start first question
-        transitionTimerRef.current = setTimeout(() => {
-          setQuestionPhase('chime');
-        }, 1000);
-      },
-    });
+    handleGreeting(greeting);
 
     return () => {
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
       }
     };
-  }, [questionPhase, speakWithCallback, mode, languageMode]);
+  }, [questionPhase, handleGreeting, mode, languageMode]);
 
-  // CHIME phase: play chime, wait 200ms, go to reading
+  // CHIME phase: play chime, wait 200ms, then call handleReading directly
   useEffect(() => {
     if (questionPhase !== 'chime') return;
 
     playChime();
     transitionTimerRef.current = setTimeout(() => {
       setQuestionPhase('reading');
+      if (currentQuestion) {
+        handleReading(currentQuestion.question_en);
+      }
     }, 200);
 
     return () => {
@@ -166,24 +232,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
         clearTimeout(transitionTimerRef.current);
       }
     };
-  }, [questionPhase]);
-
-  // READING phase: speak question text, then transition to responding
-  useEffect(() => {
-    if (questionPhase !== 'reading') return;
-    if (!currentQuestion) return;
-
-    speakWithCallback(currentQuestion.question_en, {
-      onEnd: () => {
-        setTextVisible(true);
-        // Start recording if mic is available
-        if (micPermission) {
-          startRecording();
-        }
-        setQuestionPhase('responding');
-      },
-    });
-  }, [questionPhase, currentQuestion, speakWithCallback, micPermission, startRecording]);
+  }, [questionPhase, currentQuestion, handleReading]);
 
   // --- Event handlers ---
 
@@ -197,44 +246,16 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
     setQuestionPhase('grading');
   }, [stopRecording]);
 
-  // GRADING phase: read correct answer aloud (TTS only, no state change)
+  // GRADING phase: read correct answer aloud
   useEffect(() => {
     if (questionPhase !== 'grading') return;
     if (!currentQuestion) return;
 
-    // Read correct answer aloud during grading
     const primaryAnswer = currentQuestion.studyAnswers[0];
     if (primaryAnswer) {
-      speakWithCallback(primaryAnswer.text_en);
+      handleGrading(primaryAnswer.text_en);
     }
-  }, [questionPhase, currentQuestion, speakWithCallback]);
-
-  const handleReplay = useCallback(() => {
-    if (replaysUsed >= MAX_REPLAYS || !currentQuestion) return;
-
-    // Stop recording during replay
-    stopRecording();
-    setReplaysUsed(prev => prev + 1);
-
-    // 1s pause before replay
-    transitionTimerRef.current = setTimeout(() => {
-      speakWithCallback(currentQuestion.question_en, {
-        onEnd: () => {
-          // Restart recording after replay TTS ends
-          if (micPermission) {
-            startRecording();
-          }
-        },
-      });
-    }, 1000);
-  }, [
-    replaysUsed,
-    currentQuestion,
-    stopRecording,
-    speakWithCallback,
-    micPermission,
-    startRecording,
-  ]);
+  }, [questionPhase, currentQuestion, handleGrading]);
 
   const handleGrade = useCallback(
     (grade: 'correct' | 'incorrect') => {
@@ -489,7 +510,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
               <div className="mt-3 flex justify-center">
                 <button
                   type="button"
-                  onClick={handleReplay}
+                  onClick={() => currentQuestion && handleReplay(currentQuestion.question_en)}
                   className={clsx(
                     'flex items-center gap-2 rounded-xl border border-border/60 px-4 py-2',
                     'text-sm text-muted-foreground',
