@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 18: Language Mode (gap closure complete)
+**Current focus:** v2.1 Quality & Polish -- Phase 19: TTS Core Extraction
 
 ## Current Position
 
-Phase: 18 of 25 (Language Mode)
-Plan: 7 of 7 in current phase + gap closure
-Status: Phase complete (gaps closed)
-Last activity: 2026-02-14 -- Closed verification gaps in TestPage.tsx, StudyGuidePage.tsx
+Phase: 19 of 25 (TTS Core Extraction)
+Plan: 1 of 6 in current phase
+Status: In progress
+Last activity: 2026-02-14 -- Completed 19-01-PLAN.md (TTS types + core engine)
 
-Progress: [##########] 100% (7/7 plans + gap closure)
+Progress: [#░░░░░░░░░] 17% (1/6 plans)
 
 ## Completed Milestones
 
@@ -37,6 +37,11 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 19 decisions:**
+- eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
+- void swallow pattern in safeSpeak: consumes destructured param without triggering unused-var lint error
+- Android UA detection: single exception to no-UA-sniffing rule for pause/resume cycling (breaks Android Chrome)
 
 **Phase 18 decisions:**
 - Exported LanguageMode type for downstream consumers (additive, non-breaking)
@@ -73,10 +78,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Phase 18 gap closure complete (TestPage, StudyGuidePage showBurmese guards added)
-Next step: Begin Phase 19
+Stopped at: Completed 19-01 (TTS types + core engine)
+Next step: Execute 19-02 (useTTS hook)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (Phase 18 gap closure -- showBurmese guards for TestPage + StudyGuidePage)*
+*Last updated: 2026-02-14 (19-01 complete -- ttsTypes.ts + ttsCore.ts created)*
