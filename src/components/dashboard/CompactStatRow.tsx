@@ -179,8 +179,8 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
 
   const iconElement = shouldPulseIcon ? (
     <motion.div
-      animate={{ scale: [1, 1.15, 1], opacity: [1, 0.8, 1] }}
-      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+      animate={{ scale: 1.15, opacity: 0.8 }}
+      transition={{ duration: 1, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
     >
       <Icon
         className={clsx(

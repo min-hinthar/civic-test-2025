@@ -70,7 +70,7 @@ export function AnswerFeedback({
             {isCorrect ? (
               <motion.div
                 initial={shouldReduceMotion ? {} : { scale: 0, rotate: -180 }}
-                animate={shouldReduceMotion ? {} : { scale: [0, 1.2, 1], rotate: 0 }}
+                animate={shouldReduceMotion ? {} : { scale: 1, rotate: 0 }}
                 transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success text-white"
               >
@@ -78,10 +78,12 @@ export function AnswerFeedback({
               </motion.div>
             ) : (
               <motion.div
-                initial={shouldReduceMotion ? {} : { x: 0 }}
-                animate={shouldReduceMotion ? {} : { x: [0, -5, 5, -3, 3, 0] }}
+                initial={shouldReduceMotion ? {} : { x: -8 }}
+                animate={shouldReduceMotion ? {} : { x: 0 }}
                 transition={
-                  shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: 'easeInOut' }
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: 'spring', stiffness: 600, damping: 12 }
                 }
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning text-white"
               >
@@ -104,7 +106,7 @@ export function AnswerFeedback({
                 {isCorrect && (
                   <motion.div
                     initial={shouldReduceMotion ? {} : { scale: 0 }}
-                    animate={shouldReduceMotion ? {} : { scale: [0, 1.3, 1] }}
+                    animate={shouldReduceMotion ? {} : { scale: 1 }}
                     transition={
                       shouldReduceMotion ? { duration: 0 } : { ...SPRING_BOUNCY, delay: 0.2 }
                     }

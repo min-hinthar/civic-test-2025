@@ -92,7 +92,7 @@ export function useTTS(options?: UseTTSOptions): UseTTSReturn {
   const speak = useCallback(
     async (text: string, overrides?: SpeakOptions) => {
       const eng = options?.isolated ? isolatedEngineRef.current : sharedEngine;
-      if (!eng) return;
+      if (!eng) throw new Error('TTS engine not initialized');
 
       try {
         // Apply numeric rate from settings if no rate override provided

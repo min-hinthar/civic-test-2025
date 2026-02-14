@@ -480,11 +480,16 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
                   <motion.span
                     key={i}
                     className="h-2.5 w-2.5 rounded-full bg-primary/60"
-                    animate={shouldReduceMotion ? {} : { y: [0, -6, 0] }}
+                    animate={shouldReduceMotion ? {} : { y: -6 }}
                     transition={
                       shouldReduceMotion
                         ? { duration: 0 }
-                        : { repeat: Infinity, duration: 0.6, delay: i * 0.15 }
+                        : {
+                            repeat: Infinity,
+                            repeatType: 'mirror',
+                            duration: 0.3,
+                            delay: i * 0.15,
+                          }
                     }
                   />
                 ))}

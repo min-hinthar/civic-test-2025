@@ -54,17 +54,12 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
           'bg-gradient-to-br from-primary-400 to-primary-600',
           'shadow-lg shadow-primary-500/30'
         )}
-        animate={
-          shouldReduceMotion
-            ? {}
-            : {
-                scale: [1, 1.15, 1],
-                opacity: [0.7, 1, 0.7],
-              }
-        }
+        initial={{ scale: 1, opacity: 0.7 }}
+        animate={shouldReduceMotion ? {} : { scale: 1.15, opacity: 1 }}
         transition={{
-          duration: 4,
+          duration: 2,
           repeat: Infinity,
+          repeatType: 'mirror',
           ease: 'easeInOut',
         }}
         aria-hidden="true"

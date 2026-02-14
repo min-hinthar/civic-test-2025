@@ -89,8 +89,12 @@ function NBAIconBadge({
         'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl',
         ICON_BG_MAP[type]
       )}
-      animate={!shouldReduceMotion && urgent ? { scale: [1, 1.05, 1], opacity: [1, 0.85, 1] } : {}}
-      transition={urgent ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : undefined}
+      animate={!shouldReduceMotion && urgent ? { scale: 1.05, opacity: 0.85 } : {}}
+      transition={
+        urgent
+          ? { duration: 1, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
+          : undefined
+      }
     >
       <Icon className={clsx('h-6 w-6', ICON_COLOR_MAP[type])} />
     </motion.div>

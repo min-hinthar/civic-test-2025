@@ -46,13 +46,12 @@ function SoundWaveIcon({ animate }: { animate: boolean }) {
           width={3}
           rx={1.5}
           fill="currentColor"
-          animate={{
-            height: [bar.idle, bar.active, bar.idle],
-            y: [8 - bar.idle / 2, 8 - bar.active / 2, 8 - bar.idle / 2],
-          }}
+          initial={{ height: bar.idle, y: 8 - bar.idle / 2 }}
+          animate={{ height: bar.active, y: 8 - bar.active / 2 }}
           transition={{
             repeat: Infinity,
-            duration: 0.6,
+            repeatType: 'mirror',
+            duration: 0.3,
             delay: bar.delay,
             ease: 'easeInOut',
           }}
@@ -122,10 +121,10 @@ const SpeechButton = ({
   const shouldReduceMotion = useReducedMotion();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Focus button when speaking begins
+  // Focus button when speaking begins (preventScroll avoids page jumping)
   useEffect(() => {
     if (isSpeaking) {
-      buttonRef.current?.focus();
+      buttonRef.current?.focus({ preventScroll: true });
     }
   }, [isSpeaking]);
 
