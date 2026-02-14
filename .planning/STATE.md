@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 19 of 25 (TTS Core Extraction)
-Plan: 3 of 6 in current phase
+Plan: 5 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 19-03-PLAN.md (TTS React context + hooks)
+Last activity: 2026-02-14 -- Completed 19-05-PLAN.md (Interview consumer migration)
 
-Progress: [###░░░░░░░] 50% (3/6 plans)
+Progress: [#####░░░░░] 83% (5/6 plans)
 
 ## Completed Milestones
 
@@ -46,6 +46,9 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Global test setup speechSynthesis mock made configurable: true for test-level overrides
 - Error state local to useTTS hook, not in provider context -- each consumer has independent error lifecycle
 - Isolated engine via useRef with state subscription, ref.current only in effects/handlers (React Compiler safe)
+- safeSpeakLocal wraps useTTS speak (not raw engine) -- simpler, useTTS handles cancellation silently
+- handleReplay uses Promise-based delay instead of setTimeout callback for cleaner async flow
+- Chime effect calls handleReading directly from timeout (no separate reading useEffect)
 
 **Phase 18 decisions:**
 - Exported LanguageMode type for downstream consumers (additive, non-breaking)
@@ -82,10 +85,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 19-03 (TTS React context + hooks)
-Next step: Execute 19-04 (SpeechButton migration)
+Stopped at: Completed 19-05 (Interview consumer migration)
+Next step: Execute 19-06 (AppShell wiring + old hook deletion)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (19-02 complete -- ttsCore.test.ts with 39 passing tests)*
+*Last updated: 2026-02-14 (19-05 complete -- Interview consumers migrated to useTTS)*
