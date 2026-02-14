@@ -674,3 +674,4 @@ For the error handler implementation, these are the defined error codes (from MD
 
 **Research date:** 2026-02-14
 **Valid until:** 2026-04-14 (60 days -- SpeechSynthesis bugs are long-lived; browser workarounds change slowly)
+
