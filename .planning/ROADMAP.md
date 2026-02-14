@@ -29,7 +29,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 
 ### Phases
 
-- [ ] **Phase 18: Language Mode** - Consistent English-only / bilingual behavior across all 59 consuming components
+- [x] **Phase 18: Language Mode** - Consistent English-only / bilingual behavior across all 59 consuming components
 - [ ] **Phase 19: TTS Core Extraction** - Consolidate duplicated TTS hooks into shared module
 - [ ] **Phase 20: Session Persistence** - IndexedDB session store with resume prompts for interrupted sessions
 - [ ] **Phase 21: Test & Practice UX Overhaul** - Duolingo-style Check/Continue flow with feedback panels and keyboard nav
@@ -53,13 +53,13 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 **Plans**: 7 plans
 
 Plans:
-- [ ] 18-01-PLAN.md — Core: LanguageContext enhancements + Flag SVG + FlagToggle component
-- [ ] 18-02-PLAN.md — Navigation: Sidebar + BottomTabBar flag toggle integration + tooltip
-- [ ] 18-03-PLAN.md — Settings: Enhanced language section with FlagToggle + mode descriptions
-- [ ] 18-04-PLAN.md — Toast language mode fix + USCIS simulation messages
-- [ ] 18-05-PLAN.md — Interview language mode consistency + analytics
-- [ ] 18-06-PLAN.md — Font-myanmar audit: study, test, SRS, social, UI components
-- [ ] 18-07-PLAN.md — Font-myanmar audit: PWA, onboarding, auth, landing pages
+- [x] 18-01-PLAN.md — Core: LanguageContext enhancements + Flag SVG + FlagToggle component
+- [x] 18-02-PLAN.md — Navigation: Sidebar + BottomTabBar flag toggle integration + tooltip
+- [x] 18-03-PLAN.md — Settings: Enhanced language section with FlagToggle + mode descriptions
+- [x] 18-04-PLAN.md — Toast language mode fix + USCIS simulation messages
+- [x] 18-05-PLAN.md — Interview language mode consistency + analytics
+- [x] 18-06-PLAN.md — Font-myanmar audit: study, test, SRS, social, UI components
+- [x] 18-07-PLAN.md — Font-myanmar audit: PWA, onboarding, auth, landing pages
 
 ### Phase 19: TTS Core Extraction
 **Goal**: TTS logic lives in a single shared module so all future TTS improvements apply uniformly across test, practice, interview, and study contexts
@@ -184,7 +184,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-------|-----------|----------------|--------|-----------|
 | 1-10 | v1.0 | 72/72 | Complete | 2026-02-08 |
 | 11-17 | v2.0 | 47/47 | Complete | 2026-02-13 |
-| 18. Language Mode | v2.1 | 0/7 | Planned | - |
+| 18. Language Mode | v2.1 | 7/7 | Complete | 2026-02-14 |
 | 19. TTS Core Extraction | v2.1 | 0/TBD | Not started | - |
 | 20. Session Persistence | v2.1 | 0/TBD | Not started | - |
 | 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
@@ -197,7 +197,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 0/51 | Not started |
+| v2.1 | 8 | TBD | 6/51 | In progress |
 
 ---
 
