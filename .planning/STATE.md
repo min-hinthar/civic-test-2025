@@ -46,6 +46,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Global test setup speechSynthesis mock made configurable: true for test-level overrides
 - Error state local to useTTS hook, not in provider context -- each consumer has independent error lifecycle
 - Isolated engine via useRef with state subscription, ref.current only in effects/handlers (React Compiler safe)
+- voiceName prop kept for backward compat in SpeechButton but unused -- ttsCore findVoice handles voice selection
+- TTS speaking color as dedicated indigo-purple token (hsl 250) distinct from primary blue and accent-purple
 - safeSpeakLocal wraps useTTS speak (not raw engine) -- simpler, useTTS handles cancellation silently
 - handleReplay uses Promise-based delay instead of setTimeout callback for cleaner async flow
 - Chime effect calls handleReading directly from timeout (no separate reading useEffect)
