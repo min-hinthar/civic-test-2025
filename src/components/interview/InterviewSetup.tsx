@@ -146,6 +146,19 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         <InterviewerAvatar size={80} />
       </div>
 
+      {/* USCIS simulation message */}
+      <div className="mb-6 mx-auto max-w-md rounded-xl border border-primary/30 bg-primary-subtle/20 px-4 py-3">
+        <p className="text-sm font-medium text-foreground text-center">
+          This simulates the real USCIS civics test — questions are in English only.
+        </p>
+        {showBurmese && (
+          <p className="font-myanmar mt-1 text-xs text-muted-foreground text-center">
+            ဤလေ့ကျင့်ခန်းသည် တကယ့် USCIS နိုင်ငံသားစာမေးပွဲကို တူညီစေပါသည် — မေးခွန်းများသည်
+            အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖြစ်ပါသည်။
+          </p>
+        )}
+      </div>
+
       {/* Mode selection cards - 3D chunky with Duolingo treatment */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Realistic mode */}
@@ -216,6 +229,16 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           </div>
         </Card>
       </div>
+
+      {/* Answer in English guidance (Myanmar mode only) */}
+      {showBurmese && (
+        <div className="mb-4 text-center">
+          <p className="font-myanmar text-xs text-muted-foreground">
+            အင်တာဗျူးတွင် အင်္ဂလိပ်ဘာသာဖြင့် ဖြေဆိုပါ
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">(Answer questions in English)</p>
+        </div>
+      )}
 
       {/* Microphone permission notice */}
       <div className="mb-6">
@@ -313,9 +336,11 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           <Card elevated={false} className="text-center">
             <p className="text-4xl mb-2">🎤</p>
             <p className="text-sm font-bold text-muted-foreground">First time? Give it a try!</p>
-            <p className="mt-1 font-myanmar text-xs text-muted-foreground">
-              {'ပထမဆုံးအကြိမ်လား? စမ်းကြည့်ပါ!'}
-            </p>
+            {showBurmese && (
+              <p className="mt-1 font-myanmar text-xs text-muted-foreground">
+                ပထမဆုံးအကြိမ်လား? စမ်းကြည့်ပါ!
+              </p>
+            )}
           </Card>
         ) : (
           <div className="flex flex-wrap gap-3">

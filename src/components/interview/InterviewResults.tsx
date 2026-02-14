@@ -208,6 +208,14 @@ export function InterviewResults({
 
       await saveInterviewSession(session);
 
+      console.debug('[analytics] interview_session_completed', {
+        interviewMode: mode,
+        languageMode: showBurmese ? 'bilingual' : 'english-only',
+        score,
+        passed,
+        endReason,
+      });
+
       // Record each answer to mastery system
       await Promise.all(
         results.map(r =>
@@ -244,7 +252,7 @@ export function InterviewResults({
     return () => {
       cancelled = true;
     };
-  }, [hasSaved, mode, score, totalQuestions, durationSeconds, passed, endReason, results]);
+  }, [hasSaved, mode, score, totalQuestions, durationSeconds, passed, endReason, results, showBurmese]);
 
   // --- TTS closing statement ---
   useEffect(() => {
