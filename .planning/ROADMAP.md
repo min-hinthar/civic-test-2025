@@ -30,7 +30,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 ### Phases
 
 - [x] **Phase 18: Language Mode** - Consistent English-only / bilingual behavior across all 59 consuming components
-- [ ] **Phase 19: TTS Core Extraction** - Consolidate duplicated TTS hooks into shared module
+- [x] **Phase 19: TTS Core Extraction** - Consolidate duplicated TTS hooks into shared module
 - [ ] **Phase 20: Session Persistence** - IndexedDB session store with resume prompts for interrupted sessions
 - [ ] **Phase 21: Test & Practice UX Overhaul** - Duolingo-style Check/Continue flow with feedback panels and keyboard nav
 - [ ] **Phase 22: TTS Quality** - Voice selection, speech rate control, Burmese audio, graceful error handling
@@ -72,12 +72,12 @@ Plans:
 **Plans**: 6 plans
 
 Plans:
-- [ ] 19-01-PLAN.md -- TTS types, error classes, voice constants + core engine module
-- [ ] 19-02-PLAN.md -- Unit tests for ttsCore (~35-40 test cases)
-- [ ] 19-03-PLAN.md -- TTSContext provider + useTTS/useTTSSettings hooks
-- [ ] 19-04-PLAN.md -- SpeechButton migration with animated speaking feedback
-- [ ] 19-05-PLAN.md -- InterviewSession + InterviewResults migration to useTTS
-- [ ] 19-06-PLAN.md -- AppShell wiring, integration tests, old hook deletion, cleanup
+- [x] 19-01-PLAN.md -- TTS types, error classes, voice constants + core engine module
+- [x] 19-02-PLAN.md -- Unit tests for ttsCore (~35-40 test cases)
+- [x] 19-03-PLAN.md -- TTSContext provider + useTTS/useTTSSettings hooks
+- [x] 19-04-PLAN.md -- SpeechButton migration with animated speaking feedback
+- [x] 19-05-PLAN.md -- InterviewSession + InterviewResults migration to useTTS
+- [x] 19-06-PLAN.md -- AppShell wiring, integration tests, old hook deletion, cleanup
 
 ### Phase 20: Session Persistence
 **Goal**: Users never lose progress from interrupted sessions -- they are prompted to resume where they left off
@@ -190,7 +190,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 1-10 | v1.0 | 72/72 | Complete | 2026-02-08 |
 | 11-17 | v2.0 | 47/47 | Complete | 2026-02-13 |
 | 18. Language Mode | v2.1 | 7/7 | Complete | 2026-02-14 |
-| 19. TTS Core Extraction | v2.1 | 0/TBD | Not started | - |
+| 19. TTS Core Extraction | v2.1 | 6/6 | Complete | 2026-02-14 |
 | 20. Session Persistence | v2.1 | 0/TBD | Not started | - |
 | 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
 | 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
@@ -202,7 +202,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 6/51 | In progress |
+| v2.1 | 8 | TBD | 7/51 | In progress |
 
 ---
 
