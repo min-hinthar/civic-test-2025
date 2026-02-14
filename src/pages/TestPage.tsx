@@ -408,9 +408,11 @@ const TestPage = () => {
           <p className="mt-2 text-lg font-bold text-foreground leading-snug">
             {currentQuestion?.question_en}
           </p>
-          <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
-            {currentQuestion?.question_my}
-          </p>
+          {showBurmese && (
+            <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
+              {currentQuestion?.question_my}
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap gap-2">
             <SpeechButton
               text={questionAudioText}
@@ -464,9 +466,11 @@ const TestPage = () => {
                 className={chunkyBase ?? answeredClasses}
               >
                 <span className="font-bold block text-foreground">{answer.text_en}</span>
-                <span className="font-myanmar text-muted-foreground block text-sm mt-0.5">
-                  {answer.text_my}
-                </span>
+                {showBurmese && (
+                  <span className="font-myanmar text-muted-foreground block text-sm mt-0.5">
+                    {answer.text_my}
+                  </span>
+                )}
               </motion.button>
             );
           })}
@@ -509,7 +513,9 @@ const TestPage = () => {
                 )}
               >
                 {strings.actions.next.en}
-                <span className="font-myanmar text-xs">{strings.actions.next.my}</span>
+                {showBurmese && (
+                  <span className="font-myanmar text-xs">{strings.actions.next.my}</span>
+                )}
                 <ChevronRight className="h-4 w-4" />
               </button>
             )}
@@ -578,7 +584,7 @@ const TestPage = () => {
             {endReason && (
               <p className="mt-2 text-sm font-semibold text-primary">
                 {completionMessage[endReason].en}
-                {completionMessage[endReason].my && (
+                {showBurmese && completionMessage[endReason].my && (
                   <span className="block font-myanmar mt-0.5 font-normal text-muted-foreground">
                     {completionMessage[endReason].my}
                   </span>
@@ -647,7 +653,9 @@ const TestPage = () => {
                 )}
               >
                 {strings.test.incorrectOnly.en}
-                <span className="ml-1 font-myanmar">{strings.test.incorrectOnly.my}</span>
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar">{strings.test.incorrectOnly.my}</span>
+                )}
               </button>
               <button
                 onClick={() => setShowAllResults(true)}
@@ -659,7 +667,9 @@ const TestPage = () => {
                 )}
               >
                 {strings.test.showAll.en}
-                <span className="ml-1 font-myanmar">{strings.test.showAll.my}</span>
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar">{strings.test.showAll.my}</span>
+                )}
               </button>
             </div>
           </div>
@@ -724,9 +734,11 @@ const TestPage = () => {
                 className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm"
               >
                 <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
-                <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                  {result.questionText_my}
-                </p>
+                {showBurmese && (
+                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                    {result.questionText_my}
+                  </p>
+                )}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <SpeechButton
                     text={result.questionText_en}
@@ -750,27 +762,35 @@ const TestPage = () => {
                     )}
                   >
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.yourAnswer.en} ·{' '}
-                      <span className="font-myanmar">{strings.test.yourAnswer.my}</span>
+                      {strings.test.yourAnswer.en}
+                      {showBurmese && (
+                        <span className="font-myanmar"> · {strings.test.yourAnswer.my}</span>
+                      )}
                     </p>
                     <p className="text-sm font-semibold text-foreground">
                       {result.selectedAnswer.text_en}
                     </p>
-                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                      {result.selectedAnswer.text_my}
-                    </p>
+                    {showBurmese && (
+                      <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                        {result.selectedAnswer.text_my}
+                      </p>
+                    )}
                   </div>
                   <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.correctAnswer.en} ·{' '}
-                      <span className="font-myanmar">{strings.test.correctAnswer.my}</span>
+                      {strings.test.correctAnswer.en}
+                      {showBurmese && (
+                        <span className="font-myanmar"> · {strings.test.correctAnswer.my}</span>
+                      )}
                     </p>
                     <p className="text-sm font-semibold text-foreground">
                       {result.correctAnswer.text_en}
                     </p>
-                    <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                      {result.correctAnswer.text_my}
-                    </p>
+                    {showBurmese && (
+                      <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
+                        {result.correctAnswer.text_my}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <p
@@ -780,8 +800,12 @@ const TestPage = () => {
                   )}
                 >
                   {result.isCorrect
-                    ? `${strings.test.correct.en} · ${strings.test.correct.my}`
-                    : `${strings.test.reviewAnswer.en} · ${strings.test.reviewAnswer.my}`}
+                    ? showBurmese
+                      ? `${strings.test.correct.en} · ${strings.test.correct.my}`
+                      : strings.test.correct.en
+                    : showBurmese
+                      ? `${strings.test.reviewAnswer.en} · ${strings.test.reviewAnswer.my}`
+                      : strings.test.reviewAnswer.en}
                 </p>
 
                 {/* Dynamic answer note for time/state-varying questions */}
