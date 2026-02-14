@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import { X } from 'lucide-react';
 import type { BilingualMessage } from '@/lib/errorSanitizer';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Toast types for different notification styles.
@@ -180,6 +181,7 @@ function ToastContainer({
  * Individual toast component with auto-dismiss and animations.
  */
 function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: string) => void }) {
+  const { showBurmese } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -228,7 +230,9 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
       {/* Message content - English on top, Burmese below */}
       <div className="min-w-0 flex-1">
         <p className="font-medium leading-snug">{toast.message.en}</p>
-        <p className="font-myanmar mt-1 text-sm leading-snug opacity-90">{toast.message.my}</p>
+        {showBurmese && (
+          <p className="font-myanmar mt-1 text-sm leading-snug opacity-90">{toast.message.my}</p>
+        )}
       </div>
 
       {/* Dismiss button */}
