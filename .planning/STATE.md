@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 18 of 25 (Language Mode)
 Plan: 7 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 18-07-PLAN.md (PWA/Onboarding/Auth/Landing Guards)
+Last activity: 2026-02-14 -- Completed 18-02-PLAN.md (Nav Integration)
 
-Progress: [███████░░░] 71% (5/7 plans)
+Progress: [████████░░] 86% (6/7 plans)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 6 plans, ~63 min total
+- v2.1: 7 plans, ~68 min total
 
 ## Accumulated Context
 
@@ -51,6 +51,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - DynamicAnswerNote showBurmese prop optional with default true (backward compatible)
 - Sub-components (StatCard, DeckCardItem) receive showBurmese via prop from parent
 - OnboardingTour: extracted inline step JSX into React components for hook access
+- TOOLTIP_KEY at module scope to avoid React Compiler issues with in-component constants
+- Tooltip only shows in sidebar expanded mode (collapsed too narrow for popover)
 
 ### Research Notes
 
@@ -67,10 +69,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 18-07 (PWA/Onboarding/Auth/Landing Guards)
-Next step: Continue Phase 18 (remaining plans: 02, 03)
+Stopped at: Completed 18-02 (Nav Integration)
+Next step: Continue Phase 18 (remaining plan: 03)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (18-07 PWA/Onboarding/Auth/Landing Guards complete)*
+*Last updated: 2026-02-14 (18-02 Nav Integration complete)*
