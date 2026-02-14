@@ -69,10 +69,15 @@ Plans:
   1. A single `ttsCore` module provides voice loading, voice finding, utterance creation, and duration estimation
   2. Both general-purpose TTS hook and interview TTS hook delegate to the shared core (no duplicated voice-finding logic)
   3. All existing TTS behavior (test, practice, interview, study guide) works identically to before the extraction (zero regressions)
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 19-01: TBD
+- [ ] 19-01-PLAN.md -- TTS types, error classes, voice constants + core engine module
+- [ ] 19-02-PLAN.md -- Unit tests for ttsCore (~35-40 test cases)
+- [ ] 19-03-PLAN.md -- TTSContext provider + useTTS/useTTSSettings hooks
+- [ ] 19-04-PLAN.md -- SpeechButton migration with animated speaking feedback
+- [ ] 19-05-PLAN.md -- InterviewSession + InterviewResults migration to useTTS
+- [ ] 19-06-PLAN.md -- AppShell wiring, integration tests, old hook deletion, cleanup
 
 ### Phase 20: Session Persistence
 **Goal**: Users never lose progress from interrupted sessions -- they are prompted to resume where they left off
