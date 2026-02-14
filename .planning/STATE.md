@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 19 of 25 (TTS Core Extraction) -- COMPLETE
 Plan: 6 of 6 in current phase
 Status: Phase complete
-Last activity: 2026-02-14 -- Completed 19-06-PLAN.md (AppShell wiring + old hook deletion)
+Last activity: 2026-02-14 -- Phase 19 complete + post-execution bugfixes (scroll, greeting race, WAAPI keyframes)
 
 Progress: [######░░░░] 100% (6/6 plans)
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 9 plans, ~90 min total
+- v2.1: 13 plans (Phase 18: 7, Phase 19: 6), ~3 hours total
 
 ## Accumulated Context
 
@@ -89,10 +89,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed Phase 19 (all 6 plans)
-Next step: Phase 20 or next priority phase
+Stopped at: Phase 19 complete, bugfixes committed and pushed
+Next step: Phase 20 (Session Persistence) — plan then execute
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (Phase 19 COMPLETE -- TTS core extraction finished, 6/6 plans done)*
+*Last updated: 2026-02-14 (Phase 19 COMPLETE -- 6/6 plans + bugfixes, all pushed)*
