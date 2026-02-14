@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useUserState } from '@/contexts/StateContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
@@ -67,6 +68,7 @@ const categoryGradients: Record<string, string> = {
 export function DynamicAnswerNote({
   dynamic,
   stateInfo,
+  showBurmese = true,
 }: {
   dynamic: DynamicAnswerMeta;
   stateInfo: {
@@ -75,6 +77,7 @@ export function DynamicAnswerNote({
     senators: [string, string] | null;
     capital: string;
   } | null;
+  showBurmese?: boolean;
 }) {
   if (dynamic.type === 'time') {
     return (
@@ -82,10 +85,12 @@ export function DynamicAnswerNote({
         <p className="text-xs text-foreground/80">
           This answer may change with elections. Last verified: {dynamic.lastVerified}
         </p>
-        <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
-          {'ဤအဖြေသည် ရွေးကောက်ပွဲများနှင့်အတူ ပြောင်းလဲနိုင်ပါသည်။ နောက်ဆုံးအတည်ပြုချိန်: '}
-          {dynamic.lastVerified}
-        </p>
+        {showBurmese && (
+          <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+            {'ဤအဖြေသည် ရွေးကောက်ပွဲများနှင့်အတူ ပြောင်းလဲနိုင်ပါသည်။ နောက်ဆုံးအတည်ပြုချိန်: '}
+            {dynamic.lastVerified}
+          </p>
+        )}
       </div>
     );
   }
@@ -110,11 +115,13 @@ export function DynamicAnswerNote({
         <p className="text-xs text-foreground/80">
           For {stateInfo.name}: {answer}
         </p>
-        <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
-          {stateInfo.name}
-          {'အတွက်: '}
-          {answer}
-        </p>
+        {showBurmese && (
+          <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+            {stateInfo.name}
+            {'အတွက်: '}
+            {answer}
+          </p>
+        )}
       </div>
     );
   }
@@ -125,9 +132,11 @@ export function DynamicAnswerNote({
       <p className="text-xs text-foreground/80">
         Go to Settings to select your state for a personalized answer.
       </p>
-      <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
-        {'ပုဂ္ဂိုလ်ရေးအဖြေအတွက် ဆက်တင်တွင် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။'}
-      </p>
+      {showBurmese && (
+        <p className="text-xs text-foreground/60 font-myanmar mt-0.5">
+          {'ပုဂ္ဂိုလ်ရေးအဖြေအတွက် ဆက်တင်တွင် သင့်ပြည်နယ်ကို ရွေးချယ်ပါ။'}
+        </p>
+      )}
     </div>
   );
 }
@@ -170,6 +179,7 @@ export function Flashcard3D({
   const [isFlipped, setIsFlipped] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const { stateInfo } = useUserState();
+  const { showBurmese } = useLanguage();
 
   const handleFlip = useCallback(() => {
     const newState = !isFlipped;
@@ -267,14 +277,18 @@ export function Flashcard3D({
             )}
 
             {/* Question label */}
-            <div className="text-sm font-medium text-primary mb-2">Question / မေးခွန်း</div>
+            <div className="text-sm font-medium text-primary mb-2">
+              Question{showBurmese && ' / မေးခွန်း'}
+            </div>
 
             {/* Question text */}
             <div className="flex-1 flex flex-col justify-center">
               <p className="text-lg font-semibold text-foreground leading-relaxed">{questionEn}</p>
-              <p className="mt-2 text-base font-myanmar text-muted-foreground leading-relaxed">
-                {questionMy}
-              </p>
+              {showBurmese && (
+                <p className="mt-2 text-base font-myanmar text-muted-foreground leading-relaxed">
+                  {questionMy}
+                </p>
+              )}
             </div>
 
             {/* TTS and flip hint */}
@@ -288,7 +302,9 @@ export function Flashcard3D({
                   stopPropagation
                 />
               </div>
-              <span className="text-xs text-muted-foreground">Tap to flip / လှည့်ရန် နှိပ်ပါ</span>
+              <span className="text-xs text-muted-foreground">
+                Tap to flip{showBurmese && ' / လှည့်ရန် နှိပ်ပါ'}
+              </span>
             </div>
           </div>
         </div>
@@ -308,20 +324,30 @@ export function Flashcard3D({
 
           <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">
             {/* Answer label */}
-            <div className="text-sm font-medium text-success mb-2 shrink-0">Answer / အဖြေ</div>
+            <div className="text-sm font-medium text-success mb-2 shrink-0">
+              Answer{showBurmese && ' / အဖြေ'}
+            </div>
 
             {/* Scrollable content area */}
             <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
               {/* Answer text */}
               <div>
                 <p className="text-xl font-bold text-foreground leading-relaxed">{answerEn}</p>
-                <p className="mt-3 text-lg font-myanmar text-muted-foreground leading-relaxed">
-                  {answerMy}
-                </p>
+                {showBurmese && (
+                  <p className="mt-3 text-lg font-myanmar text-muted-foreground leading-relaxed">
+                    {answerMy}
+                  </p>
+                )}
               </div>
 
               {/* Dynamic answer note for time/state-varying questions */}
-              {dynamic && <DynamicAnswerNote dynamic={dynamic} stateInfo={stateInfo} />}
+              {dynamic && (
+                <DynamicAnswerNote
+                  dynamic={dynamic}
+                  stateInfo={stateInfo}
+                  showBurmese={showBurmese}
+                />
+              )}
 
               {/* Explanation card - stopPropagation prevents flip on interact */}
               {explanation && (
@@ -352,15 +378,19 @@ export function Flashcard3D({
                   lang="en-US"
                   stopPropagation
                 />
-                <SpeechButton
-                  text={answerMy}
-                  label="MY"
-                  ariaLabel="Listen to answer in Burmese"
-                  lang="my"
-                  stopPropagation
-                />
+                {showBurmese && (
+                  <SpeechButton
+                    text={answerMy}
+                    label="MY"
+                    ariaLabel="Listen to answer in Burmese"
+                    lang="my"
+                    stopPropagation
+                  />
+                )}
               </div>
-              <span className="text-xs text-muted-foreground">Tap to flip / လှည့်ရန် နှိပ်ပါ</span>
+              <span className="text-xs text-muted-foreground">
+                Tap to flip{showBurmese && ' / လှည့်ရန် နှိပ်ပါ'}
+              </span>
             </div>
           </div>
         </div>

@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useSRSDeck } from '@/hooks/useSRSDeck';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { allQuestions } from '@/constants/questions';
@@ -60,6 +61,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
   const { deck, dueCount, isLoading, removeCard, bulkAddCards, getWeakQuestionIds } = useSRSDeck();
 
   const { categoryMasteries } = useCategoryMastery();
+  const { showBurmese } = useLanguage();
 
   const [bulkAddLoading, setBulkAddLoading] = useState(false);
   const [bulkAddResult, setBulkAddResult] = useState<string | null>(null);
@@ -152,7 +154,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         <p className="text-sm text-muted-foreground">
           Loading your deck...
-          <span className="block font-myanmar">သင့်ကတ်များတင်နေသည်...</span>
+          {showBurmese && <span className="block font-myanmar">သင့်ကတ်များတင်နေသည်...</span>}
         </p>
       </div>
     );
@@ -173,7 +175,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           >
             <ChevronLeft className="h-4 w-4" />
             <span>Back to Study Guide</span>
-            <span className="font-myanmar ml-1">/ လေ့လာရန်သို့</span>
+            {showBurmese && <span className="font-myanmar ml-1">/ လေ့လာရန်သို့</span>}
           </button>
         </div>
 
@@ -183,9 +185,11 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           <p className="text-muted-foreground mb-1">
             Add questions while studying to build your personalized review deck.
           </p>
-          <p className="text-muted-foreground font-myanmar mb-6">
-            သင်၏ကိုယ်ပိုင်ပြန်လည်သုံးသပ်ကတ်စုဆောင်းရန် လေ့လာစဉ်မေးခွန်းများထည့်ပါ။
-          </p>
+          {showBurmese && (
+            <p className="text-muted-foreground font-myanmar mb-6">
+              သင်၏ကိုယ်ပိုင်ပြန်လည်သုံးသပ်ကတ်စုဆောင်းရန် လေ့လာစဉ်မေးခွန်းများထည့်ပါ။
+            </p>
+          )}
 
           {/* Bulk-add weak area questions CTA */}
           <Button variant="primary" onClick={handleBulkAddWeak} loading={bulkAddLoading}>
@@ -218,14 +222,40 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
 
       {/* Title */}
       <h2 className="text-2xl font-bold text-foreground mb-1">Review Deck</h2>
-      <p className="text-base text-muted-foreground font-myanmar mb-4">ပြန်လည်သုံးသပ်ကတ်များ</p>
+      {showBurmese && (
+        <p className="text-base text-muted-foreground font-myanmar mb-4">ပြန်လည်သုံးသပ်ကတ်များ</p>
+      )}
 
       {/* Stats bar */}
       <div className="grid grid-cols-4 gap-3 mb-6">
-        <StatCard label="Total" labelMy="စုစုပေါင်း" value={stats.total} color="text-foreground" />
-        <StatCard label="Due" labelMy="ပြန်လည်ရန်" value={stats.due} color="text-warning" />
-        <StatCard label="New" labelMy="အသစ်" value={stats.new} color="text-primary" />
-        <StatCard label="Done" labelMy="ပြီးဆုံး" value={stats.reviewed} color="text-success" />
+        <StatCard
+          label="Total"
+          labelMy="စုစုပေါင်း"
+          value={stats.total}
+          color="text-foreground"
+          showBurmese={showBurmese}
+        />
+        <StatCard
+          label="Due"
+          labelMy="ပြန်လည်ရန်"
+          value={stats.due}
+          color="text-warning"
+          showBurmese={showBurmese}
+        />
+        <StatCard
+          label="New"
+          labelMy="အသစ်"
+          value={stats.new}
+          color="text-primary"
+          showBurmese={showBurmese}
+        />
+        <StatCard
+          label="Done"
+          labelMy="ပြီးဆုံး"
+          value={stats.reviewed}
+          color="text-success"
+          showBurmese={showBurmese}
+        />
       </div>
 
       {/* Action buttons */}
@@ -251,6 +281,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
               record={record}
               question={questionsById.get(record.questionId)}
               onRemove={handleRemove}
+              showBurmese={showBurmese}
             />
           </StaggeredItem>
         ))}
@@ -268,14 +299,15 @@ interface StatCardProps {
   labelMy: string;
   value: number;
   color: string;
+  showBurmese: boolean;
 }
 
-function StatCard({ label, labelMy, value, color }: StatCardProps) {
+function StatCard({ label, labelMy, value, color, showBurmese }: StatCardProps) {
   return (
     <Card className="p-3 text-center">
       <p className={clsx('text-2xl font-bold', color)}>{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-xs text-muted-foreground font-myanmar">{labelMy}</p>
+      {showBurmese && <p className="text-xs text-muted-foreground font-myanmar">{labelMy}</p>}
     </Card>
   );
 }
@@ -288,9 +320,10 @@ interface DeckCardItemProps {
   record: SRSCardRecord;
   question: Question | undefined;
   onRemove: (questionId: string) => void;
+  showBurmese: boolean;
 }
 
-function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
+function DeckCardItem({ record, question, onRemove, showBurmese }: DeckCardItemProps) {
   const status = getCardStatusLabel(record.card);
   const strengthColor = getIntervalStrengthColor(record.card);
 
@@ -313,7 +346,7 @@ function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
           <p className="text-sm font-medium text-foreground leading-snug">
             {question?.question_en ?? `Question ${record.questionId}`}
           </p>
-          {question?.question_my && (
+          {showBurmese && question?.question_my && (
             <p className="text-xs text-muted-foreground font-myanmar mt-0.5 leading-relaxed">
               {question.question_my}
             </p>
@@ -331,7 +364,7 @@ function DeckCardItem({ record, question, onRemove }: DeckCardItemProps) {
               )}
             >
               {status.label}
-              <span className="font-myanmar ml-1">{status.labelMy}</span>
+              {showBurmese && <span className="font-myanmar ml-1">{status.labelMy}</span>}
             </span>
             {nextReviewDate && (
               <span className="text-xs text-muted-foreground">Next: {nextReviewDate}</span>

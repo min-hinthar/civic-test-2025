@@ -5,6 +5,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Eye, EyeOff } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { getTokenColor } from '@/lib/tokens';
 
 interface CircularTimerProps {
@@ -70,6 +71,7 @@ export function CircularTimer({
 }: CircularTimerProps) {
   const [isHidden, setIsHidden] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { showBurmese } = useLanguage();
   const config = sizeConfig[size];
 
   const percent = (remainingTime / duration) * 100;
@@ -140,7 +142,9 @@ export function CircularTimer({
           {isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
           <span className="flex flex-col leading-tight">
             <span>{toggleLabel.en}</span>
-            <span className="font-myanmar text-xs opacity-70">{toggleLabel.my}</span>
+            {showBurmese && (
+              <span className="font-myanmar text-xs opacity-70">{toggleLabel.my}</span>
+            )}
           </span>
         </button>
       )}

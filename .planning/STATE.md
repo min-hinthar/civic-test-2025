@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 18 of 25 (Language Mode)
 Plan: 5 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 18-05-PLAN.md (Interview Language Mode)
+Last activity: 2026-02-14 -- Completed 18-04-PLAN.md (Toast & Pre-Screen Language Guards)
 
-Progress: [██░░░░░░░░] 29% (2/7 plans)
+Progress: [████░░░░░░] 43% (3/7 plans)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 2 plans, ~25 min total
+- v2.1: 3 plans, ~44 min total
 
 ## Accumulated Context
 
@@ -45,6 +45,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Analytics stub uses console.debug (intentional no-console warning)
 - Interview TTS/STT stays English regardless of language mode (USCIS simulation)
 - AnswerReveal needed no changes (all Burmese already gated)
+- USCIS simulation message shown every time before mock test (not just first time)
+- "Answer in English" guidance only in Myanmar mode
 
 ### Research Notes
 
@@ -61,10 +63,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 18-05 (Interview Language Mode)
-Next step: Continue Phase 18 (remaining plans: 02-04, 06-07)
+Stopped at: Completed 18-04 (Toast & Pre-Screen Language Guards)
+Next step: Continue Phase 18 (remaining plans: 02, 03, 06, 07)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (18-05 Interview Language Mode complete)*
+*Last updated: 2026-02-14 (18-04 Toast & Pre-Screen Language Guards complete)*

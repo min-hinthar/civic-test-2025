@@ -5,6 +5,7 @@ import { Check, X, Star } from 'lucide-react';
 import { clsx } from 'clsx';
 import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { getRandomCorrectEncouragement, getRandomIncorrectEncouragement } from '@/lib/i18n/strings';
 
 interface AnswerFeedbackProps {
@@ -31,6 +32,7 @@ export function AnswerFeedback({
   correctAnswerMy,
 }: AnswerFeedbackProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { showBurmese } = useLanguage();
 
   const encouragement = isCorrect
     ? getRandomCorrectEncouragement()
@@ -93,9 +95,11 @@ export function AnswerFeedback({
               <div className="flex items-center gap-2">
                 <p className="font-bold text-foreground">
                   {encouragement.en}
-                  <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
-                    {encouragement.my}
-                  </span>
+                  {showBurmese && (
+                    <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
+                      {encouragement.my}
+                    </span>
+                  )}
                 </p>
                 {isCorrect && (
                   <motion.div
@@ -115,11 +119,11 @@ export function AnswerFeedback({
                 <div className="mt-3 pt-3 border-t border-warning/30">
                   <p className="text-sm text-muted-foreground">
                     Correct answer:
-                    <span className="block font-myanmar">မှန်ကန်သောအဖြေ:</span>
+                    {showBurmese && <span className="block font-myanmar">မှန်ကန်သောအဖြေ:</span>}
                   </p>
                   <p className="mt-1 font-medium text-foreground">
                     {correctAnswer}
-                    {correctAnswerMy && (
+                    {showBurmese && correctAnswerMy && (
                       <span className="block font-myanmar text-muted-foreground">
                         {correctAnswerMy}
                       </span>

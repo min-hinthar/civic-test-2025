@@ -5,6 +5,7 @@ import { motion, AnimatePresence, PanInfo } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Flashcard3D } from './Flashcard3D';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
@@ -47,6 +48,7 @@ export function FlashcardStack({
   const [currentIndex, setCurrentIndex] = useState(startIndex);
   const [direction, setDirection] = useState(0);
   const shouldReduceMotion = useReducedMotion();
+  const { showBurmese } = useLanguage();
 
   const goToNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
@@ -128,9 +130,11 @@ export function FlashcardStack({
         <span className="font-semibold text-foreground">{currentIndex + 1}</span>
         <span className="mx-1">/</span>
         <span>{questions.length}</span>
-        <span className="ml-2 font-myanmar">
-          ({currentIndex + 1} မှ {questions.length})
-        </span>
+        {showBurmese && (
+          <span className="ml-2 font-myanmar">
+            ({currentIndex + 1} မှ {questions.length})
+          </span>
+        )}
       </div>
 
       {/* Card container with swipe */}
@@ -218,7 +222,7 @@ export function FlashcardStack({
 
       {/* Swipe hint for mobile */}
       <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
-        Swipe left/right to navigate / ဘယ်ညာပွတ်ဆွဲပါ
+        Swipe left/right to navigate{showBurmese && ' / ဘယ်ညာပွတ်ဆွဲပါ'}
       </p>
     </div>
   );
