@@ -8,9 +8,10 @@
  * horizontal scroll with snap-center, and scroll-hide/show behavior.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Sun, Moon, LogOut, Languages } from 'lucide-react';
+import { Sun, Moon, LogOut } from 'lucide-react';
+import { motion } from 'motion/react';
 import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
@@ -18,6 +19,9 @@ import { useScrollSnapCenter } from '@/lib/useScrollSnapCenter';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { FlagToggle } from '@/components/ui/FlagToggle';
+
+const TOOLTIP_KEY = 'civic-test-lang-tooltip-shown';
 
 /**
  * Mobile bottom tab bar with 6 nav items + utility controls
@@ -29,9 +33,24 @@ export function BottomTabBar() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
-  const { showBurmese, toggleMode } = useLanguage();
+  const { showBurmese } = useLanguage();
   const { isLocked, navVisible, badges } = useNavigation();
   const scrollRef = useScrollSnapCenter(location.pathname);
+
+  // --- First-time tooltip (shared key with Sidebar) ---
+  const [showTooltip, setShowTooltip] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !localStorage.getItem(TOOLTIP_KEY);
+  });
+
+  useEffect(() => {
+    if (!showTooltip) return;
+    const timer = setTimeout(() => {
+      setShowTooltip(false);
+      localStorage.setItem(TOOLTIP_KEY, 'true');
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [showTooltip]);
 
   const handleSignOut = useCallback(() => {
     logout().then(() => navigate('/'));
@@ -79,26 +98,20 @@ export function BottomTabBar() {
         {/* Separator */}
         <div className="shrink-0 mx-1.5 h-8 w-px bg-border/40" />
 
-        {/* Language toggle */}
-        <button
-          type="button"
-          onClick={toggleMode}
-          className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
-          aria-label={showBurmese ? 'Switch to English' : 'Switch to Myanmar'}
-        >
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
-              <Languages className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
-            </span>
-            <span
-              className={`text-xs whitespace-nowrap transition-colors ${
-                showBurmese ? 'font-myanmar' : ''
-              } text-muted-foreground`}
+        {/* Language toggle -- dual flag */}
+        <div className="relative flex shrink-0 items-center justify-center min-w-[60px] min-h-[56px]">
+          <FlagToggle compact />
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-lg bg-foreground text-background px-3 py-1.5 text-xs font-medium shadow-lg"
             >
-              {showBurmese ? 'English' : '\u1019\u103C\u1014\u103A\u1019\u102C'}
-            </span>
-          </div>
-        </button>
+              Switch language
+              <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
+            </motion.div>
+          )}
+        </div>
 
         {/* Theme toggle */}
         <button
