@@ -189,7 +189,9 @@ const StudyGuidePage = () => {
       >
         Study Guide
       </motion.h1>
-      <p className="mt-1 text-base text-muted-foreground font-myanmar">လေ့လာမှုလမ်းညွှန်</p>
+      {showBurmese && (
+        <p className="mt-1 text-base text-muted-foreground font-myanmar">လေ့လာမှုလမ်းညွှန်</p>
+      )}
     </div>
   );
 
@@ -213,7 +215,9 @@ const StudyGuidePage = () => {
           >
             <Icon className="h-4 w-4" />
             <span>{tab.label}</span>
-            <span className="font-myanmar text-xs opacity-80">/ {tab.labelMy}</span>
+            {showBurmese && (
+              <span className="font-myanmar text-xs opacity-80">/ {tab.labelMy}</span>
+            )}
             {tab.id === '#deck' && dueCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning text-white text-xs font-bold shadow-sm">
                 {dueCount}
@@ -273,7 +277,7 @@ const StudyGuidePage = () => {
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Back to Categories</span>
-              <span className="font-myanmar ml-1">/ အမျိုးအစားများသို့</span>
+              {showBurmese && <span className="font-myanmar ml-1">/ အမျိုးအစားများသို့</span>}
             </button>
           </div>
 
@@ -305,7 +309,7 @@ const StudyGuidePage = () => {
             >
               <ChevronLeft className="h-4 w-4" />
               <span>All Categories</span>
-              <span className="font-myanmar ml-1">/ အမျိုးအစားအားလုံး</span>
+              {showBurmese && <span className="font-myanmar ml-1">/ အမျိုးအစားအားလုံး</span>}
             </button>
           </div>
 
@@ -324,9 +328,11 @@ const StudyGuidePage = () => {
               </div>
               <p className="text-sm text-muted-foreground">
                 {categoryQuestions.length} questions in this category
-                <span className="font-myanmar ml-1">
-                  / ဤအမျိုးအစားတွင် မေးခွန်း {categoryQuestions.length} ခု
-                </span>
+                {showBurmese && (
+                  <span className="font-myanmar ml-1">
+                    / ဤအမျိုးအစားတွင် မေးခွန်း {categoryQuestions.length} ခု
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -402,12 +408,15 @@ const StudyGuidePage = () => {
                             <p className="mt-4 text-xl font-semibold text-foreground">
                               {question.question_en}
                             </p>
-                            <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
-                              {question.question_my}
-                            </p>
+                            {showBurmese && (
+                              <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                                {question.question_my}
+                              </p>
+                            )}
                           </div>
                           <p className="text-sm font-semibold text-primary">
-                            Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
+                            {showBurmese ? 'Tap to flip · ' : 'Tap to flip'}
+                            {showBurmese && <span className="font-myanmar">နှိပ်ပါ</span>}
                           </p>
                         </div>
                       </div>
@@ -425,7 +434,7 @@ const StudyGuidePage = () => {
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                              Answer - အဖြေ
+                              {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
                             </p>
                             <SpeechButton
                               text={englishAnswersText}
@@ -445,9 +454,11 @@ const StudyGuidePage = () => {
                                   <p className="text-base font-semibold tracking-wide">
                                     {answer.text_en}
                                   </p>
-                                  <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                    {answer.text_my}
-                                  </p>
+                                  {showBurmese && (
+                                    <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                      {answer.text_my}
+                                    </p>
+                                  )}
                                 </li>
                               ))}
                             </ul>
@@ -491,9 +502,12 @@ const StudyGuidePage = () => {
         {/* Bilingual encouraging intro */}
         <p className="text-base text-muted-foreground mb-6">
           Tap a category to start studying. Every card you review builds your confidence!
-          <span className="block font-myanmar mt-1">
-            လေ့လာရန် အမျိုးအစားတစ်ခုကို ရွေးပါ။ သင်ကြည့်တဲ့ကတ်တိုင်းက သင့်ကိုယုံကြည်မှုပိုပေးပါတယ်!
-          </span>
+          {showBurmese && (
+            <span className="block font-myanmar mt-1">
+              လေ့လာရန် အမျိုးအစားတစ်ခုကို ရွေးပါ။ သင်ကြည့်တဲ့ကတ်တိုင်းက
+              သင့်ကိုယုံကြည်မှုပိုပေးပါတယ်!
+            </span>
+          )}
         </p>
 
         {/* Category grid with staggered animation and color accents */}
@@ -517,7 +531,7 @@ const StudyGuidePage = () => {
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
                       {questionsPerCategory[cat]} questions
-                      <span className="font-myanmar ml-1">/ မေးခွန်း</span>
+                      {showBurmese && <span className="font-myanmar ml-1">/ မေးခွန်း</span>}
                     </p>
                   </div>
                 </Card>
@@ -555,9 +569,11 @@ const StudyGuidePage = () => {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
               <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
-              <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
-                အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ
-              </p>
+              {showBurmese && (
+                <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
+                  အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ
+                </p>
+              )}
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Rounded search input */}
@@ -600,9 +616,11 @@ const StudyGuidePage = () => {
           {legacyFilteredQuestions.length === 0 && (
             <div className="text-center py-12">
               <p className="text-lg font-bold text-muted-foreground">No questions found</p>
-              <p className="text-sm text-muted-foreground font-myanmar mt-1">
-                မေးခွန်းမတွေ့ပါ - ရှာဖွေမှုကိုပြောင်းကြည့်ပါ
-              </p>
+              {showBurmese && (
+                <p className="text-sm text-muted-foreground font-myanmar mt-1">
+                  မေးခွန်းမတွေ့ပါ - ရှာဖွေမှုကိုပြောင်းကြည့်ပါ
+                </p>
+              )}
             </div>
           )}
 
@@ -669,12 +687,15 @@ const StudyGuidePage = () => {
                             <p className="mt-4 text-xl font-semibold text-foreground">
                               {question.question_en}
                             </p>
-                            <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
-                              {question.question_my}
-                            </p>
+                            {showBurmese && (
+                              <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                                {question.question_my}
+                              </p>
+                            )}
                           </div>
                           <p className="text-sm font-semibold text-primary">
-                            Tap to flip · <span className="font-myanmar">နှိပ်ပါ</span>
+                            {showBurmese ? 'Tap to flip · ' : 'Tap to flip'}
+                            {showBurmese && <span className="font-myanmar">နှိပ်ပါ</span>}
                           </p>
                         </div>
                       </div>
@@ -692,7 +713,7 @@ const StudyGuidePage = () => {
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                              Answer - အဖြေ
+                              {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
                             </p>
                             <SpeechButton
                               text={englishAnswersText}
@@ -712,9 +733,11 @@ const StudyGuidePage = () => {
                                   <p className="text-base font-semibold tracking-wide">
                                     {answer.text_en}
                                   </p>
-                                  <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                    {answer.text_my}
-                                  </p>
+                                  {showBurmese && (
+                                    <p className="pt-1 text-base font-myanmar leading-relaxed">
+                                      {answer.text_my}
+                                    </p>
+                                  )}
                                 </li>
                               ))}
                             </ul>
