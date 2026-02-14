@@ -11,24 +11,17 @@
  * Always visible on md+ (scroll-hide only applies to mobile BottomTabBar).
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Languages,
-  Sun,
-  Moon,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  AlertTriangle,
-} from 'lucide-react';
+import { Sun, Moon, LogOut, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
 
 import { NAV_TABS, HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useThemeContext } from '@/contexts/ThemeContext';
+import { FlagToggle } from '@/components/ui/FlagToggle';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -38,6 +31,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 // ---------------------------------------------------------------------------
 
 const SPRING_CONFIG = { type: 'spring' as const, stiffness: 300, damping: 24 };
+const TOOLTIP_KEY = 'civic-test-lang-tooltip-shown';
 
 // ---------------------------------------------------------------------------
 // Sidebar component
@@ -56,12 +50,27 @@ export function Sidebar() {
     badges,
     sidebarRef,
   } = useNavigation();
-  const { showBurmese, toggleMode } = useLanguage();
+  const { showBurmese } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
   const { showWarning } = useToast();
   const shouldReduceMotion = useReducedMotion();
   const spring = shouldReduceMotion ? { duration: 0 } : SPRING_CONFIG;
+
+  // --- First-time tooltip ---
+  const [showTooltip, setShowTooltip] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !localStorage.getItem(TOOLTIP_KEY);
+  });
+
+  useEffect(() => {
+    if (!showTooltip) return;
+    const timer = setTimeout(() => {
+      setShowTooltip(false);
+      localStorage.setItem(TOOLTIP_KEY, 'true');
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [showTooltip]);
 
   // --- Locked tap handler ---
   const handleLockedTap = useCallback(() => {
@@ -178,15 +187,20 @@ export function Sidebar() {
 
       {/* --- Utility controls --- */}
       <div className="flex flex-col gap-1 px-2 py-3">
-        {/* Language toggle */}
-        <SidebarUtilityButton
-          icon={Languages}
-          label={showBurmese ? 'English' : '\u1019\u103C\u1014\u103A\u1019\u102C'}
-          isExpanded={isExpanded}
-          onClick={toggleMode}
-          tooltip={showBurmese ? 'English' : 'Myanmar'}
-          spring={spring}
-        />
+        {/* Language toggle -- dual flag */}
+        <div className={isExpanded ? 'relative px-3 py-2' : 'flex justify-center py-2'}>
+          <FlagToggle compact={!isExpanded} />
+          {showTooltip && isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 whitespace-nowrap rounded-lg bg-foreground text-background px-3 py-1.5 text-xs font-medium shadow-lg"
+            >
+              Switch language mode
+              <span className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 border-4 border-transparent border-r-foreground" />
+            </motion.div>
+          )}
+        </div>
 
         {/* Theme toggle */}
         <SidebarUtilityButton
