@@ -36,9 +36,9 @@ import { FlagToggle } from '@/components/ui/FlagToggle';
 import { SocialSettings } from '@/components/social/SocialSettings';
 import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
-const SPEECH_RATE_KEY = 'civic-prep-speech-rate';
 
 type SpeechRate = 'slow' | 'normal' | 'fast';
 
@@ -182,10 +182,8 @@ export default function SettingsPage() {
     if (typeof window === 'undefined') return '09:00';
     return localStorage.getItem(SRS_REMINDER_TIME_KEY) ?? '09:00';
   });
-  const [speechRate, setSpeechRate] = React.useState<SpeechRate>(() => {
-    if (typeof window === 'undefined') return 'normal';
-    return (localStorage.getItem(SPEECH_RATE_KEY) as SpeechRate) ?? 'normal';
-  });
+  const { settings: ttsSettings, updateSettings: updateTTSSettings } = useTTSSettings();
+  const speechRate = ttsSettings.rate;
   const { selectedState, setSelectedState, allStates } = useUserState();
   const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
 
@@ -196,8 +194,7 @@ export default function SettingsPage() {
   };
 
   const handleSpeechRateChange = (rate: SpeechRate) => {
-    setSpeechRate(rate);
-    localStorage.setItem(SPEECH_RATE_KEY, rate);
+    updateTTSSettings({ rate });
   };
 
   const handleSoundToggle = () => {
