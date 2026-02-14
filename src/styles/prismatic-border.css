@@ -25,6 +25,12 @@
   isolation: isolate;
 }
 
+/* fixed/absolute/sticky already create containing blocks for ::before,
+   so preserve their positioning when combined with prismatic-border. */
+.prismatic-border.fixed {
+  position: fixed;
+}
+
 /* ── Animated rainbow border ring (light mode) ── */
 .prismatic-border::before {
   content: '';
