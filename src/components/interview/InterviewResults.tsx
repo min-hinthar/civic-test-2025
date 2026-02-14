@@ -24,7 +24,7 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { WhyButton } from '@/components/explanations/WhyButton';
 import { FadeIn } from '@/components/animations/StaggeredList';
 import { ShareButton } from '@/components/social/ShareButton';
-import { useInterviewTTS } from '@/hooks/useInterviewTTS';
+import { useTTS } from '@/hooks/useTTS';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useStreak } from '@/hooks/useStreak';
@@ -121,7 +121,7 @@ export function InterviewResults({
   const { showBurmese } = useLanguage();
   const { stateInfo } = useUserState();
   const shouldReduceMotion = useReducedMotion();
-  const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
+  const { speak, cancel: cancelTTS, isSpeaking } = useTTS();
   const { currentStreak } = useStreak();
 
   // Subscribe to theme changes so getTokenColor() re-resolves on toggle
@@ -252,20 +252,30 @@ export function InterviewResults({
     return () => {
       cancelled = true;
     };
-  }, [hasSaved, mode, score, totalQuestions, durationSeconds, passed, endReason, results, showBurmese]);
+  }, [
+    hasSaved,
+    mode,
+    score,
+    totalQuestions,
+    durationSeconds,
+    passed,
+    endReason,
+    results,
+    showBurmese,
+  ]);
 
   // --- TTS closing statement ---
   useEffect(() => {
     const timer = setTimeout(() => {
       const closing = getClosingStatement(passed);
-      speakWithCallback(closing);
+      speak(closing); // fire-and-forget -- speak returns Promise<void>
     }, 1000);
 
     return () => {
       clearTimeout(timer);
       cancelTTS();
     };
-  }, [passed, speakWithCallback, cancelTTS]);
+  }, [passed, speak, cancelTTS]);
 
   // --- Confetti for passing ---
   useEffect(() => {
