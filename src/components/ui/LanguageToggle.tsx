@@ -1,3 +1,8 @@
+/**
+ * @deprecated Use FlagToggle from '@/components/ui/FlagToggle' instead.
+ * This component will be removed after all consumers are migrated.
+ * Kept temporarily for backward compatibility.
+ */
 'use client';
 
 import { motion } from 'motion/react';
