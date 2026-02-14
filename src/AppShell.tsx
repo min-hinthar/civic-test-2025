@@ -10,6 +10,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { SRSProvider } from '@/contexts/SRSContext';
 import { SocialProvider } from '@/contexts/SocialContext';
 import { StateProvider } from '@/contexts/StateContext';
+import { TTSProvider } from '@/contexts/TTSContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { PageTransition } from '@/components/animations/PageTransition';
@@ -186,130 +187,132 @@ const AppShell = () => {
     <ErrorBoundary>
       <LanguageProvider>
         <ThemeProvider>
-          <ToastProvider>
-            <OfflineProvider>
-              <AuthProvider>
-                <SocialProvider>
-                  <SRSProvider>
-                    <StateProvider>
-                      <Router>
-                        <NavigationProvider>
-                          <Head>
-                            <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
-                            <meta
-                              name="description"
-                              content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
-                            />
-                          </Head>
-                          <ErrorBoundary>
-                            <NavigationShell>
-                              <PageTransition>
-                                <Routes>
-                                  <Route path="/" element={<LandingPage />} />
-                                  <Route path="/auth" element={<AuthPage />} />
-                                  <Route path="/auth/forgot" element={<PasswordResetPage />} />
-                                  <Route
-                                    path="/auth/update-password"
-                                    element={<PasswordUpdatePage />}
-                                  />
-                                  <Route path="/op-ed" element={<OpEdPage />} />
+          <TTSProvider>
+            <ToastProvider>
+              <OfflineProvider>
+                <AuthProvider>
+                  <SocialProvider>
+                    <SRSProvider>
+                      <StateProvider>
+                        <Router>
+                          <NavigationProvider>
+                            <Head>
+                              <title>Civic Test Prep - Master Your U.S. Citizenship Test</title>
+                              <meta
+                                name="description"
+                                content="Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking."
+                              />
+                            </Head>
+                            <ErrorBoundary>
+                              <NavigationShell>
+                                <PageTransition>
+                                  <Routes>
+                                    <Route path="/" element={<LandingPage />} />
+                                    <Route path="/auth" element={<AuthPage />} />
+                                    <Route path="/auth/forgot" element={<PasswordResetPage />} />
+                                    <Route
+                                      path="/auth/update-password"
+                                      element={<PasswordUpdatePage />}
+                                    />
+                                    <Route path="/op-ed" element={<OpEdPage />} />
 
-                                  {/* New canonical routes */}
-                                  <Route
-                                    path="/home"
-                                    element={
-                                      <ProtectedRoute>
-                                        <Dashboard />
-                                      </ProtectedRoute>
-                                    }
-                                  />
-                                  <Route
-                                    path="/hub/*"
-                                    element={
-                                      <ProtectedRoute>
-                                        <HubPage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
+                                    {/* New canonical routes */}
+                                    <Route
+                                      path="/home"
+                                      element={
+                                        <ProtectedRoute>
+                                          <Dashboard />
+                                        </ProtectedRoute>
+                                      }
+                                    />
+                                    <Route
+                                      path="/hub/*"
+                                      element={
+                                        <ProtectedRoute>
+                                          <HubPage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
 
-                                  {/* Redirects from old routes to new canonical routes */}
-                                  <Route
-                                    path="/dashboard"
-                                    element={<Navigate to="/home" replace />}
-                                  />
-                                  <Route
-                                    path="/progress"
-                                    element={<Navigate to="/hub/overview" replace />}
-                                  />
-                                  <Route
-                                    path="/history"
-                                    element={<RedirectWithLoading to="/hub/history" />}
-                                  />
-                                  <Route
-                                    path="/social"
-                                    element={<RedirectWithLoading to="/hub/achievements" />}
-                                  />
+                                    {/* Redirects from old routes to new canonical routes */}
+                                    <Route
+                                      path="/dashboard"
+                                      element={<Navigate to="/home" replace />}
+                                    />
+                                    <Route
+                                      path="/progress"
+                                      element={<Navigate to="/hub/overview" replace />}
+                                    />
+                                    <Route
+                                      path="/history"
+                                      element={<RedirectWithLoading to="/hub/history" />}
+                                    />
+                                    <Route
+                                      path="/social"
+                                      element={<RedirectWithLoading to="/hub/achievements" />}
+                                    />
 
-                                  {/* Existing routes (unchanged) */}
-                                  <Route
-                                    path="/test"
-                                    element={
-                                      <ProtectedRoute>
-                                        <TestPage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
-                                  <Route
-                                    path="/study"
-                                    element={
-                                      <ProtectedRoute>
-                                        <StudyGuidePage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
-                                  <Route
-                                    path="/practice"
-                                    element={
-                                      <ProtectedRoute>
-                                        <PracticePage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
-                                  <Route
-                                    path="/interview"
-                                    element={
-                                      <ProtectedRoute>
-                                        <InterviewPage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
-                                  <Route
-                                    path="/settings"
-                                    element={
-                                      <ProtectedRoute>
-                                        <SettingsPage />
-                                      </ProtectedRoute>
-                                    }
-                                  />
+                                    {/* Existing routes (unchanged) */}
+                                    <Route
+                                      path="/test"
+                                      element={
+                                        <ProtectedRoute>
+                                          <TestPage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
+                                    <Route
+                                      path="/study"
+                                      element={
+                                        <ProtectedRoute>
+                                          <StudyGuidePage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
+                                    <Route
+                                      path="/practice"
+                                      element={
+                                        <ProtectedRoute>
+                                          <PracticePage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
+                                    <Route
+                                      path="/interview"
+                                      element={
+                                        <ProtectedRoute>
+                                          <InterviewPage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
+                                    <Route
+                                      path="/settings"
+                                      element={
+                                        <ProtectedRoute>
+                                          <SettingsPage />
+                                        </ProtectedRoute>
+                                      }
+                                    />
 
-                                  {/* Catch-all */}
-                                  <Route path="*" element={<Navigate to="/" replace />} />
-                                </Routes>
-                              </PageTransition>
-                            </NavigationShell>
-                          </ErrorBoundary>
-                          <PWAOnboardingFlow />
-                          <OnboardingTour />
-                          <GreetingFlow />
-                          <SyncStatusIndicator />
-                        </NavigationProvider>
-                      </Router>
-                    </StateProvider>
-                  </SRSProvider>
-                </SocialProvider>
-              </AuthProvider>
-            </OfflineProvider>
-          </ToastProvider>
+                                    {/* Catch-all */}
+                                    <Route path="*" element={<Navigate to="/" replace />} />
+                                  </Routes>
+                                </PageTransition>
+                              </NavigationShell>
+                            </ErrorBoundary>
+                            <PWAOnboardingFlow />
+                            <OnboardingTour />
+                            <GreetingFlow />
+                            <SyncStatusIndicator />
+                          </NavigationProvider>
+                        </Router>
+                      </StateProvider>
+                    </SRSProvider>
+                  </SocialProvider>
+                </AuthProvider>
+              </OfflineProvider>
+            </ToastProvider>
+          </TTSProvider>
         </ThemeProvider>
       </LanguageProvider>
     </ErrorBoundary>
