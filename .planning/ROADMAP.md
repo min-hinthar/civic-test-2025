@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap tracks all development phases for the Civic Test Prep app. Two milestones shipped: v1.0 (full-featured bilingual PWA) and v2.0 (unified navigation, dashboard intelligence, progress hub, USCIS 2025, iOS-inspired polish, security hardening).
+This roadmap tracks all development phases for the Civic Test Prep app. Two milestones shipped: v1.0 (full-featured bilingual PWA) and v2.0 (unified navigation, dashboard intelligence, progress hub, USCIS 2025, iOS-inspired polish, security hardening). The active milestone v2.1 refines the core learning experience with Duolingo-style test UX, consistent language mode, session persistence, TTS quality improvements, flashcard sorting, and accessibility/performance hardening.
 
 ## Completed Milestones
 
@@ -23,19 +23,180 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 - Phase 16: Dashboard Next Best Action (5 plans)
 - Phase 17: UI System Polish (11 plans)
 
+## v2.1 Quality & Polish (Active)
+
+**Milestone Goal:** Make the core learning experience (test, practice, interview, study) feel premium with redesigned UX, natural TTS, proper language toggle behavior, polished Burmese translations, and performance/accessibility improvements.
+
+### Phases
+
+- [ ] **Phase 18: Language Mode** - Consistent English-only / bilingual behavior across all 59 consuming components
+- [ ] **Phase 19: TTS Core Extraction** - Consolidate duplicated TTS hooks into shared module
+- [ ] **Phase 20: Session Persistence** - IndexedDB session store with resume prompts for interrupted sessions
+- [ ] **Phase 21: Test & Practice UX Overhaul** - Duolingo-style Check/Continue flow with feedback panels and keyboard nav
+- [ ] **Phase 22: TTS Quality** - Voice selection, speech rate control, Burmese audio, graceful error handling
+- [ ] **Phase 23: Flashcard Sort Mode** - Quizlet-style Know/Don't Know card sorting with SRS integration
+- [ ] **Phase 24: Accessibility & Performance** - WCAG compliance, screen reader support, Web Vitals, bundle analysis
+- [ ] **Phase 25: Burmese Translation Audit** - Natural phrasing, missing translations, consistent terminology
+
+## Phase Details
+
+### Phase 18: Language Mode
+**Goal**: Users experience consistent language behavior -- English mode shows English only, Myanmar mode shows bilingual content -- across every screen in the app
+**Depends on**: Nothing (first phase of v2.1)
+**Requirements**: LANG-01, LANG-02, LANG-03, LANG-04, LANG-05, LANG-06
+**Success Criteria** (what must be TRUE):
+  1. User in English mode sees zero Burmese text on test, practice, flashcard, and dashboard screens (navbar excluded)
+  2. User in Myanmar mode sees bilingual content (English + Burmese) on every screen
+  3. Interview simulation always runs in English-only mode regardless of the user's global language toggle
+  4. User can switch language mode via a compact toggle without leaving their current screen
+  5. Mock test in English-only mode displays a USCIS simulation message explaining English-only behavior
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD
+- [ ] 18-02: TBD
+- [ ] 18-03: TBD
+
+### Phase 19: TTS Core Extraction
+**Goal**: TTS logic lives in a single shared module so all future TTS improvements apply uniformly across test, practice, interview, and study contexts
+**Depends on**: Phase 18
+**Requirements**: INFRA-01
+**Success Criteria** (what must be TRUE):
+  1. A single `ttsCore` module provides voice loading, voice finding, utterance creation, and duration estimation
+  2. Both general-purpose TTS hook and interview TTS hook delegate to the shared core (no duplicated voice-finding logic)
+  3. All existing TTS behavior (test, practice, interview, study guide) works identically to before the extraction (zero regressions)
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: TBD
+
+### Phase 20: Session Persistence
+**Goal**: Users never lose progress from interrupted sessions -- they are prompted to resume where they left off
+**Depends on**: Phase 19
+**Requirements**: INFRA-02, SESS-01, SESS-02, SESS-03, SESS-04, SESS-05, SESS-06
+**Success Criteria** (what must be TRUE):
+  1. User who closes the browser mid-mock-test sees a resume prompt with session info when returning
+  2. User who closes the browser mid-practice session can resume from the exact question they left off
+  3. Persisted sessions older than 24 hours are silently discarded (no stale resume prompts)
+  4. User sees a countdown (5-4-3...) before the timer restarts on a resumed timed session
+  5. Dashboard displays a warning indicator when the user has an unfinished session waiting
+**Plans**: TBD
+
+Plans:
+- [ ] 20-01: TBD
+- [ ] 20-02: TBD
+- [ ] 20-03: TBD
+
+### Phase 21: Test & Practice UX Overhaul
+**Goal**: Users control their own pacing through an explicit Check/Continue flow with rich visual feedback, replacing auto-advance
+**Depends on**: Phase 18, Phase 20
+**Requirements**: TPUX-01, TPUX-02, TPUX-03, TPUX-04, TPUX-05, TPUX-06, TPUX-07, TPUX-08
+**Success Criteria** (what must be TRUE):
+  1. User selects an answer, then explicitly taps "Check" to submit -- answer is not committed on tap
+  2. User sees a bottom feedback panel slide up after checking (green for correct, amber for incorrect) with the correct answer shown
+  3. User taps "Continue" to advance to the next question -- no auto-advance timer
+  4. User sees a segmented progress bar where each question is a color-coded segment (green/red/gray/blue)
+  5. User can navigate the entire quiz with keyboard only (Tab/arrows for options, Enter for Check/Continue)
+**Plans**: TBD
+
+Plans:
+- [ ] 21-01: TBD
+- [ ] 21-02: TBD
+- [ ] 21-03: TBD
+- [ ] 21-04: TBD
+
+### Phase 22: TTS Quality
+**Goal**: Users hear clear, natural speech with control over voice and speed, including Burmese audio for all 128 questions
+**Depends on**: Phase 19
+**Requirements**: TTS-01, TTS-02, TTS-03, TTS-04, TTS-05, TTS-06
+**Success Criteria** (what must be TRUE):
+  1. User can select their preferred TTS voice from available system voices in Settings
+  2. User can set speech rate (slow/normal/fast) that applies consistently across all TTS contexts (test, practice, study, interview)
+  3. TTS failures show user-visible feedback instead of failing silently (e.g., "No voices available" message)
+  4. User sees an animated speaking indicator while TTS is actively playing
+  5. User can tap the speech button to pause active TTS, and tap again to resume (not restart)
+**Plans**: TBD
+
+Plans:
+- [ ] 22-01: TBD
+- [ ] 22-02: TBD
+- [ ] 22-03: TBD
+
+### Phase 23: Flashcard Sort Mode
+**Goal**: Users can sort flashcards into Know/Don't Know piles with swipe gestures, then drill missed cards until mastery
+**Depends on**: Phase 18, Phase 20
+**Requirements**: FLSH-01, FLSH-02, FLSH-03, FLSH-04, FLSH-05, FLSH-06, FLSH-07, FLSH-08, FLSH-09
+**Success Criteria** (what must be TRUE):
+  1. User can toggle between Browse mode (navigate cards) and Sort mode (classify cards) on the flashcard stack
+  2. User can swipe right (Know) or left (Don't Know) to sort cards, or use tap buttons as an alternative
+  3. User sees a live progress counter showing Know/Don't Know tallies during sorting
+  4. User sees an end-of-round summary with the option to study missed cards in another round
+  5. Cards sorted as "Don't Know" prompt the user to add them to their SRS deck
+**Plans**: TBD
+
+Plans:
+- [ ] 23-01: TBD
+- [ ] 23-02: TBD
+- [ ] 23-03: TBD
+
+### Phase 24: Accessibility & Performance
+**Goal**: The app meets WCAG 2.2 accessibility standards and reports performance metrics for ongoing monitoring
+**Depends on**: Phase 21, Phase 22, Phase 23
+**Requirements**: A11Y-01, A11Y-02, A11Y-03, A11Y-04, A11Y-05, A11Y-06, A11Y-07, PERF-01, PERF-02, PERF-03, PERF-04
+**Success Criteria** (what must be TRUE):
+  1. Screen reader announces "Correct" or "Incorrect -- the answer is [X]" after user checks an answer
+  2. Focus moves programmatically to the feedback panel after Check, and to the next question after Continue
+  3. User can extend the test timer by 50% via a clearly visible option (WCAG 2.2.1 timing adjustable)
+  4. Reduced motion preference triggers alternative fade animations instead of disabling all animation
+  5. Web Vitals (LCP, INP, CLS) are captured and reported to Sentry for real-user monitoring
+**Plans**: TBD
+
+Plans:
+- [ ] 24-01: TBD
+- [ ] 24-02: TBD
+- [ ] 24-03: TBD
+
+### Phase 25: Burmese Translation Audit
+**Goal**: Every Burmese translation in the app reads naturally to a native speaker with consistent terminology
+**Depends on**: Phase 18, Phase 21, Phase 23
+**Requirements**: BRMSE-01, BRMSE-02, BRMSE-03
+**Success Criteria** (what must be TRUE):
+  1. All UI strings (buttons, labels, messages, toasts, modals) have natural Burmese translations -- no robotic/literal phrasing
+  2. Zero missing Burmese translations across all user-facing screens (verified by exhaustive audit)
+  3. Recurring concepts use consistent Burmese terminology throughout (e.g., same word for "practice" everywhere)
+**Plans**: TBD
+
+Plans:
+- [ ] 25-01: TBD
+- [ ] 25-02: TBD
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 18 > 19 > 20 > 21 > 22 > 23 > 24 > 25.
+Note: Phases 22 and 23 can run in parallel (independent after their shared dependencies complete).
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-10 | v1.0 | 72/72 | Complete | 2026-02-08 |
 | 11-17 | v2.0 | 47/47 | Complete | 2026-02-13 |
+| 18. Language Mode | v2.1 | 0/TBD | Not started | - |
+| 19. TTS Core Extraction | v2.1 | 0/TBD | Not started | - |
+| 20. Session Persistence | v2.1 | 0/TBD | Not started | - |
+| 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
+| 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
+| 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
+| 24. Accessibility & Perf | v2.1 | 0/TBD | Not started | - |
+| 25. Burmese Translation | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
+| v2.1 | 8 | TBD | 0/51 | Not started |
 
 ---
 
 *Roadmap created: 2026-02-05*
 *v2.0 completed: 2026-02-13*
+*v2.1 roadmap created: 2026-02-13*
