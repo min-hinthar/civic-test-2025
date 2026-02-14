@@ -5,16 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Planning next milestone
+**Current focus:** v2.1 Quality & Polish
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Between milestones
-Last activity: 2026-02-13 — v2.0 milestone archived
-
-Progress: All phases complete
+Status: Defining requirements
+Last activity: 2026-02-13 — Milestone v2.1 started
 
 ## Completed Milestones
 
@@ -40,15 +38,15 @@ All decisions archived in PROJECT.md Key Decisions table.
 
 ### Blockers/Concerns
 
-None — clean slate for next milestone.
+None — clean slate for v2.1.
 
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: v2.0 milestone archived, ready for next milestone
-Next step: `/gsd:new-milestone` when ready
+Stopped at: v2.1 milestone started, defining requirements
+Next step: Complete requirements definition, then roadmap creation
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-13 (v2.0 milestone complete and archived)*
+*Last updated: 2026-02-13 (v2.1 milestone started)*

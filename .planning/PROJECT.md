@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, with a premium iOS-inspired UI featuring glass-morphism, spring micro-interactions, and frosted dark mode. Both languages are displayed together throughout — Burmese-only users can navigate and use the entire app comfortably.
+A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, with a premium iOS-inspired UI featuring glass-morphism, spring micro-interactions, and frosted dark mode. English mode shows English only; Myanmar mode shows bilingual content (English + Burmese) throughout — Burmese-only users can navigate and use the entire app comfortably.
 
 ## Core Value
 
@@ -72,7 +72,20 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ### Active
 
-No active requirements. Next milestone not yet defined.
+#### Current Milestone: v2.1 Quality & Polish
+
+**Goal:** Make the core learning experience (test, practice, interview, study) feel premium with redesigned UX, natural TTS, proper language toggle behavior, polished Burmese translations, and performance/accessibility improvements.
+
+**Target features:**
+- Mock Test / Practice / Interview UX overhaul (layout, flow, feedback, session persistence)
+- Language toggle behavior change (English = English only, Myanmar = bilingual except navbar)
+- Burmese translation quality polish (natural phrasing, missing translations, consistent terminology)
+- TTS audio quality improvements (natural voices, better pronunciation, proper pacing, both languages)
+- Study guide / flashcard overhaul (flip animation, card navigation, content layout, Burmese TTS)
+- Dashboard / Progress Hub refinements
+- Performance audit and optimization (bundle size, load times, animation smoothness)
+- Accessibility audit and fixes (screen reader, keyboard nav, WCAG compliance)
+- Bug fixes and tech debt cleanup (discovered during audits)
 
 ### Out of Scope
 
@@ -96,7 +109,7 @@ No active requirements. Next milestone not yet defined.
 
 **User base:** Burmese immigrants preparing for the US naturalization civics test. Many users are more comfortable in Burmese than English. The app feels warm and supportive.
 
-**Design direction:** iOS-inspired glass-morphism with 3 glass tiers (light/medium/heavy), prismatic animated borders, spring physics (BOUNCY/SNAPPY/GENTLE configs), and frosted dark mode with purple-tinted elevation hierarchy. Both English and Burmese text displayed together. 44px minimum touch targets.
+**Design direction:** iOS-inspired glass-morphism with 3 glass tiers (light/medium/heavy), prismatic animated borders, spring physics (BOUNCY/SNAPPY/GENTLE configs), and frosted dark mode with purple-tinted elevation hierarchy. English mode = English only; Myanmar mode = bilingual. 44px minimum touch targets. Duolingo + Quizlet-inspired test/study UX.
 
 ## Constraints
 
@@ -105,7 +118,7 @@ No active requirements. Next milestone not yet defined.
 - **Budget**: Free tier services only — no paid additions
 - **Platform**: PWA — installable web app, not native wrapper
 - **Design**: iOS-inspired glass-morphism — evolve, don't rebrand
-- **Languages**: English and Burmese displayed together — no language toggle
+- **Languages**: English mode = English only; Myanmar mode = bilingual (English + Burmese) except navbar
 - **CSP**: Hash-based allowlisting (Pages Router on Vercel can't forward nonce headers)
 
 ## Key Decisions
@@ -126,6 +139,8 @@ No active requirements. Next milestone not yet defined.
 | Glass-morphism tiers (light/medium/heavy) | Consistent visual hierarchy across all surfaces | ✓ Validated — 3 tiers with CSS custom properties |
 | Spring physics library (motion/react) | Consistent micro-interaction feel across components | ✓ Validated — BOUNCY/SNAPPY/GENTLE configs shared app-wide |
 | BRMSE deferred to v2.1+ | Translation trust features lower priority than UX polish | ⚠️ Revisit — community feedback may reprioritize |
+| Language toggle = mode switch | English mode = English only; Myanmar mode = bilingual (except navbar) | — Pending |
+| Duolingo + Quizlet UX inspiration | Best of both: Duolingo's playful feedback + Quizlet's card-based progress flow | — Pending |
 
 ## Milestones
 
@@ -133,6 +148,7 @@ No active requirements. Next milestone not yet defined.
 |---------|--------|------|-------------|
 | v1.0 | Complete | 2026-02-08 | 55/55 |
 | v2.0 | Complete | 2026-02-13 | 29/29 |
+| v2.1 | Active | — | TBD |
 
 ---
-*Last updated: 2026-02-13 after v2.0 milestone completion*
+*Last updated: 2026-02-13 after v2.1 milestone started*
