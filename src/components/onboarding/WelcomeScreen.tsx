@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface WelcomeScreenProps {
   /** Called when the user taps the continue button */
@@ -13,8 +14,11 @@ interface WelcomeScreenProps {
 /**
  * Bilingual welcome screen with animated US + Myanmar flags.
  * Shows on every sign-in. Dismissed by tapping "Get Started".
+ * Respects language mode (showBurmese guard).
  */
 export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
+  const { showBurmese } = useLanguage();
+
   return (
     <AnimatePresence>
       <motion.div
@@ -49,12 +53,16 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
             </p>
 
             {/* Burmese */}
-            <h2 className="mt-4 font-myanmar text-xl font-bold text-foreground">
-              {'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'}
-            </h2>
-            <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-              {'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'}
-            </p>
+            {showBurmese && (
+              <h2 className="mt-4 font-myanmar text-xl font-bold text-foreground">
+                {'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'}
+              </h2>
+            )}
+            {showBurmese && (
+              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                {'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'}
+              </p>
+            )}
 
             {/* Get Started button */}
             <button
@@ -70,7 +78,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
               )}
             >
               Get Started
-              <span className="font-myanmar ml-2 text-white/80">{'စတင်ပါ'}</span>
+              {showBurmese && <span className="font-myanmar ml-2 text-white/80">{'စတင်ပါ'}</span>}
             </button>
           </motion.div>
         </div>

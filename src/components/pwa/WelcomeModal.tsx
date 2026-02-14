@@ -13,11 +13,13 @@
  * - Only shown once per device (tracked via localStorage)
  * - Scrollable on small screens
  * - Semantic design tokens (no dark: overrides needed)
+ * - Respects language mode (showBurmese guard)
  */
 
 import React, { useState } from 'react';
 import { X, WifiOff, RefreshCw, Smartphone } from 'lucide-react';
 import { NotificationPrePrompt } from './NotificationPrePrompt';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface WelcomeModalProps {
   /** Called when user closes the welcome modal */
@@ -33,6 +35,7 @@ interface WelcomeModalProps {
  * ```
  */
 export function WelcomeModal({ onClose }: WelcomeModalProps) {
+  const { showBurmese } = useLanguage();
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(true);
   const [notificationHandled, setNotificationHandled] = useState(false);
 
@@ -74,7 +77,9 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
 
         {/* Welcome header */}
         <h2 className="mb-1 text-2xl font-bold text-foreground">Welcome!</h2>
-        <p className="font-myanmar mb-1 text-xl font-bold text-foreground">ကြိုဆိုပါတယ်!</p>
+        {showBurmese && (
+          <p className="font-myanmar mb-1 text-xl font-bold text-foreground">ကြိုဆိုပါတယ်!</p>
+        )}
         <p className="mb-6 text-muted-foreground">Your app is ready. Here are some tips:</p>
 
         {/* Tips */}
@@ -87,9 +92,11 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
             <div>
               <p className="font-medium text-foreground">Works offline</p>
               <p className="text-sm text-muted-foreground">Study anytime, even without internet.</p>
-              <p className="font-myanmar text-sm text-muted-foreground">
-                အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
-              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-muted-foreground">
+                  အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
+                </p>
+              )}
             </div>
           </div>
 
@@ -103,9 +110,11 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <p className="text-sm text-muted-foreground">
                 Your test results sync when you&apos;re back online.
               </p>
-              <p className="font-myanmar text-sm text-muted-foreground">
-                အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် စင့်ခ်လုပ်ပါမယ်။
-              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-muted-foreground">
+                  အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် စင့်ခ်လုပ်ပါမယ်။
+                </p>
+              )}
             </div>
           </div>
 
@@ -119,9 +128,11 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <p className="text-sm text-muted-foreground">
                 For the best experience, open the app from your home screen.
               </p>
-              <p className="font-myanmar text-sm text-muted-foreground">
-                အကောင်းဆုံး အတွေ့အကြုံအတွက် Home screen မှ ဖွင့်ပါ။
-              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-muted-foreground">
+                  အကောင်းဆုံး အတွေ့အကြုံအတွက် Home screen မှ ဖွင့်ပါ။
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -144,7 +155,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
           onClick={handleClose}
           className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
-          Get Started / စတင်ပါ
+          {showBurmese ? 'Get Started / စတင်ပါ' : 'Get Started'}
         </button>
       </div>
     </div>

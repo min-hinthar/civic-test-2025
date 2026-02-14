@@ -7,6 +7,7 @@
  * Supports frequency selection: daily, every 2 days, weekly, or off.
  * Shows appropriate state for unsupported browsers or denied permissions.
  * Uses semantic design tokens (no dark: overrides needed).
+ * Respects language mode (showBurmese guard).
  */
 
 import React, { useSyncExternalStore } from 'react';
@@ -14,6 +15,7 @@ import { Bell, BellOff } from 'lucide-react';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import type { ReminderFrequency } from '@/hooks/usePushNotifications';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const FREQUENCY_OPTIONS: { value: ReminderFrequency; labelEn: string; labelMy: string }[] = [
   {
@@ -49,6 +51,7 @@ function useIsClient(): boolean {
 export function NotificationSettings() {
   const isClient = useIsClient();
   const { user } = useAuth();
+  const { showBurmese } = useLanguage();
   const { isSubscribed, permission, reminderFrequency, isLoading, updateFrequency } =
     usePushNotifications(user?.id || null);
 
@@ -77,9 +80,11 @@ export function NotificationSettings() {
         <p className="text-sm text-muted-foreground">
           Notifications are not supported in this browser.
         </p>
-        <p className="font-myanmar text-sm text-muted-foreground">
-          {'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'}
-        </p>
+        {showBurmese && (
+          <p className="font-myanmar text-sm text-muted-foreground">
+            {'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'}
+          </p>
+        )}
       </div>
     );
   }
@@ -95,9 +100,11 @@ export function NotificationSettings() {
         <p className="mt-1 text-sm text-warning-700">
           To enable notifications, update your browser settings.
         </p>
-        <p className="font-myanmar text-sm text-warning-600">
-          {'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'}
-        </p>
+        {showBurmese && (
+          <p className="font-myanmar text-sm text-warning-600">
+            {'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'}
+          </p>
+        )}
       </div>
     );
   }
@@ -109,13 +116,21 @@ export function NotificationSettings() {
         <h3 className="font-medium text-foreground">Study Reminders</h3>
       </div>
       <p className="text-sm text-muted-foreground mb-1">Get friendly reminders to keep studying</p>
-      <p className="font-myanmar text-sm text-muted-foreground mb-4">
-        {'လေ့လာရန် သတိပေးချက်များ ရယူပါ'}
-      </p>
+      {showBurmese && (
+        <p className="font-myanmar text-sm text-muted-foreground mb-4">
+          {'လေ့လာရန် သတိပေးချက်များ ရယူပါ'}
+        </p>
+      )}
 
       <div className="flex items-center gap-3">
         <label htmlFor="reminder-frequency" className="text-sm text-foreground">
-          Frequency / <span className="font-myanmar">{'ကြိမ်နှုန်း'}</span>:
+          {showBurmese ? (
+            <>
+              Frequency / <span className="font-myanmar">{'ကြိမ်နှုန်း'}</span>:
+            </>
+          ) : (
+            'Frequency:'
+          )}
         </label>
         <select
           id="reminder-frequency"
@@ -126,7 +141,7 @@ export function NotificationSettings() {
         >
           {FREQUENCY_OPTIONS.map(option => (
             <option key={option.value} value={option.value}>
-              {option.labelEn} / {option.labelMy}
+              {showBurmese ? `${option.labelEn} / ${option.labelMy}` : option.labelEn}
             </option>
           ))}
         </select>
@@ -134,8 +149,14 @@ export function NotificationSettings() {
 
       {isSubscribed && reminderFrequency !== 'off' && (
         <p className="mt-3 text-sm text-success-600">
-          Notifications enabled /{' '}
-          <span className="font-myanmar">{'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'}</span>
+          {showBurmese ? (
+            <>
+              Notifications enabled /{' '}
+              <span className="font-myanmar">{'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'}</span>
+            </>
+          ) : (
+            'Notifications enabled'
+          )}
         </p>
       )}
     </div>
