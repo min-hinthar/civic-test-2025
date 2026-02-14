@@ -82,25 +82,41 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
         className="mb-4"
       />
 
+      {/* USCIS simulation message */}
+      <div className="mb-4 max-w-md rounded-xl border border-primary/30 bg-primary-subtle/20 px-4 py-3">
+        <p className="text-sm font-medium text-foreground">
+          This simulates the real USCIS civics test — questions are in English only.
+        </p>
+        {showBurmese && (
+          <p className="font-myanmar mt-1 text-xs text-muted-foreground">
+            ဤလေ့ကျင့်ခန်းသည် တကယ့် USCIS နိုင်ငံသားစာမေးပွဲကို တူညီစေပါသည် — မေးခွန်းများသည်
+            အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖြစ်ပါသည်။
+          </p>
+        )}
+      </div>
+
       {/* Encouraging message */}
       <p className="max-w-md text-muted-foreground mb-6">
         <span className="block">
           Take a deep breath. This practice test will help you prepare for your citizenship journey.
         </span>
-        <span className="block font-myanmar mt-1">
-          အသက်ရှုနက်နက်ရှူပါ။ ဤလေ့ကျင့်ခန်းက သင့်နိုင်ငံသားဖြစ်ခြင်းခရီးအတွက် အကူအညီဖြစ်ပါလိမ့်မယ်။
-        </span>
+        {showBurmese && (
+          <span className="block font-myanmar mt-1">
+            အသက်ရှုနက်နက်ရှူပါ။ ဤလေ့ကျင့်ခန်းက သင့်နိုင်ငံသားဖြစ်ခြင်းခရီးအတွက်
+            အကူအညီဖြစ်ပါလိမ့်မယ်။
+          </span>
+        )}
       </p>
 
       {/* Test info */}
       <div className="mb-8 flex gap-6 text-sm text-muted-foreground">
         <div className="flex flex-col items-center">
           <span className="text-2xl font-bold text-foreground">{questionCount}</span>
-          <span>Questions / မေးခွန်းများ</span>
+          <span>{showBurmese ? 'Questions / မေးခွန်းများ' : 'Questions'}</span>
         </div>
         <div className="flex flex-col items-center">
           <span className="text-2xl font-bold text-foreground">{durationMinutes}</span>
-          <span>Minutes / မိနစ်</span>
+          <span>{showBurmese ? 'Minutes / မိနစ်' : 'Minutes'}</span>
         </div>
       </div>
 
@@ -115,7 +131,7 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
       {/* Pass threshold info */}
       <p className="mt-6 text-sm text-muted-foreground">
         {strings.test.passThreshold.en}
-        <span className="block font-myanmar">{strings.test.passThreshold.my}</span>
+        {showBurmese && <span className="block font-myanmar">{strings.test.passThreshold.my}</span>}
       </p>
 
       {/* Practice by Category section */}
