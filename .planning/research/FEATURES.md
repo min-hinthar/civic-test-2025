@@ -1,553 +1,601 @@
-# Feature Landscape: v2.0
+# Feature Landscape: v2.1 Quality & Polish
 
-**Domain:** Bilingual civics test prep PWA for Burmese immigrants
-**Researched:** 2026-02-09
-**Focus:** Unified navigation, "Next Best Action" dashboard, Progress Hub, iOS-inspired UI, USCIS 2025 128Q bank, Burmese translation trust, security hardening
+**Domain:** Bilingual civics test prep PWA -- UX overhaul, TTS quality, card interactions, accessibility
+**Researched:** 2026-02-13
+**Focus:** Duolingo-style test UX, Quizlet-style card interactions, natural TTS voices, language mode toggle behavior, session persistence with resume, accessibility best practices for learning apps
 
-## Context: What v1.0 Already Delivers
+## Context: What v2.0 Already Delivers
 
-v1.0 shipped with 55 requirements across 10 phases. The following already exist:
+v2.0 shipped phases 11-17. The following already exist and form the foundation for v2.1 polish:
 
-- Mock test (20 random Qs from 120-question pool), timed sessions, pass/fail
-- Study guide with flashcard-style bilingual cards, TTS
-- Dashboard with accuracy metrics, category breakdown, readiness indicator
-- Per-category mastery tracking with progress rings, skill tree
-- Category-focused practice mode with weak area emphasis (SuggestedFocus)
-- FSRS spaced repetition with review heatmap
-- Interview simulation with TTS and realistic pacing
-- Study streaks, 12 badges, milestone celebrations
-- Score sharing with Canvas-rendered cards
-- Privacy-first leaderboard (opt-in, RLS)
-- Duolingo-inspired 3D buttons, sound effects
-- 7-step onboarding tour, vertical skill tree
-- Mobile bottom tab bar (3 tabs + More sheet), desktop top nav (7 links)
-- Dark/light theme, PWA with offline study, push notifications
+- Mock test with 20 questions, 1.5s auto-advance after answer, horizontal progress bar, 3D chunky answer buttons, circular timer, correct/incorrect sound effects (oscillator-based), confetti on completion
+- Practice mode with category selection, weak areas, configurable question count, optional timer
+- Interview simulation with realistic/practice modes, TTS reading (Web Speech API), self-grading, audio recording
+- Study guide with 3D flip flashcards, bilingual content, horizontal swipe navigation (FlashcardStack), SRS review with swipe-to-rate (ReviewCard)
+- Language context with `bilingual` | `english-only` toggle, persisted to localStorage
+- Sound effects via Web Audio API oscillators (correct ding, incorrect tone, level-up arpeggio, milestone chord, swoosh)
+- Navigation lock during active test sessions (beforeunload + popstate + context lock)
+- Dashboard with NBA contextual CTA, compact stat row
+- Progress Hub with 4 tabs (Overview/Categories/History/Achievements)
+- Save session guard with mutex-protected saves
+- Reduced motion support via `useReducedMotion` hook
 
-**Current question bank:** 120 questions (100 original + 20 "uscis2025Additions")
-**USCIS 2025 requirement:** 128 questions (effective Oct 20, 2025). Gap: 8 questions missing.
+**Current UX gaps identified for v2.1:**
+- Auto-advance (1.5s delay) feels rushed; no user control over pacing
+- No explicit "Check" step before committing an answer
+- Feedback is inline text only; no bottom sheet or full-width feedback panel
+- No session persistence -- closing the browser loses test/practice progress
+- Flashcards only support navigation swipe; no "know/don't know" sorting
+- TTS uses Web Speech API only; voice quality varies drastically by device/browser
+- Language toggle is global but doesn't affect TTS behavior or content filtering
+- No aria-live announcements for correct/incorrect feedback
+- No haptic feedback on answer selection
 
 ---
 
-## Epic 1: Unified Navigation
+## Epic 1: Duolingo-Style Test & Practice UX
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Consistent nav across mobile and desktop** | Users currently see different navigation structures on mobile (3 tabs + More sheet) vs desktop (7-link top bar). Switching devices feels disjointed. | Med | Existing BottomTabBar.tsx, AppNavigation.tsx |
-| **5-tab bottom bar (eliminate More menu)** | Duolingo, Khan Academy, and all major education apps use 4-5 persistent bottom tabs. The "More" sheet hides Interview, Progress, History, and Social -- users forget they exist. | Med | Bottom tab bar redesign |
-| **Active state with haptic/visual feedback** | iOS and Material Design both mandate clear active state. Current implementation has subtle indicators. | Low | Existing tab components |
-| **Badge/notification dots on tabs** | SRS due count already shows on Study in desktop nav but NOT on mobile tab bar. Users miss review reminders. | Low | useSRS context, BottomTabBar |
+| **Explicit Check button with bottom feedback panel** | Duolingo's core pattern: select answer, then tap "Check" to confirm. Bottom panel slides up with green (correct) or red (incorrect) background, correct answer text, and "Continue" button. This two-step flow prevents accidental answer commits and gives users a moment to reconsider. Current app auto-commits on tap. | Med | TestPage.tsx, PracticeSession.tsx, AnswerFeedback.tsx |
+| **Bottom feedback banner (green/red slide-up)** | After checking, a full-width banner slides up from bottom: green with checkmark + "Correct!" for right answers, red/amber with X + "Incorrect" + correct answer for wrong answers. This is THE signature Duolingo interaction -- users of any learning app expect it in 2026. | Med | New BottomFeedbackPanel component, motion/react AnimatePresence |
+| **User-controlled pacing (Continue button replaces auto-advance)** | Current 1.5s auto-advance is too fast for users who want to read explanations, and too slow for power users. Duolingo never auto-advances -- user must tap "Continue" or "Got It". This respects user pace while maintaining flow. | Low | Remove FEEDBACK_DELAY_MS timeout, add Continue button |
+| **Progress bar with segmented fill** | Current progress bar is a simple percentage fill. Duolingo uses a segmented bar where each segment represents one question, colored green (correct), red (incorrect), or gray (unanswered). Gives at-a-glance performance picture, not just position. | Med | Progress component enhancement |
+| **Streak/XP micro-reward within session** | During a session, show "+10 XP" or streak count increment after correct answers. Duolingo shows XP gain after each correct answer as a small animated counter. Reinforces every correct answer. | Low | Existing streak/badge infrastructure |
 
 ### Expected Behaviors
 
-**5-Tab Structure (recommendation based on Duolingo core tabs redesign pattern):**
+**Answer submission flow (Duolingo pattern):**
 
-1. **Home** (dashboard) -- primary landing, "Next Best Action" card
-2. **Study** (study guide + SRS reviews) -- cards, flashcards, review deck
-3. **Test** (mock test + interview) -- combined assessment modes
-4. **Progress** (consolidated hub) -- mastery, streaks, badges, history
-5. **Profile/Settings** -- account, preferences, language, theme
+```
+1. Question displayed with answer options
+2. User taps an option -> option highlights (selected state, blue/primary border)
+3. "Check" button activates at bottom (was grayed out before selection)
+4. User taps "Check" -> answer is committed
+5. Bottom feedback panel slides up:
+   - CORRECT: Green bg, checkmark icon, "Correct!" text (en + my), Continue button
+   - INCORRECT: Red/amber bg, X icon, "Incorrect" text, correct answer shown, Continue button
+   - Sound plays (existing playCorrect/playIncorrect)
+   - Haptic feedback (navigator.vibrate if available)
+6. User reads feedback, optionally expands explanation (WhyButton)
+7. User taps "Continue" -> panel slides down, next question slides in
+```
 
-This collapses 7 current navigation targets into 5, matching iOS Human Interface Guidelines recommending 3-5 bottom tabs. The "More" sheet pattern (current mobile) violates Apple's guidance: hidden navigation gets 60-80% less engagement than visible tabs.
+**Critical difference from current behavior:** Current flow commits the answer on first tap (step 2 = step 4 combined). This prevents changing your mind and creates accidental submissions, especially on small touch screens. The two-step flow is table stakes for 2026 quiz UX.
 
-**Desktop parity:** Desktop top nav should mirror the same 5 sections. Currently shows 7 links, creating cognitive dissonance when switching breakpoints.
+**Bottom feedback panel anatomy:**
+- Full-width, pinned to bottom of viewport (not scrolling content)
+- Height: ~120-160px (enough for answer text + Continue button)
+- Background: `bg-success/10` (correct) or `bg-warning/10` (incorrect) with subtle border-top
+- Icon: Animated checkmark or X (scale spring animation)
+- Text: Bilingual feedback ("Correct! / မှန်ပါသည်!" or "Review this answer / ဤအဖြေကို ပြန်လည်သုံးသပ်ပါ")
+- Correct answer (when incorrect): "The answer is: [correct answer]" in both languages
+- Continue button: Full-width, 3D chunky style, matches feedback color (green/amber)
+- Slide-up animation: `translateY(100%) -> translateY(0)` with spring physics
 
-**Transition behavior:** Active tab should animate (scale + color transition). Duolingo uses a pill-shaped active indicator that shifts between tabs.
+**Progress bar segments:**
+- Each question = one segment of equal width
+- Colors: green (answered correctly), red/amber (answered incorrectly), gray (upcoming), blue-pulse (current)
+- On answer: current segment animates to green or red
+- On mobile: segments are thin (4px height) for space efficiency
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **Smart tab badges** | Show SRS due count on Study tab, "new test available" on Test tab, unread badge on Progress tab when milestone earned | Low | Existing context data |
-| **Nav-locked mode preservation** | During active mock test, navigation is locked. This already exists but needs to work with new 5-tab layout. | Low | Existing `locked` prop on AppNavigation |
+| **Keyboard shortcut for Check/Continue** | Enter key = Check (when answer selected) or Continue (when feedback shown). Space/1-4 = select answer options. Power users can speed through without touching mouse. | Low | KeyboardEvent listeners |
+| **Explanation expansion pauses session timer** | When user expands WhyButton explanation, practice timer pauses (already partially implemented). Make this systematic across all modes. | Low | Existing handleExplanationExpandChange pattern |
+| **Haptic feedback on Check** | `navigator.vibrate(10)` on correct, `navigator.vibrate([20, 50, 20])` on incorrect. Subtle physical reinforcement. Free on Android; no-op on iOS (not supported in PWAs). | Low | navigator.vibrate API |
+| **Answer change before Check** | User can tap a different answer before hitting Check. Selected option changes. Only possible with the two-step flow. | Low | State management in answer selection |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Hamburger menu** | Hides navigation, reduces discoverability. Target audience (older immigrants) struggles with hidden menus. | Visible bottom tabs always present |
-| **Sidebar drawer navigation** | Desktop pattern that feels foreign on mobile PWA. Creates two navigation paradigms. | Single consistent tab bar that adapts (bottom on mobile, top on desktop) |
-| **Swipe-between-tabs gesture** | Conflicts with horizontal card swiping in Study and flashcard interactions | Tap-only tab switching |
+| **Auto-advance after feedback** | Current 1.5s auto-advance is the primary UX complaint. Never auto-advance. User controls pacing. | Continue button only. No timeout. |
+| **Heart/life system** | Duolingo's hearts limit mistakes per session. Punitive for test prep where making mistakes is part of learning. | Unlimited attempts. Track accuracy but never block progress. |
+| **Animated mascot reactions** | Duolingo has Duo owl reacting to answers. Cute but scope creep -- adds asset complexity, increases bundle, not needed for serious test prep. | Keep feedback to icons, colors, and sounds. |
+| **Full-screen answer transition** | Some quiz apps do full-screen green/red flash. Disorienting, accessibility concern (photosensitivity), and overkill for a test prep app. | Bottom panel only. Content area stays stable. |
 
 ---
 
-## Epic 2: "Next Best Action" Dashboard
+## Epic 2: Quizlet-Style Flashcard Interactions
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Single primary CTA** | Current dashboard has 3 equal-weight quick action buttons (Study, Test, Interview). Users with decision fatigue need ONE clear "do this next" action. | Med | Dashboard.tsx, mastery data, SRS data |
-| **Contextual recommendation** | The "Next Best Action" card should change based on user state: new user gets "Start studying", user with due SRS cards gets "Review 12 cards", user with high mastery gets "Take a mock test" | Med | useCategoryMastery, useSRS, useStreak hooks |
-| **Compact widget layout** | Current dashboard is long scroll with 10+ sections. Needs progressive disclosure -- hero action, summary cards, then details on demand. | Med | Dashboard component restructure |
+| **Know/Don't Know sorting** | Quizlet's core flashcard pattern: swipe right = "Know", swipe left = "Don't Know". Cards sort into two piles. End of session shows how many you knew vs. didn't. Then re-study the "Don't Know" pile. Currently, FlashcardStack only supports navigation swipe (left/right = previous/next). | Med | FlashcardStack.tsx refactor, new FlashcardSortMode component |
+| **Progress counter with know/don't-know tallies** | Quizlet shows "3 of 20" plus separate counts: "Know: 8 / Still Learning: 5". Users need to see their sorting progress, not just card position. | Low | UI state for sorted counts |
+| **End-of-round summary** | After going through all cards, show: "You knew 15/20. Study the 5 you missed?" with option to restart with only missed cards. Quizlet does this automatically. | Med | Summary screen component, filtered card re-queue |
+| **Card flip with tap AND swipe** | Current cards support tap-to-flip. Keep this AND add: swipe up/down for flip (alternative gesture), swipe left/right for know/don't-know sorting. Gesture must not conflict with navigation. | Med | Gesture disambiguation in FlashcardStack |
 
 ### Expected Behaviors
 
-**"Next Best Action" (NBA) decision tree:**
+**Flashcard study mode redesign:**
 
-Based on research into education app personalization patterns and predictive UX:
+Currently the app has two card interaction modes:
+1. **FlashcardStack** (study guide): Swipe left/right = navigate, tap = flip. Pure browsing.
+2. **ReviewCard** (SRS review): Swipe left = Hard, swipe right = Easy. Tap = flip.
+
+**Proposed v2.1 mode: "Sort Mode" (Quizlet-style):**
 
 ```
-Priority 1: SRS cards due > 0
-  -> "Review {N} cards" (orange urgency card)
-  -> Rationale: spaced repetition timing is time-sensitive
-
-Priority 2: Streak about to break (last activity > 20 hours ago)
-  -> "Keep your streak! Quick 5-minute review" (amber card)
-  -> Rationale: streak preservation is a strong motivator
-
-Priority 3: Weak category detected (mastery < 50%)
-  -> "Practice {weakest category}" (blue card)
-  -> Rationale: targeted practice on weak areas
-
-Priority 4: No test taken in 7+ days
-  -> "Ready for a mock test?" (green card)
-  -> Rationale: regular testing validates progress
-
-Priority 5: High mastery (> 80% overall)
-  -> "You're almost ready! Take the full test" (celebration card)
-  -> Rationale: confidence building for test-ready users
-
-Fallback: New user / no data
-  -> "Start your journey -- study {first category}" (welcoming card)
-  -> Rationale: clear onboarding path
+1. Card shows question face
+2. User taps card to flip (see answer)
+3. User swipes right = "Know" (card flies off right with green trail)
+   OR swipes left = "Don't Know" (card flies off left with amber trail)
+   OR taps "Know" / "Don't Know" buttons below card
+4. Next card slides in from center/bottom
+5. Counter updates: "Card 4 of 20 | Know: 2 | Learning: 1"
+6. After all cards:
+   - Summary: "You knew 15 of 20! Great progress!"
+   - "Study missed cards" button (re-queues the 5 "Don't Know" cards)
+   - "Done" button (return to study guide)
+7. Second round through missed cards, repeat until all "Know"
 ```
 
-**Card anatomy (single NBA card):**
-- Icon + bilingual title (en + my)
-- 1-line bilingual description of why this action matters
-- Single prominent CTA button (3D Duolingo-style)
-- Dismiss/snooze option (X or "Later")
-- Subtle progress indicator (e.g., "3 of 12 cards reviewed today")
+**Gesture disambiguation:**
+- In Sort Mode: Left/right swipe = sort (know/don't know). No navigation swipe.
+- In Browse Mode (current): Left/right swipe = navigate. No sorting.
+- Mode toggle: Button at top of FlashcardStack ("Browse" vs "Sort")
+- Flip: Tap always flips. Consider swipe up as alternative flip gesture.
 
-**Below the NBA card:** Compact stat summary row (streak days, mastery %, questions practiced). NOT the current verbose section-by-section layout.
+**Visual feedback during swipe:**
+- Already exists in ReviewCard: progressive color gradient (green right, amber left), edge labels ("Easy" / "Hard")
+- Adapt this same pattern for Sort Mode with "Know" / "Don't Know" labels
+- Card rotation during swipe: 0-15 degrees proportional to drag distance
+- Release threshold: 80px (same as ReviewCard's SWIPE_THRESHOLD)
+
+**Star/bookmark integration:**
+- Quizlet allows starring individual cards during study for later review
+- The app already has AddToDeckButton (adds to SRS deck). This IS the star equivalent.
+- Surface AddToDeckButton more prominently on the card face during Sort Mode
+- "Don't Know" cards could auto-suggest "Add to deck?" after sorting
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **Bilingual NBA reasoning** | "You haven't practiced American History in 5 days" in both languages. Builds trust -- user understands WHY the app recommends this. | Low | i18n strings |
-| **Time-aware recommendations** | Morning: "Start your day with a quick review". Evening: "Wind down with flashcards". Uses local time. | Low | Date APIs |
-| **Anxiety-calibrated urgency** | Never use red/urgent styling. Even overdue SRS cards use warm amber, not alarming red. "Gentle nudge" design pattern. | Low | Design tokens |
+| **Auto-add "Don't Know" to SRS deck** | Cards sorted as "Don't Know" are automatically offered for SRS deck addition. Bridges study guide and spaced repetition without manual effort. | Low | Existing AddToDeckButton/useSRS integration |
+| **Sort Mode persistence** | If user closes mid-sort, resume from where they left off (see Epic 5: Session Persistence). Know/Don't Know piles preserved. | Med | IndexedDB session state |
+| **Bilingual sort labels** | "Know / သိပါတယ်" and "Don't Know / မသိပါ" on swipe edges. Consistent bilingual UX. | Low | BilingualText component |
+| **Round counter** | "Round 2: Studying 5 missed cards" -- shows iteration through missed cards. Motivating progress indicator. | Low | State counter |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Multiple simultaneous recommendations** | Decision fatigue. Users freeze when given choices. | Single NBA card. One action. One tap. |
-| **AI-generated personalization copy** | Expensive, unpredictable, potentially incorrect for legal test prep context | Rule-based decision tree with handcrafted bilingual messages |
-| **Notification-style urgency** | "You MUST review now!" creates anxiety for already-stressed test takers | Warm, encouraging framing: "Great time to review" |
-| **Complex analytics on home screen** | Overwhelming. Metrics belong in Progress Hub, not on the action-oriented home. | Move charts/breakdowns to Progress Hub |
+| **Tinder-style card stack visual** | Stacked cards behind current card look cool but add rendering complexity, cause performance issues on low-end phones, and the visual metaphor (dating app) is inappropriate for test prep. | Single card with slide-in animation (current AnimatePresence pattern). |
+| **Spaced repetition within sort session** | Don't re-show "Don't Know" cards during the same round (interleaving). Show them as a separate round after completing all cards. Simpler mental model. | Sequential rounds: all cards first, then missed cards only. |
+| **Automatic flip after delay** | Some apps auto-flip the card after 5 seconds. Removes user agency and creates anxiety. | User-initiated flip only. |
+| **Gravity/physics card throw** | Cards flying with physics simulation. Fun but accessibility nightmare (motion sickness), hard to implement well, and distracting from content. | Simple slide-off animation (300ms spring). |
 
 ---
 
-## Epic 3: Progress Hub Consolidation
+## Epic 3: TTS Quality Improvements
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Single page for all progress data** | Currently scattered across Dashboard (category accuracy, badges, leaderboard), ProgressPage (skill tree, mastery rings, trend chart), HistoryPage (test sessions). Users visit 3 pages to understand their status. | Med-High | ProgressPage.tsx, HistoryPage.tsx, Dashboard.tsx |
-| **Test history timeline** | Move from separate HistoryPage into a tab/section within Progress Hub | Med | HistoryPage content migration |
-| **Badge showcase** | Currently a small widget on Dashboard. Should be a proper gallery in Progress Hub. | Low | BadgeHighlights component |
-| **Streak visualization** | Current StreakWidget on Dashboard. Progress Hub should show calendar/heatmap view. | Low-Med | StreakWidget, ReviewHeatmap components |
+| **Preferred voice selection** | Current TTS picks the "best available" voice automatically (Apple > Android > enhanced > local > any). Users should be able to choose their preferred voice from available options. Some voices sound more natural than others depending on device. | Med | Settings page, useSpeechSynthesis.ts, localStorage persistence |
+| **Speech rate control (global)** | Interview mode already has speech rate control (slow/normal/fast via localStorage `civic-prep-speech-rate`). Extend this to ALL TTS contexts (study guide play buttons, test question reading). Currently only interview uses rate preference. | Low | Unify rate reading in useSpeechSynthesis.ts |
+| **Graceful TTS failure handling** | TTS can fail silently (no voices loaded, AudioContext suspended, Chrome Android onend unreliability). Current code handles this in useInterviewTTS but useSpeechSynthesis has no onEnd/error callback. Standardize error handling. | Med | useSpeechSynthesis.ts refactor |
 
 ### Expected Behaviors
 
-**Progress Hub structure (tab-based within single page):**
+**Voice quality landscape (2026 browser TTS):**
 
-Based on consolidated learning analytics patterns:
+The Web Speech API (`speechSynthesis`) is the only zero-cost, client-side TTS option. Voice quality depends entirely on the user's device and browser:
 
-1. **Overview tab** (default): Readiness score hero, overall mastery ring, questions practiced count, current streak, recent activity timeline (last 5 actions)
-2. **Categories tab**: Current ProgressPage content (skill tree, category cards with sub-categories, mastery trend chart)
-3. **History tab**: Current HistoryPage content (test session list with scores, duration, date)
-4. **Achievements tab**: Full badge gallery (12 badges), milestone timeline, leaderboard position
+| Platform | Quality | Key Voices |
+|----------|---------|-----------|
+| macOS Safari/Chrome | HIGH | Samantha, Ava (Enhanced), Alex |
+| iOS Safari | HIGH | Same as macOS, neural voices available |
+| Chrome Desktop (Win/Mac) | MEDIUM | Google US English |
+| Android Chrome | MEDIUM-LOW | Google US English, Samsung TTS |
+| Firefox | LOW | eSpeak/mbrola (Linux), system voices (Win/Mac) |
 
-**Key consolidation moves:**
-- ReadinessIndicator moves from Dashboard to Progress Hub Overview
-- CategoryGrid stays on Dashboard as compact preview, links to Progress Hub Categories
-- StreakWidget stays on Dashboard as compact widget, links to Progress Hub Overview
-- BadgeHighlights stays on Dashboard as compact preview, links to Progress Hub Achievements
-- LeaderboardWidget moves from Dashboard to Progress Hub Achievements
-- Full trend chart moves from ProgressPage to Progress Hub Categories
-- HistoryPage becomes a tab, its route `/history` redirects to `/progress#history`
+**Burmese TTS availability:** Browser Web Speech API does NOT support Burmese/Myanmar (`my-MM`) on any major platform. No browser ships Burmese voices. Third-party APIs (Google Cloud TTS, Amazon Polly, CAMB.AI) support Burmese but require server-side API calls and have per-character costs.
 
-**Dashboard after consolidation:** Becomes focused and clean:
-- NBA card (hero)
-- Compact stat row (streak, mastery %, due reviews)
-- Quick action buttons (Study, Test, Interview) -- below NBA card
-- SRS widget (compact)
-- Compact category preview (clickable to Progress Hub)
+**Recommendation:** Keep TTS English-only for now (current approach). Add a visual indicator when Burmese text is displayed without TTS: "TTS not available for Burmese / မြန်မာဘာသာစကားအတွက် TTS မရရှိနိုင်ပါ". Do NOT pretend Burmese TTS works.
+
+**Voice selection UI:**
+```
+Settings > Speech
+  Voice: [Dropdown of available voices for en-US]
+  Speed: [Slow | Normal | Fast] (current interview-only control, made global)
+  Preview: [Play "The president lives in the White House"] button
+```
+
+**Cloud TTS consideration (future, NOT v2.1):**
+- Google Cloud TTS: 4M chars/month free (Standard), 1M chars/month free (WaveNet)
+- Amazon Polly: 5M chars/month free for 12 months
+- These would require a serverless API route (Next.js API route or Vercel Edge Function)
+- Adds latency, complexity, and ongoing cost monitoring
+- Verdict: Defer to v2.2+. Web Speech API is adequate for English. The improvement in v2.1 should be making the EXISTING TTS experience better (voice selection, rate control, error handling), not adding cloud APIs.
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **"Am I ready?" confidence meter** | Single number/gauge answering the user's real question. Based on coverage + accuracy + consistency. Already exists as ReadinessIndicator, but elevate it as the Progress Hub centerpiece. | Low | Existing ReadinessIndicator |
-| **Bilingual milestone timeline** | "Feb 1: Mastered American Government" in both languages. Gives sense of journey. | Med | Badge/milestone data, i18n |
-| **Exportable progress summary** | "Share your progress" generates a card showing readiness score, streak, badges. Extends existing Canvas share card. | Med | Existing score sharing infrastructure |
+| **"Speaking" visual indicator** | When TTS is playing, show animated sound wave icon near the SpeechButton. Users currently can't tell if TTS is active, buffering, or failed. | Low | useSpeechSynthesis return `isSpeaking` state |
+| **Sequential read mode** | "Read question, then answer" button that speaks question, pauses 1s, then speaks the correct answer. Useful for hands-free study (commute, cooking). | Med | useInterviewTTS callback chaining pattern |
+| **Pause/resume TTS** | Tap the speaking button again to pause (not cancel). `speechSynthesis.pause()` and `.resume()` exist. Currently, second tap cancels entirely. | Low | State toggle in SpeechButton |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Separate pages for each data type** | Current problem: data scattered across 3 pages | Consolidate into tabbed Progress Hub |
-| **Complex data visualizations** | Target audience wants "am I ready?" not "what's my p-value?" | Simple rings, bars, and clear labels |
-| **Comparison with other users** | Anxiety-inducing for test prep. Leaderboard exists but is opt-in. | Keep leaderboard opt-in, tucked in Achievements tab |
+| **Burmese TTS via cloud API** | Adds server-side dependency, API cost, latency, and CSP complexity for a feature that benefits a subset of users. Burmese-speaking users can read Burmese text directly. | English TTS only. Clearly label that Burmese TTS is unavailable. |
+| **AI-generated voice cloning** | CAMB.AI and similar offer voice cloning. Cool but ethically complex for a civic app, adds latency, and the Web Speech API is free. | Stick with built-in browser voices. |
+| **Background audio playback** | TTS continuing when app is backgrounded. Creates surprising behavior, drains battery, and conflicts with user's media. | Stop TTS on visibility change (document.hidden). |
 
 ---
 
-## Epic 4: iOS-Inspired Design System
+## Epic 4: Language Mode Toggle Behavior
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Consistent component library** | Current components are ad-hoc: some use Card/CardContent, some use raw divs with Tailwind classes. No design system consistency. | Med-High | All UI components |
-| **Proper spacing/typography scale** | Duolingo's recent core tabs refresh specifically cited inconsistent header sizes, typography hierarchy, and spacing as problems they fixed. Same issues exist here. | Med | globals.css, Tailwind config |
-| **Touch target compliance** | iOS requires 44pt minimum. Most components already have `min-h-[44px]` but should be systematic, not per-component. | Low | Tailwind utility classes |
+| **Language mode affects all content, not just text visibility** | Current `useLanguage()` only toggles `showBurmese` boolean, which hides/shows Myanmar text. In English-only mode, TTS should still work (it does), but flashcard backs should hide Burmese answers, test answer options should hide Burmese text, and the interview should feel fully English-immersive. Currently, some components check `showBurmese` and some don't. | Med | Audit all components using BilingualText, answer rendering, flashcard backs |
+| **Per-context language override** | Global toggle is "bilingual" or "english-only", but interview mode should ALWAYS be English-only (simulating USCIS interview where only English is spoken). Study guide should ALWAYS show bilingual (that's its purpose -- learning). Test/practice should respect the global toggle. | Med | LanguageContext.tsx enhancement, per-page override |
+| **Accessible toggle placement** | Current toggle is in Settings page only. Users need to switch mid-study without navigating away. Place a compact toggle in the top bar or as a floating action button during study/test sessions. | Low-Med | Compact LanguageToggle component |
 
 ### Expected Behaviors
 
-**Apple Liquid Glass is the current design trend (WWDC 2025, iOS 26)** but should be applied sparingly to a PWA:
+**Language mode behavior matrix:**
 
-**What to adopt:**
-- **Frosted glass navigation bars**: `backdrop-filter: blur(20px)` on both top nav and bottom tab bar. Current AppNavigation already uses `backdrop-blur-xl` -- good. BottomTabBar uses `backdrop-blur-xl` -- good. Standardize to a shared design token.
-- **Translucent card surfaces**: Cards with subtle background blur and 95% opacity. Current cards are solid `bg-card`. Add a "glass" variant.
-- **Smooth spring animations**: Current motion/react usage is good. Standardize timing curves. Use `type: 'spring', stiffness: 400, damping: 30` consistently (already used in BottomTabBar sheet).
-- **SF-style rounded corners**: `rounded-2xl` (16px) is already standard. Good.
-- **Subtle shadows with color tinting**: Current `shadow-lg shadow-primary/10` is the right approach.
+| Screen | Bilingual Mode | English-Only Mode | Override? |
+|--------|---------------|-------------------|-----------|
+| Dashboard | EN + MY text | EN only | Respects global |
+| Study Guide (Browse) | EN + MY | EN + MY | Always bilingual (study aid purpose) |
+| Study Guide (Sort Mode) | EN + MY card faces, MY on back | EN only card faces, EN only back | Respects global |
+| Mock Test | EN + MY questions & answers | EN only questions & answers | Respects global |
+| Practice | EN + MY | EN only | Respects global |
+| Interview | EN only | EN only | Always English (USCIS simulation) |
+| Progress Hub | EN + MY labels | EN only labels | Respects global |
 
-**What NOT to adopt:**
-- **Full Liquid Glass refraction effects**: Requires SVG filters, has cross-browser issues (Safari/Firefox don't support SVG filter inputs for backdrop-filter). Over-engineered for a PWA.
-- **Parallax/depth effects**: Performance-heavy, accessibility concerns, conflicts with `prefers-reduced-motion`.
-- **System-wide blur on everything**: Restrict glass effects to navigation chrome and modal overlays only.
+**Toggle UX patterns (from multilingual UX research):**
 
-**Design token standardization:**
+Best practices for language toggles in bilingual apps:
+1. Use the globe icon (internationally recognized) or translate icon
+2. Show the current mode label in both languages: "Bilingual / နှစ်ဘာသာ" vs "English Only"
+3. Toggle, not dropdown (only 2 modes)
+4. Persist to localStorage (already implemented)
+5. Place in persistent location: settings (existing) + floating mini-toggle in study/test chrome
 
+**Recommended toggle component:**
 ```
-Spacing: 4px grid (space-1 = 4px, space-2 = 8px, space-3 = 12px, space-4 = 16px)
-Border radius: sm=8px, md=12px, lg=16px, xl=24px
-Shadows: subtle (cards), medium (elevated cards), heavy (modals/sheets)
-Typography: h1=2xl/extrabold, h2=xl/bold, h3=lg/semibold, body=sm, caption=xs
-Glass: backdrop-blur-xl bg-card/95 (navigation), backdrop-blur-md bg-card/90 (cards)
+[Globe icon] [EN + MY <==> EN]  -- small pill-shaped toggle
 ```
+- In bilingual mode: pill shows "EN + MY" with both flags/indicators
+- In English-only mode: pill shows "EN" with single indicator
+- Tap toggles between modes with slide animation
+- Placed in top bar next to timer (test) or above flashcard stack (study)
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **Glass-morphism navigation** | Modern, premium feel. Differentiates from other civics apps which look like 2018 Material Design. | Low | CSS backdrop-filter (already supported) |
-| **Micro-interactions on all interactive elements** | 3D button press (already exists), tab switch animation, card flip smoothness, progress ring fill animation | Med | motion/react (already installed) |
-| **Dark mode glass** | Frosted dark glass (bg-slate-950/80 with blur) looks stunning. Current dark mode is solid colors. | Low | Tailwind dark mode tokens |
+| **USCIS Interview Prep Mode** | When language is set to "english-only" AND user starts a mock test, show a brief message: "This simulates the real USCIS interview -- English only" with encouragement. Makes the toggle meaningful for test prep strategy. | Low | Conditional message in PreTestScreen |
+| **Language-aware TTS** | In bilingual mode, SpeechButton could optionally read the English text. In English-only mode, SpeechButton is the same. This is already the behavior but making it explicit and consistent. | Low | Already implemented |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Full Liquid Glass component library** | Libraries like liquid-glass-js and liquidglassui.org exist but are immature (released 2025), add bundle size, and have browser compat issues | Use native CSS backdrop-filter + Tailwind. 3 lines of CSS, not a dependency. |
-| **Heavy blur on content areas** | Hurts readability, especially for bilingual text with Myanmar script. Myanmar glyphs are complex and need clear backgrounds. | Glass on chrome only (nav bars, modals). Content areas stay solid. |
-| **Parallax scrolling** | Motion sickness, performance hits on low-end devices (common in target audience), conflicts with reduced motion preference | Static layouts with subtle fade-in animations |
-| **Custom fonts** | Additional load time, FOUT issues. Myanmar script already needs system font fallback. | System font stack + existing font-myanmar class |
+| **More than 2 language modes** | "Burmese-only" mode makes no sense for a US civics test where answers must be in English. | Two modes only: bilingual and English-only. |
+| **Per-question language toggle** | Toggling language per-question is confusing and adds UI clutter to every question card. | Global toggle affects all content consistently. |
+| **Auto-detect language from browser** | `navigator.language` detection for auto-setting language mode. User's browser language doesn't indicate their study preference. A Burmese speaker might want English-only for practice. | Default to bilingual. Manual toggle. |
 
 ---
 
-## Epic 5: Burmese Translation Trust
+## Epic 5: Session Persistence & Resume
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Translation quality indicator** | Users need to know if Burmese translations are machine-generated or human-verified. Trust is critical for test prep. | Low | Question data schema, UI indicator |
-| **Community reporting mechanism** | Users who find translation errors need a way to flag them. Even a simple "Report issue" button per question. | Med | Supabase table for reports, UI components |
+| **Test session resume** | If user closes browser mid-test, reopening should offer "Resume test? (Question 8 of 20, 5 correct)" or "Start new test". Losing 10 minutes of test progress is the #1 PWA frustration. | Med-High | IndexedDB via idb-keyval (already installed), TestPage.tsx state serialization |
+| **Practice session resume** | Same as test: resume mid-practice session with previous answers preserved. | Med | PracticePage.tsx state serialization, IndexedDB |
+| **Flashcard sort position resume** | If user is sorting flashcards and closes, resume at the same card with know/don't-know piles intact. | Med | FlashcardStack state serialization |
 
 ### Expected Behaviors
 
-**Translation trust model (3 tiers):**
+**Session state schema (stored in IndexedDB via idb-keyval):**
 
-Based on crowdsourced translation verification patterns (Google Crowdsource, Crowdin, Transifex):
+```typescript
+interface PersistedTestSession {
+  id: string;                    // UUID
+  type: 'test' | 'practice';
+  startedAt: string;             // ISO timestamp
+  questions: SerializedQuestion[]; // Question IDs + shuffled answer order
+  currentIndex: number;
+  results: QuestionResult[];     // Already-answered questions
+  timeLeft: number;              // Remaining seconds (test only)
+  config?: PracticeConfigType;   // Practice config (practice only)
+  version: number;               // Schema version for migrations
+}
 
-1. **Verified** (green checkmark): Reviewed by native Burmese speaker with civics knowledge. Gold standard.
-2. **Community-reviewed** (blue checkmark): Flagged by 2+ community members as accurate. Intermediate trust.
-3. **Machine/initial** (no indicator or gray): Initial translation, not yet verified. Honest about limitations.
+interface PersistedSortSession {
+  id: string;
+  type: 'flashcard-sort';
+  startedAt: string;
+  questionIds: string[];         // All cards in this session
+  currentIndex: number;
+  knownIds: string[];            // Cards sorted as "Know"
+  unknownIds: string[];          // Cards sorted as "Don't Know"
+  round: number;                 // Current round (1 = first pass, 2+ = reviewing missed)
+  version: number;
+}
+```
 
-**Per-question trust flow:**
-- Each question shows a subtle trust indicator next to Burmese text
-- Tapping the indicator shows: "This translation was verified by a native speaker" or "Help improve this translation -- report issues"
-- "Report translation issue" opens a simple form: dropdown (Inaccurate, Unclear, Grammatical error, Other) + optional text field
-- Reports stored in Supabase `translation_reports` table
-- Admin can review reports and update translations
+**Resume flow:**
 
-**Why this matters for this audience:** Burmese immigrants studying for a high-stakes legal test must trust the study material. Machine translations of legal/civics content can be dangerously misleading. Transparency about translation quality builds trust.
+```
+1. User opens Test page
+2. Check IndexedDB for persisted session with type='test'
+3. If found AND session < 24 hours old:
+   - Show resume modal: "You have an unfinished test from [time ago]"
+   - "Resume" button: restore state, resume timer
+   - "Start New" button: discard persisted session, fresh start
+4. If found AND session > 24 hours old:
+   - Silently discard (test is stale)
+5. If not found:
+   - Show PreTestScreen as normal
+```
+
+**State persistence timing:**
+- Save to IndexedDB after each answer commit (not on every state change -- too many writes)
+- Save on `visibilitychange` event (user switching tabs/apps)
+- Save on `beforeunload` event (user closing browser)
+- Use the existing `createSaveSessionGuard` mutex pattern to prevent concurrent writes
+- Debounce saves: minimum 1 second between writes
+
+**Resume UX:**
+- Resume modal: glass-panel overlay with session info
+- Show: "Question X of Y | Z correct | [time remaining]"
+- "Resume" and "Start New" buttons (both 3D chunky style)
+- Auto-dismiss after 30 seconds (default to Start New if user doesn't interact)
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **Bilingual trust transparency** | No other civics app shows translation quality indicators. Most apps just show translations without context. | Low | UI badge component |
-| **Community contribution path** | Users can contribute to improving translations, creating ownership and engagement | Med | Report form, Supabase table |
-| **Translation changelog** | "Updated Feb 2026: Improved translation for Q42 based on community feedback" | Med | Supabase versioning |
+| **Cross-device resume via Supabase** | Persist session state to Supabase for logged-in users. Start on phone, resume on desktop. | High | Supabase table, sync logic, conflict resolution |
+| **Resume countdown** | "Resuming in 5... 4... 3..." with option to cancel. Gives user time to orient before timer resumes. | Low | Simple countdown component |
+| **Session expiry warning** | "Your unfinished test will expire in 2 hours" notification on dashboard if persisted session exists. | Low | NBA card integration |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **User-editable translations** | Quality control nightmare. Vandalism risk. Legal liability for incorrect civics content. | Report-only. Admin reviews and updates. |
-| **Voting on translations** | Complex UI, requires critical mass of Burmese-speaking users, gamification of serious content | Simple report mechanism. Admin decides. |
-| **AI-powered translation improvement** | Machine translation of civics/legal content is unreliable. "The 14th Amendment" has specific legal meaning that AI may mishandle. | Human verification only. AI can suggest, humans approve. |
+| **Auto-resume without asking** | Silently resuming mid-test without user consent is disorienting. User may not remember where they were. | Always show resume modal with session info. |
+| **Persist indefinitely** | Sessions older than 24 hours are stale -- test conditions have changed, user's mental state has changed. | 24-hour expiry. Auto-discard stale sessions. |
+| **Cross-device resume (v2.1)** | Requires Supabase schema changes, conflict resolution, and sync logic. Too complex for v2.1. | Local IndexedDB only. Cross-device is v2.2+. |
+| **Persist interview sessions** | Interview simulation is ephemeral by design -- it simulates a real interview where you can't pause and resume. | Test and practice only. Interview starts fresh. |
 
 ---
 
-## Epic 6: USCIS 2025 128-Question Bank
+## Epic 6: Accessibility for Learning Apps
 
 ### Table Stakes
 
 | Feature | Why Expected | Complexity | Dependencies |
 |---------|--------------|------------|--------------|
-| **Complete 128-question bank** | USCIS 2025 civics test uses 128 questions (effective Oct 20, 2025). Current app has 120 (100 original + 20 additions). Missing 8 questions. | Low-Med | Question constants, category mapping |
-| **Updated test format** | 2025 test: 20 questions asked, 12 correct to pass. Current app already uses this format. Verify alignment. | Low | TestPage.tsx verification |
-| **Category alignment with USCIS 2025** | USCIS 2025 organizes into: American Government (72Q: Principles 15Q + System of Government 47Q + Rights 10Q), American History (32Q), Integrated Civics (24Q). Current mapping needs validation. | Med | categoryMapping.ts, question files |
+| **aria-live announcements for answer feedback** | Screen reader users cannot see the green/red feedback panel. After checking an answer, an `aria-live="assertive"` region must announce "Correct!" or "Incorrect. The correct answer is [answer]". This is WCAG 2.1 Level A (4.1.3 Status Messages). | Med | New aria-live region in test/practice layout, announcement text |
+| **Focus management after answer submission** | When feedback panel appears, focus must move to it (so keyboard users and screen readers engage with feedback). When "Continue" is pressed, focus must move to the next question. Current auto-advance breaks focus management entirely. | Med | Requires explicit `ref.focus()` calls after state transitions |
+| **Touch target compliance (WCAG 2.5.8)** | WCAG 2.2 requires 24x24px minimum touch targets (Level AA). Apple HIG recommends 44x44pt. Current app mostly has `min-h-[44px]` but it's inconsistent -- some icons and secondary buttons are undersized. | Low-Med | Audit all interactive elements, apply min sizes |
+| **Keyboard navigation for quiz** | Full keyboard control: Tab to navigate between answer options, Enter/Space to select, Enter to Check, Enter to Continue. Arrow keys to move between answer options. Current quiz relies entirely on mouse/touch. | Med | KeyboardEvent handlers, `tabIndex` on answer buttons, focus ring styles |
+| **Timer accessibility** | Screen reader users need periodic time announcements (not a continuous live region -- that would be annoying). Announce time at 5-minute intervals, at 2 minutes, and at 1 minute. WCAG 2.2.1 (Timing Adjustable) requires timer extension option. | Med | Periodic aria-live announcements, optional timer pause/extension |
 
 ### Expected Behaviors
 
-**USCIS 2025 test structure (HIGH confidence - official USCIS source):**
+**aria-live implementation pattern:**
 
-- **Total questions:** 128 (up from 100 in 2008 test)
-- **Test format:** Officer asks up to 20 questions, applicant must answer 12 correctly
-- **Categories:**
-  - American Government: ~72 questions
-    - A: Principles of American Government (~15 questions)
-    - B: System of Government (~47 questions)
-    - C: Rights and Responsibilities (~10 questions)
-  - American History: ~32 questions
-  - Integrated Civics: ~24 questions
-- **Key changes from 2008:** Geography questions largely removed, more focus on history and governance. ~75% content from 2008 test (some verbatim, some revised), ~25% new content.
-- **Dynamic answers:** Some questions have answers that change (current president, current senators, etc.). USCIS provides updates at uscis.gov/citizenship/testupdates.
+```tsx
+// In test/practice layout, render an invisible live region:
+<div
+  role="status"
+  aria-live="assertive"
+  aria-atomic="true"
+  className="sr-only"
+>
+  {feedbackAnnouncement}
+</div>
 
-**Current app gap analysis:**
+// After answer check:
+// Correct: setFeedbackAnnouncement("Correct! The answer is: George Washington")
+// Incorrect: setFeedbackAnnouncement("Incorrect. The correct answer is: George Washington. You answered: Abraham Lincoln")
+```
 
-The app currently has 120 questions across 7 sub-categories:
-- GOV-P01-P16 (Principles of American Democracy): 16 questions -- includes 4 from uscis2025Additions
-- GOV-S01-S39 (System of Government): 39 questions -- includes 4 from uscis2025Additions
-- RR-01-RR-13 (Rights and Responsibilities): 13 questions -- includes 3 from uscis2025Additions
-- HIST-C01-C16 (Colonial Period): 16 questions -- includes 3 from uscis2025Additions
-- HIST-101-109 (1800s): 9 questions -- includes 2 from uscis2025Additions
-- HIST-R01-R12 (Recent History): 12 questions -- includes 2 from uscis2025Additions
-- SYM-01-SYM-15 (Symbols & Holidays): 15 questions -- includes 2 from uscis2025Additions
+**Key accessibility requirements:**
+- Live region must exist in DOM on page load (not dynamically added)
+- Wait 100ms after state change before updating live region text (gives screen reader time to detect)
+- Use `aria-live="assertive"` for answer feedback (interrupts current speech)
+- Use `aria-live="polite"` for progress updates ("Question 5 of 20")
 
-**To reach 128:** Need 8 more questions. Must cross-reference with official USCIS PDF to identify which specific questions are missing from the official 2025 list.
+**Focus management sequence:**
+```
+1. Page load -> focus on first answer option
+2. Tab between answer options (circular: last -> first)
+3. Enter/Space selects option (visual highlight)
+4. Tab to Check button -> Enter to check
+5. Focus auto-moves to feedback panel
+6. Tab to Continue button -> Enter to advance
+7. Focus auto-moves to first answer option of next question
+```
 
-**Dynamic answer handling:** Questions about current officeholders (president, VP, Speaker, senators) need a mechanism to update without code deploy. Options:
-1. Supabase table for dynamic answers (overrides static constants)
-2. Build-time env vars for current officials
-3. Comment in code indicating which answers need periodic updates
+**Timer accessibility per WCAG 2.2.1:**
+- Option to hide timer (already exists via CircularTimer `allowHide`)
+- Option to extend time by 50% (one-time extension per session)
+- Screen reader announcements at 15min, 10min, 5min, 2min, 1min marks
+- Final 60 seconds: "One minute remaining" announcement
+
+**Touch target audit areas:**
+- SpeechButton icons (currently 32x32, needs 44x44 touch area minimum)
+- AddToDeckButton compact mode (small icon, needs padding for touch)
+- Progress Hub tab buttons (already 44px height, verify width)
+- Flashcard navigation arrows (already 48x48, good)
+- Filter toggle buttons in test results (verify)
 
 ### Differentiators
 
 | Feature | Value Proposition | Complexity | Dependencies |
 |---------|-------------------|------------|--------------|
-| **Question-bank-version indicator** | "Updated for USCIS 2025 (128 questions)" badge on landing page and study guide. Builds trust that content is current. | Low | UI badge, version constant |
-| **Dynamic answer system** | Answers that change (current president, senators) auto-update without app update. | Med | Supabase or config-based answer override |
-| **Question coverage tracker** | "You've practiced 96 of 128 questions" -- specific to USCIS 2025 total. Current tracker shows against `totalQuestions` which is correct. | Low | Already exists, verify number |
+| **Reduced motion alternative animations** | Current `useReducedMotion` disables animations entirely. Better: provide ALTERNATIVE animations (fade instead of slide, opacity instead of scale). Users who prefer reduced motion still benefit from state change indicators. | Med | Motion variants with reduced alternatives |
+| **High contrast mode** | Detect `prefers-contrast: more` and increase border widths, text weights, and color contrast ratios. Myanmar script in particular benefits from higher contrast. | Low | CSS media query, Tailwind dark/light tokens |
+| **Screen reader mode for flashcards** | When screen reader is detected, flashcards auto-announce question text, and "flip" announces answer. No visual flip animation needed -- just content swap with aria-live. | Med | Screen reader detection heuristic, alternative card rendering |
 
 ### Anti-Features
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Auto-generating questions with AI** | Legal test prep content must be authoritative. AI-generated civics questions could be wrong and harmful. | Use ONLY official USCIS questions. Hand-translate to Burmese. |
-| **Supporting both 2008 and 2025 tests** | Adds complexity. 2008 test only for N-400 filed before Oct 20, 2025. Diminishing audience. | 2025 test only. Users on 2008 test can still use the app (120/128 questions overlap). |
-| **User-submitted questions** | Quality control, legal liability, incorrect content risk | Official USCIS questions only |
+| **Removing timer entirely for accessibility** | The timer simulates real USCIS test conditions. Removing it changes the test's purpose. | Make timer optional (toggle), extendable (50% more time), and screen-reader friendly. |
+| **Auto-reading questions aloud** | Automatically reading every question via TTS is overwhelming and removes user control. | SpeechButton exists. User initiates TTS. |
+| **Verbose aria descriptions** | Over-describing UI elements ("This is a green button with a checkmark icon that indicates your answer was correct and you should press it to continue") | Concise: "Correct. Continue to next question." |
 
 ---
 
-## Epic 7: Security Hardening
-
-### Table Stakes
-
-| Feature | Why Expected | Complexity | Dependencies |
-|---------|--------------|------------|--------------|
-| **Content Security Policy headers** | Prevents XSS attacks. Currently no CSP headers configured. | Med | next.config.mjs, Vercel headers |
-| **Supabase RLS audit** | Verify all tables have proper Row Level Security. Leaderboard and social features added in v1 need RLS review. | Med | Supabase dashboard, SQL policies |
-| **Input sanitization** | Translation report form (new in v2) and any user-generated content must be sanitized. `errorSanitizer.ts` exists but is for error messages only. | Low-Med | New sanitization utility |
-| **Dependency audit** | Check for known vulnerabilities in npm dependencies. | Low | `npm audit` |
-
-### Expected Behaviors
-
-**CSP configuration for Next.js + Supabase + PWA:**
+## Feature Dependencies (v2.1 Cross-Epic)
 
 ```
-default-src 'self';
-script-src 'self' 'nonce-{random}' https://accounts.google.com;
-style-src 'self' 'unsafe-inline';
-img-src 'self' data: blob: https://*.supabase.co;
-connect-src 'self' https://*.supabase.co wss://*.supabase.co;
-font-src 'self';
-worker-src 'self';
-manifest-src 'self';
-```
-
-Note: `'unsafe-inline'` for styles is needed for Tailwind's dynamic class injection. Nonce-based CSP for scripts requires server-side rendering of nonces, which conflicts with the SPA architecture (SSR disabled via `dynamic(..., { ssr: false })`). A meta-tag CSP or Vercel headers config is the pragmatic approach.
-
-**RLS audit checklist:**
-- `profiles` table: users can only read/write their own profile
-- `mock_tests` table: users can only read/write their own tests
-- `mock_test_responses` table: users can only read/write their own responses
-- `leaderboard_scores` table: all can read (public), users can only write their own
-- `interview_sessions` table: users can only read/write their own
-- New `translation_reports` table: users can insert their own, admins can read all
-
-**Dependency audit approach:**
-- Run `npm audit` and fix critical/high vulnerabilities
-- Pin dependency versions in package-lock.json (already done via lockfile)
-- Review Supabase client SDK version for known issues
-
-### Differentiators
-
-| Feature | Value Proposition | Complexity | Dependencies |
-|---------|-------------------|------------|--------------|
-| **Privacy-first data handling** | Immigrant users are justifiably cautious about data collection. Minimize PII, use anonymous IDs where possible, clear privacy policy. | Low | Policy document, data review |
-| **Offline-first security** | IndexedDB data is encrypted-at-rest on device. Supabase tokens expire and refresh properly. | Low | Already handled by Supabase SDK |
-
-### Anti-Features
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| **Complex auth requirements** | MFA, email verification, etc. create barriers for target audience. | Simple Google OAuth + email/password. Already implemented. |
-| **Data collection beyond necessity** | Analytics tracking, usage telemetry, etc. | Minimal data: auth, test results, progress. No tracking pixels. Sentry for errors only. |
-| **IP-based rate limiting** | Users on shared WiFi/cellular NAT could be blocked together | Token-based rate limiting via Supabase RLS policies |
-
----
-
-## Feature Dependencies (v2 Cross-Epic)
-
-```
-[Epic 1: Unified Navigation]
+[Epic 1: Duolingo Test UX]
     |
-    +-- required-before --> [Epic 2: NBA Dashboard] (dashboard layout depends on nav structure)
-    +-- required-before --> [Epic 3: Progress Hub] (new tab structure routes to Progress)
+    +-- required-before --> [Epic 6: Accessibility] (feedback panel needs aria-live, focus management)
+    +-- enables --> [Epic 5: Session Persistence] (Check/Continue flow creates clear save points)
     |
-    +-- enhances --> [Epic 4: iOS Design] (nav is the most visible glass surface)
+    +-- independent-of --> [Epic 2: Flashcard Sort]
+    +-- independent-of --> [Epic 3: TTS Quality]
+    +-- independent-of --> [Epic 4: Language Toggle]
 
-[Epic 2: NBA Dashboard]
+[Epic 2: Flashcard Sort]
     |
-    +-- depends-on --> [Epic 1: Navigation] (dashboard is the Home tab)
-    +-- depends-on --> [Epic 3: Progress Hub] (dashboard shows compact previews, links to Hub)
+    +-- enhanced-by --> [Epic 5: Session Persistence] (sort state resume)
+    +-- enhanced-by --> [Epic 4: Language Toggle] (card content filtering)
     |
-    +-- enhanced-by --> [Epic 6: 128Q Bank] (NBA can reference "X of 128 questions")
+    +-- independent-of --> [Epic 1, 3, 6]
 
-[Epic 3: Progress Hub]
+[Epic 3: TTS Quality]
     |
-    +-- depends-on --> [Epic 1: Navigation] (Progress is a primary tab)
-    +-- absorbs --> existing ProgressPage.tsx, HistoryPage.tsx, Dashboard widgets
+    +-- enhanced-by --> [Epic 4: Language Toggle] (TTS behavior per mode)
     |
-    +-- independent-of --> [Epic 5, 6, 7]
+    +-- independent-of --> [Epic 1, 2, 5, 6]
 
-[Epic 4: iOS Design System]
+[Epic 4: Language Toggle]
     |
-    +-- independent (cross-cutting) --> applies to all epics
-    +-- best-done-first --> establishes design tokens before other UI work
-    |
-    +-- does-NOT-depend-on --> any other epic
+    +-- enhances --> [Epic 1, 2, 3] (content filtering across all modes)
+    +-- independent (can be done in any order)
 
-[Epic 5: Burmese Translation Trust]
+[Epic 5: Session Persistence]
     |
-    +-- independent --> can be done in any order
-    +-- requires --> [Epic 7: Security] for translation_reports table RLS
+    +-- depends-on --> [Epic 1] (save points align with Check/Continue flow)
+    +-- enhanced-by --> [Epic 2] (sort state persistence)
     |
-    +-- enhances --> [Epic 6: 128Q] (new questions need trust indicators too)
+    +-- independent-of --> [Epic 3, 4, 6]
 
-[Epic 6: USCIS 128Q Bank]
+[Epic 6: Accessibility]
     |
-    +-- independent --> can be done early as pure data work
-    +-- enhanced-by --> [Epic 5] (trust indicators on new questions)
+    +-- depends-on --> [Epic 1] (feedback panel focus management, aria-live for Check flow)
+    +-- cross-cutting --> applies to all epics (touch targets, keyboard nav, screen reader)
     |
-    +-- impacts --> SRS system (new cards need scheduling), mastery calculation
-
-[Epic 7: Security Hardening]
-    |
-    +-- independent --> can be done in any order
-    +-- should-be-done-before --> [Epic 5] (translation reports need RLS)
-    +-- should-be-done-early --> foundational security before new features
+    +-- should-be-done-with --> [Epic 1] (build accessible from the start, not retrofit)
 ```
 
 ### Recommended Build Order
 
-1. **Epic 4: iOS Design System** -- establish tokens first, all subsequent UI work uses them
-2. **Epic 6: USCIS 128Q Bank** -- pure data work, no UI dependencies, unblocks question count accuracy
-3. **Epic 7: Security Hardening** -- foundational, unblocks translation reports table
-4. **Epic 1: Unified Navigation** -- structural change that everything else depends on
-5. **Epic 2: NBA Dashboard** -- redesign dashboard within new navigation structure
-6. **Epic 3: Progress Hub** -- consolidate progress views into new tab
-7. **Epic 5: Burmese Translation Trust** -- can be done alongside or after Hub
+1. **Epic 1: Duolingo Test UX** -- highest-impact UX change, establishes new interaction pattern for test/practice
+2. **Epic 6: Accessibility** -- build accessible feedback panel alongside Epic 1 (not as retrofit)
+3. **Epic 4: Language Toggle** -- cross-cutting behavior change, affects content rendering everywhere
+4. **Epic 3: TTS Quality** -- independent, settings-focused, low risk
+5. **Epic 2: Flashcard Sort Mode** -- independent, study guide enhancement
+6. **Epic 5: Session Persistence** -- depends on stable test UX from Epic 1, highest complexity
 
 ---
 
 ## MVP Recommendation
 
-### Must Have (v2.0 launch)
+### Must Have (v2.1 launch)
 
-1. **USCIS 128Q bank** -- factual gap, blocks test accuracy claim
-2. **Unified 5-tab navigation** -- structural improvement, most visible change
-3. **NBA dashboard card** -- single biggest UX improvement, replaces decision fatigue with guidance
-4. **Design token standardization** -- foundational for consistent UI
+1. **Check/Continue flow with bottom feedback panel** -- eliminates the #1 UX complaint (auto-advance), aligns with industry standard (Duolingo)
+2. **aria-live announcements for answer feedback** -- basic accessibility requirement, WCAG 2.1 Level A
+3. **Keyboard navigation for quiz** -- accessibility table stakes
+4. **Know/Don't Know flashcard sorting** -- transforms passive browsing into active study
+5. **Speech rate control (global)** -- already exists for interview, just needs unification
 
-### Should Have (v2.0 launch if time permits)
+### Should Have (v2.1 launch if time permits)
 
-5. **Progress Hub consolidation** -- reduces page sprawl, cleaner information architecture
-6. **Security hardening (CSP + RLS audit)** -- responsible engineering practice
-7. **Glass-morphism polish** -- visual differentiation, premium feel
+6. **Session persistence for test/practice** -- prevents progress loss, PWA table stakes
+7. **Language toggle consistency audit** -- makes English-only mode meaningful across all screens
+8. **Segmented progress bar** -- visual upgrade, enhances test UX
+9. **Voice selection in settings** -- empowers users with poor default voices
+10. **Touch target audit** -- WCAG 2.2 compliance
 
-### Defer to v2.1
+### Defer to v2.2
 
-8. **Burmese translation trust system** -- important but needs community infrastructure
-9. **Dynamic answer system** -- current officials rarely change; manual update is fine short-term
-10. **Full design system documentation** -- formalize after patterns stabilize
+11. **Cross-device session resume** (requires Supabase schema changes)
+12. **Cloud TTS for higher quality voices** (requires server-side API, costs)
+13. **Burmese TTS** (no browser support, requires cloud API)
+14. **Reduced motion alternative animations** (nice-to-have polish)
+15. **Screen reader mode for flashcards** (specialized, needs user testing)
 
 ---
 
 ## Sources
 
-### USCIS 2025 Civics Test
-- [USCIS 2025 Civics Test Official Page](https://www.uscis.gov/citizenship-resource-center/naturalization-test-and-study-resources/2025-civics-test) - HIGH confidence
-- [128 Civics Questions and Answers PDF](https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf) - HIGH confidence
-- [Federal Register: Implementation Notice](https://www.federalregister.gov/documents/2025/09/18/2025-18050/notice-of-implementation-of-2025-naturalization-civics-test) - HIGH confidence
-- [Immiva 128Q Breakdown](https://immiva.com/blog/128-civics-questions-for-us-citizenship-test-study-guide) - MEDIUM confidence (third-party summary)
-- [MyAttorneyUSA Guide](https://myattorneyusa.com/immigration-blog/navigating-the-u-s-naturalization-civics-test-from-100-to-128-questions-a-guide-for-aspiring-citizens/) - MEDIUM confidence
+### Duolingo UX Patterns
+- [Duolingo Onboarding UX Breakdown](https://userguiding.com/blog/duolingo-onboarding-ux) - MEDIUM confidence (third-party analysis)
+- [Duolingo Micro-Interactions Analysis](https://medium.com/@Bundu/little-touches-big-impact-the-micro-interactions-on-duolingo-d8377876f682) - MEDIUM confidence
+- [Duolingo Exercise UI Recreation (GitHub)](https://github.com/KasraTabrizi/duolingo-exercise-project) - MEDIUM confidence (implementation reference)
+- [Duolingo Exercise Types (Wiki)](https://duolingo.fandom.com/wiki/Exercise) - MEDIUM confidence
+- [Duolingo Step-by-Step User Flow](https://medium.com/@raghadware/navigating-duolingo-a-step-by-step-user-flow-for-choosing-and-completing-a-lesson-14de76946aaf) - MEDIUM confidence
+- [Duolingo Button CSS Replication](https://medium.com/@lilskyjuicebytes/clone-the-ui-1-replicating-duolingos-button-in-pure-css-bd37a97edb7e) - MEDIUM confidence
+- [Josh Comeau 3D Button Tutorial](https://www.joshwcomeau.com/animation/3d-button/) - HIGH confidence
+- [Haptic Rewards UX Pattern](https://bootcamp.uxdesign.cc/haptic-rewards-to-keep-you-glued-6efddf33801c) - MEDIUM confidence
 
-### Navigation & Dashboard Patterns
-- [Duolingo Core Tabs Redesign (Feb 2026)](https://blog.duolingo.com/core-tabs-redesign/) - HIGH confidence (official blog)
-- [Duolingo Home Screen Redesign](https://blog.duolingo.com/new-duolingo-home-screen-design/) - HIGH confidence
-- [Duolingo Achievements System](https://blog.duolingo.com/achievement-badges/) - HIGH confidence
-- [Next Best Action Guide - CleverTap](https://clevertap.com/blog/next-best-action/) - MEDIUM confidence
-- [Next Best Action - Braze](https://www.braze.com/resources/articles/next-best-action) - MEDIUM confidence
-- [Education App Design Trends 2025 - Lollypop](https://lollypop.design/blog/2025/august/top-education-app-design-trends-2025/) - MEDIUM confidence
+### Quizlet Flashcard Patterns
+- [Quizlet Flashcard Study Mode Help](https://help.quizlet.com/hc/en-us/articles/360030988091-Studying-with-Flashcards) - HIGH confidence (official docs)
+- [Quizlet New Flashcards Mode](https://quizlet.com/blog/introducing-our-new-flip-flashcards-mode) - HIGH confidence (official blog)
+- [Quizlet Learn Mode Help](https://help.quizlet.com/hc/en-us/articles/360030986971-Studying-with-Learn) - HIGH confidence
+- [Quizlet Stars Feature](https://help.quizlet.com/hc/en-us/articles/360031172312-Studying-most-missed-terms-with-stars) - HIGH confidence
 
-### iOS Design / Liquid Glass
-- [Apple Liquid Glass Wikipedia](https://en.wikipedia.org/wiki/Liquid_Glass) - HIGH confidence
-- [Liquid Glass CSS Implementation - LogRocket](https://blog.logrocket.com/how-create-liquid-glass-effects-css-and-svg/) - MEDIUM confidence
-- [Liquid Glass React Components](https://liquid-glass-js.com/) - LOW confidence (new library)
-- [Liquid Glass UI for Next.js](https://liquidglassui.org/) - LOW confidence (new library)
-- [Behind the Design: Duolingo - Apple](https://developer.apple.com/news/?id=jhkvppla) - HIGH confidence
+### TTS & Voice Quality
+- [Best Free TTS APIs 2026 (CAMB.AI)](https://www.camb.ai/blog-post/best-free-text-to-speech-ai-apis) - MEDIUM confidence
+- [Google Cloud TTS Pricing](https://cloud.google.com/text-to-speech) - HIGH confidence (official)
+- [SM Myanmar TTS](https://saomaicenter.org/en/smsoft/burmesetts) - MEDIUM confidence
+- [Narakeet Burmese TTS](https://www.narakeet.com/languages/burmese-text-to-speech/) - MEDIUM confidence
 
-### Translation Trust & Crowdsourcing
-- [Google Crowdsource App](https://en.m.wikipedia.org/wiki/Crowdsource_(app)) - MEDIUM confidence
-- [Crowdin Localization Platform](https://crowdin.com/) - HIGH confidence (official docs)
-- [Transifex Crowdsourcing Guide](https://help.transifex.com/en/articles/6231849-crowdsourcing-translations) - MEDIUM confidence
+### Language Toggle UX
+- [Multilingual UX Design (Lindie Botes)](https://medium.com/@lindiebotes/ui-ux-design-for-a-multilingual-world-languages-digital-literacy-in-app-design-5870c5fa6949) - MEDIUM confidence
+- [Language Selector UX (Smart Interface Design Patterns)](https://smart-interface-design-patterns.com/articles/language-selector/) - HIGH confidence
+- [Language Selector Design Best Practices 2025](https://www.linguise.com/blog/guide/best-practices-designing-language-selector/) - MEDIUM confidence
+- [Designing Language Switch (Usersnap)](https://usersnap.com/blog/design-language-switch/) - MEDIUM confidence
 
-### Security
-- [Supabase API Security Docs](https://supabase.com/docs/guides/api/securing-your-api) - HIGH confidence
-- [Supabase RLS Performance](https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv) - HIGH confidence
-- [Next.js CSP Guide](https://nextjs.org/docs/pages/guides/content-security-policy) - HIGH confidence
-- [Supabase Data API Hardening](https://supabase.com/docs/guides/database/hardening-data-api) - HIGH confidence
+### Session Persistence
+- [PWA Offline Data (web.dev)](https://web.dev/learn/pwa/offline-data) - HIGH confidence (Google official)
+- [IndexedDB for Session Persistence (Turnkey)](https://www.turnkey.com/blog/introducing-indexeddb-improved-session-persistence-verifiable-sessions-and-upgraded-auth-for-seamless-web-apps) - MEDIUM confidence
+- [Offline-First Frontend Apps 2025 (LogRocket)](https://blog.logrocket.com/offline-first-frontend-apps-2025-indexeddb-sqlite/) - MEDIUM confidence
 
-### PWA & Mobile UX
-- [PWA App Design - web.dev](https://web.dev/learn/pwa/app-design) - HIGH confidence
-- [PWA iOS Safe Area CSS](https://dev.to/marionauta/avoid-notches-in-your-pwa-with-just-css-al7) - MEDIUM confidence
-- [Mobile UX Patterns 2026](https://www.sanjaydey.com/mobile-ux-ui-design-patterns-2026-data-backed/) - MEDIUM confidence
+### Accessibility
+- [WCAG 2.2 Official Specification](https://www.w3.org/TR/WCAG22/) - HIGH confidence
+- [WCAG 2.2 New Success Criteria](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/) - HIGH confidence
+- [WCAG 2.5.8 Target Size Minimum](https://wcag.dock.codes/documentation/wcag258/) - HIGH confidence
+- [ARIA Live Regions (Harvard Digital Accessibility)](https://accessibility.huit.harvard.edu/technique-form-feedback-live-regions) - HIGH confidence
+- [ARIA Live Regions (MDN)](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions) - HIGH confidence
+- [Sara Soueidan: Accessible Notifications with ARIA](https://www.sarasoueidan.com/blog/accessible-notifications-with-aria-live-regions-part-1/) - HIGH confidence
+
+### Swipe Card Implementations
+- [Framer Motion Swipe Cards (GeeksforGeeks)](https://www.geeksforgeeks.org/reactjs/how-to-create-tinder-card-swipe-gesture-using-react-and-framer-motion/) - MEDIUM confidence
+- [React Tinder Card (npm)](https://www.npmjs.com/package/react-tinder-card) - MEDIUM confidence
+- [React Spring Swipe Cards](https://medium.com/swlh/tinder-card-swipe-feature-using-react-spring-and-react-use-gesture-7236d7abf2db) - MEDIUM confidence
 
 ---
 
-*Feature research for: Civic Test Prep v2.0*
-*Researched: 2026-02-09*
-*Supersedes: v1.0 feature research from 2026-02-05*
+*Feature research for: Civic Test Prep v2.1 Quality & Polish*
+*Researched: 2026-02-13*
+*Supersedes: v2.0 feature research (retained in git history)*

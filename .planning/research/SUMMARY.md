@@ -1,234 +1,436 @@
 # Project Research Summary
 
-**Project:** Civic Test Prep 2025 - v2.0 Unified Learning Hub
-**Domain:** Bilingual (English/Burmese) civics test prep PWA for Burmese immigrants
-**Researched:** 2026-02-09
+**Project:** Civic Test Prep 2025 - v2.1 Quality & Polish Milestone
+**Domain:** Bilingual civics test prep PWA enhancement (UX overhaul, TTS quality, accessibility, session persistence)
+**Researched:** 2026-02-13
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The v2.0 milestone is a **UI/UX refinement layer** built on v1.0's proven architecture (189 files, 37.5K LOC, 348 commits). Research reveals this is primarily a reshuffling and polishing effort, not infrastructure expansion. Only 2 new npm packages are needed (@radix-ui/react-tabs, @supabase/ssr), and zero new data stores or context providers. The core changes — unified navigation, dashboard simplification, Progress Hub consolidation, and design token alignment — follow established patterns from education app leaders like Duolingo and Khan Academy.
+v2.1 is a UX and quality refinement milestone focused on modernizing the test/practice experience to match 2026 industry standards (Duolingo-style interaction patterns), improving TTS accessibility for English audio, adding session persistence so users can resume interrupted sessions, and implementing a consistent language mode toggle that controls content visibility across the entire app. Unlike v2.0 which added new features (hub, dashboard, interview), v2.1 refines the foundational learning experience that 100% of users interact with.
 
-The recommended approach is **surgical refactoring over rewriting**. The existing provider hierarchy, offline-first data layer, and hash-based routing patterns are sound. The riskiest integration is Progress Hub consolidation (merging 3 pages with deep links), which must preserve all existing routes, hash fragments, and push notification URLs. The safest starting point is design token alignment, which has zero functional dependencies and reduces visual variance before layout changes. Critical finding: USCIS 2025 requires **128 questions** (not 120 as stated in PRD) — the app has 120, missing 8 questions.
+The recommended approach prioritizes consistency over novelty. The research reveals this is NOT a greenfield project—it's a surgical enhancement of a mature 40K+ LOC codebase with established patterns (8 IndexedDB stores, 59+ components consuming language context, React Compiler ESLint rules, motion/react animations). The highest-impact changes are: (1) replacing auto-advance with explicit Check/Continue flow (eliminates #1 UX complaint), (2) unifying language mode semantics across 171 conditional render points (fixes inconsistent bilingual behavior), (3) adding session persistence with resume prompts (prevents progress loss), and (4) consolidating duplicated TTS logic before adding quality improvements.
 
-Key risks center on **continuity violations**: breaking onboarding tour targets during navigation redesign, regressing user progress metrics when expanding the question bank, and eroding trust with bad Burmese translations. The mitigation strategy is to preserve user-facing continuity while restructuring under the hood — celebrate new questions instead of showing coverage regression, redirect legacy URLs transparently, and require native speaker review for all translation changes. Security hardening (push subscription authentication) is critical before any push notification improvements.
+Key risks center on cross-cutting concerns: language mode changes touch 48 files with 171 conditional render points, session persistence must handle schema evolution and stale data, TTS improvements must not break the fragile interview phase state machine, and accessibility retrofitting must coordinate with existing spring animations. The mitigation strategy is atomic migration—complete each cross-cutting change in a single phase, not incrementally. Half-migrated language mode behavior or partial TTS consolidation is worse than the status quo.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing v1.0 stack (Next.js 15 Pages Router, React 19, Supabase, Tailwind, motion/react, Radix UI, ts-fsrs, idb-keyval) **requires only 2 additions** for v2.0. The research validates that feature requests like unified navigation, dashboard CTAs, glass-morphism UI, and rate limiting do not require new libraries — they're achievable with existing tools plus CSS and component refactoring.
+**No major stack additions.** v2.1 builds entirely on existing infrastructure: Next.js 15, React 19, motion/react 12, Tailwind, idb-keyval, Sentry, Serwist. The only new dependencies are dev/build tools and one tiny runtime addition:
 
-**Core additions:**
-- **@radix-ui/react-tabs** (^1.1.13): Accessible tab component for Progress Hub — consistent with existing Radix ecosystem (Dialog, Toast, Progress already in use), handles keyboard navigation and ARIA roles correctly
-- **@supabase/ssr** (^0.8.0): Server-side Supabase client for API route authentication — enables JWT verification in push subscription endpoint to replace current "trust the userId" vulnerability
+**Stack additions (5 total, 1 runtime):**
+- **web-vitals** (1.5KB gzipped) — Runtime performance metric collection (LCP, INP, CLS) for Sentry
+- **@andresaya/edge-tts** (dev-only) — Pre-generate Burmese MP3 audio files at build time (Microsoft Edge TTS is the ONLY free service with my-MM voices)
+- **vitest-axe** (dev-only) — Accessibility testing in Vitest suite
+- **eslint-plugin-jsx-a11y** (dev-only) — Static accessibility linting (WCAG 2.1/2.2)
+- **@next/bundle-analyzer** (optional) — Bundle size treemap analysis
 
-**No library needed for:**
-- **Unified navigation**: Shared config module consumed by existing AppNavigation + BottomTabBar
-- **iOS-inspired design tokens**: CSS custom properties + Tailwind backdrop-filter (already supported)
-- **In-memory rate limiting**: 30-line Map-based token bucket (sufficient for low-traffic push endpoints)
-- **Burmese translation upgrade**: Content work on existing strings.ts centralized i18n system
+**Critical finding:** Burmese TTS requires pre-generated audio. Browser Web Speech API has zero Burmese voices. Google Cloud TTS doesn't support Burmese. Kokoro TTS doesn't support Burmese. Only Microsoft Edge TTS has `my-MM-NilarNeural` and `my-MM-ThihaNeural` voices. The client-side `edge-tts-universal` library stopped working in non-Edge browsers in December 2025 (user-agent restriction). Build-time audio generation with @andresaya/edge-tts (Node.js wrapper) is the only free, offline-capable approach. 512 audio files (128 questions × 4 strings) = ~2.3MB total, well within Vercel's 100MB limit and negligible bandwidth with service worker caching.
 
-**Critical finding from stack research:** USCIS 2025 civics test has **128 questions** (official USCIS PDF), not 120. The app currently has 120 questions (100 original + 20 uscis2025Additions). Gap: **8 questions missing** to reach full compliance.
+**No new gesture library needed.** motion/react v12.33.0 already provides everything for Duolingo-style swipe interactions: `drag`, `dragConstraints`, `dragElastic`, `useMotionValue`, `useTransform`, `onDragEnd` with velocity detection. The existing FlashcardStack already uses this pattern. Upgrading to Tinder-style swipe-to-dismiss is an enhancement of existing code, not a new capability. Adding @use-gesture/react would create competing gesture systems.
 
 ### Expected Features
 
-Seven epics identified across navigation UX, decision support, information architecture, visual design, content trust, legal compliance, and security.
+**Must have (table stakes for 2026 learning apps):**
+- **Check/Continue flow** — Explicit "Check" button after answer selection, bottom feedback panel slides up (green/red), "Continue" button advances. Replaces auto-advance which is the #1 UX complaint. Duolingo's signature interaction pattern.
+- **User-controlled pacing** — No automatic advancement. User taps Continue when ready. Respects reading speed differences.
+- **aria-live announcements** — Screen reader users must hear "Correct!" or "Incorrect. The answer is [X]" after checking answer. WCAG 2.1 Level A requirement.
+- **Keyboard navigation** — Tab between answers, Enter to select, Enter to Check, Enter to Continue. Arrow keys for answer options. Full quiz control without mouse/touch.
+- **Session persistence** — Resume mid-session after browser close. IndexedDB-based with 24-hour expiry, version-stamped sessions, resume prompt on page load.
+- **Know/Don't Know flashcard sorting** — Quizlet's core pattern. Swipe right = know, swipe left = study more. End-of-round summary: "You knew 15/20. Study the 5 you missed?"
+- **Language mode consistency** — English-only mode must hide Burmese text on ALL screens. Currently inconsistent: some screens respect the toggle, others (TestPage, flashcards) show Burmese unconditionally.
 
-**Must have (table stakes):**
-- **Consistent navigation across mobile/desktop** — users currently see different structures (mobile: 3 tabs + More sheet, desktop: 7 links). Standard pattern is 4-5 persistent bottom tabs (iOS HIG, Material Design)
-- **Single primary CTA on dashboard** — current dashboard has 11 sections with 3 equal-weight actions. Education apps use "Next Best Action" decision tree to reduce choice paralysis
-- **Complete 128-question USCIS 2025 bank** — legal requirement effective Oct 20, 2025. Current gap: 8 questions
-- **Push subscription authentication** — current API accepts any userId without verification, allowing subscription hijacking
+**Should have (competitive differentiators):**
+- **Segmented progress bar** — Each question = one segment. Green (correct), red (incorrect), gray (upcoming), blue (current). Visual performance tracking.
+- **Haptic feedback** — `navigator.vibrate(10)` on correct, `[20,50,20]` on incorrect. Free on Android, no-op on iOS PWAs.
+- **Voice selection in settings** — Let users pick preferred TTS voice from available options. Current auto-selection works but voice quality varies drastically (iOS Samantha vs. Android eSpeak).
+- **Speech rate control (global)** — Already exists for interview mode. Extend to all TTS contexts (test, practice, study guide).
+- **Auto-add "Don't Know" cards to SRS deck** — Cards sorted as "Don't Know" in flashcard mode auto-suggest SRS deck addition. Bridges study guide and spaced repetition.
+- **Reduced motion alternative animations** — Fade instead of slide, opacity instead of scale. Current `useReducedMotion` disables animations entirely—better to provide alternatives.
 
-**Should have (competitive):**
-- **Progress Hub consolidation** — current data scattered across Dashboard, ProgressPage, HistoryPage, SocialHubPage. Single tabbed hub matches standard analytics pattern
-- **iOS-inspired glass effects** — frosted nav bars, translucent cards with backdrop-blur. Differentiates from dated Material Design competitors
-- **Translation trust indicators** — show verification status (verified, community-reviewed, machine). Builds trust for high-stakes legal content
-
-**Defer to v2.1+:**
-- **Dynamic answer system** — questions about current officials (president, senators) need periodic updates. In-memory approach works short-term
-- **Full design system documentation** — formalize patterns after they stabilize through v2.0
-- **Translation contribution workflow** — community reporting infrastructure for scale
+**Defer to v2.2+:**
+- **Cross-device session resume** (requires Supabase schema changes, conflict resolution)
+- **Cloud TTS for higher quality voices** (requires server-side API route, per-character costs)
+- **High contrast mode** (`prefers-contrast: more` detection, increased border widths)
+- **Screen reader-specific flashcard mode** (needs user testing with VoiceOver/NVDA users)
 
 ### Architecture Approach
 
-The v2.0 changes fit **within the existing architecture** with no new providers, stores, or data flows. The established provider hierarchy (ErrorBoundary > Language > Theme > Toast > Offline > Auth > Social > SRS > Router) remains unchanged. All v2.0 features are UI layer modifications that consume existing context data.
+v2.1 is **enhancement, not refactoring**. The existing architecture (8 IndexedDB stores, 8 context providers, 59 files consuming LanguageContext) is sound. Changes extend existing patterns rather than introducing new ones.
 
-**Major structural changes:**
+**Major integration points:**
 
-1. **Navigation config consolidation** — create single navConfig.ts shared source of truth to replace dual nav definitions (AppNavigation's navLinks + BottomTabBar's primaryTabs/moreNavItems). Mobile expands from 3+4 to 5 persistent tabs, eliminating the More menu.
+1. **LanguageContext override mechanism** — Add `pushOverride('english-only')` / `popOverride()` to context API. Interview mode calls `pushOverride` on mount to force English-only temporarily without corrupting user preference. The existing `showBurmese` boolean remains unchanged—override transparently changes what `mode` returns. Zero-change for 59 consumer components.
 
-2. **Progress Hub page with hash routing** — new ProgressHubPage.tsx with tabs (Overview, History, Community) using location.hash pattern already validated in HistoryPage and SocialHubPage. Reuses existing components (CategoryGrid, SkillTreePath, LeaderboardTable) with zero modification. Legacy routes redirect: /progress → /hub#overview, /history → /hub#history, /social → /hub#community.
+2. **Session persistence store (9th IndexedDB store)** — New `civic-prep-sessions` database with `active-{type}` keys. Schema includes version stamping, TTL, shuffled question order serialization. Debounced writes (2s) + immediate flush on `beforeunload`/`visibilitychange`. Resume flow: check for persisted session on mount → show resume prompt → hydrate or discard.
 
-3. **Dashboard simplification via extraction** — new useNextBestAction hook computes single CTA from existing data sources (useSRS, useAuth, useCategoryMastery, useStreak). Dashboard shrinks from 11 sections to 4-5, moving detailed analytics to Progress Hub.
+3. **TTS core extraction** — Consolidate duplicated voice-finding logic from `useSpeechSynthesis` and `useInterviewTTS` into shared `ttsCore.ts`. Voice loading, voice selection, utterance creation, and duration estimation as pure functions. Both hooks delegate to core. Improvements (voice quality ranking, rate persistence, Burmese voice selection) apply once.
 
-4. **Design token consolidation** — CSS custom properties in globals.css as single source of truth, Tailwind references them via hsl(var(--...)). Current fragmentation (globals.css, tailwind.config.js, design-tokens.ts) creates drift. TypeScript tokens kept only for motion-specific values (springs, timing).
+4. **Test state machine extraction** — Extract TestPage's 819 lines into `useTestSession` hook. Separate concerns: state machine (hook) + UI rendering (components) + persistence (useSessionPersistence). Shared session UI components (`AnswerGrid`, `SessionProgress`, `SessionFeedback`) used by both test and practice.
 
-**Data flow changes:** None. All v2.0 features use derived state from existing hooks. No new IndexedDB stores, no new Supabase tables (except security hardening on existing push_subscriptions), no new context providers.
+5. **Flashcard enhancement** — Add "Sort Mode" to existing FlashcardStack. Toggle between Browse (navigation swipe) and Sort (know/don't-know swipe). Reuse existing swipe gesture code from ReviewCard. No structural changes to Flashcard3D—only prop additions for AddToDeckButton prominence.
+
+**Critical architectural insight from PITFALLS.md:** TestPage/PracticePage/InterviewPage each implement navigation lock independently. When restructuring for shared session components, lock ownership MUST remain with a single component per page. Split ownership causes unlock timing bugs (session wrapper unlocks while session component is still active).
 
 ### Critical Pitfalls
 
-Research identified 15 pitfalls across critical, moderate, and minor severity. Top 5 that threaten user experience or require rewrites:
+1. **Language toggle changes touch 171 conditional render points across 48 files** — Current `showBurmese` gates some Burmese text but NOT all. TestPage shows Burmese answers unconditionally (11 `font-myanmar` ungated). Flashcard3D shows Burmese unconditionally (5 ungated). FlashcardStack progress indicator always shows Burmese. Partial migration (fixing some files but not all) creates worse UX than current inconsistency. **Mitigation:** Audit ALL 334 `font-myanmar` occurrences BEFORE coding. Categorize as gated/ungated/intentional-always. Single atomic PR wraps ALL Burmese text through `BilingualText` or `showBurmese` guards.
 
-1. **Navigation unification breaks onboarding tour** — OnboardingTour targets 5 data-tour attributes on Dashboard elements (study-action, test-action, srs-deck, interview-sim, theme-toggle). Navigation redesign moves/removes these, causing silent tour failures with floating tooltips or skipped steps. **Prevention:** Audit all data-tour targets before ANY navigation changes, update tour steps to match new mental model.
+2. **Session persistence creates stale state bugs when question bank changes** — User starts session with question IDs from version A. App updates to version B which changes/removes IDs. User resumes with stale references → `find()` returns `undefined`. Answer shuffle desync: persisted `selectedAnswer` reference doesn't match re-shuffled answers. idb-keyval has NO schema versioning or migrations. **Mitigation:** Version-stamp sessions (`appVersion`, `questionBankHash`). Discard on version mismatch. Serialize answer selection by index, not object reference. Store shuffled question order, don't re-shuffle. 24-48 hour TTL auto-expires stale sessions.
 
-2. **Page consolidation loses hash-based deep links** — existing routes use hash routing (/history#tests, /study#review, /progress?category=X#cards) for tabs, scroll targets, and SRS entry points. Push notifications, SRS widget links, and user bookmarks depend on these URLs. **Prevention:** Map ALL routes/hashes before consolidation, implement redirects, update all navigate() calls and formatSRSReminderNotification function.
+3. **TTS improvements break interview phase state machine** — InterviewSession uses fragile 6-phase state machine (`greeting -> chime -> reading -> responding -> grading -> transition`) triggered by TTS `onEnd` callbacks. Two separate TTS hooks (`useSpeechSynthesis`, `useInterviewTTS`) duplicate voice-finding with slightly different logic. Improvements to one don't propagate. Adding Burmese TTS or voice queuing breaks timeout fallback (duration estimation is English word-count-based, fails for Burmese syllable structure). **Mitigation:** Consolidate TTS hooks into shared `ttsCore.ts` BEFORE adding features. Add Burmese duration estimation (char-count / 8 chars/sec). Test timeout fallback independently with mocked `speechSynthesis`.
 
-3. **Design token migration creates visual regressions across 63+ files** — 307 occurrences of hardcoded color classes (primary-500, success-500, warning-500) across 63 files. THREE sources of truth: globals.css CSS variables, tailwind.config.js hardcoded HSL, design-tokens.ts JS exports (not consumed by Tailwind). Dark mode uses manual overrides (.dark .bg-primary-500) instead of CSS variable switching. **Prevention:** Consolidate to CSS variables first (migration pass), THEN introduce new tokens (visual pass). Use Playwright screenshot diffing.
+4. **React Compiler ESLint rules block common session persistence patterns** — Restoring persisted state on mount requires async IndexedDB read → `setState` in effect (violates `react-hooks/set-state-in-effect`). Tracking "has session been saved" with ref and reading during render violates `react-hooks/refs`. **Mitigation:** Use "loading state" pattern (status state machine: `loading -> fresh | resumed`). Follow established `eslint-disable-next-line` patterns from existing codebase (LanguageContext line 49-55, useSpeechSynthesis line 29). Auto-save on user actions, not timers (avoids interval + stale closure).
 
-4. **Expanding to 128 questions breaks hardcoded thresholds** — app has 120 questions, but users who practiced all 100 original questions show "100% coverage". Adding 8 more questions drops them to 83%, destroying motivation. ReadinessIndicator score drops (coverage is 50% of composite score). **Prevention:** Celebrate new questions with in-app notification, consider separate "legacy 100Q" vs "128Q" tracking during transition.
-
-5. **Push subscription API lacks authentication** — /api/push/subscribe accepts any userId in POST body with NO JWT verification. Uses SUPABASE_SERVICE_ROLE_KEY (admin access) and trusts client-provided userId. Attacker can hijack any user's push notifications or spam the table. **Prevention:** Verify supabase.auth.getUser() matches userId, add token-based rate limiting (5 changes/hour), validate before ANY push improvements.
-
-**Cross-cutting concern:** React Compiler ESLint rules (project uses strict rules from React 19 compiler). Common refactoring patterns violate: setState in useEffect (set-state-in-effect), ref.current in render (refs), useMemo<Type>() generics (preserve-manual-memoization). Existing workarounds validated in HistoryPage (useMemo-derived tab from location.hash) and useMasteryMilestones (lazy useState instead of useRef). **Prevention:** Follow MEMORY.md patterns, run ESLint after every component change.
+5. **Flashcard 3D flip card pointer event management is fragile** — `backfaceVisibility: hidden` does NOT block pointer events. Card's `onClick={handleFlip}` captures ALL clicks. TTS buttons and ExplanationCard must `stopPropagation()` on click/keydown/pointerdown. Adding new interactive elements (Sort buttons, AddToDeckButton prominence) without propagation audit causes clicks to leak through and flip the card. **Mitigation:** Every interactive element inside flashcard MUST stop propagation. Maintain `pointerEvents: isFlipped ? 'auto' : 'none'` toggle on face divs. Test matrix: tap TTS on back face → no flip, expand explanation → no flip.
 
 ## Implications for Roadmap
 
-Based on research findings, suggested 7-phase structure emphasizing foundation-first and continuity preservation:
+Based on dependency analysis and risk assessment, v2.1 requires 6-7 phases in strict order. Cross-cutting concerns (language mode, TTS consolidation) must complete before dependent features.
 
-### Phase 1: Design Token Consolidation
-**Rationale:** Zero-risk infrastructure that unblocks all UI work. If tokens are inconsistent when building new UI, every new component adds to the debt. STACK.md confirms no new library needed (CSS + Tailwind).
+### Suggested Phase Structure
 
-**Delivers:** Single source of truth for colors/shadows/spacing, dark mode via CSS variable switching (not overrides), shared motion spring presets.
+#### Phase 1: Language Mode Override & Consistency Audit
+**Rationale:** LanguageContext is consumed by 59 files. Changing its semantics affects every subsequent phase. The override mechanism (for interview English-only forcing) must exist before Phase 4 restructures interview. The consistency audit (wrapping ungated Burmese text) must complete before language mode behavior changes are user-visible.
 
-**Addresses:** Epic D (iOS-Inspired Design System) foundation, prevents Pitfall 3 (visual regressions).
+**Delivers:**
+- `pushOverride(mode)` / `popOverride()` API in LanguageContext
+- All 334 `font-myanmar` occurrences audited and categorized
+- TestPage answers respect language mode (wrap in BilingualText or guard)
+- Flashcard3D front/back respect language mode
+- FlashcardStack progress indicator respects language mode
+- Compact LanguageToggle component for in-session switching
 
-**Avoids:** Touching 63+ files after visual changes are in flight. Do structural consolidation with zero visual change, then layer visual polish.
+**Addresses from FEATURES.md:**
+- Language mode consistency (table stakes)
+- Per-context language override (interview always English)
 
-**Research flag:** Standard patterns, skip research-phase.
+**Avoids from PITFALLS.md:**
+- Pitfall 1: Partial language migration worse than none
+- Pitfall 9: BilingualText cascade through 63+ consumers
 
-### Phase 2: USCIS 128-Question Bank Completion
-**Rationale:** Pure data work with no UI dependencies. Unblocks accurate question count messaging. Critical legal compliance gap (8 questions missing for Oct 2025 effective date).
+**Research flags:** Standard pattern extension. No deeper research needed.
 
-**Delivers:** Full 128-question bank with bilingual content, studyAnswers, and explanations. Updated mock test to 20Q/12 pass/9 fail logic (already implemented, verify alignment).
+---
 
-**Addresses:** Epic F (USCIS 2025 128Q Bank), prevents Pitfall 4 (coverage regression).
+#### Phase 2: TTS Core Extraction
+**Rationale:** Two TTS hooks duplicate voice-finding logic. Consolidating them BEFORE Phase 3 (session persistence, which may need TTS in resume flows) and BEFORE Phase 5 (TTS quality improvements) prevents divergence. This is foundational refactoring with zero user-facing changes—safe to do early.
 
-**Avoids:** Announcing "120 questions" in v2.0 UI when the real requirement is 128. Add celebration messaging for new questions instead of silent metric regression.
+**Delivers:**
+- `ttsCore.ts`: shared voice loading, voice finding, utterance creation, duration estimation
+- `useTTS.ts`: simplified general-purpose hook (replaces useSpeechSynthesis)
+- `useInterviewTTS.ts`: simplified interview hook (delegates to ttsCore)
+- SpeechButton import path update
+- Zero behavior changes (pure refactoring)
 
-**Research flag:** Skip research-phase (official USCIS PDF is source of truth). Cross-reference with official 2025-Civics-Test-128-Questions-and-Answers.pdf to identify missing 8.
+**Uses from STACK.md:**
+- Existing Web Speech API (no new dependencies)
 
-### Phase 3: Push Subscription Security Hardening
-**Rationale:** Foundational security before any push notification improvements. Current vulnerability allows subscription hijacking (PITFALLS.md Critical Pitfall 5). STACK.md confirms @supabase/ssr enables proper JWT verification.
+**Avoids from PITFALLS.md:**
+- Pitfall 3: Dual TTS hook divergence
+- Pitfall 4: Inline TTS improvements without extraction first
 
-**Delivers:** Authenticated push subscription endpoint via @supabase/ssr createServerClient, token-based rate limiting (5 changes/hour), input validation.
+**Research flags:** Internal refactoring. No research needed.
 
-**Addresses:** Epic G (Security Hardening) push security, prevents Pitfall 5 (unauthenticated API).
+---
 
-**Avoids:** Building new push features on insecure foundation. This is 2-hour fix that must ship before any push improvements.
+#### Phase 3: Session Persistence Store & Hook
+**Rationale:** Session persistence is consumed by Phases 4 (test/practice/interview UX overhaul), 6 (flashcard sort mode). Building the reusable store and hook first allows all session types to adopt persistence uniformly. Depends on Phase 2 complete (TTS consolidated) because resume flows may need to speak welcome messages.
 
-**Research flag:** Skip research-phase (@supabase/ssr docs are comprehensive).
+**Delivers:**
+- `sessionStore.ts`: 9th IndexedDB store, `civic-prep-sessions` database
+- `useSessionPersistence<T>` hook: debounced writes, immediate flush, TTL enforcement
+- `ResumePrompt.tsx`: modal for resume-or-start-new choice
+- Version stamping schema, question order serialization
+- Web Locks API integration for multi-tab safety
 
-### Phase 4: Unified Navigation Structure
-**Rationale:** Structural change that everything else depends on. Dashboard redesign needs stable nav, Progress Hub needs finalized route. ARCHITECTURE.md recommends creating navConfig.ts BEFORE visual changes.
+**Addresses from FEATURES.md:**
+- Session persistence (table stakes)
+- Resume prompt on page load
 
-**Delivers:** Single navConfig.ts consumed by both AppNavigation and BottomTabBar, 5-tab mobile bottom bar (eliminate More menu), layout component wrapper (move AppNavigation out of individual pages).
+**Implements from ARCHITECTURE.md:**
+- New IndexedDB store following existing `idb-keyval` + `createStore` pattern
+- Debounced write with event-based flush
 
-**Addresses:** Epic A (Unified Navigation), prevents Pitfall 1 (broken tour), Pitfall 12 (per-page nav pattern).
+**Avoids from PITFALLS.md:**
+- Pitfall 2: Stale session state on app update
+- Pitfall 4: React Compiler violations in persistence pattern
 
-**Avoids:** Doing layout-level refactor AFTER visual redesign (double work). Do structural refactor first with zero visual change, then polish.
+**Research flags:** Standard IndexedDB pattern. No research needed. Reference existing 8 stores.
 
-**Research flag:** Standard patterns (hash routing validated in codebase), but audit ALL data-tour targets, push notification URLs, and navigate() calls. Medium complexity.
+---
 
-### Phase 5: Progress Hub Consolidation
-**Rationale:** Depends on unified navigation for new /hub route. Establishes destination before dashboard links to it (ARCHITECTURE.md build order). Highest integration risk due to deep links.
+#### Phase 4: Test/Practice/Interview UX Overhaul
+**Rationale:** Highest-impact user-facing change. Depends on Phase 1 (language override for interview), Phase 3 (session persistence hook). Extract state machines from monolithic page components, add Check/Continue flow, integrate persistence. This is the "Duolingo-style UX" epic from FEATURES.md.
 
-**Delivers:** ProgressHubPage.tsx with tabs (Overview, History, Community), legacy route redirects (/progress, /history, /social → /hub#tab), preserved hash-based deep links.
+**Delivers:**
+- `useTestSession.ts`: extracted state machine from TestPage (819 lines → ~300 hook + ~200 page)
+- `usePracticeSession.ts`: extracted state machine from PracticeSession
+- Check/Continue flow with bottom feedback panel (BottomFeedbackPanel component)
+- Segmented progress bar (green/red/gray segments per question)
+- Session persistence integrated (auto-save, resume on mount)
+- Haptic feedback on answer check (`navigator.vibrate`)
+- Keyboard shortcuts (Enter = Check/Continue, Space/arrows = select answer)
+- Shared session components: `AnswerGrid.tsx`, `SessionProgress.tsx`, `SessionFeedback.tsx`
 
-**Addresses:** Epic C (Progress Hub Consolidation), prevents Pitfall 2 (broken deep links), Pitfall 14 (stale localStorage keys).
+**Addresses from FEATURES.md:**
+- Check/Continue flow (table stakes)
+- User-controlled pacing (table stakes)
+- Bottom feedback banner (table stakes)
+- Segmented progress bar (table stakes)
+- Haptic feedback (differentiator)
+- Keyboard shortcuts (differentiator)
 
-**Avoids:** Breaking push notification URLs, SRS review links, user bookmarks. Map ALL existing routes/hashes before consolidation, implement redirects, update all hardcoded path strings.
+**Uses from STACK.md:**
+- motion/react AnimatePresence for feedback panel slide-up
+- idb-keyval session persistence
+- Existing AnswerFeedback + WhyButton components
 
-**Research flag:** Hash routing is established pattern, but needs careful audit of ALL link sources. Medium-high complexity due to blast radius.
+**Avoids from PITFALLS.md:**
+- Pitfall 5: Navigation lock ownership (single owner per page)
+- Pitfall 4: React Compiler compliance in state machines
 
-### Phase 6: Dashboard Redesign with Next Best Action
-**Rationale:** Depends on navigation (dashboard is Home tab) and Progress Hub (dashboard links to it). FEATURES.md research confirms "Next Best Action" decision tree is standard education app pattern (Duolingo, Khan Academy).
+**Research flags:** **Needs /gsd:research-phase** for Check/Continue interaction timing, feedback panel animation choreography, and keyboard nav focus management. These are nuanced UX patterns not fully specified in research.
 
-**Delivers:** useNextBestAction hook (decision tree from SRS due count, test history, mastery, streak), NextBestAction hero CTA component, simplified 4-5 sections (down from 11).
+---
 
-**Addresses:** Epic B (NBA Dashboard), prevents Pitfall 8 (removing widgets users depend on), Pitfall 11 (motion/react transform conflicts).
+#### Phase 5: TTS Quality Improvements
+**Rationale:** Depends on Phase 2 (TTS core extraction) complete. Now that voice logic is consolidated, quality improvements apply once to both general and interview TTS. Depends on Phase 1 (language mode) for English-only behavior in voice selection UI.
 
-**Avoids:** Decision fatigue from 3 equal-weight CTAs, overwhelming 11-section scroll. Preserve key metrics (due cards, streak, readiness) in compact form, link to Progress Hub for details.
+**Delivers:**
+- Voice selection dropdown in Settings (shows available voices, preview button)
+- Global speech rate control (unified from interview-only to all contexts)
+- Voice preference storage in `ttsVoicePrefs.ts` (localStorage or IndexedDB)
+- Voice quality ranking (Neural > Enhanced > Standard)
+- Graceful TTS failure handling (no voices, suspended AudioContext)
+- "Speaking" visual indicator (animated sound wave icon on SpeechButton)
+- Burmese audio pre-generation build script (uses @andresaya/edge-tts)
 
-**Research flag:** Decision logic needs design review. useNextBestAction priority order should be validated with existing users. Medium complexity.
+**Addresses from FEATURES.md:**
+- Voice selection (should-have)
+- Speech rate control global (should-have)
+- Burmese TTS via pre-generated audio (deferred from v2.0)
 
-### Phase 7: Burmese Translation Trust Upgrade
-**Rationale:** Can be done alongside or after Hub/Dashboard work. Requires careful content QA, not architectural changes. FEATURES.md confirms translation trust system builds confidence for high-stakes legal content.
+**Uses from STACK.md:**
+- @andresaya/edge-tts (dev dependency, build script only)
+- Existing useTTS + useInterviewTTS (now consolidated)
 
-**Delivers:** Burmese style guide (glossary, tone, terminology), updated top-20 strings with native speaker review, text expansion safety (overflow-hidden, line-clamp), consistent font-myanmar line-height (1.6-1.8).
+**Implements from ARCHITECTURE.md:**
+- ttsVoicePrefs.ts preference storage
+- useAudioTTS hook for MP3 playback (Burmese audio)
 
-**Addresses:** Epic E (Burmese Translation Trust), prevents Pitfall 6 (bad translations erode trust).
+**Avoids from PITFALLS.md:**
+- Pitfall 3: Interview phase machine breaks (already consolidated in Phase 2)
+- Pitfall 10: Speech rate in localStorage (migrate to IndexedDB or document)
+- Pitfall 12: Voice availability varies by OS (store as hint, not exact match)
 
-**Avoids:** Partial updates creating mixed formality levels, scattered inline Burmese strings outside strings.ts. Audit for Myanmar Unicode (U+1000-109F) outside centralized i18n file first.
+**Research flags:** Standard pattern. Voice selection UI is settings CRUD. Build script for audio generation is straightforward.
 
-**Research flag:** Requires native Burmese speaker, not a technical research phase. Low technical complexity, high content sensitivity.
+---
+
+#### Phase 6: Flashcard Sort Mode & Study Guide Enhancements
+**Rationale:** Independent of test/practice UX. Depends on Phase 3 (session persistence) for sort state resume, Phase 1 (language mode) for card content filtering. Can run in parallel with Phase 5 if resources allow.
+
+**Delivers:**
+- FlashcardStack "Sort Mode" toggle (Browse vs. Sort)
+- Swipe right = Know, swipe left = Don't Know (Tinder-style dismiss)
+- Know/Don't-Know tallies counter
+- End-of-round summary: "You knew X/Y. Study missed cards?"
+- Missed cards re-queue for second round
+- Auto-suggest SRS deck addition for "Don't Know" cards
+- Sort state persistence (resume mid-sort)
+- Bilingual sort labels ("Know / သိပါတယ်")
+
+**Addresses from FEATURES.md:**
+- Know/Don't Know sorting (table stakes)
+- Progress counter with tallies (table stakes)
+- End-of-round summary (table stakes)
+- Auto-add Don't Know to SRS (differentiator)
+- Sort Mode persistence (differentiator)
+
+**Uses from STACK.md:**
+- motion/react drag + useMotionValue (already in FlashcardStack)
+- Existing ReviewCard swipe gesture pattern
+
+**Avoids from PITFALLS.md:**
+- Pitfall 6: Flashcard pointer event management (stopPropagation audit)
+- Pitfall 2: Sort state persistence schema version stamping
+
+**Research flags:** Gesture pattern already exists in ReviewCard. No research needed—copy pattern.
+
+---
+
+#### Phase 7: Accessibility & Performance Polish
+**Rationale:** Final phase builds on completed UX (Phase 4), TTS (Phase 5), and flashcards (Phase 6). Accessibility testing with vitest-axe + eslint-plugin-jsx-a11y. Performance profiling with web-vitals + @next/bundle-analyzer. This is QA and refinement.
+
+**Delivers:**
+- aria-live regions for answer feedback (assertive)
+- Focus management after answer submission (focus → feedback → Continue → next question)
+- Touch target audit (WCAG 2.5.8: 24x24px minimum, ideally 44x44px)
+- Timer accessibility (screen reader announcements at intervals, extension option)
+- Reduced motion alternative animations (fade instead of slide)
+- vitest-axe integration in test suite (`toHaveNoViolations()`)
+- eslint-plugin-jsx-a11y in ESLint config (flat config `recommended`)
+- web-vitals reporting to Sentry (LCP, INP, CLS, FCP, TTFB)
+- Bundle analysis report (@next/bundle-analyzer)
+
+**Addresses from FEATURES.md:**
+- aria-live announcements (table stakes)
+- Focus management (table stakes)
+- Keyboard navigation (table stakes, completed in Phase 4 but tested here)
+- Touch target compliance (table stakes)
+- Timer accessibility (table stakes)
+- Reduced motion alternatives (should-have)
+
+**Uses from STACK.md:**
+- vitest-axe (dev dependency)
+- eslint-plugin-jsx-a11y (dev dependency)
+- web-vitals (runtime dependency, 1.5KB)
+- @next/bundle-analyzer (optional dev dependency)
+
+**Avoids from PITFALLS.md:**
+- Pitfall 7: Accessibility + animation timing (delay aria-live until onExitComplete)
+- Pitfall 8: IndexedDB read waterfall (profile first, batch reads if needed)
+
+**Research flags:** **Needs /gsd:research-phase** for WCAG 2.2 compliance specifics (2.5.8 touch targets, 2.2.1 timing adjustable, 4.1.3 status messages). Accessibility is specialized domain requiring authoritative sources.
+
+---
 
 ### Phase Ordering Rationale
 
-- **Foundation first (Phases 1-3)**: Design tokens, question bank, and security are independent changes with no UI dependencies. Get these stable before visible changes.
-- **Structure before visual (Phase 4-5)**: Navigation structure and Progress Hub routing established before dashboard redesign. Avoids building links to pages that don't exist yet.
-- **Visual polish last (Phase 6-7)**: Dashboard simplification and translation upgrade apply after structural changes stabilize. Changing translations before layout changes = double work.
-- **Dependencies honored**: Dashboard depends on Hub existing (for links), Hub depends on unified nav (for /hub route), unified nav depends on stable tokens (for consistent UI).
-- **Pitfall avoidance**: Security hardening before push improvements, token consolidation before visual changes, question bank expansion with celebration UX (not silent regression), translation with native speaker review.
+**Why this order:**
+
+1. **Language Mode first (Phase 1)** — Cross-cutting change that affects 59 files. Interview override needed before Phase 4 restructures interview. Consistency audit prevents later rework.
+
+2. **TTS extraction before improvements (Phase 2 → 5)** — Consolidating duplicated logic prevents divergence. Phase 5 improvements apply once, not twice.
+
+3. **Session persistence before UX overhaul (Phase 3 → 4)** — Phase 4 test/practice restructuring integrates persistence. Building the hook first makes integration clean.
+
+4. **UX overhaul before accessibility (Phase 4 → 7)** — Can't test aria-live announcements and focus management until Check/Continue flow exists. Accessibility is verification/enhancement of Phase 4 work.
+
+5. **Flashcard sort independent (Phase 6)** — Can run in parallel with Phase 5. Only depends on Phases 1 and 3 (language mode, persistence).
+
+6. **Accessibility last (Phase 7)** — Tests and validates all prior phases. Performance profiling requires complete features.
+
+**Grouping rationale:**
+
+- **Phases 1-3** are foundational (language, TTS, persistence) with zero user-facing changes. Low risk, enables later phases.
+- **Phases 4-6** are feature delivery (UX overhaul, TTS quality, flashcard sort). High user impact.
+- **Phase 7** is QA and compliance. Validates phases 4-6.
+
+**Pitfall avoidance:**
+
+- Atomic migration (Phase 1) prevents partial language mode worse than none (Pitfall 1)
+- TTS consolidation first (Phase 2) prevents dual hook divergence (Pitfall 3)
+- Version-stamped sessions (Phase 3) prevent stale data bugs (Pitfall 2)
+- Single lock owner (Phase 4) prevents navigation lock timing bugs (Pitfall 5)
+- Propagation audit (Phase 6) prevents flashcard flip leaks (Pitfall 6)
+- Delayed aria-live (Phase 7) prevents animation timing conflicts (Pitfall 7)
 
 ### Research Flags
 
-**Phases likely needing deeper research:**
-- **Phase 6 (Dashboard):** Next Best Action decision tree priority order needs validation with existing users. What actually drives engagement? Mock decision logic against real user data.
-- **Phase 7 (Burmese):** Native speaker recruitment for translation review. Translation trust indicator UI patterns (verification badges, report flow) need UX design.
+**Phases needing /gsd:research-phase during planning:**
+
+- **Phase 4 (Test/Practice/Interview UX)** — Check/Continue interaction timing, feedback panel animation choreography, keyboard nav focus sequence. Nuanced UX patterns. Research Duolingo's exact timing (Check enables after selection delay? Feedback panel slide duration? Continue button animation?).
+
+- **Phase 7 (Accessibility)** — WCAG 2.2 specifics for touch targets (2.5.8), timing adjustable (2.2.1), status messages (4.1.3). Official W3C specs are dense. Need practical implementation guides for aria-live + AnimatePresence coordination.
 
 **Phases with standard patterns (skip research-phase):**
-- **Phase 1 (Design Tokens):** CSS custom properties + Tailwind is established pattern. ARCHITECTURE.md confirms approach.
-- **Phase 2 (Question Bank):** Official USCIS PDF is source of truth. Data entry + schema alignment.
-- **Phase 3 (Security):** @supabase/ssr docs are comprehensive. JWT verification is standard auth pattern.
-- **Phase 4 (Navigation):** Hash routing validated in existing HistoryPage/SocialHubPage. navConfig.ts is simple data structure.
-- **Phase 5 (Progress Hub):** Reuses existing components, follows existing hash tab pattern. Main work is route mapping.
+
+- **Phase 1 (Language Mode)** — Context API override is standard React. Bilingual text wrapping is mechanical grep + wrap.
+- **Phase 2 (TTS Core)** — Code extraction refactoring. No new concepts.
+- **Phase 3 (Session Persistence)** — IndexedDB pattern exists 8x in codebase. Copy pattern.
+- **Phase 5 (TTS Quality)** — Settings UI + build script. Straightforward.
+- **Phase 6 (Flashcard Sort)** — Gesture pattern exists in ReviewCard. Copy pattern.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Only 2 new packages needed (@radix-ui/react-tabs, @supabase/ssr). All other features achievable with existing stack. Verified against npm registry + official docs. |
-| Features | HIGH | 7 epics validated against Duolingo/Khan Academy patterns, iOS HIG, and education app research. USCIS 128Q requirement verified via official PDF. |
-| Architecture | HIGH | Direct codebase analysis (189 files). Existing patterns (hash routing, provider hierarchy, offline-first) are sound. No new infrastructure needed. |
-| Pitfalls | HIGH | 15 pitfalls identified via codebase audit + cross-referencing with React Compiler rules, Supabase security docs, PWA iOS patterns. Validated against MEMORY.md. |
+| Stack | HIGH | Only 5 new packages, all verified. Pre-generated audio is only viable approach for Burmese TTS (browser support confirmed absent via official voice lists). motion/react already has all gesture capabilities needed—no new library required. |
+| Features | HIGH | Duolingo/Quizlet patterns well-documented via official help docs, UX analysis articles, and implementation examples. Check/Continue flow, Know/Don't-Know sorting, session resume are table stakes per 2026 learning app research. |
+| Architecture | HIGH | Direct codebase analysis of all 59 LanguageContext consumers, all 8 IndexedDB stores, all TTS hooks, and session page state machines. Integration points verified against existing patterns. No speculative architecture—all extends proven patterns. |
+| Pitfalls | HIGH | Verified against codebase (React Compiler rules in MEMORY.md, existing pointer event management in Flashcard3D, navigation lock in TestPage), official docs (Web Speech API unreliability, IndexedDB schema evolution), and community sources (easy-speech library pitfalls, IndexedDB best practices). |
 
 **Overall confidence:** HIGH
 
-The research is grounded in direct codebase analysis (all claims verified against source), official documentation (USCIS, Supabase, Radix, React), and established patterns from education app leaders. The "only 2 new packages" finding de-risks the milestone significantly — most complexity is refactoring existing code, not integrating new dependencies.
-
 ### Gaps to Address
 
-**Question bank gap:** The app has 120 questions, but USCIS 2025 requires 128. Research confirmed the gap (8 questions missing) but did not identify WHICH specific questions are missing from the official 128. **Resolution:** Cross-reference existing question IDs (GOV-P01-P16, GOV-S01-S39, etc.) against the official USCIS 2025-Civics-Test-128-Questions-and-Answers.pdf to identify missing Qs. This is Phase 2 work, not a research blocker.
+**Audio file size validation:** STACK.md estimates ~2.3MB total for 512 pre-generated MP3 files (question + answer, English + Burmese, 128 questions). This is based on typical MP3 128kbps encoding at 2-4 second durations. **Validation needed:** Run the build script on actual USCIS question bank to measure real file sizes. If total exceeds 5MB, consider lower bitrate (96kbps) or runtime caching instead of precaching.
 
-**Next Best Action priority logic:** The decision tree in FEATURES.md is based on Duolingo/Khan Academy patterns (SRS due > streak preservation > weak area > test readiness). This is sound for v2.0, but the exact thresholds (e.g., "SRS due count > 5" vs "> 10", "no test in 7 days" vs "3 days") need validation against real user behavior. **Resolution:** Start with conservative thresholds (lower false positive rate), instrument the CTA with analytics, and tune in v2.1 based on click-through data.
+**Burmese TTS pronunciation quality:** Microsoft Edge NilarNeural and ThihaNeural voices exist and support `my-MM`, but pronunciation quality for USCIS civics terms in Burmese (proper nouns like "George Washington" transliterated, government terminology) is unknown. **Validation needed:** Generate sample audio for 5-10 questions during Phase 5 and validate with native Burmese speaker before generating all 512 files.
 
-**Translation style guide scope:** FEATURES.md recommends Burmese glossary for key terms, but research did not define the exact term list or formality register. **Resolution:** Phase 7 starts with a translation audit (identify top-20 most-visible strings, catalog current inconsistencies), then draft glossary with native speaker. This is content work, not a research gap.
+**Session resume UX on multi-device users:** Research assumes local-only IndexedDB persistence (no cross-device sync). For users who switch devices (start on phone, resume on desktop), the resume prompt will show "no session" on the second device. This is acceptable for v2.1 (local-first), but user testing may reveal this is confusing. **Defer to v2.2:** Cross-device session sync via Supabase (flagged in FEATURES.md as deferred).
 
-**iOS safe area edge cases:** PITFALLS.md warns about safe area handling during navigation restructure, but the specific breakage scenarios depend on how the layout component refactor is implemented. **Resolution:** Phase 4 includes explicit safe area testing on iOS Safari standalone mode after EVERY layout change. Use existing --safe-area-top/bottom CSS variables, test on device with notch.
+**WCAG 2.2 touch target exception rules:** WCAG 2.5.8 (Target Size Minimum) has exceptions for inline text links, essential UI, and user-controlled spacing. The research identifies touch target audit as table stakes but doesn't specify which exceptions apply to this app. **Validation during Phase 7:** Review official W3C understanding docs for 2.5.8 and determine if compact SpeechButton icons (32x32) qualify for "essential UI" exception or need 44x44 touch area.
+
+**Reduced motion + spring physics interaction:** motion/react's `useReducedMotion` returns true when `prefers-reduced-motion: reduce` is set. The research recommends "reduced motion alternatives" (fade instead of slide) but doesn't specify how to implement spring-to-fade conversion for 68 files using spring physics. **Validation during Phase 7:** Test if motion/react's transition prop can accept `reducedMotion ? {duration: 0.2} : spring` or if variants need duplication.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- **Codebase Analysis:** Direct reading of AppShell.tsx, BottomTabBar.tsx, AppNavigation.tsx, Dashboard.tsx, ProgressPage.tsx, HistoryPage.tsx, SocialHubPage.tsx, globals.css, tailwind.config.js, design-tokens.ts, strings.ts, questions/index.ts (project source files)
-- **USCIS Official Docs:** [2025 Civics Test](https://www.uscis.gov/citizenship-resource-center/naturalization-test-and-study-resources/2025-civics-test), [128 Questions PDF](https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf)
-- **Official Package Docs:** [@radix-ui/react-tabs](https://www.radix-ui.com/primitives/docs/components/tabs), [@supabase/ssr](https://supabase.com/docs/guides/auth/server-side/creating-a-client), [Supabase auth.getUser()](https://supabase.com/docs/guides/auth/server-side/nextjs)
-- **React Compiler Rules:** [react-hooks/set-state-in-effect](https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect), [react-hooks/refs](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs)
-- **Project Context:** docs/PRD-next-milestone.md, .planning/milestones/v1.0/, C:/Users/minkk/.claude/projects/.../memory/MEMORY.md
+
+**Stack Research:**
+- [Edge TTS Voice List (GitHub Gist)](https://gist.github.com/BettyJJ/17cbaa1de96235a7f5773b8690a20462) — Confirmed `my-MM-NilarNeural` and `my-MM-ThihaNeural`
+- [@andresaya/edge-tts (GitHub)](https://github.com/andresayac/edge-tts) — Node.js API, `toFile()` method
+- [Google Cloud TTS Supported Languages](https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types) — Burmese NOT listed
+- [motion.dev Drag Docs](https://motion.dev/docs/react-drag) — `drag`, `dragConstraints`, `onDragEnd`
+- [eslint-plugin-jsx-a11y npm](https://www.npmjs.com/package/eslint-plugin-jsx-a11y) — v6.10.2, flat config support
+- [@next/bundle-analyzer npm](https://www.npmjs.com/package/@next/bundle-analyzer) — Official Next.js package
+- [Vercel Hobby Plan Limits](https://vercel.com/docs/limits) — 100MB deploy, 100GB bandwidth
+
+**Features Research:**
+- [Quizlet Flashcard Study Mode Help](https://help.quizlet.com/hc/en-us/articles/360030988091-Studying-with-Flashcards) — Official docs
+- [Quizlet Learn Mode Help](https://help.quizlet.com/hc/en-us/articles/360030986971-Studying-with-Learn) — Official docs
+- [WCAG 2.2 Official Specification](https://www.w3.org/TR/WCAG22/) — W3C standard
+- [WCAG 2.2 New Success Criteria](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/) — 2.5.8, 2.2.1
+- [ARIA Live Regions (MDN)](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions) — Official docs
+
+**Architecture Research:**
+- Direct codebase analysis: 59 files consuming `useLanguage()`, 8 IndexedDB stores, LanguageContext.tsx, useSpeechSynthesis.ts, useInterviewTTS.ts, TestPage.tsx (819 lines), FlashcardStack.tsx, Flashcard3D.tsx
+
+**Pitfalls Research:**
+- [IndexedDB Best Practices - web.dev](https://web.dev/articles/indexeddb-best-practices-app-state) — Official Google guide
+- [IndexedDB Pain Points (GitHub Gist)](https://gist.github.com/pesterhazy/4de96193af89a6dd5ce682ce2adff49a) — Comprehensive bug catalog
+- [idb-keyval GitHub](https://github.com/jakearchibald/idb) — Library docs
+- [React Compiler v1.0 Blog Post](https://react.dev/blog/2025/10/07/react-compiler-1) — Official rules
+- MEMORY.md — React Compiler ESLint pitfalls, 3D flip card pointer events, CSP details
 
 ### Secondary (MEDIUM confidence)
-- **Education App Patterns:** [Duolingo Core Tabs Redesign](https://blog.duolingo.com/core-tabs-redesign/), [Duolingo Home Screen](https://blog.duolingo.com/new-duolingo-home-screen-design/), [Next Best Action - CleverTap](https://clevertap.com/blog/next-best-action/)
-- **iOS Design:** [Apple Liquid Glass](https://en.wikipedia.org/wiki/Liquid_Glass), [Behind the Design: Duolingo](https://developer.apple.com/news/?id=jhkvppla)
-- **Translation Trust:** [Google Crowdsource](https://en.m.wikipedia.org/wiki/Crowdsource_(app)), [Crowdin Localization](https://crowdin.com/)
-- **PWA/iOS:** [PWA App Design - web.dev](https://web.dev/learn/pwa/app-design), [Supporting iOS Safe Areas](https://jipfr.nl/blog/supporting-ios-web/)
-- **Design Tokens:** [Tailwind CSS Best Practices 2025](https://www.frontendtools.tech/blog/tailwind-css-best-practices-design-system-patterns)
 
-### Tertiary (LOW confidence, needs validation)
-- Liquid Glass React libraries (liquid-glass-js, liquidglassui.org) — immature (2025 releases), not recommended
-- Immiva/MyAttorneyUSA USCIS guides — third-party summaries, defer to official USCIS PDF
+**Stack Research:**
+- [Best Free TTS APIs 2026 (CAMB.AI)](https://www.camb.ai/blog-post/best-free-text-to-speech-ai-apis) — Survey of options
+- [Kokoro TTS Supported Languages](https://kokorottsai.com/) — English, French, Korean, Japanese, Mandarin only
+- [edge-tts-universal Browser Restriction](https://github.com/travisvn/edge-tts-universal) — Dec 2025 user-agent requirement
+
+**Features Research:**
+- [Duolingo Onboarding UX Breakdown](https://userguiding.com/blog/duolingo-onboarding-ux) — Third-party analysis
+- [Duolingo Micro-Interactions](https://medium.com/@Bundu/little-touches-big-impact-the-micro-interactions-on-duolingo-d8377876f682) — Community analysis
+- [Josh Comeau 3D Button Tutorial](https://www.joshwcomeau.com/animation/3d-button/) — CSS techniques
+- [Language Selector UX (Smart Interface Design Patterns)](https://smart-interface-design-patterns.com/articles/language-selector/) — Best practices
+
+**Pitfalls Research:**
+- [Taming the Web Speech API (Andrea Giammarchi)](https://webreflection.medium.com/taming-the-web-speech-api-ef64f5a245e1) — Cross-browser pitfalls
+- [Lessons Learned Using speechSynthesis (Talkr)](https://talkrapp.com/speechSynthesis.html) — Production experience
+- [easy-speech Library](https://github.com/leaonline/easy-speech) — Documented Web Speech API pitfalls
+- [Motion Accessibility Guide](https://motion.dev/docs/react-accessibility) — Official motion/react docs
+- [Sara Soueidan: ARIA Live Regions](https://www.sarasoueidan.com/blog/accessible-notifications-with-aria-live-regions-part-1/) — Implementation patterns
+
+### Tertiary (LOW confidence)
+
+**Features Research:**
+- [Implementing i18n in React 2026](https://thelinuxcode.com/implementing-internationalization-in-react-components-2026-a-practical-component-first-guide/) — Component patterns (needs validation)
+- [React State Persistence (UXPin)](https://www.uxpin.com/studio/blog/how-to-use-react-for-state-persistence/) — General strategies
+
+**Pitfalls Research:**
+- [Avoiding Async State Manager Pitfalls (Evil Martians)](https://evilmartians.com/chronicles/how-to-avoid-tricky-async-state-manager-pitfalls-react) — React patterns
+- [Offline-First Frontend Apps 2025 (LogRocket)](https://blog.logrocket.com/offline-first-frontend-apps-2025-indexeddb-sqlite/) — IndexedDB vs. SQLite tradeoffs
 
 ---
-*Research completed: 2026-02-09*
-*Ready for roadmap: yes*
-*Key finding: Only 2 new npm packages needed. 128Q requirement (not 120). Security hardening critical.*
+
+*Research completed: 2026-02-13*
+*Ready for roadmap: YES*
+*Recommended phases: 7 (6 core + 1 polish)*
+*Critical path: Phase 1 → 2 → 3 → 4 → 7 (accessibility validates UX)*
+*Parallel opportunity: Phase 6 (flashcards) can run alongside Phase 5 (TTS quality)*

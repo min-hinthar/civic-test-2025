@@ -1,354 +1,349 @@
-# Domain Pitfalls: v2.0 Feature Additions
+# Domain Pitfalls: v2.1 Quality & Polish
 
-**Domain:** Adding unified navigation, dashboard redesign, Progress Hub consolidation, iOS-inspired design tokens, Burmese translation trust upgrade, USCIS 120Q bank integration, and push subscription security to an existing 37.5K LOC React/Next.js PWA
-**Researched:** 2026-02-09
-**Confidence:** HIGH (verified against codebase, official docs, and community sources)
+**Domain:** Adding language mode toggle behavior change (bilingual-to-mode-based), session persistence/resume, TTS quality improvements, test/practice/interview UX overhaul, study guide flashcard overhaul, and accessibility/performance improvements to an existing 40K+ LOC bilingual PWA
+**Researched:** 2026-02-13
+**Confidence:** HIGH (verified against codebase, React Compiler rules, official docs, and community sources)
 
 ---
 
 ## Critical Pitfalls
 
-These mistakes cause rewrites, data loss, or broken user experiences for Burmese immigrant users.
+These mistakes cause rewrites, broken user sessions, or data loss.
 
-### Pitfall 1: Navigation Unification Breaks the Onboarding Tour
+### Pitfall 1: Language Toggle Behavior Change Has 171 Conditional Render Points Across 48 Files
 
-**What goes wrong:** The existing `OnboardingTour` component targets specific `data-tour` attributes on Dashboard elements (`study-action`, `test-action`, `srs-deck`, `interview-sim`, `theme-toggle`). If the navigation redesign moves, renames, or removes these elements, the tour silently fails -- tooltip positions go to (0,0) or the tour skips steps entirely with no error. Users see an empty tooltip floating in the corner.
+**What goes wrong:** The current `LanguageContext` exposes a simple `showBurmese` boolean (true when `mode === 'bilingual'`). Changing from "always bilingual with English-only toggle" to a mode-based system (e.g., English-only, Burmese-only, bilingual, or context-dependent modes) requires touching every one of the 171 `showBurmese &&` conditional render points across 48 files. But critically, NOT all Burmese text is gated by `showBurmese`:
 
-**Why it happens:** The onboarding tour uses CSS selector targeting (`[data-tour="study-action"]`), which is a fragile coupling. Navigation redesigns naturally restructure the DOM, and `data-tour` attributes are invisible in the rendered UI, so developers forget they exist. The tour also conditionally filters steps based on viewport (`theme-toggle` is filtered on mobile), adding hidden complexity.
+- **TestPage.tsx**: Always shows Burmese in answer options (`answer.text_my`), result review, and completion messages -- no `showBurmese` check. 11 instances of `font-myanmar` ungated.
+- **Flashcard3D.tsx**: Always displays both English and Burmese -- no `showBurmese` check anywhere. 5 instances of `font-myanmar` ungated.
+- **FlashcardStack.tsx**: Progress indicator always shows Burmese (`({currentIndex + 1} မှ {questions.length})`) -- no `showBurmese` check.
+- **InterviewSession.tsx**: Uses `showBurmese` in some places (greeting, question text) but NOT in the dialog footer buttons, progress counter, or "Next Question" transition text.
+
+This creates an inconsistent experience: in English-only mode, some screens hide Burmese while others always show it.
+
+**Why it happens:** The v1.0 design treated bilingual as the default and English-only as an "interview simulation mode." The toggle was added late (v1.0 Phase 7) and only applied to components that explicitly imported `useLanguage`. Components written before or outside that pattern show Burmese unconditionally.
 
 **Consequences:**
-- New users get a broken first-run experience, which is devastating for Burmese immigrants who depend on guided onboarding
-- Tour may infinite-loop if a required target is missing (depends on implementation)
-- The "More" sheet in `BottomTabBar` creates a portal that may not be in DOM when tour expects it
+- Users switch to English-only mode but still see Burmese text on TestPage, StudyGuide flashcards, and other screens -- breaks the mental model
+- If the mode becomes "Burmese-only," no component currently supports hiding English text -- the entire BilingualText component assumes English is always primary
+- Partial refactoring (fixing some files but not all) creates a worse experience than the current inconsistency because users notice the switching behavior
 
 **Prevention:**
-1. Audit all 5 `data-tour` targets BEFORE redesigning any navigation or dashboard layout
-2. Create a test that validates all tour targets exist in the DOM when the tour runs
-3. If consolidating dashboard widgets, preserve `data-tour` attributes on the new container elements
-4. Update tour steps to match the new navigation mental model (the tour should teach the NEW nav, not the old one)
+1. **Audit BEFORE coding**: Search for all `font-myanmar` occurrences (334 across 77 files) and `\.my` property accesses. Categorize each as: (a) gated by `showBurmese`, (b) ungated but should be gated, (c) intentionally always shown (e.g., the language toggle label itself)
+2. **Create a language display contract**: Define precisely what each mode means:
+   - `bilingual`: Both languages shown (current default behavior)
+   - `english-only`: English only, no Burmese text (interview simulation)
+   - If adding `burmese-primary`: Burmese on top, English smaller below (reverse of current `BilingualText`)
+3. **Wrap ALL Burmese text through `BilingualText` or `showBurmese` guard**: No raw `font-myanmar` spans without a language check. This means TestPage, Flashcard3D, and FlashcardStack all need refactoring
+4. **Single atomic PR**: Do the language mode refactor as ONE change across all files, not incrementally -- partial migration is worse than no migration
 
-**Detection:** Run the onboarding tour flow on a fresh account after ANY navigation/dashboard change. If steps skip or tooltips position incorrectly, data-tour targets are broken.
+**Detection:** Set language to English-only mode, navigate to every page, and verify zero Burmese text appears. Automated: `grep -c 'font-myanmar' src/ | grep -v ':0'` and cross-reference against `showBurmese` usage in same file.
 
-**Phase to address:** Navigation Redesign phase -- must be done IN the same phase, not deferred
+**Phase to address:** Language Mode phase -- must be completed atomically, not split across phases
 
 ---
 
-### Pitfall 2: Page Consolidation Loses Hash-Based Deep Links and Tab State
+### Pitfall 2: Session Persistence Creates Stale State Bugs When Question Bank or Schema Changes
 
-**What goes wrong:** The existing `HistoryPage` uses hash-based tabs (`#tests`, `#practice`, `#interview`) via `location.hash` with `useMemo`. The `StudyGuidePage` uses `?category=X#cards` for deep linking. The `ProgressPage` uses `?category=X#cards` for practice navigation. Consolidating these into a "Progress Hub" will break:
-- All existing bookmarks and shared links
-- The SRS widget's link to `/study#review`
-- Push notification URLs that point to `/study#review`
-- The `WeakAreaNudge` component which navigates to specific category study pages
-- Hash-based scroll targets in `HistoryPage` (`#overview`, `#trend`, `#attempts`)
+**What goes wrong:** Adding session resume (persist mid-session progress to IndexedDB so users can resume after closing the app) introduces a class of stale data bugs unique to PWAs with evolving content. The current codebase has 8 separate IndexedDB stores:
 
-**Why it happens:** Hash routing is invisible infrastructure. Developers consolidating pages focus on the visual redesign and forget that URLs are a public API. The existing `useEffect` in `HistoryPage` that scrolls to hash targets, the `tabFromHash` derivation, and the `SRS formatSRSReminderNotification` function all depend on specific URL patterns.
+| Store | Database | Key Pattern |
+|-------|----------|-------------|
+| Questions cache | `civic-prep-questions` | `all-questions` (single key) |
+| Sync queue | `civic-prep-sync` | `pending-{timestamp}` |
+| Mastery history | `civic-prep-mastery` | `answers` (single array) |
+| SRS cards | `civic-prep-srs` | `{questionId}` (per-card) |
+| SRS sync | `civic-prep-srs-sync` | Pending reviews |
+| Interview history | `civic-prep-interview` | `interview-sessions` (single key) |
+| Streak data | `civic-prep-streaks` | Streak records |
+| Badge data | `civic-prep-badges` | Badge records |
+
+Adding a 9th store for session state introduces these failure modes:
+
+1. **Question ID drift**: User starts a practice session with question IDs from version A. App updates to version B which changes/removes question IDs. User resumes session with stale question references that no longer resolve. `allQuestions.find(q => q.id === savedId)` returns `undefined`.
+2. **Answer shuffle desync**: TestPage and PracticeSession shuffle answers with `fisherYatesShuffle` using no seed. If the session is restored but answers are re-shuffled, the `selectedAnswer` reference (stored as an object reference or answer text) won't match the re-shuffled order.
+3. **Schema evolution**: `idb-keyval` uses `createStore()` which has NO built-in schema versioning. Each store is a separate IndexedDB database. Adding fields to a persisted session object (e.g., adding `languageMode` to saved state) has no migration path -- old persisted sessions lack the field and cause runtime errors.
+4. **Cross-tab corruption**: Two tabs open the same IndexedDB stores. User starts a session in tab A, opens tab B which also starts a session. Both tabs write to the same session store. idb-keyval has no locking mechanism.
+
+**Why it happens:** `idb-keyval` is deliberately minimal (~600B) and trades schema management for simplicity. The current codebase uses it correctly for append-only data (mastery history, interview sessions). But session resume requires read-modify-write cycles on mutable state, which is a fundamentally different access pattern.
 
 **Consequences:**
-- Push notifications open to wrong page (notification says "Cards Due for Review" but opens a 404 or wrong tab)
-- User bookmarks stop working, eroding trust (critical for immigrant users who may not understand why)
-- The `setUserSelectedTab` pattern in `HistoryPage` (user override of hash-derived tab) creates a confusing merge if tabs move to a new page
+- User resumes a session and sees "Question not found" or a blank card
+- Resumed session shows wrong answer highlighted as "selected" because answer objects don't match
+- After app update, resumed sessions crash with `TypeError: Cannot read properties of undefined`
+- Data corruption from multi-tab writes (less likely but possible on desktop)
 
 **Prevention:**
-1. Map ALL existing routes and hash fragments before consolidation:
-   - `/progress` -- standalone page
-   - `/history` -- with `#tests`, `#practice`, `#interview`
-   - `/study#review` -- SRS review entry point
-   - `/study?category=X#cards` -- category-specific flashcards
-2. Implement redirects from old routes to new routes (React Router `<Navigate>` elements)
-3. Update `formatSRSReminderNotification` and all `navigate()` calls that reference old routes
-4. Search for ALL hardcoded path strings: `grep -r "'/history'" "'/progress'" "'/study#'" "'#review'"` in the codebase
-5. Use React Router's `useSearchParams` to preserve query parameters across the consolidation
+1. **Version-stamp persisted sessions**: Include `appVersion` and `questionBankHash` in the persisted session. On resume, if version mismatches, discard the session with a user-friendly message ("Your session was from an older version -- starting fresh")
+2. **Serialize answer selection by index, not object reference**: Store `selectedAnswerIndex: number` not `selectedAnswer: Answer`. Reconstruct the answer from the question + index on resume
+3. **Store the shuffled question order**: Persist the actual `questionId[]` array in shuffled order, not just the current index. This eliminates the need to re-shuffle and preserves the exact session
+4. **Add a TTL**: Auto-expire persisted sessions after 24-48 hours. A civic test practice session from 3 days ago is not useful to resume
+5. **Add a session store version**: Use a wrapper around `idb-keyval` that checks a `schemaVersion` field in persisted data and runs migrations or discards incompatible data
+6. **Use Web Locks API for multi-tab safety**: `navigator.locks.request('session-write', ...)` prevents concurrent writes (supported in all modern browsers as of 2024)
 
-**Detection:** After consolidation, test every push notification URL, every `navigate()` call, every `Link to=` prop, and every bookmark scenario.
+**Detection:** Start a session, close the tab, change one question's ID in the question bank, reopen -- verify graceful handling. Start a session in two tabs simultaneously -- verify no corruption.
 
-**Phase to address:** Progress Hub Consolidation phase
+**Phase to address:** Session Persistence phase -- must define the persistence schema upfront, not retrofit
 
 ---
 
-### Pitfall 3: Design Token Migration Creates Visual Regressions Across 63+ Files
+### Pitfall 3: TTS Improvements Break the Interview Session's Phase State Machine
 
-**What goes wrong:** The codebase has 307 occurrences of hardcoded color classes (`primary-500`, `success-500`, `warning-500`) across 63 files, plus 14 CSS custom property definitions in `globals.css`, plus a `design-tokens.ts` file that is NOT actually consumed by Tailwind (it exports JS objects but Tailwind reads from `tailwind.config.js` with hardcoded HSL values). Introducing a proper design token system means touching 63+ files, and any missed occurrence creates a visual inconsistency.
+**What goes wrong:** `InterviewSession.tsx` implements a fragile state machine with 6 phases: `greeting -> chime -> reading -> responding -> grading -> transition`. Each phase transition is triggered by TTS callbacks (`speakWithCallback` with `onEnd`). The `useInterviewTTS` hook has FOUR ref values (`synthesisRef`, `voicesRef`, `timeoutRef`, `callbackFiredRef`) and a timeout fallback for Chrome's unreliable `onend` event.
 
-**Why it happens:** The v1.0 design system evolved organically. Colors were added in phases (Phase 3 added extended primaries, Phase 9 added Duolingo-style tokens). There are now THREE sources of truth:
-- `globals.css` `:root` variables (the actual CSS custom properties)
-- `tailwind.config.js` colors (hardcoded HSL strings, NOT referencing CSS variables for extended shades)
-- `design-tokens.ts` (JS export, only used for reference/documentation, not consumed by Tailwind)
+Improving TTS quality (e.g., adding voice selection UI, Burmese TTS support, rate/pitch controls, or queue-based utterance management) risks breaking the phase machine because:
+
+1. **Double-firing guard is per-utterance**: `callbackFiredRef` prevents double-firing of `onEnd` (from both the browser event and the timeout fallback). But if TTS improvements add utterance queuing (speak English, then Burmese), the guard must be per-queue-item, not per-hook-instance
+2. **`synth.cancel()` is called on every `speakWithCallback` call**: This clears ANY pending speech, not just the previous utterance. If a TTS improvement adds pre-buffering or warm-up speech, `cancel()` will kill it
+3. **Timeout fallback estimation is English-only**: `estimateDuration` uses `wordCount / 2.5 words per second`. Burmese text has a completely different word boundary model (syllable-based, no spaces). Adding Burmese TTS reading without updating the estimator produces timeouts that fire mid-speech or 10+ seconds after speech ends
+4. **Two separate TTS hooks exist**: `useSpeechSynthesis.ts` (general, used by `SpeechButton`) and `useInterviewTTS.ts` (interview-specific). They duplicate voice-finding logic with slightly different implementations. A TTS quality improvement must update BOTH, and any behavior divergence causes inconsistent voice selection
+
+**Why it happens:** The interview TTS was built as a specialized fork of the general TTS hook because it needed `onEnd` callbacks. This duplication means improvements to one don't propagate to the other. The phase state machine uses `useEffect` chains where each effect watches `questionPhase` -- this is a "derived state machine" pattern that becomes fragile when side effects (TTS) have unreliable timing.
 
 **Consequences:**
-- Changing a token in one place but not the others creates subtle color mismatches
-- Dark mode overrides in `globals.css` (lines 138-183) use hardcoded HSL values that bypass the token system entirely
-- The `primary-50` through `primary-900` in `tailwind.config.js` are hardcoded light-mode values: `'primary-50': 'hsl(214 100% 97%)'` -- these DO NOT respond to dark mode, while `--primary-500` in CSS variables DOES
-- Components using `bg-primary-500` get the hardcoded light-mode value even in dark mode, only working because `globals.css` has `.dark .bg-primary-500` overrides
+- Phase machine gets stuck in `reading` because the TTS callback fires before `questionPhase` is set, and the effect's `if (questionPhase !== 'reading') return` guard skips it
+- Adding Burmese TTS to the greeting causes `cancel()` to kill the English greeting mid-sentence
+- Timeout fallback fires early for Burmese text, advancing to the next phase while TTS is still speaking
+- Voice selection changes in `useSpeechSynthesis` don't propagate to `useInterviewTTS`, causing different voices in study vs. interview
 
 **Prevention:**
-1. First consolidate to a single source of truth: CSS custom properties in `globals.css`, referenced by Tailwind via `hsl(var(--primary-500))`
-2. Do the migration in TWO passes: first make it work identically (swap hardcoded HSL to CSS variables), THEN introduce new tokens
-3. Use visual regression testing (Playwright screenshots) before and after migration
-4. Address the dark mode override hack: `.dark .bg-primary-500 { background-color: hsl(217 85% 55%); }` must be replaced by proper CSS variable switching
-5. Do NOT introduce new token names until old ones are fully migrated
+1. **Consolidate TTS hooks**: Extract shared voice-finding and utterance management into a single `ttsEngine.ts` module. Both hooks import from it. Voice selection changes propagate automatically
+2. **Use a proper state machine for interview**: Replace the `questionPhase` useState + useEffect chain with an explicit transition function: `transition(from, to, sideEffect)`. This makes the valid transitions explicit and prevents impossible states
+3. **Add Burmese duration estimation**: For Burmese text, estimate based on character count (Myanmar script), not word count. Approximate: `charCount / 8 characters per second` at normal rate
+4. **Test the timeout fallback independently**: Add a test that mocks `speechSynthesis.speak` to never fire `onend`, verifying the timeout fallback advances the phase correctly
+5. **Never add `synth.cancel()` in the middle of a planned utterance sequence**: Use an utterance queue with explicit `isQueued` flag that prevents cancellation of upcoming items
 
-**Detection:** Toggle dark mode on every page after ANY token change. Check that `bg-primary-500` buttons match in both themes.
+**Detection:** Run the interview flow with Chrome DevTools throttled to "Slow 3G" (makes TTS loading/firing more unreliable). Run with Web Speech API mocked to never fire `onend`. Verify both scenarios complete gracefully.
 
-**Phase to address:** Design Token System phase -- must be BEFORE any visual redesign work
+**Phase to address:** TTS Improvements phase -- consolidate hooks BEFORE adding features
 
 ---
 
-### Pitfall 4: Expanding 100 to 120 Questions Breaks Hardcoded Thresholds and Progress Calculations
+### Pitfall 4: React Compiler ESLint Rules Block Common Session Persistence Patterns
 
-**What goes wrong:** The question bank ALREADY contains 120 questions (the index.ts barrel says "Total: 120 questions" and imports `uscis2025Additions` with 20 questions). The `totalQuestions` export is dynamic (`allQuestions.length`). However, there are hardcoded assumptions scattered through the codebase:
-- `TestPage.tsx` line 72: `.slice(0, 20)` -- selects 20 questions per test (correct, but the pool size affects coverage calculations)
-- `TestPage.tsx` line 41: `PASS_THRESHOLD = 12` -- currently 12/20 (60%), but if the test format changes for 120Q this needs updating
-- `Dashboard.tsx` line 135: `coveragePercent = (uniqueQIds.size / totalQuestions) * 100` -- coverage denominator is dynamic, BUT if questions are added gradually, coverage percentage drops for returning users
-- Comment in index.ts says "Total: 120 questions" but the barrel aggregation comment says `(47 questions)` + `(10 questions)` + `(13 questions)` + `(7 questions)` + `(10 questions)` + `(13 questions)` + `20 questions` = 120
+**What goes wrong:** The project enforces React Compiler ESLint rules (documented in MEMORY.md). Session persistence and resume features typically use patterns that violate these rules:
 
-**Why it happens:** The codebase was designed for 100 questions. The 2025 additions raised it to 120, and `totalQuestions` adapted via `allQuestions.length`. But the UX messaging, coverage calculations, and mastery percentages were calibrated against 100. A user who practiced all 100 original questions and shows "100% coverage" will suddenly drop to 83% when the app recognizes 120 questions.
-
-**Consequences:**
-- Users who had "100% coverage" see their dashboard regress to ~83%, destroying motivation
-- Mastery milestones that were earned (gold at 100%) may need re-earning
-- The ReadinessIndicator score drops because coverage weight (50% of composite) decreases
-- SRS deck completion stats change
-
-**Prevention:**
-1. Announce new questions in-app with a celebration, not as a silent regression
-2. Implement a "new questions available" notification that positions the change positively
-3. Consider separate tracking for "legacy 100Q mastery" vs "120Q mastery" during transition
-4. Review `calculateCompositeScore` which uses `coveragePercent` -- ensure the formula accounts for growing question pools gracefully
-5. Update the `PreTestScreen` messaging if it references total question counts
-
-**Detection:** Load the app as a user who has practiced exactly 100 questions. Verify dashboard messaging is encouraging, not deflating.
-
-**Phase to address:** USCIS 120Q Bank phase -- requires careful UX around the transition
-
----
-
-### Pitfall 5: Push Subscription API Lacks Authentication and Rate Limiting
-
-**What goes wrong:** The existing `/api/push/subscribe` endpoint (in `pages/api/push/subscribe.ts`) accepts ANY `userId` in the POST body with NO authentication verification. An attacker can:
-1. Register push subscriptions for arbitrary user IDs
-2. Overwrite legitimate subscriptions (the endpoint uses `upsert` with `onConflict: 'user_id'`)
-3. Delete any user's push subscription via the DELETE endpoint (only requires `userId`)
-4. Spam the endpoint with fake subscriptions, filling the Supabase table
-
-The endpoint uses `SUPABASE_SERVICE_ROLE_KEY` (admin-level access) with no request validation beyond "userId exists in body."
-
-**Why it happens:** The v1.0 push notification feature was built as a functional MVP without security hardening. The service role key bypasses RLS policies, and the API trusts the client-provided `userId` without verifying it against the authenticated session.
-
-**Consequences:**
-- Any user can hijack another user's push notifications
-- Subscription table can be polluted with garbage data
-- Legitimate users stop receiving notifications without knowing why
-- Service role key exposure risk (though it's server-side only, the endpoint has no CSRF protection)
-
-**Prevention:**
-1. Verify the authenticated user matches the provided userId:
+1. **`react-hooks/set-state-in-effect`**: Restoring persisted state on mount requires reading from IndexedDB (async) then calling `setState`. This is the canonical "set state in effect" pattern that the React Compiler lint flags:
    ```typescript
-   const { data: { user } } = await supabaseAdmin.auth.getUser(req.headers.authorization?.replace('Bearer ', '') ?? '');
-   if (!user || user.id !== req.body.userId) return res.status(401).json({ error: 'Unauthorized' });
+   // VIOLATION: setState in effect
+   useEffect(() => {
+     getPersistedSession().then(session => {
+       if (session) setResumedSession(session); // Flagged!
+     });
+   }, []);
    ```
-2. Add rate limiting (e.g., 5 subscription changes per hour per user)
-3. Validate the push subscription object structure
-4. Consider using Supabase RLS instead of service role key for subscription management
-5. Add CSRF token validation for the API route
 
-**Detection:** Attempt to call `/api/push/subscribe` with a userId that doesn't match the authenticated session. If it succeeds, the endpoint is vulnerable.
+2. **`react-hooks/refs`**: Tracking "has session been saved" with a ref (as TestPage does with `hasSavedSessionRef`) and reading it during render to show a "Resuming..." indicator violates the refs rule:
+   ```typescript
+   // VIOLATION: ref.current in render
+   if (hasSavedRef.current) return <ResumeBanner />;
+   ```
 
-**Phase to address:** Push Subscription Security phase -- should be done BEFORE any push notification improvements
+3. **Timer management for auto-save**: Auto-saving session state every N seconds requires an interval that accesses current state -- closures over stale state or ref.current access during cleanup both violate compiler rules
 
----
-
-### Pitfall 6: Burmese Translation "Trust Upgrade" Without Native Speaker Review Creates Worse UX Than Literal Translation
-
-**What goes wrong:** The existing Burmese translations in `strings.ts` are functional but literal (e.g., `'ဒက်ရှ်ဘုတ်'` for "Dashboard" is a transliteration, not a natural Burmese word). Improving these without a native Burmese speaker creates three failure modes:
-1. Over-localized text that uses formal register when users expect colloquial Myanmar
-2. Mixed formality levels across the app (some pages updated, some not)
-3. Technical terminology translated differently in different places (inconsistent glossary)
-
-The app has 360 occurrences of `font-myanmar` across 70 files, meaning Burmese text appears on virtually every screen. A partial update creates a jarring inconsistency.
-
-**Why it happens:** Developers use translation tools (Google Translate, ChatGPT) that produce grammatically correct but unnatural Myanmar text. The Burmese writing system has complex rules about consonant clusters, medial vowels, and tone marks that affect readability. Additionally, Myanmar has distinct formal (literary) and informal (spoken) registers -- mixing them signals "machine translated" to native speakers, eroding trust.
+**Why it happens:** React Compiler rules enforce that components are pure functions of their props and state. Side effects (IndexedDB reads, timer management) must be explicitly sequenced through hooks, not smuggled via refs or effects that set state. The session persistence pattern is inherently a side effect that needs to sync external storage with React state.
 
 **Consequences:**
-- Burmese users perceive the app as "not really for them" -- a translated English app rather than a genuinely bilingual one
-- Trust degradation is particularly harmful for immigrant users navigating a high-stakes process (citizenship test)
-- Inconsistent terminology confuses users (e.g., "progress" translated as both `တိုးတက်မှု` and `တိုင်တက်ခြင်း` in different places)
+- Developers write natural-feeling persistence code, ESLint rejects it, and the "fix" introduces subtle bugs (e.g., using `useSyncExternalStore` incorrectly, or wrapping IndexedDB reads in `use()` which causes Suspense waterfalls)
+- Workarounds that suppress lint rules (`// eslint-disable-next-line`) bypass the compiler's optimization guarantees, potentially causing stale renders
 
 **Prevention:**
-1. Create a Burmese glossary document FIRST: define how key terms are translated consistently
-2. Translate in BATCHES by feature area, not scattered across the app
-3. Have a native Burmese speaker review ALL translations before shipping -- even "improved" AI translations
-4. Test with actual Burmese speakers for comprehension, not just correctness
-5. Maintain a `BilingualString` type discipline: never inline Burmese text outside the `strings.ts` centralized file
-6. Audit for hardcoded Burmese strings outside `strings.ts` (there are some in `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, etc.)
+1. **Use `useState` with lazy initializer for synchronous data**: For localStorage-based state (like `LanguageContext` already does), `useState(() => localStorage.getItem(...))` is compiler-safe
+2. **Use the "loading state" pattern for async persistence**: Instead of setting state in an effect, use a `status` state machine:
+   ```typescript
+   const [status, setStatus] = useState<'loading' | 'fresh' | 'resumed'>('loading');
+   const [sessionData, setSessionData] = useState<SessionData | null>(null);
+   // Effect sets BOTH status and data together via a single state update
+   ```
+3. **Use `useSyncExternalStore` for IndexedDB subscription**: If session state needs to sync across components, wrap IndexedDB in a store with `subscribe`/`getSnapshot` interface
+4. **Auto-save with event handlers, not intervals**: Save session state on every user action (answer select, page navigate) rather than on a timer. This avoids the interval + stale closure problem entirely
+5. **Follow existing patterns**: `LanguageContext.tsx` line 49-55 shows the accepted pattern for syncing persisted state on mount -- use the `eslint-disable-next-line react-hooks/set-state-in-effect` comment with the `-- intentional:` justification pattern already used in `useSpeechSynthesis.ts` line 29
 
-**Detection:** Search for Myanmar Unicode range (U+1000-109F) in files OTHER than `strings.ts` and question data files. Any hits are decentralized translations that will be missed during the upgrade.
+**Detection:** Run `npx eslint src/` after any session persistence code. Zero violations required.
 
-**Phase to address:** Burmese Translation Trust Upgrade phase -- should happen as a concentrated effort, not sprinkled across phases
+**Phase to address:** ALL phases that touch state persistence -- reference this pattern library
 
 ---
 
 ## Moderate Pitfalls
 
-### Pitfall 7: Unified Navigation Doubles the Mobile "More" Menu Complexity
+### Pitfall 5: UX Overhaul of Test/Practice/Interview Breaks Navigation Lock Behavior
 
-**What goes wrong:** The current `BottomTabBar` has 3 primary tabs + "More" button (containing 4 items). The `AppNavigation` desktop bar has 7 links. These are defined in TWO separate components with TWO separate nav item arrays (`primaryTabs` and `moreNavItems` in BottomTabBar, `navLinks` in AppNavigation). Unifying navigation means maintaining a SINGLE source of truth for nav items, but the mobile and desktop presentations have different slot counts.
+**What goes wrong:** All three session types (Test, Practice, Interview) implement navigation locking to prevent accidental abandonment:
 
-If the unified system adds items (e.g., Practice, SRS Review) without adjusting the mobile "More" menu, the sheet becomes too tall. If it removes items, existing muscle memory breaks.
+- **TestPage**: Uses `setLock(shouldLock, lockMessage)` via `useNavigation()` context + `beforeunload` event + `popstate` event with `history.pushState` guard (with browser rate-limit `try/catch`)
+- **PracticePage**: Uses `setLock(phase === 'session', ...)` via `useNavigation()` + `beforeunload` in PracticeSession
+- **InterviewPage**: Likely uses similar pattern (based on InterviewSession structure)
+
+A UX overhaul that restructures component hierarchy (e.g., lifting session state to a parent, adding a session resume wrapper, or introducing a shared session layout) can break lock behavior:
+
+1. **Lock/unlock timing**: If the session component unmounts during a UX transition animation, the cleanup `useEffect(() => () => setLock(false))` fires and unlocks navigation while the session is still conceptually "active"
+2. **Double locking**: A session resume wrapper and the session component both call `setLock(true)`, but only one calls `setLock(false)` on cleanup
+3. **`history.pushState` rate limit**: TestPage's `popstate` handler has a `try/catch` around `pushState` because browsers limit to 100 calls per 10 seconds. A UX overhaul that adds more route transitions can exhaust this limit, making the navigation guard silently fail
 
 **Prevention:**
-1. Define navigation items in ONE central config, with a `mobilePriority` field that determines which appear in the bottom bar vs. the "More" sheet
-2. Keep the bottom bar to 4-5 items maximum (iOS HIG recommendation)
-3. Test the "More" sheet height on the smallest supported screen (iPhone SE / 320px wide)
-4. Animate the transition smoothly if nav structure changes -- don't force a "learn the new nav" moment
+1. **Lock ownership**: Only ONE component per page should own the navigation lock. If adding a session wrapper, move lock management to the wrapper, not the session component
+2. **Test lock lifecycle**: After any component restructuring, verify: (a) lock engages when session starts, (b) lock releases when session completes, (c) lock releases when component unmounts unexpectedly, (d) browser back button is blocked during active session
+3. **Preserve the `popstate` rate-limit guard**: The existing `try/catch` around `pushState` in TestPage is battle-tested. Don't remove it during refactoring
 
-**Detection:** Render the bottom bar and More sheet on a 320px viewport. If the sheet requires scrolling, there are too many items.
+**Detection:** Start a test, press browser back button, verify the warning toast appears. Start a test, close the tab, verify the `beforeunload` dialog appears.
 
-**Phase to address:** Navigation Redesign phase
+**Phase to address:** Test/Practice/Interview UX Overhaul phase
 
 ---
 
-### Pitfall 8: Dashboard Simplification Removes Widgets Users Depend On
+### Pitfall 6: Flashcard Overhaul Breaks 3D Flip Card Pointer Event Management
 
-**What goes wrong:** The current Dashboard has 11 staggered motion sections: welcome header, readiness hero, quick actions, SRS widget, streak widget, interview widget, badges, leaderboard, category progress (collapsible), suggested focus, and accuracy. "Simplification" means removing or consolidating some of these, but each has users who rely on it as their primary engagement hook.
+**What goes wrong:** `Flashcard3D.tsx` implements a complex pointer event management system to prevent card flips when interacting with child elements (TTS buttons, ExplanationCard). The current approach:
 
-The `SRSWidget` shows due card count and has a `data-tour="srs-deck"` attribute. The `StreakWidget` is the daily engagement driver. The `ReadinessIndicator` is the primary motivational element. Removing any of these without redirecting the user journey breaks retention patterns.
+- `backfaceVisibility: 'hidden'` on both faces
+- `pointerEvents: isFlipped ? 'none' : 'auto'` on front face (line 255)
+- `pointerEvents: isFlipped ? 'auto' : 'none'` on back face (line 302)
+- `stopPropagation` on TTS button clicks (line 191-193, plus `stopPropagation` prop)
+- `stopPropagation` on ExplanationCard's `onClick`, `onKeyDown`, and `onPointerDown` (lines 333-334)
+
+This is documented in MEMORY.md: "backfaceVisibility hidden does NOT block pointer events -- must toggle pointerEvents via state." Overhauling the flashcard (new layout, new interactive elements, swipe gestures) without preserving this exact pointer event model causes:
+
+1. Clicking a TTS button on the back face flips the card to the front
+2. Expanding an explanation on the back face flips the card
+3. The front face remains clickable through the flipped back face, causing phantom interactions
+
+**Why it happens:** CSS `backface-visibility: hidden` only controls visual rendering, not event targets. The card's `onClick={handleFlip}` is on the outermost container and captures ALL clicks that aren't explicitly stopped. Any new interactive element added to the card MUST stop propagation.
 
 **Prevention:**
-1. Track which widgets are actually clicked/interacted with before deciding what to remove (add analytics events first)
-2. If consolidating, ensure the consolidated view preserves the key information: due cards count, streak count, readiness score
-3. Move removed widgets to the Progress Hub rather than deleting them
-4. Keep `data-tour` targets on whatever replaces the current widgets
+1. **Propagation audit**: Every interactive element inside the flashcard (buttons, links, expandable sections, inputs) MUST call `e.stopPropagation()` on click, keydown, and pointerdown
+2. **Pointer event contract**: Maintain the `pointerEvents` toggle on both face divs. If restructuring the card layout, ensure `isFlipped` state still correctly controls which face accepts events
+3. **Test matrix**: After any flashcard change, test: (a) tap to flip, (b) tap TTS on front -- no flip, (c) flip to back, (d) tap TTS on back -- no flip, (e) expand explanation on back -- no flip, (f) scroll inside explanation on back -- no flip
 
-**Detection:** A/B test the simplified dashboard if possible. At minimum, survey existing users about which widgets they use most.
+**Detection:** On a touch device, rapidly tap the TTS button on the back face of a flipped card. If the card flips, propagation is leaking.
 
-**Phase to address:** Dashboard Redesign phase
+**Phase to address:** Study Guide Flashcard Overhaul phase
 
 ---
 
-### Pitfall 9: React Compiler ESLint Rules Reject Common Navigation Patterns
+### Pitfall 7: Accessibility Retrofitting Conflicts with motion/react Spring Animations
 
-**What goes wrong:** The project uses React Compiler ESLint rules (documented in MEMORY.md). Common patterns used during navigation redesign will trigger violations:
-- `setState` in `useEffect` to sync URL hash to tab state -- violates `react-hooks/set-state-in-effect`
-- `ref.current` access in render for scroll position restoration -- violates `react-hooks/refs`
-- `useMemo<Type>(() => ...)` generic annotation -- violates `react-hooks/preserve-manual-memoization`
-- Timer/interval resets for navigation animations -- require `key` prop pattern instead of `setState` in effect
+**What goes wrong:** The codebase uses motion/react extensively (68 files) with spring physics animations (`SPRING_BOUNCY`, `SPRING_SNAPPY`, `SPRING_GENTLE`). The `useReducedMotion` hook correctly checks `prefers-reduced-motion` and returns a boolean used to disable animations. But accessibility retrofitting introduces new conflicts:
 
-The existing `HistoryPage` already has a carefully constructed pattern to work around these rules: `tabFromHash` is derived via `useMemo` from `location.hash`, and `userSelectedTab` is a separate `useState` that overrides it. This pattern must be preserved or replicated in any consolidated page.
+1. **`aria-live` regions + AnimatePresence**: Adding `aria-live="polite"` to announce content changes (e.g., question transitions, score updates) conflicts with `AnimatePresence` exit animations. Screen readers announce the NEW content while the OLD content is still animating out, creating a confusing double-announcement
+2. **Focus management + spring animations**: Adding focus trapping to dialogs or auto-focus to newly revealed elements (answer feedback, explanation cards) conflicts with spring animations that take 200-400ms to settle. Focus moves to an element that's still bouncing/sliding, and screen readers announce its position before it reaches the final location
+3. **Reduced motion + opacity**: The `reducedItemVariants` in StaggeredList set `opacity: 1` for reduced motion users, meaning items appear instantly. But this also means `FadeIn` component's `delay` prop has no visible effect -- elements that should appear sequentially all appear at once, potentially overwhelming screen reader users with simultaneous announcements
+4. **WAAPI constraint**: MEMORY.md documents "WAAPI only supports 2-keyframe arrays." The `useReducedMotion` hook returns a boolean from motion/react, but WAAPI animations (used in some components) need separate handling
+
+**Why it happens:** motion/react's `useReducedMotion` is a blanket toggle that disables transform/layout animations but doesn't address screen reader timing, focus management, or announcement sequencing. Accessibility is not just "disable animations" -- it requires coordinating announcements, focus, and visual state.
 
 **Prevention:**
-1. Follow the established patterns from MEMORY.md:
-   - Use `useMemo` for derived state from `location.hash`, never `setState` in effect
-   - Use `useState(() => Date.now())` instead of `useRef(Date.now())` for initialization
-   - Use React `key` prop to force remount instead of `setState` in effect for timer resets
-2. Run ESLint after EVERY component change, not just at CI time
-3. Reference `useMasteryMilestones.ts` as the canonical example of React Compiler-safe patterns
+1. **Separate animation accessibility from screen reader accessibility**: `useReducedMotion` handles visual animations. Screen reader announcements need their own timing logic, independent of animation state
+2. **Delay `aria-live` announcements until after exit animations complete**: Use `AnimatePresence`'s `onExitComplete` callback to trigger screen reader announcements, not the state change itself
+3. **Focus after animation settles**: Use `onAnimationComplete` callback from motion/react before calling `.focus()` on newly revealed elements
+4. **Don't set `aria-hidden` on animating elements**: `AnimatePresence` exit animations leave elements in the DOM temporarily. Setting `aria-hidden="true"` on them during exit can cause screen readers to lose focus context
+5. **Test with VoiceOver/NVDA**: Automated accessibility tools cannot detect timing-related screen reader issues. Manual testing required
 
-**Detection:** `npx eslint src/components/navigation/ src/pages/` after any navigation-related changes.
+**Detection:** Enable VoiceOver (macOS) or NVDA (Windows), navigate through a test/practice session. Verify announcements match visible state transitions. Enable reduced motion in OS settings and verify no visual jarring.
 
-**Phase to address:** ALL phases -- this is a cross-cutting constraint
+**Phase to address:** Accessibility Improvements phase
 
 ---
 
-### Pitfall 10: iOS Safe Area Handling Breaks During Navigation Restructure
+### Pitfall 8: Performance Optimization Can Cause IndexedDB Read Waterfall
 
-**What goes wrong:** The existing app has careful safe area handling:
-- `globals.css` defines `--safe-area-top`, `--safe-area-bottom`, `--bottom-tab-height`
-- `.page-shell` includes `padding-top: var(--safe-area-top)` and `padding-bottom: calc(var(--safe-area-bottom) + var(--bottom-tab-height) + 1rem)`
-- `BottomTabBar` uses `style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}`
-- `AppNavigation` uses `.nav-safe-area` class with `max()` CSS functions
+**What goes wrong:** The current architecture loads data from 8 separate IndexedDB databases on app startup. Each `createStore()` call creates a separate `IDBDatabase` connection. When multiple components mount simultaneously (Dashboard loads mastery, streaks, badges, SRS cards, interview history), each triggers an independent IndexedDB read:
 
-Restructuring navigation (e.g., moving `BottomTabBar` rendering, changing `page-shell` padding, introducing new layout wrappers) can cause:
-- Content hidden behind the iOS home indicator
-- Double padding (both the page-shell AND a new layout wrapper adding safe area padding)
-- `BottomTabBar` height variable (`--bottom-tab-height: 64px` at `max-width: 767px`) no longer matching actual tab bar height after redesign
+```
+Mount: Dashboard
+  -> useCategoryMastery() -> getAnswerHistory() [civic-prep-mastery]
+  -> useStreak() -> getStreakData() [civic-prep-streaks]
+  -> useBadges() -> getAllBadges() [civic-prep-badges]
+  -> useSRSCards() -> getAllSRSCards() [civic-prep-srs]
+  -> useInterviewHistory() -> getInterviewHistory() [civic-prep-interview]
+```
+
+Performance optimization that adds more IndexedDB reads (e.g., session resume check, cached preferences, analytics) or adds memoization that depends on IndexedDB data will:
+
+1. **Create a waterfall**: Each read is independent and sequential within its hook. 5+ concurrent database opens can take 50-200ms each on mobile
+2. **Break React Compiler optimizations**: If hooks that read from IndexedDB trigger re-renders at different times (one resolves at 50ms, another at 150ms), the component renders 5 times during initial load instead of once
+3. **IndexedDB in service worker + main thread conflict**: If a service worker sync is writing to the same store while the main thread reads, reads can return stale data (IndexedDB transactions are FIFO per database, but cross-context ordering is undefined)
 
 **Prevention:**
-1. Test EVERY navigation change on iOS Safari in standalone PWA mode (not just in-browser)
-2. Keep the `--bottom-tab-height` CSS variable in sync with the actual rendered height
-3. If introducing a new layout wrapper, ensure safe area padding is applied in exactly ONE place
-4. Use `dvh` (dynamic viewport height) rather than `vh` for any new viewport-height calculations
-5. The `useViewportHeight` hook sets `--app-viewport-height` -- ensure it remains functional after layout changes
+1. **Batch IndexedDB reads**: Create a `loadAllStores()` function that reads from all stores in parallel (`Promise.all`) and returns a single combined result. Components consume from a shared cache instead of individual reads
+2. **Use a data loading context**: Wrap initial data loading in a context provider with a `status` field (`loading | ready | error`). Render a skeleton until all stores are loaded, then render once with all data
+3. **Don't add IndexedDB reads to the critical rendering path**: Session resume checks should happen BEFORE the session component mounts, not inside a `useEffect` that causes a re-render
+4. **Profile before optimizing**: Use Chrome DevTools Performance tab to measure actual IndexedDB read times on the target device (mobile, not desktop) before adding optimization complexity
 
-**Detection:** Open the PWA on an iPhone with a notch. Verify bottom content is visible above the home indicator. Verify top content is below the status bar. Check with keyboard open.
+**Detection:** Open Chrome DevTools > Performance > Record page load. Check for multiple "IndexedDB" entries in the flame chart. If total IndexedDB time exceeds 500ms, optimization is needed.
 
-**Phase to address:** Navigation Redesign and iOS-Inspired UI phase
+**Phase to address:** Performance Improvements phase
 
 ---
 
-### Pitfall 11: motion/react (Framer Motion) Inline Transform Overrides CSS Centering
+### Pitfall 9: BilingualText Component Refactor Cascades Through 63+ Consumer Components
 
-**What goes wrong:** Documented in MEMORY.md: `motion/react` inline `transform` overrides CSS `translateX(-50%)` centering. The Dashboard uses `motion.div` with stagger animations (`initial: { opacity: 0, y: 16 }`) on 11 sections. Adding new animations to navigation elements or redesigning dashboard layout with motion components will break centering on any element that uses `transform: translate()` for positioning.
+**What goes wrong:** `BilingualText` and `BilingualTextInline` are used across the entire application. The `BilingualString` type (`{ en: string; my: string }`) is the universal bilingual text contract. Changing the language mode system requires modifying how `BilingualText` decides what to render. Any signature change cascades:
 
-**Prevention:**
-1. Never use CSS `translate` for centering on elements that will be animated with motion/react
-2. Use flexbox (`justify-center`, `items-center`) for centering instead
-3. If animation requires a wrapper, use a separate `motion.div` wrapper around the centered element
-4. The `Dialog` component already handles this correctly with `pointer-events-none` wrapper + `pointer-events-auto` content -- follow that pattern
+- `BilingualText` currently accepts `text: BilingualString` and reads `showBurmese` from context
+- If adding a "Burmese-primary" mode, `BilingualText` needs to swap which text is primary/secondary
+- If adding per-component language override (e.g., "always bilingual in flashcards even in English-only mode"), the component needs a `forceMode` prop
+- The `BilingualHeading`, `BilingualButton`, `SectionHeading` components all wrap `BilingualText` patterns -- changes propagate through all of them
 
-**Detection:** After adding any `motion.div` to a centered element, verify centering in both initial and animated states.
-
-**Phase to address:** Dashboard Redesign and Navigation phases
-
----
-
-### Pitfall 12: AppNavigation Per-Page Pattern Prevents Layout-Level Changes
-
-**What goes wrong:** Every page component individually imports and renders `<AppNavigation />` inside a `<div className="page-shell">` wrapper. This pattern (seen in ALL 13 pages) means:
-- Navigation changes require touching every page file
-- The `locked` and `translucent` props are per-page configuration
-- There's no shared layout component -- each page owns its own shell
-
-Introducing a unified navigation layout requires migrating from "nav inside page" to "page inside nav layout." This is a high-touch refactor: every page import of `AppNavigation` must be removed, and the `locked`/`translucent` props must be handled by a different mechanism (route-level config or context).
+Additionally, many components bypass `BilingualText` entirely and render Burmese text directly:
+```tsx
+// Pattern seen in 20+ components:
+<p className="font-myanmar text-muted-foreground">{strings.someKey.my}</p>
+```
+These raw renders will NOT respond to any `BilingualText` behavior changes.
 
 **Prevention:**
-1. Create a `Layout` component that wraps pages and renders navigation
-2. Move `<AppNavigation />` from individual pages to the layout
-3. Use route metadata or a context to pass `locked` and `translucent` states
-4. Do this refactor FIRST, before any visual navigation changes
-5. The `page-shell` class and its padding must move to the layout, not remain in individual pages
+1. **Add mode to context, not to component props**: The new language mode should be consumed via `useLanguage()` context, not passed as props through 63 components. `BilingualText` reads the mode from context and adjusts rendering
+2. **Keep BilingualString type unchanged**: Do NOT add `mode` or `primary` fields to the string type. The type should remain `{ en: string; my: string }` -- rendering logic belongs in the component, not the data
+3. **Centralize all bilingual rendering through components**: Before changing behavior, find and wrap all raw `{strings.someKey.my}` renders in `BilingualText` or a `showBurmese &&` guard. This is a prerequisite, not part of the feature
+4. **Add `forceMode` as an optional prop**: For specific components that need to override the global mode (e.g., flashcards always bilingual), add `forceMode?: LanguageMode` to `BilingualText`
 
-**Detection:** After the refactor, search for `import AppNavigation` -- it should only appear in the layout component, not in any page.
+**Detection:** Search for `\.my\}` and `\.my\)` patterns not inside a `BilingualText` component or a `showBurmese &&` guard. Each match is a raw Burmese render that won't respond to mode changes.
 
-**Phase to address:** Navigation Redesign phase -- do the structural refactor BEFORE the visual redesign
+**Phase to address:** Language Mode phase -- prerequisite step before changing toggle behavior
 
 ---
 
 ## Minor Pitfalls
 
-### Pitfall 13: Inconsistent Icon Libraries After Navigation Redesign
+### Pitfall 10: Speech Rate Preference Stored in localStorage, Not IndexedDB
 
-**What goes wrong:** The current `BottomTabBar` and `AppNavigation` use different icon selections from `lucide-react` for the same concepts (e.g., `History` vs `Clock` for test history, `TrendingUp` for progress in both but different strokes). An "iOS-inspired" redesign may introduce SF Symbols-style icons or change icon weights, creating inconsistency between updated and not-yet-updated sections.
+**What goes wrong:** `useInterviewTTS.ts` reads speech rate from `localStorage.getItem('civic-prep-speech-rate')`. All other user data is in IndexedDB. Adding TTS quality settings (voice selection, pitch, rate for different contexts) creates a split storage situation:
 
-**Prevention:** Establish an icon mapping document before starting the redesign. Update ALL icon usages in one pass.
+- User clears "site data" expecting to reset preferences: IndexedDB is cleared but localStorage may not be (behavior varies by browser)
+- A "Reset All Settings" feature must clear BOTH localStorage AND IndexedDB
+- The TTS settings don't participate in any sync mechanism (the app has Supabase sync for other data)
 
-**Phase to address:** iOS-Inspired UI phase
+**Prevention:** When adding TTS settings, consider migrating speech rate to IndexedDB alongside other user preferences, or at minimum document the localStorage dependency so a settings reset feature knows to clear both.
 
----
-
-### Pitfall 14: Stale localStorage Keys After Page Consolidation
-
-**What goes wrong:** The app uses several localStorage keys for UI state:
-- `civic-prep-dashboard-category-collapsed` (Dashboard category section)
-- `push-reminder-frequency` (push notifications)
-- `welcome-shown`, `pwa-installed` (onboarding)
-- Various SRS and social keys
-
-Page consolidation may render some of these keys meaningless (e.g., the collapsed state of a section that no longer exists) or create conflicts (two pages using the same collapse key).
-
-**Prevention:** Audit all `localStorage.getItem`/`setItem` calls before consolidation. Remove obsolete keys with a migration function on first load of the new version.
-
-**Phase to address:** Progress Hub Consolidation phase
+**Phase to address:** TTS Improvements phase
 
 ---
 
-### Pitfall 15: PageTransition AnimatePresence Conflicts with New Navigation Animations
+### Pitfall 11: Interview Session Has No Partial Result Persistence
 
-**What goes wrong:** The existing `PageTransition` component wraps `<Routes>` with `AnimatePresence` for page-level enter/exit animations. Adding navigation-level animations (tab bar transitions, sheet animations) can conflict -- `AnimatePresence` may try to animate a page exit while a navigation animation is still running, causing visual glitches or z-index wars.
+**What goes wrong:** `InterviewSession.tsx` stores results in `useState<InterviewResult[]>([])`. If the user navigates away accidentally (despite the navigation lock), crashes, or the tab is killed by the OS, all mid-session results are lost. The session is only saved to IndexedDB via `saveInterviewSession()` AFTER `onComplete` fires.
 
-**Prevention:** Keep page transitions and navigation animations on separate z-index layers. The `BottomTabBar` already uses `z-50` for the More sheet and `z-40` for the bar itself. Ensure new navigation animations don't overlap with `PageTransition` z-indices.
+Adding session persistence to Test and Practice without adding it to Interview creates inconsistent resume behavior: "I can resume tests and practice, why not interviews?"
 
-**Phase to address:** Navigation Redesign phase
+**Prevention:** If adding session persistence to any session type, add it to ALL session types, or explicitly document why Interview is excluded (e.g., "interviews are meant to be completed in one sitting to simulate real conditions").
+
+**Phase to address:** Session Persistence phase
+
+---
+
+### Pitfall 12: TTS Voice Availability Varies by OS Version and Can Regress
+
+**What goes wrong:** The voice-finding logic in both TTS hooks prioritizes specific voices (`APPLE_US_VOICES`, `ANDROID_US_VOICES`, `ENHANCED_HINTS`). Adding a voice quality dropdown UI that shows available voices creates a UX problem:
+
+- iOS 17+ removed some previously available voices and added new ones
+- Android OEMs pre-install different TTS engines (Google TTS, Samsung TTS, device-specific)
+- The `voiceschanged` event fires multiple times on some browsers as voices lazy-load
+- A voice the user selected may not be available on their next device or after an OS update
+
+**Prevention:** Store voice preference as a "hint" (name substring), not an exact match. Fall back gracefully to the priority chain. Show "Recommended" badge on voices that match the existing priority lists.
+
+**Phase to address:** TTS Improvements phase
 
 ---
 
@@ -356,70 +351,86 @@ Page consolidation may render some of these keys meaningless (e.g., the collapse
 
 | Phase Topic | Likely Pitfall | Severity | Mitigation |
 |-------------|---------------|----------|------------|
-| Navigation Redesign | Onboarding tour breaks (Pitfall 1) | CRITICAL | Audit all data-tour targets before and after |
-| Navigation Redesign | AppNavigation per-page pattern (Pitfall 12) | HIGH | Refactor to layout component FIRST |
-| Navigation Redesign | Mobile "More" menu overflow (Pitfall 7) | MODERATE | Test on 320px viewport |
-| Dashboard Redesign | Widget removal breaks engagement (Pitfall 8) | HIGH | Preserve key metrics in simplified view |
-| Dashboard Redesign | motion/react transform conflicts (Pitfall 11) | MODERATE | Use flexbox centering, not CSS translate |
-| Progress Hub Consolidation | Hash-based deep links break (Pitfall 2) | CRITICAL | Map all routes/hashes, implement redirects |
-| Progress Hub Consolidation | Stale localStorage keys (Pitfall 14) | LOW | Audit and migrate |
-| Design Token System | 63-file visual regression (Pitfall 3) | CRITICAL | Single source of truth first, visual testing |
-| Burmese Translation | Trust erosion from bad translation (Pitfall 6) | CRITICAL | Native speaker review, glossary-first approach |
-| USCIS 120Q Bank | Coverage regression destroys motivation (Pitfall 4) | HIGH | Celebrate new questions, don't silently regress |
-| Push Security | Unauthenticated subscription API (Pitfall 5) | CRITICAL | Auth verification before ANY push improvements |
-| iOS-Inspired UI | Safe area breakage (Pitfall 10) | HIGH | Test on real iOS devices in standalone mode |
-| ALL phases | React Compiler rule violations (Pitfall 9) | MODERATE | Follow established patterns from MEMORY.md |
-
-## Cross-Cutting Concerns
-
-### Concern 1: The 13-Page AppNavigation Import Pattern
-
-Every page individually imports `AppNavigation`. This means any navigation change is automatically a 13-file change. The risk of partial migration (some pages updated, some not) is extremely high.
-
-**Recommended order:**
-1. Extract layout component (structural change, zero visual change)
-2. Verify all pages render correctly with layout-provided navigation
-3. THEN redesign the navigation visually
-
-### Concern 2: Three Sources of Truth for Colors
-
-The design token system has fragmented into `globals.css`, `tailwind.config.js`, and `design-tokens.ts`. Any new token system must consolidate these into ONE source of truth before adding new tokens.
-
-**Recommended order:**
-1. Consolidate existing tokens (CSS variables as source of truth)
-2. Wire Tailwind to CSS variables for ALL extended colors
-3. THEN introduce new design tokens
-
-### Concern 3: Burmese Text Scattered Across Codebase
-
-Despite having a centralized `strings.ts`, Burmese text appears directly in component JSX in at least: `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, `BottomTabBar.tsx`, `AppNavigation.tsx`, and multiple component files. The translation upgrade must centralize ALL Burmese text before improving it.
-
-**Recommended order:**
-1. Extract ALL inline Burmese strings to `strings.ts`
-2. Create a Burmese glossary for key terms
-3. THEN improve translations with native speaker review
+| Language Mode Change | 171 conditional renders + 163 ungated Burmese renders (Pitfall 1) | CRITICAL | Full audit before coding, atomic migration |
+| Language Mode Change | BilingualText cascade through 63+ consumers (Pitfall 9) | HIGH | Context-based mode, not prop-based |
+| Session Persistence | Stale data after app update (Pitfall 2) | CRITICAL | Version-stamp sessions, TTL expiry |
+| Session Persistence | React Compiler blocks common patterns (Pitfall 4) | HIGH | Follow established eslint-disable patterns |
+| Session Persistence | Inconsistent resume across session types (Pitfall 11) | MODERATE | All-or-nothing approach |
+| TTS Improvements | Interview phase machine breaks (Pitfall 3) | CRITICAL | Consolidate TTS hooks first |
+| TTS Improvements | Dual TTS hook divergence (Pitfall 3) | HIGH | Extract shared engine module |
+| TTS Improvements | Speech rate in localStorage (Pitfall 10) | LOW | Migrate to IndexedDB |
+| TTS Improvements | Voice availability varies by OS (Pitfall 12) | LOW | Store voice as hint, not exact |
+| Test/Practice/Interview UX | Navigation lock breaks (Pitfall 5) | HIGH | Single lock owner per page |
+| Flashcard Overhaul | Pointer event management breaks (Pitfall 6) | HIGH | Propagation audit, test matrix |
+| Accessibility | Animation + screen reader timing (Pitfall 7) | HIGH | Separate animation and a11y concerns |
+| Performance | IndexedDB read waterfall (Pitfall 8) | MODERATE | Batch reads, profile first |
+| ALL phases | React Compiler rule violations (Pitfall 4) | HIGH | Follow MEMORY.md patterns |
 
 ---
 
-## "Looks Done But Isn't" Checklist for v2.0
+## Cross-Cutting Concerns
 
-- [ ] **Navigation redesign**: All 5 data-tour targets still work on fresh account
-- [ ] **Navigation redesign**: AppNavigation import removed from ALL 13 pages
-- [ ] **Navigation redesign**: BottomTabBar "More" sheet fits on 320px screen
-- [ ] **Navigation redesign**: `locked` and `translucent` navigation states still work during tests
-- [ ] **Progress Hub**: Every old route (`/history`, `/progress`, `/history#interview`) redirects correctly
-- [ ] **Progress Hub**: Push notification URLs point to correct new routes
-- [ ] **Progress Hub**: SRS widget "review" link opens correct tab in consolidated view
-- [ ] **Design tokens**: Dark mode toggle produces identical colors to v1.0 (unless intentionally changed)
-- [ ] **Design tokens**: No hardcoded HSL values remain in `tailwind.config.js` extended colors
-- [ ] **120Q bank**: User with 100/100 coverage sees encouraging message, not regression
-- [ ] **120Q bank**: Mastery milestone celebrations acknowledge the expanded pool
-- [ ] **Burmese**: ALL Myanmar Unicode text lives in `strings.ts` (zero inline)
-- [ ] **Burmese**: Glossary terms are consistent across ALL pages
-- [ ] **Push security**: Unauthenticated POST to `/api/push/subscribe` returns 401
-- [ ] **Push security**: Cannot delete another user's subscription
-- [ ] **iOS safe areas**: Bottom tab bar clears home indicator in standalone PWA mode
-- [ ] **iOS safe areas**: Top navigation clears status bar/notch
+### Concern 1: The "Always Bilingual" Assumption Is Baked Into Data, Not Just UI
+
+The question bank itself has bilingual structure: every `Question` object has `question_en`, `question_my`, `answers[].text_en`, `answers[].text_my`, `studyAnswers[].text_en`, `studyAnswers[].text_my`. The mastery store records `questionText_en` AND `questionText_my` in every result. The sync queue stores both language versions of answers.
+
+A language mode change that hides Burmese from the UI does NOT need to touch data storage -- but developers might mistakenly "optimize" by not recording `_my` fields in English-only mode, which would corrupt data if the user switches back to bilingual.
+
+**Rule:** ALWAYS store both language versions in data, regardless of display mode. Language mode is a VIEW concern, never a DATA concern.
+
+### Concern 2: Two TTS Implementations Must Converge Before Either Is Improved
+
+`useSpeechSynthesis.ts` and `useInterviewTTS.ts` share ~70% of their code (voice finding, voice loading, cancellation) but diverge on callbacks, timeout handling, and rate configuration. Any improvement to one (better voice selection, Burmese support, queue management) must be duplicated in the other -- OR they must be consolidated first.
+
+**Recommended order:**
+1. Extract shared TTS engine (`ttsEngine.ts`) with voice finding, loading, rate config
+2. `useSpeechSynthesis` becomes a thin wrapper for fire-and-forget speech
+3. `useInterviewTTS` becomes a thin wrapper adding callbacks, timeout fallback, and phase integration
+4. THEN add improvements to the shared engine
+
+### Concern 3: Session Persistence Must Be Designed as a Cross-Feature Schema
+
+If Test, Practice, and Interview sessions all get persistence, they need a shared schema pattern:
+
+```typescript
+interface PersistedSession {
+  type: 'test' | 'practice' | 'interview';
+  version: number;           // Schema version for migration
+  appVersion: string;        // App version for compatibility check
+  startedAt: string;         // ISO timestamp
+  expiresAt: string;         // TTL for auto-cleanup
+  questionIds: string[];     // Ordered question IDs (preserves shuffle)
+  currentIndex: number;      // Where the user left off
+  results: SessionResult[];  // Completed answers
+  config: SessionConfig;     // Mode-specific config (timer, language, etc.)
+}
+```
+
+Designing this upfront prevents three separate incompatible schemas emerging from three separate implementation phases.
+
+---
+
+## "Looks Done But Isn't" Checklist for v2.1
+
+- [ ] **Language mode**: Zero `font-myanmar` renders visible in English-only mode on ALL pages
+- [ ] **Language mode**: TestPage answer options respect language mode (currently ungated)
+- [ ] **Language mode**: Flashcard3D front and back respect language mode (currently ungated)
+- [ ] **Language mode**: FlashcardStack progress indicator respects language mode (currently ungated)
+- [ ] **Session persistence**: Resumed session works after app version update (version check)
+- [ ] **Session persistence**: Resumed session expires after 24-48 hours (TTL)
+- [ ] **Session persistence**: Two tabs don't corrupt session data (Web Locks or last-write-wins)
+- [ ] **Session persistence**: ESLint passes with zero violations
+- [ ] **TTS**: Interview phase machine completes all 6 phases without getting stuck
+- [ ] **TTS**: Voice selection is consistent between SpeechButton and InterviewSession
+- [ ] **TTS**: Timeout fallback still works for long utterances (>10 seconds)
+- [ ] **UX overhaul**: Navigation lock blocks browser back button during Test session
+- [ ] **UX overhaul**: `beforeunload` dialog appears when closing tab during Practice session
+- [ ] **Flashcard overhaul**: TTS button on back face does NOT flip card
+- [ ] **Flashcard overhaul**: Explanation card interaction on back face does NOT flip card
+- [ ] **Accessibility**: Screen reader announces question transitions after animation completes
+- [ ] **Accessibility**: Reduced motion users see instant transitions (no spring physics)
+- [ ] **Accessibility**: All interactive elements have minimum 48px touch target
+- [ ] **Performance**: Dashboard initial load IndexedDB reads < 500ms on mobile
 - [ ] **React Compiler**: `npx eslint src/` passes with zero violations after every phase
 
 ---
@@ -428,54 +439,53 @@ Despite having a centralized `strings.ts`, Burmese text appears directly in comp
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Broken onboarding tour | LOW | Re-add data-tour attributes, update step selectors |
-| Broken deep links | MEDIUM | Add redirects; users with bookmarks need to re-bookmark |
-| Visual regression from tokens | HIGH | Revert to v1.0 tokens, re-attempt with visual testing |
-| Coverage regression for 120Q | LOW | Add celebration UI, recompute milestones |
-| Push subscription hijack | HIGH | Rotate VAPID keys, re-subscribe all users, audit logs |
-| Bad Burmese translations | MEDIUM | Revert to v1.0 translations while getting native review |
-| iOS safe area broken | MEDIUM | Revert navigation changes, retest on device |
+| Partial language mode migration | HIGH | Must complete the migration -- partial is worse than none |
+| Stale session resume crash | LOW | Add version check + discard with user message |
+| Broken interview phase machine | MEDIUM | Revert TTS changes, re-implement with consolidated hook |
+| React Compiler violations | LOW | Follow established patterns, add eslint-disable with justification |
+| Broken navigation lock | LOW | Restore per-page lock ownership pattern |
+| Flashcard pointer event leak | LOW | Add stopPropagation to new interactive elements |
+| Accessibility + animation timing | MEDIUM | Add onAnimationComplete-gated focus/announcements |
+| IndexedDB waterfall | LOW | Wrap in Promise.all, add loading context |
+| BilingualText cascade | HIGH | Keep changes in context, not in component signature |
 
 ---
 
 ## Sources
 
-**Navigation & Routing:**
-- [React Router Dynamic Tabs Discussion](https://github.com/remix-run/react-router/discussions/11040) - Tab state in URL params (MEDIUM confidence)
-- [React Navigation Bottom Tabs Overlap Issue](https://github.com/react-navigation/react-navigation/issues/12769) - Safe area overlaps (MEDIUM confidence)
+**Language Mode & i18n:**
+- [Implementing Internationalization in React Components (2026)](https://thelinuxcode.com/implementing-internationalization-in-react-components-2026-a-practical-component-first-guide/) - Component-first i18n (MEDIUM confidence)
+- [Making React Apps Multilingual Without Rewriting](https://ainativedev.io/news/making-react-apps-multilingual-without-rewriting-existing-components) - Zero-refactor approaches (MEDIUM confidence)
+- Codebase analysis: `LanguageContext.tsx`, `BilingualText.tsx`, 171 `showBurmese` usages across 48 files, 334 `font-myanmar` across 77 files (HIGH confidence)
 
-**Design Tokens:**
-- [Modern Design Systems for React in 2025](https://inwald.com/2025/11/modern-design-systems-for-react-in-2025-a-pragmatic-comparison/) - Token migration strategies (MEDIUM confidence)
-- [Design Tokens in React - UXPin](https://www.uxpin.com/studio/blog/what-are-design-tokens-in-react/) - Token architecture (MEDIUM confidence)
-- [Managing Global Styles with Design Tokens](https://www.uxpin.com/studio/blog/managing-global-styles-in-react-with-design-tokens/) - Single source of truth (MEDIUM confidence)
+**IndexedDB & Session Persistence:**
+- [IndexedDB Best Practices for App State - web.dev](https://web.dev/articles/indexeddb-best-practices-app-state) - Official Google guide (HIGH confidence)
+- [IndexedDB Pain Points - GitHub Gist](https://gist.github.com/pesterhazy/4de96193af89a6dd5ce682ce2adff49a) - Comprehensive bug catalog (HIGH confidence)
+- [idb-keyval GitHub](https://github.com/jakearchibald/idb) - Library documentation (HIGH confidence)
+- Codebase analysis: 8 separate IndexedDB stores via `createStore()` (HIGH confidence)
 
-**Burmese/Myanmar:**
-- [Burmese Font Issues Have Real World Consequences](https://www.localizationlab.org/blog/2019/3/25/burmese-font-issues-have-real-world-consequences-for-at-risk-users) - Trust and security impact (HIGH confidence)
-- [Mini-Guide to UX Design in Myanmar](https://www.nexlabs.co/insight-post/a-mini-guide-to-ux-design-in-myanmar) - Cultural UX considerations (MEDIUM confidence)
-- [NLP and Burmese Localization - GALA](https://www.gala-global.org/knowledge-center/professional-development/articles/nlp-burmesemyanmar) - Linguistic challenges (MEDIUM confidence)
+**Web Speech API TTS:**
+- [Taming the Web Speech API - Andrea Giammarchi](https://webreflection.medium.com/taming-the-web-speech-api-ef64f5a245e1) - Cross-browser pitfalls (MEDIUM confidence)
+- [Lessons Learned Using speechSynthesis](https://talkrapp.com/speechSynthesis.html) - Production experience report (MEDIUM confidence)
+- [easy-speech Library](https://github.com/leaonline/easy-speech) - Cross-browser TTS wrapper with documented pitfalls (MEDIUM confidence)
+- Codebase analysis: `useInterviewTTS.ts`, `useSpeechSynthesis.ts` duplicate voice logic (HIGH confidence)
+
+**Animation & Accessibility:**
+- [Motion Accessibility Guide](https://motion.dev/docs/react-accessibility) - Official motion/react accessibility docs (HIGH confidence)
+- [Framer Motion Accessibility Guide](https://www.framer.com/motion/guide-accessibility/) - ReducedMotion implementation (HIGH confidence)
+- [ARIA Attributes for Animated Elements](https://app.studyraid.com/en/read/7850/206081/aria-attributes-for-animated-elements) - Screen reader + animation coordination (MEDIUM confidence)
 
 **React Compiler:**
-- [React Compiler v1.0 Blog Post](https://react.dev/blog/2025/10/07/react-compiler-1) - Official rules documentation (HIGH confidence)
-- [set-state-in-effect Rule](https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect) - Official lint rule (HIGH confidence)
-- [refs Rule](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs) - Official lint rule (HIGH confidence)
-- [Bug: set-state-in-effect overly strict?](https://github.com/facebook/react/issues/34743) - Known false positives (HIGH confidence)
+- [React Compiler v1.0 Blog Post](https://react.dev/blog/2025/10/07/react-compiler-1) - Official rules (HIGH confidence)
+- [eslint-plugin-react-hooks](https://react.dev/reference/eslint-plugin-react-hooks) - Official lint rules (HIGH confidence)
+- MEMORY.md documented pitfalls: set-state-in-effect, refs, useMemo generics (HIGH confidence)
 
-**PWA & iOS:**
-- [Make PWAs Look Handsome on iOS](https://dev.to/karmasakshi/make-your-pwas-look-handsome-on-ios-1o08) - Safe area handling (MEDIUM confidence)
-- [Supporting iOS Safe Areas in Web Apps](https://jipfr.nl/blog/supporting-ios-web/) - Implementation guide (MEDIUM confidence)
-- [Next.js Discussion: Safe Area Inset Issues](https://github.com/vercel/next.js/discussions/81264) - Next.js-specific (MEDIUM confidence)
-- [Understanding Mobile Viewport Units](https://medium.com/@tharunbalaji110/understanding-mobile-viewport-units-a-complete-guide-to-svh-lvh-and-dvh-0c905d96e21a) - dvh/svh/lvh guide (MEDIUM confidence)
-
-**Push Notifications:**
-- [Supabase Push Notifications Docs](https://supabase.com/docs/guides/functions/examples/push-notifications) - Official (HIGH confidence)
-- [Supabase Security 2025 Retro](https://supabase.com/blog/supabase-security-2025-retro) - Security defaults (HIGH confidence)
-- [PWA Push Notifications Guide](https://www.magicbell.com/blog/using-push-notifications-in-pwas) - Implementation patterns (MEDIUM confidence)
-
-**Codebase Analysis:**
-- Verified against actual source files: `AppShell.tsx`, `BottomTabBar.tsx`, `AppNavigation.tsx`, `Dashboard.tsx`, `HistoryPage.tsx`, `ProgressPage.tsx`, `TestPage.tsx`, `globals.css`, `tailwind.config.js`, `design-tokens.ts`, `strings.ts`, `questions/index.ts`, `pushNotifications.ts`, `subscribe.ts` (HIGH confidence)
+**Stale State & Session Resume:**
+- [Avoiding Async State Manager Pitfalls - Evil Martians](https://evilmartians.com/chronicles/how-to-avoid-tricky-async-state-manager-pitfalls-react) - State synchronization patterns (MEDIUM confidence)
+- [React State Persistence - UXPin](https://www.uxpin.com/studio/blog/how-to-use-react-for-state-persistence/) - Persistence strategies (MEDIUM confidence)
 
 ---
 
-*Pitfalls research for: Civic Test Prep 2025 v2.0 Feature Additions*
-*Researched: 2026-02-09*
-*Previous version: v1.0 pitfalls archived in milestones/v1.0/*
+*Pitfalls research for: Civic Test Prep 2025 v2.1 Quality & Polish*
+*Researched: 2026-02-13*
+*Previous version: v2.0 pitfalls in .planning/research/PITFALLS.md (archived)*
