@@ -12,6 +12,8 @@ import { SPRING_BOUNCY } from '@/lib/motion-config';
 interface FlagToggleProps {
   /** Compact mode for navbar (tighter spacing) */
   compact?: boolean;
+  /** Stack flags vertically (for collapsed sidebar) */
+  vertical?: boolean;
   /** Additional class names */
   className?: string;
 }
@@ -29,7 +31,7 @@ interface FlagToggleProps {
  * - Full ARIA radiogroup accessibility
  * - Compact variant for navbar
  */
-export function FlagToggle({ compact = false, className }: FlagToggleProps) {
+export function FlagToggle({ compact = false, vertical = false, className }: FlagToggleProps) {
   const { mode, setMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -75,7 +77,13 @@ export function FlagToggle({ compact = false, className }: FlagToggleProps) {
     <div
       role="radiogroup"
       aria-label="Language mode"
-      className={clsx('inline-flex items-center rounded-lg bg-muted/50', gap, padding, className)}
+      className={clsx(
+        'inline-flex rounded-lg bg-muted/50',
+        vertical ? 'flex-col items-center' : 'items-center',
+        gap,
+        padding,
+        className
+      )}
     >
       {/* US Flag - English only */}
       <motion.button

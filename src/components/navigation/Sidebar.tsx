@@ -189,7 +189,7 @@ export function Sidebar() {
       <div className="flex flex-col gap-1 px-2 py-3">
         {/* Language toggle -- dual flag */}
         <div className={isExpanded ? 'relative px-3 py-2' : 'flex justify-center py-2'}>
-          <FlagToggle compact={!isExpanded} />
+          <FlagToggle compact={!isExpanded} vertical={!isExpanded} />
           {showTooltip && isExpanded && (
             <motion.div
               initial={{ opacity: 0, x: -8 }}
