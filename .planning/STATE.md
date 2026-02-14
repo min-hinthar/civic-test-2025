@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 19: TTS Core Extraction
+**Current focus:** v2.1 Quality & Polish -- Phase 19 COMPLETE, ready for Phase 20
 
 ## Current Position
 
-Phase: 19 of 25 (TTS Core Extraction)
-Plan: 5 of 6 in current phase
-Status: In progress
-Last activity: 2026-02-14 -- Completed 19-05-PLAN.md (Interview consumer migration)
+Phase: 19 of 25 (TTS Core Extraction) -- COMPLETE
+Plan: 6 of 6 in current phase
+Status: Phase complete
+Last activity: 2026-02-14 -- Completed 19-06-PLAN.md (AppShell wiring + old hook deletion)
 
-Progress: [#####░░░░░] 83% (5/6 plans)
+Progress: [######░░░░] 100% (6/6 plans)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 8 plans, ~75 min total
+- v2.1: 9 plans, ~90 min total
 
 ## Accumulated Context
 
@@ -51,6 +51,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - safeSpeakLocal wraps useTTS speak (not raw engine) -- simpler, useTTS handles cancellation silently
 - handleReplay uses Promise-based delay instead of setTimeout callback for cleaner async flow
 - Chime effect calls handleReading directly from timeout (no separate reading useEffect)
+- Direct TTSProvider import (not next/dynamic) since AppShell has isClient gate
+- SettingsPage migrated from raw localStorage to useTTSSettings for settings sync
 
 **Phase 18 decisions:**
 - Exported LanguageMode type for downstream consumers (additive, non-breaking)
@@ -87,10 +89,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 19-05 (Interview consumer migration)
-Next step: Execute 19-06 (AppShell wiring + old hook deletion)
+Stopped at: Completed Phase 19 (all 6 plans)
+Next step: Phase 20 or next priority phase
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (19-05 complete -- Interview consumers migrated to useTTS)*
+*Last updated: 2026-02-14 (Phase 19 COMPLETE -- TTS core extraction finished, 6/6 plans done)*
