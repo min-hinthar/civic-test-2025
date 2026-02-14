@@ -22,9 +22,10 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Mock speechSynthesis for TTS tests
+// Mock speechSynthesis for TTS tests (configurable so ttsCore.test.ts can override)
 Object.defineProperty(window, 'speechSynthesis', {
   writable: true,
+  configurable: true,
   value: {
     speak: vi.fn(),
     cancel: vi.fn(),
