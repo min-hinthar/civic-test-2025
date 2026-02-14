@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 19 of 25 (TTS Core Extraction)
-Plan: 1 of 6 in current phase
+Plan: 3 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 19-01-PLAN.md (TTS types + core engine)
+Last activity: 2026-02-14 -- Completed 19-03-PLAN.md (TTS React context + hooks)
 
-Progress: [#░░░░░░░░░] 17% (1/6 plans)
+Progress: [##░░░░░░░░] 33% (2/6 plans)
 
 ## Completed Milestones
 
@@ -42,6 +42,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
 - void swallow pattern in safeSpeak: consumes destructured param without triggering unused-var lint error
 - Android UA detection: single exception to no-UA-sniffing rule for pause/resume cycling (breaks Android Chrome)
+- Error state local to useTTS hook, not in provider context -- each consumer has independent error lifecycle
+- Isolated engine via useRef with state subscription, ref.current only in effects/handlers (React Compiler safe)
 
 **Phase 18 decisions:**
 - Exported LanguageMode type for downstream consumers (additive, non-breaking)
@@ -78,10 +80,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 19-01 (TTS types + core engine)
-Next step: Execute 19-02 (useTTS hook)
+Stopped at: Completed 19-03 (TTS React context + hooks)
+Next step: Execute 19-04 (SpeechButton migration)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (19-01 complete -- ttsTypes.ts + ttsCore.ts created)*
+*Last updated: 2026-02-14 (19-03 complete -- TTSContext.tsx + useTTS.ts + useTTSSettings.ts created)*
