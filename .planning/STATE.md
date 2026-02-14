@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 18 of 25 (Language Mode)
-Plan: 5 of 7 in current phase
+Plan: 7 of 7 in current phase
 Status: In progress
-Last activity: 2026-02-14 -- Completed 18-04-PLAN.md (Toast & Pre-Screen Language Guards)
+Last activity: 2026-02-14 -- Completed 18-07-PLAN.md (PWA/Onboarding/Auth/Landing Guards)
 
-Progress: [████░░░░░░] 43% (3/7 plans)
+Progress: [███████░░░] 71% (5/7 plans)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 3 plans, ~44 min total
+- v2.1: 6 plans, ~63 min total
 
 ## Accumulated Context
 
@@ -47,6 +47,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - AnswerReveal needed no changes (all Burmese already gated)
 - USCIS simulation message shown every time before mock test (not just first time)
 - "Answer in English" guidance only in Myanmar mode
+- ErrorBoundary uses localStorage for language mode (class component, no hooks)
+- DynamicAnswerNote showBurmese prop optional with default true (backward compatible)
+- Sub-components (StatCard, DeckCardItem) receive showBurmese via prop from parent
+- OnboardingTour: extracted inline step JSX into React components for hook access
 
 ### Research Notes
 
@@ -63,10 +67,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed 18-04 (Toast & Pre-Screen Language Guards)
-Next step: Continue Phase 18 (remaining plans: 02, 03, 06, 07)
+Stopped at: Completed 18-07 (PWA/Onboarding/Auth/Landing Guards)
+Next step: Continue Phase 18 (remaining plans: 02, 03)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (18-04 Toast & Pre-Screen Language Guards complete)*
+*Last updated: 2026-02-14 (18-07 PWA/Onboarding/Auth/Landing Guards complete)*
