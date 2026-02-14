@@ -88,7 +88,6 @@ module.exports = {
         patriotic: {
           DEFAULT: 'hsl(var(--color-patriotic-red))',
           500: 'hsl(var(--patriotic-red))',
-          600: 'hsl(0 74% 42%)',
         },
 
         /* ── Primitive palette (available for flexibility) ── */
