@@ -76,7 +76,7 @@ interface InterviewSessionProps {
  * - Practice: user-paced, Show Answer button, WhyButton, AddToDeck, quit option
  */
 export function InterviewSession({ mode, onComplete, micPermission }: InterviewSessionProps) {
-  const { showBurmese } = useLanguage();
+  const { showBurmese, mode: languageMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { speakWithCallback, cancel: cancelTTS, isSpeaking } = useInterviewTTS();
   const {
@@ -130,6 +130,11 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
   useEffect(() => {
     if (questionPhase !== 'greeting') return;
 
+    console.debug('[analytics] interview_session_started', {
+      interviewMode: mode,
+      languageMode,
+    });
+
     const greeting = getRandomGreeting();
     speakWithCallback(greeting, {
       onEnd: () => {
@@ -145,7 +150,7 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
         clearTimeout(transitionTimerRef.current);
       }
     };
-  }, [questionPhase, speakWithCallback]);
+  }, [questionPhase, speakWithCallback, mode, languageMode]);
 
   // CHIME phase: play chime, wait 200ms, go to reading
   useEffect(() => {
@@ -385,9 +390,13 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
 
       {/* Main content area */}
       <div className="flex flex-1 flex-col items-center justify-center">
-        {/* Interviewer avatar */}
-        <div className="mb-6">
+        {/* Interviewer avatar + label */}
+        <div className="mb-6 flex flex-col items-center">
           <InterviewerAvatar size={64} isSpeaking={isSpeaking} />
+          <span className="mt-1.5 text-xs text-muted-foreground">
+            USCIS Officer
+            {showBurmese && <span className="font-myanmar ml-1">· USCIS အရာရှိ</span>}
+          </span>
         </div>
 
         {/* Greeting state */}
