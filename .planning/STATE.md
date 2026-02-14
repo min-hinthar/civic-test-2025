@@ -14,7 +14,7 @@ Plan: 3 of 6 in current phase
 Status: In progress
 Last activity: 2026-02-14 -- Completed 19-03-PLAN.md (TTS React context + hooks)
 
-Progress: [##░░░░░░░░] 33% (2/6 plans)
+Progress: [###░░░░░░░] 50% (3/6 plans)
 
 ## Completed Milestones
 
@@ -42,6 +42,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
 - void swallow pattern in safeSpeak: consumes destructured param without triggering unused-var lint error
 - Android UA detection: single exception to no-UA-sniffing rule for pause/resume cycling (breaks Android Chrome)
+- Combined test tasks into single commit when ESLint unused-import prevents committing infrastructure alone
+- Global test setup speechSynthesis mock made configurable: true for test-level overrides
 - Error state local to useTTS hook, not in provider context -- each consumer has independent error lifecycle
 - Isolated engine via useRef with state subscription, ref.current only in effects/handlers (React Compiler safe)
 
@@ -86,4 +88,4 @@ Next step: Execute 19-04 (SpeechButton migration)
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (19-03 complete -- TTSContext.tsx + useTTS.ts + useTTSSettings.ts created)*
+*Last updated: 2026-02-14 (19-02 complete -- ttsCore.test.ts with 39 passing tests)*
