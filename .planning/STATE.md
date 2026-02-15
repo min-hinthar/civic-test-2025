@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 22 of 25 (TTS Quality)
-Plan: 03 of 9 in current phase
+Plan: 05 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 22-03-PLAN.md (USCIS 2025 Explanations)
+Last activity: 2026-02-15 -- Completed 22-05-PLAN.md (Auto-Read Hook & Pre-Screen Overrides)
 
-Progress: [███░░░░░░] 33% (3/9 plans complete)
+Progress: [█████░░░░] 55% (5/9 plans complete)
 
 ## Completed Milestones
 
@@ -55,6 +55,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Native browser title tooltip (span wrapper) for error/unsupported/offline states
 - Tooltip priority: unsupported > error > offline > none
 - Online/offline state tracked with useState + window event listeners (self-contained, not OfflineContext)
+- Per-session overrides use useState from global settings, never synced back to localStorage
+- Interview auto-read always on (no toggle), speed selector only in Practice mode
+- Real mode interview uses fixed normal speed (USCIS simulation fidelity)
+- SpeechOverrides exported from PreTestScreen, InterviewSpeechOverrides from InterviewSetup
+- Optional callback parameters maintain backward compatibility with existing consumers
+- SPEED_OPTIONS constant with en/my labels reused across all three pre-screens
 
 **Phase 21 decisions:**
 - Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
@@ -202,10 +208,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plans 01-03 complete
-Next step: Continue Phase 22 execution (plans 04-09)
+Stopped at: Phase 22, plans 01-05 complete
+Next step: Continue Phase 22 execution (plans 06-09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plan 03 complete -- USCIS 2025 Explanations)*
+*Last updated: 2026-02-15 (Phase 22, plan 05 complete -- Auto-Read Hook & Pre-Screen Overrides)*
