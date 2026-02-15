@@ -99,16 +99,19 @@ Plans:
 - [x] 20-05-PLAN.md — TestPage session persistence integration
 - [x] 20-06-PLAN.md — PracticePage + InterviewPage session persistence integration
 
-### Phase 21: Test & Practice UX Overhaul
-**Goal**: Users control their own pacing through an explicit Check/Continue flow with rich visual feedback, replacing auto-advance
+### Phase 21: Test, Practice & Interview UX Overhaul
+**Goal**: Users control their own pacing through an explicit Check/Continue flow with rich visual feedback (test/practice), and experience a fully immersive chat-style interview simulation with voice input, animated examiner, and Practice/Real modes
 **Depends on**: Phase 18, Phase 20
-**Requirements**: TPUX-01, TPUX-02, TPUX-03, TPUX-04, TPUX-05, TPUX-06, TPUX-07, TPUX-08
+**Requirements**: TPUX-01, TPUX-02, TPUX-03, TPUX-04, TPUX-05, TPUX-06, TPUX-07, TPUX-08, INTV-01, INTV-02, INTV-03, INTV-04, INTV-05
 **Success Criteria** (what must be TRUE):
   1. User selects an answer, then explicitly taps "Check" to submit -- answer is not committed on tap
   2. User sees a bottom feedback panel slide up after checking (green for correct, amber for incorrect) with the correct answer shown
   3. User taps "Continue" to advance to the next question -- no auto-advance timer
   4. User sees a segmented progress bar where each question is a color-coded segment (green/red/gray/blue)
   5. User can navigate the entire quiz with keyboard only (Tab/arrows for options, Enter for Check/Continue)
+  6. Interview uses chat-style layout with animated examiner character, voice-only input, and auto-read questions
+  7. Interview offers Practice mode (per-question feedback) and Real mode (USCIS 2025 rules: 20 questions, pass at 12, fail at 9, early termination)
+  8. Interview results show full transcript with per-answer grading, confidence scores, and comparison to previous attempts
 **Plans**: TBD
 
 Plans:
