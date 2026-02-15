@@ -60,7 +60,7 @@ export function SkipButton({ onSkip, disabled = false, showBurmese }: SkipButton
         // Hover
         'hover:bg-muted/30 hover:text-foreground',
         // Focus
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+        'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
         // Disabled
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none'
       )}

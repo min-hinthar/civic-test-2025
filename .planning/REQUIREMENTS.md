@@ -74,6 +74,14 @@ Requirements for v2.1 Quality & Polish milestone. Each maps to roadmap phases.
 - [ ] **PERF-03**: eslint-plugin-jsx-a11y integrated for static accessibility linting
 - [ ] **PERF-04**: vitest-axe integrated for accessibility unit testing
 
+### Interview UX
+
+- [ ] **INTV-01**: Interview uses chat-style layout with animated examiner character and voice input
+- [ ] **INTV-02**: Interview offers Practice mode (per-question feedback) and Real mode (USCIS 2025 rules)
+- [ ] **INTV-03**: Real mode follows USCIS 2025 rules: 20 questions, pass at 12 correct, fail at 9 incorrect
+- [ ] **INTV-04**: Interview shows full transcript with per-answer grading and confidence scores in results
+- [ ] **INTV-05**: User sees transcription before grading and can re-record up to 3 times
+
 ### Burmese Translation Quality
 
 - [ ] **BRMSE-01**: All UI strings have natural Burmese translations (not robotic/literal)
@@ -171,10 +179,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRMSE-01 | Phase 25 | Pending |
 | BRMSE-02 | Phase 25 | Pending |
 | BRMSE-03 | Phase 25 | Pending |
+| INTV-01 | Phase 21 | Pending |
+| INTV-02 | Phase 21 | Pending |
+| INTV-03 | Phase 21 | Pending |
+| INTV-04 | Phase 21 | Pending |
+| INTV-05 | Phase 21 | Pending |
 
 **Coverage:**
-- v2.1 requirements: 51 total
-- Mapped to phases: 51
+- v2.1 requirements: 56 total
+- Mapped to phases: 56
 - Unmapped: 0
 
 ---

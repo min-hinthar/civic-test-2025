@@ -352,7 +352,7 @@ export function FeedbackPanel({
                   'w-full rounded-xl px-6 py-3 text-base font-bold',
                   'shadow-[0_4px_0_hsl(var(--color-border))] active:shadow-[0_1px_0_hsl(var(--color-border))]',
                   'active:translate-y-[3px] transition-all duration-100',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                  'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
                   isCorrect
                     ? 'bg-success text-white hover:bg-success/90'
                     : 'bg-warning text-white hover:bg-warning/90'

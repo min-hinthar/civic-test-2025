@@ -14,6 +14,8 @@ import type { SegmentStatus } from '@/components/quiz/SegmentedProgressBar';
 import { QuizHeader } from '@/components/quiz/QuizHeader';
 import { SkipButton } from '@/components/quiz/SkipButton';
 import { SkippedReviewPhase } from '@/components/quiz/SkippedReviewPhase';
+import { StreakReward, STREAK_DISPLAY_DURATION_MS } from '@/components/quiz/StreakReward';
+import { XPPopup } from '@/components/quiz/XPPopup';
 import { quizReducer, initialQuizState } from '@/lib/quiz/quizReducer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { saveSession } from '@/lib/sessions/sessionStore';
@@ -304,6 +306,12 @@ export function PracticeSession({
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const checkDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Streak/XP micro-reward state
+  const [showStreakReward, setShowStreakReward] = useState(false);
+  const [showXP, setShowXP] = useState(false);
+  const [xpPoints, setXpPoints] = useState(10);
 
   // Quiz state machine
   const [quizState, dispatch] = useReducer(quizReducer, null, () => {
@@ -417,6 +425,21 @@ export function PracticeSession({
 
       dispatch({ type: 'SHOW_FEEDBACK', result, isCorrect });
 
+      // Trigger streak/XP micro-rewards on correct answers
+      if (isCorrect) {
+        const newStreak = quizState.streakCount + 1;
+        setXpPoints(newStreak >= 3 ? 15 : 10);
+        setShowXP(true);
+        setShowStreakReward(true);
+
+        if (streakTimerRef.current) clearTimeout(streakTimerRef.current);
+        streakTimerRef.current = setTimeout(() => {
+          setShowStreakReward(false);
+          setShowXP(false);
+          streakTimerRef.current = null;
+        }, STREAK_DISPLAY_DURATION_MS);
+      }
+
       // Save session snapshot (fire-and-forget)
       if (sessionId && practiceConfig) {
         const snapshot: PracticeSnapshot = {
@@ -441,6 +464,7 @@ export function PracticeSession({
     quizState.results,
     quizState.currentIndex,
     quizState.skippedIndices,
+    quizState.streakCount,
     currentQuestion,
     sessionId,
     practiceConfig,
@@ -452,6 +476,8 @@ export function PracticeSession({
   // Continue after feedback
   const handleContinue = useCallback(() => {
     if (quizState.phase !== 'feedback') return;
+    setShowStreakReward(false);
+    setShowXP(false);
     dispatch({ type: 'CONTINUE' });
   }, [quizState.phase]);
 
@@ -606,8 +632,42 @@ export function PracticeSession({
       if (checkDelayRef.current) {
         clearTimeout(checkDelayRef.current);
       }
+      if (streakTimerRef.current) {
+        clearTimeout(streakTimerRef.current);
+      }
     };
   }, []);
+
+  // Keyboard navigation (TPUX-06): context-sensitive Enter + Escape
+  useEffect(() => {
+    if (isFinished || isInSkippedReview) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        if (quizState.phase === 'answering' && quizState.selectedAnswer) {
+          e.preventDefault();
+          handleCheck();
+        } else if (quizState.phase === 'feedback') {
+          e.preventDefault();
+          handleContinue();
+        }
+      } else if (e.key === 'Escape' && !showExitConfirm) {
+        e.preventDefault();
+        setShowExitConfirm(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    isFinished,
+    isInSkippedReview,
+    quizState.phase,
+    quizState.selectedAnswer,
+    showExitConfirm,
+    handleCheck,
+    handleContinue,
+  ]);
 
   // -----------------------------------------------------------------------
   // Skipped review phase
@@ -747,7 +807,7 @@ export function PracticeSession({
                 'flex-1 rounded-full px-6 py-3 text-base font-bold',
                 'min-h-[48px]',
                 'transition-all duration-100',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
                 quizState.selectedAnswer && !isChecking
                   ? 'bg-primary text-primary-foreground shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]'
                   : 'bg-muted text-muted-foreground cursor-not-allowed opacity-60'
@@ -762,6 +822,16 @@ export function PracticeSession({
             </button>
           </div>
         )}
+
+        {/* Streak/XP micro-rewards (above feedback panel) */}
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <StreakReward
+            count={quizState.streakCount}
+            show={showStreakReward}
+            showBurmese={showBurmese}
+          />
+          <XPPopup points={xpPoints} show={showXP} />
+        </div>
 
         {/* Feedback panel (slides up) */}
         <div className="mt-4">
