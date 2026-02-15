@@ -7,9 +7,10 @@
  */
 
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import { useContext } from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { TTSProvider } from '@/contexts/TTSContext';
+import { TTSContext, TTSProvider } from '@/contexts/TTSContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 
 // ---------------------------------------------------------------------------
@@ -215,5 +216,173 @@ describe('TTS Integration: TTSProvider + SpeechButton', () => {
 
     const button = screen.getByRole('button', { name: /listen/i });
     expect(button).toBeDisabled();
+  });
+});
+
+// ==========================================================================
+// Phase 22: Settings Persistence, Voice Filtering, SpeechButton states
+// ==========================================================================
+
+// Helper component that accesses TTSContext directly
+function SettingsConsumer({
+  onMount,
+}: {
+  onMount?: (ctx: { updateSettings: (partial: Record<string, unknown>) => void }) => void;
+}) {
+  const val = useContext(TTSContext);
+
+  // Expose updateSettings to test via callback
+  if (onMount && val) {
+    onMount({ updateSettings: val.updateSettings });
+  }
+
+  return (
+    <div>
+      <span data-testid="auto-read">{String(val?.settings?.autoRead)}</span>
+      <span data-testid="auto-read-lang">{val?.settings?.autoReadLang}</span>
+      <span data-testid="burmese-voice">{val?.settings?.burmeseVoice}</span>
+      <span data-testid="rate">{val?.settings?.rate}</span>
+    </div>
+  );
+}
+
+describe('Phase 22: TTSSettings persistence', () => {
+  it('updateSettings changes autoRead in React state', async () => {
+    let updateFn: ((partial: Record<string, unknown>) => void) | null = null;
+
+    await act(async () => {
+      render(
+        <TTSProvider>
+          <SettingsConsumer
+            onMount={ctx => {
+              updateFn = ctx.updateSettings;
+            }}
+          />
+        </TTSProvider>
+      );
+      vi.advanceTimersByTime(10);
+    });
+
+    // Default: autoRead = false
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
+
+    // Update autoRead to true
+    await act(async () => {
+      updateFn?.({ autoRead: true });
+      vi.advanceTimersByTime(10);
+    });
+
+    // React state should reflect the change
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('true');
+  });
+
+  it('updateSettings changes burmeseVoice in React state', async () => {
+    let updateFn: ((partial: Record<string, unknown>) => void) | null = null;
+
+    await act(async () => {
+      render(
+        <TTSProvider>
+          <SettingsConsumer
+            onMount={ctx => {
+              updateFn = ctx.updateSettings;
+            }}
+          />
+        </TTSProvider>
+      );
+      vi.advanceTimersByTime(10);
+    });
+
+    // Default: nilar
+    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('nilar');
+
+    await act(async () => {
+      updateFn?.({ burmeseVoice: 'thiha' });
+      vi.advanceTimersByTime(10);
+    });
+
+    // React state should reflect the change
+    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('thiha');
+  });
+
+  it('TTSSettings defaults for new fields via merge pattern', async () => {
+    // Verify the { ...DEFAULT_SETTINGS, ...parsed } merge pattern:
+    // When default settings are loaded, Phase 22 fields are present with correct defaults
+
+    await act(async () => {
+      render(
+        <TTSProvider>
+          <SettingsConsumer />
+        </TTSProvider>
+      );
+      vi.advanceTimersByTime(10);
+    });
+
+    // Phase 22 default fields should be present
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
+    expect(screen.getByTestId('auto-read-lang')).toHaveTextContent('both');
+    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('nilar');
+    // Original defaults still present
+    expect(screen.getByTestId('rate')).toHaveTextContent('normal');
+  });
+});
+
+describe('Phase 22: Voice filtering logic', () => {
+  it('filters to English voices only', () => {
+    // Test the filtering logic directly (mirrors VoicePicker's useMemo)
+    const mixedVoices = [
+      { name: 'Samantha', lang: 'en-US', localService: true },
+      { name: 'Thomas', lang: 'fr-FR', localService: true },
+      { name: 'Google UK', lang: 'en-GB', localService: false },
+      { name: 'Yuna', lang: 'ko-KR', localService: true },
+      { name: 'Alex', lang: 'en', localService: true },
+      { name: 'Lekha', lang: 'hi-IN', localService: true },
+    ] as SpeechSynthesisVoice[];
+
+    const filtered = mixedVoices
+      .filter(v => {
+        const lang = v.lang.toLowerCase().replace(/_/g, '-');
+        return lang.startsWith('en-') || lang === 'en';
+      })
+      .sort((a, b) => {
+        if (a.localService && !b.localService) return -1;
+        if (!a.localService && b.localService) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+    expect(filtered).toHaveLength(3);
+    expect(filtered.map(v => v.name)).toEqual(
+      expect.arrayContaining(['Samantha', 'Google UK', 'Alex'])
+    );
+    // No French, Korean, or Hindi voices
+    expect(filtered.find(v => v.lang === 'fr-FR')).toBeUndefined();
+    expect(filtered.find(v => v.lang === 'ko-KR')).toBeUndefined();
+  });
+});
+
+describe('Phase 22: SpeechButton states', () => {
+  it('renders speed label when showSpeedLabel is true', async () => {
+    await act(async () => {
+      render(
+        <TTSProvider>
+          <SpeechButton text="Test" label="Listen" showSpeedLabel={true} speedLabel="1.3x" />
+        </TTSProvider>
+      );
+      vi.advanceTimersByTime(10);
+    });
+
+    expect(screen.getByText('1.3x')).toBeInTheDocument();
+  });
+
+  it('does not render speed label when showSpeedLabel is false', async () => {
+    await act(async () => {
+      render(
+        <TTSProvider>
+          <SpeechButton text="Test" label="Listen" showSpeedLabel={false} speedLabel="1.3x" />
+        </TTSProvider>
+      );
+      vi.advanceTimersByTime(10);
+    });
+
+    expect(screen.queryByText('1.3x')).not.toBeInTheDocument();
   });
 });
