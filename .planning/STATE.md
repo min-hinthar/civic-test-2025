@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 22 in progress
+**Current focus:** v2.1 Quality & Polish -- Phase 22 complete
 
 ## Current Position
 
 Phase: 22 of 25 (TTS Quality)
-Plan: 08 of 9 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 22-08-PLAN.md (Interview TTS Integration)
+Plan: 09 of 9 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 22-09-PLAN.md (Phase 22 Unit & Integration Tests)
 
-Progress: [████████░] 88% (8/9 plans complete)
+Progress: [█████████] 100% (9/9 plans complete)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 31 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12)
+- v2.1: 40 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12, Phase 22: 9)
 
 ## Accumulated Context
 
@@ -80,6 +80,9 @@ All decisions archived in PROJECT.md Key Decisions table.
 - BurmeseSpeechButton in interview chat uses compact styling (!py-1 !min-h-[32px])
 - InterviewTranscript accepts speedLabel prop for results view Burmese buttons
 - Speed override flow: InterviewSetup -> InterviewPage state -> InterviewSession/Results props
+- Mock Audio uses class-based implementation (not vi.fn().mockImplementation) to avoid vitest warnings
+- Settings persistence tested via React state verification (not direct localStorage read) due to jsdom limitations
+- Voice filtering tested as extracted logic (same algorithm as VoicePicker useMemo)
 
 **Phase 21 decisions:**
 - Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
@@ -227,10 +230,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plans 01-08 complete
-Next step: Continue Phase 22 execution (plan 09)
+Stopped at: Phase 22 complete (all 9 plans)
+Next step: Begin Phase 23
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plan 08 complete -- Interview TTS Integration)*
+*Last updated: 2026-02-15 (Phase 22 complete -- Unit & Integration Tests)*
