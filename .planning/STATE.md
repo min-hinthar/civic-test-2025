@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 22 of 25 (TTS Quality)
-Plan: 07 of 9 in current phase
+Plan: 08 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 22-07-PLAN.md (Auto-Read & Burmese Buttons Integration)
+Last activity: 2026-02-15 -- Completed 22-08-PLAN.md (Interview TTS Integration)
 
-Progress: [███████░░] 77% (7/9 plans complete)
+Progress: [████████░] 88% (8/9 plans complete)
 
 ## Completed Milestones
 
@@ -72,6 +72,14 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Flashcard3D back face Burmese SpeechButton replaced with BurmeseSpeechButton (MP3 playback instead of browser TTS)
 - Per-session override flow: PracticeConfig -> PracticePage state -> PracticeSession props
 - Results view speech buttons also get speed labels and Burmese buttons for consistency
+- InterviewSession safeSpeakLocal always passes numericRate override to speak()
+- Practice + Myanmar: English TTS then Burmese MP3 sequentially per question
+- Real mode: English only regardless of language mode (no Burmese audio)
+- Burmese audio failure is non-blocking (console.debug, no toast)
+- ChatMessage extended with questionId for Burmese replay button targeting
+- BurmeseSpeechButton in interview chat uses compact styling (!py-1 !min-h-[32px])
+- InterviewTranscript accepts speedLabel prop for results view Burmese buttons
+- Speed override flow: InterviewSetup -> InterviewPage state -> InterviewSession/Results props
 
 **Phase 21 decisions:**
 - Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
@@ -219,10 +227,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plans 01-07 complete
-Next step: Continue Phase 22 execution (plans 08-09)
+Stopped at: Phase 22, plans 01-08 complete
+Next step: Continue Phase 22 execution (plan 09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plan 07 complete -- Auto-Read & Burmese Buttons Integration)*
+*Last updated: 2026-02-15 (Phase 22, plan 08 complete -- Interview TTS Integration)*
