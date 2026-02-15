@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 20 in progress
+**Current focus:** v2.1 Quality & Polish -- Phase 20 COMPLETE, ready for Phase 21
 
 ## Current Position
 
-Phase: 20 of 25 (Session Persistence)
+Phase: 20 of 25 (Session Persistence) -- COMPLETE (VERIFIED)
 Plan: 6 of 6 in current phase
-Status: Phase complete
-Last activity: 2026-02-15 -- Completed 20-06-PLAN.md (practice & interview session persistence)
+Status: Phase complete, verified
+Last activity: 2026-02-15 -- Phase 20 complete + verified (6/6 must-haves, 7/7 requirements)
 
 Progress: [██████████] 100% (6/6 plans complete)
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 13 plans (Phase 18: 7, Phase 19: 6), ~3 hours total
+- v2.1: 19 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6)
 
 ## Accumulated Context
 
@@ -116,10 +116,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 20 plan 06 complete (phase complete)
-Next step: Begin Phase 21 planning/execution
+Stopped at: Phase 20 verified complete
+Next step: Phase 21 (Test & Practice UX Overhaul) — plan then execute
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 20 plan 06 complete -- practice & interview session persistence)*
+*Last updated: 2026-02-15 (Phase 20 COMPLETE + VERIFIED -- 6/6 plans, 7/7 requirements)*

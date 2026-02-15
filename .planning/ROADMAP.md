@@ -92,12 +92,12 @@ Plans:
 **Plans**: 6 plans
 
 Plans:
-- [ ] 20-01-PLAN.md — Session types, IndexedDB store, persistence hook, timeAgo, countdown sounds
-- [ ] 20-02-PLAN.md — SessionCountdown full-screen overlay (5-4-3-2-1-Go!)
-- [ ] 20-03-PLAN.md — ResumePromptModal, ResumeSessionCard, StartFreshConfirm components
-- [ ] 20-04-PLAN.md — Dashboard unfinished banners, nav badge extension, startup cleanup
-- [ ] 20-05-PLAN.md — TestPage session persistence integration
-- [ ] 20-06-PLAN.md — PracticePage + InterviewPage session persistence integration
+- [x] 20-01-PLAN.md — Session types, IndexedDB store, persistence hook, timeAgo, countdown sounds
+- [x] 20-02-PLAN.md — SessionCountdown full-screen overlay (5-4-3-2-1-Go!)
+- [x] 20-03-PLAN.md — ResumePromptModal, ResumeSessionCard, StartFreshConfirm components
+- [x] 20-04-PLAN.md — Dashboard unfinished banners, nav badge extension, startup cleanup
+- [x] 20-05-PLAN.md — TestPage session persistence integration
+- [x] 20-06-PLAN.md — PracticePage + InterviewPage session persistence integration
 
 ### Phase 21: Test & Practice UX Overhaul
 **Goal**: Users control their own pacing through an explicit Check/Continue flow with rich visual feedback, replacing auto-advance
@@ -194,7 +194,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 11-17 | v2.0 | 47/47 | Complete | 2026-02-13 |
 | 18. Language Mode | v2.1 | 7/7 | Complete | 2026-02-14 |
 | 19. TTS Core Extraction | v2.1 | 6/6 | Complete | 2026-02-14 |
-| 20. Session Persistence | v2.1 | 0/TBD | Not started | - |
+| 20. Session Persistence | v2.1 | 6/6 | Complete | 2026-02-15 |
 | 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
 | 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
 | 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
@@ -205,7 +205,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 7/51 | In progress |
+| v2.1 | 8 | TBD | 14/51 | In progress |
 
 ---
 
