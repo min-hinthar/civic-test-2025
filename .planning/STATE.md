@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 19 COMPLETE, ready for Phase 20
+**Current focus:** v2.1 Quality & Polish -- Phase 20 in progress
 
 ## Current Position
 
-Phase: 19 of 25 (TTS Core Extraction) -- COMPLETE
-Plan: 6 of 6 in current phase
-Status: Phase complete
-Last activity: 2026-02-14 -- Phase 19 complete + post-execution bugfixes (scroll, greeting race, WAAPI keyframes)
+Phase: 20 of 25 (Session Persistence)
+Plan: 2 of 6 in current phase (plans 01+02 executing in parallel)
+Status: In progress
+Last activity: 2026-02-15 -- Completed 20-02-PLAN.md (SessionCountdown overlay)
 
-Progress: [######░░░░] 100% (6/6 plans)
+Progress: [#░░░░░░░░░] ~17% (1/6 plans confirmed complete; plan 01 parallel)
 
 ## Completed Milestones
 
@@ -37,6 +37,12 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 20 decisions:**
+- Added playCountdownTick/playCountdownGo stubs so plan 02 compiles independently of parallel plan 01
+- Step-based countdown state (5 to -1) with useEffect timer for React Compiler safety
+- Skip button auto-focuses with preventScroll to avoid scroll jank
+- Myanmar Go text uses Unicode escape sequences for font compatibility
 
 **Phase 19 decisions:**
 - eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
@@ -88,11 +94,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-14
-Stopped at: Phase 19 complete, bugfixes committed and pushed
-Next step: Phase 20 (Session Persistence) — plan then execute
+Last session: 2026-02-15
+Stopped at: Phase 20 plan 02 complete, plan 01 parallel
+Next step: Continue Phase 20 execution (plans 03-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-14 (Phase 19 COMPLETE -- 6/6 plans + bugfixes, all pushed)*
+*Last updated: 2026-02-15 (Phase 20 plan 02 complete -- SessionCountdown overlay)*
