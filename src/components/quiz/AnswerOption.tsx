@@ -22,6 +22,8 @@ interface AnswerOptionProps {
   onSelect: () => void;
   showBurmese: boolean;
   index: number;
+  /** When true, this option gets tabIndex=0 for keyboard reachability but no focus ring */
+  isDefaultTabTarget?: boolean;
 }
 
 /**
@@ -46,6 +48,7 @@ function AnswerOption({
   onSelect,
   showBurmese,
   index,
+  isDefaultTabTarget = false,
 }: AnswerOptionProps) {
   const shouldReduceMotion = useReducedMotion();
   const optionRef = useRef<HTMLDivElement>(null);
@@ -84,7 +87,7 @@ function AnswerOption({
       role="radio"
       aria-checked={isSelected}
       aria-disabled={isLocked}
-      tabIndex={isFocused ? 0 : -1}
+      tabIndex={isFocused || isDefaultTabTarget ? 0 : -1}
       initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={shouldReduceMotion ? { duration: 0 } : { ...SPRING_SNAPPY, delay: index * 0.05 }}
@@ -176,10 +179,13 @@ function AnswerOptionGroup({
         rovingKeyDown(e);
 
         // Calculate next index to determine which answer to select
-        let nextIndex = focusedIndex;
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        let nextIndex: number;
+        if (focusedIndex < 0) {
+          // First keyboard interaction — go to first or last
+          nextIndex = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 0 : answers.length - 1;
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
           nextIndex = (focusedIndex + 1) % answers.length;
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        } else {
           nextIndex = (focusedIndex - 1 + answers.length) % answers.length;
         }
         onSelect(answers[nextIndex]);
@@ -221,6 +227,7 @@ function AnswerOptionGroup({
             onSelect={() => handleOptionSelect(answer, index)}
             showBurmese={showBurmese}
             index={index}
+            isDefaultTabTarget={focusedIndex < 0 && index === 0}
           />
         );
       })}

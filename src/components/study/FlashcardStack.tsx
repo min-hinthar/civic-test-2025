@@ -8,6 +8,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { getBurmeseAudioUrl } from '@/lib/audio/burmeseAudio';
 import { Flashcard3D } from './Flashcard3D';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
@@ -55,14 +56,21 @@ export function FlashcardStack({
 
   // Speed label for speech buttons
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
+  const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[tts.rate];
 
-  // Auto-read question text on card navigate (English only -- Burmese requires MP3, manual button)
+  // Auto-read question text on card navigate (supports bilingual auto-read)
   const currentQuestion = questions[currentIndex];
   useAutoRead({
     text: currentQuestion?.question_en ?? '',
     enabled: tts.autoRead,
     triggerKey: currentIndex,
     lang: 'en-US',
+    autoReadLang: tts.autoReadLang,
+    burmeseAudioUrl:
+      showBurmese && currentQuestion
+        ? getBurmeseAudioUrl(currentQuestion.id, 'q', tts.burmeseVoice)
+        : undefined,
+    burmeseRate: numericRate,
   });
 
   const goToNext = useCallback(() => {

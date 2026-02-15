@@ -9,6 +9,7 @@ import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { getBurmeseAudioUrl } from '@/lib/audio/burmeseAudio';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { AnswerOptionGroup } from '@/components/quiz/AnswerOption';
 import { FeedbackPanel } from '@/components/quiz/FeedbackPanel';
@@ -374,6 +375,12 @@ export function PracticeSession({
       effectiveAutoRead && !isFinished && !isInSkippedReview && quizState.phase === 'answering',
     triggerKey: quizState.currentIndex,
     lang: 'en-US',
+    autoReadLang: tts.autoReadLang,
+    burmeseAudioUrl:
+      showBurmese && currentQuestion
+        ? getBurmeseAudioUrl(currentQuestion.id, 'q', tts.burmeseVoice)
+        : undefined,
+    burmeseRate: numericRate,
   });
 
   // Derived state

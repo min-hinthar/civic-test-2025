@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { RotateCcw, LogOut, Mic, Square, MessageCircle } from 'lucide-react';
+import { RotateCcw, LogOut, Mic, Square, Send, Keyboard } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ExaminerCharacter } from '@/components/interview/ExaminerCharacter';
 import { ChatBubble } from '@/components/interview/ChatBubble';
@@ -203,6 +203,8 @@ export function InterviewSession({
     'idle'
   );
   const [responseStartTime, setResponseStartTime] = useState<number | null>(null);
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const textInputRef = useRef<HTMLInputElement | null>(null);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -430,13 +432,20 @@ export function InterviewSession({
     setQuestionPhase('transcription');
   }, [stopListening, stopRecording]);
 
+  // Ref for typed submit so handleTimerExpired can call it (defined later)
+  const handleTypedSubmitRef = useRef<() => void>(() => {});
+
   // --- Timer expired (realistic mode) ---
   const handleTimerExpired = useCallback(() => {
     stopListening();
     stopRecording();
-    // In realistic mode, timer expiry means skipped (incorrect)
-    setQuestionPhase('grading');
-  }, [stopListening, stopRecording]);
+    // If user typed something, auto-submit it; otherwise fall to self-grade
+    if (!canUseSpeech && typedAnswer.trim()) {
+      handleTypedSubmitRef.current();
+    } else {
+      setQuestionPhase('grading');
+    }
+  }, [stopListening, stopRecording, canUseSpeech, typedAnswer]);
 
   // --- Advance to next question or finish ---
   const advanceToNext = useCallback(() => {
@@ -452,6 +461,7 @@ export function InterviewSession({
       setReplaysUsed(0);
       setRecordAttempt(1);
       resetTranscript();
+      setTypedAnswer('');
       setQuestionPhase('chime');
     }, TRANSITION_DELAY_MS);
   }, [currentIndex, startTime, results, resetTranscript]);
@@ -583,6 +593,115 @@ export function InterviewSession({
     setQuestionPhase('responding');
   }, [resetTranscript, canUseSpeech, startListening, startRecording]);
 
+  // --- Typed answer submit (no-mic fallback) ---
+  const handleTypedSubmit = useCallback(() => {
+    if (!currentQuestion || !typedAnswer.trim()) return;
+
+    const responseTimeMs = responseStartTime ? Date.now() - responseStartTime : undefined;
+    const userText = typedAnswer.trim();
+    addMessage('user', userText);
+
+    const gradeResult: GradeResult = gradeAnswer(userText, currentQuestion.studyAnswers);
+
+    const interviewResult: InterviewResult = {
+      questionId: currentQuestion.id,
+      questionText_en: currentQuestion.question_en,
+      questionText_my: currentQuestion.question_my,
+      correctAnswers: currentQuestion.studyAnswers.map(a => ({
+        text_en: a.text_en,
+        text_my: a.text_my,
+      })),
+      selfGrade: gradeResult.isCorrect ? 'correct' : 'incorrect',
+      category: currentQuestion.category,
+      confidence: gradeResult.confidence,
+      responseTimeMs,
+    };
+
+    const newResults = [...results, interviewResult];
+    const newCorrect = gradeResult.isCorrect ? correctCount + 1 : correctCount;
+    const newIncorrect = gradeResult.isCorrect ? incorrectCount : incorrectCount + 1;
+
+    setResults(newResults);
+    setCorrectCount(newCorrect);
+    setIncorrectCount(newIncorrect);
+
+    if (sessionId) {
+      const snapshot: InterviewSnapshot = {
+        id: sessionId,
+        type: 'interview',
+        savedAt: new Date().toISOString(),
+        version: SESSION_VERSION,
+        questions,
+        results: newResults,
+        currentIndex: currentIndex + 1,
+        correctCount: newCorrect,
+        incorrectCount: newIncorrect,
+        mode,
+        startTime,
+      };
+      saveSession(snapshot).catch(() => {});
+    }
+
+    setQuestionPhase('feedback');
+
+    // Check early termination (real mode)
+    if (mode === 'realistic') {
+      if (newCorrect >= PASS_THRESHOLD) {
+        transitionTimerRef.current = setTimeout(() => {
+          addMessage('examiner', "Congratulations! You've passed the civics test.");
+          setExaminerState('speaking');
+          safeSpeakLocal("Congratulations! You've passed the civics test.").then(() => {
+            setExaminerState('idle');
+            const duration = Math.round((Date.now() - startTime) / 1000);
+            onCompleteRef.current(newResults, duration, 'passThreshold');
+          });
+        }, 500);
+        return;
+      }
+      if (newIncorrect >= FAIL_THRESHOLD) {
+        transitionTimerRef.current = setTimeout(() => {
+          addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
+          setExaminerState('speaking');
+          safeSpeakLocal("Unfortunately, you didn't reach the passing score this time.").then(
+            () => {
+              setExaminerState('idle');
+              const duration = Math.round((Date.now() - startTime) / 1000);
+              onCompleteRef.current(newResults, duration, 'failThreshold');
+            }
+          );
+        }, 500);
+        return;
+      }
+    }
+
+    if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
+      transitionTimerRef.current = setTimeout(() => {
+        const duration = Math.round((Date.now() - startTime) / 1000);
+        onCompleteRef.current(newResults, duration, 'complete');
+      }, TRANSITION_DELAY_MS);
+      return;
+    }
+  }, [
+    typedAnswer,
+    currentQuestion,
+    results,
+    correctCount,
+    incorrectCount,
+    responseStartTime,
+    addMessage,
+    sessionId,
+    questions,
+    currentIndex,
+    mode,
+    startTime,
+    safeSpeakLocal,
+  ]);
+
+  // Keep ref in sync for handleTimerExpired to call
+  useEffect(() => {
+    handleTypedSubmitRef.current = handleTypedSubmit;
+  }, [handleTypedSubmit]);
+
   // --- Phase: FEEDBACK (Practice: show detailed, Real: brief ack) ---
   useEffect(() => {
     if (questionPhase !== 'feedback') return;
@@ -706,6 +825,7 @@ export function InterviewSession({
         setReplaysUsed(0);
         setRecordAttempt(1);
         resetTranscript();
+        setTypedAnswer('');
         setQuestionPhase('chime');
       }, TRANSITION_DELAY_MS);
     },
@@ -771,7 +891,10 @@ export function InterviewSession({
   const isTransition = questionPhase === 'transition';
   const showTimer = mode === 'realistic' && questionPhase === 'responding';
   const showSelfGradeButtons = questionPhase === 'grading' && !canUseSpeech;
-  const showRecordingArea = questionPhase === 'responding' && canUseSpeech;
+  // Show mic recording when speech works and no error; show text input as fallback
+  const hasSpeechError = !!speechError && !isListening;
+  const showRecordingArea = questionPhase === 'responding' && canUseSpeech && !hasSpeechError;
+  const showTextInputFallback = questionPhase === 'responding' && (!canUseSpeech || hasSpeechError);
   const showTranscriptionReview = questionPhase === 'transcription' && canUseSpeech;
 
   return (
@@ -964,28 +1087,60 @@ export function InterviewSession({
                 <p className="text-center text-xs text-warning">{speechError}</p>
               )}
             </div>
-          ) : questionPhase === 'responding' && !canUseSpeech ? (
+          ) : showTextInputFallback ? (
             <div className="space-y-3">
-              <div className="flex items-center justify-center gap-2 py-2 text-white/40">
-                <MessageCircle className="h-4 w-4" />
+              <div className="flex items-center justify-center gap-1.5 py-1 text-white/40">
+                <Keyboard className="h-3.5 w-3.5" />
                 <span className="text-xs">
-                  {!micPermission
-                    ? 'Microphone unavailable. Answer aloud, then self-grade.'
-                    : 'Speech recognition unavailable. Answer aloud, then self-grade.'}
+                  {hasSpeechError
+                    ? 'Speech recognition failed. Type your answer instead.'
+                    : 'No microphone. Type your answer below.'}
                 </span>
               </div>
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleTypedSubmit();
+                }}
+                className="flex gap-2"
+              >
+                <input
+                  ref={textInputRef}
+                  type="text"
+                  value={typedAnswer}
+                  onChange={e => setTypedAnswer(e.target.value)}
+                  placeholder="Type your answer..."
+                  autoFocus
+                  className={clsx(
+                    'flex-1 rounded-xl border border-white/20 bg-white/5 px-3 py-2',
+                    'text-sm text-white placeholder:text-white/30',
+                    'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+                  )}
+                />
+                <button
+                  type="submit"
+                  disabled={!typedAnswer.trim()}
+                  className={clsx(
+                    'flex items-center gap-1.5 rounded-xl px-4 py-2',
+                    'text-xs font-semibold text-white',
+                    typedAnswer.trim()
+                      ? 'bg-primary hover:bg-primary/90'
+                      : 'bg-white/10 text-white/30 cursor-not-allowed',
+                    'transition-colors',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
+                  )}
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  <span>Submit</span>
+                </button>
+              </form>
               <div className="flex justify-center">
                 <button
                   type="button"
                   onClick={() => setQuestionPhase('grading')}
-                  className={clsx(
-                    'flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2',
-                    'text-xs font-semibold text-white',
-                    'transition-colors hover:bg-primary/90',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
-                  )}
+                  className="text-xs text-white/30 underline hover:text-white/50 transition-colors"
                 >
-                  I&apos;ve answered
+                  Skip — self-grade instead
                 </button>
               </div>
             </div>

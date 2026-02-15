@@ -34,11 +34,26 @@ const PREFERRED_VOICES = [
   'jenny',
   'michelle',
   'guy',
+  'aria',
+  'davis',
+  'eric',
+  'steffan',
+  'christopher',
+  'monica',
+  'jane',
+  'jason',
+  'nancy',
+  'tony',
+  'sara',
   // Google — high quality on Chrome
   'google us english',
   // Apple — high quality on Safari/macOS
   'samantha',
   'alex',
+  'allison',
+  'tom',
+  // Android / generic
+  'english united states',
 ];
 
 /** Score a voice by quality preference. Lower = better. */
@@ -61,25 +76,29 @@ function voiceQualityScore(name: string): number {
 export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: VoicePickerProps) {
   const { speak } = useTTS();
 
-  // Filter to high-quality US English natural voices only (no robotic, no UK/AU/IN)
+  // Filter to high-quality US English natural voices, with fallback to all en-us if too few
   const filteredVoices = useMemo(() => {
-    return voices
-      .filter(v => {
-        const lang = v.lang.toLowerCase().replace(/_/g, '-');
-        // Must be US English
-        if (lang !== 'en-us') return false;
-        const lower = v.name.toLowerCase();
-        // Must be a known high-quality voice OR contain natural/neural indicator
-        const isPreferred = PREFERRED_VOICES.some(pref => lower.includes(pref));
-        const isNatural = lower.includes('natural') || lower.includes('neural');
-        return isPreferred || isNatural;
-      })
-      .sort((a, b) => {
-        const scoreA = voiceQualityScore(a.name);
-        const scoreB = voiceQualityScore(b.name);
-        if (scoreA !== scoreB) return scoreA - scoreB;
-        return a.name.localeCompare(b.name);
-      });
+    const usVoices = voices.filter(v => {
+      const lang = v.lang.toLowerCase().replace(/_/g, '-');
+      return lang === 'en-us';
+    });
+
+    const highQuality = usVoices.filter(v => {
+      const lower = v.name.toLowerCase();
+      const isPreferred = PREFERRED_VOICES.some(pref => lower.includes(pref));
+      const isNatural = lower.includes('natural') || lower.includes('neural');
+      return isPreferred || isNatural;
+    });
+
+    // Fallback: if fewer than 3 high-quality voices, show all US English voices
+    const pool = highQuality.length >= 3 ? highQuality : usVoices;
+
+    return pool.sort((a, b) => {
+      const scoreA = voiceQualityScore(a.name);
+      const scoreB = voiceQualityScore(b.name);
+      if (scoreA !== scoreB) return scoreA - scoreB;
+      return a.name.localeCompare(b.name);
+    });
   }, [voices]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

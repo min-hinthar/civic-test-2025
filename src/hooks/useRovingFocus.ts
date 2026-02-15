@@ -16,7 +16,7 @@ import { useState, useCallback } from 'react';
  * @returns focusedIndex, setFocusedIndex, handleKeyDown
  */
 export function useRovingFocus(itemCount: number) {
-  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -24,12 +24,12 @@ export function useRovingFocus(itemCount: number) {
         case 'ArrowDown':
         case 'ArrowRight':
           e.preventDefault();
-          setFocusedIndex(prev => (prev + 1) % itemCount);
+          setFocusedIndex(prev => (prev < 0 ? 0 : (prev + 1) % itemCount));
           break;
         case 'ArrowUp':
         case 'ArrowLeft':
           e.preventDefault();
-          setFocusedIndex(prev => (prev - 1 + itemCount) % itemCount);
+          setFocusedIndex(prev => (prev < 0 ? itemCount - 1 : (prev - 1 + itemCount) % itemCount));
           break;
       }
     },
