@@ -125,6 +125,10 @@ export interface InterviewResult {
   correctAnswers: Array<{ text_en: string; text_my: string }>;
   selfGrade: 'correct' | 'incorrect';
   category: Category;
+  /** Match confidence from answer grader (0-1), undefined for self-graded */
+  confidence?: number;
+  /** Time from question TTS end to answer submit in ms */
+  responseTimeMs?: number;
 }
 
 export interface InterviewSession {
