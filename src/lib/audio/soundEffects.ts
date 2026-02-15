@@ -211,3 +211,39 @@ export function playSwoosh(): void {
     // Silently ignore
   }
 }
+
+// ---------------------------------------------------------------------------
+// Countdown sounds (stubs -- plan 20-01 replaces with full implementations)
+// ---------------------------------------------------------------------------
+
+/**
+ * Short tick sound for countdown numbers (5-1).
+ * Stub: plays a brief click. Plan 20-01 provides the real implementation.
+ */
+export function playCountdownTick(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 880, 0, 0.08, 0.2); // A5 click
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Chime sound for countdown "Go!".
+ * Stub: plays a brief rising tone. Plan 20-01 provides the real implementation.
+ */
+export function playCountdownGo(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 523, 0, 0.15, 0.3); // C5
+    playNote(ctx, 784, 0.1, 0.2, 0.3); // G5
+    playNote(ctx, 1047, 0.2, 0.3, 0.3); // C6
+  } catch {
+    // Silently ignore
+  }
+}
