@@ -55,6 +55,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Native browser title tooltip (span wrapper) for error/unsupported/offline states
 - Tooltip priority: unsupported > error > offline > none
 - Online/offline state tracked with useState + window event listeners (self-contained, not OfflineContext)
+- Module-level singleton player shared across BurmeseSpeechButton instances
+- Myanmar flag as simple 3-stripe SVG (yellow/green/red) with white star at 16x16
+- RATE_MAP duplicated inline in BurmeseSpeechButton (avoids importing from TTSContext)
+- SpeechAnimations.tsx extracted as shared module for both SpeechButton and BurmeseSpeechButton
+- BurmeseSpeechButton tracks per-instance isSpeaking via URL comparison (currentFile === myUrl)
+- Burmese audio URL convention: /audio/my-MM/{female|male}/{questionId}-{q|a|e}.mp3
 - Per-session overrides use useState from global settings, never synced back to localStorage
 - Interview auto-read always on (no toggle), speed selector only in Practice mode
 - Real mode interview uses fixed normal speed (USCIS simulation fidelity)
