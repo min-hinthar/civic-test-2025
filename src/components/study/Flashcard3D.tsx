@@ -7,6 +7,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useUserState } from '@/contexts/StateContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
 
@@ -18,6 +19,8 @@ import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
 const FLIP_SPRING = { type: 'spring' as const, stiffness: 250, damping: 18, mass: 0.8 };
 
 interface Flashcard3DProps {
+  /** Question ID for Burmese audio lookup */
+  questionId?: string;
   /** Question text (front of card) */
   questionEn: string;
   questionMy: string;
@@ -38,6 +41,10 @@ interface Flashcard3DProps {
   dynamic?: DynamicAnswerMeta;
   /** Called when card is flipped */
   onFlip?: (isFlipped: boolean) => void;
+  /** Show speed label on speech buttons */
+  showSpeedLabel?: boolean;
+  /** Speed label text (e.g. '1x', '0.75x') */
+  speedLabel?: string;
   /** Additional class names */
   className?: string;
 }
@@ -163,6 +170,7 @@ export function DynamicAnswerNote({
  * ```
  */
 export function Flashcard3D({
+  questionId,
   questionEn,
   questionMy,
   answerEn,
@@ -174,6 +182,8 @@ export function Flashcard3D({
   allQuestions = [],
   dynamic,
   onFlip,
+  showSpeedLabel = false,
+  speedLabel,
   className,
 }: Flashcard3DProps) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -293,14 +303,26 @@ export function Flashcard3D({
 
             {/* TTS and flip hint */}
             <div className="flex items-center justify-between mt-4">
-              <div onClick={handleTTSClick}>
+              <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={questionEn}
                   label="Listen"
                   ariaLabel="Listen to question in English"
                   lang="en-US"
                   stopPropagation
+                  showSpeedLabel={showSpeedLabel}
+                  speedLabel={speedLabel}
                 />
+                {showBurmese && questionId && (
+                  <BurmeseSpeechButton
+                    questionId={questionId}
+                    audioType="q"
+                    label="နားထောင်ရန်"
+                    stopPropagation
+                    showSpeedLabel={showSpeedLabel}
+                    speedLabel={speedLabel}
+                  />
+                )}
               </div>
               <span className="text-xs text-muted-foreground">
                 Tap to flip{showBurmese && ' / လှည့်ရန် နှိပ်ပါ'}
@@ -377,14 +399,17 @@ export function Flashcard3D({
                   ariaLabel="Listen to answer in English"
                   lang="en-US"
                   stopPropagation
+                  showSpeedLabel={showSpeedLabel}
+                  speedLabel={speedLabel}
                 />
-                {showBurmese && (
-                  <SpeechButton
-                    text={answerMy}
+                {showBurmese && questionId && (
+                  <BurmeseSpeechButton
+                    questionId={questionId}
+                    audioType="a"
                     label="MY"
-                    ariaLabel="Listen to answer in Burmese"
-                    lang="my"
                     stopPropagation
+                    showSpeedLabel={showSpeedLabel}
+                    speedLabel={speedLabel}
                   />
                 )}
               </div>

@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAutoRead } from '@/hooks/useAutoRead';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { Flashcard3D } from './Flashcard3D';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
@@ -49,6 +51,19 @@ export function FlashcardStack({
   const [direction, setDirection] = useState(0);
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
+  const { settings: tts } = useTTSSettings();
+
+  // Speed label for speech buttons
+  const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
+
+  // Auto-read question text on card navigate (English only -- Burmese requires MP3, manual button)
+  const currentQuestion = questions[currentIndex];
+  useAutoRead({
+    text: currentQuestion?.question_en ?? '',
+    enabled: tts.autoRead,
+    triggerKey: currentIndex,
+    lang: 'en-US',
+  });
 
   const goToNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
@@ -81,8 +96,6 @@ export function FlashcardStack({
     },
     [goToNext, goToPrev]
   );
-
-  const currentQuestion = questions[currentIndex];
 
   if (!currentQuestion) {
     return null;
@@ -159,6 +172,7 @@ export function FlashcardStack({
             className="cursor-grab active:cursor-grabbing"
           >
             <Flashcard3D
+              questionId={currentQuestion.id}
               questionEn={currentQuestion.question_en}
               questionMy={currentQuestion.question_my}
               answerEn={answer.en}
@@ -174,6 +188,8 @@ export function FlashcardStack({
               explanation={currentQuestion.explanation}
               allQuestions={questions}
               dynamic={currentQuestion.dynamic}
+              showSpeedLabel
+              speedLabel={speedLabel}
             />
           </motion.div>
         </AnimatePresence>

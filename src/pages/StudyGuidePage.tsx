@@ -8,7 +8,9 @@ import clsx from 'clsx';
 import { allQuestions } from '@/constants/questions';
 
 import SpeechButton from '@/components/ui/SpeechButton';
+import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { PillTabBar } from '@/components/ui/PillTabBar';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
@@ -58,6 +60,8 @@ const StudyGuidePage = () => {
   }, [questionCategories]);
 
   const { showBurmese } = useLanguage();
+  const { settings: tts } = useTTSSettings();
+  const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
   // SRS deck state for due count badge
   const { dueCount } = useSRS();
 
@@ -397,7 +401,19 @@ const StudyGuidePage = () => {
                                 label="Play Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
+                                showSpeedLabel
+                                speedLabel={speedLabel}
                               />
+                              {showBurmese && (
+                                <BurmeseSpeechButton
+                                  questionId={question.id}
+                                  audioType="q"
+                                  label="နားထောင်ရန်"
+                                  stopPropagation
+                                  showSpeedLabel
+                                  speedLabel={speedLabel}
+                                />
+                              )}
                             </div>
                             <p className="mt-4 text-xl font-semibold text-foreground">
                               {question.question_en}
@@ -430,12 +446,26 @@ const StudyGuidePage = () => {
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
                               {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
                             </p>
-                            <SpeechButton
-                              text={englishAnswersText}
-                              label="Play Answers"
-                              ariaLabel={`Play English answers for ${question.question_en}`}
-                              stopPropagation
-                            />
+                            <div className="flex gap-2">
+                              <SpeechButton
+                                text={englishAnswersText}
+                                label="Play Answers"
+                                ariaLabel={`Play English answers for ${question.question_en}`}
+                                stopPropagation
+                                showSpeedLabel
+                                speedLabel={speedLabel}
+                              />
+                              {showBurmese && (
+                                <BurmeseSpeechButton
+                                  questionId={question.id}
+                                  audioType="a"
+                                  label="MY"
+                                  stopPropagation
+                                  showSpeedLabel
+                                  speedLabel={speedLabel}
+                                />
+                              )}
+                            </div>
                           </div>
                           {/* Scrollable area for answers + explanation */}
                           <div className="mt-4 flex-1 overflow-y-auto overscroll-contain pr-1 min-h-0">
@@ -676,7 +706,19 @@ const StudyGuidePage = () => {
                                 label="Play Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
+                                showSpeedLabel
+                                speedLabel={speedLabel}
                               />
+                              {showBurmese && (
+                                <BurmeseSpeechButton
+                                  questionId={question.id}
+                                  audioType="q"
+                                  label="နားထောင်ရန်"
+                                  stopPropagation
+                                  showSpeedLabel
+                                  speedLabel={speedLabel}
+                                />
+                              )}
                             </div>
                             <p className="mt-4 text-xl font-semibold text-foreground">
                               {question.question_en}
@@ -709,12 +751,26 @@ const StudyGuidePage = () => {
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
                               {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
                             </p>
-                            <SpeechButton
-                              text={englishAnswersText}
-                              label="Play Answers"
-                              ariaLabel={`Play English answers for ${question.question_en}`}
-                              stopPropagation
-                            />
+                            <div className="flex gap-2">
+                              <SpeechButton
+                                text={englishAnswersText}
+                                label="Play Answers"
+                                ariaLabel={`Play English answers for ${question.question_en}`}
+                                stopPropagation
+                                showSpeedLabel
+                                speedLabel={speedLabel}
+                              />
+                              {showBurmese && (
+                                <BurmeseSpeechButton
+                                  questionId={question.id}
+                                  audioType="a"
+                                  label="MY"
+                                  stopPropagation
+                                  showSpeedLabel
+                                  speedLabel={speedLabel}
+                                />
+                              )}
+                            </div>
                           </div>
                           {/* Scrollable area for answers + explanation */}
                           <div className="mt-4 flex-1 overflow-y-auto overscroll-contain pr-1 min-h-0">
