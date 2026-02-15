@@ -20,10 +20,48 @@ interface VoicePickerProps {
 
 const PREVIEW_TEXT = 'What is the supreme law of the land?';
 
+/**
+ * High-quality natural US English voices, ordered by preference.
+ * These are neural/natural voices that sound best for civics test prep.
+ * Matching is case-insensitive substring — "Ava" matches "Microsoft Ava Online (Natural)".
+ */
+const PREFERRED_VOICES = [
+  // Microsoft Neural (Natural) — highest quality on Windows/Edge
+  'ava',
+  'andrew',
+  'emma',
+  'brian',
+  'jenny',
+  'michelle',
+  'guy',
+  // Google — high quality on Chrome
+  'google us english',
+  // Apple — high quality on Safari/macOS
+  'samantha',
+  'alex',
+];
+
+/** Score a voice by quality preference. Lower = better. */
+function voiceQualityScore(name: string): number {
+  const lower = name.toLowerCase();
+  // Prefer US English locale
+  const isUS = lower.includes('en-us') || lower.includes('united states');
+  // Check if it's a known high-quality voice
+  const preferredIdx = PREFERRED_VOICES.findIndex(pref => lower.includes(pref));
+  // "Natural" or "Neural" in name indicates high quality
+  const isNatural = lower.includes('natural') || lower.includes('neural');
+
+  if (preferredIdx >= 0) return preferredIdx;
+  if (isNatural && isUS) return 50;
+  if (isNatural) return 60;
+  if (isUS) return 70;
+  return 100;
+}
+
 export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: VoicePickerProps) {
   const { speak } = useTTS();
 
-  // Filter to English voices (en-*) and sort: local first, then alphabetical
+  // Filter to English voices (en-*), sort by quality tier then alphabetical
   const filteredVoices = useMemo(() => {
     return voices
       .filter(v => {
@@ -31,9 +69,9 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
         return lang.startsWith('en-') || lang === 'en';
       })
       .sort((a, b) => {
-        // Local voices first
-        if (a.localService && !b.localService) return -1;
-        if (!a.localService && b.localService) return 1;
+        const scoreA = voiceQualityScore(a.name);
+        const scoreB = voiceQualityScore(b.name);
+        if (scoreA !== scoreB) return scoreA - scoreB;
         return a.name.localeCompare(b.name);
       });
   }, [voices]);
@@ -79,11 +117,16 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
       aria-label="Select English voice"
     >
       <option value="">System default</option>
-      {filteredVoices.map(voice => (
-        <option key={voice.name} value={voice.name}>
-          {voice.name} ({voice.localService ? 'Local' : 'Online'})
-        </option>
-      ))}
+      {filteredVoices.map(voice => {
+        const score = voiceQualityScore(voice.name);
+        const quality = score < 50 ? ' ★' : '';
+        return (
+          <option key={voice.name} value={voice.name}>
+            {voice.name}
+            {quality} ({voice.localService ? 'Local' : 'Online'})
+          </option>
+        );
+      })}
     </select>
   );
 }
