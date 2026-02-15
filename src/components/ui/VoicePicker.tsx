@@ -10,6 +10,7 @@
 
 import React, { useMemo } from 'react';
 import { useTTS } from '@/hooks/useTTS';
+import { findVoice } from '@/lib/ttsCore';
 
 interface VoicePickerProps {
   voices: SpeechSynthesisVoice[];
@@ -76,14 +77,24 @@ function voiceQualityScore(name: string): number {
 export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: VoicePickerProps) {
   const { speak } = useTTS();
 
-  // Filter to online-only US English voices (no local/offline voices)
+  // Resolve which voice "System default" would actually use
+  const defaultVoiceName = useMemo(() => {
+    const resolved = findVoice(voices, 'en-US');
+    return resolved?.name ?? null;
+  }, [voices]);
+
+  // Filter to US English voices, preferring online but falling back to local
   const filteredVoices = useMemo(() => {
-    const onlineUSVoices = voices.filter(v => {
+    const allUSVoices = voices.filter(v => {
       const lang = v.lang.toLowerCase().replace(/_/g, '-');
-      return lang === 'en-us' && !v.localService;
+      return lang === 'en-us';
     });
 
-    return onlineUSVoices.sort((a, b) => {
+    // Prefer online voices; fall back to all US English when no online voices exist
+    const onlineUSVoices = allUSVoices.filter(v => !v.localService);
+    const pool = onlineUSVoices.length >= 2 ? onlineUSVoices : allUSVoices;
+
+    return pool.sort((a, b) => {
       const scoreA = voiceQualityScore(a.name);
       const scoreB = voiceQualityScore(b.name);
       if (scoreA !== scoreB) return scoreA - scoreB;
@@ -131,7 +142,7 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
       className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px] min-w-[200px]"
       aria-label="Select English voice"
     >
-      <option value="">System default</option>
+      <option value="">{defaultVoiceName ? `Auto (${defaultVoiceName})` : 'System default'}</option>
       {filteredVoices.map(voice => (
         <option key={voice.name} value={voice.name}>
           {voice.name}

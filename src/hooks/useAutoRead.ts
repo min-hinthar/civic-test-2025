@@ -54,13 +54,14 @@ export function useAutoRead(options: UseAutoReadOptions): void {
     burmeseAudioUrl,
     burmeseRate = 1,
   } = options;
-  // Track if the effect has been cancelled (React Strict Mode double-invoke safety)
-  const cancelledRef = useRef(false);
-  // Lazy-created Burmese audio player
+  // Lazy-created Burmese audio player (ref is safe — only used in effects/callbacks)
   const burmesePlayerRef = useRef<BurmesePlayer | null>(null);
 
   useEffect(() => {
-    cancelledRef.current = false;
+    // Local variable per effect invocation — not shared across re-renders.
+    // This avoids the race condition where a shared ref gets reset by a new
+    // effect invocation while the old effect's async chain is still running.
+    let cancelled = false;
 
     if (!enabled || !text?.trim()) return;
 
@@ -76,9 +77,9 @@ export function useAutoRead(options: UseAutoReadOptions): void {
         await speak(text, { lang });
       } catch {
         // Retry once
-        if (cancelledRef.current) return;
+        if (cancelled) return;
         await new Promise(r => setTimeout(r, 500));
-        if (cancelledRef.current) return;
+        if (cancelled) return;
         try {
           await speak(text, { lang });
         } catch {
@@ -97,7 +98,7 @@ export function useAutoRead(options: UseAutoReadOptions): void {
     };
 
     const timer = setTimeout(async () => {
-      if (cancelledRef.current) return;
+      if (cancelled) return;
 
       if (autoReadLang === 'english') {
         await speakEnglish();
@@ -106,14 +107,14 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       } else {
         // 'both': English first, then Burmese
         await speakEnglish();
-        if (!cancelledRef.current) {
+        if (!cancelled) {
           await playBurmese();
         }
       }
     }, delay);
 
     return () => {
-      cancelledRef.current = true;
+      cancelled = true;
       clearTimeout(timer);
       cancel();
       burmesePlayerRef.current?.cancel();

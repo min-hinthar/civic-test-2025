@@ -38,10 +38,15 @@ const SpeechButton = ({
   showSpeedLabel = false,
   speedLabel,
 }: SpeechButtonProps) => {
-  const { speak, cancel, pause, resume, isSpeaking, isPaused, isSupported, error } = useTTS();
+  const { speak, cancel, pause, resume, isSpeaking, isPaused, currentText, isSupported, error } =
+    useTTS();
   const shouldReduceMotion = useReducedMotion();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const lastClickRef = useRef<number>(0);
+
+  // Per-button state: only show animations when THIS button's text is being spoken
+  const isMySpeaking = isSpeaking && currentText === text;
+  const isMyPaused = isPaused && currentText === text;
 
   // Online/offline awareness
   const [isOnline, setIsOnline] = useState(() =>
@@ -60,12 +65,12 @@ const SpeechButton = ({
     };
   }, [handleOnline, handleOffline]);
 
-  // Focus button when speaking begins (preventScroll avoids page jumping)
+  // Focus button when THIS button starts speaking (preventScroll avoids page jumping)
   useEffect(() => {
-    if (isSpeaking) {
+    if (isMySpeaking) {
       buttonRef.current?.focus({ preventScroll: true });
     }
-  }, [isSpeaking]);
+  }, [isMySpeaking]);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (stopPropagation) {
@@ -77,43 +82,42 @@ const SpeechButton = ({
     if (now - lastClickRef.current < 150) return;
     lastClickRef.current = now;
 
-    if (isPaused) {
-      // Paused -> resume
+    if (isMyPaused) {
+      // This button is paused -> resume
       resume();
-    } else if (isSpeaking) {
-      // Speaking -> pause (or cancel on Android)
+    } else if (isMySpeaking) {
+      // This button is speaking -> pause (or cancel on Android)
       if (isAndroid()) {
         cancel();
       } else {
         pause();
       }
     } else {
-      // Idle -> speak (fire-and-forget)
-      // voiceName is accepted for backward compatibility but voice selection
-      // is handled internally by ttsCore's findVoice algorithm
+      // Idle or a different button is speaking -> start new speech
+      // (speak() internally cancels any active speech first)
       void speak(text, { lang, pitch, rate });
     }
   };
 
   // Determine ARIA label based on state
   const computedAriaLabel =
-    isSpeaking && !isPaused
+    isMySpeaking && !isMyPaused
       ? 'Pause speaking'
-      : isPaused
+      : isMyPaused
         ? 'Resume speaking'
         : (ariaLabel ?? label);
 
-  const showAnimations = isSpeaking && !shouldReduceMotion && !isPaused;
+  const showAnimations = isMySpeaking && !shouldReduceMotion && !isMyPaused;
 
   // Error state: show red tint when error is present and not actively speaking/paused
-  const hasError = error !== null && !isSpeaking && !isPaused;
+  const hasError = error !== null && !isMySpeaking && !isMyPaused;
 
   // Tooltip text: error > unsupported > offline > default
   const tooltipTitle = !isSupported
     ? 'TTS not supported in this browser'
     : hasError
       ? error
-      : !isOnline && !isSpeaking
+      : !isOnline && !isMySpeaking
         ? `${ariaLabel ?? label} (Limited audio offline)`
         : undefined;
 
@@ -121,7 +125,7 @@ const SpeechButton = ({
     <button
       ref={buttonRef}
       type="button"
-      aria-pressed={isSpeaking || isPaused}
+      aria-pressed={isMySpeaking || isMyPaused}
       aria-label={computedAriaLabel}
       onClick={handleClick}
       disabled={!isSupported || !text?.trim()}
@@ -129,9 +133,9 @@ const SpeechButton = ({
         // Base styles
         'relative inline-flex items-center gap-2 overflow-visible rounded-full border px-4 py-2 text-xs font-semibold shadow-sm transition min-h-[44px]',
         // State-specific styles
-        isPaused
+        isMyPaused
           ? 'border-tts/50 bg-tts/5 text-tts'
-          : isSpeaking
+          : isMySpeaking
             ? clsx('border-tts bg-tts/10 text-tts', !shouldReduceMotion && 'animate-pulse-subtle')
             : hasError
               ? 'border-destructive/50 bg-destructive/5 text-destructive'
@@ -142,9 +146,9 @@ const SpeechButton = ({
       )}
     >
       {/* Icon: pause icon when paused, animated sound wave when speaking, Volume2 when idle */}
-      {isPaused ? (
+      {isMyPaused ? (
         <PauseIcon />
-      ) : isSpeaking ? (
+      ) : isMySpeaking ? (
         <SoundWaveIcon animate={!shouldReduceMotion} />
       ) : (
         <Volume2 className="h-4 w-4" aria-hidden="true" />
@@ -160,7 +164,7 @@ const SpeechButton = ({
       {showAnimations && <ExpandingRings />}
       {/* ARIA live region for state announcements */}
       <span className="sr-only" role="status" aria-live="polite">
-        {isSpeaking ? 'Speaking' : isPaused ? 'Paused' : ''}
+        {isMySpeaking ? 'Speaking' : isMyPaused ? 'Paused' : ''}
       </span>
     </button>
   );

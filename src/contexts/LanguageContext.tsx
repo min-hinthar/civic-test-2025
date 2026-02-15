@@ -49,7 +49,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setModeState(newMode);
     localStorage.setItem(STORAGE_KEY, newMode);
     document.documentElement.lang = langAttrForMode(newMode);
-    console.debug('[analytics] language_mode_changed', { mode: newMode });
+    // Analytics event: language mode changed (handled by downstream listeners)
   }, []);
 
   const toggleMode = useCallback(() => {

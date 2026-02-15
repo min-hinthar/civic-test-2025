@@ -192,7 +192,102 @@ describe('findVoice', () => {
     expect(result?.name).toBe('Google US English');
   });
 
-  it('falls back to Edge voices', () => {
+  it('prefers natural/neural online voice over basic voices', () => {
+    const voices = [
+      createMockVoice({
+        name: 'Microsoft Zira',
+        lang: 'en-US',
+        voiceURI: 'microsoft zira',
+        localService: true,
+      }),
+      createMockVoice({
+        name: 'Microsoft Ava Online (Natural)',
+        lang: 'en-US',
+        voiceURI: 'microsoft ava online (natural)',
+        localService: false,
+      }),
+    ];
+    const result = findVoice(voices, 'en-US');
+    expect(result?.name).toBe('Microsoft Ava Online (Natural)');
+  });
+
+  it('prefers online natural voice over local natural voice', () => {
+    const voices = [
+      createMockVoice({
+        name: 'Local Neural Voice',
+        lang: 'en-US',
+        voiceURI: 'local-neural',
+        localService: true,
+      }),
+      createMockVoice({
+        name: 'Online Natural Voice',
+        lang: 'en-US',
+        voiceURI: 'online-natural',
+        localService: false,
+      }),
+    ];
+    const result = findVoice(voices, 'en-US');
+    expect(result?.name).toBe('Online Natural Voice');
+  });
+
+  it('prefers local natural voice over non-natural voices', () => {
+    const voices = [
+      createMockVoice({
+        name: 'Microsoft David',
+        lang: 'en-US',
+        voiceURI: 'microsoft david',
+        localService: true,
+      }),
+      createMockVoice({
+        name: 'Neural TTS Voice',
+        lang: 'en-US',
+        voiceURI: 'neural-tts',
+        localService: true,
+      }),
+    ];
+    const result = findVoice(voices, 'en-US');
+    expect(result?.name).toBe('Neural TTS Voice');
+  });
+
+  it('preferred voice takes priority over natural voice', () => {
+    const voices = [
+      createMockVoice({
+        name: 'Microsoft Ava Online (Natural)',
+        lang: 'en-US',
+        voiceURI: 'microsoft ava online (natural)',
+        localService: false,
+      }),
+      createMockVoice({
+        name: 'Google US English',
+        lang: 'en-US',
+        voiceURI: 'google us english',
+        localService: false,
+      }),
+    ];
+    const result = findVoice(voices, 'en-US', { preferredVoiceName: 'Google US English' });
+    expect(result?.name).toBe('Google US English');
+  });
+
+  it('prefers Google US English over Apple/Edge basic voices', () => {
+    const voices = [
+      createMockVoice({
+        name: 'Microsoft Zira',
+        lang: 'en-US',
+        voiceURI: 'microsoft zira',
+        localService: true,
+      }),
+      createMockVoice({
+        name: 'Google US English',
+        lang: 'en-US',
+        voiceURI: 'google us english',
+        localService: false,
+      }),
+    ];
+    const result = findVoice(voices, 'en-US');
+    expect(result?.name).toBe('Google US English');
+  });
+
+  it('falls back to Edge voices when no natural or Google voices', () => {
     const voices = [
       createMockVoice({
         name: 'Microsoft Zira',

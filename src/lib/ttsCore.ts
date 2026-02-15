@@ -164,8 +164,9 @@ export function loadVoices(): Promise<SpeechSynthesisVoice[]> {
 /**
  * Find the best voice for a given language.
  *
- * Search order: preferred name > Apple voices > Android voices > Edge voices >
- * enhanced hints > local service (if preferLocal) > first lang match > any voice.
+ * Search order: preferred name > natural/neural voices > Google US English >
+ * Apple voices > Android voices > Edge basic voices > enhanced hints >
+ * local service (if preferLocal) > first lang match > any voice.
  * Normalizes voice.lang underscores to hyphens (Android locale format, Pitfall 9).
  */
 export function findVoice(
@@ -194,25 +195,40 @@ export function findVoice(
     if (preferred) return preferred;
   }
 
-  // (b) Apple voices
+  // (b) Natural/neural voices — highest quality on any platform
+  //     Prefer online natural voices (Edge "Ava Online (Natural)") over local
+  const isNatural = (voice: SpeechSynthesisVoice) => {
+    const lower = voice.name.toLowerCase();
+    return lower.includes('natural') || lower.includes('neural');
+  };
+  const naturalOnline = matchesLang.find(v => isNatural(v) && !v.localService);
+  if (naturalOnline) return naturalOnline;
+  const naturalLocal = matchesLang.find(v => isNatural(v));
+  if (naturalLocal) return naturalLocal;
+
+  // (c) Google US English — Chrome's highest-quality voice
+  const googleVoice = matchesLang.find(voice => matchesHint(voice, 'google us english'));
+  if (googleVoice) return googleVoice;
+
+  // (d) Apple voices
   for (const name of APPLE_US_VOICES) {
     const match = matchesLang.find(voice => matchesHint(voice, name));
     if (match) return match;
   }
 
-  // (c) Android voices
+  // (e) Android voices
   for (const name of ANDROID_US_VOICES) {
     const match = matchesLang.find(voice => matchesHint(voice, name));
     if (match) return match;
   }
 
-  // (d) Edge voices
+  // (f) Edge basic voices (fallback when no natural voices available)
   for (const name of EDGE_VOICES) {
     const match = matchesLang.find(voice => matchesHint(voice, name));
     if (match) return match;
   }
 
-  // (e) Enhanced hints
+  // (g) Enhanced hints
   const enhanced = matchesLang.find(voice => ENHANCED_HINTS.some(hint => matchesHint(voice, hint)));
   if (enhanced) return enhanced;
 

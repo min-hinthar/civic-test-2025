@@ -49,13 +49,99 @@ const NUMBER_WORDS: Record<string, string> = {
 
 /** Common civics synonyms for fuzzy matching */
 const SYNONYMS: Record<string, string[]> = {
-  freedom: ['liberty'],
-  liberty: ['freedom'],
+  // Core civic concepts
+  freedom: ['liberty', 'freedoms'],
+  liberty: ['freedom', 'liberties'],
   president: ['chief executive'],
-  law: ['legislation', 'statute'],
-  legislation: ['law'],
-  statute: ['law'],
+  law: ['legislation', 'statute', 'laws'],
+  legislation: ['law', 'laws'],
+  statute: ['law', 'laws'],
+  // Government & governance
+  constitution: ['constitutional'],
+  supreme: ['highest', 'top', 'ultimate'],
+  highest: ['supreme', 'top'],
+  declare: ['declared', 'announce', 'announced', 'proclaim', 'proclaimed'],
+  declared: ['declare', 'announce', 'announced'],
+  independence: ['independent'],
+  govern: ['governed', 'governing', 'rule', 'ruled'],
+  governed: ['govern', 'governing'],
+  fought: ['battled', 'warred', 'fight', 'fighting'],
+  fight: ['fought', 'battled'],
+  equal: ['equality', 'equally'],
+  represent: ['representation', 'represents', 'representing'],
+  representation: ['represent', 'represents'],
+  vote: ['voting', 'votes', 'voted', 'elect'],
+  voting: ['vote', 'votes', 'elect'],
+  elect: ['elected', 'election', 'vote'],
+  elected: ['elect', 'election'],
+  election: ['elect', 'elected', 'elections'],
+  citizen: ['citizens', 'citizenship'],
+  citizens: ['citizen', 'citizenship'],
+  amend: ['amended', 'amendment', 'amendments'],
+  amendment: ['amend', 'amendments'],
+  amendments: ['amend', 'amendment'],
+  right: ['rights'],
+  rights: ['right'],
+  state: ['states'],
+  states: ['state'],
+  country: ['nation'],
+  nation: ['country'],
+  people: ['citizens', 'populace'],
+  branch: ['branches'],
+  branches: ['branch'],
+  power: ['powers', 'authority'],
+  powers: ['power', 'authority'],
+  tax: ['taxes', 'taxation'],
+  taxes: ['tax', 'taxation'],
+  war: ['wars', 'warfare'],
+  speech: ['expression', 'speak'],
+  religion: ['religious', 'worship'],
+  press: ['media', 'journalism'],
+  // Historical
+  colony: ['colonies', 'colonial'],
+  colonies: ['colony', 'colonial'],
+  british: ['britain', 'england', 'english'],
+  britain: ['british', 'england'],
+  slave: ['slavery', 'slaves', 'enslaved'],
+  slavery: ['slave', 'slaves', 'enslaved'],
+  civil: ['civilian'],
 };
+
+/**
+ * Simple suffix-stripping stemmer for civics answers.
+ * Reduces common English inflections to base form.
+ */
+function simpleStem(word: string): string {
+  if (word.length <= 3) return word;
+  // -ies → -y (e.g., colonies → colony)
+  if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+  // -ing → base (e.g., governing → govern, fighting → fight)
+  if (word.endsWith('ing') && word.length > 5) {
+    // doubled consonant: e.g., "running" → "run"
+    const base = word.slice(0, -3);
+    if (base.length >= 2 && base[base.length - 1] === base[base.length - 2]) {
+      return base.slice(0, -1);
+    }
+    return base;
+  }
+  // -tion → t (e.g., representation → represent...at — not great, skip this one)
+  // -ed → base (e.g., declared → declar, governed → govern)
+  if (word.endsWith('ed') && word.length > 4) {
+    // doubled consonant: e.g., "stopped" → "stop"
+    const base = word.slice(0, -2);
+    if (base.length >= 2 && base[base.length - 1] === base[base.length - 2]) {
+      return base.slice(0, -1);
+    }
+    return base;
+  }
+  // -ly → base (e.g., equally → equal)
+  if (word.endsWith('ly') && word.length > 4) return word.slice(0, -2);
+  // -es → base (e.g., branches → branch, taxes → tax)
+  if (word.endsWith('es') && word.length > 4) return word.slice(0, -2);
+  // -s → base (e.g., rights → right, laws → law)
+  if (word.endsWith('s') && word.length > 3) return word.slice(0, -1);
+  return word;
+}
 
 /** Stop words to remove before keyword extraction */
 const STOP_WORDS = new Set([
@@ -161,18 +247,32 @@ export function extractKeywords(answer: string): string[] {
 }
 
 /**
- * Expand a set of keywords with known civics synonyms.
- * Returns the original keywords plus any synonym expansions.
+ * Expand a set of keywords with known civics synonyms and stems.
+ * Returns the original keywords, their stems, and any synonym expansions.
  */
 function expandWithSynonyms(keywords: string[]): Set<string> {
   const expanded = new Set(keywords);
   for (const keyword of keywords) {
+    // Add stemmed form
+    expanded.add(simpleStem(keyword));
+    // Add synonyms
     const synonyms = SYNONYMS[keyword];
     if (synonyms) {
       for (const synonym of synonyms) {
-        // Add individual synonym words
         for (const word of synonym.split(' ')) {
           expanded.add(word);
+          expanded.add(simpleStem(word));
+        }
+      }
+    }
+    // Also check if stem matches a synonym key
+    const stemmed = simpleStem(keyword);
+    const stemSynonyms = SYNONYMS[stemmed];
+    if (stemSynonyms) {
+      for (const synonym of stemSynonyms) {
+        for (const word of synonym.split(' ')) {
+          expanded.add(word);
+          expanded.add(simpleStem(word));
         }
       }
     }
@@ -185,13 +285,13 @@ function expandWithSynonyms(keywords: string[]): Set<string> {
  *
  * @param transcript - The spoken/typed answer text
  * @param expectedAnswers - Array of correct answers (English text used for grading)
- * @param threshold - Minimum confidence to consider correct (default 0.5, lenient)
+ * @param threshold - Minimum confidence to consider correct (default 0.35, lenient for speech)
  * @returns GradeResult with confidence score and keyword analysis
  */
 export function gradeAnswer(
   transcript: string,
   expectedAnswers: Array<{ text_en: string; text_my?: string }>,
-  threshold = 0.5
+  threshold = 0.35
 ): GradeResult {
   // Handle empty transcript
   if (!transcript.trim()) {
@@ -217,21 +317,28 @@ export function gradeAnswer(
 
     if (expectedKeywords.length === 0) continue;
 
-    // Check each expected keyword against transcript keywords (with synonyms)
+    // Check each expected keyword against transcript keywords (with synonyms + stemming)
     const matched: string[] = [];
     const missing: string[] = [];
 
     for (const keyword of expectedKeywords) {
-      if (expandedTranscript.has(keyword)) {
+      const keywordStem = simpleStem(keyword);
+
+      if (expandedTranscript.has(keyword) || expandedTranscript.has(keywordStem)) {
         matched.push(keyword);
       } else {
-        // Check if any synonym of this keyword is in the transcript
-        const synonyms = SYNONYMS[keyword];
+        // Check if any synonym of this keyword (or its stem) is in the transcript
         let found = false;
-        if (synonyms) {
-          for (const synonym of synonyms) {
+        const synonymLists = [SYNONYMS[keyword], SYNONYMS[keywordStem]].filter(Boolean);
+        for (const synonyms of synonymLists) {
+          if (found) break;
+          for (const synonym of synonyms!) {
             const synonymWords = synonym.split(' ');
-            if (synonymWords.some(w => expandedTranscript.has(w))) {
+            if (
+              synonymWords.some(
+                w => expandedTranscript.has(w) || expandedTranscript.has(simpleStem(w))
+              )
+            ) {
               matched.push(keyword);
               found = true;
               break;

@@ -562,8 +562,12 @@ const TestPage = () => {
     setShowStreakReward(false);
     setShowXP(false);
 
-    // Check thresholds before advancing
-    if (hasPassedThreshold(quizState, quizConfig) || hasFailedThreshold(quizState, quizConfig)) {
+    // Defensive: finish if all questions answered or thresholds met
+    if (
+      quizState.currentIndex + 1 >= questions.length ||
+      hasPassedThreshold(quizState, quizConfig) ||
+      hasFailedThreshold(quizState, quizConfig)
+    ) {
       dispatch({ type: 'FINISH' });
       return;
     }
@@ -574,7 +578,7 @@ const TestPage = () => {
     setTimeout(() => {
       dispatch({ type: 'TRANSITION_COMPLETE' });
     }, 50);
-  }, [quizState, quizConfig]);
+  }, [quizState, quizConfig, questions.length]);
 
   // Handle Skip
   const handleSkip = useCallback(() => {
@@ -691,6 +695,10 @@ const TestPage = () => {
   }
 
   if (!currentQuestion && !isFinished) {
+    // Safety: if no question exists at current index, force finish to avoid stuck state
+    if (quizState.currentIndex >= questions.length) {
+      dispatch({ type: 'FINISH' });
+    }
     return (
       <div className="page-shell" data-tour="mock-test">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">

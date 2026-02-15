@@ -166,7 +166,7 @@ function ToastContainer({
 }) {
   return (
     <div
-      className="pointer-events-none fixed top-4 right-4 z-[9999] flex max-w-sm flex-col gap-3"
+      className="pointer-events-none fixed top-4 left-4 right-4 z-[9999] flex flex-col gap-3 sm:left-auto sm:max-w-sm"
       aria-live="assertive"
       aria-atomic="true"
     >

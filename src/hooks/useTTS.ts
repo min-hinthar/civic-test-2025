@@ -30,6 +30,8 @@ interface UseTTSReturn {
   resume: () => void;
   isSpeaking: boolean;
   isPaused: boolean;
+  /** The text currently being spoken (null when idle). For per-button matching. */
+  currentText: string | null;
   isSupported: boolean;
   error: string | null;
   voices: SpeechSynthesisVoice[];
@@ -159,6 +161,7 @@ export function useTTS(options?: UseTTSOptions): UseTTSReturn {
     resume,
     isSpeaking: state.isSpeaking,
     isPaused: state.isPaused,
+    currentText: state.currentText,
     isSupported,
     error,
     voices,

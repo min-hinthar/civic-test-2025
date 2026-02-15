@@ -89,7 +89,7 @@ export function QuizHeader({
       </div>
 
       {/* Timer slot (renders CircularTimer for mock test, nothing for practice without timer) */}
-      <div className="flex items-center justify-end w-10">
+      <div className="flex items-center justify-end shrink-0">
         {timerSlot ?? <div className="w-10" aria-hidden="true" />}
       </div>
     </div>
