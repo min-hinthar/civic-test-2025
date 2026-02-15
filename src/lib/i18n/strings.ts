@@ -288,6 +288,16 @@ export const strings = {
     },
   },
 
+  // Quiz (Check/Continue flow)
+  quiz: {
+    check: { en: 'Check', my: '\u1005\u1005\u103A\u1006\u1031\u1038\u1015\u102B' },
+    skip: { en: 'Skip', my: '\u1000\u103B\u1031\u102C\u103A\u1015\u102B' },
+    continue: { en: 'Continue', my: '\u1006\u1000\u103A\u101C\u1000\u103A\u1015\u102B' },
+    exit: { en: 'Exit', my: '\u1011\u103D\u1000\u103A\u101B\u1014\u103A' },
+    questionNofM: { en: 'Question', my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038' },
+    of: { en: 'of', my: '\u1019\u103E' },
+  },
+
   // App meta
   app: {
     title: { en: 'U.S. Citizenship Test Prep', my: 'အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး' },
