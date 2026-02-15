@@ -81,6 +81,13 @@ interface ChatMessage {
   confidence?: number;
 }
 
+/** Rate map for named speed to numeric playback rate */
+const RATE_MAP: Record<'slow' | 'normal' | 'fast', number> = {
+  slow: 0.7,
+  normal: 0.98,
+  fast: 1.3,
+};
+
 interface InterviewSessionProps {
   /** Interview mode (realistic or practice) */
   mode: InterviewMode;
@@ -92,6 +99,8 @@ interface InterviewSessionProps {
   ) => void;
   /** Whether mic permission was granted */
   micPermission: boolean;
+  /** Per-session speech speed override from InterviewSetup */
+  speedOverride?: 'slow' | 'normal' | 'fast';
   /** Session ID for persistence */
   sessionId?: string;
   /** Pre-shuffled questions for resume */
@@ -127,6 +136,7 @@ export function InterviewSession({
   mode,
   onComplete,
   micPermission,
+  speedOverride,
   sessionId,
   initialQuestions,
   initialResults,
@@ -137,7 +147,11 @@ export function InterviewSession({
 }: InterviewSessionProps) {
   const { showBurmese, mode: languageMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const { speak, cancel: cancelTTS } = useTTS();
+  const { speak, cancel: cancelTTS, settings: ttsSettings } = useTTS();
+
+  // Effective speed: Real mode always normal, Practice mode uses override or global setting
+  const effectiveSpeed = mode === 'realistic' ? 'normal' : (speedOverride ?? ttsSettings.rate);
+  const numericRate = RATE_MAP[effectiveSpeed];
   const {
     transcript,
     isListening,
@@ -211,18 +225,18 @@ export function InterviewSession({
     }
   }, [chatMessages, questionPhase, shouldReduceMotion]);
 
-  // --- Safe speak wrapper ---
+  // --- Safe speak wrapper (applies session speed override) ---
   const safeSpeakLocal = useCallback(
     async (text: string) => {
       try {
-        await speak(text);
+        await speak(text, { rate: numericRate });
         return 'completed' as const;
       } catch (err) {
         if (err instanceof TTSCancelledError) return 'cancelled' as const;
         return 'error' as const;
       }
     },
-    [speak]
+    [speak, numericRate]
   );
 
   // --- Silence detection: auto-stop recording after 2s silence ---

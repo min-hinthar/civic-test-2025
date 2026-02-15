@@ -11,6 +11,7 @@ import { InterviewResults } from '@/components/interview/InterviewResults';
 import { getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import type { InterviewSnapshot, SessionSnapshot } from '@/lib/sessions/sessionTypes';
+import type { InterviewSpeechOverrides } from '@/components/interview/InterviewSetup';
 import type { InterviewMode, InterviewResult, InterviewEndReason } from '@/types';
 
 type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
@@ -37,6 +38,9 @@ const InterviewPage = () => {
   const [sessionResults, setSessionResults] = useState<InterviewResult[]>([]);
   const [sessionDuration, setSessionDuration] = useState(0);
   const [endReason, setEndReason] = useState<InterviewEndReason>('complete');
+
+  // Per-session speech speed override (from InterviewSetup)
+  const [speedOverride, setSpeedOverride] = useState<'slow' | 'normal' | 'fast'>('normal');
 
   // --- Session persistence state ---
   const [savedSessions, setSavedSessions] = useState<InterviewSnapshot[]>([]);
@@ -93,23 +97,29 @@ const InterviewPage = () => {
     setShowResumeModal(false);
   }, []);
 
-  const handleStart = useCallback((selectedMode: InterviewMode) => {
-    setMode(selectedMode);
+  const handleStart = useCallback(
+    (selectedMode: InterviewMode, overrides?: InterviewSpeechOverrides) => {
+      setMode(selectedMode);
+      if (overrides) {
+        setSpeedOverride(overrides.speedOverride);
+      }
 
-    // Check mic permission state from the setup's proactive request
-    navigator.mediaDevices
-      ?.getUserMedia({ audio: true })
-      .then(mediaStream => {
-        mediaStream.getTracks().forEach(t => t.stop());
-        setMicPermission(true);
-      })
-      .catch(() => {
-        setMicPermission(false);
-      })
-      .finally(() => {
-        setPhase('countdown');
-      });
-  }, []);
+      // Check mic permission state from the setup's proactive request
+      navigator.mediaDevices
+        ?.getUserMedia({ audio: true })
+        .then(mediaStream => {
+          mediaStream.getTracks().forEach(t => t.stop());
+          setMicPermission(true);
+        })
+        .catch(() => {
+          setMicPermission(false);
+        })
+        .finally(() => {
+          setPhase('countdown');
+        });
+    },
+    []
+  );
 
   const handleCountdownComplete = useCallback(() => {
     setPhase('session');
@@ -177,6 +187,7 @@ const InterviewPage = () => {
           mode={mode}
           onComplete={handleSessionComplete}
           micPermission={micPermission}
+          speedOverride={speedOverride}
           sessionId={sessionId}
           initialQuestions={resumeData?.questions}
           initialResults={resumeData?.results}
