@@ -205,6 +205,7 @@ const InterviewPage = () => {
           endReason={endReason}
           onRetry={handleRetry}
           onSwitchMode={handleSwitchMode}
+          speedOverride={speedOverride}
         />
       )}
     </div>

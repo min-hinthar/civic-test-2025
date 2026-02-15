@@ -132,6 +132,8 @@ interface InterviewResultsProps {
   onRetry: () => void;
   /** Callback to switch mode and start new session */
   onSwitchMode: (mode: InterviewMode) => void;
+  /** Session speed override for speech button labels */
+  speedOverride?: 'slow' | 'normal' | 'fast';
 }
 
 /**
@@ -160,11 +162,17 @@ export function InterviewResults({
   endReason,
   onRetry,
   onSwitchMode,
+  speedOverride,
 }: InterviewResultsProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const { speak, cancel: cancelTTS, isSpeaking } = useTTS();
+  const { speak, cancel: cancelTTS, isSpeaking, settings: ttsSettings } = useTTS();
+
+  // Effective speed for speech button labels in transcript
+  const effectiveSpeed = mode === 'realistic' ? 'normal' : (speedOverride ?? ttsSettings.rate);
+  const effectiveSpeedLabel = effectiveSpeed === 'normal' ? undefined : effectiveSpeed;
+
   const { currentStreak } = useStreak();
   const { addCard, isInDeck } = useSRS();
   const { showSuccess } = useToast();
@@ -778,6 +786,7 @@ export function InterviewResults({
               endReason={endReason}
               earlyTerminationIndex={earlyTerminationIndex}
               showBurmese={showBurmese}
+              speedLabel={effectiveSpeedLabel}
             />
           </div>
         </FadeIn>

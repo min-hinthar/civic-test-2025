@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ChatBubble } from '@/components/interview/ChatBubble';
 import { ExaminerCharacter } from '@/components/interview/ExaminerCharacter';
+import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { SPRING_GENTLE } from '@/lib/motion-config';
@@ -17,6 +18,8 @@ interface InterviewTranscriptProps {
   endReason: InterviewEndReason;
   earlyTerminationIndex?: number;
   showBurmese: boolean;
+  /** Speed label for speech buttons (e.g., "slow", "fast") */
+  speedLabel?: string;
 }
 
 /** Map end reasons to termination messages */
@@ -64,6 +67,7 @@ export function InterviewTranscript({
   endReason,
   earlyTerminationIndex,
   showBurmese,
+  speedLabel,
 }: InterviewTranscriptProps) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -135,6 +139,18 @@ export function InterviewTranscript({
                 </p>
                 {showBurmese && (
                   <p className="mt-1 font-myanmar text-xs opacity-70">{result.questionText_my}</p>
+                )}
+                {showBurmese && (
+                  <div className="mt-1.5">
+                    <BurmeseSpeechButton
+                      questionId={result.questionId}
+                      audioType="q"
+                      label="Burmese"
+                      className="!py-1 !px-2.5 !text-[10px] !min-h-[28px]"
+                      showSpeedLabel={!!speedLabel}
+                      speedLabel={speedLabel}
+                    />
+                  </div>
                 )}
               </ChatBubble>
 
