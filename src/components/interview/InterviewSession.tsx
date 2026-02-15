@@ -167,6 +167,7 @@ export function InterviewSession({
     startListening,
     stopListening,
     resetTranscript,
+    error: speechError,
   } = useInterviewSpeech();
   const {
     startRecording,
@@ -174,8 +175,12 @@ export function InterviewSession({
     clearRecording,
     stream,
     isRecording,
+    requestPermission,
     cleanup: cleanupRecorder,
   } = useAudioRecorder();
+
+  // Unified check: speech recognition API available AND mic permission granted
+  const canUseSpeech = speechSupported && micPermission;
 
   // --- Session state ---
   const [questions] = useState<Question[]>(
@@ -202,6 +207,13 @@ export function InterviewSession({
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const msgIdCounter = useRef(0);
+
+  // Initialize audio recorder stream for waveform + silence detection
+  useEffect(() => {
+    if (micPermission) {
+      void requestPermission();
+    }
+  }, [micPermission, requestPermission]);
 
   // Burmese audio player for Practice mode in Myanmar mode
   const burmesePlayerRef = useRef<BurmesePlayer | null>(null);
@@ -382,7 +394,7 @@ export function InterviewSession({
       if (speakResult === 'completed') {
         setResponseStartTime(Date.now());
         // Start speech recognition if supported
-        if (speechSupported && micPermission) {
+        if (canUseSpeech) {
           resetTranscript();
           startListening().catch(() => {});
           startRecording();
@@ -400,8 +412,7 @@ export function InterviewSession({
     currentQuestion,
     safeSpeakLocal,
     addMessage,
-    speechSupported,
-    micPermission,
+    canUseSpeech,
     resetTranscript,
     startListening,
     startRecording,
@@ -455,7 +466,7 @@ export function InterviewSession({
     addMessage('user', userText);
 
     // If speech recognition available, grade automatically
-    if (speechSupported && currentQuestion) {
+    if (canUseSpeech && currentQuestion) {
       const gradeResult: GradeResult = gradeAnswer(transcript, currentQuestion.studyAnswers);
 
       // Store result
@@ -546,7 +557,7 @@ export function InterviewSession({
     }
   }, [
     transcript,
-    speechSupported,
+    canUseSpeech,
     currentQuestion,
     results,
     correctCount,
@@ -565,12 +576,12 @@ export function InterviewSession({
   const handleReRecord = useCallback(() => {
     setRecordAttempt(prev => prev + 1);
     resetTranscript();
-    if (speechSupported && micPermission) {
+    if (canUseSpeech) {
       startListening().catch(() => {});
       startRecording();
     }
     setQuestionPhase('responding');
-  }, [resetTranscript, speechSupported, micPermission, startListening, startRecording]);
+  }, [resetTranscript, canUseSpeech, startListening, startRecording]);
 
   // --- Phase: FEEDBACK (Practice: show detailed, Real: brief ack) ---
   useEffect(() => {
@@ -727,7 +738,7 @@ export function InterviewSession({
     const speakResult = await safeSpeakLocal(currentQuestion.question_en);
     setExaminerState('listening');
 
-    if (speakResult === 'completed' && speechSupported && micPermission) {
+    if (speakResult === 'completed' && canUseSpeech) {
       resetTranscript();
       startListening().catch(() => {});
       startRecording();
@@ -738,8 +749,7 @@ export function InterviewSession({
     stopListening,
     stopRecording,
     safeSpeakLocal,
-    speechSupported,
-    micPermission,
+    canUseSpeech,
     resetTranscript,
     startListening,
     startRecording,
@@ -760,9 +770,9 @@ export function InterviewSession({
   const isGreeting = questionPhase === 'greeting';
   const isTransition = questionPhase === 'transition';
   const showTimer = mode === 'realistic' && questionPhase === 'responding';
-  const showSelfGradeButtons = questionPhase === 'grading' && !speechSupported;
-  const showRecordingArea = questionPhase === 'responding' && micPermission && speechSupported;
-  const showTranscriptionReview = questionPhase === 'transcription' && speechSupported;
+  const showSelfGradeButtons = questionPhase === 'grading' && !canUseSpeech;
+  const showRecordingArea = questionPhase === 'responding' && canUseSpeech;
+  const showTranscriptionReview = questionPhase === 'transcription' && canUseSpeech;
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col">
@@ -923,8 +933,8 @@ export function InterviewSession({
                   </button>
                 )}
 
-                {/* Manual submit button */}
-                {questionPhase === 'responding' && isListening && (
+                {/* Manual submit button — always visible so user can advance */}
+                {questionPhase === 'responding' && (
                   <button
                     type="button"
                     onClick={handleManualSubmit}
@@ -948,13 +958,36 @@ export function InterviewSession({
                   <span className="text-xs text-white/50">Listening...</span>
                 </div>
               )}
+
+              {/* Speech recognition error */}
+              {speechError && !isListening && (
+                <p className="text-center text-xs text-warning">{speechError}</p>
+              )}
             </div>
-          ) : questionPhase === 'responding' && !speechSupported ? (
-            <div className="flex items-center justify-center gap-2 py-2 text-white/40">
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-xs">
-                Speech recognition unavailable. Answer aloud, then self-grade.
-              </span>
+          ) : questionPhase === 'responding' && !canUseSpeech ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 py-2 text-white/40">
+                <MessageCircle className="h-4 w-4" />
+                <span className="text-xs">
+                  {!micPermission
+                    ? 'Microphone unavailable. Answer aloud, then self-grade.'
+                    : 'Speech recognition unavailable. Answer aloud, then self-grade.'}
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setQuestionPhase('grading')}
+                  className={clsx(
+                    'flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2',
+                    'text-xs font-semibold text-white',
+                    'transition-colors hover:bg-primary/90',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
+                  )}
+                >
+                  I&apos;ve answered
+                </button>
+              </div>
             </div>
           ) : (
             <div className="flex items-center justify-center py-2">
