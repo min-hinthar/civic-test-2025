@@ -76,24 +76,14 @@ function voiceQualityScore(name: string): number {
 export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: VoicePickerProps) {
   const { speak } = useTTS();
 
-  // Filter to high-quality US English natural voices, with fallback to all en-us if too few
+  // Filter to online-only US English voices (no local/offline voices)
   const filteredVoices = useMemo(() => {
-    const usVoices = voices.filter(v => {
+    const onlineUSVoices = voices.filter(v => {
       const lang = v.lang.toLowerCase().replace(/_/g, '-');
-      return lang === 'en-us';
+      return lang === 'en-us' && !v.localService;
     });
 
-    const highQuality = usVoices.filter(v => {
-      const lower = v.name.toLowerCase();
-      const isPreferred = PREFERRED_VOICES.some(pref => lower.includes(pref));
-      const isNatural = lower.includes('natural') || lower.includes('neural');
-      return isPreferred || isNatural;
-    });
-
-    // Fallback: if fewer than 3 high-quality voices, show all US English voices
-    const pool = highQuality.length >= 3 ? highQuality : usVoices;
-
-    return pool.sort((a, b) => {
+    return onlineUSVoices.sort((a, b) => {
       const scoreA = voiceQualityScore(a.name);
       const scoreB = voiceQualityScore(b.name);
       if (scoreA !== scoreB) return scoreA - scoreB;
@@ -144,7 +134,7 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
       <option value="">System default</option>
       {filteredVoices.map(voice => (
         <option key={voice.name} value={voice.name}>
-          {voice.name} ({voice.localService ? 'Local' : 'Online'})
+          {voice.name}
         </option>
       ))}
     </select>

@@ -280,13 +280,15 @@ export function InterviewSession({
   );
 
   // --- Silence detection: auto-stop recording after 2s silence ---
+  // Only transitions if user has spoken (transcript exists) to avoid premature cutoff.
+  // Does not require isListening — recognition may have auto-ended (continuous: false).
   const handleSilenceDetected = useCallback(() => {
-    if (questionPhase === 'responding' && isListening) {
+    if (questionPhase === 'responding' && transcript.trim()) {
       stopListening();
       stopRecording();
       setQuestionPhase('transcription');
     }
-  }, [questionPhase, isListening, stopListening, stopRecording]);
+  }, [questionPhase, transcript, stopListening, stopRecording]);
 
   useSilenceDetection({
     stream,
@@ -294,6 +296,41 @@ export function InterviewSession({
     enabled: questionPhase === 'responding' && isRecording,
     silenceMs: 2000,
   });
+
+  // --- Auto-handle speech recognition ending during responding phase ---
+  // When recognition ends (isListening → false) while still in responding:
+  //   - With transcript: auto-transition to transcription review
+  //   - Without transcript + no error: restart recognition (user may not have spoken yet)
+  //   - With error: text input fallback shows via hasSpeechError (no action needed)
+  useEffect(() => {
+    if (questionPhase !== 'responding' || !canUseSpeech || isListening) return;
+
+    if (transcript.trim()) {
+      // User spoke and recognition ended — auto-advance to transcription
+      const timer = setTimeout(() => {
+        stopRecording();
+        setQuestionPhase('transcription');
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+
+    if (!speechError) {
+      // No transcript, no error — recognition timed out (no-speech). Restart.
+      const timer = setTimeout(() => {
+        startListening().catch(() => {});
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+    // speechError exists → hasSpeechError shows text input fallback automatically
+  }, [
+    questionPhase,
+    canUseSpeech,
+    isListening,
+    transcript,
+    speechError,
+    startListening,
+    stopRecording,
+  ]);
 
   // --- Cleanup on unmount ---
   useEffect(() => {
