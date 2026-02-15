@@ -115,18 +115,18 @@ Plans:
 **Plans**: 12 plans
 
 Plans:
-- [ ] 21-01-PLAN.md — Quiz state machine + haptics utility + sound effects extensions
-- [ ] 21-02-PLAN.md — Answer grader TDD (keyword-based fuzzy matching for interview)
-- [ ] 21-03-PLAN.md — FeedbackPanel + AnswerOption with keyboard navigation
-- [ ] 21-04-PLAN.md — SegmentedProgressBar + QuizHeader + SkipButton
-- [ ] 21-05-PLAN.md — Examiner SVG character + ChatBubble + speech recognition hooks
-- [ ] 21-06-PLAN.md — TestPage full refactor (Check/Continue flow + new components)
-- [ ] 21-07-PLAN.md — PracticeSession refactor (Check/Continue + skip review + tappable segments)
-- [ ] 21-08-PLAN.md — Interview session chat-style overhaul (Practice/Real modes, speech input)
-- [ ] 21-09-PLAN.md — Test/Practice results screen redesign
-- [ ] 21-10-PLAN.md — Interview results screen (transcript, confidence, comparison)
-- [ ] 21-11-PLAN.md — Keyboard nav polish + streak/XP animations + REQUIREMENTS.md update
-- [ ] 21-12-PLAN.md — PillTabBar extraction + consistent pill tabs across all pages
+- [x] 21-01-PLAN.md — Quiz state machine + haptics utility + sound effects extensions
+- [x] 21-02-PLAN.md — Answer grader TDD (keyword-based fuzzy matching for interview)
+- [x] 21-03-PLAN.md — FeedbackPanel + AnswerOption with keyboard navigation
+- [x] 21-04-PLAN.md — SegmentedProgressBar + QuizHeader + SkipButton
+- [x] 21-05-PLAN.md — Examiner SVG character + ChatBubble + speech recognition hooks
+- [x] 21-06-PLAN.md — TestPage full refactor (Check/Continue flow + new components)
+- [x] 21-07-PLAN.md — PracticeSession refactor (Check/Continue + skip review + tappable segments)
+- [x] 21-08-PLAN.md — Interview session chat-style overhaul (Practice/Real modes, speech input)
+- [x] 21-09-PLAN.md — Test/Practice results screen redesign
+- [x] 21-10-PLAN.md — Interview results screen (transcript, confidence, comparison)
+- [x] 21-11-PLAN.md — Keyboard nav polish + streak/XP animations + REQUIREMENTS.md update
+- [x] 21-12-PLAN.md — PillTabBar extraction + consistent pill tabs across all pages
 
 ### Phase 22: TTS Quality
 **Goal**: Users hear clear, natural speech with control over voice and speed, including Burmese audio for all 128 questions
@@ -206,7 +206,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 18. Language Mode | v2.1 | 7/7 | Complete | 2026-02-14 |
 | 19. TTS Core Extraction | v2.1 | 6/6 | Complete | 2026-02-14 |
 | 20. Session Persistence | v2.1 | 6/6 | Complete | 2026-02-15 |
-| 21. Test & Practice UX | v2.1 | 0/12 | Not started | - |
+| 21. Test & Practice UX | v2.1 | 12/12 | Complete | 2026-02-15 |
 | 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
 | 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
 | 24. Accessibility & Perf | v2.1 | 0/TBD | Not started | - |
@@ -216,7 +216,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 14/51 | In progress |
+| v2.1 | 8 | TBD | 27/51 | In progress |
 
 ---
 

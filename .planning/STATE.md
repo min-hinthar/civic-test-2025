@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 21 in progress
+**Current focus:** v2.1 Quality & Polish -- Phase 21 COMPLETE, ready for Phase 22
 
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
 Plan: 12 of 12 in current phase
-Status: Phase complete
-Last activity: 2026-02-15 -- Completed 21-11-PLAN.md (Streak/XP Micro-Rewards & Keyboard Nav)
+Status: Phase complete, verified (8/8 must-haves, 13 requirements)
+Last activity: 2026-02-15 -- Phase 21 complete + verified (12/12 plans, 35 commits)
 
 Progress: [████████████] 100% (12/12 plans complete)
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 22 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 3+)
+- v2.1: 31 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12)
 
 ## Accumulated Context
 
@@ -184,10 +184,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21 complete (all 12 plans)
-Next step: Phase 22 planning
+Stopped at: Phase 21 verified complete (8/8 must-haves)
+Next step: Phase 22 (TTS Quality) — plan then execute
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 complete -- all 12 plans executed)*
+*Last updated: 2026-02-15 (Phase 21 COMPLETE + VERIFIED -- 12/12 plans, 8/8 must-haves, 13 requirements)*
