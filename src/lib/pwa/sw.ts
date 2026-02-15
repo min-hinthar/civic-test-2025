@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 import { defaultCache } from '@serwist/next/worker';
 import type { PrecacheEntry, SerwistGlobalConfig } from 'serwist';
-import { Serwist } from 'serwist';
+import { CacheFirst, ExpirationPlugin, Serwist } from 'serwist';
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -16,7 +16,24 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: defaultCache,
+  runtimeCaching: [
+    ...defaultCache,
+    // CacheFirst for pre-generated Burmese audio MP3 files
+    {
+      matcher({ url }) {
+        return url.pathname.startsWith('/audio/');
+      },
+      handler: new CacheFirst({
+        cacheName: 'burmese-audio-v1',
+        plugins: [
+          new ExpirationPlugin({
+            maxEntries: 800,
+            maxAgeSeconds: 90 * 24 * 60 * 60, // 90 days
+          }),
+        ],
+      }),
+    },
+  ],
   fallbacks: {
     entries: [
       {
