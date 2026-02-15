@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 20 of 25 (Session Persistence)
-Plan: 4 of 6 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 20-04-PLAN.md (dashboard banners and nav badges)
+Plan: 6 of 6 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 20-06-PLAN.md (practice & interview session persistence)
 
-Progress: [####░░░░░░] 67% (4/6 plans complete)
+Progress: [██████████] 100% (6/6 plans complete)
 
 ## Completed Milestones
 
@@ -56,6 +56,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Inline confirmation swap (not sub-dialog) for Start Fresh action
 - Resume button 600ms loading delay before callback for intentional feel
 - Single session auto-selected; multiple sessions require explicit selection
+- Practice countdown shown on resume when timer enabled (fresh timer duration)
+- Interview resume skips greeting, starts at chime phase for next ungraded question
+- Interview questions changed from useMemo to useState lazy init for resume seeding
+- resumeData cleared on retry/switchMode to prevent stale state
+- Countdown subtitle: Q{index}/{count} for resume vs {count} Questions for new
 
 **Phase 19 decisions:**
 - eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
@@ -108,10 +113,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 20 plan 04 complete
-Next step: Continue Phase 20 execution (plans 05-06)
+Stopped at: Phase 20 plan 06 complete (phase complete)
+Next step: Begin Phase 21 planning/execution
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 20 plan 04 complete -- dashboard banners and nav badges)*
+*Last updated: 2026-02-15 (Phase 20 plan 06 complete -- practice & interview session persistence)*
