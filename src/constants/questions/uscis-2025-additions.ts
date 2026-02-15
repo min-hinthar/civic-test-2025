@@ -35,6 +35,14 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'the army is the source of power', text_my: 'စစ်တပ်က အာဏာပေးသည်', correct: false },
       { text_en: 'a king is the source of power', text_my: 'ဘုရင်က အာဏာပေးသည်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Popular sovereignty means government power comes from the people, not from a monarch or military. This principle, rooted in Enlightenment philosophy, is a cornerstone of American democracy and is reflected in the Constitution\'s opening words "We the People."',
+      brief_my:
+        'လူထုအာဏာ (popular sovereignty) ဆိုသည်မှာ အစိုးရ၏အာဏာသည် ဘုရင် သို့မဟုတ် စစ်တပ်ထံမှ မဟုတ်ဘဲ ပြည်သူလူထုထံမှ ဆင်းသက်လာခြင်းဖြစ်သည်။ ဤအခြေခံမူသည် အမေရိကန်ဒီမိုကရေစီ၏ အုတ်မြစ်ဖြစ်ပြီး ဖွဲ့စည်းပုံ၏ "We the People" ဟူသော စကားလုံးများတွင် ထင်ဟပ်သည်။',
+      citation: 'Preamble to the Constitution',
+      relatedQuestionIds: ['GOV-P03', 'GOV-P15'],
+    },
   },
   {
     id: 'GOV-P14',
@@ -57,6 +65,14 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'to collect taxes', text_my: 'အခွန်ကောက်ခံရန်', correct: false },
       { text_en: 'to select senators', text_my: 'အထက်လွှတ်တော်အမတ်များရွေးရန်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'The Bill of Rights was added in 1791 to guarantee that the federal government could not take away essential personal freedoms. Many states refused to ratify the Constitution without these protections, fearing a powerful central government could become tyrannical.',
+      brief_my:
+        'အခွင့်အရေးဥပဒေကြမ်း (Bill of Rights) ကို ၁၇၉၁ ခုနှစ်တွင် ဖက်ဒရယ်အစိုးရက အခြေခံလွတ်လပ်ခွင့်များကို မဖယ်ရှားနိုင်စေရန် ထည့်သွင်းခဲ့သည်။ ပြည်နယ်များစွာက အာဏာကြီးမားသော ဗဟိုအစိုးရ အာဏာရှင်ဆန်လာမည်ကို စိုးရိမ်၍ ဤကာကွယ်မှုများမပါဘဲ ဖွဲ့စည်းပုံကို အတည်မပြုရန် ငြင်းဆိုခဲ့သည်။',
+      citation: 'Amendments I-X (Bill of Rights)',
+      relatedQuestionIds: ['GOV-P05', 'GOV-P06'],
+    },
   },
   {
     id: 'GOV-P15',
@@ -91,6 +107,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Consent of the governed is the idea that legitimate government authority comes only from the agreement of the people being governed. Citizens express this consent primarily through voting and participating in the democratic process.',
+      brief_my:
+        'ပြည်သူ၏သဘောတူညီမှု (consent of the governed) ဆိုသည်မှာ တရားဝင်အစိုးရအာဏာသည် အုပ်ချုပ်ခံပြည်သူများ၏ သဘောတူညီချက်မှသာ ရရှိကြောင်း ဖြစ်သည်။ နိုင်ငံသားများက မဲပေးခြင်းနှင့် ဒီမိုကရေစီလုပ်ငန်းစဉ်တွင် ပါဝင်ခြင်းဖြင့် ဤသဘောတူညီမှုကို ဖော်ပြကြသည်။',
+      citation: 'Declaration of Independence',
+      relatedQuestionIds: ['GOV-P13', 'GOV-P03'],
+    },
   },
   {
     id: 'GOV-P16',
@@ -125,6 +149,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Constitution can be amended through two paths: Congress proposes amendments (requiring two-thirds vote in both chambers) and three-fourths of states ratify, or states call a constitutional convention. The deliberately high threshold ensures only changes with broad consensus become law.',
+      brief_my:
+        'ဖွဲ့စည်းပုံကို နည်းလမ်းနှစ်ခုဖြင့် ပြင်ဆင်နိုင်သည် — ကွန်ဂရက်က အဆိုတင်သွင်း၍ (လွှတ်တော်နှစ်ရပ်၏ သုံးပုံနှစ်ပုံမဲ) ပြည်နယ်သုံးပုံသုံးခုက အတည်ပြုခြင်း၊ သို့မဟုတ် ပြည်နယ်များက ဖွဲ့စည်းပုံညီလာခံ ခေါ်ယူခြင်း ဖြစ်သည်။ အလွန်မြင့်မားသော သတ်မှတ်ချက်သည် ကျယ်ပြန့်သော သဘောတူညီမှုရှိမှသာ ပြောင်းလဲနိုင်စေသည်။',
+      citation: 'Article V',
+      relatedQuestionIds: ['GOV-P04', 'GOV-P05'],
+    },
   },
   // ============================================
   // SYSTEM OF GOVERNMENT (GOV-S36-39)
@@ -155,6 +187,13 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Speaker of the House presides over legislative debate, sets the agenda, and maintains order. As the highest-ranking member of the House, the Speaker is also second in the presidential line of succession after the Vice President.',
+      brief_my:
+        'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker) သည် ဥပဒေပြုဆွေးနွေးမှုကို ဦးဆောင်ပြီး အစီအစဉ်သတ်မှတ်ကာ စည်းကမ်းထိန်းသိမ်းသည်။ အောက်လွှတ်တော်၏ အမြင့်ဆုံးရာထူးရှိသူအနေဖြင့် ဒုတိယသမ္မတနောက်မှ သမ္မတအဆင့်ဆင့် ဆက်ခံရေးတွင် ဒုတိယမြောက်ဖြစ်သည်။',
+      relatedQuestionIds: ['GOV-S07', 'GOV-S08'],
+    },
   },
   {
     id: 'GOV-S37',
@@ -168,6 +207,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'the Pentagon', text_my: 'ပင်တာဂွန်', correct: false },
       { text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        "The White House at 1600 Pennsylvania Avenue in Washington, D.C. has been the official residence of every U.S. President since John Adams in 1800. It serves as both the President's home and the center of executive branch operations.",
+      brief_my:
+        'ဝါရှင်တန်ဒီစီရှိ ပင်ဆယ်လ်ဗေးနီးယားလမ်း ၁၆၀၀ ရှိ အိမ်ဖြူတော် (White House) သည် ၁၈၀၀ ခုနှစ် ဂျွန်အဒမ်စ် လက်ထက်မှစ၍ သမ္မတတိုင်း၏ တရားဝင်နေအိမ်ဖြစ်သည်။ သမ္မတ၏နေအိမ်နှင့် အုပ်ချုပ်ရေးဌာနခွဲ ဗဟိုဌာနအဖြစ် နှစ်မျိုးလုံး ဆောင်ရွက်သည်။',
+      relatedQuestionIds: ['GOV-S12', 'GOV-S13'],
+    },
   },
   {
     id: 'GOV-S38',
@@ -194,6 +240,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Judicial review is the power of courts to examine laws and government actions and strike down those that violate the Constitution. Established by the landmark case Marbury v. Madison (1803), it is a critical check on legislative and executive power.',
+      brief_my:
+        'တရားရုံးပြန်လည်သုံးသပ်မှု (judicial review) ဆိုသည်မှာ ဥပဒေများနှင့် အစိုးရလုပ်ဆောင်ချက်များကို စစ်ဆေးပြီး ဖွဲ့စည်းပုံချိုးဖောက်သည်များကို ပယ်ဖျက်နိုင်သော တရားရုံးများ၏ အာဏာဖြစ်သည်။ Marbury v. Madison (၁၈၀၃) အမှုမှ ချမှတ်ခဲ့ပြီး ဥပဒေပြုနှင့် အုပ်ချုပ်ရေးအာဏာကို ထိန်းညှိသော အရေးကြီးသည့် ယန္တရားဖြစ်သည်။',
+      citation: 'Marbury v. Madison (1803)',
+      relatedQuestionIds: ['GOV-S24', 'GOV-S25'],
+    },
   },
   {
     id: 'GOV-S39',
@@ -207,6 +261,14 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'state governors', text_my: 'ပြည်နယ်အုပ်ချုပ်ရေးမှူးများ', correct: false },
       { text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Under Article II, the President nominates federal judges, who must then be confirmed by the Senate. This process ensures both the executive and legislative branches share responsibility for shaping the judiciary, maintaining the balance of power.',
+      brief_my:
+        'အပိုဒ် ၂ (Article II) အရ သမ္မတက ဖက်ဒရယ်တရားသူကြီးများကို အမည်စာရင်းတင်သွင်းပြီး အထက်လွှတ်တော် (Senate) က အတည်ပြုရသည်။ ဤလုပ်ငန်းစဉ်သည် အုပ်ချုပ်ရေးနှင့် ဥပဒေပြုဌာနခွဲ နှစ်ခုလုံး တရားစီရင်ရေးဖွဲ့စည်းမှုတွင် တာဝန်ခွဲဝေရာ အာဏာချိန်ခွင်ညှာကို ထိန်းသိမ်းသည်။',
+      citation: 'Article II, Section 2',
+      relatedQuestionIds: ['GOV-S24', 'GOV-S38'],
+    },
   },
   // ============================================
   // RIGHTS AND RESPONSIBILITIES (RR-11-13)
@@ -242,6 +304,13 @@ export const uscis2025Additions: Question[] = [
       },
       { text_en: 'serve as President', text_my: 'သမ္မတဖြစ်မည်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'The Oath of Allegiance includes several solemn promises: to renounce loyalty to foreign nations, to support and defend the Constitution, and to bear arms or perform civil service if required. These commitments symbolize full dedication to the United States.',
+      brief_my:
+        'သစ္စာဆိုစာ (Oath of Allegiance) တွင် ကတိကဝတ်များစွာ ပါဝင်သည် — နိုင်ငံခြားအပေါ် သစ္စာကို စွန့်လွှတ်ခြင်း၊ ဖွဲ့စည်းပုံကို ထောက်ခံကာကွယ်ခြင်း၊ လိုအပ်ပါက စစ်မှုထမ်း သို့မဟုတ် အရပ်ဘက်ဝန်ဆောင်မှု ထမ်းဆောင်ခြင်း စသည်ဖြင့် အမေရိကန်ပြည်ထောင်စုအပေါ် အပြည့်အဝ သက်ဝင်ခြင်းကို ကိုယ်စားပြုသည်။',
+      relatedQuestionIds: ['RR-12', 'RR-13'],
+    },
   },
   {
     id: 'RR-12',
@@ -266,6 +335,13 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Everyone living in the U.S. — citizens and non-citizens alike — must obey federal, state, and local laws, and pay required taxes. These are universal responsibilities that maintain social order and fund public services.',
+      brief_my:
+        'အမေရိကန်တွင် နေထိုင်သူတိုင်း — နိုင်ငံသားဖြစ်စေ မဖြစ်စေ — ဖက်ဒရယ်၊ ပြည်နယ်နှင့် ဒေသန္တရဥပဒေများကို လိုက်နာရမည်ဖြစ်ပြီး လိုအပ်သည့်အခွန်ကို ပေးဆောင်ရသည်။ ဤတာဝန်များသည် လူမှုစနစ်ထိန်းသိမ်းရန်နှင့် အများပြည်သူဝန်ဆောင်မှုများ ရန်ပုံငွေရှာရန် မရှိမဖြစ်လိုအပ်သည်။',
+      relatedQuestionIds: ['RR-11', 'RR-13'],
+    },
   },
   {
     id: 'RR-13',
@@ -287,6 +363,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'skip jury duty', text_my: 'ဂျူရီတာဝန်ရှောင်ရန်', correct: false },
       { text_en: 'refuse to vote', text_my: 'မဲမပေးရန်', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Americans can serve their country through military service, government work, community volunteering, or civic participation like voting and jury duty. Service strengthens democracy and binds citizens to their shared responsibilities.',
+      brief_my:
+        'အမေရိကန်များသည် စစ်မှုထမ်းခြင်း၊ အစိုးရအတွက် အလုပ်လုပ်ခြင်း၊ အသိုင်းအဝိုင်းတွင် စေတနာဝန်ထမ်းခြင်း သို့မဟုတ် မဲပေးခြင်းနှင့် ဂျူရီတာဝန်ကဲ့သို့ နိုင်ငံသားတာဝန်ထမ်းဆောင်ခြင်းဖြင့် နိုင်ငံကို ဝန်ဆောင်နိုင်သည်။ ဤဝန်ဆောင်မှုသည် ဒီမိုကရေစီကို အားကောင်းစေပြီး နိုင်ငံသားများကို မျှဝေတာဝန်များဖြင့် ချိတ်ဆက်ပေးသည်။',
+      relatedQuestionIds: ['RR-11', 'RR-12'],
+    },
   },
   // ============================================
   // AMERICAN HISTORY: COLONIAL (HIST-C14-16)
@@ -324,6 +407,13 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'In 1773, American colonists protested "taxation without representation" by boarding British ships and dumping tea into Boston Harbor. This act of defiance was a pivotal moment leading to the American Revolution.',
+      brief_my:
+        '၁၇၇၃ ခုနှစ်တွင် အမေရိကန်ကိုလိုနီများက "ကိုယ်စားပြုမှုမပါဘဲ အခွန်ကောက်ခြင်း" ကို ဆန့်ကျင်၍ ဗြိတိသျှသင်္ဘောများပေါ်တက်ပြီး လက်ဖက်ရည်ကို ဘော့စတန်ဆိပ်ကမ်းထဲ ပစ်ချခဲ့သည်။ ဤဆန့်ကျင်လှုပ်ရှားမှုသည် အမေရိကန်တော်လှန်ရေးဆီသို့ ဦးတည်သော အရေးကြီးသည့် အခိုက်အတန့်ဖြစ်သည်။',
+      relatedQuestionIds: ['HIST-C01', 'HIST-C03'],
+    },
   },
   {
     id: 'HIST-C15',
@@ -341,6 +431,17 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'Hawaii', text_my: 'ဟာဝိုင်', correct: false },
       { text_en: 'California', text_my: 'ကယ်လီဖိုးနီးယား', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'The original 13 colonies — including Virginia, Massachusetts, Pennsylvania, and others — were British settlements along the Atlantic coast. After declaring independence in 1776, they became the first states of the United States.',
+      brief_my:
+        'မူလကိုလိုနီ ၁၃ ခု — ဗာဂျီးနီးယား၊ မက်ဆာချူဆက်၊ ပင်စီလ်ဗေးနီးယားနှင့် အခြားတို့ — သည် အတ္တလန္တိတ်ကမ်းရိုးတန်းတစ်လျှောက် ဗြိတိသျှအခြေချနေရာများဖြစ်သည်။ ၁၇၇၆ တွင် လွတ်လပ်ရေးကြေညာပြီးနောက် အမေရိကန်ပြည်ထောင်စု၏ ပထမဆုံးပြည်နယ်များ ဖြစ်လာခဲ့သည်။',
+      commonMistake_en:
+        'Alaska, Hawaii, and California were not among the original 13 colonies — they became states much later.',
+      commonMistake_my:
+        'အလာစကာ၊ ဟာဝိုင်နှင့် ကယ်လီဖိုးနီးယားတို့သည် မူလကိုလိုနီ ၁၃ ခုတွင် မပါဝင်ပါ — ၎င်းတို့ ပိုမိုနောက်ကျမှ ပြည်နယ်ဖြစ်လာခဲ့သည်။',
+      relatedQuestionIds: ['HIST-C01', 'HIST-C02'],
+    },
   },
   {
     id: 'HIST-C16',
@@ -354,6 +455,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'Queen Victoria', text_my: 'ဘုရင်မ ဗစ်တိုရီးယား', correct: false },
       { text_en: 'King Charles I', text_my: 'ဘုရင် ခါလ်စ် ပထမ', correct: false },
     ],
+    explanation: {
+      brief_en:
+        "King George III ruled Britain during the American Revolution (1775-1783). His policies of heavy taxation and restriction of colonial self-governance fueled the colonists' desire for independence, making him a central figure in the founding story.",
+      brief_my:
+        'ဘုရင်ဂျော့ဂျ်သုံး (King George III) သည် အမေရိကန်တော်လှန်ရေး (၁၇၇၅-၁၇၈၃) ကာလတွင် ဗြိတိန်ကို အုပ်ချုပ်ခဲ့သည်။ အခွန်ကြီးကောက်ခံခြင်းနှင့် ကိုလိုနီကိုယ်ပိုင်အုပ်ချုပ်ရေးကို ကန့်သတ်ခြင်းတို့ကြောင့် ကိုလိုနီသားများ၏ လွတ်လပ်ရေးလိုလားမှုကို မီးရှုးညှိခဲ့သည်။',
+      relatedQuestionIds: ['HIST-C01', 'HIST-C14'],
+    },
   },
   // ============================================
   // AMERICAN HISTORY: 1800s (HIST-108-109)
