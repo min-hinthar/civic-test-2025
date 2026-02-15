@@ -129,6 +129,12 @@ export interface InterviewResult {
   confidence?: number;
   /** Time from question TTS end to answer submit in ms */
   responseTimeMs?: number;
+  /** What user said (transcribed text), undefined for self-graded */
+  transcript?: string;
+  /** Keywords that matched expected answers */
+  matchedKeywords?: string[];
+  /** Keywords user missed from expected answers */
+  missingKeywords?: string[];
 }
 
 export interface InterviewSession {
