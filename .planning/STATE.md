@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 22 of 25 (TTS Quality)
 Plan: 02 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 22-02-PLAN.md (SpeechButton enhancement)
+Last activity: 2026-02-15 -- Completed 22-01-PLAN.md (Voice Selection & Speech Settings)
 
-Progress: [█░░░░░░░░] 11% (1/9 plans complete)
+Progress: [██░░░░░░░] 22% (2/9 plans complete)
 
 ## Completed Milestones
 
@@ -39,6 +39,13 @@ See `.planning/MILESTONES.md` for details.
 All decisions archived in PROJECT.md Key Decisions table.
 
 **Phase 22 decisions:**
+- VoicePicker uses native <select> for accessibility (not custom dropdown)
+- Voice preview plays "What is the supreme law of the land?" on selection change
+- Interview section replaced by Speech & Audio section (above Sound & Notifications)
+- Sound & Notifications icon changed from Volume2 to Bell to differentiate from Speech & Audio
+- Auto-read language selector only visible when autoRead is ON and showBurmese is true
+- Burmese voice selector always visible in bilingual mode (not gated on autoRead)
+- Settings merge uses { ...DEFAULT_SETTINGS, ...parsed } for backward-compatible field additions
 - Android gets cancel/restart semantics instead of pause/resume (Android Chrome pause bug)
 - 150ms debounce window for rapid taps via useRef timestamp
 - PauseIcon is static two-bar SVG (not SoundWaveIcon with animate=false)
@@ -192,10 +199,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plan 02 complete
+Stopped at: Phase 22, plans 01 and 02 complete
 Next step: Continue Phase 22 execution (plans 03-09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plan 02 complete -- SpeechButton enhancement)*
+*Last updated: 2026-02-15 (Phase 22, plans 01+02 complete -- Voice Selection & Speech Settings + SpeechButton enhancement)*
