@@ -138,12 +138,18 @@ Plans:
   3. TTS failures show user-visible feedback instead of failing silently (e.g., "No voices available" message)
   4. User sees an animated speaking indicator while TTS is actively playing
   5. User can tap the speech button to pause active TTS, and tap again to resume (not restart)
-**Plans**: TBD
+**Plans**: 9 plans
 
 Plans:
-- [ ] 22-01: TBD
-- [ ] 22-02: TBD
-- [ ] 22-03: TBD
+- [ ] 22-01-PLAN.md — TTSSettings extension + VoicePicker + Settings "Speech & Audio" section
+- [ ] 22-02-PLAN.md — SpeechButton pause/resume + speed label + error state + debounce
+- [ ] 22-03-PLAN.md — Write 28 missing USCIS 2025 explanation objects
+- [ ] 22-04-PLAN.md — Burmese audio adapter + BurmeseSpeechButton + SW caching route
+- [ ] 22-05-PLAN.md — useAutoRead hook + per-session speed/auto-read overrides on pre-screens
+- [ ] 22-06-PLAN.md — Edge-tts generation scripts + audio file generation (checkpoint)
+- [ ] 22-07-PLAN.md — Auto-read + Burmese buttons wiring into study/test/practice screens
+- [ ] 22-08-PLAN.md — Interview audio integration (speed override, Burmese in Practice mode)
+- [ ] 22-09-PLAN.md — Unit tests + integration tests + final build verification
 
 ### Phase 23: Flashcard Sort Mode
 **Goal**: Users can sort flashcards into Know/Don't Know piles with swipe gestures, then drill missed cards until mastery
