@@ -442,3 +442,6 @@ coverage/
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Generated build artifacts
+scripts/questions-export.json
