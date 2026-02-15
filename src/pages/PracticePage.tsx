@@ -54,6 +54,8 @@ const PracticePage = () => {
   const [initialIndex, setInitialIndex] = useState(0);
   const [initialSkippedIndices, setInitialSkippedIndices] = useState<number[]>([]);
   const [practiceConfig, setPracticeConfig] = useState<PracticeSnapshot['config'] | null>(null);
+  const [speedOverride, setSpeedOverride] = useState<'slow' | 'normal' | 'fast' | undefined>();
+  const [autoReadOverride, setAutoReadOverride] = useState<boolean | undefined>();
 
   // Check for saved sessions on mount
   useEffect(() => {
@@ -121,6 +123,8 @@ const PracticePage = () => {
 
       setCategoryName(config.categoryName);
       setTimerEnabled(config.timerEnabled);
+      setSpeedOverride(config.speedOverride);
+      setAutoReadOverride(config.autoReadOverride);
 
       // Save practice config for session persistence
       setPracticeConfig({
@@ -258,6 +262,8 @@ const PracticePage = () => {
           initialSkippedIndices={
             initialSkippedIndices.length > 0 ? initialSkippedIndices : undefined
           }
+          speedOverride={speedOverride}
+          autoReadOverride={autoReadOverride}
         />
       )}
       {phase === 'results' && (

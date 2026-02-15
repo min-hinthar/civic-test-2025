@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
+import { useAutoRead } from '@/hooks/useAutoRead';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -14,7 +17,7 @@ import { useToast } from '@/components/BilingualToast';
 import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { CircularTimer } from '@/components/test/CircularTimer';
-import { PreTestScreen } from '@/components/test/PreTestScreen';
+import { PreTestScreen, type SpeechOverrides } from '@/components/test/PreTestScreen';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
@@ -93,6 +96,14 @@ const TestPage = () => {
   const { showBurmese } = useLanguage();
   const { showSuccess, showWarning } = useToast();
   const { setLock } = useNavigation();
+  const { settings: tts } = useTTSSettings();
+
+  // Per-session speech overrides from PreTestScreen
+  const [speechOverrides, setSpeechOverrides] = useState<SpeechOverrides | null>(null);
+  const effectiveSpeed = speechOverrides?.speedOverride ?? tts.rate;
+  const effectiveAutoRead = speechOverrides?.autoReadOverride ?? tts.autoRead;
+  const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[effectiveSpeed];
+  const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[effectiveSpeed];
 
   // Pre-quiz UI state
   const [showPreTest, setShowPreTest] = useState(true);
@@ -159,6 +170,14 @@ const TestPage = () => {
   const questionAudioText = currentQuestion?.question_en ?? '';
   const answerChoicesAudioText =
     currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
+
+  // Auto-read question on question change (gated on autoRead setting and active quiz)
+  useAutoRead({
+    text: questionAudioText,
+    enabled: effectiveAutoRead && !showPreTest && !showCountdown && !isFinished,
+    triggerKey: quizState.currentIndex,
+    lang: 'en-US',
+  });
 
   const correctCount = useMemo(
     () => quizState.results.filter(r => r.isCorrect).length,
@@ -631,7 +650,8 @@ const TestPage = () => {
         <PreTestScreen
           questionCount={questionCount}
           durationMinutes={20}
-          onReady={() => {
+          onReady={overrides => {
+            if (overrides) setSpeechOverrides(overrides);
             setShowPreTest(false);
             setShowCountdown(true);
           }}
@@ -735,11 +755,26 @@ const TestPage = () => {
                   text={questionAudioText}
                   label="Play Test Question"
                   ariaLabel="Play English test question audio"
+                  rate={numericRate}
+                  showSpeedLabel
+                  speedLabel={speedLabel}
                 />
+                {showBurmese && currentQuestion && (
+                  <BurmeseSpeechButton
+                    questionId={currentQuestion.id}
+                    audioType="q"
+                    label="မြန်မာ"
+                    showSpeedLabel
+                    speedLabel={speedLabel}
+                  />
+                )}
                 <SpeechButton
                   text={answerChoicesAudioText}
                   label="Play Answer Choices"
                   ariaLabel="Play English answer choices audio"
+                  rate={numericRate}
+                  showSpeedLabel
+                  speedLabel={speedLabel}
                 />
               </div>
             </div>
@@ -1060,11 +1095,26 @@ const TestPage = () => {
                     text={result.questionText_en}
                     label="Play English question"
                     ariaLabel={`Play English question audio for ${result.questionText_en}`}
+                    rate={numericRate}
+                    showSpeedLabel
+                    speedLabel={speedLabel}
                   />
+                  {showBurmese && (
+                    <BurmeseSpeechButton
+                      questionId={result.questionId}
+                      audioType="q"
+                      label="မြန်မာ"
+                      showSpeedLabel
+                      speedLabel={speedLabel}
+                    />
+                  )}
                   <SpeechButton
                     text={result.correctAnswer.text_en}
                     label="Play official answer"
                     ariaLabel={`Play English official answer for ${result.questionText_en}`}
+                    rate={numericRate}
+                    showSpeedLabel
+                    speedLabel={speedLabel}
                   />
                   <AddToDeckButton questionId={result.questionId} compact />
                 </div>

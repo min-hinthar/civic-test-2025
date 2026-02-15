@@ -6,6 +6,9 @@ import { clsx } from 'clsx';
 import { X } from 'lucide-react';
 import { SPRING_SNAPPY } from '@/lib/motion-config';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
+import { useAutoRead } from '@/hooks/useAutoRead';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { AnswerOptionGroup } from '@/components/quiz/AnswerOption';
 import { FeedbackPanel } from '@/components/quiz/FeedbackPanel';
@@ -56,6 +59,10 @@ interface PracticeSessionProps {
   initialIndex?: number;
   /** Initial skipped indices when resuming a saved session */
   initialSkippedIndices?: number[];
+  /** Per-session speech speed override from PracticeConfig */
+  speedOverride?: 'slow' | 'normal' | 'fast';
+  /** Per-session auto-read override from PracticeConfig */
+  autoReadOverride?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -302,9 +309,18 @@ export function PracticeSession({
   initialResults,
   initialIndex,
   initialSkippedIndices,
+  speedOverride,
+  autoReadOverride,
 }: PracticeSessionProps) {
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
+  const { settings: tts } = useTTSSettings();
+
+  // Per-session effective values (override > global setting)
+  const effectiveSpeed = speedOverride ?? tts.rate;
+  const effectiveAutoRead = autoReadOverride ?? tts.autoRead;
+  const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[effectiveSpeed];
+  const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[effectiveSpeed];
   const checkDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -350,6 +366,15 @@ export function PracticeSession({
 
   const currentQuestion =
     !isFinished && !isInSkippedReview ? (questions[quizState.currentIndex] ?? null) : null;
+
+  // Auto-read question on question change (only during answering phase, not during feedback)
+  useAutoRead({
+    text: currentQuestion?.question_en ?? '',
+    enabled:
+      effectiveAutoRead && !isFinished && !isInSkippedReview && quizState.phase === 'answering',
+    triggerKey: quizState.currentIndex,
+    lang: 'en-US',
+  });
 
   // Derived state
   const correctCount = quizState.results.filter(r => r.isCorrect).length;
@@ -772,11 +797,26 @@ export function PracticeSession({
                   text={currentQuestion.question_en}
                   label="Play Question"
                   ariaLabel="Play English question audio"
+                  rate={numericRate}
+                  showSpeedLabel
+                  speedLabel={speedLabel}
                 />
+                {showBurmese && (
+                  <BurmeseSpeechButton
+                    questionId={currentQuestion.id}
+                    audioType="q"
+                    label="မြန်မာ"
+                    showSpeedLabel
+                    speedLabel={speedLabel}
+                  />
+                )}
                 <SpeechButton
                   text={currentQuestion.answers.map(a => a.text_en).join('. ')}
                   label="Play Answer Choices"
                   ariaLabel="Play English answer choices audio"
+                  rate={numericRate}
+                  showSpeedLabel
+                  speedLabel={speedLabel}
                 />
               </div>
             </div>
