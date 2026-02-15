@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 09 of 12 in current phase
+Plan: 10 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-06-PLAN.md (TestPage Check/Continue Refactor)
+Last activity: 2026-02-15 -- Completed 21-10-PLAN.md (Interview Results Redesign)
 
-Progress: [█████████░░░] 75% (9/12 plans complete)
+Progress: [██████████░░] 83% (10/12 plans complete)
 
 ## Completed Milestones
 
@@ -85,6 +85,14 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Check button uses rounded-full pill shape with 3D chunky shadow
 - Feedback panel fixed to bottom with z-40
 - Helper function getQuestionAtIndex outside component for React Compiler purity
+- ExaminerCharacter replaces InterviewerAvatar on results screen (consistent with chat session)
+- Dark gradient (slate-900/800) for interview results matching session aesthetic
+- getRecommendation pure function with 3 score tiers (>=16, >=12, <12)
+- SRS batch offer uses sequential addCard loop (no batch API available)
+- Review Transcript button scrolls to transcript section instead of separate route
+- Confidence stats (avg/min/max) shown only when speech recognition data available
+- Score comparison fetches second-most-recent session from history array
+- InterviewResult type extended with transcript, matchedKeywords, missingKeywords (backward compatible)
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -164,10 +172,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 12 complete
-Next step: Phase 21 remaining plans (09, 10, 11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 10, 12 complete
+Next step: Phase 21 remaining plans (09, 11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 06 complete -- TestPage Check/Continue Refactor)*
+*Last updated: 2026-02-15 (Phase 21 plan 10 complete -- Interview Results Redesign)*
