@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 12 of 12 in current phase
+Plan: 03 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-12-PLAN.md (PillTabBar)
+Last activity: 2026-02-15 -- Completed 21-03-PLAN.md (FeedbackPanel & AnswerOption)
 
-Progress: [███░░░░░░░░░] 25% (3/12 plans complete)
+Progress: [████░░░░░░░░] 33% (4/12 plans complete)
 
 ## Completed Milestones
 
@@ -51,6 +51,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - PillTabBar reduced motion support via useReducedMotion (disables scale, instant pill position)
 - PreTestScreen onCountChange prop optional for backward compatibility
 - InterviewSetup PillTabBar selector replaces two-card direct-click with mode selector + info panel
+- FeedbackPanel uses SPRING_SNAPPY for slide-up, SPRING_BOUNCY for checkmark icon
+- AnswerOptionGroup arrow keys directly select answers (not just focus) per locked decision
+- AnswerOption uses inline shadow-[0_4px_0] with border color token for 3D chunky style
+- useRovingFocus is a generic hook for W3C radiogroup keyboard navigation
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -130,10 +134,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 12 complete
-Next step: Phase 21 remaining plans (03-11)
+Stopped at: Phase 21, plans 01, 02, 03, 12 complete
+Next step: Phase 21 remaining plans (04-11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 12 complete -- PillTabBar generic component)*
+*Last updated: 2026-02-15 (Phase 21 plan 03 complete -- FeedbackPanel & AnswerOption)*
