@@ -112,13 +112,20 @@ Plans:
   6. Interview uses chat-style layout with animated examiner character, voice-only input, and auto-read questions
   7. Interview offers Practice mode (per-question feedback) and Real mode (USCIS 2025 rules: 20 questions, pass at 12, fail at 9, early termination)
   8. Interview results show full transcript with per-answer grading, confidence scores, and comparison to previous attempts
-**Plans**: TBD
+**Plans**: 11 plans
 
 Plans:
-- [ ] 21-01: TBD
-- [ ] 21-02: TBD
-- [ ] 21-03: TBD
-- [ ] 21-04: TBD
+- [ ] 21-01-PLAN.md — Quiz state machine + haptics utility + sound effects extensions
+- [ ] 21-02-PLAN.md — Answer grader TDD (keyword-based fuzzy matching for interview)
+- [ ] 21-03-PLAN.md — FeedbackPanel + AnswerOption with keyboard navigation
+- [ ] 21-04-PLAN.md — SegmentedProgressBar + QuizHeader + SkipButton
+- [ ] 21-05-PLAN.md — Examiner SVG character + ChatBubble + speech recognition hooks
+- [ ] 21-06-PLAN.md — TestPage full refactor (Check/Continue flow + new components)
+- [ ] 21-07-PLAN.md — PracticeSession refactor (Check/Continue + skip review + tappable segments)
+- [ ] 21-08-PLAN.md — Interview session chat-style overhaul (Practice/Real modes, speech input)
+- [ ] 21-09-PLAN.md — Test/Practice results screen redesign
+- [ ] 21-10-PLAN.md — Interview results screen (transcript, confidence, comparison)
+- [ ] 21-11-PLAN.md — Keyboard nav polish + streak/XP animations + REQUIREMENTS.md update
 
 ### Phase 22: TTS Quality
 **Goal**: Users hear clear, natural speech with control over voice and speed, including Burmese audio for all 128 questions
