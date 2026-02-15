@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 22 of 25 (TTS Quality)
-Plan: 02 of 9 in current phase
+Plan: 03 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 22-01-PLAN.md (Voice Selection & Speech Settings)
+Last activity: 2026-02-15 -- Completed 22-03-PLAN.md (USCIS 2025 Explanations)
 
-Progress: [██░░░░░░░] 22% (2/9 plans complete)
+Progress: [███░░░░░░] 33% (3/9 plans complete)
 
 ## Completed Milestones
 
@@ -39,6 +39,9 @@ See `.planning/MILESTONES.md` for details.
 All decisions archived in PROJECT.md Key Decisions table.
 
 **Phase 22 decisions:**
+- Explanation style matches existing american-government.ts (direct, factual, 2-3 sentences, why-not-what)
+- Burmese explanation translations use formal-but-accessible register with English terms in parentheses
+- Optional fields (citation, commonMistake, relatedQuestionIds) included where genuinely helpful
 - VoicePicker uses native <select> for accessibility (not custom dropdown)
 - Voice preview plays "What is the supreme law of the land?" on selection change
 - Interview section replaced by Speech & Audio section (above Sound & Notifications)
@@ -199,10 +202,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plans 01 and 02 complete
-Next step: Continue Phase 22 execution (plans 03-09)
+Stopped at: Phase 22, plans 01-03 complete
+Next step: Continue Phase 22 execution (plans 04-09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plans 01+02 complete -- Voice Selection & Speech Settings + SpeechButton enhancement)*
+*Last updated: 2026-02-15 (Phase 22, plan 03 complete -- USCIS 2025 Explanations)*
