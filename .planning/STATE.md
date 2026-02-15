@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 2 of 12 in current phase
+Plan: 12 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-01-PLAN.md (Quiz Foundations)
+Last activity: 2026-02-15 -- Completed 21-12-PLAN.md (PillTabBar)
 
-Progress: [██░░░░░░░░░░] 17% (2/12 plans complete)
+Progress: [███░░░░░░░░░] 25% (3/12 plans complete)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 21 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 2+)
+- v2.1: 22 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 3+)
 
 ## Accumulated Context
 
@@ -47,6 +47,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Compound number phrases handled before individual number words to avoid partial replacements
 - Bidirectional synonym mapping (freedom/liberty) for keyword matching
 - Extended stop words list includes spoken filler words (think, would, could) for natural speech tolerance
+- PillTabBar uses inline style for dynamic grid-template-columns (tab count varies 2-4+)
+- PillTabBar reduced motion support via useReducedMotion (disables scale, instant pill position)
+- PreTestScreen onCountChange prop optional for backward compatibility
+- InterviewSetup PillTabBar selector replaces two-card direct-click with mode selector + info panel
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -126,10 +130,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01 and 02 complete
-Next step: Phase 21 plan 03+
+Stopped at: Phase 21, plans 01, 02, 12 complete
+Next step: Phase 21 remaining plans (03-11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plans 01+02 complete -- quiz foundations + answer grader TDD)*
+*Last updated: 2026-02-15 (Phase 21 plan 12 complete -- PillTabBar generic component)*
