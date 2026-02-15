@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 10 of 12 in current phase
+Plan: 11 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-10-PLAN.md (Interview Results Redesign)
+Last activity: 2026-02-15 -- Completed 21-09-PLAN.md (Test/Practice Results Screen)
 
-Progress: [██████████░░] 83% (10/12 plans complete)
+Progress: [███████████░] 92% (11/12 plans complete)
 
 ## Completed Milestones
 
@@ -93,6 +93,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Confidence stats (avg/min/max) shown only when speech recognition data available
 - Score comparison fetches second-most-recent session from history array
 - InterviewResult type extended with transcript, matchedKeywords, missingKeywords (backward compatible)
+- TestResultsScreen shared between mock-test and practice with mode-specific behavior
+- timeTaken made optional for practice mode (practice doesn't track time)
+- PracticeResults delegates to TestResultsScreen instead of duplicating results UI
+- CategoryBreakdown sorts categories weakest-first for actionable review
+- QuestionReviewList supports skipped questions as third filter tab
+- Duration stat grid conditionally renders 3 or 4 columns based on timeTaken availability
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -172,10 +178,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 10, 12 complete
-Next step: Phase 21 remaining plans (09, 11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 12 complete
+Next step: Phase 21 remaining plan (11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 10 complete -- Interview Results Redesign)*
+*Last updated: 2026-02-15 (Phase 21 plan 09 complete -- Test/Practice Results Screen)*
