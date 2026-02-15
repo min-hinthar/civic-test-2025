@@ -10,6 +10,7 @@ import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
+import { PillTabBar } from '@/components/ui/PillTabBar';
 import { strings } from '@/lib/i18n/strings';
 import {
   USCIS_CATEGORIES,
@@ -325,39 +326,30 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
               </span>
             )}
           </p>
-          <div className="flex gap-2">
-            {([5, 10, 'full'] as CountOption[]).map(option => {
-              const isActive = countOption === option;
-              const label =
-                option === 5
-                  ? strings.practice.quick
-                  : option === 10
-                    ? strings.practice.standard
-                    : strings.practice.full;
-              const displayCount = option === 'full' ? selectedQuestionCount : option;
-
-              return (
-                <button
-                  key={String(option)}
-                  onClick={() => setCountOption(option)}
-                  className={clsx(
-                    'flex-1 rounded-xl border-2 px-3 py-2.5 text-center transition-colors min-h-[44px]',
-                    isActive
-                      ? 'border-primary bg-primary-subtle text-primary'
-                      : 'border-border bg-card text-foreground hover:border-primary-300'
-                  )}
-                >
-                  <span className="block text-lg font-bold">{displayCount}</span>
-                  <span className="block text-xs text-muted-foreground">{label.en}</span>
-                  {showBurmese && (
-                    <span className="block font-myanmar text-xs text-muted-foreground">
-                      {label.my}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <PillTabBar
+            tabs={[
+              {
+                id: '5',
+                label: `5 \u00B7 ${strings.practice.quick.en}`,
+                labelMy: strings.practice.quick.my,
+              },
+              {
+                id: '10',
+                label: `10 \u00B7 ${strings.practice.standard.en}`,
+                labelMy: strings.practice.standard.my,
+              },
+              {
+                id: 'full',
+                label: `${selectedQuestionCount} \u00B7 ${strings.practice.full.en}`,
+                labelMy: strings.practice.full.my,
+              },
+            ]}
+            activeTab={String(countOption)}
+            onTabChange={id => setCountOption(id === 'full' ? 'full' : (Number(id) as 5 | 10))}
+            ariaLabel="Question count"
+            showBurmese={showBurmese}
+            size="sm"
+          />
         </motion.div>
       )}
 

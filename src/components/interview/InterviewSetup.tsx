@@ -5,6 +5,7 @@ import { Shield, BookOpen, ChevronDown, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
 import { Card } from '@/components/ui/Card';
+import { PillTabBar } from '@/components/ui/PillTabBar';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualText } from '@/components/bilingual/BilingualText';
 import { InterviewerAvatar } from '@/components/interview/InterviewerAvatar';
@@ -71,6 +72,7 @@ const practiceTips: Array<{ en: string; my: string }> = [
 export function InterviewSetup({ onStart }: InterviewSetupProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
+  const [selectedMode, setSelectedMode] = useState<InterviewMode>('practice');
   const [tipsExpanded, setTipsExpanded] = useState(false);
   const [recentSessions, setRecentSessions] = useState<InterviewSession[]>([]);
   const [micPermission, setMicPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
@@ -159,76 +161,75 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         )}
       </div>
 
-      {/* Mode selection cards - 3D chunky with Duolingo treatment */}
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Realistic mode */}
-        <Card
-          interactive
-          onClick={() => onStart('realistic')}
-          className="group glass-light prismatic-border border-2 border-transparent transition-colors hover:border-primary-400"
-        >
-          <div className="flex flex-col items-center gap-3 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-subtle text-primary">
-              <Shield className="h-7 w-7" />
-            </div>
-            <div>
-              <BilingualText
-                text={strings.interview.realisticMode}
-                size="md"
-                className="font-bold"
-              />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <BilingualText text={strings.interview.realisticTip} size="sm" />
-            </p>
-            {/* 3D Start button */}
-            <span
-              className={clsx(
-                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
-                'shadow-[0_4px_0_hsl(var(--primary-700))] group-hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
-                'group-active:shadow-[0_1px_0_hsl(var(--primary-800))] group-active:translate-y-[3px]',
-                'transition-[box-shadow,transform] duration-100'
-              )}
-            >
-              {showBurmese ? <span className="font-myanmar">{'စတင်ပါ'}</span> : 'Start'}
-            </span>
-          </div>
-        </Card>
-
-        {/* Practice mode */}
-        <Card
-          interactive
-          onClick={() => onStart('practice')}
-          className="group glass-light prismatic-border border-2 border-transparent transition-colors hover:border-accent"
-        >
-          <div className="flex flex-col items-center gap-3 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/20 text-accent-foreground">
-              <BookOpen className="h-7 w-7" />
-            </div>
-            <div>
-              <BilingualText
-                text={strings.interview.practiceMode}
-                size="md"
-                className="font-bold"
-              />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <BilingualText text={strings.interview.practiceTip} size="sm" />
-            </p>
-            {/* 3D Start button */}
-            <span
-              className={clsx(
-                'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
-                'shadow-[0_4px_0_hsl(var(--primary-700))] group-hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
-                'group-active:shadow-[0_1px_0_hsl(var(--primary-800))] group-active:translate-y-[3px]',
-                'transition-[box-shadow,transform] duration-100'
-              )}
-            >
-              {showBurmese ? <span className="font-myanmar">{'စတင်ပါ'}</span> : 'Start'}
-            </span>
-          </div>
-        </Card>
+      {/* Mode selector - PillTabBar */}
+      <div className="mb-6">
+        <PillTabBar
+          tabs={[
+            {
+              id: 'practice',
+              label: strings.interview.practiceMode.en,
+              labelMy: strings.interview.practiceMode.my,
+              icon: BookOpen,
+            },
+            {
+              id: 'realistic',
+              label: strings.interview.realisticMode.en,
+              labelMy: strings.interview.realisticMode.my,
+              icon: Shield,
+            },
+          ]}
+          activeTab={selectedMode}
+          onTabChange={id => setSelectedMode(id as InterviewMode)}
+          ariaLabel="Interview mode"
+          showBurmese={showBurmese}
+        />
       </div>
+
+      {/* Mode info panel */}
+      <Card elevated={false} className="mb-6">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div
+            className={clsx(
+              'flex h-14 w-14 items-center justify-center rounded-2xl',
+              selectedMode === 'realistic'
+                ? 'bg-primary-subtle text-primary'
+                : 'bg-accent/20 text-accent-foreground'
+            )}
+          >
+            {selectedMode === 'realistic' ? (
+              <Shield className="h-7 w-7" />
+            ) : (
+              <BookOpen className="h-7 w-7" />
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            <BilingualText
+              text={
+                selectedMode === 'realistic'
+                  ? strings.interview.realisticTip
+                  : strings.interview.practiceTip
+              }
+              size="sm"
+            />
+          </p>
+          {/* Start button */}
+          <button
+            onClick={() => onStart(selectedMode)}
+            className={clsx(
+              'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white min-h-[44px]',
+              'shadow-[0_4px_0_hsl(var(--primary-700))] hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
+              'active:shadow-[0_1px_0_hsl(var(--primary-800))] active:translate-y-[3px]',
+              'transition-[box-shadow,transform] duration-100'
+            )}
+          >
+            {showBurmese ? (
+              <span className="font-myanmar">{'\u1005\u1010\u1004\u103A\u1015\u102B'}</span>
+            ) : (
+              'Start'
+            )}
+          </button>
+        </div>
+      </Card>
 
       {/* Answer in English guidance (Myanmar mode only) */}
       {showBurmese && (

@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { allQuestions } from '@/constants/questions';
 
 import SpeechButton from '@/components/ui/SpeechButton';
+import { PillTabBar } from '@/components/ui/PillTabBar';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
@@ -35,13 +36,6 @@ const CATEGORY_COLORS_MAP: Record<string, string> = {
     'from-sky-500 to-indigo-500',
   'Civics: Symbols and Holidays': 'from-slate-500 to-stone-500',
 };
-
-/** Tab definitions for the study guide */
-const TABS = [
-  { id: '', label: 'Browse', labelMy: 'ကြည့်ရှုရန်', icon: BookOpen },
-  { id: '#deck', label: 'Deck', labelMy: 'ကတ်စုပုံ', icon: Layers },
-  { id: '#review', label: 'Review', labelMy: 'ပြန်လည်သုံးသပ်', icon: GraduationCap },
-] as const;
 
 const StudyGuidePage = () => {
   const location = useLocation();
@@ -195,37 +189,37 @@ const StudyGuidePage = () => {
     </div>
   );
 
-  // Tab navigation bar
+  // Tab navigation bar - PillTabBar with spring-animated sliding pill
   const tabBar = (
-    <div className="flex gap-2 mb-6 overflow-x-auto pt-2 pb-1">
-      {TABS.map(tab => {
-        const isActive = activeTab === tab.id;
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.id}
-            onClick={() => navigate(tab.id ? `/study${tab.id}` : '/study')}
-            className={clsx(
-              'relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold',
-              'transition-all min-h-[44px] whitespace-nowrap',
-              isActive
-                ? 'bg-primary text-white shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-[2px]'
-                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-            )}
-          >
-            <Icon className="h-4 w-4" />
-            <span>{tab.label}</span>
-            {showBurmese && (
-              <span className="font-myanmar text-xs opacity-80">/ {tab.labelMy}</span>
-            )}
-            {tab.id === '#deck' && dueCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning text-white text-xs font-bold shadow-sm">
-                {dueCount}
-              </span>
-            )}
-          </button>
-        );
-      })}
+    <div className="mb-6">
+      <PillTabBar
+        tabs={[
+          {
+            id: '',
+            label: 'Browse',
+            labelMy: '\u1000\u103C\u100A\u103A\u1037\u101B\u103E\u102F\u101B\u1014\u103A',
+            icon: BookOpen,
+          },
+          {
+            id: '#deck',
+            label: 'Deck',
+            labelMy: '\u1000\u1010\u103A\u1005\u102F\u1015\u102F\u1036',
+            icon: Layers,
+            badge: dueCount > 0 ? dueCount : undefined,
+          },
+          {
+            id: '#review',
+            label: 'Review',
+            labelMy:
+              '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A',
+            icon: GraduationCap,
+          },
+        ]}
+        activeTab={activeTab}
+        onTabChange={tabId => navigate(tabId ? `/study${tabId}` : '/study')}
+        ariaLabel="Study guide tabs"
+        showBurmese={showBurmese}
+      />
     </div>
   );
 

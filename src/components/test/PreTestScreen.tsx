@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
+import { PillTabBar } from '@/components/ui/PillTabBar';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { strings } from '@/lib/i18n/strings';
 import { USCIS_CATEGORIES, CATEGORY_COLORS } from '@/lib/mastery';
@@ -24,6 +25,8 @@ interface PreTestScreenProps {
   questionCount: number;
   durationMinutes: number;
   onReady: () => void;
+  /** Optional callback for question count selection */
+  onCountChange?: (count: number) => void;
 }
 
 /**
@@ -39,7 +42,12 @@ interface PreTestScreenProps {
  * IMPORTANT: Per user decision, the breathing animation is user-controlled -
  * it runs continuously until the user taps "I'm Ready", not on a forced timer.
  */
-export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTestScreenProps) {
+export function PreTestScreen({
+  questionCount,
+  durationMinutes,
+  onReady,
+  onCountChange,
+}: PreTestScreenProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
   const { categoryMasteries } = useCategoryMastery();
@@ -102,6 +110,22 @@ export function PreTestScreen({ questionCount, durationMinutes, onReady }: PreTe
           </span>
         )}
       </p>
+
+      {/* Question count selector */}
+      {onCountChange && (
+        <div className="mb-6 w-full max-w-xs">
+          <PillTabBar
+            tabs={[
+              { id: '10', label: '10 Qs' },
+              { id: '20', label: '20 Qs' },
+            ]}
+            activeTab={String(questionCount)}
+            onTabChange={id => onCountChange(Number(id))}
+            ariaLabel="Question count"
+            size="sm"
+          />
+        </div>
+      )}
 
       {/* Test info */}
       <div className="mb-8 flex gap-6 text-sm text-muted-foreground">

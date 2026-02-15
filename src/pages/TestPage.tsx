@@ -63,6 +63,7 @@ const TestPage = () => {
   const { showSuccess, showWarning } = useToast();
   const { setLock } = useNavigation();
   const [showPreTest, setShowPreTest] = useState(true);
+  const [questionCount, setQuestionCount] = useState(20);
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
@@ -438,18 +439,32 @@ const TestPage = () => {
     }
   }, [isFinished]);
 
+  // Handle question count change from PreTestScreen
+  const handleCountChange = useCallback((count: number) => {
+    setQuestionCount(count);
+    setQuestions(
+      fisherYatesShuffle(allQuestions)
+        .slice(0, count)
+        .map(question => ({
+          ...question,
+          answers: fisherYatesShuffle(question.answers),
+        }))
+    );
+  }, []);
+
   // Pre-test screen
   if (showPreTest) {
     return (
       <div className="page-shell" data-tour="mock-test">
         <UpdateBanner showBurmese={showBurmese} />
         <PreTestScreen
-          questionCount={20}
+          questionCount={questionCount}
           durationMinutes={20}
           onReady={() => {
             setShowPreTest(false);
             setShowCountdown(true);
           }}
+          onCountChange={handleCountChange}
         />
         <ResumePromptModal
           sessions={savedSessions}
