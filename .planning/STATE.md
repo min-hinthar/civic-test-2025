@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 22 of 25 (TTS Quality)
-Plan: 05 of 9 in current phase
+Plan: 07 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 22-05-PLAN.md (Auto-Read Hook & Pre-Screen Overrides)
+Last activity: 2026-02-15 -- Completed 22-07-PLAN.md (Auto-Read & Burmese Buttons Integration)
 
-Progress: [█████░░░░] 55% (5/9 plans complete)
+Progress: [███████░░] 77% (7/9 plans complete)
 
 ## Completed Milestones
 
@@ -67,6 +67,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - SpeechOverrides exported from PreTestScreen, InterviewSpeechOverrides from InterviewSetup
 - Optional callback parameters maintain backward compatibility with existing consumers
 - SPEED_OPTIONS constant with en/my labels reused across all three pre-screens
+- Auto-read handles English only via SpeechSynthesis; Burmese uses pre-generated MP3 via manual BurmeseSpeechButton
+- PracticeSession auto-read gated on answering phase only (not feedback/checked/transition)
+- Flashcard3D back face Burmese SpeechButton replaced with BurmeseSpeechButton (MP3 playback instead of browser TTS)
+- Per-session override flow: PracticeConfig -> PracticePage state -> PracticeSession props
+- Results view speech buttons also get speed labels and Burmese buttons for consistency
 
 **Phase 21 decisions:**
 - Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
@@ -214,10 +219,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 22, plans 01-05 complete
-Next step: Continue Phase 22 execution (plans 06-09)
+Stopped at: Phase 22, plans 01-07 complete
+Next step: Continue Phase 22 execution (plans 08-09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 22, plan 05 complete -- Auto-Read Hook & Pre-Screen Overrides)*
+*Last updated: 2026-02-15 (Phase 22, plan 07 complete -- Auto-Read & Burmese Buttons Integration)*
