@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 08 of 12 in current phase
+Plan: 09 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-08-PLAN.md (Interview Session Overhaul)
+Last activity: 2026-02-15 -- Completed 21-06-PLAN.md (TestPage Check/Continue Refactor)
 
-Progress: [████████░░░░] 67% (8/12 plans complete)
+Progress: [█████████░░░] 75% (9/12 plans complete)
 
 ## Completed Milestones
 
@@ -78,6 +78,13 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Typing indicator phase (1.2s) before each question for natural conversation feel
 - Response time tracked from TTS end to answer submit (InterviewResult confidence/responseTimeMs fields)
 - InterviewPage.tsx unchanged -- InterviewSession props interface backward compatible
+- Batch SRS recording on finish (not per-answer) for better performance
+- 250ms intentional delay between CHECK and SHOW_FEEDBACK for suspense
+- TRANSITION_COMPLETE dispatched 50ms after CONTINUE for animation timing
+- Exit dialog uses Radix Dialog for focus trap and portal rendering
+- Check button uses rounded-full pill shape with 3D chunky shadow
+- Feedback panel fixed to bottom with z-40
+- Helper function getQuestionAtIndex outside component for React Compiler purity
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -157,10 +164,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 07, 08, 12 complete
-Next step: Phase 21 remaining plans (06, 09, 10, 11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 12 complete
+Next step: Phase 21 remaining plans (09, 10, 11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 08 complete -- Interview Session Overhaul)*
+*Last updated: 2026-02-15 (Phase 21 plan 06 complete -- TestPage Check/Continue Refactor)*
