@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 05 of 12 in current phase
+Plan: 07 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-05-PLAN.md (Interview Components & Speech Hooks)
+Last activity: 2026-02-15 -- Completed 21-07-PLAN.md (PracticeSession Refactor)
 
-Progress: [█████░░░░░░░] 50% (6/12 plans complete)
+Progress: [██████░░░░░░] 58% (7/12 plans complete)
 
 ## Completed Milestones
 
@@ -63,6 +63,13 @@ All decisions archived in PROJECT.md Key Decisions table.
 - SkipButton uses 3D chunky outline style with border shadow matching Check button visual language
 - Quiz i18n strings added as new 'quiz' section separate from existing 'test' and 'actions' sections
 - Individual Segment wrapped in React.memo to avoid re-rendering all segments on state change
+- SkippedReviewPhase uses isolated internal quizReducer for review state
+- Segment tap review uses inline modal dialog (not separate route)
+- Inline exit confirmation dialog for practice (ExitConfirmDialog component pending)
+- SRS marking batched at end of practice (recordAnswer loop, not per-question)
+- Timer pauses during feedback phase (isFeedback gates timer effect)
+- PracticeSnapshot extended with optional skippedIndices for session persistence
+- hasCompletedRef prevents double-firing onComplete from effect on finished state
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -142,10 +149,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 12 complete
-Next step: Phase 21 remaining plans (06-11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 07, 12 complete
+Next step: Phase 21 remaining plans (06, 08-11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 05 complete -- Interview Components & Speech Hooks)*
+*Last updated: 2026-02-15 (Phase 21 plan 07 complete -- PracticeSession Refactor)*
