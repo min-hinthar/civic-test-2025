@@ -207,6 +207,8 @@ export function InterviewSession({
   const textInputRef = useRef<HTMLInputElement | null>(null);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Separate ref for advanceToNext timer — prevents feedback effect cleanup from cancelling it */
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const msgIdCounter = useRef(0);
 
@@ -339,6 +341,9 @@ export function InterviewSession({
       burmesePlayerRef.current?.cancel();
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
+      }
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
       }
     };
   }, [cleanupRecorder]);
@@ -493,7 +498,9 @@ export function InterviewSession({
     }
 
     setQuestionPhase('transition');
-    transitionTimerRef.current = setTimeout(() => {
+    // Use advanceTimerRef (not transitionTimerRef) so feedback effect cleanup
+    // doesn't cancel this timer when the phase change triggers re-render
+    advanceTimerRef.current = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
       setReplaysUsed(0);
       setRecordAttempt(1);

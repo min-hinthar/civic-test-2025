@@ -131,12 +131,28 @@ export function TTSProvider({ children }: { children: ReactNode }) {
       });
     });
 
+    // Listen for late-arriving voices (Chrome loads online voices async after local ones)
+    const handleVoicesChanged = () => {
+      eng.refreshVoices().then(newVoices => {
+        if (newVoices.length > 0) {
+          setVoices(newVoices);
+        }
+      });
+    };
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+    }
+
     return () => {
       unsub();
       eng.destroy();
       // Cancel idle callback if it hasn't fired yet
       if (typeof cancelIdleCallback === 'function' && typeof idleId === 'number') {
         cancelIdleCallback(idleId);
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- engine creation runs once on mount
