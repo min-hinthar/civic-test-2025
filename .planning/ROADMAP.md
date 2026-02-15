@@ -112,7 +112,7 @@ Plans:
   6. Interview uses chat-style layout with animated examiner character, voice-only input, and auto-read questions
   7. Interview offers Practice mode (per-question feedback) and Real mode (USCIS 2025 rules: 20 questions, pass at 12, fail at 9, early termination)
   8. Interview results show full transcript with per-answer grading, confidence scores, and comparison to previous attempts
-**Plans**: 11 plans
+**Plans**: 12 plans
 
 Plans:
 - [ ] 21-01-PLAN.md — Quiz state machine + haptics utility + sound effects extensions
@@ -126,6 +126,7 @@ Plans:
 - [ ] 21-09-PLAN.md — Test/Practice results screen redesign
 - [ ] 21-10-PLAN.md — Interview results screen (transcript, confidence, comparison)
 - [ ] 21-11-PLAN.md — Keyboard nav polish + streak/XP animations + REQUIREMENTS.md update
+- [ ] 21-12-PLAN.md — PillTabBar extraction + consistent pill tabs across all pages
 
 ### Phase 22: TTS Quality
 **Goal**: Users hear clear, natural speech with control over voice and speed, including Burmese audio for all 128 questions
@@ -205,7 +206,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 18. Language Mode | v2.1 | 7/7 | Complete | 2026-02-14 |
 | 19. TTS Core Extraction | v2.1 | 6/6 | Complete | 2026-02-14 |
 | 20. Session Persistence | v2.1 | 6/6 | Complete | 2026-02-15 |
-| 21. Test & Practice UX | v2.1 | 0/TBD | Not started | - |
+| 21. Test & Practice UX | v2.1 | 0/12 | Not started | - |
 | 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
 | 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
 | 24. Accessibility & Perf | v2.1 | 0/TBD | Not started | - |
