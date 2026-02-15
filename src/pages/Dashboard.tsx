@@ -20,6 +20,8 @@ import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 import { BadgeHighlights } from '@/components/social/BadgeHighlights';
+import { UnfinishedBanner } from '@/components/sessions/UnfinishedBanner';
+import { useSessionPersistence } from '@/lib/sessions/useSessionPersistence';
 import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
@@ -33,6 +35,11 @@ const Dashboard = () => {
   const { user, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
+
+  // Unfinished session banners
+  const { sessions } = useSessionPersistence();
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const visibleSessions = sessions.filter(s => !dismissedIds.has(s.id));
 
   // NBA recommendation
   const { nbaState } = useNextBestAction();
@@ -144,6 +151,16 @@ const Dashboard = () => {
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
         <StaggeredList delay={80} stagger={80}>
+          {/* Unfinished Session Banners */}
+          {visibleSessions.length > 0 && (
+            <StaggeredItem className="mb-6">
+              <UnfinishedBanner
+                sessions={visibleSessions}
+                onDismiss={id => setDismissedIds(prev => new Set([...prev, id]))}
+              />
+            </StaggeredItem>
+          )}
+
           {/* NBA Hero Card */}
           <StaggeredItem className="mb-6">
             {nbaState ? <NBAHeroCard nbaState={nbaState} /> : <NBAHeroSkeleton />}
