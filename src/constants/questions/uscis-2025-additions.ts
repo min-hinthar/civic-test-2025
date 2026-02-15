@@ -487,6 +487,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'the first female senator', text_my: 'ပထမဆုံး အမျိုးသမီးဆင်နေတာ', correct: false },
       { text_en: 'a Supreme Court justice', text_my: 'တရားရုံးချုပ်တရားသူကြီး', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Harriet Tubman escaped slavery and then risked her life repeatedly to guide others to freedom through the Underground Railroad. She made about 13 trips back to the South and helped rescue approximately 70 enslaved people, earning the nickname "Moses."',
+      brief_my:
+        'ဟာရီယက်တပ်ဘ်မန် (Harriet Tubman) သည် ကျွန်ဘဝမှ လွတ်မြောက်ပြီးနောက် Underground Railroad မှတဆင့် အခြားသူများကို လွတ်လပ်ရေးသို့ ပို့ဆောင်ရန် အသက်အန္တရာယ်ကို ထပ်ခါထပ်ခါ စွန့်စားခဲ့သည်။ တောင်ပိုင်းသို့ ခရီးစဉ် ၁၃ ခန့်ပြန်သွားပြီး ကျွန် ၇၀ ခန့်ကို ကယ်တင်ခဲ့သဖြင့် "မိုးဇက" ဟု အမည်ရခဲ့သည်။',
+      relatedQuestionIds: ['HIST-109'],
+    },
   },
   {
     id: 'HIST-109',
@@ -517,6 +524,17 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Underground Railroad was not a literal railroad but a secret network of routes, safe houses, and abolitionists who helped enslaved people escape to free states and Canada before the Civil War. Conductors like Harriet Tubman guided travelers along the dangerous journey.',
+      brief_my:
+        'Underground Railroad သည် အမှန်တကယ် ရထားလမ်းမဟုတ်ဘဲ ပြည်တွင်းစစ်မတိုင်မီ ကျွန်များကို လွတ်လပ်သောပြည်နယ်များနှင့် ကနေဒါသို့ ထွက်ပြေးနိုင်ရန် ကူညီခဲ့သော လျှို့ဝှက်လမ်းကြောင်းများ၊ ခိုလှုံရာနေရာများနှင့် ကျွန်စနစ်ဆန့်ကျင်သူများ၏ ကွန်ယက်ဖြစ်သည်။',
+      commonMistake_en:
+        'Despite the name, it had nothing to do with actual railroads or subways — "underground" referred to its secrecy.',
+      commonMistake_my:
+        'အမည်ရှိသော်လည်း ရထားလမ်း သို့မဟုတ် မြေအောက်ရထားနှင့် ဘာမှမဆိုင်ပါ — "underground" ဆိုသည်မှာ လျှို့ဝှက်ခြင်းကို ရည်ညွှန်းသည်။',
+      relatedQuestionIds: ['HIST-108'],
+    },
   },
   // ============================================
   // RECENT AMERICAN HISTORY (HIST-R11-12)
@@ -550,6 +568,13 @@ export const uscis2025Additions: Question[] = [
       },
       { text_en: 'a wall around the Capitol', text_my: 'ကက်ပီတိုလ်ပတ်လည်နံရံ', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Built in 1961 by communist East Germany, the Berlin Wall physically divided the city of Berlin for 28 years. Its fall in 1989 symbolized the end of the Cold War and the collapse of communist regimes across Eastern Europe.',
+      brief_my:
+        '၁၉၆၁ ခုနှစ်တွင် ကွန်မြူနစ်အရှေ့ဂျာမနီက တည်ဆောက်ခဲ့သော ဘာလင်နံရံ (Berlin Wall) သည် ဘာလင်မြို့ကို ၂၈ နှစ်ကြာ ရုပ်ပိုင်းဆိုင်ရာ ခွဲခြားထားခဲ့သည်။ ၁၉၈၉ တွင် ၎င်းပြိုကျခြင်းသည် စစ်အေးကာလ အဆုံးသတ်ခြင်းနှင့် အရှေ့ဥရောပတစ်ဝှမ်း ကွန်မြူနစ်အစိုးရများ ပြိုကျခြင်းကို သင်္ကေတပြုခဲ့သည်။',
+      relatedQuestionIds: ['HIST-R03'],
+    },
   },
   {
     id: 'HIST-R12',
@@ -578,6 +603,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'a federal court', text_my: 'ဖက်ဒရယ်တရားရုံး', correct: false },
       { text_en: 'a private company', text_my: 'ပုဂ္ဂလိကကုမ္ပဏီ', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'Founded in 1945 after World War II, the United Nations brings together 193 member countries to promote international peace, security, and cooperation. The U.S. played a leading role in creating the UN, and its headquarters is in New York City.',
+      brief_my:
+        'ဒုတိယကမ္ဘာစစ်ပြီးနောက် ၁၉၄၅ ခုနှစ်တွင် တည်ထောင်ခဲ့သော ကုလသမဂ္ဂ (United Nations) သည် နိုင်ငံပေါင်း ၁၉၃ ခုကို စုစည်းပြီး နိုင်ငံတကာငြိမ်းချမ်းရေး၊ လုံခြုံရေးနှင့် ပူးပေါင်းဆောင်ရွက်ရေးကို မြှင့်တင်သည်။ အမေရိကန်က ကုလသမဂ္ဂ ဖန်တီးရာတွင် ဦးဆောင်ခဲ့ပြီး ဌာနချုပ်သည် နယူးယောက်မြို့တွင် ရှိသည်။',
+      relatedQuestionIds: ['HIST-R03', 'HIST-R11'],
+    },
   },
   // ============================================
   // SYMBOLS AND HOLIDAYS (SYM-14-15)
@@ -594,6 +626,17 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'Liberty and Justice', text_my: 'လွတ်လပ်ရေးနှင့် တရားမျှတမှု', correct: false },
       { text_en: 'United We Stand', text_my: 'အတူတကွရပ်တည်ကြစို့', correct: false },
     ],
+    explanation: {
+      brief_en:
+        '"In God We Trust" became the official national motto in 1956, though it appeared on U.S. coins as early as the 1860s. "E Pluribus Unum" ("Out of many, one") is a traditional motto but was never formally adopted by law as the national motto.',
+      brief_my:
+        '"In God We Trust" သည် ၁၉၅၆ ခုနှစ်တွင် တရားဝင်အမျိုးသားမိုထိုး ဖြစ်လာခဲ့သော်လည်း ၁၈၆၀ ခုနှစ်များကတည်းက အမေရိကန်ဒင်္ဂါးများပေါ်တွင် ပေါ်ခဲ့ပြီးဖြစ်သည်။ "E Pluribus Unum" ("များစွာထဲမှ တစ်ခုတည်း") သည် ရိုးရာမိုထိုးဖြစ်သော်လည်း ဥပဒေဖြင့် တရားဝင် အမျိုးသားမိုထိုးအဖြစ် သတ်မှတ်ခြင်း မခံရပါ။',
+      commonMistake_en:
+        'Many confuse "E Pluribus Unum" with the official motto. While important, it is not the legally designated national motto — "In God We Trust" is.',
+      commonMistake_my:
+        'လူများစွာက "E Pluribus Unum" ကို တရားဝင်မိုထိုးဟု ထင်မှတ်ကြသည်။ အရေးကြီးသော်လည်း ဥပဒေအရ သတ်မှတ်ထားသော အမျိုးသားမိုထိုးမှာ "In God We Trust" ဖြစ်သည်။',
+      relatedQuestionIds: ['SYM-01', 'SYM-02'],
+    },
   },
   {
     id: 'SYM-15',
@@ -607,6 +650,13 @@ export const uscis2025Additions: Question[] = [
       { text_en: 'the cherry blossom', text_my: 'ချယ်ရီပန်း', correct: false },
       { text_en: 'the lily', text_my: 'ပန်းခရမ်း', correct: false },
     ],
+    explanation: {
+      brief_en:
+        'President Ronald Reagan declared the rose the national flower of the United States in 1986. The rose has been cultivated in America since colonial times and symbolizes beauty, strength, and the diverse character of the nation.',
+      brief_my:
+        'သမ္မတရော်နယ်ရေဂင် (Ronald Reagan) က ၁၉၈၆ ခုနှစ်တွင် နှင်းဆီပန်းကို အမေရိကန်အမျိုးသားပန်းအဖြစ် ကြေညာခဲ့သည်။ နှင်းဆီပန်းသည် ကိုလိုနီခေတ်ကတည်းက အမေရိကတွင် စိုက်ပျိုးခဲ့ပြီး လှပမှု၊ ခိုင်ခံ့မှုနှင့် နိုင်ငံ၏ မတူကွဲပြားသော ဝိသေသကို သင်္ကေတပြုသည်။',
+      relatedQuestionIds: ['SYM-14'],
+    },
   },
   // ============================================
   // USCIS 2025: 8 ADDITIONAL QUESTIONS (GOV-P17, GOV-S40-S46)
@@ -651,6 +701,13 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        "The Founders drew on many earlier documents when drafting the Constitution. The Magna Carta (1215) established the principle that no one is above the law, the English Bill of Rights (1689) limited royal power, and the Declaration of Independence articulated natural rights — all shaping the Constitution's framework.",
+      brief_my:
+        'တည်ထောင်ဖခင်များက ဖွဲ့စည်းပုံရေးဆွဲရာတွင် အစောပိုင်းစာရွက်စာတမ်းများစွာကို ကိုးကားခဲ့သည်။ မဂ္ဂနာကာတာ (Magna Carta, ၁၂၁၅) က မည်သူမျှ ဥပဒေအထက် မရှိဟူသော မူကို ချမှတ်ခဲ့ပြီး အင်္ဂလိပ်အခွင့်အရေးဥပဒေ (English Bill of Rights, ၁၆၈၉) က ဘုရင့်အာဏာကို ကန့်သတ်ခဲ့ကာ လွတ်လပ်ရေးကြေညာစာတမ်းက သဘာဝအခွင့်အရေးများကို ဖော်ပြခဲ့သည်။',
+      relatedQuestionIds: ['GOV-P01', 'GOV-P02'],
+    },
   },
   {
     id: 'GOV-S40',
@@ -690,6 +747,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'House members serve two-year terms so they must frequently face voters and stay closely attuned to public opinion. Senators serve six-year terms, giving them more independence to focus on long-term policy. This design balances responsiveness with stability.',
+      brief_my:
+        'အောက်လွှတ်တော်အမတ်များသည် သက်တမ်းနှစ်နှစ်ဖြင့် တာဝန်ထမ်းဆောင်ရသဖြင့် မဲဆန္ဒရှင်များနှင့် မကြာခဏ ရင်ဆိုင်ပြီး ပြည်သူ့အမြင်ကို နီးကပ်စွာ လိုက်နာရသည်။ အထက်လွှတ်တော်အမတ်များ (senators) က သက်တမ်းခြောက်နှစ်ဖြစ်၍ ရေရှည်မူဝါဒကို လွတ်လပ်စွာ အာရုံစိုက်နိုင်သည်။',
+      citation: 'Article I, Sections 2 and 3',
+      relatedQuestionIds: ['GOV-S05', 'GOV-S41'],
+    },
   },
   {
     id: 'GOV-S41',
@@ -707,6 +772,18 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Every state has exactly two senators regardless of population. This was established by the Great Compromise of 1787, which balanced the interests of large and small states by giving equal Senate representation while basing House seats on population.',
+      brief_my:
+        'လူဦးရေ မည်မျှရှိသည်ဖြစ်စေ ပြည်နယ်တိုင်းတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးတိတိ ရှိသည်။ ၁၇၈၇ ခုနှစ် ကြီးမားသော အပေးအယူ (Great Compromise) က အထက်လွှတ်တော်တွင် တန်းတူကိုယ်စားပြုမှုပေးပြီး အောက်လွှတ်တော်နေရာများကို လူဦးရေအပေါ် အခြေခံ၍ ပြည်နယ်ကြီးငယ်အကျိုးစီးပွားကို ချိန်ခွင်ညှာခဲ့သည်။',
+      citation: 'Article I, Section 3; Great Compromise (Connecticut Compromise)',
+      commonMistake_en:
+        'Population determines the number of House representatives, not senators. Senate representation is always two per state.',
+      commonMistake_my:
+        'လူဦးရေက အောက်လွှတ်တော်ကိုယ်စားလှယ်အရေအတွက်ကို ဆုံးဖြတ်သည်၊ အထက်လွှတ်တော်အမတ်များကို မဟုတ်ပါ။ အထက်လွှတ်တော်ကိုယ်စားပြုမှုသည် ပြည်နယ်တစ်ခုလျှင် နှစ်ဦး အမြဲဖြစ်သည်။',
+      relatedQuestionIds: ['GOV-S42', 'GOV-S05'],
+    },
   },
   {
     id: 'GOV-S42',
@@ -745,6 +822,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Equal Senate representation was part of the Great Compromise at the Constitutional Convention. Small states feared being overpowered by large states, so the framers agreed that every state would have two senators, ensuring an equal voice in at least one chamber of Congress.',
+      brief_my:
+        'တန်းတူအထက်လွှတ်တော်ကိုယ်စားပြုမှုသည် ဖွဲ့စည်းပုံညီလာခံ၏ ကြီးမားသောအပေးအယူ (Great Compromise) ၏ အစိတ်အပိုင်းဖြစ်သည်။ ပြည်နယ်ငယ်များက ပြည်နယ်ကြီးများ၏ လွှမ်းမိုးမှုကို စိုးရိမ်ခဲ့သဖြင့် ကွန်ဂရက်အခန်းတစ်ခုတွင်မူ အသံတူညီမှုရှိစေရန် ပြည်နယ်တိုင်းတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးရှိမည်ဟု သဘောတူခဲ့သည်။',
+      citation: 'Article I, Section 3; Great Compromise',
+      relatedQuestionIds: ['GOV-S41', 'GOV-S05'],
+    },
   },
   {
     id: 'GOV-S43',
@@ -787,6 +872,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The 22nd Amendment, ratified in 1951, limits the President to two four-year terms. This was enacted after Franklin D. Roosevelt won four consecutive terms, breaking the two-term tradition set by George Washington to prevent the concentration of power.',
+      brief_my:
+        '၁၉၅၁ ခုနှစ်တွင် အတည်ပြုခဲ့သော ပြင်ဆင်ချက် ၂၂ (22nd Amendment) က သမ္မတကို လေးနှစ်သက်တမ်း နှစ်ခုသာ ကန့်သတ်သည်။ ဖရန့်ကလင်ဒီရူးစဗဲ့ (FDR) က ဆက်တိုက်လေးကြိမ် ရွေးကောက်ခံရပြီး ဂျော့ဝါရှင်တန် ချမှတ်ခဲ့သော နှစ်ကြိမ်ဓလေ့ကို ချိုးဖောက်ခဲ့သဖြင့် အာဏာစုစည်းမှုကို တားဆီးရန် ဤပြင်ဆင်ချက်ကို ပြဌာန်းခဲ့သည်။',
+      citation: '22nd Amendment (1951)',
+      relatedQuestionIds: ['GOV-S12', 'GOV-P04'],
+    },
   },
   {
     id: 'GOV-S44',
@@ -825,6 +918,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'The Electoral College is the system that formally elects the President and Vice President. Each state gets electors equal to its total congressional delegation, creating a compromise between direct popular vote and selection by Congress that the Founders designed to balance large and small state interests.',
+      brief_my:
+        'ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့ (Electoral College) သည် သမ္မတနှင့် ဒုတိယသမ္မတကို တရားဝင်ရွေးကောက်တင်မြှောက်သော စနစ်ဖြစ်သည်။ ပြည်နယ်တစ်ခုစီတွင် ကွန်ဂရက်ကိုယ်စားလှယ်အရေအတွက်နှင့် ညီမျှသော ရွေးကောက်တင်မြှောက်သူများ ရရှိပြီး ပြည်သူ့တိုက်ရိုက်မဲနှင့် ကွန်ဂရက်ရွေးချယ်မှုကြား အပေးအယူဖန်တီးသည်။',
+      citation: 'Article II, Section 1; 12th Amendment',
+      relatedQuestionIds: ['GOV-S12', 'GOV-S43'],
+    },
   },
   {
     id: 'GOV-S45',
@@ -860,6 +961,14 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Supreme Court justices serve lifetime appointments, meaning they hold office until they choose to retire, pass away, or are removed through impeachment. Article III of the Constitution establishes this to insulate the judiciary from political pressure.',
+      brief_my:
+        'တရားရုံးချုပ်တရားသူကြီးများသည် တသက်တာ ခန့်အပ်ခြင်းခံရပြီး အနားယူချင်သည်အထိ၊ ကွယ်လွန်သည်အထိ သို့မဟုတ် စွပ်စွဲခံရ၍ ဖယ်ရှားခံရသည်အထိ ရာထူးထမ်းဆောင်သည်။ ဖွဲ့စည်းပုံ အပိုဒ် ၃ (Article III) က တရားစီရင်ရေးကို နိုင်ငံရေးဖိအားမှ ကာကွယ်ရန် ဤအချက်ကို ချမှတ်ထားသည်။',
+      citation: 'Article III, Section 1',
+      relatedQuestionIds: ['GOV-S46', 'GOV-S39'],
+    },
   },
   {
     id: 'GOV-S46',
@@ -898,5 +1007,13 @@ export const uscis2025Additions: Question[] = [
         correct: false,
       },
     ],
+    explanation: {
+      brief_en:
+        'Life tenure for Supreme Court justices ensures judicial independence by freeing judges from worrying about elections or political retaliation. Without needing to please voters or politicians, justices can interpret the Constitution impartially based on law rather than popular opinion.',
+      brief_my:
+        'တရားရုံးချုပ်တရားသူကြီးများ၏ တသက်တာသက်တမ်းသည် ရွေးကောက်ပွဲ သို့မဟုတ် နိုင်ငံရေးလက်စားချေမှုကို စိုးရိမ်ရန် မလိုအပ်စေခြင်းဖြင့် တရားစီရင်ရေးလွတ်လပ်မှုကို သေချာစေသည်။ မဲဆန္ဒရှင်များ သို့မဟုတ် နိုင်ငံရေးသမားများကို ကျေနပ်စေရန် မလိုအပ်ဘဲ လူထုအမြင်ထက် ဥပဒေကို အခြေခံ၍ ဖွဲ့စည်းပုံကို ဘက်မလိုက်ဘဲ အဓိပ္ပာယ်ဖွင့်ဆိုနိုင်သည်။',
+      citation: 'Article III, Section 1',
+      relatedQuestionIds: ['GOV-S45', 'GOV-S38'],
+    },
   },
 ];
