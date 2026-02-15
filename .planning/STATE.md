@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 20 of 25 (Session Persistence)
-Plan: 2 of 6 in current phase (plans 01+02 executing in parallel)
+Plan: 2 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 20-02-PLAN.md (SessionCountdown overlay)
+Last activity: 2026-02-15 -- Completed 20-01-PLAN.md (session persistence foundation) and 20-02-PLAN.md (SessionCountdown overlay)
 
-Progress: [#░░░░░░░░░] ~17% (1/6 plans confirmed complete; plan 01 parallel)
+Progress: [##░░░░░░░░] 33% (2/6 plans complete)
 
 ## Completed Milestones
 
@@ -39,6 +39,11 @@ See `.planning/MILESTONES.md` for details.
 All decisions archived in PROJECT.md Key Decisions table.
 
 **Phase 20 decisions:**
+- 1-per-type session limit enforced in saveSession (max 3 snapshots total)
+- 24-hour expiry checked on every load plus cleanExpiredSessions on startup
+- VERSION constant for migration safety -- mismatched versions auto-discarded
+- useSessionPersistence uses cancelled-flag async IIFE pattern for React Compiler safety
+- Countdown tick at 800 Hz / 80ms, Go chime as C5+G5 ascending pair
 - Added playCountdownTick/playCountdownGo stubs so plan 02 compiles independently of parallel plan 01
 - Step-based countdown state (5 to -1) with useEffect timer for React Compiler safety
 - Skip button auto-focuses with preventScroll to avoid scroll jank
@@ -95,10 +100,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 20 plan 02 complete, plan 01 parallel
+Stopped at: Phase 20 plans 01+02 complete
 Next step: Continue Phase 20 execution (plans 03-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 20 plan 02 complete -- SessionCountdown overlay)*
+*Last updated: 2026-02-15 (Phase 20 plans 01+02 complete -- session foundation + SessionCountdown overlay)*
