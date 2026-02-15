@@ -89,12 +89,15 @@ Plans:
   3. Persisted sessions older than 24 hours are silently discarded (no stale resume prompts)
   4. User sees a countdown (5-4-3...) before the timer restarts on a resumed timed session
   5. Dashboard displays a warning indicator when the user has an unfinished session waiting
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 20-01: TBD
-- [ ] 20-02: TBD
-- [ ] 20-03: TBD
+- [ ] 20-01-PLAN.md — Session types, IndexedDB store, persistence hook, timeAgo, countdown sounds
+- [ ] 20-02-PLAN.md — SessionCountdown full-screen overlay (5-4-3-2-1-Go!)
+- [ ] 20-03-PLAN.md — ResumePromptModal, ResumeSessionCard, StartFreshConfirm components
+- [ ] 20-04-PLAN.md — Dashboard unfinished banners, nav badge extension, startup cleanup
+- [ ] 20-05-PLAN.md — TestPage session persistence integration
+- [ ] 20-06-PLAN.md — PracticePage + InterviewPage session persistence integration
 
 ### Phase 21: Test & Practice UX Overhaul
 **Goal**: Users control their own pacing through an explicit Check/Continue flow with rich visual feedback, replacing auto-advance
