@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 20 of 25 (Session Persistence)
-Plan: 2 of 6 in current phase
+Plan: 3 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 20-01-PLAN.md (session persistence foundation) and 20-02-PLAN.md (SessionCountdown overlay)
+Last activity: 2026-02-15 -- Completed 20-03-PLAN.md (resume prompt UI components)
 
-Progress: [##░░░░░░░░] 33% (2/6 plans complete)
+Progress: [###░░░░░░░] 50% (3/6 plans complete)
 
 ## Completed Milestones
 
@@ -48,6 +48,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Step-based countdown state (5 to -1) with useEffect timer for React Compiler safety
 - Skip button auto-focuses with preventScroll to avoid scroll jank
 - Myanmar Go text uses Unicode escape sequences for font compatibility
+- ResumeSessionCard as button element for click-to-select in multiple-session modal
+- Metadata-only card content (no question snippets) for simplicity and privacy
+- Inline confirmation swap (not sub-dialog) for Start Fresh action
+- Resume button 600ms loading delay before callback for intentional feel
+- Single session auto-selected; multiple sessions require explicit selection
 
 **Phase 19 decisions:**
 - eslint-disable for currentUtterance: module-level GC prevention pattern (intentional assign-only variable)
@@ -100,10 +105,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 20 plans 01+02 complete
-Next step: Continue Phase 20 execution (plans 03-06)
+Stopped at: Phase 20 plan 03 complete
+Next step: Continue Phase 20 execution (plans 04-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 20 plans 01+02 complete -- session foundation + SessionCountdown overlay)*
+*Last updated: 2026-02-15 (Phase 20 plan 03 complete -- resume prompt UI components)*
