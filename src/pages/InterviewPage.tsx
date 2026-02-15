@@ -73,8 +73,13 @@ const InterviewPage = () => {
     setShowResumeModal(false);
 
     // Check mic permission, then go straight to session (skip countdown on resume)
+    if (!navigator.mediaDevices) {
+      setMicPermission(false);
+      setPhase('session');
+      return;
+    }
     navigator.mediaDevices
-      ?.getUserMedia({ audio: true })
+      .getUserMedia({ audio: true })
       .then(mediaStream => {
         mediaStream.getTracks().forEach(t => t.stop());
         setMicPermission(true);
@@ -105,8 +110,13 @@ const InterviewPage = () => {
       }
 
       // Check mic permission state from the setup's proactive request
+      if (!navigator.mediaDevices) {
+        setMicPermission(false);
+        setPhase('countdown');
+        return;
+      }
       navigator.mediaDevices
-        ?.getUserMedia({ audio: true })
+        .getUserMedia({ audio: true })
         .then(mediaStream => {
           mediaStream.getTracks().forEach(t => t.stop());
           setMicPermission(true);

@@ -114,20 +114,20 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
   // Proactively request microphone permission
   useEffect(() => {
     let cancelled = false;
-    navigator.mediaDevices
-      ?.getUserMedia({ audio: true })
-      .then(stream => {
-        // Stop the stream immediately - we just needed permission
+    const checkMic = async () => {
+      if (!navigator.mediaDevices) {
+        if (!cancelled) setMicPermission('denied');
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         stream.getTracks().forEach(t => t.stop());
-        if (!cancelled) {
-          setMicPermission('granted');
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setMicPermission('denied');
-        }
-      });
+        if (!cancelled) setMicPermission('granted');
+      } catch {
+        if (!cancelled) setMicPermission('denied');
+      }
+    };
+    void checkMic();
     return () => {
       cancelled = true;
     };
