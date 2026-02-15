@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import Head from 'next/head';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
@@ -38,6 +38,7 @@ import { WhatsNewModal, useWhatsNew } from '@/components/update/WhatsNewModal';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { NavigationProvider } from '@/components/navigation/NavigationProvider';
 import { NavigationShell } from '@/components/navigation/NavigationShell';
+import { cleanExpiredSessions } from '@/lib/sessions/sessionStore';
 
 /**
  * Hook to detect if running on client side.
@@ -178,6 +179,13 @@ const AppShell = () => {
   const isClient = useIsClient();
 
   useViewportHeight();
+
+  // Clean expired session snapshots from IndexedDB on app startup
+  useEffect(() => {
+    cleanExpiredSessions().catch(() => {
+      // IndexedDB not available
+    });
+  }, []);
 
   if (!isClient) {
     return null;

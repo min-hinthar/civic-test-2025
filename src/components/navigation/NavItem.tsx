@@ -33,6 +33,10 @@ function TabBadge({ tab, badges }: { tab: NavTab; badges: NavBadges }) {
   switch (tab.badgeKey) {
     case 'studyDueCount':
       return <NavBadge type="count" count={badges.studyDueCount} color="warning" />;
+    case 'testSessionCount':
+      return <NavBadge type="count" count={badges.testSessionCount} color="warning" />;
+    case 'interviewSessionCount':
+      return <NavBadge type="count" count={badges.interviewSessionCount} color="warning" />;
     case 'hubHasUpdate':
       return <NavBadge type="dot" color="primary" visible={badges.hubHasUpdate} />;
     case 'settingsHasUpdate':

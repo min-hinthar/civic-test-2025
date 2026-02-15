@@ -14,6 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSRS } from '@/contexts/SRSContext';
+import { getAllSessions } from '@/lib/sessions/sessionStore';
 import type { NavBadges } from './navConfig';
 
 const EARNED_KEY = 'civic-prep-earned-badge-count';
@@ -50,6 +51,8 @@ export function useNavBadges(): NavBadges {
   const { dueCount } = useSRS();
   const [settingsHasUpdate, setSettingsHasUpdate] = useState(false);
   const [hubHasUpdate, setHubHasUpdate] = useState(false);
+  const [testSessionCount, setTestSessionCount] = useState(0);
+  const [interviewSessionCount, setInterviewSessionCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,6 +70,19 @@ export function useNavBadges(): NavBadges {
       if (!cancelled) {
         setHubHasUpdate(checkHubBadge());
       }
+      // Session count check (IndexedDB, async)
+      getAllSessions()
+        .then(sessions => {
+          if (!cancelled) {
+            setTestSessionCount(
+              sessions.filter(s => s.type === 'mock-test' || s.type === 'practice').length
+            );
+            setInterviewSessionCount(sessions.filter(s => s.type === 'interview').length);
+          }
+        })
+        .catch(() => {
+          // IndexedDB not available
+        });
     };
 
     // Schedule initial check outside synchronous effect flow
@@ -99,5 +115,7 @@ export function useNavBadges(): NavBadges {
     studyDueCount: dueCount,
     hubHasUpdate,
     settingsHasUpdate,
+    testSessionCount,
+    interviewSessionCount,
   };
 }

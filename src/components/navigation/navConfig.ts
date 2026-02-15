@@ -23,6 +23,8 @@ export interface NavBadges {
   studyDueCount: number;
   hubHasUpdate: boolean;
   settingsHasUpdate: boolean;
+  testSessionCount: number;
+  interviewSessionCount: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -72,6 +74,7 @@ export const NAV_TABS: NavTab[] = [
       '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032',
     icon: ClipboardCheck,
     order: 2,
+    badgeKey: 'testSessionCount',
     dataTour: 'nav-test',
   },
   {
@@ -81,6 +84,7 @@ export const NAV_TABS: NavTab[] = [
     labelMy: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038',
     icon: Mic,
     order: 3,
+    badgeKey: 'interviewSessionCount',
     dataTour: 'nav-interview',
   },
   {
