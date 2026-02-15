@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 20 of 25 (Session Persistence)
-Plan: 3 of 6 in current phase
+Plan: 4 of 6 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 20-03-PLAN.md (resume prompt UI components)
+Last activity: 2026-02-15 -- Completed 20-04-PLAN.md (dashboard banners and nav badges)
 
-Progress: [###░░░░░░░] 50% (3/6 plans complete)
+Progress: [####░░░░░░] 67% (4/6 plans complete)
 
 ## Completed Milestones
 
@@ -48,6 +48,9 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Step-based countdown state (5 to -1) with useEffect timer for React Compiler safety
 - Skip button auto-focuses with preventScroll to avoid scroll jank
 - Myanmar Go text uses Unicode escape sequences for font compatibility
+- NavItem TabBadge uses explicit switch cases for new badge keys (not dynamic lookup)
+- Practice sessions count toward testSessionCount badge (both mock-test and practice types)
+- Session count fetch added to existing runCheck in useNavBadges for consistency
 - ResumeSessionCard as button element for click-to-select in multiple-session modal
 - Metadata-only card content (no question snippets) for simplicity and privacy
 - Inline confirmation swap (not sub-dialog) for Start Fresh action
@@ -105,10 +108,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 20 plan 03 complete
-Next step: Continue Phase 20 execution (plans 04-06)
+Stopped at: Phase 20 plan 04 complete
+Next step: Continue Phase 20 execution (plans 05-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 20 plan 03 complete -- resume prompt UI components)*
+*Last updated: 2026-02-15 (Phase 20 plan 04 complete -- dashboard banners and nav badges)*
