@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 03 of 12 in current phase
+Plan: 04 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-03-PLAN.md (FeedbackPanel & AnswerOption)
+Last activity: 2026-02-15 -- Completed 21-04-PLAN.md (SegmentedProgressBar, QuizHeader, SkipButton)
 
-Progress: [████░░░░░░░░] 33% (4/12 plans complete)
+Progress: [████░░░░░░░░] 42% (5/12 plans complete)
 
 ## Completed Milestones
 
@@ -55,6 +55,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - AnswerOptionGroup arrow keys directly select answers (not just focus) per locked decision
 - AnswerOption uses inline shadow-[0_4px_0] with border color token for 3D chunky style
 - useRovingFocus is a generic hook for W3C radiogroup keyboard navigation
+- Segment completion tracked via refs (hasPlayedRef) to avoid setState-in-effect React Compiler violation
+- SkipButton uses 3D chunky outline style with border shadow matching Check button visual language
+- Quiz i18n strings added as new 'quiz' section separate from existing 'test' and 'actions' sections
+- Individual Segment wrapped in React.memo to avoid re-rendering all segments on state change
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -134,10 +138,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 12 complete
-Next step: Phase 21 remaining plans (04-11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 12 complete
+Next step: Phase 21 remaining plans (05-11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 03 complete -- FeedbackPanel & AnswerOption)*
+*Last updated: 2026-02-15 (Phase 21 plan 04 complete -- SegmentedProgressBar, QuizHeader, SkipButton)*
