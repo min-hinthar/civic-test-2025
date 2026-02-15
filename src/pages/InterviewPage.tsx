@@ -107,26 +107,10 @@ const InterviewPage = () => {
       setMode(selectedMode);
       if (overrides) {
         setSpeedOverride(overrides.speedOverride);
+        // Use mic permission status from InterviewSetup's proactive probe
+        setMicPermission(overrides.micGranted);
       }
-
-      // Check mic permission state from the setup's proactive request
-      if (!navigator.mediaDevices) {
-        setMicPermission(false);
-        setPhase('countdown');
-        return;
-      }
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then(mediaStream => {
-          mediaStream.getTracks().forEach(t => t.stop());
-          setMicPermission(true);
-        })
-        .catch(() => {
-          setMicPermission(false);
-        })
-        .finally(() => {
-          setPhase('countdown');
-        });
+      setPhase('countdown');
     },
     []
   );

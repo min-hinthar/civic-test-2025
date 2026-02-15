@@ -18,9 +18,11 @@ import { useTTS } from '@/hooks/useTTS';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
 import type { InterviewMode, InterviewSession } from '@/types';
 
-/** Speech override for interview (speed only -- auto-read always on) */
+/** Speech override for interview */
 export interface InterviewSpeechOverrides {
   speedOverride: 'slow' | 'normal' | 'fast';
+  /** Whether mic permission was granted during setup (avoids redundant getUserMedia) */
+  micGranted: boolean;
 }
 
 interface InterviewSetupProps {
@@ -347,12 +349,10 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           {/* Start button */}
           <button
             onClick={() =>
-              onStart(
-                selectedMode,
-                selectedMode === 'practice'
-                  ? { speedOverride: sessionSpeed }
-                  : { speedOverride: 'normal' }
-              )
+              onStart(selectedMode, {
+                speedOverride: selectedMode === 'practice' ? sessionSpeed : 'normal',
+                micGranted: micPermission === 'granted',
+              })
             }
             className={clsx(
               'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-sm font-bold text-white min-h-[48px]',
