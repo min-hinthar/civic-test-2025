@@ -263,6 +263,7 @@ const PracticePage = () => {
       {phase === 'results' && (
         <PracticeResults
           results={practiceResults}
+          questions={practiceQuestions}
           categoryName={categoryName}
           previousMastery={previousMastery}
           categoryColor={categoryColor}

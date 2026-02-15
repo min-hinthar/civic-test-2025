@@ -61,6 +61,8 @@ import type { SegmentStatus } from '@/components/quiz/SegmentedProgressBar';
 import { QuizHeader } from '@/components/quiz/QuizHeader';
 import { SkipButton } from '@/components/quiz/SkipButton';
 import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
+import { StreakReward, STREAK_DISPLAY_DURATION_MS } from '@/components/quiz/StreakReward';
+import { XPPopup } from '@/components/quiz/XPPopup';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
@@ -105,6 +107,12 @@ const TestPage = () => {
 
   // Exit dialog state
   const [showExitDialog, setShowExitDialog] = useState(false);
+
+  // Streak/XP micro-reward state
+  const [showStreakReward, setShowStreakReward] = useState(false);
+  const [showXP, setShowXP] = useState(false);
+  const [xpPoints, setXpPoints] = useState(10);
+  const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Results screen state
   const [showConfetti, setShowConfetti] = useState(false);
@@ -386,11 +394,14 @@ const TestPage = () => {
     }
   }, [isFinished]);
 
-  // Cleanup check delay timeout on unmount
+  // Cleanup check delay and streak timer on unmount
   useEffect(() => {
     return () => {
       if (checkDelayRef.current) {
         clearTimeout(checkDelayRef.current);
+      }
+      if (streakTimerRef.current) {
+        clearTimeout(streakTimerRef.current);
       }
     };
   }, []);
@@ -499,12 +510,31 @@ const TestPage = () => {
     checkDelayRef.current = setTimeout(() => {
       checkDelayRef.current = null;
       dispatch({ type: 'SHOW_FEEDBACK', result, isCorrect: isCorrectAnswer });
+
+      // Trigger streak/XP micro-rewards on correct answers
+      if (isCorrectAnswer) {
+        const newStreak = quizState.streakCount + 1;
+        setXpPoints(newStreak >= 3 ? 15 : 10);
+        setShowXP(true);
+        setShowStreakReward(true);
+
+        if (streakTimerRef.current) clearTimeout(streakTimerRef.current);
+        streakTimerRef.current = setTimeout(() => {
+          setShowStreakReward(false);
+          setShowXP(false);
+          streakTimerRef.current = null;
+        }, STREAK_DISPLAY_DURATION_MS);
+      }
     }, CHECK_DELAY_MS);
   }, [quizState, currentQuestion, sessionId, questions, timeLeft]);
 
   // Handle Continue from FeedbackPanel (TPUX-03)
   const handleContinue = useCallback(() => {
     if (quizState.phase !== 'feedback') return;
+
+    // Hide streak/XP rewards
+    setShowStreakReward(false);
+    setShowXP(false);
 
     // Check thresholds before advancing
     if (hasPassedThreshold(quizState, quizConfig) || hasFailedThreshold(quizState, quizConfig)) {
@@ -552,6 +582,43 @@ const TestPage = () => {
       playLevelUp();
     }
   }, [finalCorrect]);
+
+  // ---------------------------------------------------------------------------
+  // Keyboard navigation (TPUX-06)
+  // ---------------------------------------------------------------------------
+
+  // Context-sensitive Enter key: Check when answer selected, Continue when feedback showing
+  // Escape key: opens ExitConfirmDialog
+  useEffect(() => {
+    if (isFinished || showPreTest || showCountdown) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        if (quizState.phase === 'answering' && quizState.selectedAnswer) {
+          e.preventDefault();
+          handleCheck();
+        } else if (quizState.phase === 'feedback') {
+          e.preventDefault();
+          handleContinue();
+        }
+      } else if (e.key === 'Escape' && !showExitDialog) {
+        e.preventDefault();
+        setShowExitDialog(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    isFinished,
+    showPreTest,
+    showCountdown,
+    quizState.phase,
+    quizState.selectedAnswer,
+    showExitDialog,
+    handleCheck,
+    handleContinue,
+  ]);
 
   // ---------------------------------------------------------------------------
   // Early returns (pre-test screens)
@@ -723,7 +790,7 @@ const TestPage = () => {
             className={clsx(
               'rounded-full px-8 py-3 min-h-[48px] text-base font-bold',
               'transition-all duration-100',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+              'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
               quizState.selectedAnswer
                 ? [
                     'bg-primary text-primary-foreground',
@@ -741,6 +808,16 @@ const TestPage = () => {
           </button>
         </div>
       )}
+
+      {/* Streak/XP micro-rewards (above feedback panel) */}
+      <div className="fixed inset-x-0 bottom-[140px] z-50 flex flex-col items-center gap-2 pointer-events-none">
+        <StreakReward
+          count={quizState.streakCount}
+          show={showStreakReward}
+          showBurmese={showBurmese}
+        />
+        <XPPopup points={xpPoints} show={showXP} />
+      </div>
 
       {/* Feedback panel -- slides up from bottom (TPUX-02) */}
       <div className="fixed inset-x-0 bottom-0 z-40">
