@@ -125,7 +125,7 @@ export function ExaminerCharacter({ state, size = 'md' }: ExaminerCharacterProps
           {/* Tie */}
           <path d="M78 105 L80 130 L82 105 Z" className="fill-patriotic dark:fill-red-400" />
           {/* Tie knot */}
-          <circle cx="80" cy="104" r="2" className="fill-patriotic-red dark:fill-red-400" />
+          <circle cx="80" cy="104" r="2" className="fill-patriotic dark:fill-red-400" />
 
           {/* USCIS badge on left lapel */}
           <g transform="translate(52, 108)">
