@@ -23,6 +23,9 @@ const DEFAULT_SETTINGS: TTSSettings = {
   pitch: 1.02,
   lang: 'en-US',
   preferredVoice: null,
+  autoRead: false,
+  autoReadLang: 'both',
+  burmeseVoice: 'nilar',
 };
 
 // ---------------------------------------------------------------------------
@@ -55,7 +58,8 @@ function loadInitialSettings(): TTSSettings {
       const parsed = JSON.parse(stored) as TTSSettings;
       // Validate rate is one of the named values
       if (parsed.rate === 'slow' || parsed.rate === 'normal' || parsed.rate === 'fast') {
-        return parsed;
+        // Merge with defaults so existing users get new fields automatically
+        return { ...DEFAULT_SETTINGS, ...parsed };
       }
       return DEFAULT_SETTINGS;
     }
