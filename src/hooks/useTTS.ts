@@ -107,10 +107,13 @@ export function useTTS(options?: UseTTSOptions): UseTTSReturn {
         setError(null);
         await eng.speak(text, resolvedOverrides);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Speech synthesis failed';
-        // Don't set error for cancellation (user-initiated action, not an error)
-        if (err instanceof Error && err.name === 'TTSCancelledError') return;
-        setError(message);
+        // Always re-throw so callers can detect cancellation and handle errors.
+        // Set error state for UI display (skip for cancellation — that's user-initiated).
+        if (!(err instanceof Error && err.name === 'TTSCancelledError')) {
+          const message = err instanceof Error ? err.message : 'Speech synthesis failed';
+          setError(message);
+        }
+        throw err;
       }
     },
     [sharedEngine, options?.isolated, rateToNumeric, settings.rate, settings.pitch, settings.lang]

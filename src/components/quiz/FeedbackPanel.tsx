@@ -133,7 +133,7 @@ function ExplanationSection({
         <div className="mt-2">
           <SpeechButton
             text={explanation.brief_en}
-            label="Listen"
+            label="Explain"
             ariaLabel="Listen to explanation"
             className="text-xs"
             stopPropagation

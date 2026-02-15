@@ -72,18 +72,27 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       return burmesePlayerRef.current;
     };
 
-    const speakEnglish = async () => {
+    /**
+     * Speak English text. Returns true if completed, false if cancelled.
+     * Retries once on transient TTS errors (not on cancellation).
+     */
+    const speakEnglish = async (): Promise<boolean> => {
       try {
         await speak(text, { lang });
-      } catch {
-        // Retry once
-        if (cancelled) return;
+        return true;
+      } catch (err) {
+        // Cancellation = user/system stopped speech — don't retry, signal caller
+        if (err instanceof Error && err.name === 'TTSCancelledError') return false;
+        // Transient error — retry once after delay
+        if (cancelled) return false;
         await new Promise(r => setTimeout(r, 500));
-        if (cancelled) return;
+        if (cancelled) return false;
         try {
           await speak(text, { lang });
+          return true;
         } catch {
           // Give up silently
+          return true;
         }
       }
     };
@@ -106,11 +115,11 @@ export function useAutoRead(options: UseAutoReadOptions): void {
         await playBurmese();
       } else {
         // 'both': English first, brief pause, then Burmese
-        await speakEnglish();
-        if (!cancelled) {
-          // Small gap between languages for processing
-          await new Promise(r => setTimeout(r, 400));
-        }
+        const completed = await speakEnglish();
+        // Stop chain if English was cancelled (user pressed stop / navigated away)
+        if (!completed || cancelled) return;
+        // Small gap between languages for processing
+        await new Promise(r => setTimeout(r, 400));
         if (!cancelled) {
           await playBurmese();
         }
@@ -123,8 +132,8 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       cancel();
       burmesePlayerRef.current?.cancel();
     };
-    // Re-trigger on key change, enabled toggle, or language mode change
-    // speak/cancel are stable (useCallback in useTTS)
+    // Re-trigger on key change, enabled toggle, language mode change, or Burmese URL change.
+    // speak/cancel are stable (useCallback in useTTS); lang/burmeseRate rarely change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerKey, enabled, autoReadLang]);
+  }, [triggerKey, enabled, autoReadLang, burmeseAudioUrl]);
 }

@@ -768,7 +768,7 @@ const TestPage = () => {
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={questionAudioText}
-                  label="Play Test Question"
+                  label="Question"
                   ariaLabel="Play English test question audio"
                   rate={numericRate}
                   showSpeedLabel
@@ -778,14 +778,14 @@ const TestPage = () => {
                   <BurmeseSpeechButton
                     questionId={currentQuestion.id}
                     audioType="q"
-                    label="မြန်မာ"
+                    label="မေးခွန်း"
                     showSpeedLabel
                     speedLabel={speedLabel}
                   />
                 )}
                 <SpeechButton
                   text={answerChoicesAudioText}
-                  label="Play Answer Choices"
+                  label="Answers"
                   ariaLabel="Play English answer choices audio"
                   rate={numericRate}
                   showSpeedLabel
@@ -1108,7 +1108,7 @@ const TestPage = () => {
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <SpeechButton
                     text={result.questionText_en}
-                    label="Play English question"
+                    label="Question"
                     ariaLabel={`Play English question audio for ${result.questionText_en}`}
                     rate={numericRate}
                     showSpeedLabel
@@ -1118,14 +1118,14 @@ const TestPage = () => {
                     <BurmeseSpeechButton
                       questionId={result.questionId}
                       audioType="q"
-                      label="မြန်မာ"
+                      label="မေးခွန်း"
                       showSpeedLabel
                       speedLabel={speedLabel}
                     />
                   )}
                   <SpeechButton
                     text={result.correctAnswer.text_en}
-                    label="Play official answer"
+                    label="Answer"
                     ariaLabel={`Play English official answer for ${result.questionText_en}`}
                     rate={numericRate}
                     showSpeedLabel

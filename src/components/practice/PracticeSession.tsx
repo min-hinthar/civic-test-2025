@@ -189,7 +189,7 @@ function SegmentReviewDialog({
               <div className="mt-2">
                 <SpeechButton
                   text={question.explanation.brief_en}
-                  label="Listen"
+                  label="Explain"
                   ariaLabel="Listen to explanation"
                   className="text-xs"
                   stopPropagation
@@ -802,7 +802,7 @@ export function PracticeSession({
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={currentQuestion.question_en}
-                  label="Play Question"
+                  label="Question"
                   ariaLabel="Play English question audio"
                   rate={numericRate}
                   showSpeedLabel
@@ -812,14 +812,14 @@ export function PracticeSession({
                   <BurmeseSpeechButton
                     questionId={currentQuestion.id}
                     audioType="q"
-                    label="မြန်မာ"
+                    label="မေးခွန်း"
                     showSpeedLabel
                     speedLabel={speedLabel}
                   />
                 )}
                 <SpeechButton
                   text={currentQuestion.answers.map(a => a.text_en).join('. ')}
-                  label="Play Answer Choices"
+                  label="Answers"
                   ariaLabel="Play English answer choices audio"
                   rate={numericRate}
                   showSpeedLabel

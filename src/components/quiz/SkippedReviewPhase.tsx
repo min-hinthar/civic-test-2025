@@ -312,7 +312,7 @@ export function SkippedReviewPhase({
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={currentQuestion.question_en}
-                  label="Play Question"
+                  label="Question"
                   ariaLabel="Play question audio"
                 />
               </div>

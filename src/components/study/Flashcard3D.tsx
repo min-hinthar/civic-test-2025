@@ -306,7 +306,7 @@ export function Flashcard3D({
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={questionEn}
-                  label="Listen"
+                  label="Question"
                   ariaLabel="Listen to question in English"
                   lang="en-US"
                   stopPropagation
@@ -317,7 +317,7 @@ export function Flashcard3D({
                   <BurmeseSpeechButton
                     questionId={questionId}
                     audioType="q"
-                    label="နားထောင်ရန်"
+                    label="မေးခွန်း"
                     stopPropagation
                     showSpeedLabel={showSpeedLabel}
                     speedLabel={speedLabel}
@@ -395,7 +395,7 @@ export function Flashcard3D({
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={answerEn}
-                  label="EN"
+                  label="Answer"
                   ariaLabel="Listen to answer in English"
                   lang="en-US"
                   stopPropagation
@@ -406,7 +406,7 @@ export function Flashcard3D({
                   <BurmeseSpeechButton
                     questionId={questionId}
                     audioType="a"
-                    label="MY"
+                    label="အဖြေ"
                     stopPropagation
                     showSpeedLabel={showSpeedLabel}
                     speedLabel={speedLabel}

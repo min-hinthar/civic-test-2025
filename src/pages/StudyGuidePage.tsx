@@ -398,7 +398,7 @@ const StudyGuidePage = () => {
                             <div className="flex flex-wrap gap-2">
                               <SpeechButton
                                 text={question.question_en}
-                                label="Play Question"
+                                label="Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
                                 showSpeedLabel
@@ -408,7 +408,7 @@ const StudyGuidePage = () => {
                                 <BurmeseSpeechButton
                                   questionId={question.id}
                                   audioType="q"
-                                  label="နားထောင်ရန်"
+                                  label="မေးခွန်း"
                                   stopPropagation
                                   showSpeedLabel
                                   speedLabel={speedLabel}
@@ -449,7 +449,7 @@ const StudyGuidePage = () => {
                             <div className="flex gap-2">
                               <SpeechButton
                                 text={englishAnswersText}
-                                label="Play Answers"
+                                label="Answers"
                                 ariaLabel={`Play English answers for ${question.question_en}`}
                                 stopPropagation
                                 showSpeedLabel
@@ -459,7 +459,7 @@ const StudyGuidePage = () => {
                                 <BurmeseSpeechButton
                                   questionId={question.id}
                                   audioType="a"
-                                  label="MY"
+                                  label="အဖြေ"
                                   stopPropagation
                                   showSpeedLabel
                                   speedLabel={speedLabel}
@@ -703,7 +703,7 @@ const StudyGuidePage = () => {
                             <div className="flex flex-wrap gap-2">
                               <SpeechButton
                                 text={question.question_en}
-                                label="Play Question"
+                                label="Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
                                 showSpeedLabel
@@ -713,7 +713,7 @@ const StudyGuidePage = () => {
                                 <BurmeseSpeechButton
                                   questionId={question.id}
                                   audioType="q"
-                                  label="နားထောင်ရန်"
+                                  label="မေးခွန်း"
                                   stopPropagation
                                   showSpeedLabel
                                   speedLabel={speedLabel}
@@ -754,7 +754,7 @@ const StudyGuidePage = () => {
                             <div className="flex gap-2">
                               <SpeechButton
                                 text={englishAnswersText}
-                                label="Play Answers"
+                                label="Answers"
                                 ariaLabel={`Play English answers for ${question.question_en}`}
                                 stopPropagation
                                 showSpeedLabel
@@ -764,7 +764,7 @@ const StudyGuidePage = () => {
                                 <BurmeseSpeechButton
                                   questionId={question.id}
                                   audioType="a"
-                                  label="MY"
+                                  label="အဖြေ"
                                   stopPropagation
                                   showSpeedLabel
                                   speedLabel={speedLabel}

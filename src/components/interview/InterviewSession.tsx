@@ -1022,7 +1022,7 @@ export function InterviewSession({
                       <BurmeseSpeechButton
                         questionId={msg.questionId}
                         audioType="q"
-                        label="Burmese"
+                        label="မြန်မာ"
                         className="!py-1 !px-2.5 !text-[10px] !min-h-[32px]"
                         showSpeedLabel
                         speedLabel={effectiveSpeed === 'normal' ? undefined : effectiveSpeed}

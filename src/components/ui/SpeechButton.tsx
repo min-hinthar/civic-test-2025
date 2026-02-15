@@ -8,6 +8,50 @@ import { useTTS } from '@/hooks/useTTS';
 import { isAndroid } from '@/lib/ttsCore';
 
 // ---------------------------------------------------------------------------
+// US Flag Icon (16x16 inline SVG)
+// ---------------------------------------------------------------------------
+
+/** Simplified US flag: blue canton + stripes. */
+function USFlagIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 12"
+      aria-hidden="true"
+      className="h-4 w-4 shrink-0"
+      role="img"
+    >
+      {/* Red stripes background */}
+      <rect width="16" height="12" fill="#B22234" />
+      {/* White stripes */}
+      <rect y="1.85" width="16" height="0.92" fill="white" />
+      <rect y="3.69" width="16" height="0.92" fill="white" />
+      <rect y="5.54" width="16" height="0.92" fill="white" />
+      <rect y="7.38" width="16" height="0.92" fill="white" />
+      <rect y="9.23" width="16" height="0.92" fill="white" />
+      <rect y="11.08" width="16" height="0.92" fill="white" />
+      {/* Blue canton */}
+      <rect width="6.4" height="6.46" fill="#3C3B6E" />
+      {/* Stars (simplified 3x2 grid) */}
+      <circle cx="1.1" cy="1.1" r="0.45" fill="white" />
+      <circle cx="3.2" cy="1.1" r="0.45" fill="white" />
+      <circle cx="5.3" cy="1.1" r="0.45" fill="white" />
+      <circle cx="2.15" cy="2.15" r="0.45" fill="white" />
+      <circle cx="4.25" cy="2.15" r="0.45" fill="white" />
+      <circle cx="1.1" cy="3.2" r="0.45" fill="white" />
+      <circle cx="3.2" cy="3.2" r="0.45" fill="white" />
+      <circle cx="5.3" cy="3.2" r="0.45" fill="white" />
+      <circle cx="2.15" cy="4.25" r="0.45" fill="white" />
+      <circle cx="4.25" cy="4.25" r="0.45" fill="white" />
+      <circle cx="1.1" cy="5.3" r="0.45" fill="white" />
+      <circle cx="3.2" cy="5.3" r="0.45" fill="white" />
+      <circle cx="5.3" cy="5.3" r="0.45" fill="white" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // SpeechButton
 // ---------------------------------------------------------------------------
 
@@ -95,7 +139,7 @@ const SpeechButton = ({
     } else {
       // Idle or a different button is speaking -> start new speech
       // (speak() internally cancels any active speech first)
-      void speak(text, { lang, pitch, rate });
+      speak(text, { lang, pitch, rate }).catch(() => {});
     }
   };
 
@@ -145,15 +189,17 @@ const SpeechButton = ({
         className
       )}
     >
-      {/* Icon: pause icon when paused, animated sound wave when speaking, Volume2 when idle */}
+      {/* Flag icon — always visible for language identification */}
+      <USFlagIcon />
+      <span>{label}</span>
+      {/* State icon: pause when paused, sound wave when speaking, Volume2 when idle */}
       {isMyPaused ? (
         <PauseIcon />
       ) : isMySpeaking ? (
         <SoundWaveIcon animate={!shouldReduceMotion} />
       ) : (
-        <Volume2 className="h-4 w-4" aria-hidden="true" />
+        <Volume2 className="h-4 w-4 shrink-0" aria-hidden="true" />
       )}
-      <span>{label}</span>
       {/* Speed label */}
       {showSpeedLabel && speedLabel && (
         <span className="text-[10px] font-medium text-muted-foreground/70 tabular-nums">

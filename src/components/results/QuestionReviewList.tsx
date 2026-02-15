@@ -234,7 +234,7 @@ export function QuestionReviewList({
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <SpeechButton
                     text={question.question_en}
-                    label="Play English question"
+                    label="Question"
                     ariaLabel={`Play English question audio for ${question.question_en}`}
                   />
                   <AddToDeckButton questionId={question.id} compact />
@@ -293,12 +293,12 @@ export function QuestionReviewList({
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <SpeechButton
                       text={result.questionText_en}
-                      label="Play English question"
+                      label="Question"
                       ariaLabel={`Play English question audio for ${result.questionText_en}`}
                     />
                     <SpeechButton
                       text={result.correctAnswer.text_en}
-                      label="Play official answer"
+                      label="Answer"
                       ariaLabel={`Play English official answer for ${result.questionText_en}`}
                     />
                     <AddToDeckButton questionId={result.questionId} compact />

@@ -7,6 +7,7 @@
  */
 
 import clsx from 'clsx';
+import { Volume2 } from 'lucide-react';
 import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import { ExpandingRings, PauseIcon, SoundWaveIcon } from '@/components/ui/SpeechAnimations';
@@ -217,15 +218,17 @@ export function BurmeseSpeechButton({
         className
       )}
     >
-      {/* Icon: pause icon when paused, animated sound wave when speaking, Myanmar flag when idle */}
+      {/* Flag icon — always visible for language identification */}
+      <MyanmarFlagIcon />
+      <span>{label}</span>
+      {/* State icon: pause when paused, sound wave when speaking, Volume2 when idle */}
       {isMyPaused ? (
         <PauseIcon />
       ) : isMySpeaking ? (
         <SoundWaveIcon animate={!shouldReduceMotion} />
       ) : (
-        <MyanmarFlagIcon />
+        <Volume2 className="h-4 w-4 shrink-0" aria-hidden="true" />
       )}
-      <span>{label}</span>
       {/* Speed label */}
       {showSpeedLabel && speedLabel && (
         <span className="text-[10px] font-medium text-muted-foreground/70 tabular-nums">

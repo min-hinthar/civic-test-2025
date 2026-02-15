@@ -373,7 +373,7 @@ export function InterviewResults({
   useEffect(() => {
     const timer = setTimeout(() => {
       const closing = getClosingStatement(passed);
-      speak(closing); // fire-and-forget -- speak returns Promise<void>
+      speak(closing).catch(() => {}); // fire-and-forget
     }, 1000);
 
     return () => {
