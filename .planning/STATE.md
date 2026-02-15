@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 21 COMPLETE, ready for Phase 22
+**Current focus:** v2.1 Quality & Polish -- Phase 22 in progress
 
 ## Current Position
 
-Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 12 of 12 in current phase
-Status: Phase complete, verified (8/8 must-haves, 13 requirements)
-Last activity: 2026-02-15 -- Phase 21 complete + verified (12/12 plans, 35 commits)
+Phase: 22 of 25 (TTS Quality)
+Plan: 02 of 9 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 22-02-PLAN.md (SpeechButton enhancement)
 
-Progress: [████████████] 100% (12/12 plans complete)
+Progress: [█░░░░░░░░] 11% (1/9 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,14 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 22 decisions:**
+- Android gets cancel/restart semantics instead of pause/resume (Android Chrome pause bug)
+- 150ms debounce window for rapid taps via useRef timestamp
+- PauseIcon is static two-bar SVG (not SoundWaveIcon with animate=false)
+- Native browser title tooltip (span wrapper) for error/unsupported/offline states
+- Tooltip priority: unsupported > error > offline > none
+- Online/offline state tracked with useState + window event listeners (self-contained, not OfflineContext)
 
 **Phase 21 decisions:**
 - Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
@@ -184,10 +192,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21 verified complete (8/8 must-haves)
-Next step: Phase 22 (TTS Quality) — plan then execute
+Stopped at: Phase 22, plan 02 complete
+Next step: Continue Phase 22 execution (plans 03-09)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 COMPLETE + VERIFIED -- 12/12 plans, 8/8 must-haves, 13 requirements)*
+*Last updated: 2026-02-15 (Phase 22, plan 02 complete -- SpeechButton enhancement)*
