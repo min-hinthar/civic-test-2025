@@ -60,6 +60,9 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Interview resume skips greeting, starts at chime phase for next ungraded question
 - Interview questions changed from useMemo to useState lazy init for resume seeding
 - resumeData cleared on retry/switchMode to prevent stale state
+- TestPage questions changed from useMemo to useState lazy init (React Compiler enforces declaration order)
+- Timer and navigation lock effects gated on showCountdown to prevent ticking during countdown animation
+- deleteSession called after saveTestSession succeeds on completion (cleanup only after Supabase confirm)
 - Countdown subtitle: Q{index}/{count} for resume vs {count} Questions for new
 
 **Phase 19 decisions:**
