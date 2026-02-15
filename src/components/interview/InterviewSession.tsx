@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RotateCcw, Eye, LogOut } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -25,6 +25,9 @@ import { playChime } from '@/lib/interview/audioChime';
 import { getRandomGreeting } from '@/lib/interview/interviewGreetings';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import { allQuestions } from '@/constants/questions';
+import { saveSession } from '@/lib/sessions/sessionStore';
+import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
+import type { InterviewSnapshot } from '@/lib/sessions/sessionTypes';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -61,6 +64,20 @@ interface InterviewSessionProps {
   ) => void;
   /** Whether mic permission was granted */
   micPermission: boolean;
+  /** Session ID for persistence (optional -- when provided, saves to IndexedDB) */
+  sessionId?: string;
+  /** Pre-shuffled questions for resume */
+  initialQuestions?: Question[];
+  /** Graded results so far (resume) */
+  initialResults?: InterviewResult[];
+  /** Current question index (resume) */
+  initialIndex?: number;
+  /** Running correct count (resume) */
+  initialCorrectCount?: number;
+  /** Running incorrect count (resume) */
+  initialIncorrectCount?: number;
+  /** Original session start timestamp (resume) */
+  initialStartTime?: number;
 }
 
 /**
@@ -76,7 +93,18 @@ interface InterviewSessionProps {
  * - Realistic: 15s timer, auto-reveal, threshold stop (12 correct / 9 incorrect)
  * - Practice: user-paced, Show Answer button, WhyButton, AddToDeck, quit option
  */
-export function InterviewSession({ mode, onComplete, micPermission }: InterviewSessionProps) {
+export function InterviewSession({
+  mode,
+  onComplete,
+  micPermission,
+  sessionId,
+  initialQuestions,
+  initialResults,
+  initialIndex,
+  initialCorrectCount,
+  initialIncorrectCount,
+  initialStartTime,
+}: InterviewSessionProps) {
   const { showBurmese, mode: languageMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { speak, cancel: cancelTTS, isSpeaking } = useTTS();
@@ -91,19 +119,21 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
   } = useAudioRecorder();
 
   // --- Session state ---
-  const questions: Question[] = useMemo(
-    () => fisherYatesShuffle(allQuestions).slice(0, QUESTIONS_PER_SESSION),
-    []
+  const [questions] = useState<Question[]>(
+    () => initialQuestions ?? fisherYatesShuffle(allQuestions).slice(0, QUESTIONS_PER_SESSION)
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [results, setResults] = useState<InterviewResult[]>([]);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [incorrectCount, setIncorrectCount] = useState(0);
-  const [questionPhase, setQuestionPhase] = useState<QuestionPhase>('greeting');
+  const isResuming = (initialIndex ?? 0) > 0;
+  const [currentIndex, setCurrentIndex] = useState(initialIndex ?? 0);
+  const [results, setResults] = useState<InterviewResult[]>(initialResults ?? []);
+  const [correctCount, setCorrectCount] = useState(initialCorrectCount ?? 0);
+  const [incorrectCount, setIncorrectCount] = useState(initialIncorrectCount ?? 0);
+  const [questionPhase, setQuestionPhase] = useState<QuestionPhase>(
+    isResuming ? 'chime' : 'greeting'
+  );
   const [replaysUsed, setReplaysUsed] = useState(0);
   const [textVisible, setTextVisible] = useState(false);
   const [showQuitDialog, setShowQuitDialog] = useState(false);
-  const [startTime] = useState(() => Date.now());
+  const [startTime] = useState(() => initialStartTime ?? Date.now());
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Stable refs for callbacks that need current values
@@ -281,6 +311,24 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
       setCorrectCount(newCorrect);
       setIncorrectCount(newIncorrect);
 
+      // Save session to IndexedDB (fire-and-forget)
+      if (sessionId) {
+        const snapshot: InterviewSnapshot = {
+          id: sessionId,
+          type: 'interview',
+          savedAt: new Date().toISOString(),
+          version: SESSION_VERSION,
+          questions,
+          results: newResults,
+          currentIndex: currentIndex + 1,
+          correctCount: newCorrect,
+          incorrectCount: newIncorrect,
+          mode,
+          startTime,
+        };
+        saveSession(snapshot).catch(() => {});
+      }
+
       // Clear recording blob
       clearRecording();
 
@@ -323,6 +371,8 @@ export function InterviewSession({ mode, onComplete, micPermission }: InterviewS
       mode,
       currentIndex,
       startTime,
+      sessionId,
+      questions,
     ]
   );
 

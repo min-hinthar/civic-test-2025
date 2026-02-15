@@ -40,6 +40,12 @@ import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { Filter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { playCorrect, playIncorrect, playLevelUp, playMilestone } from '@/lib/audio/soundEffects';
+import { saveSession, getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
+import type { MockTestSnapshot } from '@/lib/sessions/sessionTypes';
+import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
+import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
+import { SessionCountdown } from '@/components/sessions/SessionCountdown';
+import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
@@ -67,30 +73,85 @@ const TestPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [explanationExpanded, setExplanationExpanded] = useState(false);
   const [showAllResults, setShowAllResults] = useState(false);
+  const [savedSessions, setSavedSessions] = useState<MockTestSnapshot[]>([]);
+  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [sessionId] = useState(() => `session-mock-test-${Date.now()}`);
+  const [isResuming, setIsResuming] = useState(false);
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingResultRef = useRef<QuestionResult | null>(null);
   const hasSavedSessionRef = useRef(false);
   const lockMessage = 'Complete or exit the test first';
 
-  // Navigation lock via context: lock when test is active (not pre-test, not finished)
+  // Navigation lock via context: lock when test is active (not pre-test, not finished, not in countdown)
   useEffect(() => {
-    const shouldLock = !showPreTest && !isFinished;
+    const shouldLock = !showPreTest && !isFinished && !showCountdown;
     setLock(shouldLock, lockMessage);
-  }, [showPreTest, isFinished, setLock]);
+  }, [showPreTest, isFinished, showCountdown, setLock]);
 
   // Release lock on unmount
   useEffect(() => () => setLock(false), [setLock]);
 
-  const questions = useMemo(
-    () =>
-      fisherYatesShuffle(allQuestions)
-        .slice(0, 20)
-        .map(question => ({
-          ...question,
-          answers: fisherYatesShuffle(question.answers),
-        })),
-    []
+  const [questions, setQuestions] = useState(() =>
+    fisherYatesShuffle(allQuestions)
+      .slice(0, 20)
+      .map(question => ({
+        ...question,
+        answers: fisherYatesShuffle(question.answers),
+      }))
   );
+
+  // Check for saved mock-test sessions on mount
+  useEffect(() => {
+    let cancelled = false;
+    getSessionsByType('mock-test')
+      .then(sessions => {
+        if (!cancelled && sessions.length > 0) {
+          setSavedSessions(sessions as MockTestSnapshot[]);
+          setShowResumeModal(true);
+        }
+      })
+      .catch(() => {
+        // IndexedDB not available
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Resume handler: restore session state and show countdown
+  const handleResume = useCallback((session: SessionSnapshot) => {
+    const mockSession = session as MockTestSnapshot;
+    setQuestions(mockSession.questions);
+    setResults(mockSession.results);
+    setCurrentIndex(mockSession.currentIndex);
+    // Timer resets to full duration (user decision: fresh timer on resume)
+    setTimeLeft(TEST_DURATION_SECONDS);
+    setShowResumeModal(false);
+    setIsResuming(true);
+    setShowPreTest(false);
+    // Show countdown before resuming
+    setShowCountdown(true);
+  }, []);
+
+  // Start fresh handler: delete saved session and continue to normal flow
+  const handleStartFresh = useCallback((session: SessionSnapshot) => {
+    deleteSession(session.id).catch(() => {});
+    setSavedSessions([]);
+    setShowResumeModal(false);
+    // Continue to normal PreTestScreen
+  }, []);
+
+  // Not now handler: dismiss modal, keep session saved for next visit
+  const handleNotNow = useCallback(() => {
+    setShowResumeModal(false);
+    // Session stays saved, modal re-appears on next visit
+  }, []);
+
+  // Countdown complete handler
+  const handleCountdownComplete = useCallback(() => {
+    setShowCountdown(false);
+  }, []);
   // Map questionId -> Question for explanation lookup in review screen
   const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), [questions]);
   const currentQuestion = !isFinished ? questions[currentIndex] : null;
@@ -213,6 +274,19 @@ const TestPage = () => {
 
       pendingResultRef.current = result;
 
+      // Fire-and-forget: persist session snapshot to IndexedDB
+      const snapshot: MockTestSnapshot = {
+        id: sessionId,
+        type: 'mock-test',
+        savedAt: new Date().toISOString(),
+        version: SESSION_VERSION,
+        questions,
+        results: [...results, result],
+        currentIndex: currentIndex + 1,
+        timeLeft,
+      };
+      saveSession(snapshot).catch(() => {});
+
       // Fire-and-forget: record answer to mastery store
       recordAnswer({
         questionId: currentQuestion.id,
@@ -226,7 +300,17 @@ const TestPage = () => {
         advanceToNext();
       }, FEEDBACK_DELAY_MS);
     },
-    [currentQuestion, isFinished, showFeedback, advanceToNext]
+    [
+      currentQuestion,
+      isFinished,
+      showFeedback,
+      advanceToNext,
+      sessionId,
+      questions,
+      results,
+      currentIndex,
+      timeLeft,
+    ]
   );
 
   const handleExplanationExpandChange = useCallback((expanded: boolean) => {
@@ -248,9 +332,9 @@ const TestPage = () => {
     }
   }, [correctCount]);
 
-  // Timer countdown
+  // Timer countdown (gated on showCountdown to prevent ticking during countdown animation)
   useEffect(() => {
-    if (isFinished || showPreTest) return;
+    if (isFinished || showPreTest || showCountdown) return;
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -263,11 +347,11 @@ const TestPage = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isFinished, showPreTest]);
+  }, [isFinished, showPreTest, showCountdown]);
 
   // Navigation lock — throttle history API to stay under browser's 100/10s limit
   useEffect(() => {
-    if (isFinished || showPreTest) return;
+    if (isFinished || showPreTest || showCountdown) return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
@@ -296,7 +380,7 @@ const TestPage = () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFinished, showPreTest, showWarning]);
+  }, [isFinished, showPreTest, showCountdown, showWarning]);
 
   // Save session on finish
   useEffect(() => {
@@ -319,6 +403,8 @@ const TestPage = () => {
     const persist = async () => {
       try {
         await saveTestSession(session);
+        // Clean up saved session from IndexedDB on completion
+        deleteSession(sessionId).catch(() => {});
         showSuccess({
           en: `Mock test saved — ${correctAnswers} correct answers`,
           my: `စမ်းသပ်စာမေးပွဲ သိမ်းဆည်းပြီး — အဖြေမှန် ${correctAnswers} ခု`,
@@ -339,6 +425,7 @@ const TestPage = () => {
     questions.length,
     results,
     saveTestSession,
+    sessionId,
     showSuccess,
     showWarning,
     timeLeft,
@@ -359,7 +446,33 @@ const TestPage = () => {
         <PreTestScreen
           questionCount={20}
           durationMinutes={20}
-          onReady={() => setShowPreTest(false)}
+          onReady={() => {
+            setShowPreTest(false);
+            setShowCountdown(true);
+          }}
+        />
+        <ResumePromptModal
+          sessions={savedSessions}
+          open={showResumeModal}
+          onResume={handleResume}
+          onStartFresh={handleStartFresh}
+          onNotNow={handleNotNow}
+        />
+      </div>
+    );
+  }
+
+  // Countdown overlay (shown before every timed test start)
+  if (showCountdown) {
+    return (
+      <div className="page-shell" data-tour="mock-test">
+        <SessionCountdown
+          onComplete={handleCountdownComplete}
+          subtitle={
+            isResuming
+              ? `Mock Test \u2014 Q${currentIndex + 1}/${questions.length}`
+              : `Mock Test \u2014 ${questions.length} Questions`
+          }
         />
       </div>
     );
