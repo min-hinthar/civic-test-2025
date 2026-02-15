@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 04 of 12 in current phase
+Plan: 05 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-04-PLAN.md (SegmentedProgressBar, QuizHeader, SkipButton)
+Last activity: 2026-02-15 -- Completed 21-05-PLAN.md (Interview Components & Speech Hooks)
 
-Progress: [████░░░░░░░░] 42% (5/12 plans complete)
+Progress: [█████░░░░░░░] 50% (6/12 plans complete)
 
 ## Completed Milestones
 
@@ -51,6 +51,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - PillTabBar reduced motion support via useReducedMotion (disables scale, instant pill position)
 - PreTestScreen onCountChange prop optional for backward compatibility
 - InterviewSetup PillTabBar selector replaces two-card direct-click with mode selector + info panel
+- Native Web Speech API used directly instead of react-speech-recognition (avoids dependency, per user instruction)
+- CSS keyframe animations for examiner character (no Lottie, saves 133KB)
+- Web Speech API type declarations added as ambient .d.ts for TypeScript
+- Silence detection uses cancelled-flag pattern for React Compiler safety
 - FeedbackPanel uses SPRING_SNAPPY for slide-up, SPRING_BOUNCY for checkmark icon
 - AnswerOptionGroup arrow keys directly select answers (not just focus) per locked decision
 - AnswerOption uses inline shadow-[0_4px_0] with border color token for 3D chunky style
@@ -138,10 +142,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 12 complete
-Next step: Phase 21 remaining plans (05-11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 12 complete
+Next step: Phase 21 remaining plans (06-11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 04 complete -- SegmentedProgressBar, QuizHeader, SkipButton)*
+*Last updated: 2026-02-15 (Phase 21 plan 05 complete -- Interview Components & Speech Hooks)*
