@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 07 of 12 in current phase
+Plan: 08 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-07-PLAN.md (PracticeSession Refactor)
+Last activity: 2026-02-15 -- Completed 21-08-PLAN.md (Interview Session Overhaul)
 
-Progress: [██████░░░░░░] 58% (7/12 plans complete)
+Progress: [████████░░░░] 67% (8/12 plans complete)
 
 ## Completed Milestones
 
@@ -70,6 +70,14 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Timer pauses during feedback phase (isFeedback gates timer effect)
 - PracticeSnapshot extended with optional skippedIndices for session persistence
 - hasCompletedRef prevents double-firing onComplete from effect on finished state
+- Chat-style conversation log replaces old Q&A card layout in InterviewSession
+- ExaminerCharacter replaces InterviewerAvatar with state-driven animations
+- Auto-grading via gradeAnswer when speech recognition available, SelfGradeButtons fallback
+- Practice mode: per-question feedback with TTS, exit allowed; Real mode: brief acks, early termination
+- Dark gradient background (slate-900/800) for interview immersion
+- Typing indicator phase (1.2s) before each question for natural conversation feel
+- Response time tracked from TTS end to answer submit (InterviewResult confidence/responseTimeMs fields)
+- InterviewPage.tsx unchanged -- InterviewSession props interface backward compatible
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -149,10 +157,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 07, 12 complete
-Next step: Phase 21 remaining plans (06, 08-11)
+Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 07, 08, 12 complete
+Next step: Phase 21 remaining plans (06, 09, 10, 11)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 07 complete -- PracticeSession Refactor)*
+*Last updated: 2026-02-15 (Phase 21 plan 08 complete -- Interview Session Overhaul)*
