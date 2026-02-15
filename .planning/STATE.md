@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 21 of 25 (Test & Practice UX Overhaul)
 Plan: 2 of 12 in current phase
 Status: In progress
-Last activity: 2026-02-15 -- Completed 21-02-PLAN.md (Answer Grader TDD)
+Last activity: 2026-02-15 -- Completed 21-01-PLAN.md (Quiz Foundations)
 
-Progress: [█░░░░░░░░░░░] 8% (1/12 plans complete)
+Progress: [██░░░░░░░░░░] 17% (2/12 plans complete)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 20 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 1+)
+- v2.1: 21 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 2+)
 
 ## Accumulated Context
 
@@ -39,6 +39,11 @@ See `.planning/MILESTONES.md` for details.
 All decisions archived in PROJECT.md Key Decisions table.
 
 **Phase 21 decisions:**
+- Quiz state machine uses 6 phases with strict guards preventing invalid state combinations
+- Haptics use Vibration API directly (no library) with silent no-op on unsupported platforms
+- Sound effects follow existing module pattern: mute check, lazy AudioContext, silent catch
+- Threshold helpers (hasPassedThreshold/hasFailedThreshold) are pure functions for consumer flexibility
+- playCompletionSparkle uses dual-tone (2000Hz + 2400Hz) for richer sparkle effect
 - Compound number phrases handled before individual number words to avoid partial replacements
 - Bidirectional synonym mapping (freedom/liberty) for keyword matching
 - Extended stop words list includes spoken filler words (think, would, could) for natural speech tolerance
@@ -121,10 +126,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plan 02 complete
+Stopped at: Phase 21, plans 01 and 02 complete
 Next step: Phase 21 plan 03+
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 02 complete -- answer grader TDD)*
+*Last updated: 2026-02-15 (Phase 21 plans 01+02 complete -- quiz foundations + answer grader TDD)*
