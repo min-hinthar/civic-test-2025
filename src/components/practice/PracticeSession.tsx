@@ -10,6 +10,9 @@ import { CircularTimer } from '@/components/test/CircularTimer';
 import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/AnswerFeedback';
 import { WhyButton } from '@/components/explanations/WhyButton';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
+import { saveSession } from '@/lib/sessions/sessionStore';
+import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
+import type { PracticeSnapshot } from '@/lib/sessions/sessionTypes';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -26,6 +29,14 @@ interface PracticeSessionProps {
   timerEnabled: boolean;
   /** Called when all questions are answered */
   onComplete: (results: QuestionResult[]) => void;
+  /** Session ID for persistence (optional -- when provided, saves to IndexedDB) */
+  sessionId?: string;
+  /** Practice config for persistence metadata */
+  practiceConfig?: PracticeSnapshot['config'];
+  /** Initial results when resuming a saved session */
+  initialResults?: QuestionResult[];
+  /** Initial question index when resuming a saved session */
+  initialIndex?: number;
 }
 
 /**
@@ -40,11 +51,19 @@ interface PracticeSessionProps {
  * - Records answers to masteryStore with sessionType: 'practice'
  * - Navigation lock via beforeunload
  */
-export function PracticeSession({ questions, timerEnabled, onComplete }: PracticeSessionProps) {
+export function PracticeSession({
+  questions,
+  timerEnabled,
+  onComplete,
+  sessionId,
+  practiceConfig,
+  initialResults,
+  initialIndex,
+}: PracticeSessionProps) {
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [results, setResults] = useState<QuestionResult[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(initialIndex ?? 0);
+  const [results, setResults] = useState<QuestionResult[]>(initialResults ?? []);
   const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [explanationExpanded, setExplanationExpanded] = useState(false);
@@ -119,13 +138,41 @@ export function PracticeSession({ questions, timerEnabled, onComplete }: Practic
         sessionType: 'practice',
       });
 
+      // Save session to IndexedDB (fire-and-forget)
+      if (sessionId && practiceConfig) {
+        const snapshot: PracticeSnapshot = {
+          id: sessionId,
+          type: 'practice',
+          savedAt: new Date().toISOString(),
+          version: SESSION_VERSION,
+          questions,
+          results: [...results, result],
+          currentIndex: currentIndex + 1,
+          timerEnabled,
+          timeLeft,
+          config: practiceConfig,
+        };
+        saveSession(snapshot).catch(() => {});
+      }
+
       // Delay before advancing
       feedbackTimeoutRef.current = setTimeout(() => {
         feedbackTimeoutRef.current = null;
         advanceToNext();
       }, FEEDBACK_DELAY_MS);
     },
-    [currentQuestion, showFeedback, advanceToNext]
+    [
+      currentQuestion,
+      showFeedback,
+      advanceToNext,
+      sessionId,
+      practiceConfig,
+      questions,
+      results,
+      currentIndex,
+      timerEnabled,
+      timeLeft,
+    ]
   );
 
   const handleExplanationExpandChange = useCallback((expanded: boolean) => {

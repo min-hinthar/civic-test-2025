@@ -10,8 +10,13 @@ import { getCategoryQuestionIds, CATEGORY_COLORS, USCIS_CATEGORIES } from '@/lib
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import { allQuestions } from '@/constants/questions';
+import { getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
+import type { PracticeSnapshot } from '@/lib/sessions/sessionTypes';
+import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
+import { SessionCountdown } from '@/components/sessions/SessionCountdown';
 import type { Question, QuestionResult, Category } from '@/types';
 import type { USCISCategory, CategoryName } from '@/lib/mastery';
+import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
 
 type PracticePhase = 'config' | 'session' | 'results';
 
@@ -40,6 +45,66 @@ const PracticePage = () => {
   const [previousMastery, setPreviousMastery] = useState(0);
   const { overallMastery, categoryMasteries } = useCategoryMastery();
 
+  // --- Session persistence state ---
+  const [savedSessions, setSavedSessions] = useState<PracticeSnapshot[]>([]);
+  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [sessionId] = useState(() => `session-practice-${Date.now()}`);
+  const [initialResults, setInitialResults] = useState<QuestionResult[]>([]);
+  const [initialIndex, setInitialIndex] = useState(0);
+  const [practiceConfig, setPracticeConfig] = useState<PracticeSnapshot['config'] | null>(null);
+
+  // Check for saved sessions on mount
+  useEffect(() => {
+    let cancelled = false;
+    getSessionsByType('practice')
+      .then(sessions => {
+        if (!cancelled && sessions.length > 0) {
+          setSavedSessions(sessions as PracticeSnapshot[]);
+          setShowResumeModal(true);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // --- Resume / Start Fresh / Not Now handlers ---
+
+  const handleResume = useCallback((session: SessionSnapshot) => {
+    const snap = session as PracticeSnapshot;
+    setPracticeQuestions(snap.questions);
+    setInitialResults(snap.results);
+    setInitialIndex(snap.currentIndex);
+    setTimerEnabled(snap.timerEnabled);
+    setCategoryName(snap.config.categoryName);
+    setPracticeConfig(snap.config);
+    setShowResumeModal(false);
+
+    // If timer enabled, show countdown before session; otherwise go straight to session
+    if (snap.timerEnabled) {
+      setShowCountdown(true);
+    } else {
+      setPhase('session');
+    }
+  }, []);
+
+  const handleStartFresh = useCallback((session: SessionSnapshot) => {
+    deleteSession(session.id).catch(() => {});
+    setSavedSessions([]);
+    setShowResumeModal(false);
+  }, []);
+
+  const handleNotNow = useCallback(() => {
+    setShowResumeModal(false);
+  }, []);
+
+  const handleCountdownComplete = useCallback(() => {
+    setShowCountdown(false);
+    setPhase('session');
+  }, []);
+
   const handleStart = useCallback(
     async (config: PracticeConfigType) => {
       // Capture mastery before session for animation
@@ -54,6 +119,13 @@ const PracticePage = () => {
 
       setCategoryName(config.categoryName);
       setTimerEnabled(config.timerEnabled);
+
+      // Save practice config for session persistence
+      setPracticeConfig({
+        category: config.category,
+        categoryName: config.categoryName,
+        count: config.count,
+      });
 
       // Determine color
       if (config.category !== 'weak') {
@@ -105,15 +177,30 @@ const PracticePage = () => {
       }));
 
       setPracticeQuestions(shuffledQuestions);
-      setPhase('session');
+
+      // Reset resume state for new session
+      setInitialResults([]);
+      setInitialIndex(0);
+
+      // If timer enabled, show countdown; otherwise go straight to session
+      if (config.timerEnabled) {
+        setShowCountdown(true);
+      } else {
+        setPhase('session');
+      }
     },
     [overallMastery, categoryMasteries]
   );
 
-  const handleComplete = useCallback((results: QuestionResult[]) => {
-    setPracticeResults(results);
-    setPhase('results');
-  }, []);
+  const handleComplete = useCallback(
+    (results: QuestionResult[]) => {
+      setPracticeResults(results);
+      setPhase('results');
+      // Delete session from IndexedDB on completion
+      deleteSession(sessionId).catch(() => {});
+    },
+    [sessionId]
+  );
 
   const handleDone = useCallback(() => {
     // Reset state and go back to config
@@ -130,14 +217,41 @@ const PracticePage = () => {
   // Release lock on unmount
   useEffect(() => () => setLock(false), [setLock]);
 
+  // Build countdown subtitle
+  const countdownSubtitle = practiceConfig
+    ? initialIndex > 0
+      ? `Practice: ${practiceConfig.categoryName.en} \u2014 Q${initialIndex + 1}/${practiceConfig.count}`
+      : `Practice: ${practiceConfig.categoryName.en} \u2014 ${practiceConfig.count} Questions`
+    : undefined;
+
   return (
     <div className="page-shell">
+      {/* Resume prompt modal (config phase only) */}
+      {phase === 'config' && savedSessions.length > 0 && (
+        <ResumePromptModal
+          sessions={savedSessions}
+          open={showResumeModal}
+          onResume={handleResume}
+          onStartFresh={handleStartFresh}
+          onNotNow={handleNotNow}
+        />
+      )}
+
+      {/* Session countdown (timer enabled) */}
+      {showCountdown && (
+        <SessionCountdown onComplete={handleCountdownComplete} subtitle={countdownSubtitle} />
+      )}
+
       {phase === 'config' && <PracticeConfig onStart={handleStart} />}
       {phase === 'session' && practiceQuestions.length > 0 && (
         <PracticeSession
           questions={practiceQuestions}
           timerEnabled={timerEnabled}
           onComplete={handleComplete}
+          sessionId={sessionId}
+          practiceConfig={practiceConfig ?? undefined}
+          initialResults={initialResults.length > 0 ? initialResults : undefined}
+          initialIndex={initialIndex > 0 ? initialIndex : undefined}
         />
       )}
       {phase === 'results' && (
