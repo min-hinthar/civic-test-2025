@@ -213,36 +213,36 @@ export function playSwoosh(): void {
 }
 
 // ---------------------------------------------------------------------------
-// Countdown sounds (stubs -- plan 20-01 replaces with full implementations)
+// Countdown sounds
 // ---------------------------------------------------------------------------
 
 /**
- * Short tick sound for countdown numbers (5-1).
- * Stub: plays a brief click. Plan 20-01 provides the real implementation.
+ * Short click/tick for countdown numbers (5, 4, 3, 2, 1).
+ * 800 Hz sine wave, 80ms duration, volume 0.15. Subtle but audible.
  */
 export function playCountdownTick(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 880, 0, 0.08, 0.2); // A5 click
+    playNote(ctx, 800, 0, 0.08, 0.15);
   } catch {
     // Silently ignore
   }
 }
 
 /**
- * Chime sound for countdown "Go!".
- * Stub: plays a brief rising tone. Plan 20-01 provides the real implementation.
+ * Ascending two-note "Go!" chime for countdown completion.
+ * C5 (523 Hz) at t=0 for 150ms, then G5 (784 Hz) at t=0.1 for 200ms.
+ * Energetic start signal.
  */
 export function playCountdownGo(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 523, 0, 0.15, 0.3); // C5
-    playNote(ctx, 784, 0.1, 0.2, 0.3); // G5
-    playNote(ctx, 1047, 0.2, 0.3, 0.3); // C6
+    playNote(ctx, 523, 0, 0.15, 0.25); // C5
+    playNote(ctx, 784, 0.1, 0.2, 0.25); // G5
   } catch {
     // Silently ignore
   }
