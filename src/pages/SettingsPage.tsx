@@ -17,7 +17,6 @@ import {
   Globe,
   LogOut,
   MapPin,
-  Mic,
   Palette,
   RotateCcw,
   Settings,
@@ -37,6 +36,9 @@ import { SocialSettings } from '@/components/social/SocialSettings';
 import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { useTTS } from '@/hooks/useTTS';
+import { VoicePicker } from '@/components/ui/VoicePicker';
+import type { AutoReadLang, BurmeseVoice } from '@/lib/ttsTypes';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
 
@@ -46,6 +48,21 @@ const SPEECH_RATE_OPTIONS: { value: SpeechRate; en: string; my: string }[] = [
   { value: 'slow', en: 'Slow', my: '\u1014\u103E\u1031\u1038' },
   { value: 'normal', en: 'Normal', my: '\u1015\u102F\u1036\u1019\u103E\u1014\u103A' },
   { value: 'fast', en: 'Fast', my: '\u1019\u103C\u1014\u103A' },
+];
+
+const AUTO_READ_LANG_OPTIONS: { value: AutoReadLang; en: string; my: string }[] = [
+  { value: 'english', en: 'English', my: '\u1021\u1004\u103A\u1039\u1002\u101C\u102D\u1015\u103A' },
+  { value: 'burmese', en: 'Burmese', my: '\u1019\u103C\u1014\u103A\u1019\u102C' },
+  {
+    value: 'both',
+    en: 'Both',
+    my: '\u1014\u103E\u1005\u103A\u1019\u103B\u102D\u102F\u1038\u101C\u102F\u1036\u1038',
+  },
+];
+
+const BURMESE_VOICE_OPTIONS: { value: BurmeseVoice; en: string }[] = [
+  { value: 'nilar', en: 'Nilar (Female)' },
+  { value: 'thiha', en: 'Thiha (Male)' },
 ];
 
 /** Reusable toggle switch component */
@@ -183,6 +200,7 @@ export default function SettingsPage() {
     return localStorage.getItem(SRS_REMINDER_TIME_KEY) ?? '09:00';
   });
   const { settings: ttsSettings, updateSettings: updateTTSSettings } = useTTSSettings();
+  const { voices } = useTTS();
   const speechRate = ttsSettings.rate;
   const { selectedState, setSelectedState, allStates } = useUserState();
   const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
@@ -371,9 +389,183 @@ export default function SettingsPage() {
           />
         </SettingsSection>
 
-        {/* ======= Sound & Notifications Section ======= */}
+        {/* ======= Speech & Audio Section ======= */}
         <SettingsSection
           icon={<Volume2 className="h-5 w-5" />}
+          titleEn="Speech & Audio"
+          titleMy={
+            '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u1004\u103A\u1037 \u1021\u101E\u1036'
+          }
+          showBurmese={showBurmese}
+        >
+          {/* Voice Picker */}
+          <SettingsRow
+            label="English Voice"
+            labelMy={'\u1021\u1004\u103A\u1039\u1002\u101C\u102D\u1015\u103A\u1021\u101E\u1036'}
+            description="Select a voice for English text-to-speech"
+            descriptionMy={
+              '\u1021\u1004\u103A\u1039\u1002\u101C\u102D\u1015\u103A\u1005\u102C\u101E\u102C\u1016\u1010\u103A\u101B\u1014\u103A \u1021\u101E\u1036\u101B\u103D\u1031\u1038\u1001\u103B\u101A\u103A\u1015\u102B'
+            }
+            showBurmese={showBurmese}
+            action={
+              <VoicePicker
+                voices={voices}
+                selectedVoice={ttsSettings.preferredVoice}
+                onSelect={(name: string) => updateTTSSettings({ preferredVoice: name || null })}
+                showBurmese={showBurmese}
+              />
+            }
+          />
+
+          {/* Speech Speed */}
+          <div className="py-3 border-b border-border/40">
+            <div className="flex items-center gap-2 mb-2">
+              <Globe className="h-4 w-4 text-primary" />
+              <p className="text-sm font-semibold text-foreground">Speech Speed</p>
+              {showBurmese && (
+                <span className="font-myanmar text-xs text-muted-foreground">
+                  {
+                    '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
+                  }
+                </span>
+              )}
+            </div>
+            <div className="flex gap-2" role="radiogroup" aria-label="Speech rate">
+              {SPEECH_RATE_OPTIONS.map(option => (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={speechRate === option.value}
+                  onClick={() => handleSpeechRateChange(option.value)}
+                  className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
+                    speechRate === option.value
+                      ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
+                      : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
+                  }`}
+                >
+                  <span>{option.en}</span>
+                  {showBurmese && (
+                    <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                      {option.my}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Controls how fast text-to-speech reads aloud.
+            </p>
+            {showBurmese && (
+              <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                {
+                  '\u1005\u102C\u101E\u102C\u1016\u1010\u103A\u101B\u1014\u103A \u1021\u101E\u1036\u1019\u103C\u1014\u103A\u1000\u102D\u102F \u1011\u102D\u1014\u103A\u1038\u1001\u103B\u102F\u1015\u103A\u1015\u102B\u104B'
+                }
+              </p>
+            )}
+          </div>
+
+          {/* Auto-Read Toggle */}
+          <SettingsRow
+            label="Auto-Read Questions"
+            labelMy={
+              '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1021\u101C\u102D\u102F\u1021\u101C\u103B\u103E\u1031\u102C\u1000\u103A\u1016\u1010\u103A\u1015\u102B'
+            }
+            description="Automatically read questions aloud when they appear"
+            descriptionMy={
+              '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1015\u1031\u102B\u103A\u101C\u102C\u101E\u1031\u102C\u1021\u1001\u102B \u1021\u101C\u102D\u102F\u1021\u101C\u103B\u103E\u1031\u102C\u1000\u103A\u1016\u1010\u103A\u1015\u102B\u101E\u100A\u103A'
+            }
+            showBurmese={showBurmese}
+            action={
+              <ToggleSwitch
+                checked={ttsSettings.autoRead}
+                onChange={() => updateTTSSettings({ autoRead: !ttsSettings.autoRead })}
+                ariaLabel="Toggle auto-read questions"
+              />
+            }
+          />
+
+          {/* Auto-Read Language (conditional: visible when autoRead ON and showBurmese) */}
+          {ttsSettings.autoRead && showBurmese && (
+            <div className="py-3 border-b border-border/40">
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-sm font-semibold text-foreground">Auto-Read Language</p>
+                <span className="font-myanmar text-xs text-muted-foreground">
+                  {
+                    '\u1021\u101C\u102D\u102F\u1021\u101C\u103B\u103E\u1031\u102C\u1000\u103A\u1016\u1010\u103A\u101B\u1014\u103A\u1018\u102C\u101E\u102C'
+                  }
+                </span>
+              </div>
+              <div className="flex gap-2" role="radiogroup" aria-label="Auto-read language">
+                {AUTO_READ_LANG_OPTIONS.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={ttsSettings.autoReadLang === option.value}
+                    onClick={() => updateTTSSettings({ autoReadLang: option.value })}
+                    className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
+                      ttsSettings.autoReadLang === option.value
+                        ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
+                        : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
+                    }`}
+                  >
+                    <span>{option.en}</span>
+                    {showBurmese && (
+                      <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                        {option.my}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Burmese Voice Selector (conditional: visible when showBurmese) */}
+          {showBurmese && (
+            <div className="py-3">
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-sm font-semibold text-foreground">Burmese Voice</p>
+                <span className="font-myanmar text-xs text-muted-foreground">
+                  {'\u1019\u103C\u1014\u103A\u1019\u102C\u1021\u101E\u1036'}
+                </span>
+              </div>
+              <div className="flex gap-2" role="radiogroup" aria-label="Burmese voice">
+                {BURMESE_VOICE_OPTIONS.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={ttsSettings.burmeseVoice === option.value}
+                    onClick={() => updateTTSSettings({ burmeseVoice: option.value })}
+                    className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
+                      ttsSettings.burmeseVoice === option.value
+                        ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
+                        : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
+                    }`}
+                  >
+                    {option.en}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Select the voice for Burmese audio playback.
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                  {
+                    '\u1019\u103C\u1014\u103A\u1019\u102C\u1021\u101E\u1036\u1016\u103C\u1004\u103A\u1037\u1016\u1010\u103A\u101B\u1014\u103A \u1021\u101E\u1036\u101B\u103D\u1031\u1038\u1001\u103B\u101A\u103A\u1015\u102B\u104B'
+                  }
+                </p>
+              )}
+            </div>
+          )}
+        </SettingsSection>
+
+        {/* ======= Sound & Notifications Section ======= */}
+        <SettingsSection
+          icon={<Bell className="h-5 w-5" />}
           titleEn="Sound & Notifications"
           titleMy={
             '\u1021\u101E\u1036\u1014\u103E\u1004\u103A\u1037 \u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1000\u103C\u102C\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038'
@@ -464,61 +656,6 @@ export default function SettingsPage() {
                   </p>
                 )}
               </div>
-            )}
-          </div>
-        </SettingsSection>
-
-        {/* ======= Interview Section ======= */}
-        <SettingsSection
-          icon={<Mic className="h-5 w-5" />}
-          titleEn="Interview"
-          titleMy={'\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038'}
-          showBurmese={showBurmese}
-        >
-          <div className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Globe className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold text-foreground">Speech Speed</p>
-              {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground">
-                  {
-                    '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
-                  }
-                </span>
-              )}
-            </div>
-            <div className="flex gap-2" role="radiogroup" aria-label="Speech rate">
-              {SPEECH_RATE_OPTIONS.map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={speechRate === option.value}
-                  onClick={() => handleSpeechRateChange(option.value)}
-                  className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
-                    speechRate === option.value
-                      ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
-                      : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
-                  }`}
-                >
-                  <span>{option.en}</span>
-                  {showBurmese && (
-                    <span className="block font-myanmar text-xs mt-0.5 font-normal">
-                      {option.my}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Controls how fast the interviewer speaks during practice.
-            </p>
-            {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                {
-                  '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1005\u1005\u103A\u101E\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1021\u1010\u103D\u1004\u103A\u1038 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u101E\u100A\u103A\u1037\u1021\u1019\u103C\u1014\u103A\u1000\u102D\u102F \u1011\u102D\u1014\u103A\u1038\u1001\u103B\u102F\u1015\u103A\u1015\u102B\u104B'
-                }
-              </p>
             )}
           </div>
         </SettingsSection>

@@ -1,0 +1,89 @@
+'use client';
+
+/**
+ * VoicePicker Component
+ *
+ * Dropdown for selecting a TTS voice from available browser voices.
+ * Filters to English voices, groups by local/remote, and plays a
+ * preview sample on selection change.
+ */
+
+import React, { useMemo } from 'react';
+import { useTTS } from '@/hooks/useTTS';
+
+interface VoicePickerProps {
+  voices: SpeechSynthesisVoice[];
+  selectedVoice: string | null;
+  onSelect: (voiceName: string) => void;
+  showBurmese: boolean;
+}
+
+const PREVIEW_TEXT = 'What is the supreme law of the land?';
+
+export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: VoicePickerProps) {
+  const { speak } = useTTS();
+
+  // Filter to English voices (en-*) and sort: local first, then alphabetical
+  const filteredVoices = useMemo(() => {
+    return voices
+      .filter(v => {
+        const lang = v.lang.toLowerCase().replace(/_/g, '-');
+        return lang.startsWith('en-') || lang === 'en';
+      })
+      .sort((a, b) => {
+        // Local voices first
+        if (a.localService && !b.localService) return -1;
+        if (!a.localService && b.localService) return 1;
+        return a.name.localeCompare(b.name);
+      });
+  }, [voices]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.value;
+    onSelect(name);
+
+    // Play preview with the selected voice
+    if (name) {
+      const voice = voices.find(v => v.name === name);
+      if (voice) {
+        speak(PREVIEW_TEXT, { voice, lang: voice.lang }).catch(() => {
+          // Preview playback failed silently -- not critical
+        });
+      }
+    }
+  };
+
+  if (filteredVoices.length === 0) {
+    return (
+      <div className="rounded-xl border border-warning bg-warning-subtle px-4 py-3">
+        <p className="text-sm font-semibold text-warning">No voices available</p>
+        <p className="text-xs text-warning/80 mt-1">
+          Your browser may not have any speech voices installed.
+        </p>
+        {showBurmese && (
+          <p className="text-xs text-warning/80 mt-1 font-myanmar">
+            {
+              '\u101E\u1004\u103A\u1037\u1018\u101B\u102C\u1000\u103A\u1006\u102C\u1010\u103D\u1004\u103A \u1021\u101E\u1036\u1019\u103B\u102C\u1038 \u1019\u101B\u103E\u102D\u1015\u102B\u104B'
+            }
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <select
+      value={selectedVoice ?? ''}
+      onChange={handleChange}
+      className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px] min-w-[200px]"
+      aria-label="Select English voice"
+    >
+      <option value="">System default</option>
+      {filteredVoices.map(voice => (
+        <option key={voice.name} value={voice.name}>
+          {voice.name} ({voice.localService ? 'Local' : 'Online'})
+        </option>
+      ))}
+    </select>
+  );
+}
