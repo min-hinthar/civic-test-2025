@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 21 of 25 (Test & Practice UX Overhaul)
-Plan: 11 of 12 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 21-09-PLAN.md (Test/Practice Results Screen)
+Plan: 12 of 12 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 21-11-PLAN.md (Streak/XP Micro-Rewards & Keyboard Nav)
 
-Progress: [███████████░] 92% (11/12 plans complete)
+Progress: [████████████] 100% (12/12 plans complete)
 
 ## Completed Milestones
 
@@ -99,6 +99,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - CategoryBreakdown sorts categories weakest-first for actionable review
 - QuestionReviewList supports skipped questions as third filter tab
 - Duration stat grid conditionally renders 3 or 4 columns based on timeTaken availability
+- Streak milestones at 3,5,7,10,15,20 (not every correct answer) with badge tiers flame/star/trophy
+- playStreak() sound only at streak >= 10 to avoid audio fatigue
+- XP popup uses useState animKey pattern instead of Date.now() for React Compiler purity
+- Focus rings always visible (focus:ring-2) not keyboard-only (focus-visible:ring-2)
+- Context-sensitive Enter key: Check when answer selected, Continue when feedback showing
+- Escape opens exit dialog globally (not just from QuizHeader)
 
 **Phase 20 decisions:**
 - 1-per-type session limit enforced in saveSession (max 3 snapshots total)
@@ -178,10 +184,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 21, plans 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 12 complete
-Next step: Phase 21 remaining plan (11)
+Stopped at: Phase 21 complete (all 12 plans)
+Next step: Phase 22 planning
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-15 (Phase 21 plan 09 complete -- Test/Practice Results Screen)*
+*Last updated: 2026-02-15 (Phase 21 complete -- all 12 plans executed)*
