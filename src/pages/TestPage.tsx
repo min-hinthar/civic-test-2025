@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ChevronRight, Trophy } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Sparkles, Trophy } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
 import SpeechButton from '@/components/ui/SpeechButton';
@@ -13,13 +13,10 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
 import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
-import { Progress } from '@/components/ui/Progress';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { PreTestScreen } from '@/components/test/PreTestScreen';
-import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/AnswerFeedback';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
-import { WhyButton } from '@/components/explanations/WhyButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
@@ -46,11 +43,43 @@ import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { SessionCountdown } from '@/components/sessions/SessionCountdown';
 import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
+import { hapticLight, hapticDouble } from '@/lib/haptics';
+
+// New quiz state machine components
+import {
+  quizReducer,
+  initialQuizState,
+  createQuizConfig,
+  hasPassedThreshold,
+  hasFailedThreshold,
+} from '@/lib/quiz/quizReducer';
+import { AnswerOptionGroup } from '@/components/quiz/AnswerOption';
+import { FeedbackPanel } from '@/components/quiz/FeedbackPanel';
+import { SegmentedProgressBar } from '@/components/quiz/SegmentedProgressBar';
+import type { SegmentStatus } from '@/components/quiz/SegmentedProgressBar';
+import { QuizHeader } from '@/components/quiz/QuizHeader';
+import { SkipButton } from '@/components/quiz/SkipButton';
+import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
-const INCORRECT_LIMIT = 9;
-const FEEDBACK_DELAY_MS = 1500;
+const CHECK_DELAY_MS = 250;
+
+// ---------------------------------------------------------------------------
+// Helpers (outside component for React Compiler purity)
+// ---------------------------------------------------------------------------
+
+function getQuestionAtIndex(
+  questions: ReturnType<typeof fisherYatesShuffle<(typeof allQuestions)[number]>>,
+  index: number
+) {
+  return questions[index] ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// TestPage
+// ---------------------------------------------------------------------------
 
 const TestPage = () => {
   const { saveTestSession } = useAuth();
@@ -62,37 +91,34 @@ const TestPage = () => {
   const { showBurmese } = useLanguage();
   const { showSuccess, showWarning } = useToast();
   const { setLock } = useNavigation();
+
+  // Pre-quiz UI state
   const [showPreTest, setShowPreTest] = useState(true);
   const [questionCount, setQuestionCount] = useState(20);
-  const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const [endReason, setEndReason] = useState<TestEndReason | null>(null);
-  const [results, setResults] = useState<QuestionResult[]>([]);
-  const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [explanationExpanded, setExplanationExpanded] = useState(false);
-  const [showAllResults, setShowAllResults] = useState(false);
   const [savedSessions, setSavedSessions] = useState<MockTestSnapshot[]>([]);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [showCountdown, setShowCountdown] = useState(false);
-  const [sessionId] = useState(() => `session-mock-test-${Date.now()}`);
   const [isResuming, setIsResuming] = useState(false);
-  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingResultRef = useRef<QuestionResult | null>(null);
+
+  // Timer state (external to reducer -- timer is a side effect)
+  const [timeLeft, setTimeLeft] = useState(TEST_DURATION_SECONDS);
+
+  // Exit dialog state
+  const [showExitDialog, setShowExitDialog] = useState(false);
+
+  // Results screen state
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showAllResults, setShowAllResults] = useState(false);
+
+  // Session ID (stable across renders)
+  const [sessionId] = useState(() => `session-mock-test-${Date.now()}`);
+
+  // Refs for timeout cleanup and save guard
+  const checkDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasSavedSessionRef = useRef(false);
-  const lockMessage = 'Complete or exit the test first';
+  const resumeDataRef = useRef<MockTestSnapshot | null>(null);
 
-  // Navigation lock via context: lock when test is active (not pre-test, not finished, not in countdown)
-  useEffect(() => {
-    const shouldLock = !showPreTest && !isFinished && !showCountdown;
-    setLock(shouldLock, lockMessage);
-  }, [showPreTest, isFinished, showCountdown, setLock]);
-
-  // Release lock on unmount
-  useEffect(() => () => setLock(false), [setLock]);
-
+  // Questions (lazy-initialized, can be replaced by resume)
   const [questions, setQuestions] = useState(() =>
     fisherYatesShuffle(allQuestions)
       .slice(0, 20)
@@ -101,6 +127,131 @@ const TestPage = () => {
         answers: fisherYatesShuffle(question.answers),
       }))
   );
+
+  // Quiz state machine config
+  const quizConfig = useMemo(
+    () => createQuizConfig('mock-test', questions.length),
+    [questions.length]
+  );
+
+  // Quiz state machine
+  const [quizState, dispatch] = useReducer(quizReducer, quizConfig, initialQuizState);
+  const isFinished = quizState.phase === 'finished';
+  const lockMessage = 'Complete or exit the test first';
+
+  // ---------------------------------------------------------------------------
+  // Derived state (MUST be before early returns per rules-of-hooks)
+  // ---------------------------------------------------------------------------
+
+  const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), [questions]);
+
+  const currentQuestion = !isFinished
+    ? getQuestionAtIndex(questions, quizState.currentIndex)
+    : null;
+  const questionAudioText = currentQuestion?.question_en ?? '';
+  const answerChoicesAudioText =
+    currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
+
+  const correctCount = useMemo(
+    () => quizState.results.filter(r => r.isCorrect).length,
+    [quizState.results]
+  );
+  const incorrectCount = quizState.results.length - correctCount;
+
+  // Segmented progress bar segments
+  const segments: SegmentStatus[] = useMemo(() => {
+    const segs: SegmentStatus[] = [];
+    for (let i = 0; i < questions.length; i++) {
+      if (i === quizState.currentIndex && !isFinished) {
+        segs.push('current');
+      } else if (quizState.skippedIndices.includes(i)) {
+        segs.push('skipped');
+      } else {
+        const result = quizState.results.find(r => r.questionId === questions[i].id);
+        if (result) {
+          segs.push(result.isCorrect ? 'correct' : 'incorrect');
+        } else {
+          segs.push('unanswered');
+        }
+      }
+    }
+    return segs;
+  }, [questions, quizState.currentIndex, quizState.results, quizState.skippedIndices, isFinished]);
+
+  // End reason for results display
+  const endReasonForDisplay: TestEndReason | null = useMemo(() => {
+    if (!isFinished) return null;
+    if (hasPassedThreshold(quizState, quizConfig)) return 'passThreshold';
+    if (hasFailedThreshold(quizState, quizConfig)) return 'failThreshold';
+    if (quizState.results.length === questions.length) return 'complete';
+    return 'time';
+  }, [isFinished, quizState, quizConfig, questions.length]);
+
+  // Final results for save-on-finish
+  const finalResults = useMemo(
+    () => (isFinished ? quizState.results : []),
+    [isFinished, quizState.results]
+  );
+  const finalCorrect = useMemo(() => finalResults.filter(r => r.isCorrect).length, [finalResults]);
+  const finalIncorrect = finalResults.length - finalCorrect;
+
+  // Share card data (only when test is complete and passed)
+  const shareCardData: ShareCardData | null = useMemo(() => {
+    if (!isFinished || finalCorrect < PASS_THRESHOLD) return null;
+
+    const catMap: Record<string, { correct: number; total: number }> = {};
+    for (const r of finalResults) {
+      if (!catMap[r.category]) catMap[r.category] = { correct: 0, total: 0 };
+      catMap[r.category].total += 1;
+      if (r.isCorrect) catMap[r.category].correct += 1;
+    }
+
+    return {
+      score: finalCorrect,
+      total: finalResults.length,
+      sessionType: 'test',
+      streak: currentStreak,
+      topBadge: null,
+      categories: Object.entries(catMap).map(([name, stats]) => ({
+        name,
+        correct: stats.correct,
+        total: stats.total,
+      })),
+      date: new Date().toISOString(),
+    };
+  }, [isFinished, finalCorrect, finalResults, currentStreak]);
+
+  const completionMessage: Record<TestEndReason, { en: string; my: string }> = {
+    passThreshold: {
+      en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
+      my: '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A \u1041\u1042 \u1001\u103B\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u101C\u103B\u103E\u1004\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u1015\u102B\u1010\u101A\u103A\u104B \u1005\u1031\u102C\u1005\u102E\u1038\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1005\u103D\u102C\u1016\u103C\u1031\u1006\u102D\u102F\u1014\u102D\u102F\u1004\u103A\u101E\u100A\u103A\u1000\u102D\u102F \u1002\u102F\u100F\u103A\u101A\u1030\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B',
+    },
+    failThreshold: {
+      en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
+      my: '\u1021\u1019\u103E\u102C\u1038 \u1049 \u1000\u103C\u102D\u1019\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1014\u1031\u102C\u1000\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u1010\u101A\u103A\u104B \u1011\u1015\u103A\u1019\u1036\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u101B\u1014\u103A \u1016\u103C\u1031\u1006\u102D\u102F\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1015\u102B\u104B',
+    },
+    time: {
+      en: 'Time expired before the full set finished.',
+      my: '',
+    },
+    complete: {
+      en: 'You completed all 20 questions.',
+      my: '',
+    },
+  };
+
+  // ---------------------------------------------------------------------------
+  // Effects
+  // ---------------------------------------------------------------------------
+
+  // Navigation lock via context: lock when test is active
+  useEffect(() => {
+    const shouldLock = !showPreTest && !isFinished && !showCountdown;
+    setLock(shouldLock, lockMessage);
+  }, [showPreTest, isFinished, showCountdown, setLock]);
+
+  // Release lock on unmount
+  useEffect(() => () => setLock(false), [setLock]);
 
   // Check for saved mock-test sessions on mount
   useEffect(() => {
@@ -120,237 +271,24 @@ const TestPage = () => {
     };
   }, []);
 
-  // Resume handler: restore session state and show countdown
-  const handleResume = useCallback((session: SessionSnapshot) => {
-    const mockSession = session as MockTestSnapshot;
-    setQuestions(mockSession.questions);
-    setResults(mockSession.results);
-    setCurrentIndex(mockSession.currentIndex);
-    // Timer resets to full duration (user decision: fresh timer on resume)
-    setTimeLeft(TEST_DURATION_SECONDS);
-    setShowResumeModal(false);
-    setIsResuming(true);
-    setShowPreTest(false);
-    // Show countdown before resuming
-    setShowCountdown(true);
-  }, []);
-
-  // Start fresh handler: delete saved session and continue to normal flow
-  const handleStartFresh = useCallback((session: SessionSnapshot) => {
-    deleteSession(session.id).catch(() => {});
-    setSavedSessions([]);
-    setShowResumeModal(false);
-    // Continue to normal PreTestScreen
-  }, []);
-
-  // Not now handler: dismiss modal, keep session saved for next visit
-  const handleNotNow = useCallback(() => {
-    setShowResumeModal(false);
-    // Session stays saved, modal re-appears on next visit
-  }, []);
-
-  // Countdown complete handler
-  const handleCountdownComplete = useCallback(() => {
-    setShowCountdown(false);
-  }, []);
-  // Map questionId -> Question for explanation lookup in review screen
-  const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), [questions]);
-  const currentQuestion = !isFinished ? questions[currentIndex] : null;
-  const questionAudioText = currentQuestion?.question_en ?? '';
-  const answerChoicesAudioText =
-    currentQuestion?.answers?.map(answer => answer.text_en).join('. ') ?? '';
-
-  const answeredQuestions = results.length;
-  const progressPercent = Math.round((answeredQuestions / questions.length) * 100);
-
-  const correctCount = results.filter(result => result.isCorrect).length;
-  const askedCount = results.length;
-  const incorrectCount = askedCount - correctCount;
-
-  // Share card data for social sharing (only when test is complete)
-  const shareCardData: ShareCardData | null = useMemo(() => {
-    if (!isFinished || correctCount < PASS_THRESHOLD) return null;
-
-    // Build category breakdown from results
-    const catMap: Record<string, { correct: number; total: number }> = {};
-    for (const r of results) {
-      if (!catMap[r.category]) catMap[r.category] = { correct: 0, total: 0 };
-      catMap[r.category].total += 1;
-      if (r.isCorrect) catMap[r.category].correct += 1;
-    }
-
-    return {
-      score: correctCount,
-      total: askedCount,
-      sessionType: 'test',
-      streak: currentStreak,
-      topBadge: null,
-      categories: Object.entries(catMap).map(([name, stats]) => ({
-        name,
-        correct: stats.correct,
-        total: stats.total,
-      })),
-      date: new Date().toISOString(),
-    };
-  }, [isFinished, correctCount, askedCount, results, currentStreak]);
-
-  const completionMessage: Record<TestEndReason, { en: string; my: string }> = {
-    passThreshold: {
-      en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
-      my: 'အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ စောစီးအောင်မြင်စွာဖြေဆိုနိုင်သည်ကို ဂုဏ်ယူလိုက်ပါ။',
-    },
-    failThreshold: {
-      en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
-      my: 'အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ ထပ်မံကြိုးစားရန် ဖြေဆိုချက်များကိုပြန်လည်သုံးသပ်ပါ။',
-    },
-    time: {
-      en: 'Time expired before the full set finished.',
-      my: '',
-    },
-    complete: {
-      en: 'You completed all 20 questions.',
-      my: '',
-    },
-  };
-
-  const processResult = useCallback(
-    (result: QuestionResult) => {
-      const nextResults = [...results, result];
-      const nextCorrect = nextResults.filter(item => item.isCorrect).length;
-      const nextIncorrect = nextResults.length - nextCorrect;
-      const answeredAll = nextResults.length === questions.length;
-      const reachedPass = nextCorrect >= PASS_THRESHOLD;
-      const reachedFail = nextIncorrect >= INCORRECT_LIMIT;
-
-      setResults(nextResults);
-
-      if (reachedPass || reachedFail) {
-        setIsFinished(true);
-        setEndReason(reachedPass ? 'passThreshold' : 'failThreshold');
-      } else if (answeredAll) {
-        setIsFinished(true);
-        setEndReason('complete');
-      } else {
-        setCurrentIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
-      }
-    },
-    [questions.length, results]
-  );
-
-  const advanceToNext = useCallback(() => {
-    const result = pendingResultRef.current;
-    if (!result) return;
-    pendingResultRef.current = null;
-    setShowFeedback(false);
-    setSelectedAnswer(null);
-    setExplanationExpanded(false);
-    processResult(result);
-  }, [processResult]);
-
-  const handleAnswerSelect = useCallback(
-    (answer: Answer) => {
-      if (!currentQuestion || isFinished || showFeedback) return;
-
-      setSelectedAnswer(answer);
-      setShowFeedback(true);
-      setExplanationExpanded(false);
-
-      // Play sound in event handler (React Compiler safe)
-      if (answer.correct) {
-        playCorrect();
-      } else {
-        playIncorrect();
-      }
-
-      const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
-      const result: QuestionResult = {
-        questionId: currentQuestion.id,
-        questionText_en: currentQuestion.question_en,
-        questionText_my: currentQuestion.question_my,
-        selectedAnswer: answer,
-        correctAnswer,
-        isCorrect: answer.correct,
-        category: currentQuestion.category,
-      };
-
-      pendingResultRef.current = result;
-
-      // Fire-and-forget: persist session snapshot to IndexedDB
-      const snapshot: MockTestSnapshot = {
-        id: sessionId,
-        type: 'mock-test',
-        savedAt: new Date().toISOString(),
-        version: SESSION_VERSION,
-        questions,
-        results: [...results, result],
-        currentIndex: currentIndex + 1,
-        timeLeft,
-      };
-      saveSession(snapshot).catch(() => {});
-
-      // Fire-and-forget: record answer to mastery store
-      recordAnswer({
-        questionId: currentQuestion.id,
-        isCorrect: answer.correct,
-        sessionType: 'test',
-      });
-
-      // Delay before moving to next question to show feedback
-      feedbackTimeoutRef.current = setTimeout(() => {
-        feedbackTimeoutRef.current = null;
-        advanceToNext();
-      }, FEEDBACK_DELAY_MS);
-    },
-    [
-      currentQuestion,
-      isFinished,
-      showFeedback,
-      advanceToNext,
-      sessionId,
-      questions,
-      results,
-      currentIndex,
-      timeLeft,
-    ]
-  );
-
-  const handleExplanationExpandChange = useCallback((expanded: boolean) => {
-    setExplanationExpanded(expanded);
-    if (expanded && feedbackTimeoutRef.current) {
-      // Pause auto-advance when user expands explanation
-      clearTimeout(feedbackTimeoutRef.current);
-      feedbackTimeoutRef.current = null;
-    }
-  }, []);
-
-  // Handler for results celebration sound
-  const handleScoreCountComplete = useCallback(() => {
-    setShowConfetti(true);
-    if (correctCount >= PASS_THRESHOLD) {
-      playMilestone();
-    } else {
-      playLevelUp();
-    }
-  }, [correctCount]);
-
-  // Timer countdown (gated on showCountdown to prevent ticking during countdown animation)
+  // Timer countdown (pauses during feedback/checked phases and countdown animation)
   useEffect(() => {
     if (isFinished || showPreTest || showCountdown) return;
+    if (quizState.phase === 'feedback' || quizState.phase === 'checked') return;
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          setEndReason(current => current ?? 'time');
-          setIsFinished(true);
+          dispatch({ type: 'FINISH' });
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isFinished, showPreTest, showCountdown]);
+  }, [isFinished, showPreTest, showCountdown, quizState.phase]);
 
-  // Navigation lock — throttle history API to stay under browser's 100/10s limit
+  // Navigation lock -- throttle history API to stay under browser's 100/10s limit
   useEffect(() => {
     if (isFinished || showPreTest || showCountdown) return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -362,15 +300,14 @@ const TestPage = () => {
       try {
         window.history.pushState(null, '', window.location.href);
       } catch {
-        // SecurityError: browser rate limit exceeded — earlier pushState calls
-        // already have guard entries in the history stack, so navigation is still blocked
+        // SecurityError: browser rate limit exceeded
       }
       const now = Date.now();
       if (now - lastWarningTime > 3000) {
         lastWarningTime = now;
         showWarning({
           en: 'Please finish the mock test first!',
-          my: 'စမ်းသပ်စာမေးပွဲ မေးခွန်းများပြီးဆုံးစွာ ဖြေဆိုပြီးမှထွက်ပါ',
+          my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1005\u103D\u102C \u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1019\u103E\u1011\u103D\u1000\u103A\u1015\u102B',
         });
       }
     };
@@ -383,48 +320,58 @@ const TestPage = () => {
     };
   }, [isFinished, showPreTest, showCountdown, showWarning]);
 
-  // Save session on finish
+  // Save session on finish (batch SRS recording)
   useEffect(() => {
-    if (!isFinished || !results.length || hasSavedSessionRef.current) return;
+    if (!isFinished || finalResults.length === 0 || hasSavedSessionRef.current) return;
     hasSavedSessionRef.current = true;
-    const correctAnswers = results.filter(result => result.isCorrect).length;
-    const incorrectAnswers = results.length - correctAnswers;
-    const completedFullSet = results.length === questions.length;
-    const fallbackReason: TestEndReason = endReason ?? (completedFullSet ? 'complete' : 'time');
+    const completedFullSet = finalResults.length === questions.length;
+    const fallbackReason: TestEndReason =
+      endReasonForDisplay ?? (completedFullSet ? 'complete' : 'time');
     const session: Omit<TestSession, 'id'> = {
       date: new Date().toISOString(),
-      score: correctAnswers,
-      totalQuestions: results.length,
+      score: finalCorrect,
+      totalQuestions: finalResults.length,
       durationSeconds: TEST_DURATION_SECONDS - timeLeft,
-      passed: correctAnswers >= PASS_THRESHOLD,
-      incorrectCount: incorrectAnswers,
+      passed: finalCorrect >= PASS_THRESHOLD,
+      incorrectCount: finalIncorrect,
       endReason: fallbackReason,
-      results,
+      results: finalResults,
     };
+
+    // Batch SRS recording on finish (instead of per-answer)
+    for (const result of finalResults) {
+      recordAnswer({
+        questionId: result.questionId,
+        isCorrect: result.isCorrect,
+        sessionType: 'test',
+      });
+    }
+
     const persist = async () => {
       try {
         await saveTestSession(session);
-        // Clean up saved session from IndexedDB on completion
         deleteSession(sessionId).catch(() => {});
         showSuccess({
-          en: `Mock test saved — ${correctAnswers} correct answers`,
-          my: `စမ်းသပ်စာမေးပွဲ သိမ်းဆည်းပြီး — အဖြေမှန် ${correctAnswers} ခု`,
+          en: `Mock test saved \u2014 ${finalCorrect} correct answers`,
+          my: `\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1015\u103C\u102E\u1038 \u2014 \u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A ${finalCorrect} \u1001\u102F`,
         });
       } catch (error) {
         console.error(error);
         hasSavedSessionRef.current = false;
         showWarning({
-          en: 'Unable to save test — please check your connection',
-          my: 'စာမေးပွဲ သိမ်းဆည်းမရပါ — ချိတ်ဆက်မှုကို စစ်ဆေးပါ',
+          en: 'Unable to save test \u2014 please check your connection',
+          my: '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1019\u101B\u1015\u102B \u2014 \u1001\u103B\u102D\u1010\u103A\u1006\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1005\u1005\u103A\u1006\u1031\u1038\u1015\u102B',
         });
       }
     };
     persist();
   }, [
-    endReason,
+    endReasonForDisplay,
     isFinished,
+    finalCorrect,
+    finalIncorrect,
+    finalResults,
     questions.length,
-    results,
     saveTestSession,
     sessionId,
     showSuccess,
@@ -439,7 +386,50 @@ const TestPage = () => {
     }
   }, [isFinished]);
 
-  // Handle question count change from PreTestScreen
+  // Cleanup check delay timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (checkDelayRef.current) {
+        clearTimeout(checkDelayRef.current);
+      }
+    };
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------------
+
+  // Resume handler: restore session state and show countdown
+  const handleResume = useCallback((session: SessionSnapshot) => {
+    const mockSession = session as MockTestSnapshot;
+    setQuestions(mockSession.questions);
+    setTimeLeft(TEST_DURATION_SECONDS);
+    setShowResumeModal(false);
+    setIsResuming(true);
+    setShowPreTest(false);
+    setShowCountdown(true);
+    resumeDataRef.current = mockSession;
+  }, []);
+
+  // Start fresh handler
+  const handleStartFresh = useCallback((session: SessionSnapshot) => {
+    deleteSession(session.id).catch(() => {});
+    setSavedSessions([]);
+    setShowResumeModal(false);
+  }, []);
+
+  // Not now handler
+  const handleNotNow = useCallback(() => {
+    setShowResumeModal(false);
+  }, []);
+
+  // Countdown complete handler
+  const handleCountdownComplete = useCallback(() => {
+    setShowCountdown(false);
+    resumeDataRef.current = null;
+  }, []);
+
+  // Question count change from PreTestScreen
   const handleCountChange = useCallback((count: number) => {
     setQuestionCount(count);
     setQuestions(
@@ -452,7 +442,121 @@ const TestPage = () => {
     );
   }, []);
 
-  // Pre-test screen
+  // Handle answer selection (does NOT commit -- TPUX-01)
+  const handleAnswerSelect = useCallback(
+    (answer: Answer) => {
+      if (quizState.phase !== 'answering') return;
+      dispatch({ type: 'SELECT_ANSWER', answer });
+    },
+    [quizState.phase]
+  );
+
+  // Handle Check button (TPUX-02)
+  const handleCheck = useCallback(() => {
+    if (quizState.phase !== 'answering' || !quizState.selectedAnswer || !currentQuestion) return;
+
+    const selectedAnswer = quizState.selectedAnswer;
+    const isCorrectAnswer = selectedAnswer.correct;
+
+    // Sound + haptic in event handler (React Compiler safe)
+    if (isCorrectAnswer) {
+      playCorrect();
+      hapticLight();
+    } else {
+      playIncorrect();
+      hapticDouble();
+    }
+
+    // Transition to checked phase
+    dispatch({ type: 'CHECK' });
+
+    // Build the result
+    const correctAnswer = currentQuestion.answers.find(ans => ans.correct)!;
+    const result: QuestionResult = {
+      questionId: currentQuestion.id,
+      questionText_en: currentQuestion.question_en,
+      questionText_my: currentQuestion.question_my,
+      selectedAnswer,
+      correctAnswer,
+      isCorrect: isCorrectAnswer,
+      category: currentQuestion.category,
+    };
+
+    // Fire-and-forget: persist session snapshot to IndexedDB
+    const snapshot: MockTestSnapshot = {
+      id: sessionId,
+      type: 'mock-test',
+      savedAt: new Date().toISOString(),
+      version: SESSION_VERSION,
+      questions,
+      results: [...quizState.results, result],
+      currentIndex: quizState.currentIndex + 1,
+      timeLeft,
+    };
+    saveSession(snapshot).catch(() => {});
+
+    // Intentional delay before showing feedback (per locked decision: 200-300ms)
+    checkDelayRef.current = setTimeout(() => {
+      checkDelayRef.current = null;
+      dispatch({ type: 'SHOW_FEEDBACK', result, isCorrect: isCorrectAnswer });
+    }, CHECK_DELAY_MS);
+  }, [quizState, currentQuestion, sessionId, questions, timeLeft]);
+
+  // Handle Continue from FeedbackPanel (TPUX-03)
+  const handleContinue = useCallback(() => {
+    if (quizState.phase !== 'feedback') return;
+
+    // Check thresholds before advancing
+    if (hasPassedThreshold(quizState, quizConfig) || hasFailedThreshold(quizState, quizConfig)) {
+      dispatch({ type: 'FINISH' });
+      return;
+    }
+
+    dispatch({ type: 'CONTINUE' });
+
+    // After a brief moment for the transition animation, complete the transition
+    setTimeout(() => {
+      dispatch({ type: 'TRANSITION_COMPLETE' });
+    }, 50);
+  }, [quizState, quizConfig]);
+
+  // Handle Skip
+  const handleSkip = useCallback(() => {
+    if (quizState.phase !== 'answering') return;
+    dispatch({ type: 'SKIP' });
+    setTimeout(() => {
+      dispatch({ type: 'TRANSITION_COMPLETE' });
+    }, 50);
+  }, [quizState.phase]);
+
+  // Exit dialog handlers
+  const handleExitRequest = useCallback(() => {
+    setShowExitDialog(true);
+  }, []);
+
+  const handleExitClose = useCallback(() => {
+    setShowExitDialog(false);
+  }, []);
+
+  const handleConfirmExit = useCallback(() => {
+    setShowExitDialog(false);
+    navigate('/dashboard');
+  }, [navigate]);
+
+  // Score count complete handler for results celebration
+  const handleScoreCountComplete = useCallback(() => {
+    setShowConfetti(true);
+    if (finalCorrect >= PASS_THRESHOLD) {
+      playMilestone();
+    } else {
+      playLevelUp();
+    }
+  }, [finalCorrect]);
+
+  // ---------------------------------------------------------------------------
+  // Early returns (pre-test screens)
+  // ---------------------------------------------------------------------------
+
   if (showPreTest) {
     return (
       <div className="page-shell" data-tour="mock-test">
@@ -477,7 +581,6 @@ const TestPage = () => {
     );
   }
 
-  // Countdown overlay (shown before every timed test start)
   if (showCountdown) {
     return (
       <div className="page-shell" data-tour="mock-test">
@@ -485,7 +588,7 @@ const TestPage = () => {
           onComplete={handleCountdownComplete}
           subtitle={
             isResuming
-              ? `Mock Test \u2014 Q${currentIndex + 1}/${questions.length}`
+              ? `Mock Test \u2014 Q${quizState.currentIndex + 1}/${questions.length}`
               : `Mock Test \u2014 ${questions.length} Questions`
           }
         />
@@ -503,170 +606,178 @@ const TestPage = () => {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // Active quiz view
+  // ---------------------------------------------------------------------------
+
   const activeView = (
-    <div className="mx-auto max-w-5xl px-4 pb-16 pt-6">
-      {/* Horizontal progress bar at top with timer alongside */}
-      <div className="mb-6 flex items-center gap-4">
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              Question {currentIndex + 1} / {questions.length}
-            </p>
-            <p className="text-xs text-muted-foreground">{answeredQuestions} answered</p>
-          </div>
-          <Progress value={progressPercent} size="lg" />
-        </div>
-        {/* Compact circular timer alongside progress */}
-        <div className="shrink-0">
+    <div className="mx-auto max-w-5xl px-4 pb-32 pt-2">
+      {/* Quiz header: exit (X), question number, timer */}
+      <QuizHeader
+        questionNumber={quizState.currentIndex + 1}
+        totalQuestions={questions.length}
+        mode="mock-test"
+        onExit={handleExitRequest}
+        timerSlot={
           <CircularTimer
             duration={TEST_DURATION_SECONDS}
             remainingTime={timeLeft}
+            isPlaying={quizState.phase !== 'feedback' && quizState.phase !== 'checked'}
             size="sm"
             allowHide
           />
-        </div>
+        }
+        showBurmese={showBurmese}
+      />
+
+      {/* Segmented progress bar */}
+      <div className="mb-6">
+        <SegmentedProgressBar
+          segments={segments}
+          currentIndex={quizState.currentIndex}
+          totalCount={questions.length}
+          showBurmese={showBurmese}
+        />
       </div>
 
-      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
-        {/* Question area */}
-        <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
-            {currentQuestion?.category}
-          </p>
-          <p className="mt-2 text-lg font-bold text-foreground leading-snug">
-            {currentQuestion?.question_en}
-          </p>
-          {showBurmese && (
-            <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
-              {currentQuestion?.question_my}
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap gap-2">
-            <SpeechButton
-              text={questionAudioText}
-              label="Play Test Question"
-              ariaLabel="Play English test question audio"
-            />
-            <SpeechButton
-              text={answerChoicesAudioText}
-              label="Play Answer Choices"
-              ariaLabel="Play English answer choices audio"
-            />
-          </div>
-        </div>
+      {/* Question card with AnimatePresence for slide transitions */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={quizState.currentIndex}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -60 }}
+          transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
+        >
+          <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
+            {/* Question area */}
+            <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
+                {currentQuestion?.category}
+              </p>
+              <p className="mt-2 text-lg font-bold text-foreground leading-snug">
+                {currentQuestion?.question_en}
+              </p>
+              {showBurmese && (
+                <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
+                  {currentQuestion?.question_my}
+                </p>
+              )}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <SpeechButton
+                  text={questionAudioText}
+                  label="Play Test Question"
+                  ariaLabel="Play English test question audio"
+                />
+                <SpeechButton
+                  text={answerChoicesAudioText}
+                  label="Play Answer Choices"
+                  ariaLabel="Play English answer choices audio"
+                />
+              </div>
+            </div>
 
-        {/* Answer options as 3D chunky buttons */}
-        <div className="mt-6 grid gap-3">
-          {currentQuestion?.answers.map((answer, index) => {
-            const isSelected = selectedAnswer === answer;
-            const isAnswered = showFeedback;
+            {/* Answer options using AnswerOptionGroup with roving focus */}
+            <div className="mt-6">
+              <AnswerOptionGroup
+                answers={currentQuestion?.answers ?? []}
+                selectedAnswer={quizState.selectedAnswer}
+                isLocked={quizState.phase === 'checked' || quizState.phase === 'feedback'}
+                correctAnswer={
+                  quizState.phase === 'feedback' || quizState.phase === 'checked'
+                    ? currentQuestion?.answers.find(a => a.correct)
+                    : undefined
+                }
+                onSelect={handleAnswerSelect}
+                showBurmese={showBurmese}
+              />
+            </div>
 
-            // 3D chunky styles for unanswered state
-            const chunkyBase = !isAnswered
-              ? clsx(
-                  'rounded-2xl border-2 px-5 py-4 text-left w-full min-h-[56px]',
-                  'font-semibold transition-all duration-100',
-                  'shadow-[0_4px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[3px]',
-                  'hover:border-primary-400 hover:bg-primary-subtle/50 hover:shadow-[0_4px_0_hsl(var(--primary-600))]',
-                  '',
-                  isSelected
-                    ? 'border-primary bg-primary-subtle shadow-[0_4px_0_hsl(var(--primary-600))]'
-                    : 'border-border bg-card'
-                )
-              : undefined;
-
-            // When answered, use getAnswerOptionClasses for correct/incorrect coloring
-            const answeredClasses = isAnswered
-              ? clsx(
-                  getAnswerOptionClasses(isSelected, answer.correct, true),
-                  'w-full min-h-[56px] py-4 px-5 text-left'
-                )
-              : undefined;
-
-            return (
-              <motion.button
-                key={answer.text_en}
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.05 }}
-                onClick={() => handleAnswerSelect(answer)}
-                disabled={showFeedback}
-                className={chunkyBase ?? answeredClasses}
-              >
-                <span className="font-bold block text-foreground">{answer.text_en}</span>
-                {showBurmese && (
-                  <span className="font-myanmar text-muted-foreground block text-sm mt-0.5">
-                    {answer.text_my}
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
-
-        {/* Answer feedback with animated icons */}
-        <div className="mt-4">
-          <AnswerFeedback
-            isCorrect={selectedAnswer?.correct ?? false}
-            show={showFeedback}
-            correctAnswer={currentQuestion?.answers.find(a => a.correct)?.text_en}
-            correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
-          />
-        </div>
-
-        {/* Dynamic answer note during in-test feedback */}
-        {showFeedback && currentQuestion?.dynamic && (
-          <DynamicAnswerNote dynamic={currentQuestion.dynamic} stateInfo={stateInfo} />
-        )}
-
-        {/* WhyButton inline explanation (only when feedback shown and explanation exists) */}
-        {showFeedback && currentQuestion?.explanation && (
-          <div className="mt-3">
-            <WhyButton
-              explanation={currentQuestion.explanation}
-              isCorrect={selectedAnswer?.correct}
-              compact
-              onExpandChange={handleExplanationExpandChange}
-            />
-            {/* Show "Next" button when explanation is expanded (auto-advance paused) */}
-            {explanationExpanded && (
-              <button
-                onClick={advanceToNext}
-                className={clsx(
-                  'mt-3 flex w-full items-center justify-center gap-2',
-                  'min-h-[48px] rounded-xl px-4 py-2.5',
-                  'bg-primary text-primary-foreground font-bold',
-                  'shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
-                  'transition-[box-shadow,transform] duration-100'
-                )}
-              >
-                {strings.actions.next.en}
-                {showBurmese && (
-                  <span className="font-myanmar text-xs">{strings.actions.next.my}</span>
-                )}
-                <ChevronRight className="h-4 w-4" />
-              </button>
+            {/* Dynamic answer note during feedback */}
+            {quizState.phase === 'feedback' && currentQuestion?.dynamic && (
+              <DynamicAnswerNote dynamic={currentQuestion.dynamic} stateInfo={stateInfo} />
             )}
-          </div>
-        )}
 
-        {/* Progress summary */}
-        <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="text-success font-bold">{correctCount} correct</span>
-            <span className="text-warning font-bold">{incorrectCount} incorrect</span>
+            {/* Progress summary */}
+            <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="text-success font-bold">{correctCount} correct</span>
+                <span className="text-warning font-bold">{incorrectCount} incorrect</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                12 correct or 9 incorrect ends the test
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">12 correct or 9 incorrect ends the test</p>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Bottom action buttons: Skip + Check (only during answering phase) */}
+      {quizState.phase === 'answering' && (
+        <div className="mt-6 flex items-center gap-3 justify-end">
+          <SkipButton onSkip={handleSkip} showBurmese={showBurmese} />
+          <button
+            type="button"
+            onClick={handleCheck}
+            disabled={!quizState.selectedAnswer}
+            className={clsx(
+              'rounded-full px-8 py-3 min-h-[48px] text-base font-bold',
+              'transition-all duration-100',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+              quizState.selectedAnswer
+                ? [
+                    'bg-primary text-primary-foreground',
+                    'shadow-[0_4px_0_hsl(var(--primary-700))]',
+                    'active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
+                    'hover:bg-primary/90',
+                  ]
+                : 'bg-muted text-muted-foreground cursor-not-allowed opacity-50'
+            )}
+          >
+            {strings.quiz.check.en}
+            {showBurmese && (
+              <span className="ml-2 font-myanmar text-sm font-normal">{strings.quiz.check.my}</span>
+            )}
+          </button>
         </div>
+      )}
+
+      {/* Feedback panel -- slides up from bottom (TPUX-02) */}
+      <div className="fixed inset-x-0 bottom-0 z-40">
+        <FeedbackPanel
+          isCorrect={quizState.isCorrect ?? false}
+          show={quizState.phase === 'feedback'}
+          correctAnswer={currentQuestion?.answers.find(a => a.correct)?.text_en ?? ''}
+          correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
+          userAnswer={quizState.selectedAnswer?.text_en}
+          userAnswerMy={quizState.selectedAnswer?.text_my}
+          streakCount={quizState.streakCount}
+          mode="mock-test"
+          onContinue={handleContinue}
+          showBurmese={showBurmese}
+        />
       </div>
+
+      {/* Exit confirmation dialog */}
+      <ExitConfirmDialog
+        open={showExitDialog}
+        onClose={handleExitClose}
+        onConfirmExit={handleConfirmExit}
+        mode="mock-test"
+        showBurmese={showBurmese}
+      />
     </div>
   );
+
+  // ---------------------------------------------------------------------------
+  // Results view
+  // ---------------------------------------------------------------------------
 
   const resultView = (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
       <Confetti
         fire={showConfetti}
-        intensity={correctCount >= PASS_THRESHOLD ? 'celebration' : 'burst'}
+        intensity={finalCorrect >= PASS_THRESHOLD ? 'celebration' : 'burst'}
       />
 
       <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
@@ -685,7 +796,7 @@ const TestPage = () => {
             <Trophy
               className={clsx(
                 'h-8 w-8',
-                correctCount >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
+                finalCorrect >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
               )}
             />
           </motion.div>
@@ -698,8 +809,8 @@ const TestPage = () => {
             className="mb-6"
           />
           <CountUpScore
-            score={correctCount}
-            total={askedCount}
+            score={finalCorrect}
+            total={finalResults.length}
             onComplete={handleScoreCountComplete}
           />
         </div>
@@ -709,12 +820,12 @@ const TestPage = () => {
             <p className="text-muted-foreground">
               Review your answers and retake the mock test anytime.
             </p>
-            {endReason && (
+            {endReasonForDisplay && (
               <p className="mt-2 text-sm font-semibold text-primary">
-                {completionMessage[endReason].en}
-                {showBurmese && completionMessage[endReason].my && (
+                {completionMessage[endReasonForDisplay].en}
+                {showBurmese && completionMessage[endReasonForDisplay].my && (
                   <span className="block font-myanmar mt-0.5 font-normal text-muted-foreground">
-                    {completionMessage[endReason].my}
+                    {completionMessage[endReasonForDisplay].my}
                   </span>
                 )}
               </p>
@@ -747,21 +858,21 @@ const TestPage = () => {
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
-            <p className="text-2xl font-bold text-success">{correctCount}</p>
+            <p className="text-2xl font-bold text-success">{finalCorrect}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
-            <p className="text-2xl font-bold text-warning">{incorrectCount}</p>
+            <p className="text-2xl font-bold text-warning">{finalIncorrect}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
             <p
               className={clsx(
                 'text-2xl font-bold',
-                correctCount >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
+                finalCorrect >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
               )}
             >
-              {correctCount >= PASS_THRESHOLD ? 'Pass' : 'Review'}
+              {finalCorrect >= PASS_THRESHOLD ? 'Pass' : 'Review'}
             </p>
           </div>
         </div>
@@ -803,8 +914,8 @@ const TestPage = () => {
           </div>
           <p className="text-xs text-muted-foreground">
             {strings.test.showing.en}{' '}
-            {showAllResults ? results.length : results.filter(r => !r.isCorrect).length}{' '}
-            {strings.test.ofQuestions.en} {results.length} {strings.test.questions.en}
+            {showAllResults ? finalResults.length : finalResults.filter(r => !r.isCorrect).length}{' '}
+            {strings.test.ofQuestions.en} {finalResults.length} {strings.test.questions.en}
           </p>
         </div>
 
@@ -825,7 +936,7 @@ const TestPage = () => {
                 <SectionHeading
                   text={{
                     en: 'Based on this test, consider reviewing:',
-                    my: 'ဒီစာမေးပွဲအပေါ်အခြေခံ၍ ပြန်လည်လေ့လာရန်:',
+                    my: '\u1012\u102E\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1015\u1031\u102B\u103A\u1021\u1001\u103C\u1031\u1001\u1036\u104D \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A:',
                   }}
                   className="mb-3"
                 />
@@ -852,7 +963,7 @@ const TestPage = () => {
 
         {/* Result cards */}
         <div className="mt-4 space-y-6">
-          {(showAllResults ? results : results.filter(r => !r.isCorrect)).map(result => {
+          {(showAllResults ? finalResults : finalResults.filter(r => !r.isCorrect)).map(result => {
             const questionData = questionsById.get(result.questionId);
             const explanation = questionData?.explanation;
 
@@ -892,7 +1003,7 @@ const TestPage = () => {
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                       {strings.test.yourAnswer.en}
                       {showBurmese && (
-                        <span className="font-myanmar"> · {strings.test.yourAnswer.my}</span>
+                        <span className="font-myanmar"> \u00B7 {strings.test.yourAnswer.my}</span>
                       )}
                     </p>
                     <p className="text-sm font-semibold text-foreground">
@@ -908,7 +1019,10 @@ const TestPage = () => {
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                       {strings.test.correctAnswer.en}
                       {showBurmese && (
-                        <span className="font-myanmar"> · {strings.test.correctAnswer.my}</span>
+                        <span className="font-myanmar">
+                          {' '}
+                          \u00B7 {strings.test.correctAnswer.my}
+                        </span>
                       )}
                     </p>
                     <p className="text-sm font-semibold text-foreground">
@@ -929,10 +1043,10 @@ const TestPage = () => {
                 >
                   {result.isCorrect
                     ? showBurmese
-                      ? `${strings.test.correct.en} · ${strings.test.correct.my}`
+                      ? `${strings.test.correct.en} \u00B7 ${strings.test.correct.my}`
                       : strings.test.correct.en
                     : showBurmese
-                      ? `${strings.test.reviewAnswer.en} · ${strings.test.reviewAnswer.my}`
+                      ? `${strings.test.reviewAnswer.en} \u00B7 ${strings.test.reviewAnswer.my}`
                       : strings.test.reviewAnswer.en}
                 </p>
 
@@ -959,6 +1073,10 @@ const TestPage = () => {
       </div>
     </div>
   );
+
+  // ---------------------------------------------------------------------------
+  // Main render
+  // ---------------------------------------------------------------------------
 
   return (
     <div className="page-shell" data-tour="mock-test">
