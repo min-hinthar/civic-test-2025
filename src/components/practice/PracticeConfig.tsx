@@ -2,11 +2,13 @@
 
 import { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
-import { Target, Timer, ChevronDown, Zap, BookOpen, Award } from 'lucide-react';
+import { Target, Timer, ChevronDown, Zap, BookOpen, Award, Volume2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useTTS } from '@/hooks/useTTS';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { CategoryRing } from '@/components/progress/CategoryRing';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
@@ -33,7 +35,18 @@ export interface PracticeConfigType {
   count: number;
   /** Whether timer is enabled */
   timerEnabled: boolean;
+  /** Per-session speech speed override */
+  speedOverride?: 'slow' | 'normal' | 'fast';
+  /** Per-session auto-read override */
+  autoReadOverride?: boolean;
 }
+
+/** Speed pill options matching Settings page pattern */
+const SPEED_OPTIONS: { value: 'slow' | 'normal' | 'fast'; en: string; my: string }[] = [
+  { value: 'slow', en: 'Slow', my: '\u1014\u103E\u1031\u1038' },
+  { value: 'normal', en: 'Normal', my: '\u1015\u102F\u1036\u1019\u103E\u1014\u103A' },
+  { value: 'fast', en: 'Fast', my: '\u1019\u103C\u1014\u103A' },
+];
 
 interface PracticeConfigProps {
   onStart: (config: PracticeConfigType) => void;
@@ -75,6 +88,8 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
   const { categoryMasteries, subCategoryMasteries, isLoading } = useCategoryMastery();
+  const { isSupported: ttsSupported } = useTTS();
+  const { settings: globalTTS } = useTTSSettings();
 
   const [selectedCategory, setSelectedCategory] = useState<
     USCISCategory | Category | 'weak' | null
@@ -82,6 +97,10 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
   const [expandedCategory, setExpandedCategory] = useState<USCISCategory | null>(null);
   const [countOption, setCountOption] = useState<CountOption>(10);
   const [timerEnabled, setTimerEnabled] = useState(false);
+
+  // Per-session speech overrides (initialized from global, NOT synced back)
+  const [sessionSpeed, setSessionSpeed] = useState<'slow' | 'normal' | 'fast'>(globalTTS.rate);
+  const [sessionAutoRead, setSessionAutoRead] = useState(globalTTS.autoRead);
 
   const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
 
@@ -141,6 +160,8 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
       categoryName: getCategoryDisplayName(selectedCategory),
       count: actualCount,
       timerEnabled,
+      speedOverride: sessionSpeed,
+      autoReadOverride: sessionAutoRead,
     });
   };
 
@@ -394,6 +415,87 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
           <span className="text-xs text-muted-foreground ml-2">
             {timerEnabled ? strings.practice.timerOn.en : strings.practice.timerOff.en}
           </span>
+        </motion.div>
+      )}
+
+      {/* Speech options */}
+      {selectedCategory && ttsSupported && (
+        <motion.div
+          initial={shouldReduceMotion ? {} : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6 rounded-xl border border-border bg-card p-4"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <Volume2 className="h-4 w-4 text-primary" />
+            <p className="text-sm font-semibold text-foreground">Speech Speed</p>
+            {showBurmese && (
+              <span className="font-myanmar text-xs text-muted-foreground">
+                {
+                  '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
+                }
+              </span>
+            )}
+          </div>
+
+          {/* Speed pill selector */}
+          <div className="flex gap-2" role="radiogroup" aria-label="Speech speed">
+            {SPEED_OPTIONS.map(option => (
+              <button
+                key={option.value}
+                type="button"
+                role="radio"
+                aria-checked={sessionSpeed === option.value}
+                onClick={() => setSessionSpeed(option.value)}
+                className={clsx(
+                  'flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px]',
+                  sessionSpeed === option.value
+                    ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
+                    : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
+                )}
+              >
+                <span>{option.en}</span>
+                {showBurmese && (
+                  <span className="block font-myanmar text-xs mt-0.5 font-normal">{option.my}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Auto-read toggle */}
+          <div className="mt-3 flex items-center justify-between pt-3 border-t border-border/40">
+            <div>
+              <p className="text-sm font-medium text-foreground">Auto-Read</p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground">
+                  {
+                    '\u1021\u101C\u102D\u102F\u1021\u101C\u103B\u103E\u1031\u102C\u1000\u103A\u1016\u1010\u103A\u1015\u102B'
+                  }
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sessionAutoRead}
+              aria-label="Toggle auto-read"
+              onClick={() => setSessionAutoRead(prev => !prev)}
+              className="relative inline-flex min-h-[48px] min-w-[48px] shrink-0 cursor-pointer items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              <span
+                className={clsx(
+                  'inline-flex h-7 w-12 items-center rounded-full border-2 border-transparent transition-colors duration-200',
+                  sessionAutoRead ? 'bg-primary' : 'bg-muted'
+                )}
+              >
+                <span
+                  className={clsx(
+                    'pointer-events-none inline-block h-6 w-6 rounded-full bg-surface shadow-md ring-0 transition-transform duration-200',
+                    sessionAutoRead ? 'translate-x-5' : 'translate-x-0'
+                  )}
+                />
+              </span>
+            </button>
+          </div>
         </motion.div>
       )}
 

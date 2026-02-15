@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Shield, BookOpen, ChevronDown, Mic, MicOff } from 'lucide-react';
+import { Shield, BookOpen, ChevronDown, Mic, MicOff, Volume2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
 import { Card } from '@/components/ui/Card';
@@ -14,11 +14,25 @@ import { strings } from '@/lib/i18n/strings';
 import { SPRING_GENTLE } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTTS } from '@/hooks/useTTS';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
 import type { InterviewMode, InterviewSession } from '@/types';
 
-interface InterviewSetupProps {
-  onStart: (mode: InterviewMode) => void;
+/** Speech override for interview (speed only -- auto-read always on) */
+export interface InterviewSpeechOverrides {
+  speedOverride: 'slow' | 'normal' | 'fast';
 }
+
+interface InterviewSetupProps {
+  onStart: (mode: InterviewMode, overrides?: InterviewSpeechOverrides) => void;
+}
+
+/** Speed pill options matching Settings page pattern */
+const SPEED_OPTIONS: { value: 'slow' | 'normal' | 'fast'; en: string; my: string }[] = [
+  { value: 'slow', en: 'Slow', my: '\u1014\u103E\u1031\u1038' },
+  { value: 'normal', en: 'Normal', my: '\u1015\u102F\u1036\u1019\u103E\u1014\u103A' },
+  { value: 'fast', en: 'Fast', my: '\u1019\u103C\u1014\u103A' },
+];
 
 /** Tips for each mode displayed in the "What to Expect" section */
 const realisticTips: Array<{ en: string; my: string }> = [
@@ -73,10 +87,16 @@ const practiceTips: Array<{ en: string; my: string }> = [
 export function InterviewSetup({ onStart }: InterviewSetupProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
+  const { isSupported: ttsSupported } = useTTS();
+  const { settings: globalTTS } = useTTSSettings();
   const [selectedMode, setSelectedMode] = useState<InterviewMode>('practice');
   const [tipsExpanded, setTipsExpanded] = useState(false);
   const [recentSessions, setRecentSessions] = useState<InterviewSession[]>([]);
   const [micPermission, setMicPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+
+  // Per-session speed override (initialized from global, NOT synced back)
+  // Only applicable in Practice mode; Real mode uses fixed normal speed
+  const [sessionSpeed, setSessionSpeed] = useState<'slow' | 'normal' | 'fast'>(globalTTS.rate);
 
   // Load recent interview history
   useEffect(() => {
@@ -283,9 +303,57 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             </div>
           )}
 
+          {/* Speech speed selector (Practice mode only, TTS supported) */}
+          {selectedMode === 'practice' && ttsSupported && (
+            <div className="w-full border-t border-border/40 pt-4">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Volume2 className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold text-foreground">Speech Speed</p>
+                {showBurmese && (
+                  <span className="font-myanmar text-xs text-muted-foreground">
+                    {
+                      '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
+                    }
+                  </span>
+                )}
+              </div>
+              <div className="flex gap-2" role="radiogroup" aria-label="Speech speed">
+                {SPEED_OPTIONS.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={sessionSpeed === option.value}
+                    onClick={() => setSessionSpeed(option.value)}
+                    className={clsx(
+                      'flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px]',
+                      sessionSpeed === option.value
+                        ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
+                        : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
+                    )}
+                  >
+                    <span>{option.en}</span>
+                    {showBurmese && (
+                      <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                        {option.my}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Start button */}
           <button
-            onClick={() => onStart(selectedMode)}
+            onClick={() =>
+              onStart(
+                selectedMode,
+                selectedMode === 'practice'
+                  ? { speedOverride: sessionSpeed }
+                  : { speedOverride: 'normal' }
+              )
+            }
             className={clsx(
               'mt-2 inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-sm font-bold text-white min-h-[48px]',
               'shadow-[0_4px_0_hsl(var(--primary-700))] hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
