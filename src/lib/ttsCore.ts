@@ -53,7 +53,7 @@ const SENTENCE_BOUNDARY = /(?<=[.!?])\s+/;
 // ---------------------------------------------------------------------------
 
 /** Check if running on Android (only used for pause/resume skip -- Pitfall 5). */
-function isAndroid(): boolean {
+export function isAndroid(): boolean {
   return typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
 }
 

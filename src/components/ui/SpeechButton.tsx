@@ -5,6 +5,7 @@ import { type MouseEvent, useEffect, useRef } from 'react';
 
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTS } from '@/hooks/useTTS';
+import { isAndroid } from '@/lib/ttsCore';
 
 // ---------------------------------------------------------------------------
 // Animation sub-components (private -- not exported)
@@ -117,9 +118,10 @@ const SpeechButton = ({
   className,
   stopPropagation = false,
 }: SpeechButtonProps) => {
-  const { speak, cancel, isSpeaking, isSupported } = useTTS();
+  const { speak, cancel, pause, resume, isSpeaking, isPaused, isSupported } = useTTS();
   const shouldReduceMotion = useReducedMotion();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const lastClickRef = useRef<number>(0);
 
   // Focus button when speaking begins (preventScroll avoids page jumping)
   useEffect(() => {
@@ -132,24 +134,46 @@ const SpeechButton = ({
     if (stopPropagation) {
       event.stopPropagation();
     }
-    if (isSpeaking) {
-      cancel();
+
+    // Rapid-tap debounce: ignore clicks within 150ms
+    const now = Date.now();
+    if (now - lastClickRef.current < 150) return;
+    lastClickRef.current = now;
+
+    if (isPaused) {
+      // Paused -> resume
+      resume();
+    } else if (isSpeaking) {
+      // Speaking -> pause (or cancel on Android)
+      if (isAndroid()) {
+        cancel();
+      } else {
+        pause();
+      }
     } else {
-      // Fire-and-forget -- don't await for button click
+      // Idle -> speak (fire-and-forget)
       // voiceName is accepted for backward compatibility but voice selection
       // is handled internally by ttsCore's findVoice algorithm
       void speak(text, { lang, pitch, rate });
     }
   };
 
-  const showAnimations = isSpeaking && !shouldReduceMotion;
+  // Determine ARIA label based on state
+  const computedAriaLabel =
+    isSpeaking && !isPaused
+      ? 'Pause speaking'
+      : isPaused
+        ? 'Resume speaking'
+        : (ariaLabel ?? label);
+
+  const showAnimations = isSpeaking && !shouldReduceMotion && !isPaused;
 
   return (
     <button
       ref={buttonRef}
       type="button"
-      aria-pressed={isSpeaking}
-      aria-label={isSpeaking ? 'Stop speaking' : (ariaLabel ?? label)}
+      aria-pressed={isSpeaking || isPaused}
+      aria-label={computedAriaLabel}
       onClick={handleClick}
       disabled={!isSupported || !text?.trim()}
       className={clsx(
@@ -175,7 +199,7 @@ const SpeechButton = ({
       {showAnimations && <ExpandingRings />}
       {/* ARIA live region for state announcements */}
       <span className="sr-only" role="status" aria-live="polite">
-        {isSpeaking ? 'Speaking' : ''}
+        {isSpeaking ? 'Speaking' : isPaused ? 'Paused' : ''}
       </span>
     </button>
   );
