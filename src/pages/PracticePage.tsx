@@ -52,6 +52,7 @@ const PracticePage = () => {
   const [sessionId] = useState(() => `session-practice-${Date.now()}`);
   const [initialResults, setInitialResults] = useState<QuestionResult[]>([]);
   const [initialIndex, setInitialIndex] = useState(0);
+  const [initialSkippedIndices, setInitialSkippedIndices] = useState<number[]>([]);
   const [practiceConfig, setPracticeConfig] = useState<PracticeSnapshot['config'] | null>(null);
 
   // Check for saved sessions on mount
@@ -77,6 +78,7 @@ const PracticePage = () => {
     setPracticeQuestions(snap.questions);
     setInitialResults(snap.results);
     setInitialIndex(snap.currentIndex);
+    setInitialSkippedIndices(snap.skippedIndices ?? []);
     setTimerEnabled(snap.timerEnabled);
     setCategoryName(snap.config.categoryName);
     setPracticeConfig(snap.config);
@@ -181,6 +183,7 @@ const PracticePage = () => {
       // Reset resume state for new session
       setInitialResults([]);
       setInitialIndex(0);
+      setInitialSkippedIndices([]);
 
       // If timer enabled, show countdown; otherwise go straight to session
       if (config.timerEnabled) {
@@ -252,6 +255,9 @@ const PracticePage = () => {
           practiceConfig={practiceConfig ?? undefined}
           initialResults={initialResults.length > 0 ? initialResults : undefined}
           initialIndex={initialIndex > 0 ? initialIndex : undefined}
+          initialSkippedIndices={
+            initialSkippedIndices.length > 0 ? initialSkippedIndices : undefined
+          }
         />
       )}
       {phase === 'results' && (

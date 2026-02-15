@@ -63,6 +63,8 @@ export interface PracticeSnapshot extends BaseSessionSnapshot {
   timerEnabled: boolean;
   /** Seconds remaining -- for display only */
   timeLeft: number;
+  /** Indices of skipped questions (for review at end of practice) */
+  skippedIndices?: number[];
   /** Practice configuration for display on resume card */
   config: {
     category: string;

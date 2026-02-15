@@ -1,14 +1,20 @@
 'use client';
 
-import { useCallback, useState, useEffect, useRef } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { motion } from 'motion/react';
-import clsx from 'clsx';
+import { useCallback, useState, useEffect, useRef, useReducer } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { clsx } from 'clsx';
+import { X } from 'lucide-react';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 import SpeechButton from '@/components/ui/SpeechButton';
-import { Progress } from '@/components/ui/Progress';
 import { CircularTimer } from '@/components/test/CircularTimer';
-import { AnswerFeedback, getAnswerOptionClasses } from '@/components/test/AnswerFeedback';
-import { WhyButton } from '@/components/explanations/WhyButton';
+import { AnswerOptionGroup } from '@/components/quiz/AnswerOption';
+import { FeedbackPanel } from '@/components/quiz/FeedbackPanel';
+import { SegmentedProgressBar } from '@/components/quiz/SegmentedProgressBar';
+import type { SegmentStatus } from '@/components/quiz/SegmentedProgressBar';
+import { QuizHeader } from '@/components/quiz/QuizHeader';
+import { SkipButton } from '@/components/quiz/SkipButton';
+import { SkippedReviewPhase } from '@/components/quiz/SkippedReviewPhase';
+import { quizReducer, initialQuizState } from '@/lib/quiz/quizReducer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { saveSession } from '@/lib/sessions/sessionStore';
 import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
@@ -17,10 +23,19 @@ import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { playCorrect, playIncorrect } from '@/lib/audio/soundEffects';
+import { hapticLight, hapticDouble } from '@/lib/haptics';
 import type { Answer, Question, QuestionResult } from '@/types';
 
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
 const PRACTICE_DURATION_SECONDS = 20 * 60;
-const FEEDBACK_DELAY_MS = 1500;
+const CHECK_DELAY_MS = 250;
+
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
 
 interface PracticeSessionProps {
   /** Questions to practice */
@@ -37,19 +52,244 @@ interface PracticeSessionProps {
   initialResults?: QuestionResult[];
   /** Initial question index when resuming a saved session */
   initialIndex?: number;
+  /** Initial skipped indices when resuming a saved session */
+  initialSkippedIndices?: number[];
 }
 
+// ---------------------------------------------------------------------------
+// Segment tap review dialog
+// ---------------------------------------------------------------------------
+
+interface SegmentReviewDialogProps {
+  question: Question;
+  result: QuestionResult;
+  onClose: () => void;
+  showBurmese: boolean;
+  shouldReduceMotion: boolean;
+}
+
+function SegmentReviewDialog({
+  question,
+  result,
+  onClose,
+  showBurmese,
+  shouldReduceMotion,
+}: SegmentReviewDialogProps) {
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+
+      {/* Dialog */}
+      <div className="relative z-10 w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute right-3 top-3 rounded-full p-1.5 text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+          aria-label="Close review"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Question */}
+        <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
+          {question.category}
+        </p>
+        <p className="mt-2 text-base font-bold text-foreground leading-snug">
+          {question.question_en}
+        </p>
+        {showBurmese && (
+          <p className="mt-1.5 text-sm text-muted-foreground font-myanmar leading-relaxed">
+            {question.question_my}
+          </p>
+        )}
+
+        {/* User's answer */}
+        <div className="mt-4 space-y-2">
+          <div
+            className={clsx(
+              'rounded-xl border p-3',
+              result.isCorrect
+                ? 'border-success/30 bg-success-subtle'
+                : 'border-warning/30 bg-warning-subtle'
+            )}
+          >
+            <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+              {strings.test.yourAnswer.en}
+              {showBurmese && (
+                <span className="ml-1 font-myanmar">{strings.test.yourAnswer.my}</span>
+              )}
+            </p>
+            <p
+              className={clsx(
+                'mt-1 text-sm font-medium',
+                result.isCorrect ? 'text-foreground' : 'text-foreground line-through'
+              )}
+            >
+              {result.selectedAnswer.text_en}
+            </p>
+            {showBurmese && result.selectedAnswer.text_my && (
+              <p className="font-myanmar text-sm text-muted-foreground">
+                {result.selectedAnswer.text_my}
+              </p>
+            )}
+          </div>
+
+          {/* Correct answer (shown when wrong) */}
+          {!result.isCorrect && (
+            <div className="rounded-xl border border-border/60 bg-muted/40 p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                {strings.test.correctAnswer.en}
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar">{strings.test.correctAnswer.my}</span>
+                )}
+              </p>
+              <p className="mt-1 text-sm font-medium text-foreground">
+                {result.correctAnswer.text_en}
+              </p>
+              {showBurmese && result.correctAnswer.text_my && (
+                <p className="font-myanmar text-sm text-muted-foreground">
+                  {result.correctAnswer.text_my}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Explanation */}
+          {question.explanation && (
+            <div className="mt-2 border-t border-border/50 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {strings.explanations.why.en}
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar">{strings.explanations.why.my}</span>
+                )}
+              </p>
+              <p className="mt-1 text-sm text-foreground">{question.explanation.brief_en}</p>
+              {showBurmese && (
+                <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+                  {question.explanation.brief_my}
+                </p>
+              )}
+              <div className="mt-2">
+                <SpeechButton
+                  text={question.explanation.brief_en}
+                  label="Listen"
+                  ariaLabel="Listen to explanation"
+                  className="text-xs"
+                  stopPropagation
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Close button at bottom */}
+        <button
+          onClick={onClose}
+          className={clsx(
+            'mt-4 w-full rounded-xl px-4 py-2.5 text-sm font-bold',
+            'bg-muted text-foreground hover:bg-muted/80',
+            'transition-colors duration-100'
+          )}
+        >
+          {strings.actions.back.en}
+          {showBurmese && (
+            <span className="ml-2 font-myanmar text-xs">{strings.actions.back.my}</span>
+          )}
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Exit confirm dialog (inline)
+// ---------------------------------------------------------------------------
+
+interface ExitConfirmProps {
+  open: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+  showBurmese: boolean;
+  shouldReduceMotion: boolean;
+}
+
+function ExitConfirmInline({
+  open,
+  onConfirm,
+  onCancel,
+  showBurmese,
+  shouldReduceMotion,
+}: ExitConfirmProps) {
+  if (!open) return null;
+
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    >
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
+      <div className="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl text-center">
+        <h3 className="text-lg font-bold text-foreground">{strings.quiz.exit.en}?</h3>
+        {showBurmese && (
+          <p className="mt-1 font-myanmar text-sm text-muted-foreground">{strings.quiz.exit.my}?</p>
+        )}
+        <p className="mt-2 text-sm text-muted-foreground">
+          Your progress is saved. You can resume this session later.
+        </p>
+        <div className="mt-5 flex gap-3">
+          <button
+            onClick={onCancel}
+            className={clsx(
+              'flex-1 rounded-xl border-2 border-border px-4 py-2.5 text-sm font-semibold',
+              'text-foreground hover:bg-muted/30 transition-colors'
+            )}
+          >
+            {strings.quiz.continue.en}
+          </button>
+          <button
+            onClick={onConfirm}
+            className={clsx(
+              'flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold',
+              'bg-warning text-white hover:bg-warning/90 transition-colors'
+            )}
+          >
+            {strings.quiz.exit.en}
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PracticeSession
+// ---------------------------------------------------------------------------
+
 /**
- * Practice session component with Duolingo visual treatment.
+ * Practice session component with Check/Continue flow and educational features.
  *
  * Features:
- * - Horizontal progress bar at top with compact timer alongside
- * - 3D chunky answer buttons with shadow depth
- * - Sound effects: playCorrect/playIncorrect on answer selection
- * - Animated feedback icons (star/shake via AnswerFeedback)
- * - WhyButton after each answer with pausable auto-advance
- * - Records answers to masteryStore with sessionType: 'practice'
- * - Navigation lock via beforeunload
+ * - Quiz state machine via useReducer(quizReducer)
+ * - Check/Continue flow (no auto-advance)
+ * - Explanations shown in FeedbackPanel (Practice only)
+ * - Live score tally in SegmentedProgressBar
+ * - Tappable segments for read-only review of answered questions
+ * - Skip button with amber segments; skipped questions reviewed at end
+ * - Session persistence with skippedIndices
+ * - Slide-left question transitions
+ * - Exit confirmation dialog
+ * - Timer pauses during feedback
+ * - SRS marking batched at end
  */
 export function PracticeSession({
   questions,
@@ -59,86 +299,125 @@ export function PracticeSession({
   practiceConfig,
   initialResults,
   initialIndex,
+  initialSkippedIndices,
 }: PracticeSessionProps) {
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const [currentIndex, setCurrentIndex] = useState(initialIndex ?? 0);
-  const [results, setResults] = useState<QuestionResult[]>(initialResults ?? []);
-  const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [explanationExpanded, setExplanationExpanded] = useState(false);
+  const checkDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Quiz state machine
+  const [quizState, dispatch] = useReducer(quizReducer, null, () => {
+    const state = initialQuizState({
+      mode: 'practice',
+      questionCount: questions.length,
+      allowSkipReview: true,
+      allowSegmentTap: true,
+      showLiveScore: true,
+      showExplanation: true,
+    });
+    // Restore from saved session if available
+    if (initialResults && initialResults.length > 0) {
+      return {
+        ...state,
+        currentIndex: initialIndex ?? initialResults.length,
+        results: initialResults,
+        skippedIndices: initialSkippedIndices ?? [],
+      };
+    }
+    return state;
+  });
+
+  // Timer
   const [timeLeft, setTimeLeft] = useState(PRACTICE_DURATION_SECONDS);
-  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingResultRef = useRef<QuestionResult | null>(null);
 
-  const currentQuestion = questions[currentIndex] ?? null;
-  const progressPercent = Math.round((results.length / questions.length) * 100);
-  const questionAudioText = currentQuestion?.question_en ?? '';
-  const answerChoicesAudioText = currentQuestion?.answers?.map(a => a.text_en).join('. ') ?? '';
+  // Exit confirm
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  const correctCount = results.filter(r => r.isCorrect).length;
-  const incorrectCount = results.length - correctCount;
+  // Segment tap review
+  const [reviewSegmentIndex, setReviewSegmentIndex] = useState<number | null>(null);
 
-  const processResult = useCallback(
-    (result: QuestionResult) => {
-      const nextResults = [...results, result];
-      setResults(nextResults);
+  // Track whether we are in skipped-review sub-phase
+  const isInSkippedReview = quizState.phase === 'skipped-review';
+  const isFinished = quizState.phase === 'finished';
 
-      if (nextResults.length >= questions.length) {
-        onComplete(nextResults);
-      } else {
-        setCurrentIndex(prev => prev + 1);
-      }
+  const currentQuestion =
+    !isFinished && !isInSkippedReview ? (questions[quizState.currentIndex] ?? null) : null;
+
+  // Derived state
+  const correctCount = quizState.results.filter(r => r.isCorrect).length;
+  const isFeedback = quizState.phase === 'feedback';
+  const isChecking = quizState.phase === 'checked';
+  const isLocked = isChecking || isFeedback;
+
+  // Build segment statuses
+  const segments: SegmentStatus[] = questions.map((_, i) => {
+    // Check if this index has a result
+    const result = quizState.results.find(r => r.questionId === questions[i].id);
+    if (result) {
+      return result.isCorrect ? 'correct' : 'incorrect';
+    }
+    // Check if skipped
+    if (quizState.skippedIndices.includes(i)) {
+      return 'skipped';
+    }
+    // Current
+    if (i === quizState.currentIndex && !isFinished && !isInSkippedReview) {
+      return 'current';
+    }
+    return 'unanswered';
+  });
+
+  // Get correct answer for current question
+  const correctAnswer = currentQuestion?.answers.find(a => a.correct);
+
+  // -----------------------------------------------------------------------
+  // Handlers
+  // -----------------------------------------------------------------------
+
+  // Answer selection
+  const handleSelect = useCallback(
+    (answer: Answer) => {
+      if (quizState.phase !== 'answering') return;
+      dispatch({ type: 'SELECT_ANSWER', answer });
     },
-    [questions.length, results, onComplete]
+    [quizState.phase]
   );
 
-  const advanceToNext = useCallback(() => {
-    const result = pendingResultRef.current;
-    if (!result) return;
-    pendingResultRef.current = null;
-    setShowFeedback(false);
-    setSelectedAnswer(null);
-    setExplanationExpanded(false);
-    processResult(result);
-  }, [processResult]);
+  // Check button
+  const handleCheck = useCallback(() => {
+    if (quizState.phase !== 'answering' || !quizState.selectedAnswer || !currentQuestion) return;
 
-  const handleAnswerSelect = useCallback(
-    (answer: Answer) => {
-      if (!currentQuestion || showFeedback) return;
+    dispatch({ type: 'CHECK' });
 
-      setSelectedAnswer(answer);
-      setShowFeedback(true);
-      setExplanationExpanded(false);
+    // Brief intentional delay before showing feedback
+    checkDelayRef.current = setTimeout(() => {
+      checkDelayRef.current = null;
 
-      // Play sound in event handler (React Compiler safe)
-      if (answer.correct) {
-        playCorrect();
-      } else {
-        playIncorrect();
-      }
+      const isCorrect = quizState.selectedAnswer!.correct;
+      const correctAns = currentQuestion.answers.find(a => a.correct)!;
 
-      const correctAnswer = currentQuestion.answers.find(a => a.correct)!;
       const result: QuestionResult = {
         questionId: currentQuestion.id,
         questionText_en: currentQuestion.question_en,
         questionText_my: currentQuestion.question_my,
-        selectedAnswer: answer,
-        correctAnswer,
-        isCorrect: answer.correct,
+        selectedAnswer: quizState.selectedAnswer!,
+        correctAnswer: correctAns,
+        isCorrect,
         category: currentQuestion.category,
       };
 
-      pendingResultRef.current = result;
+      // Sound + haptic
+      if (isCorrect) {
+        playCorrect();
+        hapticLight();
+      } else {
+        playIncorrect();
+        hapticDouble();
+      }
 
-      // Record answer to mastery store immediately (before advancing)
-      recordAnswer({
-        questionId: currentQuestion.id,
-        isCorrect: answer.correct,
-        sessionType: 'practice',
-      });
+      dispatch({ type: 'SHOW_FEEDBACK', result, isCorrect });
 
-      // Save session to IndexedDB (fire-and-forget)
+      // Save session snapshot (fire-and-forget)
       if (sessionId && practiceConfig) {
         const snapshot: PracticeSnapshot = {
           id: sessionId,
@@ -146,69 +425,211 @@ export function PracticeSession({
           savedAt: new Date().toISOString(),
           version: SESSION_VERSION,
           questions,
-          results: [...results, result],
-          currentIndex: currentIndex + 1,
+          results: [...quizState.results, result],
+          currentIndex: quizState.currentIndex + 1,
           timerEnabled,
           timeLeft,
+          skippedIndices: quizState.skippedIndices,
           config: practiceConfig,
         };
         saveSession(snapshot).catch(() => {});
       }
+    }, CHECK_DELAY_MS);
+  }, [
+    quizState.phase,
+    quizState.selectedAnswer,
+    quizState.results,
+    quizState.currentIndex,
+    quizState.skippedIndices,
+    currentQuestion,
+    sessionId,
+    practiceConfig,
+    questions,
+    timerEnabled,
+    timeLeft,
+  ]);
 
-      // Delay before advancing
-      feedbackTimeoutRef.current = setTimeout(() => {
-        feedbackTimeoutRef.current = null;
-        advanceToNext();
-      }, FEEDBACK_DELAY_MS);
+  // Continue after feedback
+  const handleContinue = useCallback(() => {
+    if (quizState.phase !== 'feedback') return;
+    dispatch({ type: 'CONTINUE' });
+  }, [quizState.phase]);
+
+  // Skip
+  const handleSkip = useCallback(() => {
+    if (quizState.phase !== 'answering') return;
+    dispatch({ type: 'SKIP' });
+
+    // Save session with skip
+    if (sessionId && practiceConfig) {
+      const newSkipped = [...quizState.skippedIndices, quizState.currentIndex];
+      const snapshot: PracticeSnapshot = {
+        id: sessionId,
+        type: 'practice',
+        savedAt: new Date().toISOString(),
+        version: SESSION_VERSION,
+        questions,
+        results: quizState.results,
+        currentIndex: quizState.currentIndex + 1,
+        timerEnabled,
+        timeLeft,
+        skippedIndices: newSkipped,
+        config: practiceConfig,
+      };
+      saveSession(snapshot).catch(() => {});
+    }
+  }, [
+    quizState.phase,
+    quizState.skippedIndices,
+    quizState.currentIndex,
+    quizState.results,
+    sessionId,
+    practiceConfig,
+    questions,
+    timerEnabled,
+    timeLeft,
+  ]);
+
+  // Transition complete
+  useEffect(() => {
+    if (quizState.phase !== 'transitioning') return;
+
+    const timer = setTimeout(
+      () => {
+        dispatch({ type: 'TRANSITION_COMPLETE' });
+      },
+      shouldReduceMotion ? 0 : 300
+    );
+
+    return () => clearTimeout(timer);
+  }, [quizState.phase, shouldReduceMotion]);
+
+  // Segment tap for review
+  const handleSegmentTap = useCallback(
+    (index: number) => {
+      // Only allow tapping answered or skipped segments
+      const status = segments[index];
+      if (status === 'correct' || status === 'incorrect' || status === 'skipped') {
+        setReviewSegmentIndex(index);
+      }
     },
-    [
-      currentQuestion,
-      showFeedback,
-      advanceToNext,
-      sessionId,
-      practiceConfig,
-      questions,
-      results,
-      currentIndex,
-      timerEnabled,
-      timeLeft,
-    ]
+    [segments]
   );
 
-  const handleExplanationExpandChange = useCallback((expanded: boolean) => {
-    setExplanationExpanded(expanded);
-    if (expanded && feedbackTimeoutRef.current) {
-      clearTimeout(feedbackTimeoutRef.current);
-      feedbackTimeoutRef.current = null;
-    }
+  const handleCloseReview = useCallback(() => {
+    setReviewSegmentIndex(null);
   }, []);
 
-  // Timer countdown (only when enabled)
+  // Exit confirmation
+  const handleExitRequest = useCallback(() => {
+    setShowExitConfirm(true);
+  }, []);
+
+  const handleExitConfirm = useCallback(() => {
+    setShowExitConfirm(false);
+    // Complete with current results (partial)
+    onComplete(quizState.results);
+  }, [onComplete, quizState.results]);
+
+  const handleExitCancel = useCallback(() => {
+    setShowExitConfirm(false);
+  }, []);
+
+  // Skipped review complete
+  const handleSkippedReviewComplete = useCallback(
+    (combinedResults: QuestionResult[]) => {
+      // Batch SRS marking at end
+      for (const result of combinedResults) {
+        recordAnswer({
+          questionId: result.questionId,
+          isCorrect: result.isCorrect,
+          sessionType: 'practice',
+        });
+      }
+      onComplete(combinedResults);
+    },
+    [onComplete]
+  );
+
+  // Handle finished state (no skipped questions to review)
+  const hasCompletedRef = useRef(false);
   useEffect(() => {
-    if (!timerEnabled) return;
+    if (isFinished && !hasCompletedRef.current) {
+      hasCompletedRef.current = true;
+
+      // Batch SRS marking at end
+      for (const result of quizState.results) {
+        recordAnswer({
+          questionId: result.questionId,
+          isCorrect: result.isCorrect,
+          sessionType: 'practice',
+        });
+      }
+
+      onComplete(quizState.results);
+    }
+  }, [isFinished, quizState.results, onComplete]);
+
+  // Timer countdown (pauses during feedback)
+  useEffect(() => {
+    if (!timerEnabled || isFinished || isInSkippedReview || isFeedback) return;
+
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Time expired - complete with current results
-          onComplete(results);
+          dispatch({ type: 'FINISH' });
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-    return () => clearInterval(timer);
-  }, [timerEnabled, results, onComplete]);
 
-  // Navigation lock
+    return () => clearInterval(timer);
+  }, [timerEnabled, isFinished, isInSkippedReview, isFeedback]);
+
+  // Navigation lock (beforeunload)
   useEffect(() => {
+    if (isFinished) return;
+
     const beforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
     };
     window.addEventListener('beforeunload', beforeUnload);
     return () => window.removeEventListener('beforeunload', beforeUnload);
+  }, [isFinished]);
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (checkDelayRef.current) {
+        clearTimeout(checkDelayRef.current);
+      }
+    };
   }, []);
+
+  // -----------------------------------------------------------------------
+  // Skipped review phase
+  // -----------------------------------------------------------------------
+
+  if (isInSkippedReview) {
+    return (
+      <SkippedReviewPhase
+        questions={questions}
+        skippedIndices={quizState.skippedIndices}
+        existingResults={quizState.results}
+        onComplete={handleSkippedReviewComplete}
+        showBurmese={showBurmese}
+        sessionId={sessionId}
+        practiceConfig={practiceConfig}
+      />
+    );
+  }
+
+  // -----------------------------------------------------------------------
+  // Loading state
+  // -----------------------------------------------------------------------
 
   if (!currentQuestion) {
     return (
@@ -218,166 +639,173 @@ export function PracticeSession({
     );
   }
 
+  // -----------------------------------------------------------------------
+  // Reviewed segment data for dialog
+  // -----------------------------------------------------------------------
+
+  const reviewQuestion = reviewSegmentIndex !== null ? questions[reviewSegmentIndex] : null;
+  const reviewResult =
+    reviewSegmentIndex !== null
+      ? quizState.results.find(r => r.questionId === questions[reviewSegmentIndex]?.id)
+      : null;
+
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-16 pt-6">
-      {/* Horizontal progress bar at top with optional timer alongside */}
-      <div className="mb-6 flex items-center gap-4">
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              {strings.practice.practiceMode.en} {currentIndex + 1} / {questions.length}
-              {showBurmese && (
-                <span className="ml-1 font-myanmar font-normal text-muted-foreground">
-                  {strings.practice.practiceMode.my}
-                </span>
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground">{results.length} answered</p>
-          </div>
-          <Progress value={progressPercent} size="lg" />
-        </div>
-        {/* Compact circular timer alongside progress (only when enabled) */}
-        {timerEnabled && (
-          <div className="shrink-0">
+    <div className="mx-auto max-w-5xl px-4 pb-16 pt-2">
+      {/* Quiz header with exit button */}
+      <QuizHeader
+        questionNumber={quizState.currentIndex + 1}
+        totalQuestions={questions.length}
+        mode="practice"
+        onExit={handleExitRequest}
+        timerSlot={
+          timerEnabled ? (
             <CircularTimer
               duration={PRACTICE_DURATION_SECONDS}
               remainingTime={timeLeft}
               size="sm"
               allowHide
             />
-          </div>
-        )}
+          ) : undefined
+        }
+        showBurmese={showBurmese}
+      />
+
+      {/* Segmented progress bar with live score + tappable segments */}
+      <div className="mb-6">
+        <SegmentedProgressBar
+          segments={segments}
+          currentIndex={quizState.currentIndex}
+          totalCount={questions.length}
+          correctCount={correctCount}
+          allowTap
+          onSegmentTap={handleSegmentTap}
+          showLiveScore
+          showBurmese={showBurmese}
+        />
       </div>
 
+      {/* Question card with slide-left transitions */}
       <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
-        {/* Question area */}
-        <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
-            {currentQuestion.category}
-          </p>
-          <p className="mt-2 text-lg font-bold text-foreground leading-snug">
-            {currentQuestion.question_en}
-          </p>
-          {showBurmese && (
-            <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
-              {currentQuestion.question_my}
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap gap-2">
-            <SpeechButton
-              text={questionAudioText}
-              label="Play Question"
-              ariaLabel="Play English question audio"
-            />
-            <SpeechButton
-              text={answerChoicesAudioText}
-              label="Play Answer Choices"
-              ariaLabel="Play English answer choices audio"
-            />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={quizState.currentIndex}
+            initial={shouldReduceMotion ? { opacity: 0 } : { x: 60, opacity: 0 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { x: 0, opacity: 1 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { x: -60, opacity: 0 }}
+            transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
+          >
+            {/* Question area */}
+            <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
+                {currentQuestion.category}
+              </p>
+              <p className="mt-2 text-lg font-bold text-foreground leading-snug">
+                {currentQuestion.question_en}
+              </p>
+              {showBurmese && (
+                <p className="mt-2 text-base text-muted-foreground font-myanmar leading-relaxed">
+                  {currentQuestion.question_my}
+                </p>
+              )}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <SpeechButton
+                  text={currentQuestion.question_en}
+                  label="Play Question"
+                  ariaLabel="Play English question audio"
+                />
+                <SpeechButton
+                  text={currentQuestion.answers.map(a => a.text_en).join('. ')}
+                  label="Play Answer Choices"
+                  ariaLabel="Play English answer choices audio"
+                />
+              </div>
+            </div>
+
+            {/* Answer options with keyboard navigation */}
+            <div className="mt-6">
+              <AnswerOptionGroup
+                answers={currentQuestion.answers}
+                selectedAnswer={quizState.selectedAnswer}
+                isLocked={isLocked}
+                correctAnswer={isLocked ? correctAnswer : undefined}
+                onSelect={handleSelect}
+                showBurmese={showBurmese}
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Action buttons: Skip + Check (not during feedback) */}
+        {!isFeedback && (
+          <div className="mt-6 flex gap-3">
+            <SkipButton onSkip={handleSkip} disabled={isChecking} showBurmese={showBurmese} />
+            <button
+              type="button"
+              onClick={handleCheck}
+              disabled={!quizState.selectedAnswer || isChecking}
+              className={clsx(
+                'flex-1 rounded-full px-6 py-3 text-base font-bold',
+                'min-h-[48px]',
+                'transition-all duration-100',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                quizState.selectedAnswer && !isChecking
+                  ? 'bg-primary text-primary-foreground shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]'
+                  : 'bg-muted text-muted-foreground cursor-not-allowed opacity-60'
+              )}
+            >
+              {strings.quiz.check.en}
+              {showBurmese && (
+                <span className="ml-2 font-myanmar text-sm font-normal">
+                  {strings.quiz.check.my}
+                </span>
+              )}
+            </button>
           </div>
-        </div>
+        )}
 
-        {/* Answer options as 3D chunky buttons */}
-        <div className="mt-6 grid gap-3">
-          {currentQuestion.answers.map((answer, index) => {
-            const isSelected = selectedAnswer === answer;
-            const isAnswered = showFeedback;
-
-            // 3D chunky styles for unanswered state
-            const chunkyBase = !isAnswered
-              ? clsx(
-                  'rounded-2xl border-2 px-5 py-4 text-left w-full min-h-[56px]',
-                  'font-semibold transition-all duration-100',
-                  'shadow-[0_4px_0_hsl(var(--border))] active:shadow-[0_1px_0_hsl(var(--border))] active:translate-y-[3px]',
-                  'hover:border-primary-400 hover:bg-primary-subtle/50 hover:shadow-[0_4px_0_hsl(var(--primary-600))]',
-                  '',
-                  isSelected
-                    ? 'border-primary bg-primary-subtle shadow-[0_4px_0_hsl(var(--primary-600))]'
-                    : 'border-border bg-card'
-                )
-              : undefined;
-
-            // When answered, use getAnswerOptionClasses for correct/incorrect coloring
-            const answeredClasses = isAnswered
-              ? clsx(
-                  getAnswerOptionClasses(isSelected, answer.correct, true),
-                  'w-full min-h-[56px] py-4 px-5 text-left'
-                )
-              : undefined;
-
-            return (
-              <motion.button
-                key={answer.text_en}
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.05 }}
-                onClick={() => handleAnswerSelect(answer)}
-                disabled={showFeedback}
-                className={chunkyBase ?? answeredClasses}
-              >
-                <span className="font-bold block text-foreground">{answer.text_en}</span>
-                {showBurmese && (
-                  <span className="font-myanmar text-muted-foreground block text-sm mt-0.5">
-                    {answer.text_my}
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
-
-        {/* Answer feedback with animated icons */}
+        {/* Feedback panel (slides up) */}
         <div className="mt-4">
-          <AnswerFeedback
-            isCorrect={selectedAnswer?.correct ?? false}
-            show={showFeedback}
-            correctAnswer={currentQuestion.answers.find(a => a.correct)?.text_en}
-            correctAnswerMy={currentQuestion.answers.find(a => a.correct)?.text_my}
+          <FeedbackPanel
+            isCorrect={quizState.isCorrect ?? false}
+            show={isFeedback}
+            correctAnswer={correctAnswer?.text_en ?? ''}
+            correctAnswerMy={correctAnswer?.text_my}
+            userAnswer={quizState.selectedAnswer?.text_en}
+            userAnswerMy={quizState.selectedAnswer?.text_my}
+            explanation={currentQuestion.explanation}
+            streakCount={quizState.streakCount}
+            mode="practice"
+            onContinue={handleContinue}
+            showBurmese={showBurmese}
           />
         </div>
-
-        {/* WhyButton inline explanation */}
-        {showFeedback && currentQuestion.explanation && (
-          <div className="mt-3">
-            <WhyButton
-              explanation={currentQuestion.explanation}
-              isCorrect={selectedAnswer?.correct}
-              compact
-              onExpandChange={handleExplanationExpandChange}
-            />
-            {/* "Next" button when explanation expanded (auto-advance paused) */}
-            {explanationExpanded && (
-              <button
-                onClick={advanceToNext}
-                className={clsx(
-                  'mt-3 flex w-full items-center justify-center gap-2',
-                  'min-h-[48px] rounded-xl px-4 py-2.5',
-                  'bg-primary text-primary-foreground font-bold',
-                  'shadow-[0_4px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[3px]',
-                  'transition-[box-shadow,transform] duration-100'
-                )}
-              >
-                {strings.actions.next.en}
-                {showBurmese && (
-                  <span className="font-myanmar text-xs">{strings.actions.next.my}</span>
-                )}
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Progress summary */}
-        <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="text-success font-bold">{correctCount} correct</span>
-            <span className="text-warning font-bold">{incorrectCount} incorrect</span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {questions.length - results.length} remaining
-          </p>
-        </div>
       </div>
+
+      {/* Segment tap review dialog */}
+      <AnimatePresence>
+        {reviewSegmentIndex !== null && reviewQuestion && reviewResult && (
+          <SegmentReviewDialog
+            question={reviewQuestion}
+            result={reviewResult}
+            onClose={handleCloseReview}
+            showBurmese={showBurmese}
+            shouldReduceMotion={shouldReduceMotion}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Exit confirmation dialog */}
+      <AnimatePresence>
+        {showExitConfirm && (
+          <ExitConfirmInline
+            open={showExitConfirm}
+            onConfirm={handleExitConfirm}
+            onCancel={handleExitCancel}
+            showBurmese={showBurmese}
+            shouldReduceMotion={shouldReduceMotion}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
