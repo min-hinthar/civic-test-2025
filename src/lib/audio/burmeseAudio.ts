@@ -74,6 +74,7 @@ export interface BurmesePlayer {
 export function createBurmesePlayer(): BurmesePlayer {
   let audio: HTMLAudioElement | null = null;
   let state: BurmesePlayerState = { isSpeaking: false, isPaused: false, currentFile: null };
+  let cancelledFlag = false; // Prevents retry after explicit cancel()
   const listeners = new Set<StateCallback>();
 
   function notify() {
@@ -128,6 +129,7 @@ export function createBurmesePlayer(): BurmesePlayer {
     async play(url: string, rate = 1): Promise<void> {
       // Cancel any existing playback
       cleanupAudio();
+      cancelledFlag = false; // Reset on new play
 
       // Update state to speaking
       state = { isSpeaking: true, isPaused: false, currentFile: url };
@@ -136,9 +138,13 @@ export function createBurmesePlayer(): BurmesePlayer {
       try {
         await attemptPlay(url, rate);
       } catch {
-        // Retry once on failure
+        // Don't retry if explicitly cancelled — prevents zombie playback
+        if (cancelledFlag) {
+          resetState();
+          return;
+        }
+        // Retry once on load/network failure
         try {
-          // Cleanup failed attempt
           cleanupAudio();
           state = { isSpeaking: true, isPaused: false, currentFile: url };
           notify();
@@ -168,6 +174,7 @@ export function createBurmesePlayer(): BurmesePlayer {
     },
 
     cancel() {
+      cancelledFlag = true;
       cleanupAudio();
       resetState();
     },

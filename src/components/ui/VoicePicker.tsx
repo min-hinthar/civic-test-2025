@@ -83,18 +83,21 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
     return resolved?.name ?? null;
   }, [voices]);
 
-  // Filter to US English voices, preferring online but falling back to local
+  // Filter to US English online / natural voices only — no local basic voices
   const filteredVoices = useMemo(() => {
     const allUSVoices = voices.filter(v => {
       const lang = v.lang.toLowerCase().replace(/_/g, '-');
       return lang === 'en-us';
     });
 
-    // Prefer online voices; fall back to all US English when no online voices exist
-    const onlineUSVoices = allUSVoices.filter(v => !v.localService);
-    const pool = onlineUSVoices.length >= 2 ? onlineUSVoices : allUSVoices;
+    // Only show online voices OR voices with "natural"/"neural" in name
+    const highQuality = allUSVoices.filter(v => {
+      if (!v.localService) return true; // Online/cloud voice
+      const lower = v.name.toLowerCase();
+      return lower.includes('natural') || lower.includes('neural');
+    });
 
-    return pool.sort((a, b) => {
+    return highQuality.sort((a, b) => {
       const scoreA = voiceQualityScore(a.name);
       const scoreB = voiceQualityScore(b.name);
       if (scoreA !== scoreB) return scoreA - scoreB;

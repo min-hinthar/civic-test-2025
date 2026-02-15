@@ -105,8 +105,12 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       } else if (autoReadLang === 'burmese') {
         await playBurmese();
       } else {
-        // 'both': English first, then Burmese
+        // 'both': English first, brief pause, then Burmese
         await speakEnglish();
+        if (!cancelled) {
+          // Small gap between languages for processing
+          await new Promise(r => setTimeout(r, 400));
+        }
         if (!cancelled) {
           await playBurmese();
         }
@@ -119,8 +123,8 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       cancel();
       burmesePlayerRef.current?.cancel();
     };
-    // Dependencies: re-trigger only on key change and enabled toggle
+    // Re-trigger on key change, enabled toggle, or language mode change
     // speak/cancel are stable (useCallback in useTTS)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerKey, enabled]);
+  }, [triggerKey, enabled, autoReadLang]);
 }
