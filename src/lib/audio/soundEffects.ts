@@ -247,3 +247,85 @@ export function playCountdownGo(): void {
     // Silently ignore
   }
 }
+
+// ---------------------------------------------------------------------------
+// Quiz interaction sounds
+// ---------------------------------------------------------------------------
+
+/**
+ * Short neutral tone for skipping a question.
+ * 500 Hz triangle wave, 100ms. Quick, non-judgmental.
+ */
+export function playSkip(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 500, 0, 0.1, 0.15, 'triangle');
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Ascending 3-note arpeggio for streak milestones.
+ * E5 (659 Hz) -> G5 (784 Hz) -> C6 (1047 Hz). Celebratory.
+ */
+export function playStreak(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 659, 0, 0.12, 0.25, 'triangle'); // E5
+    playNote(ctx, 784, 0.1, 0.12, 0.25, 'triangle'); // G5
+    playNote(ctx, 1047, 0.2, 0.15, 0.25, 'triangle'); // C6
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Quick frequency sweep for feedback panel reveal.
+ * Sine wave 200 Hz -> 600 Hz over 120ms. Subtle "whoosh" upward.
+ */
+export function playPanelReveal(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(200, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.12);
+
+    gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.12);
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Short sparkly burst for progress bar completion.
+ * High-frequency sine wave (2000 Hz) with quick decay. Satisfying.
+ */
+export function playCompletionSparkle(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 2000, 0, 0.08, 0.2);
+    playNote(ctx, 2400, 0.04, 0.08, 0.15);
+  } catch {
+    // Silently ignore
+  }
+}
