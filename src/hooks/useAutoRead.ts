@@ -1,8 +1,8 @@
 /**
  * useAutoRead Hook
  *
- * Triggers TTS speech automatically when content changes (e.g., question navigation).
- * Supports bilingual auto-read: English TTS, Burmese MP3, or both sequentially.
+ * Triggers auto-read when content changes (e.g., question navigation).
+ * Supports bilingual auto-read: English MP3, Burmese MP3, or both sequentially.
  * Uses triggerKey-based re-triggering with configurable delay and silent retry.
  *
  * Usage:
@@ -10,25 +10,25 @@
  *     text: question.text,
  *     enabled: sessionAutoRead,
  *     triggerKey: questionIndex,
- *     lang: 'en-US',
  *     autoReadLang: 'both',
+ *     englishAudioUrl: '/audio/en-US/ava/GOV-P01-q.mp3',
  *     burmeseAudioUrl: '/audio/my-MM/female/GOV-P01-q.mp3',
  *   });
  */
 
 import { useEffect, useRef } from 'react';
 
-import { createBurmesePlayer, type BurmesePlayer } from '@/lib/audio/burmeseAudio';
+import { createAudioPlayer, type AudioPlayer } from '@/lib/audio/audioPlayer';
 import type { AutoReadLang } from '@/lib/ttsTypes';
 
 import { useTTS } from './useTTS';
 
 interface UseAutoReadOptions {
-  /** Text to speak (English) */
+  /** Text to speak (English fallback when no MP3 URL provided) */
   text: string;
   /** Whether auto-read is enabled */
   enabled: boolean;
-  /** Language override for English TTS (e.g., 'en-US') */
+  /** Language override for English browser TTS fallback (e.g., 'en-US') */
   lang?: string;
   /** Unique key that triggers re-read on change (e.g., question index, card side) */
   triggerKey: string | number;
@@ -36,6 +36,10 @@ interface UseAutoReadOptions {
   delay?: number;
   /** Which language(s) to auto-read. Defaults to 'english'. */
   autoReadLang?: AutoReadLang;
+  /** URL for pre-generated English audio MP3. When provided, uses MP3 instead of browser TTS. */
+  englishAudioUrl?: string;
+  /** Playback rate for English audio (default 1) */
+  englishRate?: number;
   /** URL for pre-generated Burmese audio MP3. Required for 'burmese' or 'both' modes. */
   burmeseAudioUrl?: string;
   /** Playback rate for Burmese audio (default 1) */
@@ -51,11 +55,14 @@ export function useAutoRead(options: UseAutoReadOptions): void {
     triggerKey,
     delay = 300,
     autoReadLang = 'english',
+    englishAudioUrl,
+    englishRate = 1,
     burmeseAudioUrl,
     burmeseRate = 1,
   } = options;
-  // Lazy-created Burmese audio player (ref is safe — only used in effects/callbacks)
-  const burmesePlayerRef = useRef<BurmesePlayer | null>(null);
+  // Lazy-created audio players (ref is safe — only used in effects/callbacks)
+  const englishPlayerRef = useRef<AudioPlayer | null>(null);
+  const burmesePlayerRef = useRef<AudioPlayer | null>(null);
 
   useEffect(() => {
     // Local variable per effect invocation — not shared across re-renders.
@@ -65,25 +72,47 @@ export function useAutoRead(options: UseAutoReadOptions): void {
 
     if (!enabled || !text?.trim()) return;
 
-    const getBurmesePlayer = (): BurmesePlayer => {
+    const getEnglishPlayer = (): AudioPlayer => {
+      if (!englishPlayerRef.current) {
+        englishPlayerRef.current = createAudioPlayer();
+      }
+      return englishPlayerRef.current;
+    };
+
+    const getBurmesePlayer = (): AudioPlayer => {
       if (!burmesePlayerRef.current) {
-        burmesePlayerRef.current = createBurmesePlayer();
+        burmesePlayerRef.current = createAudioPlayer();
       }
       return burmesePlayerRef.current;
     };
 
     /**
-     * Speak English text. Returns true if completed, false if cancelled.
-     * Retries once on transient TTS errors (not on cancellation).
+     * Play English audio. Returns true if completed, false if cancelled/failed.
+     * When englishAudioUrl is available, uses MP3 player; otherwise falls back to browser TTS.
      */
-    const speakEnglish = async (): Promise<boolean> => {
+    const playEnglish = async (): Promise<boolean> => {
+      if (englishAudioUrl) {
+        // MP3 mode — retry once on network failure
+        try {
+          await getEnglishPlayer().play(englishAudioUrl, englishRate);
+          return true;
+        } catch {
+          if (cancelled) return false;
+          // Retry once
+          try {
+            await getEnglishPlayer().play(englishAudioUrl, englishRate);
+            return true;
+          } catch {
+            return false;
+          }
+        }
+      }
+      // Browser TTS fallback
       try {
         await speak(text, { lang });
         return true;
       } catch (err) {
-        // Cancellation = user/system stopped speech — don't retry, signal caller
         if (err instanceof Error && err.name === 'TTSCancelledError') return false;
-        // Transient error — retry once after delay
         if (cancelled) return false;
         await new Promise(r => setTimeout(r, 500));
         if (cancelled) return false;
@@ -91,7 +120,6 @@ export function useAutoRead(options: UseAutoReadOptions): void {
           await speak(text, { lang });
           return true;
         } catch {
-          // Give up — report failure so chain can adapt
           return false;
         }
       }
@@ -110,14 +138,12 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       if (cancelled) return;
 
       if (autoReadLang === 'english') {
-        await speakEnglish();
+        await playEnglish();
       } else if (autoReadLang === 'burmese') {
         await playBurmese();
       } else {
         // 'both': English first, brief pause, then Burmese
-        const completed = await speakEnglish();
-        // Only stop chain on cancellation (user pressed stop / navigated away),
-        // NOT on English TTS failure — Burmese should still play
+        const completed = await playEnglish();
         if (cancelled) return;
         // Small gap between languages (skip if English failed)
         await new Promise(r => setTimeout(r, completed ? 400 : 0));
@@ -131,10 +157,11 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       cancelled = true;
       clearTimeout(timer);
       cancel();
+      englishPlayerRef.current?.cancel();
       burmesePlayerRef.current?.cancel();
     };
-    // Re-trigger on key change, enabled toggle, language mode change, or Burmese URL change.
-    // speak/cancel are stable (useCallback in useTTS); lang/burmeseRate rarely change.
+    // Re-trigger on key change, enabled toggle, language mode change, or audio URL change.
+    // speak/cancel are stable (useCallback in useTTS); lang/rates rarely change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerKey, enabled, autoReadLang, burmeseAudioUrl]);
+  }, [triggerKey, enabled, autoReadLang, englishAudioUrl, burmeseAudioUrl]);
 }

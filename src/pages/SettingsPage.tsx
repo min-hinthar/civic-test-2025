@@ -36,9 +36,7 @@ import { SocialSettings } from '@/components/social/SocialSettings';
 import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
-import { useTTS } from '@/hooks/useTTS';
-import { VoicePicker } from '@/components/ui/VoicePicker';
-import type { AutoReadLang, BurmeseVoice } from '@/lib/ttsTypes';
+import type { AutoReadLang } from '@/lib/ttsTypes';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
 
@@ -58,11 +56,6 @@ const AUTO_READ_LANG_OPTIONS: { value: AutoReadLang; en: string; my: string }[] 
     en: 'Both',
     my: '\u1014\u103E\u1005\u103A\u1019\u103B\u102D\u102F\u1038\u101C\u102F\u1036\u1038',
   },
-];
-
-const BURMESE_VOICE_OPTIONS: { value: BurmeseVoice; en: string }[] = [
-  { value: 'nilar', en: 'Nilar (Female)' },
-  { value: 'thiha', en: 'Thiha (Male)' },
 ];
 
 /** Reusable toggle switch component */
@@ -200,7 +193,6 @@ export default function SettingsPage() {
     return localStorage.getItem(SRS_REMINDER_TIME_KEY) ?? '09:00';
   });
   const { settings: ttsSettings, updateSettings: updateTTSSettings } = useTTSSettings();
-  const { voices } = useTTS();
   const speechRate = ttsSettings.rate;
   const { selectedState, setSelectedState, allStates } = useUserState();
   const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
@@ -398,25 +390,6 @@ export default function SettingsPage() {
           }
           showBurmese={showBurmese}
         >
-          {/* Voice Picker */}
-          <SettingsRow
-            label="English Voice"
-            labelMy={'\u1021\u1004\u103A\u1039\u1002\u101C\u102D\u1015\u103A\u1021\u101E\u1036'}
-            description="Select a voice for English text-to-speech"
-            descriptionMy={
-              '\u1021\u1004\u103A\u1039\u1002\u101C\u102D\u1015\u103A\u1005\u102C\u101E\u102C\u1016\u1010\u103A\u101B\u1014\u103A \u1021\u101E\u1036\u101B\u103D\u1031\u1038\u1001\u103B\u101A\u103A\u1015\u102B'
-            }
-            showBurmese={showBurmese}
-            action={
-              <VoicePicker
-                voices={voices}
-                selectedVoice={ttsSettings.preferredVoice}
-                onSelect={(name: string) => updateTTSSettings({ preferredVoice: name || null })}
-                showBurmese={showBurmese}
-              />
-            }
-          />
-
           {/* Speech Speed */}
           <div className="py-3 border-b border-border/40">
             <div className="flex items-center gap-2 mb-2">
@@ -519,46 +492,6 @@ export default function SettingsPage() {
                   </button>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Burmese Voice Selector (conditional: visible when showBurmese) */}
-          {showBurmese && (
-            <div className="py-3">
-              <div className="flex items-center gap-2 mb-2">
-                <p className="text-sm font-semibold text-foreground">Burmese Voice</p>
-                <span className="font-myanmar text-xs text-muted-foreground">
-                  {'\u1019\u103C\u1014\u103A\u1019\u102C\u1021\u101E\u1036'}
-                </span>
-              </div>
-              <div className="flex gap-2" role="radiogroup" aria-label="Burmese voice">
-                {BURMESE_VOICE_OPTIONS.map(option => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    role="radio"
-                    aria-checked={ttsSettings.burmeseVoice === option.value}
-                    onClick={() => updateTTSSettings({ burmeseVoice: option.value })}
-                    className={`flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px] ${
-                      ttsSettings.burmeseVoice === option.value
-                        ? 'border-primary bg-primary-subtle text-primary shadow-[0_2px_0_0] shadow-primary-200'
-                        : 'border-border bg-card text-muted-foreground hover:bg-muted/40'
-                    }`}
-                  >
-                    {option.en}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Select the voice for Burmese audio playback.
-              </p>
-              {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                  {
-                    '\u1019\u103C\u1014\u103A\u1019\u102C\u1021\u101E\u1036\u1016\u103C\u1004\u103A\u1037\u1016\u1010\u103A\u101B\u1014\u103A \u1021\u101E\u1036\u101B\u103D\u1031\u1038\u1001\u103B\u101A\u103A\u1015\u102B\u104B'
-                  }
-                </p>
-              )}
             </div>
           )}
         </SettingsSection>

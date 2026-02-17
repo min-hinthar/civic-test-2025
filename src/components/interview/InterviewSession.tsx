@@ -22,10 +22,11 @@ import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useTTS } from '@/hooks/useTTS';
 import { TTSCancelledError } from '@/lib/ttsTypes';
 import {
-  createBurmesePlayer,
+  createAudioPlayer,
+  getEnglishAudioUrl,
   getBurmeseAudioUrl,
-  type BurmesePlayer,
-} from '@/lib/audio/burmeseAudio';
+  type AudioPlayer,
+} from '@/lib/audio/audioPlayer';
 import { useInterviewSpeech } from '@/hooks/useSpeechRecognition';
 import { useSilenceDetection } from '@/hooks/useSilenceDetection';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
@@ -219,11 +220,18 @@ export function InterviewSession({
     }
   }, [micPermission, requestPermission]);
 
-  // Burmese audio player for Practice mode in Myanmar mode
-  const burmesePlayerRef = useRef<BurmesePlayer | null>(null);
-  const getBurmesePlayer = useCallback((): BurmesePlayer => {
+  // Audio players for pre-generated MP3 playback
+  const englishPlayerRef = useRef<AudioPlayer | null>(null);
+  const burmesePlayerRef = useRef<AudioPlayer | null>(null);
+  const getEnglishPlayer = useCallback((): AudioPlayer => {
+    if (!englishPlayerRef.current) {
+      englishPlayerRef.current = createAudioPlayer();
+    }
+    return englishPlayerRef.current;
+  }, []);
+  const getBurmesePlayer = useCallback((): AudioPlayer => {
     if (!burmesePlayerRef.current) {
-      burmesePlayerRef.current = createBurmesePlayer();
+      burmesePlayerRef.current = createAudioPlayer();
     }
     return burmesePlayerRef.current;
   }, []);
@@ -267,7 +275,7 @@ export function InterviewSession({
     }
   }, [chatMessages, questionPhase, shouldReduceMotion]);
 
-  // --- Safe speak wrapper (applies session speed override) ---
+  // --- Safe speak wrapper for dynamic text (greetings, feedback, acks) ---
   const safeSpeakLocal = useCallback(
     async (text: string) => {
       try {
@@ -279,6 +287,20 @@ export function InterviewSession({
       }
     },
     [speak, numericRate]
+  );
+
+  // --- Safe play for question text (uses pre-generated English MP3) ---
+  const safePlayQuestion = useCallback(
+    async (questionId: string) => {
+      try {
+        const url = getEnglishAudioUrl(questionId, 'q');
+        await getEnglishPlayer().play(url, numericRate);
+        return 'completed' as const;
+      } catch {
+        return 'error' as const;
+      }
+    },
+    [numericRate, getEnglishPlayer]
   );
 
   // --- Silence detection: auto-stop recording after 2s silence ---
@@ -338,6 +360,7 @@ export function InterviewSession({
   useEffect(() => {
     return () => {
       cleanupRecorder();
+      englishPlayerRef.current?.cancel();
       burmesePlayerRef.current?.cancel();
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
@@ -418,13 +441,13 @@ export function InterviewSession({
     setExaminerState('speaking');
     addMessage('examiner', questionText, undefined, undefined, currentQuestion.id);
 
-    safeSpeakLocal(questionText).then(async speakResult => {
+    safePlayQuestion(currentQuestion.id).then(async speakResult => {
       if (cancelled) return;
 
-      // Practice mode + Myanmar mode: play Burmese audio after English TTS
+      // Practice mode + Myanmar mode: play Burmese audio after English MP3
       if (speakResult === 'completed' && showBurmese && mode === 'practice') {
         try {
-          const url = getBurmeseAudioUrl(currentQuestion.id, 'q', ttsSettings.burmeseVoice);
+          const url = getBurmeseAudioUrl(currentQuestion.id, 'q');
           await getBurmesePlayer().play(url, numericRate);
         } catch {
           // Burmese audio failure is non-blocking -- continue silently
@@ -449,12 +472,13 @@ export function InterviewSession({
 
     return () => {
       cancelled = true;
+      englishPlayerRef.current?.cancel();
       burmesePlayerRef.current?.cancel();
     };
   }, [
     questionPhase,
     currentQuestion,
-    safeSpeakLocal,
+    safePlayQuestion,
     addMessage,
     canUseSpeech,
     resetTranscript,
@@ -462,7 +486,6 @@ export function InterviewSession({
     startRecording,
     showBurmese,
     mode,
-    ttsSettings.burmeseVoice,
     numericRate,
     getBurmesePlayer,
   ]);
@@ -899,7 +922,7 @@ export function InterviewSession({
 
     setExaminerState('speaking');
     await new Promise(resolve => setTimeout(resolve, 500));
-    const speakResult = await safeSpeakLocal(currentQuestion.question_en);
+    const speakResult = await safePlayQuestion(currentQuestion.id);
     setExaminerState('listening');
 
     if (speakResult === 'completed' && canUseSpeech) {
@@ -912,7 +935,7 @@ export function InterviewSession({
     replaysUsed,
     stopListening,
     stopRecording,
-    safeSpeakLocal,
+    safePlayQuestion,
     canUseSpeech,
     resetTranscript,
     startListening,
@@ -922,6 +945,7 @@ export function InterviewSession({
   // --- Quit handler ---
   const handleQuit = useCallback(() => {
     cancelTTS();
+    englishPlayerRef.current?.cancel();
     burmesePlayerRef.current?.cancel();
     stopListening();
     stopRecording();

@@ -240,7 +240,7 @@ function SettingsConsumer({
     <div>
       <span data-testid="auto-read">{String(val?.settings?.autoRead)}</span>
       <span data-testid="auto-read-lang">{val?.settings?.autoReadLang}</span>
-      <span data-testid="burmese-voice">{val?.settings?.burmeseVoice}</span>
+      <span data-testid="auto-read-lang-value">{val?.settings?.autoReadLang}</span>
       <span data-testid="rate">{val?.settings?.rate}</span>
     </div>
   );
@@ -276,7 +276,7 @@ describe('Phase 22: TTSSettings persistence', () => {
     expect(screen.getByTestId('auto-read')).toHaveTextContent('true');
   });
 
-  it('updateSettings changes burmeseVoice in React state', async () => {
+  it('updateSettings changes autoReadLang in React state', async () => {
     let updateFn: ((partial: Record<string, unknown>) => void) | null = null;
 
     await act(async () => {
@@ -292,16 +292,16 @@ describe('Phase 22: TTSSettings persistence', () => {
       vi.advanceTimersByTime(10);
     });
 
-    // Default: nilar
-    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('nilar');
+    // Default: both
+    expect(screen.getByTestId('auto-read-lang-value')).toHaveTextContent('both');
 
     await act(async () => {
-      updateFn?.({ burmeseVoice: 'thiha' });
+      updateFn?.({ autoReadLang: 'english' });
       vi.advanceTimersByTime(10);
     });
 
     // React state should reflect the change
-    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('thiha');
+    expect(screen.getByTestId('auto-read-lang-value')).toHaveTextContent('english');
   });
 
   it('TTSSettings defaults for new fields via merge pattern', async () => {
@@ -317,10 +317,10 @@ describe('Phase 22: TTSSettings persistence', () => {
       vi.advanceTimersByTime(10);
     });
 
-    // Phase 22 default fields should be present
+    // Default fields should be present
     expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
     expect(screen.getByTestId('auto-read-lang')).toHaveTextContent('both');
-    expect(screen.getByTestId('burmese-voice')).toHaveTextContent('nilar');
+    expect(screen.getByTestId('auto-read-lang-value')).toHaveTextContent('both');
     // Original defaults still present
     expect(screen.getByTestId('rate')).toHaveTextContent('normal');
   });

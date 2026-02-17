@@ -312,6 +312,8 @@ export function SkippedReviewPhase({
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={currentQuestion.question_en}
+                  questionId={currentQuestion.id}
+                  audioType="q"
                   label="Question"
                   ariaLabel="Play question audio"
                 />
@@ -369,6 +371,7 @@ export function SkippedReviewPhase({
             userAnswer={quizState.selectedAnswer?.text_en}
             userAnswerMy={quizState.selectedAnswer?.text_my}
             explanation={currentQuestion.explanation}
+            questionId={currentQuestion.id}
             streakCount={quizState.streakCount}
             mode="practice"
             onContinue={handleContinue}

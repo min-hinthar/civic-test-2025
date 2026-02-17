@@ -8,7 +8,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
-import { getBurmeseAudioUrl } from '@/lib/audio/burmeseAudio';
+import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { Flashcard3D } from './Flashcard3D';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
@@ -66,10 +66,10 @@ export function FlashcardStack({
     triggerKey: currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,
+    englishAudioUrl: currentQuestion ? getEnglishAudioUrl(currentQuestion.id, 'q') : undefined,
+    englishRate: numericRate,
     burmeseAudioUrl:
-      showBurmese && currentQuestion
-        ? getBurmeseAudioUrl(currentQuestion.id, 'q', tts.burmeseVoice)
-        : undefined,
+      showBurmese && currentQuestion ? getBurmeseAudioUrl(currentQuestion.id, 'q') : undefined,
     burmeseRate: numericRate,
   });
 

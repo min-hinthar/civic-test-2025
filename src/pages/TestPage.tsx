@@ -10,7 +10,7 @@ import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
-import { getBurmeseAudioUrl } from '@/lib/audio/burmeseAudio';
+import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -179,10 +179,10 @@ const TestPage = () => {
     triggerKey: quizState.currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,
+    englishAudioUrl: currentQuestion ? getEnglishAudioUrl(currentQuestion.id, 'q') : undefined,
+    englishRate: numericRate,
     burmeseAudioUrl:
-      showBurmese && currentQuestion
-        ? getBurmeseAudioUrl(currentQuestion.id, 'q', tts.burmeseVoice)
-        : undefined,
+      showBurmese && currentQuestion ? getBurmeseAudioUrl(currentQuestion.id, 'q') : undefined,
     burmeseRate: numericRate,
   });
 
@@ -768,6 +768,8 @@ const TestPage = () => {
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={questionAudioText}
+                  questionId={currentQuestion?.id}
+                  audioType="q"
                   label="Question"
                   ariaLabel="Play English test question audio"
                   rate={numericRate}
@@ -785,6 +787,8 @@ const TestPage = () => {
                 )}
                 <SpeechButton
                   text={answerChoicesAudioText}
+                  questionId={currentQuestion?.id}
+                  audioType="a"
                   label="Answers"
                   ariaLabel="Play English answer choices audio"
                   rate={numericRate}
@@ -878,6 +882,7 @@ const TestPage = () => {
           correctAnswerMy={currentQuestion?.answers.find(a => a.correct)?.text_my}
           userAnswer={quizState.selectedAnswer?.text_en}
           userAnswerMy={quizState.selectedAnswer?.text_my}
+          questionId={currentQuestion?.id}
           streakCount={quizState.streakCount}
           mode="mock-test"
           onContinue={handleContinue}
@@ -1108,6 +1113,8 @@ const TestPage = () => {
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <SpeechButton
                     text={result.questionText_en}
+                    questionId={result.questionId}
+                    audioType="q"
                     label="Question"
                     ariaLabel={`Play English question audio for ${result.questionText_en}`}
                     rate={numericRate}
@@ -1125,6 +1132,8 @@ const TestPage = () => {
                   )}
                   <SpeechButton
                     text={result.correctAnswer.text_en}
+                    questionId={result.questionId}
+                    audioType="a"
                     label="Answer"
                     ariaLabel={`Play English official answer for ${result.questionText_en}`}
                     rate={numericRate}

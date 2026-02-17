@@ -323,12 +323,16 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                                   <div className="mt-2 flex flex-wrap gap-2">
                                     <SpeechButton
                                       text={result.questionText_en}
+                                      questionId={result.questionId}
+                                      audioType="q"
                                       label="Question"
                                       ariaLabel={`Play English question audio for ${result.questionText_en}`}
                                       stopPropagation
                                     />
                                     <SpeechButton
                                       text={result.correctAnswer.text_en}
+                                      questionId={result.questionId}
+                                      audioType="a"
                                       label="Answer"
                                       ariaLabel={`Play official English answer for ${result.questionText_en}`}
                                       stopPropagation

@@ -398,6 +398,8 @@ const StudyGuidePage = () => {
                             <div className="flex flex-wrap gap-2">
                               <SpeechButton
                                 text={question.question_en}
+                                questionId={question.id}
+                                audioType="q"
                                 label="Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
@@ -449,6 +451,8 @@ const StudyGuidePage = () => {
                             <div className="flex gap-2">
                               <SpeechButton
                                 text={englishAnswersText}
+                                questionId={question.id}
+                                audioType="a"
                                 label="Answers"
                                 ariaLabel={`Play English answers for ${question.question_en}`}
                                 stopPropagation
@@ -703,6 +707,8 @@ const StudyGuidePage = () => {
                             <div className="flex flex-wrap gap-2">
                               <SpeechButton
                                 text={question.question_en}
+                                questionId={question.id}
+                                audioType="q"
                                 label="Question"
                                 ariaLabel={`Play English question audio for ${question.question_en}`}
                                 stopPropagation
@@ -754,6 +760,8 @@ const StudyGuidePage = () => {
                             <div className="flex gap-2">
                               <SpeechButton
                                 text={englishAnswersText}
+                                questionId={question.id}
+                                audioType="a"
                                 label="Answers"
                                 ariaLabel={`Play English answers for ${question.question_en}`}
                                 stopPropagation

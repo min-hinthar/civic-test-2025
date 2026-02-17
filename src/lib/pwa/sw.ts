@@ -18,16 +18,16 @@ const serwist = new Serwist({
   navigationPreload: true,
   runtimeCaching: [
     ...defaultCache,
-    // CacheFirst for pre-generated Burmese audio MP3 files
+    // CacheFirst for pre-generated audio MP3 files (English + Burmese)
     {
       matcher({ url }) {
         return url.pathname.startsWith('/audio/');
       },
       handler: new CacheFirst({
-        cacheName: 'burmese-audio-v1',
+        cacheName: 'audio-v2',
         plugins: [
           new ExpirationPlugin({
-            maxEntries: 800,
+            maxEntries: 1200, // ~384 English + ~384 Burmese + buffer
             maxAgeSeconds: 90 * 24 * 60 * 60, // 90 days
           }),
         ],

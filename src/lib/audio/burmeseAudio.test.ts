@@ -13,23 +13,19 @@ import { getBurmeseAudioUrl, createBurmesePlayer, type AudioType } from './burme
 // ---------------------------------------------------------------------------
 
 describe('getBurmeseAudioUrl', () => {
-  it('returns correct path for nilar (female) voice', () => {
-    expect(getBurmeseAudioUrl('GOV-P01', 'q', 'nilar')).toBe('/audio/my-MM/female/GOV-P01-q.mp3');
-  });
-
-  it('returns correct path for thiha (male) voice', () => {
-    expect(getBurmeseAudioUrl('GOV-P01', 'q', 'thiha')).toBe('/audio/my-MM/male/GOV-P01-q.mp3');
+  it('returns correct path for female voice', () => {
+    expect(getBurmeseAudioUrl('GOV-P01', 'q')).toBe('/audio/my-MM/female/GOV-P01-q.mp3');
   });
 
   it('handles answer type', () => {
-    expect(getBurmeseAudioUrl('GOV-P01', 'a', 'nilar')).toBe('/audio/my-MM/female/GOV-P01-a.mp3');
+    expect(getBurmeseAudioUrl('GOV-P01', 'a')).toBe('/audio/my-MM/female/GOV-P01-a.mp3');
   });
 
   it('handles explanation type', () => {
-    expect(getBurmeseAudioUrl('GOV-P01', 'e', 'nilar')).toBe('/audio/my-MM/female/GOV-P01-e.mp3');
+    expect(getBurmeseAudioUrl('GOV-P01', 'e')).toBe('/audio/my-MM/female/GOV-P01-e.mp3');
   });
 
-  it('defaults to nilar when voice not specified', () => {
+  it('handles different question IDs', () => {
     expect(getBurmeseAudioUrl('RIGHTS-P05', 'q')).toBe('/audio/my-MM/female/RIGHTS-P05-q.mp3');
   });
 

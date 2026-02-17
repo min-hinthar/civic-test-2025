@@ -9,7 +9,7 @@ import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
-import { getBurmeseAudioUrl } from '@/lib/audio/burmeseAudio';
+import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { AnswerOptionGroup } from '@/components/quiz/AnswerOption';
 import { FeedbackPanel } from '@/components/quiz/FeedbackPanel';
@@ -189,6 +189,8 @@ function SegmentReviewDialog({
               <div className="mt-2">
                 <SpeechButton
                   text={question.explanation.brief_en}
+                  questionId={question.id}
+                  audioType="e"
                   label="Explain"
                   ariaLabel="Listen to explanation"
                   className="text-xs"
@@ -376,10 +378,10 @@ export function PracticeSession({
     triggerKey: quizState.currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,
+    englishAudioUrl: currentQuestion ? getEnglishAudioUrl(currentQuestion.id, 'q') : undefined,
+    englishRate: numericRate,
     burmeseAudioUrl:
-      showBurmese && currentQuestion
-        ? getBurmeseAudioUrl(currentQuestion.id, 'q', tts.burmeseVoice)
-        : undefined,
+      showBurmese && currentQuestion ? getBurmeseAudioUrl(currentQuestion.id, 'q') : undefined,
     burmeseRate: numericRate,
   });
 
@@ -802,6 +804,8 @@ export function PracticeSession({
               <div className="mt-3 flex flex-wrap gap-2">
                 <SpeechButton
                   text={currentQuestion.question_en}
+                  questionId={currentQuestion.id}
+                  audioType="q"
                   label="Question"
                   ariaLabel="Play English question audio"
                   rate={numericRate}
@@ -819,6 +823,8 @@ export function PracticeSession({
                 )}
                 <SpeechButton
                   text={currentQuestion.answers.map(a => a.text_en).join('. ')}
+                  questionId={currentQuestion.id}
+                  audioType="a"
                   label="Answers"
                   ariaLabel="Play English answer choices audio"
                   rate={numericRate}
@@ -890,6 +896,7 @@ export function PracticeSession({
             userAnswer={quizState.selectedAnswer?.text_en}
             userAnswerMy={quizState.selectedAnswer?.text_my}
             explanation={currentQuestion.explanation}
+            questionId={currentQuestion.id}
             streakCount={quizState.streakCount}
             mode="practice"
             onContinue={handleContinue}

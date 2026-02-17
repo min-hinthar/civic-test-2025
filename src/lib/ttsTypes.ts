@@ -56,18 +56,13 @@ export type TTSState = {
 /** Language options for auto-read feature. */
 export type AutoReadLang = 'english' | 'burmese' | 'both';
 
-/** Pre-generated Burmese voice options (edge-tts). */
-export type BurmeseVoice = 'nilar' | 'thiha';
-
 /** User-facing settings with named rate. */
 export type TTSSettings = {
   rate: 'slow' | 'normal' | 'fast';
   pitch: number;
   lang: string;
-  preferredVoice: string | null;
   autoRead: boolean;
   autoReadLang: AutoReadLang;
-  burmeseVoice: BurmeseVoice;
 };
 
 /** Per-call overrides for speak(). */

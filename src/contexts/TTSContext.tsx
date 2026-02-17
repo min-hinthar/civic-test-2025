@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import { createTTSEngine, loadVoices, findVoice } from '../lib/ttsCore';
+import { createTTSEngine, loadVoices } from '../lib/ttsCore';
 import type { TTSEngine, TTSSettings, TTSState } from '../lib/ttsTypes';
 
 // ---------------------------------------------------------------------------
@@ -22,10 +22,8 @@ const DEFAULT_SETTINGS: TTSSettings = {
   rate: 'normal',
   pitch: 1.02,
   lang: 'en-US',
-  preferredVoice: null,
   autoRead: false,
   autoReadLang: 'both',
-  burmeseVoice: 'nilar',
 };
 
 // ---------------------------------------------------------------------------
@@ -119,17 +117,6 @@ export function TTSProvider({ children }: { children: ReactNode }) {
     const idleId = scheduleVoiceLoad(() => {
       loadVoices().then(loadedVoices => {
         setVoices(loadedVoices);
-        // Always forward preferred voice name so speakChunk can find it at speak-time
-        if (settings.preferredVoice) {
-          eng.setDefaults({ preferredVoiceName: settings.preferredVoice });
-          // Also sync lang if the preferred voice is already loaded
-          const preferred = findVoice(loadedVoices, settings.lang, {
-            preferredVoiceName: settings.preferredVoice,
-          });
-          if (preferred) {
-            eng.setDefaults({ lang: preferred.lang });
-          }
-        }
       });
     });
 
@@ -170,13 +157,12 @@ export function TTSProvider({ children }: { children: ReactNode }) {
         } catch {
           // localStorage full or unavailable
         }
-        // Sync numeric rate + preferred voice to engine
+        // Sync numeric rate to engine
         if (engine) {
           engine.setDefaults({
             rate: RATE_MAP[next.rate],
             pitch: next.pitch,
             lang: next.lang,
-            preferredVoiceName: next.preferredVoice ?? undefined,
           });
         }
         return next;

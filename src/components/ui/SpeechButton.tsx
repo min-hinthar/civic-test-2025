@@ -5,7 +5,21 @@ import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react
 import { ExpandingRings, PauseIcon, SoundWaveIcon } from '@/components/ui/SpeechAnimations';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTS } from '@/hooks/useTTS';
+import { useTTSSettings } from '@/hooks/useTTSSettings';
+import {
+  createAudioPlayer,
+  getEnglishAudioUrl,
+  type AudioPlayer,
+  type AudioPlayerState,
+  type AudioType,
+} from '@/lib/audio/audioPlayer';
 import { isAndroid } from '@/lib/ttsCore';
+
+// ---------------------------------------------------------------------------
+// Rate map (matches TTSContext RATE_MAP)
+// ---------------------------------------------------------------------------
+
+const RATE_MAP = { slow: 0.7, normal: 0.98, fast: 1.3 } as const;
 
 // ---------------------------------------------------------------------------
 // US Flag Icon (16x16 inline SVG)
@@ -52,6 +66,19 @@ function USFlagIcon() {
 }
 
 // ---------------------------------------------------------------------------
+// Module-level player singleton (shared across all SpeechButton instances)
+// ---------------------------------------------------------------------------
+
+let sharedPlayer: AudioPlayer | null = null;
+
+function getPlayer(): AudioPlayer {
+  if (!sharedPlayer) {
+    sharedPlayer = createAudioPlayer();
+  }
+  return sharedPlayer;
+}
+
+// ---------------------------------------------------------------------------
 // SpeechButton
 // ---------------------------------------------------------------------------
 
@@ -59,10 +86,13 @@ interface SpeechButtonProps {
   text: string;
   label: string;
   ariaLabel?: string;
+  /** Question ID for MP3 lookup. When provided, uses pre-generated audio. */
+  questionId?: string;
+  /** Audio type: 'q' (question), 'a' (answer), 'e' (explanation). Default: 'q'. */
+  audioType?: AudioType;
   lang?: string;
   pitch?: number;
   rate?: number;
-  voiceName?: string;
   className?: string;
   stopPropagation?: boolean;
   showSpeedLabel?: boolean;
@@ -73,10 +103,11 @@ const SpeechButton = ({
   text,
   label,
   ariaLabel,
+  questionId,
+  audioType = 'q',
   lang = 'en-US',
   pitch,
   rate,
-  voiceName: _voiceName,
   className,
   stopPropagation = false,
   showSpeedLabel = false,
@@ -84,13 +115,36 @@ const SpeechButton = ({
 }: SpeechButtonProps) => {
   const { speak, cancel, pause, resume, isSpeaking, isPaused, currentText, isSupported, error } =
     useTTS();
+  const { settings } = useTTSSettings();
   const shouldReduceMotion = useReducedMotion();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const lastClickRef = useRef<number>(0);
 
-  // Per-button state: only show animations when THIS button's text is being spoken
-  const isMySpeaking = isSpeaking && currentText === text;
-  const isMyPaused = isPaused && currentText === text;
+  // MP3 mode: use pre-generated audio when questionId is available
+  const useMp3 = !!questionId;
+  const myUrl = questionId ? getEnglishAudioUrl(questionId, audioType) : null;
+
+  // Player state subscription (only used in MP3 mode)
+  const [playerState, setPlayerState] = useState<AudioPlayerState>({
+    isSpeaking: false,
+    isPaused: false,
+    currentFile: null,
+  });
+
+  useEffect(() => {
+    if (!useMp3) return;
+    const player = getPlayer();
+    const unsub = player.onStateChange(setPlayerState);
+    return unsub;
+  }, [useMp3]);
+
+  // Per-button state: detect if THIS button's content is playing
+  const isMySpeaking = useMp3
+    ? playerState.isSpeaking && playerState.currentFile === myUrl
+    : isSpeaking && currentText === text;
+  const isMyPaused = useMp3
+    ? playerState.isPaused && playerState.currentFile === myUrl
+    : isPaused && currentText === text;
 
   // Online/offline awareness
   const [isOnline, setIsOnline] = useState(() =>
@@ -126,20 +180,34 @@ const SpeechButton = ({
     if (now - lastClickRef.current < 150) return;
     lastClickRef.current = now;
 
-    if (isMyPaused) {
-      // This button is paused -> resume
-      resume();
-    } else if (isMySpeaking) {
-      // This button is speaking -> pause (or cancel on Android)
-      if (isAndroid()) {
-        cancel();
+    if (useMp3 && myUrl) {
+      // MP3 mode
+      const player = getPlayer();
+      if (isMyPaused) {
+        player.resume();
+      } else if (isMySpeaking) {
+        if (isAndroid()) {
+          player.cancel();
+        } else {
+          player.pause();
+        }
       } else {
-        pause();
+        const numericRate = rate ?? RATE_MAP[settings.rate];
+        player.play(myUrl, numericRate).catch(() => {});
       }
     } else {
-      // Idle or a different button is speaking -> start new speech
-      // (speak() internally cancels any active speech first)
-      speak(text, { lang, pitch, rate }).catch(() => {});
+      // Browser TTS fallback
+      if (isMyPaused) {
+        resume();
+      } else if (isMySpeaking) {
+        if (isAndroid()) {
+          cancel();
+        } else {
+          pause();
+        }
+      } else {
+        speak(text, { lang, pitch, rate }).catch(() => {});
+      }
     }
   };
 
@@ -157,13 +225,14 @@ const SpeechButton = ({
   const hasError = error !== null && !isMySpeaking && !isMyPaused;
 
   // Tooltip text: error > unsupported > offline > default
-  const tooltipTitle = !isSupported
-    ? 'TTS not supported in this browser'
-    : hasError
-      ? error
-      : !isOnline && !isMySpeaking
-        ? `${ariaLabel ?? label} (Limited audio offline)`
-        : undefined;
+  const tooltipTitle =
+    !useMp3 && !isSupported
+      ? 'TTS not supported in this browser'
+      : hasError
+        ? error
+        : !isOnline && !isMySpeaking
+          ? `${ariaLabel ?? label} (Limited audio offline)`
+          : undefined;
 
   const button = (
     <button
@@ -172,7 +241,7 @@ const SpeechButton = ({
       aria-pressed={isMySpeaking || isMyPaused}
       aria-label={computedAriaLabel}
       onClick={handleClick}
-      disabled={!isSupported || !text?.trim()}
+      disabled={!useMp3 && (!isSupported || !text.trim())}
       className={clsx(
         // Base styles
         'relative inline-flex items-center gap-2 overflow-visible rounded-full border px-4 py-2 text-xs font-semibold shadow-sm transition min-h-[44px]',

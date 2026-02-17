@@ -306,6 +306,8 @@ export function Flashcard3D({
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={questionEn}
+                  questionId={questionId}
+                  audioType="q"
                   label="Question"
                   ariaLabel="Listen to question in English"
                   lang="en-US"
@@ -395,6 +397,8 @@ export function Flashcard3D({
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={answerEn}
+                  questionId={questionId}
+                  audioType="a"
                   label="Answer"
                   ariaLabel="Listen to answer in English"
                   lang="en-US"

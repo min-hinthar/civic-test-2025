@@ -1,0 +1,770 @@
+[
+  {
+    "id": "GOV-P01",
+    "question_en": "What is the supreme law of the land?",
+    "answer_en": "the Constitution",
+    "explanation_en": "The Constitution is the highest legal authority in the United States. All other laws must follow it, and no person or government body is above it."
+  },
+  {
+    "id": "GOV-P02",
+    "question_en": "What does the Constitution do?",
+    "answer_en": "sets up the government. defines the government. protects basic rights of Americans",
+    "explanation_en": "The Constitution does three key things: it sets up the structure of the government, defines what each branch can do, and protects the basic rights of all Americans."
+  },
+  {
+    "id": "GOV-P03",
+    "question_en": "The idea of self-government is in the first three words of the Constitution. What are these words?",
+    "answer_en": "We the People",
+    "explanation_en": "\"We the People\" shows that the government gets its power from the people, not from a king or ruler. This is the core idea of self-government — citizens are in charge."
+  },
+  {
+    "id": "GOV-P04",
+    "question_en": "What is an amendment?",
+    "answer_en": "a change (to the Constitution). an addition (to the Constitution)",
+    "explanation_en": "An amendment is a change or addition to the Constitution. The Founders designed this process so the Constitution could grow with the country while still being hard to change on a whim."
+  },
+  {
+    "id": "GOV-P05",
+    "question_en": "What do we call the first ten amendments to the Constitution?",
+    "answer_en": "the Bill of Rights",
+    "explanation_en": "The Bill of Rights is the first 10 amendments, added in 1791. They guarantee essential freedoms like speech, religion, and the right to a fair trial — protections many states demanded before agreeing to the Constitution."
+  },
+  {
+    "id": "GOV-P06",
+    "question_en": "What is one right or freedom from the First Amendment?",
+    "answer_en": "speech. religion. assembly. press. petition the government",
+    "explanation_en": "The First Amendment protects five freedoms: speech, religion, press, assembly, and the right to petition the government. These are considered the most fundamental freedoms in American democracy."
+  },
+  {
+    "id": "GOV-P07",
+    "question_en": "How many amendments does the Constitution have?",
+    "answer_en": "twenty-seven (27)",
+    "explanation_en": "There are 27 amendments to the Constitution. The first 10 (the Bill of Rights) were added in 1791, and the most recent (27th) was ratified in 1992 — over 200 years after it was first proposed!"
+  },
+  {
+    "id": "GOV-P08",
+    "question_en": "What did the Declaration of Independence do?",
+    "answer_en": "announced our independence (from Great Britain). declared our independence (from Great Britain). said that the United States is free (from Great Britain)",
+    "explanation_en": "The Declaration of Independence, written in 1776, announced that the American colonies were breaking free from British rule. It did not create the government — the Constitution did that 11 years later."
+  },
+  {
+    "id": "GOV-P09",
+    "question_en": "What are two rights in the Declaration of Independence?",
+    "answer_en": "life. liberty. pursuit of happiness",
+    "explanation_en": "The Declaration lists three \"unalienable rights\": life, liberty, and the pursuit of happiness. These are natural rights that every person is born with, not given by the government."
+  },
+  {
+    "id": "GOV-P10",
+    "question_en": "What is freedom of religion?",
+    "answer_en": "You can practice any religion, or not practice a religion.",
+    "explanation_en": "Freedom of religion means you can follow any religion you choose, or choose not to follow any religion at all. The government cannot force a religion on you or stop you from practicing yours."
+  },
+  {
+    "id": "GOV-P11",
+    "question_en": "What is the economic system in the United States?",
+    "answer_en": "capitalist economy. market economy",
+    "explanation_en": "The U.S. has a capitalist (or market) economy, meaning private businesses and individuals make most economic decisions. People can own property, start businesses, and compete freely in the market."
+  },
+  {
+    "id": "GOV-P12",
+    "question_en": "What is the \"rule of law\"?",
+    "answer_en": "Everyone must follow the law.. Leaders must obey the law.. Government must obey the law.. No one is above the law.",
+    "explanation_en": "The rule of law means everyone — including the President, Congress, and judges — must follow the law. No one is above the law, and the law applies equally to all people."
+  },
+  {
+    "id": "GOV-S01",
+    "question_en": "Name one branch or part of the government.",
+    "answer_en": "Congress. legislative. President. executive. the courts. judicial",
+    "explanation_en": "The U.S. government has three branches: legislative (Congress — makes laws), executive (President — enforces laws), and judicial (courts — interprets laws). This separation prevents any one group from having too much power."
+  },
+  {
+    "id": "GOV-S02",
+    "question_en": "What stops one branch of government from becoming too powerful?",
+    "answer_en": "checks and balances. separation of powers",
+    "explanation_en": "Checks and balances (also called separation of powers) means each branch can limit the others. For example, the President can veto laws, Congress can override vetoes, and courts can declare laws unconstitutional."
+  },
+  {
+    "id": "GOV-S03",
+    "question_en": "Who is in charge of the executive branch?",
+    "answer_en": "the President",
+    "explanation_en": "The President leads the executive branch, which is responsible for enforcing and carrying out federal laws. The executive branch also includes the Vice President and the Cabinet."
+  },
+  {
+    "id": "GOV-S04",
+    "question_en": "Who makes federal laws?",
+    "answer_en": "Congress. Senate and House (of Representatives). (U.S. or national) legislature",
+    "explanation_en": "Congress (the Senate and the House of Representatives) is the legislative branch that makes federal laws. Both chambers must agree on a bill before it goes to the President to be signed into law."
+  },
+  {
+    "id": "GOV-S05",
+    "question_en": "What are the two parts of the U.S. Congress?",
+    "answer_en": "the Senate and House (of Representatives)",
+    "explanation_en": "Congress has two parts: the Senate (100 members, 2 per state) and the House of Representatives (435 members, based on state population). This two-part system ensures both equal and proportional representation."
+  },
+  {
+    "id": "GOV-S06",
+    "question_en": "How many U.S. Senators are there?",
+    "answer_en": "one hundred (100)",
+    "explanation_en": "There are 100 U.S. Senators — 2 from each of the 50 states. This gives every state equal representation in the Senate, regardless of how large or small its population is."
+  },
+  {
+    "id": "GOV-S07",
+    "question_en": "We elect a U.S. Senator for how many years?",
+    "answer_en": "six (6)",
+    "explanation_en": "U.S. Senators serve 6-year terms. This is longer than Representatives (2 years) so that Senators can focus on long-term issues without constantly campaigning."
+  },
+  {
+    "id": "GOV-S08",
+    "question_en": "Who is one of your state's U.S. Senators now?",
+    "answer_en": "Adam Schiff",
+    "explanation_en": "Your U.S. Senators represent your entire state in Congress. This answer varies by state — check your state's current senators before the civics test."
+  },
+  {
+    "id": "GOV-S09",
+    "question_en": "The House of Representatives has how many voting members?",
+    "answer_en": "four hundred thirty-five (435)",
+    "explanation_en": "The House has 435 voting members. Each state gets a number of Representatives based on its population — larger states like California have many more than smaller states like Wyoming."
+  },
+  {
+    "id": "GOV-S10",
+    "question_en": "We elect a U.S. Representative for how many years?",
+    "answer_en": "two (2)",
+    "explanation_en": "Representatives serve 2-year terms, the shortest of any federal elected official. This keeps them closely accountable to the people, since they must seek re-election frequently."
+  },
+  {
+    "id": "GOV-S11",
+    "question_en": "Name your U.S. Representative.",
+    "answer_en": "Judy Chu",
+    "explanation_en": "Your Representative serves your specific congressional district. This answer varies by district — check who represents your area before the civics test."
+  },
+  {
+    "id": "GOV-S12",
+    "question_en": "Who does a U.S. Senator represent?",
+    "answer_en": "all people of the state",
+    "explanation_en": "A Senator represents ALL the people in their state, not just one district. This is different from a Representative, who only represents one congressional district within the state."
+  },
+  {
+    "id": "GOV-S13",
+    "question_en": "Why do some states have more Representatives than other states?",
+    "answer_en": "(because of) the state's population. (because) they have more people. (because) some states have more people",
+    "explanation_en": "States with more people get more Representatives. A census (population count) is done every 10 years to adjust representation. California has the most (52), while states like Wyoming have only 1."
+  },
+  {
+    "id": "GOV-S14",
+    "question_en": "We elect a President for how many years?",
+    "answer_en": "four (4)",
+    "explanation_en": "The President is elected for a 4-year term and can serve a maximum of two terms (8 years total). The 22nd Amendment, passed after FDR served four terms, set this two-term limit."
+  },
+  {
+    "id": "GOV-S15",
+    "question_en": "In what month do we vote for President?",
+    "answer_en": "November",
+    "explanation_en": "Americans vote for President in November, specifically on the Tuesday after the first Monday. Election Day was set in November because it was after the fall harvest when farmers could travel."
+  },
+  {
+    "id": "GOV-S16",
+    "question_en": "What is the name of the President of the United States now?",
+    "answer_en": "Donald Trump",
+    "explanation_en": "The current President is the person serving at the time of your civics test. This answer changes when a new President takes office. Always check for the most current name before your test."
+  },
+  {
+    "id": "GOV-S17",
+    "question_en": "What is the name of the Vice President of the United States now?",
+    "answer_en": "JD Vance",
+    "explanation_en": "The Vice President serves as the President's backup and also serves as President of the Senate. Like the President, this answer changes — check the current name before your test."
+  },
+  {
+    "id": "GOV-S18",
+    "question_en": "If the President can no longer serve, who becomes President?",
+    "answer_en": "the Vice President",
+    "explanation_en": "If the President cannot serve, the Vice President takes over. This succession is established by the Constitution and has happened nine times in U.S. history."
+  },
+  {
+    "id": "GOV-S19",
+    "question_en": "If both the President and the Vice President can no longer serve, who becomes President?",
+    "answer_en": "the Speaker of the House",
+    "explanation_en": "The Speaker of the House is third in line for the presidency. The order goes: Vice President, then Speaker of the House, then President pro tempore of the Senate."
+  },
+  {
+    "id": "GOV-S20",
+    "question_en": "Who is the Commander in Chief of the military?",
+    "answer_en": "the President",
+    "explanation_en": "The President is Commander in Chief of the military. This means civilian (non-military) leadership controls the armed forces, which is a key principle of American democracy."
+  },
+  {
+    "id": "GOV-S21",
+    "question_en": "Who signs bills to become laws?",
+    "answer_en": "the President",
+    "explanation_en": "The President signs bills passed by Congress to make them official laws. If the President disagrees, they can veto (reject) the bill instead."
+  },
+  {
+    "id": "GOV-S22",
+    "question_en": "Who vetoes bills?",
+    "answer_en": "the President",
+    "explanation_en": "The President can veto (reject) bills passed by Congress. However, Congress can override a veto with a two-thirds vote in both the Senate and the House. This is an example of checks and balances."
+  },
+  {
+    "id": "GOV-S23",
+    "question_en": "What does the President's Cabinet do?",
+    "answer_en": "advises the President",
+    "explanation_en": "The Cabinet is a group of advisors who help the President make decisions. Each Cabinet member leads a federal department (like Defense, Education, or State) and is an expert in that area."
+  },
+  {
+    "id": "GOV-S24",
+    "question_en": "What are two Cabinet-level positions?",
+    "answer_en": "Secretary of Agriculture. Secretary of Commerce. Secretary of Defense. Secretary of Education. Secretary of Energy. Secretary of Health and Human Services. Secretary of Homeland Security. Secretary of Housing and Urban Development. Secretary of the Interior. Secretary of Labor. Secretary of State. Secretary of Transportation. Secretary of the Treasury. Secretary of Veterans Affairs. Attorney General. Vice President",
+    "explanation_en": "There are 15 executive departments, each led by a Secretary (or Attorney General). You only need to name two. Common ones include Secretary of State, Secretary of Defense, and Attorney General."
+  },
+  {
+    "id": "GOV-S25",
+    "question_en": "What does the judicial branch do?",
+    "answer_en": "reviews laws. explains laws. resolves disputes (disagreements). decides if a law goes against the Constitution",
+    "explanation_en": "The judicial branch (the courts) reviews and interprets laws, resolves disputes, and decides whether laws follow the Constitution. It does NOT make laws (Congress does) or enforce them (the President does)."
+  },
+  {
+    "id": "GOV-S26",
+    "question_en": "What is the highest court in the United States?",
+    "answer_en": "the Supreme Court",
+    "explanation_en": "The Supreme Court is the highest court in the country. Its decisions are final — no other court can overrule it. It has the power of \"judicial review\" to strike down unconstitutional laws."
+  },
+  {
+    "id": "GOV-S27",
+    "question_en": "How many justices are on the Supreme Court?",
+    "answer_en": "nine (9)",
+    "explanation_en": "The Supreme Court has 9 justices. They are appointed by the President, confirmed by the Senate, and serve for life. The number is not set in the Constitution but has been 9 since 1869."
+  },
+  {
+    "id": "GOV-S28",
+    "question_en": "Who is the Chief Justice of the United States now?",
+    "answer_en": "John Roberts",
+    "explanation_en": "The Chief Justice leads the Supreme Court. Like the President and Vice President, this answer can change — check for the current name before your civics test."
+  },
+  {
+    "id": "GOV-S29",
+    "question_en": "Under our Constitution, some powers belong to the federal government. What is one power of the federal government?",
+    "answer_en": "to print money. to declare war. to create an army. to make treaties",
+    "explanation_en": "The federal government handles things that affect the whole country: printing money, declaring war, making treaties, and creating an army. States cannot do these things on their own."
+  },
+  {
+    "id": "GOV-S30",
+    "question_en": "Under our Constitution, some powers belong to the states. What is one power of the states?",
+    "answer_en": "provide schooling and education. provide protection (police). provide safety (fire departments). give a driver's license. approve zoning and land use",
+    "explanation_en": "State governments handle local matters: schools, police, fire departments, driver's licenses, and zoning. These are things that directly affect daily life in your community."
+  },
+  {
+    "id": "GOV-S31",
+    "question_en": "Who is the Governor of your state now?",
+    "answer_en": "Gavin Newsom",
+    "explanation_en": "The Governor is the head of your state government, similar to how the President leads the federal government. This answer varies by state — check before your test."
+  },
+  {
+    "id": "GOV-S32",
+    "question_en": "What is the capital of your state?",
+    "answer_en": "Sacramento",
+    "explanation_en": "Each state has its own capital city where the state government is located. The state capital is often NOT the largest city. This answer varies — check your state's capital before the test."
+  },
+  {
+    "id": "GOV-S33",
+    "question_en": "What are the two major political parties in the United States?",
+    "answer_en": "Democratic and Republican",
+    "explanation_en": "The U.S. has a two-party system dominated by Democrats and Republicans. While other parties exist (Libertarian, Green, etc.), these two have won virtually all major elections since the 1850s."
+  },
+  {
+    "id": "GOV-S34",
+    "question_en": "What is the political party of the President now?",
+    "answer_en": "Republican Party",
+    "explanation_en": "This answer changes when a new President takes office. The President's party affiliation is public knowledge — check the current information before your civics test."
+  },
+  {
+    "id": "GOV-S35",
+    "question_en": "What is the name of the Speaker of the House of Representatives now?",
+    "answer_en": "Mike Johnson",
+    "explanation_en": "The Speaker leads the House of Representatives and is second in line for the presidency (after the Vice President). This answer changes — check the current name before your test."
+  },
+  {
+    "id": "RR-01",
+    "question_en": "There are four amendments to the Constitution about who can vote. Describe one of them.",
+    "answer_en": "Citizens eighteen (18) and older (can vote).. You don't have to pay (a poll tax) to vote.. Any citizen can vote. (Women and men can vote.). A male citizen of any race (can vote).",
+    "explanation_en": "Four amendments expanded voting rights: the 15th (any race can vote), 19th (women can vote), 24th (no poll tax required), and 26th (age 18 and older). Each one removed a barrier to voting."
+  },
+  {
+    "id": "RR-02",
+    "question_en": "What is one responsibility that is only for United States citizens?",
+    "answer_en": "serve on a jury. vote in a federal election",
+    "explanation_en": "Two responsibilities belong only to citizens: voting in federal elections and serving on a jury. Paying taxes and obeying the law are responsibilities for everyone living in the U.S., not just citizens."
+  },
+  {
+    "id": "RR-03",
+    "question_en": "Name one right only for United States citizens.",
+    "answer_en": "vote in a federal election. run for federal office",
+    "explanation_en": "Only citizens can vote in federal elections and run for federal office. Rights like free speech and freedom of religion belong to everyone in the U.S., whether citizen or not."
+  },
+  {
+    "id": "RR-04",
+    "question_en": "What are two rights of everyone living in the United States?",
+    "answer_en": "freedom of expression. freedom of speech. freedom of assembly. freedom to petition the government. freedom of religion. the right to bear arms",
+    "explanation_en": "Everyone living in the U.S. has these rights, whether they are a citizen or not: freedom of expression, speech, assembly, religion, the right to petition the government, and the right to bear arms."
+  },
+  {
+    "id": "RR-05",
+    "question_en": "What do we show loyalty to when we say the Pledge of Allegiance?",
+    "answer_en": "the United States. the flag",
+    "explanation_en": "When saying the Pledge of Allegiance, we show loyalty to the United States and its flag. The pledge is a promise of loyalty to the country and what it stands for — \"one nation, under God, indivisible, with liberty and justice for all.\""
+  },
+  {
+    "id": "RR-06",
+    "question_en": "What is one promise you make when you become a United States citizen?",
+    "answer_en": "give up loyalty to other countries. defend the Constitution and laws of the United States. obey the laws of the United States. serve in the U.S. military (if needed). serve (do important work for) the nation (if needed). be loyal to the United States",
+    "explanation_en": "The Oath of Allegiance includes several promises: give up loyalty to other countries, defend the Constitution, obey U.S. laws, serve in the military if needed, and do important work for the nation if needed."
+  },
+  {
+    "id": "RR-07",
+    "question_en": "How old do citizens have to be to vote for President?",
+    "answer_en": "eighteen (18) and older",
+    "explanation_en": "You must be at least 18 years old to vote. The 26th Amendment (1971) lowered the voting age from 21 to 18. This was partly because 18-year-olds could be drafted to fight in the Vietnam War but could not vote."
+  },
+  {
+    "id": "RR-08",
+    "question_en": "What are two ways that Americans can participate in their democracy?",
+    "answer_en": "vote. join a political party. help with a campaign. join a civic group. join a community group. give an elected official your opinion on an issue. call Senators and Representatives. publicly support or oppose an issue or policy. run for office. write to a newspaper",
+    "explanation_en": "There are many ways to participate in democracy beyond voting: join a political party, help with a campaign, join a civic or community group, contact your elected officials, run for office, or write to a newspaper."
+  },
+  {
+    "id": "RR-09",
+    "question_en": "When is the last day you can send in federal income tax forms?",
+    "answer_en": "April 15",
+    "explanation_en": "April 15 is \"Tax Day\" — the deadline to file your federal income tax return. Everyone who earns income in the U.S. must pay federal taxes, whether they are a citizen or not."
+  },
+  {
+    "id": "RR-10",
+    "question_en": "When must all men register for the Selective Service?",
+    "answer_en": "at age eighteen (18). between eighteen (18) and twenty-six (26)",
+    "explanation_en": "All men living in the U.S. must register for the Selective Service between ages 18 and 26. This is a requirement for both citizens and non-citizens. Women are not currently required to register."
+  },
+  {
+    "id": "HIST-C01",
+    "question_en": "What is one reason colonists came to America?",
+    "answer_en": "freedom. political liberty. religious freedom. economic opportunity. practice their religion. escape persecution",
+    "explanation_en": "Colonists came to America for many reasons, including religious freedom, political liberty, and economic opportunity. Many were fleeing persecution in Europe and sought a fresh start in the New World."
+  },
+  {
+    "id": "HIST-C02",
+    "question_en": "Who lived in America before the Europeans arrived?",
+    "answer_en": "American Indians. Native Americans",
+    "explanation_en": "American Indians (Native Americans) lived in America for thousands of years before Europeans arrived. They had diverse cultures, languages, and civilizations across the continent."
+  },
+  {
+    "id": "HIST-C03",
+    "question_en": "What group of people was taken to America and sold as slaves?",
+    "answer_en": "Africans. people from Africa",
+    "explanation_en": "Beginning in the 1600s, millions of Africans were forcibly taken from their homeland and sold into slavery in America. This horrific practice lasted until the end of the Civil War in 1865."
+  },
+  {
+    "id": "HIST-C04",
+    "question_en": "Why did the colonists fight the British?",
+    "answer_en": "because of high taxes (taxation without representation). because the British army stayed in their houses (boarding, quartering). because they didn't have self-government",
+    "explanation_en": "The colonists fought the British because of high taxes without representation in Parliament, British soldiers being quartered in their homes, and lack of self-government. \"No taxation without representation\" became a rallying cry."
+  },
+  {
+    "id": "HIST-C05",
+    "question_en": "Who wrote the Declaration of Independence?",
+    "answer_en": "Thomas Jefferson",
+    "explanation_en": "Thomas Jefferson wrote the Declaration of Independence in 1776. At just 33 years old, he was chosen by the Continental Congress to draft this historic document declaring America free from British rule."
+  },
+  {
+    "id": "HIST-C06",
+    "question_en": "When was the Declaration of Independence adopted?",
+    "answer_en": "July 4, 1776",
+    "explanation_en": "The Declaration of Independence was adopted on July 4, 1776. This is why Americans celebrate Independence Day (the 4th of July) every year — it marks the day America officially declared freedom from Britain."
+  },
+  {
+    "id": "HIST-C07",
+    "question_en": "There were 13 original states. Name three.",
+    "answer_en": "New Hampshire. Massachusetts. Rhode Island. Connecticut. New York. New Jersey. Pennsylvania. Delaware. Maryland. Virginia. North Carolina. South Carolina. Georgia",
+    "explanation_en": "The 13 original states were the former British colonies that declared independence in 1776. They were all along the East Coast, from New Hampshire in the north to Georgia in the south."
+  },
+  {
+    "id": "HIST-C08",
+    "question_en": "What happened at the Constitutional Convention?",
+    "answer_en": "The Constitution was written.. The Founding Fathers wrote the Constitution.",
+    "explanation_en": "At the Constitutional Convention in 1787 in Philadelphia, the Founding Fathers wrote the U.S. Constitution. They replaced the weaker Articles of Confederation with a stronger framework for the new national government."
+  },
+  {
+    "id": "HIST-C09",
+    "question_en": "When was the Constitution written?",
+    "answer_en": "1787",
+    "explanation_en": "The Constitution was written in 1787 at the Constitutional Convention in Philadelphia. It was ratified (approved) in 1788 and took effect in 1789, making it the supreme law of the land."
+  },
+  {
+    "id": "HIST-C10",
+    "question_en": "The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",
+    "answer_en": "(James) Madison. (Alexander) Hamilton. (John) Jay. Publius",
+    "explanation_en": "The Federalist Papers were 85 essays written by Alexander Hamilton, James Madison, and John Jay under the pen name \"Publius.\" They argued for ratifying the Constitution and explained how the new government would work."
+  },
+  {
+    "id": "HIST-C11",
+    "question_en": "What is one thing Benjamin Franklin is famous for?",
+    "answer_en": "U.S. diplomat. oldest member of the Constitutional Convention. first Postmaster General of the United States. writer of \"Poor Richard's Almanac\". started the first free libraries",
+    "explanation_en": "Benjamin Franklin was a true polymath — he served as a U.S. diplomat, was the oldest delegate at the Constitutional Convention, became the first Postmaster General, started free libraries, and invented bifocal glasses and the lightning rod."
+  },
+  {
+    "id": "HIST-C12",
+    "question_en": "Who is the \"Father of Our Country\"?",
+    "answer_en": "(George) Washington",
+    "explanation_en": "George Washington is called the \"Father of Our Country\" because he led the Continental Army to victory in the Revolutionary War and then served as the first President, setting many precedents for the new nation."
+  },
+  {
+    "id": "HIST-C13",
+    "question_en": "Who was the first President?",
+    "answer_en": "(George) Washington",
+    "explanation_en": "George Washington was the first President of the United States, serving from 1789 to 1797. He was unanimously elected by the Electoral College — the only president in history to achieve this."
+  },
+  {
+    "id": "HIST-101",
+    "question_en": "What territory did the United States buy from France in 1803?",
+    "answer_en": "the Louisiana Territory. Louisiana",
+    "explanation_en": "In 1803, President Thomas Jefferson purchased the Louisiana Territory from France for $15 million. This \"Louisiana Purchase\" doubled the size of the United States and opened the West for expansion."
+  },
+  {
+    "id": "HIST-102",
+    "question_en": "Name one war fought by the United States in the 1800s.",
+    "answer_en": "War of 1812. Mexican-American War. Civil War. Spanish-American War",
+    "explanation_en": "The U.S. fought four major wars in the 1800s: the War of 1812, the Mexican-American War, the Civil War, and the Spanish-American War. The Civil War (1861-1865) was the deadliest, fought between the North and South."
+  },
+  {
+    "id": "HIST-103",
+    "question_en": "Name the U.S. war between the North and the South.",
+    "answer_en": "the Civil War. the War between the States",
+    "explanation_en": "The Civil War (1861-1865) was fought between the Northern states (the Union) and the Southern states (the Confederacy). It is also called the War Between the States. It remains the deadliest war in American history."
+  },
+  {
+    "id": "HIST-104",
+    "question_en": "Name one problem that led to the Civil War.",
+    "answer_en": "slavery. economic reasons. states' rights",
+    "explanation_en": "Slavery was the primary cause of the Civil War. The North wanted to stop slavery from spreading, while the South relied on enslaved labor for its economy. States' rights and economic differences also played roles."
+  },
+  {
+    "id": "HIST-105",
+    "question_en": "What was one important thing that Abraham Lincoln did?",
+    "answer_en": "freed the slaves (Emancipation Proclamation). saved (or preserved) the Union. led the United States during the Civil War",
+    "explanation_en": "Abraham Lincoln freed the slaves through the Emancipation Proclamation, preserved the Union by winning the Civil War, and led the country through its most difficult period. He is widely considered one of America's greatest presidents."
+  },
+  {
+    "id": "HIST-106",
+    "question_en": "What did the Emancipation Proclamation do?",
+    "answer_en": "freed the slaves. freed slaves in the Confederacy. freed slaves in the Confederate states. freed slaves in most Southern states",
+    "explanation_en": "The Emancipation Proclamation, issued by President Lincoln in 1863, declared that enslaved people in Confederate states were free. It did not immediately free all slaves, but it changed the purpose of the Civil War to include ending slavery."
+  },
+  {
+    "id": "HIST-107",
+    "question_en": "What did Susan B. Anthony do?",
+    "answer_en": "fought for women's rights. fought for civil rights",
+    "explanation_en": "Susan B. Anthony was a leader in the women's rights and civil rights movements. She fought tirelessly for women's right to vote, which was finally achieved with the 19th Amendment in 1920 — 14 years after her death."
+  },
+  {
+    "id": "HIST-R01",
+    "question_en": "Name one war fought by the United States in the 1900s.",
+    "answer_en": "World War I. World War II. Korean War. Vietnam War. (Persian) Gulf War",
+    "explanation_en": "The U.S. fought five major wars in the 1900s: World War I, World War II, the Korean War, the Vietnam War, and the Persian Gulf War. These conflicts shaped America's role as a global superpower."
+  },
+  {
+    "id": "HIST-R02",
+    "question_en": "Who was President during World War I?",
+    "answer_en": "(Woodrow) Wilson",
+    "explanation_en": "Woodrow Wilson was President during World War I (1914-1918). He tried to keep America neutral at first but eventually asked Congress to declare war in 1917. After the war, he proposed the League of Nations to prevent future wars."
+  },
+  {
+    "id": "HIST-R03",
+    "question_en": "Who was President during the Great Depression and World War II?",
+    "answer_en": "(Franklin) Roosevelt",
+    "explanation_en": "Franklin Roosevelt (FDR) was President during both the Great Depression and World War II. He served an unprecedented four terms and created the New Deal programs to help Americans recover from economic hardship."
+  },
+  {
+    "id": "HIST-R04",
+    "question_en": "Who did the United States fight in World War II?",
+    "answer_en": "Japan, Germany, and Italy",
+    "explanation_en": "In World War II, the U.S. fought against the Axis powers: Japan, Germany, and Italy. The war lasted from 1939 to 1945, and the U.S. joined after Japan attacked Pearl Harbor on December 7, 1941."
+  },
+  {
+    "id": "HIST-R05",
+    "question_en": "Before he was President, Eisenhower was a general. What war was he in?",
+    "answer_en": "World War II",
+    "explanation_en": "Dwight D. Eisenhower was a five-star general who led the Allied forces in Europe during World War II, including the D-Day invasion of Normandy in 1944. He later served as the 34th President from 1953 to 1961."
+  },
+  {
+    "id": "HIST-R06",
+    "question_en": "During the Cold War, what was the main concern of the United States?",
+    "answer_en": "Communism",
+    "explanation_en": "During the Cold War (roughly 1947-1991), the U.S. was primarily concerned about the spread of Communism, especially from the Soviet Union. This rivalry shaped American foreign policy for decades."
+  },
+  {
+    "id": "HIST-R07",
+    "question_en": "What movement tried to end racial discrimination?",
+    "answer_en": "civil rights (movement)",
+    "explanation_en": "The civil rights movement (1950s-1960s) fought to end racial discrimination and segregation in the United States. It led to landmark legislation including the Civil Rights Act of 1964 and the Voting Rights Act of 1965."
+  },
+  {
+    "id": "HIST-R08",
+    "question_en": "What did Martin Luther King, Jr. do?",
+    "answer_en": "fought for civil rights. worked for equality for all Americans",
+    "explanation_en": "Martin Luther King, Jr. was the most prominent leader of the civil rights movement. He fought for equality through nonviolent protest and is famous for his \"I Have a Dream\" speech at the March on Washington in 1963."
+  },
+  {
+    "id": "HIST-R09",
+    "question_en": "What major event happened on September 11, 2001, in the United States?",
+    "answer_en": "Terrorists attacked the United States.",
+    "explanation_en": "On September 11, 2001, terrorists hijacked four airplanes and attacked the United States. Two planes hit the World Trade Center in New York, one hit the Pentagon, and one crashed in Pennsylvania. Nearly 3,000 people died."
+  },
+  {
+    "id": "HIST-R10",
+    "question_en": "Name one American Indian tribe in the United States.",
+    "answer_en": "Cherokee. Navajo. Sioux. Chippewa. Choctaw. Pueblo. Apache. Iroquois. Creek. Blackfeet. Seminole. Cheyenne. Arawak. Shawnee. Mohegan. Huron. Oneida. Lakota. Crow. Teton. Hopi. Inuit",
+    "explanation_en": "There are many federally recognized American Indian tribes in the United States, including Cherokee, Navajo, Sioux, Chippewa, Choctaw, Apache, Iroquois, and many more. Each tribe has its own unique culture, language, and history."
+  },
+  {
+    "id": "SYM-01",
+    "question_en": "Name one of the two longest rivers in the United States.",
+    "answer_en": "Missouri (River). Mississippi (River)",
+    "explanation_en": "The two longest rivers in the United States are the Missouri River (2,341 miles) and the Mississippi River (2,320 miles). The Missouri flows into the Mississippi, and together they form one of the world's great river systems."
+  },
+  {
+    "id": "SYM-02",
+    "question_en": "What ocean is on the West Coast of the United States?",
+    "answer_en": "Pacific (Ocean)",
+    "explanation_en": "The Pacific Ocean is on the West Coast of the United States. It is the largest and deepest ocean in the world. States like California, Oregon, and Washington border the Pacific."
+  },
+  {
+    "id": "SYM-03",
+    "question_en": "What ocean is on the East Coast of the United States?",
+    "answer_en": "Atlantic (Ocean)",
+    "explanation_en": "The Atlantic Ocean is on the East Coast of the United States. It separates North America from Europe and Africa. States like New York, Florida, and Massachusetts border the Atlantic."
+  },
+  {
+    "id": "SYM-04",
+    "question_en": "Name one U.S. territory.",
+    "answer_en": "Puerto Rico. U.S. Virgin Islands. American Samoa. Northern Mariana Islands. Guam",
+    "explanation_en": "The U.S. has five main territories: Puerto Rico, U.S. Virgin Islands, American Samoa, Northern Mariana Islands, and Guam. These are areas under U.S. control that are not states."
+  },
+  {
+    "id": "SYM-05",
+    "question_en": "Name one state that borders Canada.",
+    "answer_en": "Maine. New Hampshire. Vermont. New York. Pennsylvania. Ohio. Michigan. Minnesota. North Dakota. Montana. Idaho. Washington. Alaska",
+    "explanation_en": "Thirteen states border Canada along the northern U.S. boundary, from Maine in the east to Alaska in the west. The U.S.-Canada border is the longest international border in the world."
+  },
+  {
+    "id": "SYM-06",
+    "question_en": "Name one state that borders Mexico.",
+    "answer_en": "California. Arizona. New Mexico. Texas",
+    "explanation_en": "Four states border Mexico: California, Arizona, New Mexico, and Texas. These are all in the southern part of the United States. The U.S.-Mexico border is about 1,954 miles long."
+  },
+  {
+    "id": "SYM-07",
+    "question_en": "What is the capital of the United States?",
+    "answer_en": "Washington, D.C.",
+    "explanation_en": "Washington, D.C. is the capital of the United States. \"D.C.\" stands for \"District of Columbia.\" It is not a state — it is a special federal district where the President, Congress, and Supreme Court are located."
+  },
+  {
+    "id": "SYM-08",
+    "question_en": "Where is the Statue of Liberty?",
+    "answer_en": "New York (Harbor). Liberty Island",
+    "explanation_en": "The Statue of Liberty is in New York Harbor on Liberty Island. It was a gift from France in 1886 and has become one of America's most recognizable symbols of freedom and democracy."
+  },
+  {
+    "id": "SYM-09",
+    "question_en": "Why does the flag have 13 stripes?",
+    "answer_en": "because there were 13 original colonies. because the stripes represent the original colonies",
+    "explanation_en": "The flag has 13 stripes (7 red and 6 white) to represent the 13 original colonies that declared independence and became the first states. The stripes remind us of where the country began."
+  },
+  {
+    "id": "SYM-10",
+    "question_en": "Why does the flag have 50 stars?",
+    "answer_en": "because there is one star for each state. because each star represents a state. because there are 50 states",
+    "explanation_en": "The flag has 50 stars because there are 50 states in the United States today. Each star represents one state. When a new state joins, a new star is added to the flag."
+  },
+  {
+    "id": "SYM-11",
+    "question_en": "What is the name of the national anthem?",
+    "answer_en": "The Star-Spangled Banner",
+    "explanation_en": "\"The Star-Spangled Banner\" is the U.S. national anthem. It was written by Francis Scott Key in 1814 during the Battle of Baltimore, when he saw the American flag still flying over Fort McHenry after a British attack."
+  },
+  {
+    "id": "SYM-12",
+    "question_en": "When do we celebrate Independence Day?",
+    "answer_en": "July 4",
+    "explanation_en": "Independence Day is celebrated on July 4 because the Declaration of Independence was adopted on July 4, 1776. It is one of America's most important holidays, celebrated with fireworks, parades, and barbecues."
+  },
+  {
+    "id": "SYM-13",
+    "question_en": "Name two national U.S. holidays.",
+    "answer_en": "New Year's Day. Martin Luther King, Jr. Day. Presidents' Day. Memorial Day. Juneteenth. Independence Day. Labor Day. Columbus Day. Veterans Day. Thanksgiving Day. Christmas Day",
+    "explanation_en": "The U.S. has 11 federal holidays, including New Year's Day, MLK Jr. Day, Presidents' Day, Memorial Day, Juneteenth, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving, and Christmas."
+  },
+  {
+    "id": "GOV-P13",
+    "question_en": "What is popular sovereignty?",
+    "answer_en": "the people are the source of government power",
+    "explanation_en": "Popular sovereignty means government power comes from the people, not from a monarch or military. This principle, rooted in Enlightenment philosophy, is a cornerstone of American democracy and is reflected in the Constitution's opening words \"We the People.\""
+  },
+  {
+    "id": "GOV-P14",
+    "question_en": "What is the purpose of the Bill of Rights?",
+    "answer_en": "to protect basic rights and freedoms",
+    "explanation_en": "The Bill of Rights was added in 1791 to guarantee that the federal government could not take away essential personal freedoms. Many states refused to ratify the Constitution without these protections, fearing a powerful central government could become tyrannical."
+  },
+  {
+    "id": "GOV-P15",
+    "question_en": "What does consent of the governed mean?",
+    "answer_en": "people give the government power by voting",
+    "explanation_en": "Consent of the governed is the idea that legitimate government authority comes only from the agreement of the people being governed. Citizens express this consent primarily through voting and participating in the democratic process."
+  },
+  {
+    "id": "GOV-P16",
+    "question_en": "What are two ways the Constitution can be amended?",
+    "answer_en": "Congress proposes and states ratify. a constitutional convention called by the states",
+    "explanation_en": "The Constitution can be amended through two paths: Congress proposes amendments (requiring two-thirds vote in both chambers) and three-fourths of states ratify, or states call a constitutional convention. The deliberately high threshold ensures only changes with broad consensus become law."
+  },
+  {
+    "id": "GOV-S36",
+    "question_en": "What is the main responsibility of the Speaker of the House?",
+    "answer_en": "to lead the House of Representatives",
+    "explanation_en": "The Speaker of the House presides over legislative debate, sets the agenda, and maintains order. As the highest-ranking member of the House, the Speaker is also second in the presidential line of succession after the Vice President."
+  },
+  {
+    "id": "GOV-S37",
+    "question_en": "Where does the President live?",
+    "answer_en": "the White House",
+    "explanation_en": "The White House at 1600 Pennsylvania Avenue in Washington, D.C. has been the official residence of every U.S. President since John Adams in 1800. It serves as both the President's home and the center of executive branch operations."
+  },
+  {
+    "id": "GOV-S38",
+    "question_en": "What does judicial review mean?",
+    "answer_en": "courts can decide if a law is constitutional",
+    "explanation_en": "Judicial review is the power of courts to examine laws and government actions and strike down those that violate the Constitution. Established by the landmark case Marbury v. Madison (1803), it is a critical check on legislative and executive power."
+  },
+  {
+    "id": "GOV-S39",
+    "question_en": "Who appoints federal judges?",
+    "answer_en": "the President",
+    "explanation_en": "Under Article II, the President nominates federal judges, who must then be confirmed by the Senate. This process ensures both the executive and legislative branches share responsibility for shaping the judiciary, maintaining the balance of power."
+  },
+  {
+    "id": "RR-11",
+    "question_en": "What is one promise you make in the Oath of Allegiance?",
+    "answer_en": "give up loyalty to other countries. defend the Constitution. obey the laws of the United States",
+    "explanation_en": "The Oath of Allegiance includes several solemn promises: to renounce loyalty to foreign nations, to support and defend the Constitution, and to bear arms or perform civil service if required. These commitments symbolize full dedication to the United States."
+  },
+  {
+    "id": "RR-12",
+    "question_en": "What is one responsibility of everyone living in the United States?",
+    "answer_en": "obey the law. pay taxes",
+    "explanation_en": "Everyone living in the U.S. — citizens and non-citizens alike — must obey federal, state, and local laws, and pay required taxes. These are universal responsibilities that maintain social order and fund public services."
+  },
+  {
+    "id": "RR-13",
+    "question_en": "What is one way Americans can serve their country?",
+    "answer_en": "serve in the military. work for the government. volunteer in the community",
+    "explanation_en": "Americans can serve their country through military service, government work, community volunteering, or civic participation like voting and jury duty. Service strengthens democracy and binds citizens to their shared responsibilities."
+  },
+  {
+    "id": "HIST-C14",
+    "question_en": "What was the Boston Tea Party?",
+    "answer_en": "a protest against British taxes where tea was dumped into the harbor",
+    "explanation_en": "In 1773, American colonists protested \"taxation without representation\" by boarding British ships and dumping tea into Boston Harbor. This act of defiance was a pivotal moment leading to the American Revolution."
+  },
+  {
+    "id": "HIST-C15",
+    "question_en": "Name one of the original 13 colonies.",
+    "answer_en": "Massachusetts. Virginia. Pennsylvania",
+    "explanation_en": "The original 13 colonies — including Virginia, Massachusetts, Pennsylvania, and others — were British settlements along the Atlantic coast. After declaring independence in 1776, they became the first states of the United States."
+  },
+  {
+    "id": "HIST-C16",
+    "question_en": "Who was the King of England during the American Revolution?",
+    "answer_en": "King George III",
+    "explanation_en": "King George III ruled Britain during the American Revolution (1775-1783). His policies of heavy taxation and restriction of colonial self-governance fueled the colonists' desire for independence, making him a central figure in the founding story."
+  },
+  {
+    "id": "HIST-108",
+    "question_en": "Who was Harriet Tubman?",
+    "answer_en": "an abolitionist who helped enslaved people escape",
+    "explanation_en": "Harriet Tubman escaped slavery and then risked her life repeatedly to guide others to freedom through the Underground Railroad. She made about 13 trips back to the South and helped rescue approximately 70 enslaved people, earning the nickname \"Moses.\""
+  },
+  {
+    "id": "HIST-109",
+    "question_en": "What was the Underground Railroad?",
+    "answer_en": "a network that helped enslaved people escape to freedom",
+    "explanation_en": "The Underground Railroad was not a literal railroad but a secret network of routes, safe houses, and abolitionists who helped enslaved people escape to free states and Canada before the Civil War. Conductors like Harriet Tubman guided travelers along the dangerous journey."
+  },
+  {
+    "id": "HIST-R11",
+    "question_en": "What was the Berlin Wall?",
+    "answer_en": "a wall that divided East and West Berlin during the Cold War",
+    "explanation_en": "Built in 1961 by communist East Germany, the Berlin Wall physically divided the city of Berlin for 28 years. Its fall in 1989 symbolized the end of the Cold War and the collapse of communist regimes across Eastern Europe."
+  },
+  {
+    "id": "HIST-R12",
+    "question_en": "What is the United Nations?",
+    "answer_en": "an international organization where countries work together for peace",
+    "explanation_en": "Founded in 1945 after World War II, the United Nations brings together 193 member countries to promote international peace, security, and cooperation. The U.S. played a leading role in creating the UN, and its headquarters is in New York City."
+  },
+  {
+    "id": "SYM-14",
+    "question_en": "What is the national motto of the United States?",
+    "answer_en": "In God We Trust",
+    "explanation_en": "\"In God We Trust\" became the official national motto in 1956, though it appeared on U.S. coins as early as the 1860s. \"E Pluribus Unum\" (\"Out of many, one\") is a traditional motto but was never formally adopted by law as the national motto."
+  },
+  {
+    "id": "SYM-15",
+    "question_en": "What is the national flower of the United States?",
+    "answer_en": "the rose",
+    "explanation_en": "President Ronald Reagan declared the rose the national flower of the United States in 1986. The rose has been cultivated in America since colonial times and symbolizes beauty, strength, and the diverse character of the nation."
+  },
+  {
+    "id": "GOV-P17",
+    "question_en": "Many documents influenced the United States Constitution. Name one.",
+    "answer_en": "Magna Carta. Articles of Confederation. Federalist Papers. Anti-Federalist Papers. Declaration of Independence. English Bill of Rights",
+    "explanation_en": "The Founders drew on many earlier documents when drafting the Constitution. The Magna Carta (1215) established the principle that no one is above the law, the English Bill of Rights (1689) limited royal power, and the Declaration of Independence articulated natural rights — all shaping the Constitution's framework."
+  },
+  {
+    "id": "GOV-S40",
+    "question_en": "Why do U.S. representatives serve shorter terms than U.S. senators?",
+    "answer_en": "to more closely follow public opinion. to be more responsive to the people",
+    "explanation_en": "House members serve two-year terms so they must frequently face voters and stay closely attuned to public opinion. Senators serve six-year terms, giving them more independence to focus on long-term policy. This design balances responsiveness with stability."
+  },
+  {
+    "id": "GOV-S41",
+    "question_en": "How many senators does each state have?",
+    "answer_en": "Two (2)",
+    "explanation_en": "Every state has exactly two senators regardless of population. This was established by the Great Compromise of 1787, which balanced the interests of large and small states by giving equal Senate representation while basing House seats on population."
+  },
+  {
+    "id": "GOV-S42",
+    "question_en": "Why does each state have two senators?",
+    "answer_en": "equal representation for small and large states. so all states have equal power in the Senate",
+    "explanation_en": "Equal Senate representation was part of the Great Compromise at the Constitutional Convention. Small states feared being overpowered by large states, so the framers agreed that every state would have two senators, ensuring an equal voice in at least one chamber of Congress."
+  },
+  {
+    "id": "GOV-S43",
+    "question_en": "The President of the United States can serve only two terms. Why?",
+    "answer_en": "Because of the 22nd Amendment. to prevent abuse of power. to ensure peaceful transfer of power",
+    "explanation_en": "The 22nd Amendment, ratified in 1951, limits the President to two four-year terms. This was enacted after Franklin D. Roosevelt won four consecutive terms, breaking the two-term tradition set by George Washington to prevent the concentration of power."
+  },
+  {
+    "id": "GOV-S44",
+    "question_en": "Why is the Electoral College important?",
+    "answer_en": "It decides who is elected president. It provides a compromise between the popular vote and congressional vote",
+    "explanation_en": "The Electoral College is the system that formally elects the President and Vice President. Each state gets electors equal to its total congressional delegation, creating a compromise between direct popular vote and selection by Congress that the Founders designed to balance large and small state interests."
+  },
+  {
+    "id": "GOV-S45",
+    "question_en": "How long do Supreme Court justices serve?",
+    "answer_en": "They are appointed for life. until they want to retire. until they die. until they are impeached and convicted",
+    "explanation_en": "Supreme Court justices serve lifetime appointments, meaning they hold office until they choose to retire, pass away, or are removed through impeachment. Article III of the Constitution establishes this to insulate the judiciary from political pressure."
+  },
+  {
+    "id": "GOV-S46",
+    "question_en": "Why do Supreme Court justices serve for life?",
+    "answer_en": "to be independent from politics. so they can make decisions based on the Constitution rather than popular opinion",
+    "explanation_en": "Life tenure for Supreme Court justices ensures judicial independence by freeing judges from worrying about elections or political retaliation. Without needing to please voters or politicians, justices can interpret the Constitution impartially based on law rather than popular opinion."
+  }
+]

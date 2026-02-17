@@ -141,7 +141,7 @@ export function BurmeseSpeechButton({
   }, [playerState.isSpeaking]);
 
   // Determine if THIS button's audio is playing
-  const myUrl = getBurmeseAudioUrl(questionId, audioType, settings.burmeseVoice);
+  const myUrl = getBurmeseAudioUrl(questionId, audioType);
   const isMySpeaking = playerState.isSpeaking && playerState.currentFile === myUrl;
   const isMyPaused = playerState.isPaused && playerState.currentFile === myUrl;
 

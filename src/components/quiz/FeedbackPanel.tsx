@@ -28,6 +28,8 @@ interface FeedbackPanelProps {
   userAnswer?: string;
   userAnswerMy?: string;
   explanation?: Explanation;
+  /** Question ID for pre-generated audio lookup */
+  questionId?: string;
   streakCount: number;
   mode: QuizMode;
   onContinue: () => void;
@@ -110,9 +112,11 @@ function StreakBadge({
 function ExplanationSection({
   explanation,
   showBurmese,
+  questionId,
 }: {
   explanation: Explanation;
   showBurmese: boolean;
+  questionId?: string;
 }) {
   const explStrings = strings.explanations;
 
@@ -133,6 +137,8 @@ function ExplanationSection({
         <div className="mt-2">
           <SpeechButton
             text={explanation.brief_en}
+            questionId={questionId}
+            audioType="e"
             label="Explain"
             ariaLabel="Listen to explanation"
             className="text-xs"
@@ -188,6 +194,7 @@ export function FeedbackPanel({
   userAnswer,
   userAnswerMy,
   explanation,
+  questionId,
   streakCount,
   mode,
   onContinue,
@@ -338,7 +345,11 @@ export function FeedbackPanel({
 
               {/* Explanation (Practice mode only, incorrect only) */}
               {showExplanation && (
-                <ExplanationSection explanation={explanation} showBurmese={showBurmese} />
+                <ExplanationSection
+                  explanation={explanation}
+                  showBurmese={showBurmese}
+                  questionId={questionId}
+                />
               )}
             </div>
 
