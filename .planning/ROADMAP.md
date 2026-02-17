@@ -33,7 +33,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 - [x] **Phase 19: TTS Core Extraction** - Consolidate duplicated TTS hooks into shared module
 - [ ] **Phase 20: Session Persistence** - IndexedDB session store with resume prompts for interrupted sessions
 - [ ] **Phase 21: Test & Practice UX Overhaul** - Duolingo-style Check/Continue flow with feedback panels and keyboard nav
-- [ ] **Phase 22: TTS Quality** - Voice selection, speech rate control, Burmese audio, graceful error handling
+- [x] **Phase 22: TTS Quality** - Voice selection, speech rate control, Burmese audio, graceful error handling
 - [ ] **Phase 23: Flashcard Sort Mode** - Quizlet-style Know/Don't Know card sorting with SRS integration
 - [ ] **Phase 24: Accessibility & Performance** - WCAG compliance, screen reader support, Web Vitals, bundle analysis
 - [ ] **Phase 25: Burmese Translation Audit** - Natural phrasing, missing translations, consistent terminology
@@ -141,15 +141,15 @@ Plans:
 **Plans**: 9 plans
 
 Plans:
-- [ ] 22-01-PLAN.md — TTSSettings extension + VoicePicker + Settings "Speech & Audio" section
-- [ ] 22-02-PLAN.md — SpeechButton pause/resume + speed label + error state + debounce
-- [ ] 22-03-PLAN.md — Write 28 missing USCIS 2025 explanation objects
-- [ ] 22-04-PLAN.md — Burmese audio adapter + BurmeseSpeechButton + SW caching route
-- [ ] 22-05-PLAN.md — useAutoRead hook + per-session speed/auto-read overrides on pre-screens
-- [ ] 22-06-PLAN.md — Edge-tts generation scripts + audio file generation (checkpoint)
-- [ ] 22-07-PLAN.md — Auto-read + Burmese buttons wiring into study/test/practice screens
-- [ ] 22-08-PLAN.md — Interview audio integration (speed override, Burmese in Practice mode)
-- [ ] 22-09-PLAN.md — Unit tests + integration tests + final build verification
+- [x] 22-01-PLAN.md — TTSSettings extension + VoicePicker + Settings "Speech & Audio" section
+- [x] 22-02-PLAN.md — SpeechButton pause/resume + speed label + error state + debounce
+- [x] 22-03-PLAN.md — Write 28 missing USCIS 2025 explanation objects
+- [x] 22-04-PLAN.md — Burmese audio adapter + BurmeseSpeechButton + SW caching route
+- [x] 22-05-PLAN.md — useAutoRead hook + per-session speed/auto-read overrides on pre-screens
+- [x] 22-06-PLAN.md — Edge-tts generation scripts + audio file generation (checkpoint)
+- [x] 22-07-PLAN.md — Auto-read + Burmese buttons wiring into study/test/practice screens
+- [x] 22-08-PLAN.md — Interview audio integration (speed override, Burmese in Practice mode)
+- [x] 22-09-PLAN.md — Unit tests + integration tests + final build verification
 
 ### Phase 23: Flashcard Sort Mode
 **Goal**: Users can sort flashcards into Know/Don't Know piles with swipe gestures, then drill missed cards until mastery
@@ -213,7 +213,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 19. TTS Core Extraction | v2.1 | 6/6 | Complete | 2026-02-14 |
 | 20. Session Persistence | v2.1 | 6/6 | Complete | 2026-02-15 |
 | 21. Test & Practice UX | v2.1 | 12/12 | Complete | 2026-02-15 |
-| 22. TTS Quality | v2.1 | 0/TBD | Not started | - |
+| 22. TTS Quality | v2.1 | 9/9 | Complete | 2026-02-15 |
 | 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
 | 24. Accessibility & Perf | v2.1 | 0/TBD | Not started | - |
 | 25. Burmese Translation | v2.1 | 0/TBD | Not started | - |
