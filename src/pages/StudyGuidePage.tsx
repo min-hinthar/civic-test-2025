@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, KeyboardEvent } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronLeft, Search, BookOpen, Layers, GraduationCap } from 'lucide-react';
+import { ChevronLeft, Search, BookOpen, ArrowLeftRight, Layers, GraduationCap } from 'lucide-react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { allQuestions } from '@/constants/questions';
@@ -23,6 +23,7 @@ import { ReviewSession } from '@/components/srs/ReviewSession';
 import { useSRS } from '@/contexts/SRSContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
+import { SortModeContainer } from '@/components/sort/SortModeContainer';
 import { recordStudyActivity } from '@/lib/social';
 import { getSubCategoryColors } from '@/lib/mastery';
 import type { Category } from '@/types';
@@ -72,11 +73,17 @@ const StudyGuidePage = () => {
     });
   }, []);
 
-  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review
+  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review, #sort, #sort-{category}
   const hash = location.hash;
   const isDeckView = hash === '#deck';
   const isReviewView = hash === '#review';
+  const isSortView = hash === '#sort' || hash.startsWith('#sort-');
   const isCardsView = hash === '#cards' || hash.startsWith('#cards-');
+
+  // Extract optional sort category from #sort-{category}
+  const sortCategory = hash.startsWith('#sort-')
+    ? decodeURIComponent(hash.replace('#sort-', ''))
+    : undefined;
   const selectedCategory = hash.startsWith('#category-')
     ? decodeURIComponent(hash.replace('#category-', ''))
     : null;
@@ -169,8 +176,9 @@ const StudyGuidePage = () => {
   const activeTab = useMemo(() => {
     if (isDeckView) return '#deck';
     if (isReviewView) return '#review';
+    if (isSortView) return '#sort';
     return '';
-  }, [isDeckView, isReviewView]);
+  }, [isDeckView, isReviewView, isSortView]);
 
   // Page header with bold title and patriotic emoji
   const pageHeader = (
@@ -205,6 +213,13 @@ const StudyGuidePage = () => {
             icon: BookOpen,
           },
           {
+            id: '#sort',
+            label: 'Sort',
+            labelMy:
+              '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1001\u103D\u1032\u1015\u102B',
+            icon: ArrowLeftRight,
+          },
+          {
             id: '#deck',
             label: 'Deck',
             labelMy: '\u1000\u1010\u103A\u1005\u102F\u1015\u102F\u1036',
@@ -226,6 +241,19 @@ const StudyGuidePage = () => {
       />
     </div>
   );
+
+  // Sort mode view
+  if (isSortView) {
+    return (
+      <div className="page-shell" data-tour="study-guide">
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {pageHeader}
+          {tabBar}
+          <SortModeContainer categoryFilter={sortCategory} onExit={() => navigate('/study')} />
+        </div>
+      </div>
+    );
+  }
 
   // Review session view
   if (isReviewView) {
@@ -335,11 +363,16 @@ const StudyGuidePage = () => {
             </div>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 flex flex-wrap gap-3">
             <BilingualButton
               label={{ en: 'Study as Flashcards', my: 'ကတ်များဖြင့်လေ့လာပါ' }}
               variant="primary"
               onClick={() => handleShowCards(selectedCategory)}
+            />
+            <BilingualButton
+              label={{ en: 'Sort Cards', my: 'ကတ်များအမျိုးအစားခွဲပါ' }}
+              variant="secondary"
+              onClick={() => navigate(`/study#sort-${encodeURIComponent(selectedCategory)}`)}
             />
           </div>
 

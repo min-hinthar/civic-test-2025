@@ -12,7 +12,7 @@ interface ExitConfirmDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirmExit: () => void;
-  mode: 'mock-test' | 'practice' | 'interview';
+  mode: 'mock-test' | 'practice' | 'interview' | 'sort';
   showBurmese: boolean;
 }
 
@@ -32,6 +32,10 @@ const titles: Record<ExitConfirmDialogProps['mode'], { en: string; my: string }>
   interview: {
     en: 'Exit Interview?',
     my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
+  },
+  sort: {
+    en: 'Exit Sort?',
+    my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1001\u103D\u1032\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
   },
 };
 
