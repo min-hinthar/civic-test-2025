@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 22 complete
+**Current focus:** v2.2 Flashcard Sort Mode -- Phase 23 in progress
 
 ## Current Position
 
-Phase: 22 of 25 (TTS Quality)
-Plan: 09 of 9 in current phase
-Status: Phase complete
-Last activity: 2026-02-15 -- Completed 22-09-PLAN.md (Phase 22 Unit & Integration Tests)
+Phase: 23 of 25 (Flashcard Sort Mode)
+Plan: 01 of 9 in current phase
+Status: In progress
+Last activity: 2026-02-17 -- Completed 23-01-PLAN.md (Sort Mode State Machine)
 
-Progress: [█████████] 100% (9/9 plans complete)
+Progress: [#........] 11% (1/9 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,14 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 23 decisions:**
+- Single Know swipe = mastered for session (no consecutive-correct tracking)
+- Undo resets allUnknownIds for dont-know cards (full reversal)
+- FINISH_SESSION preserves roundHistory for post-session display
+- RESUME_SESSION reconstructs Sets from serialized arrays, resets undoStack
+- createIdleState helper for clean idle state construction
+- Sort reducer follows same phase-guarded pattern as quizReducer
 
 **Phase 22 decisions:**
 - Explanation style matches existing american-government.ts (direct, factual, 2-3 sentences, why-not-what)
@@ -229,11 +237,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: Phase 22 verified and marked complete in ROADMAP
-Next step: Begin Phase 23 (Flashcard Sort Mode)
+Last session: 2026-02-17
+Stopped at: Completed 23-01-PLAN.md (Sort Mode State Machine)
+Next step: Execute 23-02-PLAN.md (Sort Mode Provider & Hook)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-16 (Phase 22 finalized — SUMMARY, VERIFICATION, ROADMAP updated)*
+*Last updated: 2026-02-17 (Phase 23 plan 01 complete -- sort reducer and types)*

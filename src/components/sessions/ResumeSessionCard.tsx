@@ -52,10 +52,10 @@ const TYPE_CONFIG = {
   },
   sort: {
     Icon: Layers,
-    iconColor: 'text-info',
-    iconBg: 'bg-info/10',
-    borderColor: 'border-info/30',
-    cardBg: 'bg-info/5',
+    iconColor: 'text-accent-purple',
+    iconBg: 'bg-accent-purple/10',
+    borderColor: 'border-accent-purple/30',
+    cardBg: 'bg-accent-purple/5',
     label: {
       en: 'Flashcard Sort',
       my: '\u1000\u1010\u103A\u1005\u102E\u1005\u102F\u1036',
