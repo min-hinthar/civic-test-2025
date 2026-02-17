@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 23 of 25 (Flashcard Sort Mode)
-Plan: 03 of 9 in current phase
+Plan: 07 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-17 -- Completed 23-03-PLAN.md (Sort Reducer Tests)
+Last activity: 2026-02-17 -- Completed 23-07-PLAN.md (Round Summary, Missed Cards, SRS Batch Add)
 
-Progress: [###......] 33% (3/9 plans complete)
+Progress: [#######..] 78% (7/9 plans complete)
 
 ## Completed Milestones
 
@@ -49,6 +49,13 @@ All decisions archived in PROJECT.md Key Decisions table.
 - SortSnapshot stores card IDs not full Question objects (compact IndexedDB payloads)
 - No SESSION_VERSION bump for sort union addition (backward-compatible)
 - SortRoundResult defined inline in sessionTypes.ts (mirrors sortTypes.ts, avoids circular deps)
+- Reuse CountUp from react-countup for hero stat animation (already installed)
+- Per-category breakdown uses sub-category colors, not USCIS main categories
+- allUnknownIds prop kept in RoundSummary for parent-level SRSBatchAdd integration
+- MissedCardsList uses AnimatePresence for expand/collapse (not CSS transition)
+- SRSBatchAdd checkbox selection defaults all new cards checked; expandable for deselection
+- No effect on existing SRS schedules from sort mode Don't Know classification
+- toMyanmarNumeral helper defined locally (small utility, not shared module)
 
 **Phase 22 decisions:**
 - Explanation style matches existing american-government.ts (direct, factual, 2-3 sentences, why-not-what)
@@ -242,10 +249,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Completed 23-02-PLAN.md (Sound Effects & Session Types)
-Next step: Execute 23-03-PLAN.md (next wave 1 plan)
+Stopped at: Completed 23-07-PLAN.md (Round Summary, Missed Cards, SRS Batch Add)
+Next step: Execute 23-08-PLAN.md (SortPage orchestrator) or 23-09-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-17 (Phase 23 plan 02 complete -- sound effects and session types)*
+*Last updated: 2026-02-17 (Phase 23 plan 07 complete -- round summary, missed cards, SRS batch add)*
