@@ -13,15 +13,19 @@
  * - Undo with sound feedback
  * - Personal best tracking in localStorage
  * - Computed segments array for progress bar
+ * - Session persistence: save/load/resume/discard via IndexedDB
  */
 
-import { useCallback, useMemo, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { sortReducer } from '@/lib/sort/sortReducer';
 import type { SortAction, SortState } from '@/lib/sort/sortTypes';
 import { allQuestions } from '@/constants/questions';
 import { useSRS } from '@/contexts/SRSContext';
 import { playFling, playKnow, playDontKnow, playSkip } from '@/lib/audio/soundEffects';
 import { hapticMedium, hapticDouble } from '@/lib/haptics';
+import { saveSession, getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
+import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
+import type { SortSnapshot } from '@/lib/sessions/sessionTypes';
 import type { Question } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -29,6 +33,9 @@ import type { Question } from '@/types';
 // ---------------------------------------------------------------------------
 
 const PERSONAL_BEST_KEY = 'civic-prep-sort-personal-best';
+
+/** Debounce interval for IndexedDB saves (ms) */
+const SAVE_DEBOUNCE_MS = 2000;
 
 interface PersonalBest {
   percentage: number;
@@ -61,6 +68,14 @@ export interface UseSortSessionReturn {
   segments: ('know' | 'dont-know' | null)[];
   /** Personal best first-round % */
   personalBest: PersonalBest | null;
+  /** Pending sort session loaded from IndexedDB (null if none) */
+  pendingSession: SortSnapshot | null;
+  /** Whether pending session check is still loading */
+  isLoadingSession: boolean;
+  /** Resume a saved sort session */
+  resumeSession: (snapshot: SortSnapshot) => void;
+  /** Discard a saved sort session */
+  discardSession: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -82,6 +97,12 @@ const IDLE_STATE: SortState = {
 };
 
 // ---------------------------------------------------------------------------
+// Active phases that should trigger session saves
+// ---------------------------------------------------------------------------
+
+const SAVE_PHASES = new Set(['sorting', 'animating', 'round-summary', 'countdown']);
+
+// ---------------------------------------------------------------------------
 // Read personal best from localStorage (pure helper)
 // ---------------------------------------------------------------------------
 
@@ -97,12 +118,159 @@ function readPersonalBest(): PersonalBest | null {
 }
 
 // ---------------------------------------------------------------------------
+// Build SortSnapshot from current state (pure helper)
+// ---------------------------------------------------------------------------
+
+function buildSnapshot(state: SortState, sessionId: string): SortSnapshot {
+  return {
+    id: sessionId,
+    type: 'sort',
+    savedAt: new Date().toISOString(),
+    version: SESSION_VERSION,
+    sourceCardIds: state.sourceCards.map(c => c.id),
+    round: state.round,
+    knownIds: [...state.knownIds],
+    unknownIds: [...state.unknownIds],
+    allUnknownIds: [...state.allUnknownIds],
+    remainingCardIds: state.cards.slice(state.currentIndex).map(c => c.id),
+    currentIndex: state.currentIndex,
+    roundHistory: state.roundHistory,
+    categoryFilter: state.categoryFilter,
+    startTime: state.startTime,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Reconstruct Question[] from IDs (pure helper)
+// ---------------------------------------------------------------------------
+
+const questionMap = new Map(allQuestions.map(q => [q.id, q]));
+
+function questionsFromIds(ids: string[]): Question[] {
+  const result: Question[] = [];
+  for (const id of ids) {
+    const q = questionMap.get(id);
+    if (q) result.push(q);
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
 
 export function useSortSession(): UseSortSessionReturn {
   const [state, dispatch] = useReducer(sortReducer, IDLE_STATE);
   const { getDueCards } = useSRS();
+
+  // Session persistence state
+  const [pendingSession, setPendingSession] = useState<SortSnapshot | null>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const sessionIdRef = useRef(`session-sort-${Date.now()}`);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // -------------------------------------------------------------------------
+  // Load pending session on mount
+  // -------------------------------------------------------------------------
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const sessions = await getSessionsByType('sort');
+        if (!cancelled && sessions.length > 0) {
+          setPendingSession(sessions[0] as SortSnapshot);
+        }
+      } catch {
+        // IndexedDB failure is non-critical
+      }
+      if (!cancelled) {
+        setIsLoadingSession(false);
+      }
+    };
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Debounced save on state changes
+  // -------------------------------------------------------------------------
+
+  const statePhase = state.phase;
+  const stateCurrentIndex = state.currentIndex;
+  const stateRound = state.round;
+  const roundHistoryLen = state.roundHistory.length;
+
+  useEffect(() => {
+    // Only save during active phases
+    if (!SAVE_PHASES.has(statePhase)) return;
+
+    // Don't save if no cards (session not started)
+    if (state.cards.length === 0) return;
+
+    // Clear any existing debounce timer
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+
+    saveTimerRef.current = setTimeout(() => {
+      const snapshot = buildSnapshot(state, sessionIdRef.current);
+      saveSession(snapshot).catch(() => {});
+    }, SAVE_DEBOUNCE_MS);
+
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+    };
+    // Track significant state changes that warrant a save
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statePhase, stateCurrentIndex, stateRound, roundHistoryLen]);
+
+  // -------------------------------------------------------------------------
+  // Delete session on completion (idle after active, or mastery)
+  // -------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (statePhase === 'idle' || statePhase === 'mastery') {
+      // Flush any pending save timer
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      deleteSession(sessionIdRef.current).catch(() => {});
+    }
+  }, [statePhase]);
+
+  // -------------------------------------------------------------------------
+  // Save final snapshot on unmount if session is active
+  // -------------------------------------------------------------------------
+
+  // Keep a ref to current state for unmount save (avoid stale closure)
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
+  useEffect(() => {
+    return () => {
+      // Flush any pending timer
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      // Save if session is active
+      const s = stateRef.current;
+      if (SAVE_PHASES.has(s.phase) && s.cards.length > 0) {
+        const snapshot = buildSnapshot(s, sessionIdRef.current);
+        saveSession(snapshot).catch(() => {});
+      }
+    };
+  }, []);
 
   // -------------------------------------------------------------------------
   // Smart card source logic
@@ -143,6 +311,8 @@ export function useSortSession(): UseSortSessionReturn {
 
   const startSession = useCallback(
     (categoryFilter?: string) => {
+      // Generate fresh session ID for new session
+      sessionIdRef.current = `session-sort-${Date.now()}`;
       const cards = getCards(categoryFilter);
       dispatch({
         type: 'START_SORT',
@@ -151,6 +321,52 @@ export function useSortSession(): UseSortSessionReturn {
     },
     [getCards]
   );
+
+  // -------------------------------------------------------------------------
+  // Resume session from snapshot
+  // -------------------------------------------------------------------------
+
+  const resumeSession = useCallback((snapshot: SortSnapshot) => {
+    // Reconstruct Question objects from IDs
+    const sourceCards = questionsFromIds(snapshot.sourceCardIds);
+    const remainingCards = questionsFromIds(snapshot.remainingCardIds);
+
+    // Use the snapshot's session ID so future saves overwrite it
+    sessionIdRef.current = snapshot.id;
+
+    dispatch({
+      type: 'RESUME_SESSION',
+      payload: {
+        cards: remainingCards,
+        sourceCards,
+        round: snapshot.round,
+        knownIds: new Set(snapshot.knownIds),
+        unknownIds: new Set(snapshot.unknownIds),
+        allUnknownIds: new Set(snapshot.allUnknownIds),
+        currentIndex: snapshot.currentIndex,
+        roundHistory: snapshot.roundHistory,
+        categoryFilter: snapshot.categoryFilter,
+        startTime: snapshot.startTime,
+      },
+    });
+
+    // Clear pending session state
+    setPendingSession(null);
+
+    // Delete the old snapshot (will be re-saved as progress continues)
+    deleteSession(snapshot.id).catch(() => {});
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Discard saved session
+  // -------------------------------------------------------------------------
+
+  const discardSession = useCallback(() => {
+    if (pendingSession) {
+      deleteSession(pendingSession.id).catch(() => {});
+    }
+    setPendingSession(null);
+  }, [pendingSession]);
 
   // -------------------------------------------------------------------------
   // Handle sort with sound + haptics
@@ -297,5 +513,9 @@ export function useSortSession(): UseSortSessionReturn {
     canUndo,
     segments,
     personalBest,
+    pendingSession,
+    isLoadingSession,
+    resumeSession,
+    discardSession,
   };
 }
