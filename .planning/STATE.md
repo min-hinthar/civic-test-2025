@@ -49,6 +49,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - SortSnapshot stores card IDs not full Question objects (compact IndexedDB payloads)
 - No SESSION_VERSION bump for sort union addition (backward-compatible)
 - SortRoundResult defined inline in sessionTypes.ts (mirrors sortTypes.ts, avoids circular deps)
+- Personal best tracked via useMemo derivation (not useState/useEffect) for React Compiler safety
+- Weak area detection omitted from smart defaults (requires async mastery data); falls back to all questions
+- Sort tab placed as second tab (Browse, Sort, Deck, Review) in PillTabBar
+- Round summary has manual 'Study Missed Cards' button that triggers countdown (not auto-countdown)
+- Category detail view gains 'Sort Cards' secondary button alongside existing flashcard button
 - Reuse CountUp from react-countup for hero stat animation (already installed)
 - Per-category breakdown uses sub-category colors, not USCIS main categories
 - allUnknownIds prop kept in RoundSummary for parent-level SRSBatchAdd integration
