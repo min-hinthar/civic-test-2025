@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 23 of 25 (Flashcard Sort Mode)
-Plan: 01 of 9 in current phase
+Plan: 02 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-17 -- Completed 23-01-PLAN.md (Sort Mode State Machine)
+Last activity: 2026-02-17 -- Completed 23-02-PLAN.md (Sound Effects & Session Types)
 
-Progress: [#........] 11% (1/9 plans complete)
+Progress: [##.......] 22% (2/9 plans complete)
 
 ## Completed Milestones
 
@@ -45,6 +45,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - RESUME_SESSION reconstructs Sets from serialized arrays, resets undoStack
 - createIdleState helper for clean idle state construction
 - Sort reducer follows same phase-guarded pattern as quizReducer
+- Sort card uses accent-purple color token (distinct from primary/success/accent for other modes)
+- SortSnapshot stores card IDs not full Question objects (compact IndexedDB payloads)
+- No SESSION_VERSION bump for sort union addition (backward-compatible)
+- SortRoundResult defined inline in sessionTypes.ts (mirrors sortTypes.ts, avoids circular deps)
 
 **Phase 22 decisions:**
 - Explanation style matches existing american-government.ts (direct, factual, 2-3 sentences, why-not-what)
@@ -238,10 +242,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Completed 23-01-PLAN.md (Sort Mode State Machine)
-Next step: Execute 23-02-PLAN.md (Sort Mode Provider & Hook)
+Stopped at: Completed 23-02-PLAN.md (Sound Effects & Session Types)
+Next step: Execute 23-03-PLAN.md (next wave 1 plan)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-17 (Phase 23 plan 01 complete -- sort reducer and types)*
+*Last updated: 2026-02-17 (Phase 23 plan 02 complete -- sound effects and session types)*
