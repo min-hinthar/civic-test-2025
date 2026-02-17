@@ -302,7 +302,7 @@ export function Flashcard3D({
             </div>
 
             {/* TTS and flip hint */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4">
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={questionEn}
@@ -326,8 +326,8 @@ export function Flashcard3D({
                   />
                 )}
               </div>
-              <span className="text-xs text-muted-foreground">
-                Tap to flip{showBurmese && ' / လှည့်ရန် နှိပ်ပါ'}
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                Tap to flip{showBurmese && ' / လှည့်ရန်'}
               </span>
             </div>
           </div>
@@ -393,7 +393,7 @@ export function Flashcard3D({
             </div>
 
             {/* TTS and flip hint */}
-            <div className="flex items-center justify-between mt-4 shrink-0">
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4 shrink-0">
               <div className="flex gap-2" onClick={handleTTSClick}>
                 <SpeechButton
                   text={answerEn}
@@ -417,8 +417,8 @@ export function Flashcard3D({
                   />
                 )}
               </div>
-              <span className="text-xs text-muted-foreground">
-                Tap to flip{showBurmese && ' / လှည့်ရန် နှိပ်ပါ'}
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                Tap to flip{showBurmese && ' / လှည့်ရန်'}
               </span>
             </div>
           </div>

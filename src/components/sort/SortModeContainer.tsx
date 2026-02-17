@@ -193,6 +193,10 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   const handleSortWithAnnouncement = useCallback(
     (direction: 'know' | 'dont-know') => {
       handleSort(direction);
+      // For button-initiated sorts, immediately complete the 'animating' phase.
+      // Drag-initiated sorts fire onAnimationComplete from SwipeableCard after
+      // the spring fling — the second dispatch is a no-op (phase guard).
+      handleAnimationComplete();
       setAnnouncement(
         direction === 'know'
           ? showBurmese
@@ -203,7 +207,7 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
             : labels.sortedAsDontKnow.en
       );
     },
-    [handleSort, showBurmese]
+    [handleSort, handleAnimationComplete, showBurmese]
   );
 
   // Exit handlers
