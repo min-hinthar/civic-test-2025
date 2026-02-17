@@ -97,7 +97,11 @@ export function VoicePicker({ voices, selectedVoice, onSelect, showBurmese }: Vo
       return lower.includes('natural') || lower.includes('neural');
     });
 
-    return highQuality.sort((a, b) => {
+    // Mobile browsers report all voices as localService with no "natural" labels —
+    // fall back to showing all en-US voices so the picker isn't empty
+    const candidates = highQuality.length > 0 ? highQuality : allUSVoices;
+
+    return candidates.sort((a, b) => {
       const scoreA = voiceQualityScore(a.name);
       const scoreB = voiceQualityScore(b.name);
       if (scoreA !== scoreB) return scoreA - scoreB;

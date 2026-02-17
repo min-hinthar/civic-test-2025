@@ -390,10 +390,12 @@ export function createTTSEngine(defaults?: TTSEngineDefaults): TTSEngine {
       // Create NEW utterance for each speak (never reuse -- Pitfall 10)
       const utterance = new SpeechSynthesisUtterance(text);
 
-      // Determine voice
+      // Determine voice — forward user's preferred voice name to findVoice
       const voice =
         overrides?.voice ??
-        findVoice(voiceCache ?? [], overrides?.lang ?? engineDefaults.lang ?? 'en-US');
+        findVoice(voiceCache ?? [], overrides?.lang ?? engineDefaults.lang ?? 'en-US', {
+          preferredVoiceName: engineDefaults.preferredVoiceName,
+        });
       if (voice) utterance.voice = voice;
 
       // Apply settings: overrides > defaults

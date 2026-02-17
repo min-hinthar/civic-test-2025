@@ -91,8 +91,8 @@ export function useAutoRead(options: UseAutoReadOptions): void {
           await speak(text, { lang });
           return true;
         } catch {
-          // Give up silently
-          return true;
+          // Give up — report failure so chain can adapt
+          return false;
         }
       }
     };
@@ -116,10 +116,11 @@ export function useAutoRead(options: UseAutoReadOptions): void {
       } else {
         // 'both': English first, brief pause, then Burmese
         const completed = await speakEnglish();
-        // Stop chain if English was cancelled (user pressed stop / navigated away)
-        if (!completed || cancelled) return;
-        // Small gap between languages for processing
-        await new Promise(r => setTimeout(r, 400));
+        // Only stop chain on cancellation (user pressed stop / navigated away),
+        // NOT on English TTS failure — Burmese should still play
+        if (cancelled) return;
+        // Small gap between languages (skip if English failed)
+        await new Promise(r => setTimeout(r, completed ? 400 : 0));
         if (!cancelled) {
           await playBurmese();
         }

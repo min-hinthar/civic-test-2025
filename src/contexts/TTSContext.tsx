@@ -119,8 +119,10 @@ export function TTSProvider({ children }: { children: ReactNode }) {
     const idleId = scheduleVoiceLoad(() => {
       loadVoices().then(loadedVoices => {
         setVoices(loadedVoices);
-        // If user has a preferred voice, find and set it as default
-        if (settings.preferredVoice && loadedVoices.length > 0) {
+        // Always forward preferred voice name so speakChunk can find it at speak-time
+        if (settings.preferredVoice) {
+          eng.setDefaults({ preferredVoiceName: settings.preferredVoice });
+          // Also sync lang if the preferred voice is already loaded
           const preferred = findVoice(loadedVoices, settings.lang, {
             preferredVoiceName: settings.preferredVoice,
           });
@@ -168,12 +170,13 @@ export function TTSProvider({ children }: { children: ReactNode }) {
         } catch {
           // localStorage full or unavailable
         }
-        // Sync numeric rate to engine
+        // Sync numeric rate + preferred voice to engine
         if (engine) {
           engine.setDefaults({
             rate: RATE_MAP[next.rate],
             pitch: next.pitch,
             lang: next.lang,
+            preferredVoiceName: next.preferredVoice ?? undefined,
           });
         }
         return next;

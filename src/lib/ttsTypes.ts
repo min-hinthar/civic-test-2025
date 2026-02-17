@@ -84,6 +84,7 @@ export type TTSEngineDefaults = {
   lang?: string;
   rate?: number;
   pitch?: number;
+  preferredVoiceName?: string;
 };
 
 /** Preferences for findVoice(). */
