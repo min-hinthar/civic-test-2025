@@ -139,10 +139,14 @@ interface ErrorFallbackProps {
 function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) {
   // Read language mode directly from localStorage to avoid dependency on context
   // (ErrorBoundary may catch errors from context providers themselves)
-  const showBurmese =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('civic-test-language-mode') !== 'english-only'
-      : true;
+  let showBurmese = true;
+  try {
+    if (typeof window !== 'undefined') {
+      showBurmese = localStorage.getItem('civic-test-language-mode') !== 'english-only';
+    }
+  } catch {
+    // localStorage unavailable (private browsing, test env, etc.)
+  }
 
   const message = errorMessage ?? {
     en: 'Something went wrong. Please try again.',
