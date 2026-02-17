@@ -161,12 +161,18 @@ Plans:
   3. User sees a live progress counter showing Know/Don't Know tallies during sorting
   4. User sees an end-of-round summary with the option to study missed cards in another round
   5. Cards sorted as "Don't Know" prompt the user to add them to their SRS deck
-**Plans**: TBD
+**Plans**: 9 plans
 
 Plans:
-- [ ] 23-01: TBD
-- [ ] 23-02: TBD
-- [ ] 23-03: TBD
+- [ ] 23-01-PLAN.md -- Sort mode types + state machine reducer
+- [ ] 23-02-PLAN.md -- Sort sound effects + SortSnapshot session type
+- [ ] 23-03-PLAN.md -- Sort reducer unit tests (TDD)
+- [ ] 23-04-PLAN.md -- SwipeableCard + SwipeableStack gesture components
+- [ ] 23-05-PLAN.md -- SortProgress, KnowDontKnowButtons, SortCountdown UI
+- [ ] 23-06-PLAN.md -- SortModeContainer orchestrator + StudyGuidePage integration
+- [ ] 23-07-PLAN.md -- RoundSummary + MissedCardsList + SRSBatchAdd
+- [ ] 23-08-PLAN.md -- Session persistence + resume prompt for sort mode
+- [ ] 23-09-PLAN.md -- Full integration, polish, and visual verification
 
 ### Phase 24: Accessibility & Performance
 **Goal**: The app meets WCAG 2.2 accessibility standards and reports performance metrics for ongoing monitoring
