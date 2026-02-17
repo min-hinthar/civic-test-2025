@@ -11,7 +11,7 @@
  * accent color, and metadata display. Bilingual text follows language mode.
  */
 
-import { ClipboardCheck, BookOpen, Mic } from 'lucide-react';
+import { ClipboardCheck, BookOpen, Mic, Layers } from 'lucide-react';
 import { clsx } from 'clsx';
 
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -48,6 +48,17 @@ const TYPE_CONFIG = {
     label: {
       en: 'Interview',
       my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038',
+    },
+  },
+  sort: {
+    Icon: Layers,
+    iconColor: 'text-info',
+    iconBg: 'bg-info/10',
+    borderColor: 'border-info/30',
+    cardBg: 'bg-info/5',
+    label: {
+      en: 'Flashcard Sort',
+      my: '\u1000\u1010\u103A\u1005\u102E\u1005\u102F\u1036',
     },
   },
 } as const;
@@ -154,16 +165,23 @@ function getSessionLabel(session: SessionSnapshot, showBurmese: boolean): string
             : 'Practice';
       return showBurmese ? `${config.label.my}: ${modeLabel}` : `${config.label.en}: ${modeLabel}`;
     }
+    case 'sort': {
+      if (session.categoryFilter) {
+        return showBurmese
+          ? `${config.label.my}: ${session.categoryFilter}`
+          : `${config.label.en}: ${session.categoryFilter}`;
+      }
+      return showBurmese ? config.label.my : config.label.en;
+    }
   }
 }
 
 function getProgressText(session: SessionSnapshot, showBurmese: boolean): string {
-  const qNum = session.currentIndex + 1;
-  const total = session.questions.length;
-  const qText = `Q${qNum}/${total}`;
-
   switch (session.type) {
     case 'mock-test': {
+      const qNum = session.currentIndex + 1;
+      const total = session.questions.length;
+      const qText = `Q${qNum}/${total}`;
       const correct = session.results.filter(r => r.isCorrect).length;
       const answered = session.results.length;
       return showBurmese
@@ -171,6 +189,9 @@ function getProgressText(session: SessionSnapshot, showBurmese: boolean): string
         : `${qText} \u2022 ${correct}/${answered} correct`;
     }
     case 'practice': {
+      const qNum = session.currentIndex + 1;
+      const total = session.questions.length;
+      const qText = `Q${qNum}/${total}`;
       const correct = session.results.filter(r => r.isCorrect).length;
       const answered = session.results.length;
       return showBurmese
@@ -178,9 +199,23 @@ function getProgressText(session: SessionSnapshot, showBurmese: boolean): string
         : `${qText} \u2022 ${correct}/${answered} correct`;
     }
     case 'interview': {
+      const qNum = session.currentIndex + 1;
+      const total = session.questions.length;
+      const qText = `Q${qNum}/${total}`;
       return showBurmese
         ? `${qText} \u2022 ${session.correctCount} \u1019\u103E\u1014\u103A / ${session.incorrectCount} \u1019\u103E\u102C\u1038`
         : `${qText} \u2022 ${session.correctCount} correct / ${session.incorrectCount} incorrect`;
+    }
+    case 'sort': {
+      const cardNum = session.currentIndex + 1;
+      const total = session.remainingCardIds.length;
+      const known = session.knownIds.length;
+      const roundLabel = showBurmese
+        ? `\u1021\u1000\u103B\u102D\u1019\u103A ${session.round}`
+        : `Round ${session.round}`;
+      return showBurmese
+        ? `${roundLabel} \u2022 ${cardNum}/${total} \u2022 ${known} \u101E\u102D`
+        : `${roundLabel} \u2022 ${cardNum}/${total} \u2022 ${known} known`;
     }
   }
 }
@@ -201,6 +236,7 @@ function getTimerText(session: SessionSnapshot, showBurmese: boolean): string {
         ? `\u1000\u103B\u1014\u103A\u1021\u1001\u103B\u102D\u1014\u103A: ${formatTime(session.timeLeft)}`
         : `Time remaining: ${formatTime(session.timeLeft)}`;
     case 'interview':
+    case 'sort':
       return showBurmese
         ? '\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103E\u102D'
         : 'Untimed';

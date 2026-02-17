@@ -13,7 +13,7 @@
  */
 
 import { AnimatePresence, motion } from 'motion/react';
-import { BookOpen, ClipboardCheck, Clock, Mic, X } from 'lucide-react';
+import { BookOpen, ClipboardCheck, Clock, Layers, Mic, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -34,6 +34,8 @@ function getSessionIcon(type: SessionSnapshot['type']) {
       return BookOpen;
     case 'interview':
       return Mic;
+    case 'sort':
+      return Layers;
   }
 }
 
@@ -55,6 +57,11 @@ function getSessionLabel(type: SessionSnapshot['type']): { en: string; my: strin
         en: 'Unfinished Interview',
         my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038',
       };
+    case 'sort':
+      return {
+        en: 'Unfinished Flashcard Sort',
+        my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u1000\u1010\u103A\u1005\u102E\u1005\u102F\u1036',
+      };
   }
 }
 
@@ -67,6 +74,8 @@ function getSessionRoute(type: SessionSnapshot['type']): string {
       return '/practice';
     case 'interview':
       return '/interview';
+    case 'sort':
+      return '/sort';
   }
 }
 

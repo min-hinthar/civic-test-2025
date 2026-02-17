@@ -24,7 +24,7 @@ export interface BaseSessionSnapshot {
   /** Unique ID in format: `session-{type}-{timestamp}` */
   id: string;
   /** Discriminant for the union type */
-  type: 'mock-test' | 'practice' | 'interview';
+  type: 'mock-test' | 'practice' | 'interview' | 'sort';
   /** ISO timestamp when session was last saved */
   savedAt: string;
   /** Schema version -- mismatched versions are discarded on load */
@@ -96,7 +96,54 @@ export interface InterviewSnapshot extends BaseSessionSnapshot {
 }
 
 /**
+ * Stats for a completed sort round (used in SortSnapshot persistence).
+ * NOTE: This mirrors RoundResult in src/lib/sort/sortTypes.ts;
+ * any structural changes to one must be applied to the other.
+ */
+export interface SortRoundResult {
+  round: number;
+  totalCards: number;
+  knownCount: number;
+  unknownCount: number;
+  durationMs: number;
+  unknownIds: string[];
+}
+
+/**
+ * Sort (flashcard sort) session snapshot.
+ * Captures the card-sorting session state for IndexedDB persistence.
+ * Stores card IDs (not full Question objects) to keep payloads small.
+ */
+export interface SortSnapshot extends BaseSessionSnapshot {
+  type: 'sort';
+  /** Full card set for the session (question IDs only for compact storage) */
+  sourceCardIds: string[];
+  /** Current round number */
+  round: number;
+  /** Question IDs sorted as Know this round */
+  knownIds: string[];
+  /** Question IDs sorted as Don't Know this round */
+  unknownIds: string[];
+  /** Cumulative Don't Know IDs across all rounds */
+  allUnknownIds: string[];
+  /** Card IDs remaining in current round (shuffled order) */
+  remainingCardIds: string[];
+  /** Current card index in the round */
+  currentIndex: number;
+  /** Previous round results for improvement delta */
+  roundHistory: SortRoundResult[];
+  /** Category filter if applied */
+  categoryFilter?: string;
+  /** Date.now() of round start for duration calculation */
+  startTime: number;
+}
+
+/**
  * Discriminated union of all session snapshot types.
  * Use `snapshot.type` to narrow to a specific type.
  */
-export type SessionSnapshot = MockTestSnapshot | PracticeSnapshot | InterviewSnapshot;
+export type SessionSnapshot =
+  | MockTestSnapshot
+  | PracticeSnapshot
+  | InterviewSnapshot
+  | SortSnapshot;
