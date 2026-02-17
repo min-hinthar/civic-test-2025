@@ -8,7 +8,8 @@
  * lifecycle: sorting -> round-summary -> countdown -> mastery.
  *
  * Features:
- * - Auto-starts session on mount with optional category filter
+ * - Session resume: shows ResumePromptModal when saved session found
+ * - Auto-starts new session when no pending session exists
  * - Phase-based rendering: sorting, round-summary, countdown, mastery, idle
  * - Exit confirmation dialog with sort-specific messaging
  * - Aria live region for screen reader sort result announcements
@@ -27,9 +28,11 @@ import { KnowDontKnowButtons } from '@/components/sort/KnowDontKnowButtons';
 import { SortCountdown } from '@/components/sort/SortCountdown';
 import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 import { Confetti } from '@/components/celebrations/Confetti';
+import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { playMasteryComplete } from '@/lib/audio/soundEffects';
+import type { SortSnapshot, SessionSnapshot } from '@/lib/sessions/sessionTypes';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -99,6 +102,10 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
     exitSession,
     canUndo,
     segments,
+    pendingSession,
+    isLoadingSession,
+    resumeSession,
+    discardSession,
   } = useSortSession();
 
   const { showBurmese } = useLanguage();
@@ -108,20 +115,39 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   // Exit dialog state
   const [showExitDialog, setShowExitDialog] = useState(false);
 
+  // Resume modal state
+  const [showResumeModal, setShowResumeModal] = useState(false);
+
   // Confetti state
   const [showConfetti, setShowConfetti] = useState(false);
 
   // Mastery sound played ref (prevent double-fire)
   const masteryPlayedRef = useRef(false);
 
+  // Track whether session has been started (to prevent double-start)
+  const sessionStartedRef = useRef(false);
+
   // Aria live announcement text
   const [announcement, setAnnouncement] = useState('');
 
-  // Auto-start session on mount
+  // -------------------------------------------------------------------------
+  // Session loading: show resume modal or auto-start
+  // -------------------------------------------------------------------------
+
   useEffect(() => {
-    startSession(categoryFilter);
+    // Wait until loading is complete
+    if (isLoadingSession) return;
+    // Don't re-run if session already started
+    if (sessionStartedRef.current) return;
+
+    if (pendingSession) {
+      setShowResumeModal(true);
+    } else {
+      sessionStartedRef.current = true;
+      startSession(categoryFilter);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoadingSession]);
 
   // Play mastery sound and show confetti when entering mastery phase
   useEffect(() => {
@@ -139,6 +165,35 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
       masteryPlayedRef.current = false;
     }
   }, [state.phase]);
+
+  // -------------------------------------------------------------------------
+  // Resume handlers
+  // -------------------------------------------------------------------------
+
+  const handleResume = useCallback(
+    (session: SessionSnapshot) => {
+      sessionStartedRef.current = true;
+      setShowResumeModal(false);
+      resumeSession(session as SortSnapshot);
+    },
+    [resumeSession]
+  );
+
+  const handleStartFresh = useCallback(
+    (_session: SessionSnapshot) => {
+      sessionStartedRef.current = true;
+      setShowResumeModal(false);
+      discardSession();
+      startSession(categoryFilter);
+    },
+    [discardSession, startSession, categoryFilter]
+  );
+
+  const handleNotNow = useCallback(() => {
+    sessionStartedRef.current = true;
+    setShowResumeModal(false);
+    startSession(categoryFilter);
+  }, [startSession, categoryFilter]);
 
   // Handle sort with announcement
   const handleSortWithAnnouncement = useCallback(
@@ -195,6 +250,37 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   const totalKnown = latestRound?.knownCount ?? 0;
   const totalCards = latestRound?.totalCards ?? 0;
   const knowPercent = totalCards > 0 ? Math.round((totalKnown / totalCards) * 100) : 0;
+
+  // -------------------------------------------------------------------------
+  // Loading state (checking for pending session)
+  // -------------------------------------------------------------------------
+
+  if (isLoadingSession) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-purple border-t-transparent mb-4" />
+        <p className={clsx('text-muted-foreground', showBurmese && 'font-myanmar')}>
+          {showBurmese ? labels.loading.my : labels.loading.en}
+        </p>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // Resume prompt modal
+  // -------------------------------------------------------------------------
+
+  if (showResumeModal && pendingSession) {
+    return (
+      <ResumePromptModal
+        sessions={[pendingSession]}
+        open={showResumeModal}
+        onResume={handleResume}
+        onStartFresh={handleStartFresh}
+        onNotNow={handleNotNow}
+      />
+    );
+  }
 
   // -------------------------------------------------------------------------
   // Idle / Loading
