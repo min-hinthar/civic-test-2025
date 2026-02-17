@@ -329,3 +329,89 @@ export function playCompletionSparkle(): void {
     // Silently ignore
   }
 }
+
+// ---------------------------------------------------------------------------
+// Sort mode sounds
+// ---------------------------------------------------------------------------
+
+/**
+ * Whoosh sound for card fling gesture.
+ * Frequency sweep from 800 Hz -> 300 Hz over 0.2s. Quick, kinetic.
+ */
+export function playFling(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.2);
+
+    gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.2);
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Ascending two-note ding for "Know" sort.
+ * C5 (523 Hz) -> E5 (659 Hz). Bright, affirming.
+ */
+export function playKnow(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 523, 0, 0.2, 0.12); // C5
+    playNote(ctx, 659, 0.1, 0.2, 0.12); // E5
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Low single-note thud for "Don't Know" sort.
+ * 200 Hz triangle wave. Soft, non-punishing.
+ */
+export function playDontKnow(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 200, 0, 0.15, 0.15, 'triangle');
+  } catch {
+    // Silently ignore
+  }
+}
+
+/**
+ * Triumphant five-note chime for 100% mastery completion.
+ * C5+E5+G5 chord, then ascending C6 and E6. Celebratory.
+ */
+export function playMasteryComplete(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    // Simultaneous chord
+    playNote(ctx, 523, 0, 0.3, 0.4); // C5
+    playNote(ctx, 659, 0, 0.3, 0.4); // E5
+    playNote(ctx, 784, 0, 0.3, 0.4); // G5
+    // Ascending resolution
+    playNote(ctx, 1047, 0.3, 0.3, 0.5); // C6
+    playNote(ctx, 1319, 0.5, 0.25, 0.5); // E6
+  } catch {
+    // Silently ignore
+  }
+}
