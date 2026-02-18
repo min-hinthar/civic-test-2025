@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 24 of 25 (Accessibility & Performance)
-Plan: 07 of 10 in current phase
-Status: In progress (plans 02, 03, 07, 08 complete)
-Last activity: 2026-02-18 -- Completed 24-07-PLAN.md (performance monitoring and optimization)
+Plan: 04 of 10 in current phase
+Status: In progress (plans 02, 03, 04, 07, 08 complete)
+Last activity: 2026-02-18 -- Completed 24-04-PLAN.md (reduced motion alternatives)
 
-Progress: [####......] 40% (4/10 plans complete)
+Progress: [#####.....] 50% (5/10 plans complete)
 
 ## Completed Milestones
 
@@ -60,6 +60,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Bundle analyzer wraps inside Sentry in config chain (Sentry must be outermost for source map upload)
 - Myanmar font preload skipped -- webpack hashes paths per build; @fontsource v5 already sets font-display: swap
 - No SW changes needed -- audio files already cached with CacheFirst (1200 entries, 90 days)
+- Crossfade via CSS opacity transition (not motion/react) for Flashcard3D reduced motion flip
+- pendingDirection state prop defers SwipeableCard animation to useEffect for button-initiated sorts under reduced motion
+- 150ms easeOut standard for interactive control reduced motion transitions; 200ms for progress bars
+- SessionCountdown and StreakReward already had adequate reduced motion handling -- no changes needed
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -277,10 +281,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 07 complete
-Next step: Continue Phase 24 plans (24-01, 24-04, 24-05, 24-06, 24-09, 24-10 remaining)
+Stopped at: Phase 24 plan 04 complete
+Next step: Continue Phase 24 plans (24-01, 24-05, 24-06, 24-09, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 07 complete -- performance monitoring and optimization)*
+*Last updated: 2026-02-18 (Phase 24 plan 04 complete -- reduced motion alternatives)*
