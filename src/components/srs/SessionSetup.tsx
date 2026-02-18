@@ -132,7 +132,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back</span>
-            {showBurmese && <span className="font-myanmar ml-1">/ {'နောက်သို့'}</span>}
+            {showBurmese && <span className="font-myanmar ml-1">/ နောက်သို့</span>}
           </button>
         </div>
 
@@ -141,14 +141,12 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           <h2 className="text-xl font-bold text-foreground">All caught up!</h2>
           {showBurmese && (
             <p className="font-myanmar text-base text-muted-foreground mt-1">
-              {'အားလုံးပြန်လှည်ပြီးပါပြီ။'}
+              အားလုံးပြန်လည်သုံးသပ်ပြီးပါပြီ!
             </p>
           )}
           <p className="text-sm text-muted-foreground mt-3">Come back later for more reviews.</p>
           {showBurmese && (
-            <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
-              {'နောက်မှပြန်လာပါ။'}
-            </p>
+            <p className="font-myanmar text-sm text-muted-foreground mt-0.5">နောက်မှပြန်လာပါ။</p>
           )}
         </Card>
       </div>
@@ -171,7 +169,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
-          {showBurmese && <span className="font-myanmar ml-1">/ {'နောက်သို့'}</span>}
+          {showBurmese && <span className="font-myanmar ml-1">/ နောက်သို့</span>}
         </button>
       </div>
 
@@ -182,7 +180,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
             <h2 className="text-xl font-bold text-foreground">Review Session</h2>
             {showBurmese && (
               <p className="font-myanmar text-base text-muted-foreground mt-0.5">
-                {'ပြန်လှည့်စစ်ဆေးခြင်း'}
+                ပြန်လည်သုံးသပ်ခြင်း
               </p>
             )}
           </StaggeredItem>
@@ -194,7 +192,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               <p className="text-sm text-muted-foreground mt-1">cards due for review</p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  {'ပြန်လှည်ရမည့် ကတ်များ'}
+                  ပြန်လည်သုံးသပ်ရမည့်ကတ်များ
                 </p>
               )}
             </div>
@@ -205,9 +203,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
             <p className="text-sm font-medium text-foreground mb-3">
               Session size
               {showBurmese && (
-                <span className="font-myanmar text-muted-foreground ml-2">
-                  / {'အကြိမ်အရေအတွက်'}
-                </span>
+                <span className="font-myanmar text-muted-foreground ml-2">/ အကြိမ်အရေအတွက်</span>
               )}
             </p>
             <div className="flex gap-2">
@@ -312,7 +308,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               <span className="flex flex-col items-center">
                 <span>Start Review</span>
                 {showBurmese && (
-                  <span className="font-myanmar text-sm opacity-80">{'ပြန်လှည်ခြင်းစတင်ပါ'}</span>
+                  <span className="font-myanmar text-sm opacity-80">ပြန်လည်သုံးသပ်ခြင်းစတင်ပါ</span>
                 )}
               </span>
             </Button>

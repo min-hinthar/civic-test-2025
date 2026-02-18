@@ -270,7 +270,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
         >
           <X className="h-4 w-4" />
           <span>Exit</span>
-          {showBurmese && <span className="font-myanmar ml-1">/ {'ထွက်ပါ'}</span>}
+          {showBurmese && <span className="font-myanmar ml-1">/ ထွက်ပါ</span>}
         </button>
 
         {timerEnabled && (

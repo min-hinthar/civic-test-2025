@@ -157,21 +157,13 @@ export function SwipeableStack({
         {/* Don't Know label - left side */}
         <div className="text-center opacity-20">
           <span className="text-sm font-bold text-warning">Don&apos;t Know</span>
-          {isBurmese && (
-            <span className="block text-xs font-myanmar text-warning/80">
-              {'\u1019\u101E\u102D\u1015\u102B'}
-            </span>
-          )}
+          {isBurmese && <span className="block text-xs font-myanmar text-warning/80">မသိပါ</span>}
         </div>
 
         {/* Know label - right side */}
         <div className="text-center opacity-20">
           <span className="text-sm font-bold text-success">Know</span>
-          {isBurmese && (
-            <span className="block text-xs font-myanmar text-success/80">
-              {'\u101E\u102D\u1015\u102B\u1010\u101A\u103A'}
-            </span>
-          )}
+          {isBurmese && <span className="block text-xs font-myanmar text-success/80">သိပါတယ်</span>}
         </div>
       </div>
 

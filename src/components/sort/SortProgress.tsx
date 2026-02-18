@@ -24,9 +24,9 @@ export interface SortProgressProps {
 // ---------------------------------------------------------------------------
 
 const labels = {
-  know: { en: 'Know', my: '\u101E\u102D\u1015\u102B\u1010\u101A\u103A' },
-  dontKnow: { en: "Don't Know", my: '\u1019\u101E\u102D\u1015\u102B' },
-  round: { en: 'Round', my: '\u1021\u1000\u103C\u102D\u1019\u103A' },
+  know: { en: 'Know', my: 'သိပါတယ်' },
+  dontKnow: { en: "Don't Know", my: 'မသိပါ' },
+  round: { en: 'Round', my: 'အကြိမ်' },
 };
 
 // ---------------------------------------------------------------------------

@@ -75,7 +75,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <span className={`text-sm text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
-            {showBurmese ? 'စာမေးပွဲများ တင်နေပါသည်...' : 'Loading review cards...'}
+            {showBurmese ? 'ပြန်လည်သုံးသပ်ကတ်များ တင်နေပါသည်...' : 'Loading review cards...'}
           </span>
         </div>
       </div>
@@ -100,11 +100,11 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               <p
                 className={`text-sm font-semibold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese ? 'စာမေးပွဲကို စတင်ပါ' : 'Start your review deck'}
+                {showBurmese ? 'ပြန်လည်သုံးသပ်ကဒ်တွဲကို စတင်ပါ' : 'Start your review deck'}
               </p>
               <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
                 {showBurmese
-                  ? 'မေးခွန်းများ ထည့်သွင်း၊ ပြန်လည်ရန် စတင်ပါ!'
+                  ? 'မေးခွန်းများထည့်ပြီး ပြန်လည်သုံးသပ်ပါ!'
                   : 'Add questions to start reviewing!'}
               </p>
             </div>
@@ -219,7 +219,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               )}
             </div>
             <p className={`text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
-              {showBurmese ? 'စာမေးပွဲများကို ပြန်လည်ရန် နှိပ်ပါ' : 'Tap to review your deck'}
+              {showBurmese ? 'ကဒ်တွဲကို ပြန်လည်သုံးသပ်ရန် နှိပ်ပါ' : 'Tap to review your deck'}
             </p>
           </div>
         </div>
@@ -346,7 +346,7 @@ export function SRSWidget({ className }: SRSWidgetProps) {
               >
                 <BookOpen className="h-4 w-4" />
                 <span className={showBurmese ? 'font-myanmar' : ''}>
-                  {showBurmese ? 'စာမေးပွဲများ ကြည့်ရန်' : 'Go to Review Deck'}
+                  {showBurmese ? 'ပြန်လည်သုံးသပ်ကဒ်တွဲသို့' : 'Go to Review Deck'}
                 </span>
               </button>
             </div>

@@ -216,7 +216,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
         >
           <ChevronLeft className="h-4 w-4" />
           <span>Back to Study Guide</span>
-          <span className="font-myanmar ml-1">/ လေ့လာရန်သို့</span>
+          {showBurmese && <span className="font-myanmar ml-1">/ လေ့လာမှုလမ်းညွှန်သို့</span>}
         </button>
       </div>
 

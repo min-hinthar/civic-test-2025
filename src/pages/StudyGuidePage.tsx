@@ -209,28 +209,26 @@ const StudyGuidePage = () => {
           {
             id: '',
             label: 'Browse',
-            labelMy: '\u1000\u103C\u100A\u103A\u1037\u101B\u103E\u102F\u101B\u1014\u103A',
+            labelMy: 'ရှာဖွေရန်',
             icon: BookOpen,
           },
           {
             id: '#sort',
             label: 'Sort',
-            labelMy:
-              '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1001\u103D\u1032\u1015\u102B',
+            labelMy: 'ခွဲခြားရန်',
             icon: ArrowLeftRight,
           },
           {
             id: '#deck',
             label: 'Deck',
-            labelMy: '\u1000\u1010\u103A\u1005\u102F\u1015\u102F\u1036',
+            labelMy: 'ကဒ်တွဲ',
             icon: Layers,
             badge: dueCount > 0 ? dueCount : undefined,
           },
           {
             id: '#review',
             label: 'Review',
-            labelMy:
-              '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A',
+            labelMy: 'ပြန်လည်သုံးသပ်',
             icon: GraduationCap,
           },
         ]}

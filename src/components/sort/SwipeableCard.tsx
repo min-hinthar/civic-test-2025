@@ -277,7 +277,7 @@ export function SwipeableCard({
               <span className="text-lg font-bold text-success drop-shadow-md">Know</span>
               {isBurmese && (
                 <span className="block text-sm font-myanmar text-success/80 drop-shadow-md">
-                  {'\u101E\u102D\u1015\u102B\u1010\u101A\u103A'}
+                  သိပါတယ်
                 </span>
               )}
             </motion.div>
@@ -291,7 +291,7 @@ export function SwipeableCard({
               <span className="text-lg font-bold text-warning drop-shadow-md">Don&apos;t Know</span>
               {isBurmese && (
                 <span className="block text-sm font-myanmar text-warning/80 drop-shadow-md">
-                  {'\u1019\u101E\u102D\u1015\u102B'}
+                  မသိပါ
                 </span>
               )}
             </motion.div>

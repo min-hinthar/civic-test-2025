@@ -160,7 +160,7 @@ export function ReviewCard({
           >
             <div className="flex flex-col items-center text-warning font-bold">
               <span className="text-lg">Hard</span>
-              {showBurmese && <span className="font-myanmar text-sm">{'ခက်သည်'}</span>}
+              {showBurmese && <span className="font-myanmar text-sm">ခက်သည်</span>}
             </div>
           </motion.div>
 
@@ -171,7 +171,7 @@ export function ReviewCard({
           >
             <div className="flex flex-col items-center text-success-600 dark:text-success font-bold">
               <span className="text-lg">Easy</span>
-              {showBurmese && <span className="font-myanmar text-sm">{'လွယ်သည်'}</span>}
+              {showBurmese && <span className="font-myanmar text-sm">လွယ်သည်</span>}
             </div>
           </motion.div>
         </>
@@ -251,7 +251,7 @@ export function ReviewCard({
                   </p>
                   {showBurmese && (
                     <p className="font-myanmar text-sm text-foreground/60 mt-0.5">
-                      {'ဆက်ကြိုးစားပါ။ သင်လုပ်နိုင်ပါတယ်။'}
+                      ဆက်ကြိုးစားပါ။ သင်လုပ်နိုင်ပါတယ်!
                     </p>
                   )}
                 </div>

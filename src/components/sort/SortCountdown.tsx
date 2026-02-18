@@ -36,15 +36,15 @@ export interface SortCountdownProps {
 const labels = {
   studyMissed: {
     en: 'Study Missed Cards',
-    my: '\u1019\u1019\u103E\u1014\u103A\u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
+    my: 'မမှန်ကတ်များကိုလေ့လာပါ',
   },
   cancel: {
     en: 'Cancel',
-    my: '\u1015\u101A\u103A\u1016\u103B\u1000\u103A\u1015\u102B',
+    my: 'ပယ်ဖျက်ပါ',
   },
   startingIn: {
     en: 'Starting in',
-    my: '\u1005\u1010\u1004\u103A\u1019\u100A\u103A',
+    my: 'စတင်မည်',
   },
 };
 

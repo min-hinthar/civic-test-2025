@@ -23,9 +23,9 @@ export interface KnowDontKnowButtonsProps {
 // ---------------------------------------------------------------------------
 
 const labels = {
-  know: { en: 'Know', my: '\u101E\u102D\u1015\u102B\u1010\u101A\u103A' },
-  dontKnow: { en: "Don't Know", my: '\u1019\u101E\u102D\u1015\u102B' },
-  undo: { en: 'Undo', my: '\u1015\u103C\u1014\u103A\u1016\u103B\u1000\u103A\u1015\u102B' },
+  know: { en: 'Know', my: 'သိပါတယ်' },
+  dontKnow: { en: "Don't Know", my: 'မသိပါ' },
+  undo: { en: 'Undo', my: 'နောက်ပြန်ပြင်' },
 };
 
 // ---------------------------------------------------------------------------

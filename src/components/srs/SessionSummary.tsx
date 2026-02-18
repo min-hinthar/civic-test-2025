@@ -99,7 +99,7 @@ export function SessionSummary({
     if (totalCount === 0) {
       return {
         en: 'No cards reviewed this session.',
-        my: 'ဤစစ်ဆေးခြင်းတွင် ကတ်မပြန်လှည်ပါ။',
+        my: 'ဤစစ်ဆေးခြင်းတွင် ကတ်မပြန်လည်သုံးသပ်ပါ။',
       };
     }
     if (hardCount === 0) {
@@ -111,12 +111,12 @@ export function SessionSummary({
     if (easyCount === 0) {
       return {
         en: 'Every review helps! Keep going!',
-        my: 'ပြန်လှည့်တိုင်းက အကူအညီပေးတယ်! ဆက်ကြိုးစားပါ!',
+        my: 'ပြန်လည်သုံးသပ်တိုင်းက အကူအညီပေးတယ်! ဆက်ကြိုးစားပါ!',
       };
     }
     return {
       en: 'Good effort! Review builds strength.',
-      my: 'ကောင်းတဲ့ကြိုးစားမှု! ပြန်လှည့်ခြင်းက အားတည်ဆောက်ပေးတယ်!',
+      my: 'ကောင်းတဲ့ကြိုးစားမှု! ပြန်လည်သုံးသပ်ခြင်းက အားတည်ဆောက်ပေးတယ်!',
     };
   }, [totalCount, hardCount, easyCount]);
 
@@ -143,7 +143,7 @@ export function SessionSummary({
         <h2 className="text-2xl font-bold text-foreground">Session Complete</h2>
         {showBurmese && (
           <p className="font-myanmar text-base text-muted-foreground mt-1">
-            {'စစ်ဆေးခြင်းပြီးပါပြီ'}
+            ပြန်လည်သုံးသပ်ခြင်းပြီးပါပြီ
           </p>
         )}
       </motion.div>
@@ -156,7 +156,7 @@ export function SessionSummary({
             <p className="text-3xl font-bold text-foreground">{totalCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Reviewed</p>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">{'ပြန်လှည့်ပြီး'}</p>
+              <p className="font-myanmar text-xs text-muted-foreground">ပြန်လည်သုံးသပ်ပြီး</p>
             )}
           </Card>
 
@@ -164,18 +164,14 @@ export function SessionSummary({
           <Card className="text-center py-4 px-2">
             <p className="text-3xl font-bold text-success-600 dark:text-success">{easyCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Easy</p>
-            {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">{'လွယ်သည်'}</p>
-            )}
+            {showBurmese && <p className="font-myanmar text-xs text-muted-foreground">လွယ်သည်</p>}
           </Card>
 
           {/* Hard */}
           <Card className="text-center py-4 px-2">
             <p className="text-3xl font-bold text-warning">{hardCount}</p>
             <p className="text-xs text-muted-foreground mt-1">Hard</p>
-            {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">{'ခက်သည်'}</p>
-            )}
+            {showBurmese && <p className="font-myanmar text-xs text-muted-foreground">ခက်သည်</p>}
           </Card>
         </div>
       </motion.div>
@@ -198,7 +194,7 @@ export function SessionSummary({
             </div>
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mb-3">
-                {'ဤအမျိုးအစားများကို လေ့ကျင့်ပါ'}
+                ဤအမျိုးအစားများကို လေ့ကျင့်ပါ
               </p>
             )}
 
@@ -244,7 +240,7 @@ export function SessionSummary({
           <span className="flex flex-col items-center">
             <span>Back to Deck</span>
             {showBurmese && (
-              <span className="font-myanmar text-sm opacity-80">{'ကတ်များဆီသို့ပြန်သွားပါ'}</span>
+              <span className="font-myanmar text-sm opacity-80">ကတ်များဆီသို့ပြန်သွားပါ</span>
             )}
           </span>
         </Button>

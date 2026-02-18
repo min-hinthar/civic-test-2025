@@ -55,31 +55,31 @@ interface SortModeContainerProps {
 // ---------------------------------------------------------------------------
 
 const labels = {
-  round: { en: 'Round', my: '\u1021\u1000\u103C\u102D\u1019\u103A' },
+  round: { en: 'Round', my: 'အကြိမ်' },
   youKnowThemAll: {
     en: 'You know them all!',
-    my: '\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u101E\u102D\u1015\u102B\u1015\u103C\u102E',
+    my: 'အားလုံးသိပါပြီ!',
   },
   amazing: {
     en: 'Amazing work!',
-    my: '\u1021\u1036\u1037\u1019\u103E\u102C\u1015\u102B\u1015\u1032',
+    my: 'အံ့မှာပါပဲ!',
   },
-  known: { en: 'Known', my: '\u101E\u102D\u1015\u102B\u1010\u101A\u103A' },
+  known: { en: 'Known', my: 'သိပါတယ်' },
   backToStudy: {
     en: 'Back to Study Guide',
-    my: '\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u101E\u102D\u102F\u1037',
+    my: 'လေ့လာမှုလမ်းညွှန်သို့',
   },
   sortedAsKnow: {
     en: 'Sorted as Know',
-    my: '\u101E\u102D\u1015\u102B\u1010\u101A\u103A\u101F\u102F\u1001\u103D\u1032\u1011\u102C\u1038\u1015\u102B\u1010\u101A\u103A',
+    my: 'သိပါတယ်ဟုခွဲထားပါတယ်',
   },
   sortedAsDontKnow: {
     en: "Sorted as Don't Know",
-    my: '\u1019\u101E\u102D\u1015\u102B\u101F\u102F\u1001\u103D\u1032\u1011\u102C\u1038\u1015\u102B\u1010\u101A\u103A',
+    my: 'မသိပါဟုခွဲထားပါတယ်',
   },
   loading: {
     en: 'Loading cards...',
-    my: '\u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1010\u1004\u103A\u1014\u1031\u1015\u102B\u1010\u101A\u103A...',
+    my: 'ကတ်များတင်နေပါတယ်...',
   },
 };
 
