@@ -167,8 +167,7 @@ function ToastContainer({
   return (
     <div
       className="pointer-events-none fixed top-4 left-4 right-4 z-[9999] flex flex-col gap-3 sm:left-auto sm:max-w-sm"
-      aria-live="assertive"
-      aria-atomic="true"
+      aria-live="polite"
     >
       {toasts.map(toast => (
         <Toast key={toast.id} toast={toast} onDismiss={onDismiss} />
@@ -210,7 +209,7 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
 
   return (
     <div
-      role="alert"
+      role={toast.type === 'error' || toast.type === 'warning' ? 'alert' : 'status'}
       className={clsx(
         // Base styles
         'pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 shadow-lg',

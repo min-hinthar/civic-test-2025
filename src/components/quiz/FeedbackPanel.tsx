@@ -244,142 +244,165 @@ export function FeedbackPanel({
 
   const showExplanation = mode === 'practice' && !isCorrect && explanation;
 
+  // Build screen reader announcement text
+  const announcementText = (() => {
+    if (!show) return '';
+    if (mode === 'practice') {
+      if (isCorrect) {
+        return `Correct. ${explanation?.brief_en ?? ''}`.trim();
+      }
+      return `Incorrect. The answer is ${correctAnswer}. ${explanation?.brief_en ?? ''}`.trim();
+    }
+    // Mock test: simpler verdict (no explanation, simulation fidelity)
+    if (isCorrect) {
+      return 'Correct.';
+    }
+    return `Incorrect. The answer is ${correctAnswer}.`;
+  })();
+
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          role="status"
-          aria-live="polite"
-          initial={shouldReduceMotion ? { opacity: 0 } : { y: '100%', opacity: 0 }}
-          animate={shouldReduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { y: '100%', opacity: 0 }}
-          transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
-          onClick={handlePanelClick}
-          className={clsx(
-            'w-full cursor-pointer border-t-4 px-4 py-4 sm:px-6',
-            'min-h-[120px]',
-            isCorrect ? 'border-success bg-success-subtle' : 'border-warning bg-warning-subtle'
-          )}
-        >
-          <div className="mx-auto max-w-2xl">
-            {/* Header row: icon + encouragement + streak */}
-            <div className="flex items-start gap-3">
-              {isCorrect ? (
-                <CorrectIcon shouldReduceMotion={shouldReduceMotion} />
-              ) : (
-                <IncorrectIcon shouldReduceMotion={shouldReduceMotion} />
-              )}
+    <>
+      {/* Screen reader announcement -- always in the DOM so live region detects content changes */}
+      <div aria-live="assertive" className="sr-only">
+        {show && announcementText}
+      </div>
 
-              <div className="flex-1 min-w-0">
-                {/* Encouragement message */}
-                <p className="text-lg font-bold text-foreground">
-                  {encouragement.en}
-                  {showBurmese && (
-                    <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
-                      {encouragement.my}
-                    </span>
-                  )}
-                </p>
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            role="status"
+            aria-live="polite"
+            initial={shouldReduceMotion ? { opacity: 0 } : { y: '100%', opacity: 0 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { y: '100%', opacity: 0 }}
+            transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
+            onClick={handlePanelClick}
+            className={clsx(
+              'w-full cursor-pointer border-t-4 px-4 py-4 sm:px-6',
+              'min-h-[120px]',
+              isCorrect ? 'border-success bg-success-subtle' : 'border-warning bg-warning-subtle'
+            )}
+          >
+            <div className="mx-auto max-w-2xl">
+              {/* Header row: icon + encouragement + streak */}
+              <div className="flex items-start gap-3">
+                {isCorrect ? (
+                  <CorrectIcon shouldReduceMotion={shouldReduceMotion} />
+                ) : (
+                  <IncorrectIcon shouldReduceMotion={shouldReduceMotion} />
+                )}
 
-                {/* Streak badge */}
-                <div className="mt-1">
-                  <StreakBadge
-                    count={streakCount}
-                    shouldReduceMotion={shouldReduceMotion}
-                    showBurmese={showBurmese}
-                  />
+                <div className="flex-1 min-w-0">
+                  {/* Encouragement message */}
+                  <p className="text-lg font-bold text-foreground">
+                    {encouragement.en}
+                    {showBurmese && (
+                      <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
+                        {encouragement.my}
+                      </span>
+                    )}
+                  </p>
+
+                  {/* Streak badge */}
+                  <div className="mt-1">
+                    <StreakBadge
+                      count={streakCount}
+                      shouldReduceMotion={shouldReduceMotion}
+                      showBurmese={showBurmese}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Answer display */}
-            <div className="mt-3 space-y-2">
-              {/* Correct answer display (always shown) */}
-              {isCorrect ? (
-                // Correct: show user's selected answer
-                <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {userAnswer ?? correctAnswer}
-                  </p>
-                  {showBurmese && (userAnswerMy ?? correctAnswerMy) && (
-                    <p className="font-myanmar text-sm text-muted-foreground">
-                      {userAnswerMy ?? correctAnswerMy}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                // Incorrect: user's wrong pick (dimmed) + correct answer
-                <div className="space-y-2">
-                  {userAnswer && (
-                    <div className="opacity-50">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        {strings.test.yourAnswer.en}
-                        {showBurmese && (
-                          <span className="ml-1 font-myanmar">{strings.test.yourAnswer.my}</span>
-                        )}
-                      </p>
-                      <p className="mt-0.5 text-sm text-foreground line-through">{userAnswer}</p>
-                      {showBurmese && userAnswerMy && (
-                        <p className="font-myanmar text-sm text-muted-foreground line-through">
-                          {userAnswerMy}
-                        </p>
-                      )}
-                    </div>
-                  )}
+              {/* Answer display */}
+              <div className="mt-3 space-y-2">
+                {/* Correct answer display (always shown) */}
+                {isCorrect ? (
+                  // Correct: show user's selected answer
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      {strings.test.correctAnswer.en}
-                      {showBurmese && (
-                        <span className="ml-1 font-myanmar">{strings.test.correctAnswer.my}</span>
-                      )}
+                    <p className="text-sm font-medium text-foreground">
+                      {userAnswer ?? correctAnswer}
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">{correctAnswer}</p>
-                    {showBurmese && correctAnswerMy && (
+                    {showBurmese && (userAnswerMy ?? correctAnswerMy) && (
                       <p className="font-myanmar text-sm text-muted-foreground">
-                        {correctAnswerMy}
+                        {userAnswerMy ?? correctAnswerMy}
                       </p>
                     )}
                   </div>
-                </div>
-              )}
-
-              {/* Explanation (Practice mode only, incorrect only) */}
-              {showExplanation && (
-                <ExplanationSection
-                  explanation={explanation}
-                  showBurmese={showBurmese}
-                  questionId={questionId}
-                />
-              )}
-            </div>
-
-            {/* Continue button - 3D chunky style */}
-            <div className="mt-4">
-              <button
-                ref={continueButtonRef}
-                type="button"
-                onClick={onContinue}
-                className={clsx(
-                  'w-full rounded-xl px-6 py-3 text-base font-bold',
-                  'shadow-[0_4px_0_hsl(var(--color-border))] active:shadow-[0_1px_0_hsl(var(--color-border))]',
-                  'active:translate-y-[3px] transition-all duration-100',
-                  'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-                  isCorrect
-                    ? 'bg-success text-white hover:bg-success/90'
-                    : 'bg-warning text-white hover:bg-warning/90'
+                ) : (
+                  // Incorrect: user's wrong pick (dimmed) + correct answer
+                  <div className="space-y-2">
+                    {userAnswer && (
+                      <div className="opacity-50">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {strings.test.yourAnswer.en}
+                          {showBurmese && (
+                            <span className="ml-1 font-myanmar">{strings.test.yourAnswer.my}</span>
+                          )}
+                        </p>
+                        <p className="mt-0.5 text-sm text-foreground line-through">{userAnswer}</p>
+                        {showBurmese && userAnswerMy && (
+                          <p className="font-myanmar text-sm text-muted-foreground line-through">
+                            {userAnswerMy}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {strings.test.correctAnswer.en}
+                        {showBurmese && (
+                          <span className="ml-1 font-myanmar">{strings.test.correctAnswer.my}</span>
+                        )}
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium text-foreground">{correctAnswer}</p>
+                      {showBurmese && correctAnswerMy && (
+                        <p className="font-myanmar text-sm text-muted-foreground">
+                          {correctAnswerMy}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 )}
-              >
-                {strings.actions.continue.en}
-                {showBurmese && (
-                  <span className="ml-2 font-myanmar text-sm font-normal">
-                    {strings.actions.continue.my}
-                  </span>
+
+                {/* Explanation (Practice mode only, incorrect only) */}
+                {showExplanation && (
+                  <ExplanationSection
+                    explanation={explanation}
+                    showBurmese={showBurmese}
+                    questionId={questionId}
+                  />
                 )}
-              </button>
+              </div>
+
+              {/* Continue button - 3D chunky style */}
+              <div className="mt-4">
+                <button
+                  ref={continueButtonRef}
+                  type="button"
+                  onClick={onContinue}
+                  className={clsx(
+                    'w-full rounded-xl px-6 py-3 text-base font-bold',
+                    'shadow-[0_4px_0_hsl(var(--color-border))] active:shadow-[0_1px_0_hsl(var(--color-border))]',
+                    'active:translate-y-[3px] transition-all duration-100',
+                    'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+                    isCorrect
+                      ? 'bg-success text-white hover:bg-success/90'
+                      : 'bg-warning text-white hover:bg-warning/90'
+                  )}
+                >
+                  {strings.actions.continue.en}
+                  {showBurmese && (
+                    <span className="ml-2 font-myanmar text-sm font-normal">
+                      {strings.actions.continue.my}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
