@@ -405,7 +405,7 @@ const StudyGuidePage = () => {
                   >
                     <div
                       className={clsx(
-                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground overflow-hidden',
+                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground',
                         'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
                         'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
                         'min-h-[30rem]'
@@ -714,7 +714,7 @@ const StudyGuidePage = () => {
                   >
                     <div
                       className={clsx(
-                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground overflow-hidden',
+                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground',
                         'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
                         'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
                         'min-h-[30rem]'

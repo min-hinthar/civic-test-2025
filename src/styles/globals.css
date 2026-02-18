@@ -198,6 +198,8 @@ html.theme-transitioning .page-shell {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 

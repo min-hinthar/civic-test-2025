@@ -280,7 +280,10 @@ export function Flashcard3D({
             // Normal: hide back face via 3D backfaceVisibility
             ...(shouldReduceMotion
               ? { opacity: isFlipped ? 0 : 1, transition: 'opacity 200ms ease-in-out' }
-              : { backfaceVisibility: 'hidden' as const }),
+              : {
+                  WebkitBackfaceVisibility: 'hidden' as const,
+                  backfaceVisibility: 'hidden' as const,
+                }),
             pointerEvents: isFlipped ? 'none' : 'auto',
           }}
         >
@@ -356,6 +359,7 @@ export function Flashcard3D({
             ...(shouldReduceMotion
               ? { opacity: isFlipped ? 1 : 0, transition: 'opacity 200ms ease-in-out' }
               : {
+                  WebkitBackfaceVisibility: 'hidden' as const,
                   backfaceVisibility: 'hidden' as const,
                   transform: 'rotateY(180deg)',
                 }),
