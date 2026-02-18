@@ -3,6 +3,8 @@
  *
  * Maps the 7 sub-categories used in question data to the 3 main USCIS categories.
  * Provides colors, bilingual names, and helper functions for category-based features.
+ *
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 import type { Category, Question } from '@/types';

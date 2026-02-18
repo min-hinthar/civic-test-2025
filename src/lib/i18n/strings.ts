@@ -3,6 +3,8 @@
  *
  * Pattern: English on top, Burmese below (stacked)
  * All user-facing text should be defined here for consistency.
+ *
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export interface BilingualString {
@@ -54,11 +56,11 @@ export const strings = {
     welcome: { en: 'Welcome back', my: 'ပြန်လာတာကို ကြိုဆိုပါတယ်' },
     yourProgress: { en: 'Your Progress', my: 'သင့်တိုးတက်မှု' },
     recentTests: { en: 'Recent Tests', my: 'မကြာသေးမီ စာမေးပွဲများ' },
-    weakAreas: { en: 'Areas to Improve', my: 'တိုးတက်ရမည့်နေရာများ' },
-    studyStreak: { en: 'Study Streak', my: 'လေ့လာမှုဆက်တိုက်' },
-    questionsAnswered: { en: 'Questions Answered', my: 'ဖြေဆိုပြီး မေးခွန်းများ' },
+    weakAreas: { en: 'Areas to Improve', my: 'တိုးတက်ရမယ့်နေရာများ' },
+    studyStreak: { en: 'Study Streak', my: 'ဆက်တိုက်လေ့လာမှု' },
+    questionsAnswered: { en: 'Questions Answered', my: 'ဖြေပြီးတဲ့မေးခွန်းများ' },
     accuracy: { en: 'Accuracy', my: 'မှန်ကန်မှု' },
-    readyForTest: { en: 'Ready for the Test?', my: 'စာမေးပွဲအတွက် အဆင်သင့်ဖြစ်ပါသလား' },
+    readyForTest: { en: 'Ready for the Test?', my: 'စာမေးပွဲအတွက် အဆင်သင့်ဖြစ်ပြီလား' },
   },
 
   // Study Guide
@@ -76,22 +78,22 @@ export const strings = {
   test: {
     mockTest: { en: 'Mock Test', my: 'စမ်းသပ်စာမေးပွဲ' },
     question: { en: 'Question', my: 'မေးခွန်း' },
-    timeRemaining: { en: 'Time Remaining', my: 'ကျန်ရှိသည့်အချိန်' },
+    timeRemaining: { en: 'Time Remaining', my: 'ကျန်တဲ့အချိန်' },
     correct: { en: 'Correct', my: 'မှန်ပါသည်' },
     incorrect: { en: 'Incorrect', my: 'မှားပါသည်' },
     yourAnswer: { en: 'Your Answer', my: 'သင့်အဖြေ' },
-    correctAnswer: { en: 'Correct Answer', my: 'မှန်ကန်သောအဖြေ' },
+    correctAnswer: { en: 'Correct Answer', my: 'မှန်ကန်တဲ့အဖြေ' },
     testComplete: { en: 'Test Complete!', my: 'စာမေးပွဲပြီးပါပြီ!' },
-    youScored: { en: 'You scored', my: 'သင်ရမှတ်' },
+    youScored: { en: 'You scored', my: 'သင့်ရမှတ်' },
     passed: { en: 'Passed', my: 'အောင်မြင်' },
     needsWork: { en: 'Keep Practicing', my: 'ဆက်လေ့ကျင့်ပါ' },
     passThreshold: { en: '6 out of 10 to pass', my: 'အောင်ရန် ၁၀ ခုမှ ၆ ခုလို' },
-    incorrectOnly: { en: 'Incorrect Only', my: 'မှားသောမေးခွန်းများသာ' },
+    incorrectOnly: { en: 'Incorrect Only', my: 'မှားတဲ့မေးခွန်းများသာ' },
     showAll: { en: 'Show All', my: 'အားလုံးပြပါ' },
-    showing: { en: 'Showing', my: 'ပြသနေသည်' },
+    showing: { en: 'Showing', my: 'ပြနေသည်' },
     ofQuestions: { en: 'of', my: 'မှ' },
     questions: { en: 'questions', my: 'မေးခွန်းများ' },
-    reviewAnswer: { en: 'Review this answer', my: 'ပြန်လည်လေ့လာပါ' },
+    reviewAnswer: { en: 'Review this answer', my: 'ဒီအဖြေကို ပြန်လည်သုံးသပ်ပါ' },
   },
 
   // Encouragement messages (rotating variety)
@@ -100,7 +102,7 @@ export const strings = {
       { en: 'Great job!', my: 'အရမ်းကောင်းပါတယ်!' },
       { en: 'Excellent!', my: 'အထူးကောင်းမွန်ပါတယ်!' },
       { en: 'Keep it up!', my: 'ဆက်လက်ကြိုးစားပါ!' },
-      { en: 'You got it!', my: 'သင်လုပ်နိုင်ပါတယ်!' },
+      { en: 'You got it!', my: 'မှန်ပါတယ်!' },
       { en: 'Perfect!', my: 'ပြည့်စုံပါတယ်!' },
     ],
     incorrect: [
@@ -112,7 +114,7 @@ export const strings = {
     ],
     streak: [
       { en: "You're on fire!", my: 'သင်အရမ်းကောင်းနေတယ်!' },
-      { en: 'Amazing streak!', my: 'အံ့သြစရာကောင်းတဲ့ဆက်တိုက်မှု!' },
+      { en: 'Amazing streak!', my: 'အံ့သြစရာ ဆက်တိုက်မှု!' },
       { en: 'Unstoppable!', my: 'ရပ်လို့မရဘူး!' },
     ],
     milestone: [
@@ -133,7 +135,7 @@ export const strings = {
     },
     network: {
       en: "You're offline. Your progress is saved locally.",
-      my: 'သင်အင်တာနက်မရပါ။ သင့်တိုးတက်မှုကို ဒီမှာသိမ်းထားပါတယ်။',
+      my: 'အင်တာနက်မရပါ။ သင့်တိုးတက်မှုကို ဒီမှာသိမ်းထားပါတယ်။',
     },
     saveError: {
       en: "Couldn't save right now. We'll try again later.",
@@ -159,7 +161,7 @@ export const strings = {
   explanations: {
     why: { en: 'Why?', my: 'ဘာကြောင့်လဲ' },
     memoryTip: { en: 'Memory Tip', my: 'မှတ်ဉာဏ်အကူ' },
-    commonMistake: { en: 'Common Mistake', my: 'အဖြစ်များသောအမှား' },
+    commonMistake: { en: 'Common Mistake', my: 'အဖြစ်များတဲ့အမှား' },
     funFact: { en: 'Fun Fact', my: 'စိတ်ဝင်စားစရာ' },
     seeAlso: { en: 'See also', my: 'ဆက်စပ်မေးခွန်းများ' },
     source: { en: 'Source', my: 'အရင်းအမြစ်' },
@@ -169,23 +171,23 @@ export const strings = {
 
   // Category progress & mastery
   progress: {
-    categoryProgress: { en: 'Category Progress', my: 'အမျိုးအစားတိုးတက်မှု' },
+    categoryProgress: { en: 'Category Progress', my: 'အမျိုးအစားအလိုက် တိုးတက်မှု' },
     mastery: { en: 'Mastery', my: 'ကျွမ်းကျင်မှု' },
     practiceNow: { en: 'Practice Now', my: 'ယခုလေ့ကျင့်ပါ' },
-    reviewInGuide: { en: 'Review in Guide', my: 'အညွှန်းတွင်ပြန်ကြည့်ပါ' },
+    reviewInGuide: { en: 'Review in Guide', my: 'အညွှန်းမှာ ပြန်ကြည့်ပါ' },
     suggestedFocus: { en: 'Suggested Focus', my: 'အကြံပြုအာရုံစိုက်ရာ' },
     notStarted: { en: 'Not Started', my: 'မစတင်ရသေး' },
     bronze: { en: 'Bronze', my: 'ကြေးတံဆိပ်' },
     silver: { en: 'Silver', my: 'ငွေတံဆိပ်' },
     gold: { en: 'Gold', my: 'ရွှေတံဆိပ်' },
-    questionsCorrect: { en: 'Questions Correct', my: 'မှန်ကန်သောမေးခွန်းများ' },
-    overallReadiness: { en: 'Overall Readiness', my: 'အလုံးစုံအဆင်သင့်ဖြစ်မှု' },
+    questionsCorrect: { en: 'Questions Correct', my: 'မှန်ကန်တဲ့မေးခွန်းများ' },
+    overallReadiness: { en: 'Overall Readiness', my: 'အလုံးစုံ အဆင်သင့်ဖြစ်မှု' },
     masteryTrend: { en: 'Mastery Trend', my: 'ကျွမ်းကျင်မှုလမ်းကြောင်း' },
   },
 
   // Practice mode
   practice: {
-    practiceMode: { en: 'Practice Mode', my: 'လေ့ကျင့်ရေးမုဒ်' },
+    practiceMode: { en: 'Practice Mode', my: 'လေ့ကျင့်မုဒ်' },
     selectCategory: { en: 'Select Category', my: 'အမျိုးအစားရွေးပါ' },
     questionCount: { en: 'Question Count', my: 'မေးခွန်းအရေအတွက်' },
     quick: { en: 'Quick', my: 'အမြန်' },
@@ -193,10 +195,10 @@ export const strings = {
     full: { en: 'Full', my: 'အပြည့်' },
     startPractice: { en: 'Start Practice', my: 'လေ့ကျင့်မှုစတင်ပါ' },
     practiceComplete: { en: 'Practice Complete!', my: 'လေ့ကျင့်မှုပြီးပါပြီ!' },
-    masteryUpdate: { en: 'Mastery Updated', my: 'ကျွမ်းကျင်မှုအသစ်ပြင်ဆင်ပြီး' },
-    practiceAllWeak: { en: 'Practice All Weak Areas', my: 'အားနည်းရာအားလုံးလေ့ကျင့်ပါ' },
+    masteryUpdate: { en: 'Mastery Updated', my: 'ကျွမ်းကျင်မှု အပ်ဒိတ်လုပ်ပြီး' },
+    practiceAllWeak: { en: 'Practice All Weak Areas', my: 'အားနည်းတဲ့နေရာအားလုံး လေ့ကျင့်ပါ' },
     alreadyMastered: { en: 'Already Mastered', my: 'ကျွမ်းကျင်ပြီးသား' },
-    practiceAnyway: { en: 'Practice Anyway', my: 'ဒါပေမယ့်လေ့ကျင့်ပါ' },
+    practiceAnyway: { en: 'Practice Anyway', my: 'ဒါပေမယ့် လေ့ကျင့်ပါ' },
     practiceSessions: { en: 'Practice Sessions', my: 'လေ့ကျင့်မှုအကြိမ်များ' },
     timer: { en: 'Timer', my: 'အချိန်တိုင်း' },
     timerOff: { en: 'Timer Off', my: 'အချိန်တိုင်းပိတ်' },
@@ -214,12 +216,12 @@ export const strings = {
     incorrect: { en: 'Incorrect', my: 'မှားပါတယ်' },
     nextQuestion: { en: 'Next Question', my: 'နောက်မေးခွန်း' },
     whatToExpect: { en: 'What to Expect', my: 'ဘာကိုမျှော်လင့်ရမလဲ' },
-    recentScores: { en: 'Recent Scores', my: 'မကြာသေးမီရမှတ်များ' },
+    recentScores: { en: 'Recent Scores', my: 'မကြာသေးမီ ရမှတ်များ' },
     interviewResults: { en: 'Interview Results', my: 'အင်တာဗျူးရလဒ်များ' },
     passed: { en: 'Passed', my: 'အောင်မြင်ပါတယ်' },
     failed: { en: 'Did Not Pass', my: 'မအောင်မြင်ပါ' },
-    replaysUsed: { en: 'replays used', my: 'ပြန်ဖွင့်မှုအကြိမ်' },
-    alsoAccepted: { en: 'Also accepted', my: 'လက်ခံနိုင်သောအဖြေများ' },
+    replaysUsed: { en: 'replays used', my: 'ပြန်ဖွင့်အကြိမ်' },
+    alsoAccepted: { en: 'Also accepted', my: 'လက်ခံနိုင်တဲ့အဖြေများ' },
     yourAnswer: { en: 'Your Recording', my: 'သင့်အသံဖမ်းမှု' },
     realisticTip: {
       en: 'Like the real USCIS interview. 15 seconds per question.',
@@ -238,7 +240,7 @@ export const strings = {
     confirmEndTitle: { en: 'End Interview?', my: 'အင်တာဗျူးရပ်မလား?' },
     confirmEndMessage: {
       en: 'Your progress so far will be saved.',
-      my: 'ယခုအထိတိုးတက်မှုကို သိမ်းဆည်းပါမည်။',
+      my: 'ယခုအထိ တိုးတက်မှုကို သိမ်းဆည်းပါမည်။',
     },
     cancel: { en: 'Cancel', my: 'ပယ်ဖျက်ပါ' },
     confirm: { en: 'End', my: 'ရပ်ပါ' },
@@ -251,107 +253,59 @@ export const strings = {
 
   // Progress Hub
   hub: {
-    pageTitle: {
-      en: 'My Progress',
-      my: '\u1000\u103B\u103D\u1014\u103A\u102F\u1015\u103A\u101B\u1032\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F',
-    },
-    overview: { en: 'Overview', my: '\u1021\u1001\u103C\u1031\u1021\u1014\u1031' },
-    history: { en: 'History', my: '\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038' },
-    achievements: {
-      en: 'Achievements',
-      my: '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038',
-    },
-    categoryMastery: {
-      en: 'Category Mastery',
-      my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1021\u101C\u102D\u102F\u1000\u103A \u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F',
-    },
-    loadMore: {
-      en: 'Load more',
-      my: '\u1011\u1015\u103A\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A',
-    },
-    showMore: { en: 'Show more', my: '\u1011\u1015\u103A\u1015\u103C\u101B\u1014\u103A' },
-    showLess: {
-      en: 'Show less',
-      my: '\u101C\u103B\u103E\u1031\u1037\u1015\u103C\u101B\u1014\u103A',
-    },
-    mockTests: {
-      en: 'Mock Tests',
-      my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103B\u102C\u1038',
-    },
-    interviews: {
-      en: 'Interviews',
-      my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103B\u102C\u1038',
-    },
-    leaderboard: {
-      en: 'Leaderboard',
-      my: '\u1021\u1006\u1004\u1037\u103A\u1007\u101A\u102C\u1038',
-    },
+    pageTitle: { en: 'My Progress', my: 'ကျွန်ုပ်ရဲ့တိုးတက်မှု' },
+    overview: { en: 'Overview', my: 'အခြေအနေ' },
+    history: { en: 'History', my: 'မှတ်တမ်း' },
+    achievements: { en: 'Achievements', my: 'အောင်မြင်မှုများ' },
+    categoryMastery: { en: 'Category Mastery', my: 'အမျိုးအစားအလိုက် ကျွမ်းကျင်မှု' },
+    loadMore: { en: 'Load more', my: 'ထပ်ကြည့်ရန်' },
+    showMore: { en: 'Show more', my: 'ထပ်ပြရန်' },
+    showLess: { en: 'Show less', my: 'လျှော့ပြရန်' },
+    mockTests: { en: 'Mock Tests', my: 'စမ်းသပ်စာမေးပွဲများ' },
+    interviews: { en: 'Interviews', my: 'အင်တာဗျူးများ' },
+    leaderboard: { en: 'Leaderboard', my: 'အဆင့်ဇယား' },
   },
 
   // Quiz (Check/Continue flow)
   quiz: {
-    check: { en: 'Check', my: '\u1005\u1005\u103A\u1006\u1031\u1038\u1015\u102B' },
-    skip: { en: 'Skip', my: '\u1000\u103B\u1031\u102C\u103A\u1015\u102B' },
-    continue: { en: 'Continue', my: '\u1006\u1000\u103A\u101C\u1000\u103A\u1015\u102B' },
-    exit: { en: 'Exit', my: '\u1011\u103D\u1000\u103A\u101B\u1014\u103A' },
-    questionNofM: { en: 'Question', my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038' },
-    of: { en: 'of', my: '\u1019\u103E' },
-    exitQuiz: {
-      en: 'Exit Quiz?',
-      my: '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103E \u1011\u103D\u1000\u103A\u1019\u100A\u103A\u101C\u102C\u1038?',
-    },
-    exitPractice: {
-      en: 'Exit Practice?',
-      my: '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1001\u1014\u103A\u1038\u1019\u103E \u1011\u103D\u1000\u103A\u1019\u100A\u103A\u101C\u102C\u1038?',
-    },
-    exitInterview: {
-      en: 'Exit Interview?',
-      my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E \u1011\u103D\u1000\u103A\u1019\u100A\u103A\u101C\u102C\u1038?',
-    },
+    check: { en: 'Check', my: 'စစ်ဆေးပါ' },
+    skip: { en: 'Skip', my: 'ကျော်ပါ' },
+    continue: { en: 'Continue', my: 'ဆက်လက်ပါ' },
+    exit: { en: 'Exit', my: 'ထွက်ရန်' },
+    questionNofM: { en: 'Question', my: 'မေးခွန်း' },
+    of: { en: 'of', my: 'မှ' },
+    exitQuiz: { en: 'Exit Quiz?', my: 'စာမေးပွဲမှ ထွက်မည်လား?' },
+    exitPractice: { en: 'Exit Practice?', my: 'လေ့ကျင့်ခန်းမှ ထွက်မည်လား?' },
+    exitInterview: { en: 'Exit Interview?', my: 'အင်တာဗျူးမှ ထွက်မည်လား?' },
     progressSaved: {
       en: 'Your progress is saved. You can resume this session later.',
-      my: '\u101E\u1004\u103A\u1037\u104F \u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1011\u102C\u1038\u1015\u102B\u101E\u100A\u103A\u104B \u1014\u1031\u102C\u1000\u103A\u1019\u103E \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1006\u1000\u103A\u101C\u1000\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u101E\u100A\u103A\u104B',
+      my: 'သင့်တိုးတက်မှုကို သိမ်းဆည်းထားပါသည်။ နောက်မှ ပြန်လည်ဆက်လုပ်နိုင်ပါသည်။',
     },
-    keepGoing: { en: 'Keep Going', my: '\u1006\u1000\u103A\u101C\u1000\u103A\u101B\u1014\u103A' },
-    streakInRow: {
-      en: 'in a row!',
-      my: '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A\u1019\u103E\u1014\u103A\u1015\u102B\u1010\u101A\u103A!',
-    },
+    keepGoing: { en: 'Keep Going', my: 'ဆက်လက်ရန်' },
+    streakInRow: { en: 'in a row!', my: 'ဆက်တိုက်မှန်ပါတယ်!' },
     reviewingSkipped: {
       en: 'Reviewing Skipped Questions',
-      my: '\u1000\u103B\u1031\u102C\u103A\u1011\u102C\u1038\u101E\u1031\u102C\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038',
+      my: 'ကျော်ထားတဲ့မေးခွန်းများ ပြန်စစ်ဆေးခြင်း',
     },
-    finishWithoutReview: {
-      en: 'Finish Without Reviewing',
-      my: '\u1019\u1005\u1005\u103A\u1006\u1031\u1038\u1018\u1032 \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101B\u1014\u103A',
-    },
+    finishWithoutReview: { en: 'Finish Without Reviewing', my: 'မစစ်ဆေးဘဲ ပြီးဆုံးရန်' },
     addAllToReviewDeck: {
       en: 'Add all wrong answers to review deck',
-      my: '\u1019\u103E\u102C\u1038\u101E\u1031\u102C\u1021\u1016\u103C\u1031\u1019\u103B\u102C\u1038\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101C\u1031\u1037\u101C\u102C\u1005\u102C\u101B\u1004\u103A\u1038\u101E\u102D\u102F\u1037 \u1011\u100A\u103A\u1037\u101B\u1014\u103A',
+      my: 'မှားတဲ့အဖြေအားလုံးကို ပြန်လေ့လာစာရင်းထဲ ထည့်ရန်',
     },
-    timerWarning: {
-      en: 'Time running low!',
-      my: '\u1021\u1001\u103B\u102D\u1014\u103A\u1014\u100A\u103A\u1038\u1014\u1031\u1015\u102B\u1015\u103C\u102E!',
-    },
-    extend: { en: '+15s', my: '+\u1041\u1045\u1005\u1000\u1039\u1000\u1014\u1037\u103A' },
-    secondsRemaining: {
-      en: '{n} seconds remaining',
-      my: '{n} \u1005\u1000\u1039\u1000\u1014\u1037\u103A\u1000\u103B\u1014\u103A\u101E\u100A\u103A',
-    },
-    perQuestionTimer: {
-      en: 'Per-Question Timer',
-      my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u1005\u103A\u1001\u102F\u1001\u103B\u1004\u103A\u1038 \u1021\u1001\u103B\u102D\u1014\u103A\u1010\u102D\u102F\u1004\u103A\u1038',
-    },
+    timerWarning: { en: 'Time running low!', my: 'အချိန်နည်းနေပါပြီ!' },
+    extend: { en: '+15s', my: '+၁၅စက္ကန့်' },
+    secondsRemaining: { en: '{n} seconds remaining', my: '{n} စက္ကန့်ကျန်သည်' },
+    perQuestionTimer: { en: 'Per-Question Timer', my: 'မေးခွန်းတစ်ခုချင်း အချိန်တိုင်း' },
     thirtySecondsPerQuestion: {
       en: '30 seconds per question',
-      my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u1005\u103A\u1001\u102F\u101C\u103B\u103E\u1004\u103A \u1043\u1040 \u1005\u1000\u1039\u1000\u1014\u1037\u103A',
+      my: 'မေးခွန်းတစ်ခုလျှင် ၃၀ စက္ကန့်',
     },
   },
 
   // App meta
   app: {
-    title: { en: 'U.S. Citizenship Test Prep', my: 'အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး' },
-    tagline: { en: 'Prepare with confidence', my: 'ယုံကြည်မှုနဲ့ပြင်ဆင်ပါ' },
+    title: { en: 'U.S. Citizenship Test Prep', my: 'အမေရိကန်နိုင်ငံသားစာမေးပွဲ ပြင်ဆင်ရေး' },
+    tagline: { en: 'Prepare with confidence', my: 'ယုံကြည်မှုနဲ့ ပြင်ဆင်ပါ' },
   },
 } as const;
 
