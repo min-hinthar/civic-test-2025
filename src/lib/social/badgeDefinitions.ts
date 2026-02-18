@@ -8,6 +8,8 @@
  * - Streak: Consecutive study day milestones
  * - Accuracy: Test score milestones
  * - Coverage: Question/category completion milestones
+ *
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 import { totalQuestions } from '@/constants/questions';
@@ -48,15 +50,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'streak',
     name: {
       en: 'Week Warrior',
-      my: 'တစ်ပတ်တိုက်သူ',
+      my: 'တစ်ပတ်သူရဲကောင်း (Week Warrior)',
     },
     description: {
       en: '7-day study streak',
-      my: '၇ ရက်ဆက်တိုက်လေ့လာမှု',
+      my: '၇ ရက်ဆက်တိုက် လေ့လာပြီး!',
     },
     requirement: {
       en: 'Study for 7 consecutive days',
-      my: '၇ ရက်ဆက်တိုက်လေ့လာပါ',
+      my: '၇ ရက်ဆက်တိုက် လေ့လာပါ',
     },
     icon: 'Flame',
     check: data => data.currentStreak >= 7 || data.longestStreak >= 7,
@@ -66,15 +68,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'streak',
     name: {
       en: 'Fortnight Focus',
-      my: 'နှစ်ပတ်စိုက်လျက်',
+      my: 'နှစ်ပတ်စွဲမြဲသူ (Fortnight Focus)',
     },
     description: {
       en: '14-day study streak',
-      my: '၁၄ ရက်ဆက်တိုက်လေ့လာမှု',
+      my: '၁၄ ရက်ဆက်တိုက် လေ့လာပြီး!',
     },
     requirement: {
       en: 'Study for 14 consecutive days',
-      my: '၁၄ ရက်ဆက်တိုက်လေ့လာပါ',
+      my: '၁၄ ရက်ဆက်တိုက် လေ့လာပါ',
     },
     icon: 'Flame',
     check: data => data.currentStreak >= 14 || data.longestStreak >= 14,
@@ -84,15 +86,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'streak',
     name: {
       en: 'Monthly Master',
-      my: 'တစ်လပတ်သူရဲ',
+      my: 'တစ်လတာချန်ပီယံ (Monthly Master)',
     },
     description: {
       en: '30-day study streak',
-      my: '၃၀ ရက်ဆက်တိုက်လေ့လာမှု',
+      my: '၃၀ ရက်ဆက်တိုက် လေ့လာပြီး!',
     },
     requirement: {
       en: 'Study for 30 consecutive days',
-      my: '၃၀ ရက်ဆက်တိုက်လေ့လာပါ',
+      my: '၃၀ ရက်ဆက်တိုက် လေ့လာပါ',
     },
     icon: 'Flame',
     check: data => data.currentStreak >= 30 || data.longestStreak >= 30,
@@ -104,15 +106,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'accuracy',
     name: {
       en: 'Sharp Shooter',
-      my: 'ထိပ်တန်းတိကျသူ',
+      my: 'ပစ်မှတ်ကျသူ (Sharp Shooter)',
     },
     description: {
       en: 'Score 90% on a test',
-      my: 'စာမေးပွဲတွင် ၉၀% ရမှတ်',
+      my: 'စာမေးပွဲမှာ ၉၀% ရပြီး!',
     },
     requirement: {
       en: 'Get 90% on a mock test',
-      my: 'စမ်းသပ်စာမေးပွဲတွင် ၉၀% ရယူပါ',
+      my: 'စမ်းသပ်စာမေးပွဲမှာ ၉၀% ရယူပါ',
     },
     icon: 'Target',
     check: data => data.bestTestAccuracy >= 90,
@@ -122,15 +124,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'accuracy',
     name: {
       en: 'Perfect Score',
-      my: 'အပြည့်အမှတ်',
+      my: 'အမှတ်ပြည့် (Perfect Score)',
     },
     description: {
       en: 'Score 100% on a test',
-      my: 'စာမေးပွဲတွင် ၁၀၀% ရမှတ်',
+      my: 'စာမေးပွဲမှာ ၁၀၀% ရပြီး!',
     },
     requirement: {
       en: 'Get a perfect score on a mock test',
-      my: 'စမ်းသပ်စာမေးပွဲတွင် ၁၀၀% ရယူပါ',
+      my: 'စမ်းသပ်စာမေးပွဲမှာ ၁၀၀% ရယူပါ',
     },
     icon: 'Star',
     check: data => data.bestTestAccuracy >= 100,
@@ -142,15 +144,15 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'coverage',
     name: {
       en: 'Complete Scholar',
-      my: 'ပြည့်စုံပညာရှင်',
+      my: 'ပညာရှင်ပြည့်စုံ (Complete Scholar)',
     },
     description: {
       en: `Answered all ${totalQuestions} questions`,
-      my: `မေးခွန်း ${totalQuestions} လုံးလေ့လာပြီး`,
+      my: `မေးခွန်း ${totalQuestions} ခုလုံး ဖြေပြီး!`,
     },
     requirement: {
       en: `Answer all ${totalQuestions} questions at least once`,
-      my: `မေးခွန်း ${totalQuestions} လုံးကို အနည်းဆုံး တစ်ကြိမ်ဖြေပါ`,
+      my: `မေးခွန်း ${totalQuestions} ခုလုံးကို အနည်းဆုံးတစ်ကြိမ် ဖြေပါ`,
     },
     icon: 'BookCheck',
     check: data => data.uniqueQuestionsAnswered >= totalQuestions,
@@ -160,11 +162,11 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'coverage',
     name: {
       en: 'Category Champion',
-      my: 'အမျိုးအစားချန်ပီယံ',
+      my: 'အမျိုးအစားချန်ပီယံ (Category Champion)',
     },
     description: {
       en: 'Mastered all categories',
-      my: 'အမျိုးအစားအားလုံး ကျွမ်းကျင်ပြီး',
+      my: 'အမျိုးအစားအားလုံး ကျွမ်းကျင်ပြီး!',
     },
     requirement: {
       en: 'Master all question categories',

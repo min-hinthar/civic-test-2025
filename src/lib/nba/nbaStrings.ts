@@ -5,6 +5,8 @@
  * Dynamic strings accept input data for interpolation (streak count, due count, etc.).
  *
  * Pure functions -- no React dependencies.
+ *
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 import type { BilingualString } from '@/lib/i18n/strings';
@@ -58,7 +60,7 @@ function newUserContent(): NBAContent {
     },
     hint: {
       en: 'Study flashcards to build knowledge',
-      my: 'အသိပညာတည်ဆောက်ရန် ဖလက်ရှ်ကတ်များ လေ့လာပါ',
+      my: 'အသိပညာတည်ဆောက်ဖို့ ဖလက်ရှ်ကတ်များ လေ့လာပါ',
     },
     cta: {
       label: { en: 'Begin studying', my: 'လေ့လာစတင်ပါ' },
@@ -85,11 +87,11 @@ function returningUserContent(): NBAContent {
       my: 'ရပ်ထားတဲ့နေရာက ဆက်လေ့လာပါ',
     },
     cta: {
-      label: { en: 'Quick review', my: 'အမြန်ပြန်လည်စစ်ဆေးပါ' },
+      label: { en: 'Quick review', my: 'အမြန်ပြန်လည်သုံးသပ်ပါ' },
       to: '/study',
     },
     skip: {
-      label: { en: 'Check your progress', my: 'တိုးတက်မှု ကြည့်ပါ' },
+      label: { en: 'Check your progress', my: 'တိုးတက်မှုကြည့်ပါ' },
       to: '/hub/overview',
     },
     gradient: NBA_GRADIENTS['returning-user'],
@@ -102,14 +104,14 @@ function streakAtRiskContent(currentStreak: number): NBAContent {
   return {
     title: {
       en: `Keep your ${currentStreak}-day streak alive!`,
-      my: `${currentStreak} ရက်ဆက်တိုက် မှတ်တမ်းကို ဆက်ထိန်းပါ!`,
+      my: `${currentStreak} ရက်ဆက်တိုက်မှတ်တမ်းကို ဆက်ထိန်းပါ!`,
     },
     hint: {
       en: 'Study today to keep your streak going',
-      my: 'ဆက်တိုက်ရက် ထိန်းဖို့ ဒီနေ့ လေ့လာပါ',
+      my: 'ဆက်တိုက်မှတ်တမ်း ထိန်းဖို့ ဒီနေ့လေ့လာပါ',
     },
     cta: {
-      label: { en: 'Study now', my: 'ယခု လေ့လာပါ' },
+      label: { en: 'Study now', my: 'ယခုလေ့လာပါ' },
       to: '/study',
     },
     skip: {
@@ -126,16 +128,16 @@ function srsDueContent(dueCount: number): NBAContent {
   return {
     title: {
       en: `${dueCount} card${dueCount === 1 ? '' : 's'} ready for review`,
-      my: `ပြန်လည်စစ်ဆေးရန် ကတ် ${dueCount} ခု အဆင်သင့်`,
+      my: `ပြန်လည်သုံးသပ်ရန် ကတ် ${dueCount} ခု အဆင်သင့်`,
     },
     hint: {
       en: 'Spaced repetition keeps knowledge fresh',
-      my: 'အချိန်ခြားပြန်လေ့ကျင့်ခြင်းက အသိပညာကို လတ်ဆတ်နေစေပါတယ်',
+      my: 'အချိန်ခြားပြန်လေ့ကျင့်ခြင်းက အသိပညာကို လတ်ဆတ်နေစေတယ်',
     },
     cta: {
       label: {
         en: `Review ${dueCount} card${dueCount === 1 ? '' : 's'}`,
-        my: `ကတ် ${dueCount} ခု ပြန်စစ်ပါ`,
+        my: `ကတ် ${dueCount} ခု ပြန်သုံးသပ်ပါ`,
       },
       to: '/study#review',
     },
@@ -169,7 +171,7 @@ function weakCategoryContent(categoryName: BilingualString, mastery: number): NB
       to: '/study',
     },
     skip: {
-      label: { en: 'Take a mock test', my: 'စာမေးပွဲ စမ်းကြည့်ပါ' },
+      label: { en: 'Take a mock test', my: 'စမ်းသပ်စာမေးပွဲ စမ်းကြည့်ပါ' },
       to: '/test',
     },
     gradient: NBA_GRADIENTS['weak-category'],
@@ -183,14 +185,14 @@ function noRecentTestContent(daysSinceTest: number): NBAContent {
   return {
     title: {
       en: 'Time for a practice test',
-      my: 'စာမေးပွဲ စမ်းကြည့်ချိန် ရောက်ပါပြီ',
+      my: 'စာမေးပွဲ စမ်းကြည့်ချိန်ရောက်ပြီ',
     },
     hint: {
       en: `Testing reinforces what you've learned${daysSinceTest > 0 ? ` -- it's been ${daysSinceTest} days` : ''}`,
-      my: `စာမေးပွဲက သင်ယူထားတာကို ခိုင်မာစေပါတယ်${daysSinceTest > 0 ? ` -- ${daysSinceTest} ရက် ကြာပါပြီ` : ''}`,
+      my: `စာမေးပွဲက သင်ယူထားတာကို ခိုင်မာစေပါတယ်${daysSinceTest > 0 ? ` -- ${daysSinceTest} ရက်ကြာပါပြီ` : ''}`,
     },
     cta: {
-      label: { en: 'Start mock test', my: 'စာမေးပွဲ စတင်ပါ' },
+      label: { en: 'Start mock test', my: 'စမ်းသပ်စာမေးပွဲ စတင်ပါ' },
       to: '/test',
     },
     skip: {
@@ -213,7 +215,7 @@ function testReadyContent(readinessScore: number, suggestInterview: boolean): NB
     },
     hint: {
       en: `Your readiness score is ${pct}% -- you've got this!`,
-      my: `အဆင်သင့်ဖြစ်မှုရမှတ် ${pct}% -- သင်လုပ်နိုင်ပါတယ်!`,
+      my: `အဆင်သင့်ဖြစ်မှု ${pct}% ရှိပြီ -- သင်လုပ်နိုင်ပါတယ်!`,
     },
     cta: suggestInterview
       ? {
@@ -224,7 +226,7 @@ function testReadyContent(readinessScore: number, suggestInterview: boolean): NB
           to: '/interview',
         }
       : {
-          label: { en: 'Take a mock test', my: 'စာမေးပွဲ စမ်းကြည့်ပါ' },
+          label: { en: 'Take a mock test', my: 'စမ်းသပ်စာမေးပွဲ စမ်းကြည့်ပါ' },
           to: '/test',
         },
     skip: {
@@ -251,7 +253,7 @@ function celebrationContent(
     },
     hint: {
       en: `${streak}-day streak and ${masteryPct}% mastery -- keep it up!`,
-      my: `${streak} ရက်ဆက်တိုက်နှင့် ${masteryPct}% ကျွမ်းကျင်မှု -- ဆက်လက်ကြိုးစားပါ!`,
+      my: `${streak} ရက်ဆက်တိုက်နှင့် ${masteryPct}% ကျွမ်းကျင်မှု -- ဆက်ကြိုးစားပါ!`,
     },
     cta: suggestInterview
       ? {
@@ -259,7 +261,7 @@ function celebrationContent(
           to: '/interview',
         }
       : {
-          label: { en: 'Keep reviewing', my: 'ဆက်လက်ပြန်လည်စစ်ဆေးပါ' },
+          label: { en: 'Keep reviewing', my: 'ဆက်ပြန်လည်သုံးသပ်ပါ' },
           to: '/study',
         },
     skip: {
