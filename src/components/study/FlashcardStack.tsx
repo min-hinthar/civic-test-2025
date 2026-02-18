@@ -158,8 +158,8 @@ export function FlashcardStack({
         )}
       </div>
 
-      {/* Card container with swipe */}
-      <div className="relative min-h-[400px]">
+      {/* Card container with swipe - explicit dimensions prevent layout shift during 3D flip */}
+      <div className="relative" style={{ minHeight: '400px' }}>
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentIndex}
@@ -178,6 +178,7 @@ export function FlashcardStack({
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
             className="cursor-grab active:cursor-grabbing"
+            style={{ opacity: 1, position: 'relative', zIndex: 1 }}
           >
             <Flashcard3D
               questionId={currentQuestion.id}

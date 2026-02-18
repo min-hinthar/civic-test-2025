@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import clsx from 'clsx';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SwipeableCard } from './SwipeableCard';
 import { getSubCategoryColors } from '@/lib/mastery';
@@ -18,6 +19,8 @@ interface SwipeableStackProps {
   isAnimating: boolean;
   onSwipe: (direction: 'know' | 'dont-know') => void;
   onAnimationComplete: () => void;
+  /** Direction for button-initiated sort under reduced motion */
+  pendingDirection?: 'know' | 'dont-know' | null;
   showBurmese: boolean;
   speedLabel: string;
   className?: string;
@@ -31,8 +34,8 @@ interface SwipeableStackProps {
 const SCALE_STEP = 0.04;
 /** Vertical offset per stack level in pixels */
 const OFFSET_STEP = 8;
-/** Opacity reduction per stack level */
-const OPACITY_STEP = 0.15;
+/** Opacity reduction per stack level (0 = fully opaque deck cards) */
+const OPACITY_STEP = 0;
 
 // ---------------------------------------------------------------------------
 // Static Card Preview (lightweight behind-card rendering)
@@ -109,6 +112,7 @@ function StaticCardPreview({
  * - Decreasing scale and increasing vertical offset for depth effect
  * - Only top card receives pointer events
  * - Subtle scale-up animation when card in front is swiped away
+ * - Reduced motion: behind cards use simple fade-in instead of spring entrance
  * - Category hint tags on all visible cards
  * - Background zone labels behind the stack
  * - Empty state when no cards remain
@@ -119,10 +123,12 @@ export function SwipeableStack({
   isAnimating,
   onSwipe,
   onAnimationComplete,
+  pendingDirection,
   showBurmese,
   speedLabel,
   className,
 }: SwipeableStackProps) {
+  const shouldReduceMotion = useReducedMotion();
   const { showBurmese: contextShowBurmese } = useLanguage();
   const isBurmese = showBurmese ?? contextShowBurmese;
 
@@ -152,7 +158,9 @@ export function SwipeableStack({
         <div className="text-center opacity-20">
           <span className="text-sm font-bold text-warning">Don&apos;t Know</span>
           {isBurmese && (
-            <span className="block text-xs font-myanmar text-warning/80">{'မသိပါ'}</span>
+            <span className="block text-xs font-myanmar text-warning/80">
+              {'\u1019\u101E\u102D\u1015\u102B'}
+            </span>
           )}
         </div>
 
@@ -160,7 +168,9 @@ export function SwipeableStack({
         <div className="text-center opacity-20">
           <span className="text-sm font-bold text-success">Know</span>
           {isBurmese && (
-            <span className="block text-xs font-myanmar text-success/80">{'သိပါတယ်'}</span>
+            <span className="block text-xs font-myanmar text-success/80">
+              {'\u101E\u102D\u1015\u102B\u1010\u101A\u103A'}
+            </span>
           )}
         </div>
       </div>
@@ -189,6 +199,7 @@ export function SwipeableStack({
                   onSwipe={onSwipe}
                   onAnimationComplete={onAnimationComplete}
                   isAnimating={isAnimating}
+                  pendingDirection={pendingDirection}
                   showBurmese={isBurmese}
                   speedLabel={speedLabel}
                 />
@@ -197,20 +208,25 @@ export function SwipeableStack({
           }
 
           // Behind cards: lightweight static previews with depth transforms
+          // Reduced motion: simple fade-in instead of spring scale+translate entrance
           return (
             <motion.div
               key={card.id}
-              initial={{ scale: scale - SCALE_STEP, y: translateY + OFFSET_STEP }}
-              animate={{
-                scale,
-                y: translateY,
-                opacity,
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 25,
-              }}
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { scale: scale - SCALE_STEP, y: translateY + OFFSET_STEP }
+              }
+              animate={
+                shouldReduceMotion
+                  ? { opacity, scale, y: translateY }
+                  : { scale, y: translateY, opacity }
+              }
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0.15 }
+                  : { type: 'spring', stiffness: 300, damping: 25 }
+              }
               style={{
                 position: 'absolute',
                 top: 0,
