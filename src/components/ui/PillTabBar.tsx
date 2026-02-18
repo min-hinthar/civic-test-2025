@@ -75,7 +75,7 @@ export function PillTabBar({
           className="absolute inset-y-0 rounded-xl bg-primary/10 dark:bg-primary/20 shadow-sm"
           style={{ width: `${100 / tabs.length}%` }}
           animate={{ x: `${activeIndex * 100}%` }}
-          transition={shouldReduceMotion ? { duration: 0 } : SPRING_SNAPPY}
+          transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_SNAPPY}
         />
         {tabs.map(tab => {
           const isActive = activeTab === tab.id;

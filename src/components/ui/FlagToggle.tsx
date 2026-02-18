@@ -114,7 +114,7 @@ export function FlagToggle({ compact = false, vertical = false, className }: Fla
           onClick={() => handleSelect('english-only')}
           disabled={isDebounced && !isBilingual}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.85 }}
-          transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
+          transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_BOUNCY}
           className={clsx(
             'relative flex items-center justify-center rounded-md p-1',
             'min-h-[36px] min-w-[36px]',
@@ -144,7 +144,7 @@ export function FlagToggle({ compact = false, vertical = false, className }: Fla
           onClick={() => handleSelect('bilingual')}
           disabled={isDebounced && isBilingual}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.85 }}
-          transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
+          transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_BOUNCY}
           className={clsx(
             'relative flex items-center justify-center rounded-md p-1',
             'min-h-[36px] min-w-[36px]',

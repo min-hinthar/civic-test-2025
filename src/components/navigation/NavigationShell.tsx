@@ -52,7 +52,7 @@ export function NavigationShell({ children }: NavigationShellProps) {
         id="main-content"
         tabIndex={-1}
         animate={{ marginLeft }}
-        transition={shouldReduceMotion ? { duration: 0 } : SPRING}
+        transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING}
         className="outline-none"
       >
         {children}

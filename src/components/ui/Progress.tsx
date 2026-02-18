@@ -62,7 +62,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
             <motion.div
               initial={shouldReduceMotion ? { width: `${percentage}%` } : { width: 0 }}
               animate={{ width: `${percentage}%` }}
-              transition={shouldReduceMotion ? { duration: 0 } : SPRING_GENTLE}
+              transition={shouldReduceMotion ? { duration: 0.2, ease: 'easeOut' } : SPRING_GENTLE}
               className={clsx('h-full rounded-full', variantClasses[variant])}
             />
           </ProgressPrimitive.Indicator>

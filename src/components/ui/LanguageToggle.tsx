@@ -81,7 +81,7 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
             animate={{
               left: showBurmese ? 18 : 2,
             }}
-            transition={shouldReduceMotion ? { duration: 0 } : SPRING_BOUNCY}
+            transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_BOUNCY}
           />
         </div>
         <span

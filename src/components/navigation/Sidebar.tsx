@@ -55,7 +55,7 @@ export function Sidebar() {
   const { user, logout } = useAuth();
   const { showWarning } = useToast();
   const shouldReduceMotion = useReducedMotion();
-  const spring = shouldReduceMotion ? { duration: 0 } : SPRING_CONFIG;
+  const spring = shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' as const } : SPRING_CONFIG;
 
   // --- First-time tooltip ---
   const [showTooltip, setShowTooltip] = useState(() => {

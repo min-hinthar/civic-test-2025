@@ -151,7 +151,7 @@ export function NavItem({
             <motion.span
               layoutId="mobile-nav-pill"
               className="absolute inset-0 rounded-full bg-primary/20 shadow-sm shadow-primary/15"
-              transition={shouldReduceMotion ? { duration: 0 } : SPRING_SNAPPY}
+              transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_SNAPPY}
             />
           )}
           {iconElement}

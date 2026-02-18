@@ -14,6 +14,7 @@
  * - Exit confirmation dialog with sort-specific messaging
  * - Aria live region for screen reader sort result announcements
  * - Confetti celebration on mastery (100% known)
+ * - Auto-read of current card question text (gated on animation completion via 500ms delay)
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -32,8 +33,10 @@ import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAutoRead } from '@/hooks/useAutoRead';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { playMasteryComplete } from '@/lib/audio/soundEffects';
 import { MAX_ROUNDS } from '@/lib/sort/sortTypes';
 import type { SortSnapshot, SessionSnapshot } from '@/lib/sessions/sessionTypes';
@@ -107,6 +110,28 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   const shouldReduceMotion = useReducedMotion();
   const { settings: tts } = useTTSSettings();
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
+  const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[tts.rate];
+
+  // Current card for auto-read (null when no cards or sorting complete)
+  const currentCard =
+    state.phase === 'sorting' || state.phase === 'animating'
+      ? (state.cards[state.currentIndex] ?? null)
+      : null;
+
+  // Auto-read question text after card animation settles (500ms delay)
+  useAutoRead({
+    text: currentCard?.question_en ?? '',
+    enabled: tts.autoRead && currentCard !== null,
+    triggerKey: currentCard?.id ?? '',
+    lang: 'en-US',
+    delay: 500, // Wait for card entrance animation to complete
+    autoReadLang: tts.autoReadLang,
+    englishAudioUrl: currentCard ? getEnglishAudioUrl(currentCard.id, 'q') : undefined,
+    englishRate: numericRate,
+    burmeseAudioUrl:
+      showBurmese && currentCard ? getBurmeseAudioUrl(currentCard.id, 'q') : undefined,
+    burmeseRate: numericRate,
+  });
 
   // Exit dialog state
   const [showExitDialog, setShowExitDialog] = useState(false);
