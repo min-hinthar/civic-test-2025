@@ -6,6 +6,8 @@ import type { Question } from '@/types';
  * ID Prefixes:
  * - GOV-P##: Principles of American Democracy (12 questions)
  * - GOV-S##: System of Government (35 questions)
+ *
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const americanGovernmentQuestions: Question[] = [
@@ -15,24 +17,30 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P01',
     question_en: 'What is the supreme law of the land?',
-    question_my: 'နိုင်ငံ၏ အမြင့်ဆုံးဥပဒေကား အဘယ်နည်း။',
+    question_my: 'နိုင်ငံရဲ့ အမြင့်ဆုံးဥပဒေက ဘာလဲ။',
     category: 'Principles of American Democracy',
-    studyAnswers: [{ text_en: 'the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ' }],
+    studyAnswers: [
+      { text_en: 'the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution)' },
+    ],
     answers: [
-      { text_en: 'the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ', correct: true },
+      {
+        text_en: 'the Constitution',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution)',
+        correct: true,
+      },
       {
         text_en: 'the Declaration of Independence',
-        text_my: 'လွတ်လပ်ရေးကြေညာစာတမ်း',
+        text_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence)',
         correct: false,
       },
       {
         text_en: 'the Articles of Confederation',
-        text_my: 'ကွန်ဖက်ဒရေးရှင်း ဆောင်းပါးများ',
+        text_my: 'ကွန်ဖက်ဒရေးရှင်းစာချုပ် (Articles of Confederation)',
         correct: false,
       },
       {
         text_en: 'the Emancipation Proclamation',
-        text_my: 'လွတ်မြောက်ရေး ကြေညာချက်',
+        text_my: 'ကျွန်စနစ်ဖျက်သိမ်းကြေညာစာ (Emancipation Proclamation)',
         correct: false,
       },
     ],
@@ -40,47 +48,55 @@ export const americanGovernmentQuestions: Question[] = [
       brief_en:
         'The Constitution is the highest legal authority in the United States. All other laws must follow it, and no person or government body is above it.',
       brief_my:
-        'ဖွဲ့စည်းပုံအခြေခံဥပဒေသည် အမေရိကန်ပြည်ထောင်စု၏ အမြင့်ဆုံးဥပဒေဖြစ်ပါသည်။ အခြားဥပဒေအားလုံးသည် ၎င်းကိုလိုက်နာရပြီး မည်သူမျှ ၎င်းအထက်တွင် မရှိပါ။',
+        'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ဟာ အမေရိကန်ရဲ့ အမြင့်ဆုံးဥပဒေဖြစ်တယ်။ အခြားဥပဒေအားလုံး ဒီဟာကို လိုက်နာရပြီး ဘယ်သူမှ ဒီဥပဒေအထက်မှာ မရှိဘူး။',
       citation: 'Article VI, Clause 2 (Supremacy Clause)',
       commonMistake_en:
         "The Declaration of Independence declared freedom from Britain but does not set up how the government works — that is the Constitution's job.",
       commonMistake_my:
-        'လွတ်လပ်ရေးကြေညာစာတမ်းသည် ဗြိတိန်မှ လွတ်လပ်ရေးကို ကြေညာခဲ့သော်လည်း အစိုးရလုပ်ပုံလုပ်နည်းကို မသတ်မှတ်ပါ — ၎င်းသည် ဖွဲ့စည်းပုံ၏ တာဝန်ဖြစ်ပါသည်။',
+        'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) က ဗြိတိန်ဆီက လွတ်လပ်ရေးကို ကြေညာခဲ့ပေမယ့် အစိုးရလုပ်ပုံလုပ်နည်းကို မသတ်မှတ်ဘူး — အဲဒါက ဖွဲ့စည်းပုံ (Constitution) ရဲ့ တာဝန်ပဲ။',
       relatedQuestionIds: ['GOV-P02', 'GOV-P03'],
     },
   },
   {
     id: 'GOV-P02',
     question_en: 'What does the Constitution do?',
-    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေက ဘာလုပ်သလဲ။',
+    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) က ဘာလုပ်သလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
-      { text_en: 'sets up the government', text_my: 'အစိုးရကိုဖွဲ့စည်းတယ်' },
-      { text_en: 'defines the government', text_my: 'အစိုးရကို သတ်မှတ်သည်' },
+      { text_en: 'sets up the government', text_my: 'အစိုးရ (Government) ကို ဖွဲ့စည်းတယ်' },
+      { text_en: 'defines the government', text_my: 'အစိုးရ (Government) ကို သတ်မှတ်တယ်' },
       {
         text_en: 'protects basic rights of Americans',
-        text_my: 'အမေရိကန်များ၏ အခြေခံအခွင့်အရေးများကို ကာကွယ်ပေးသည်',
+        text_my: 'အမေရိကန်တွေရဲ့ အခြေခံအခွင့်အရေးတွေကို ကာကွယ်ပေးတယ်',
       },
     ],
     answers: [
-      { text_en: 'sets up the government', text_my: 'အစိုးရကိုဖွဲ့စည်းတယ်', correct: true },
+      {
+        text_en: 'sets up the government',
+        text_my: 'အစိုးရ (Government) ကို ဖွဲ့စည်းတယ်',
+        correct: true,
+      },
       {
         text_en: 'declares our independence',
-        text_my: 'ကျွန်ုပ်တို့၏လွတ်လပ်ရေးကိုကြေငြာသည်',
+        text_my: 'ငါတို့ရဲ့ လွတ်လပ်ရေးကို ကြေညာတယ်',
         correct: false,
       },
       {
         text_en: 'defines the role of the states',
-        text_my: 'ပြည်နယ်များ၏အခန်းကဏ္ဍကိုသတ်မှတ်သည်',
+        text_my: 'ပြည်နယ် (State) တွေရဲ့ အခန်းကဏ္ဍကို သတ်မှတ်တယ်',
         correct: false,
       },
-      { text_en: 'sets the tax rate', text_my: 'အခွန်နှုန်းထားကိုသတ်မှတ်သည်', correct: false },
+      {
+        text_en: 'sets the tax rate',
+        text_my: 'အခွန် (Tax) နှုန်းထားကို သတ်မှတ်တယ်',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'The Constitution does three key things: it sets up the structure of the government, defines what each branch can do, and protects the basic rights of all Americans.',
       brief_my:
-        'ဖွဲ့စည်းပုံအခြေခံဥပဒေသည် အဓိကအရာသုံးခုကို လုပ်ဆောင်သည် — အစိုးရဖွဲ့စည်းပုံ ချမှတ်ခြင်း၊ ဌာနခွဲတစ်ခုစီ၏ လုပ်ပိုင်ခွင့်များ သတ်မှတ်ခြင်းနှင့် အမေရိကန်အားလုံး၏ အခြေခံအခွင့်အရေးများကို ကာကွယ်ခြင်းတို့ ဖြစ်သည်။',
+        'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) က အဓိကအရာသုံးခုကို လုပ်ဆောင်တယ် — အစိုးရဖွဲ့စည်းပုံ ချမှတ်ခြင်း၊ ဌာနခွဲတစ်ခုစီရဲ့ လုပ်ပိုင်ခွင့်တွေ သတ်မှတ်ခြင်းနဲ့ အမေရိကန်အားလုံးရဲ့ အခြေခံအခွင့်အရေးတွေကို ကာကွယ်ခြင်း ဖြစ်တယ်။',
       citation: 'Preamble and Articles I-VII',
       relatedQuestionIds: ['GOV-P01', 'GOV-P05'],
     },
@@ -90,16 +106,20 @@ export const americanGovernmentQuestions: Question[] = [
     question_en:
       'The idea of self-government is in the first three words of the Constitution. What are these words?',
     question_my:
-      'ကိုယ်ပိုင်အုပ်ချုပ်ရေးဆိုတဲ့ စိတ်ကူးက ဖွဲ့စည်းပုံအခြေခံဥပဒေရဲ့ ပထမဆုံး စကားလုံးသုံးလုံးမှာ ရှိပါတယ်။ ဒီစကားလုံးတွေက ဘာတွေလဲ။',
+      'ကိုယ်ပိုင်အုပ်ချုပ်ရေးဆိုတဲ့ အယူအဆက ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ရဲ့ ပထမဆုံးစကားလုံး ၃ လုံးမှာ ရှိတယ်။ ဒီစကားလုံးတွေက ဘာတွေလဲ။',
     category: 'Principles of American Democracy',
-    studyAnswers: [{ text_en: 'We the People', text_my: 'ငါတို့ပြည်သူတွေ' }],
+    studyAnswers: [{ text_en: 'We the People', text_my: 'ငါတို့ ပြည်သူတွေ (We the People)' }],
     answers: [
-      { text_en: 'We the People', text_my: 'ငါတို့ပြည်သူတွေ', correct: true },
-      { text_en: 'We the States', text_my: 'ငါတို့ပြည်နယ်တွေ', correct: false },
-      { text_en: 'Congress shall make', text_my: 'ကွန်ဂရက်ကလုပ်ရမယ်။', correct: false },
+      { text_en: 'We the People', text_my: 'ငါတို့ ပြည်သူတွေ (We the People)', correct: true },
+      { text_en: 'We the States', text_my: 'ငါတို့ ပြည်နယ်တွေ', correct: false },
+      {
+        text_en: 'Congress shall make',
+        text_my: 'ကွန်ဂရက် (Congress) က လုပ်ရမယ်',
+        correct: false,
+      },
       {
         text_en: 'Life, Liberty, Happiness',
-        text_my: 'အသက်ရှင်သန်မှု၊ လွတ်လပ်မှု၊ ပျော်ရွှင်မှု',
+        text_my: 'အသက်ရှင်သန်မှု၊ လွတ်လပ်ခွင့်၊ ပျော်ရွှင်မှု',
         correct: false,
       },
     ],
@@ -107,7 +127,7 @@ export const americanGovernmentQuestions: Question[] = [
       brief_en:
         '"We the People" shows that the government gets its power from the people, not from a king or ruler. This is the core idea of self-government — citizens are in charge.',
       brief_my:
-        '"ငါတို့ပြည်သူတွေ" ဆိုသည်မှာ အစိုးရ၏ အာဏာသည် ဘုရင် သို့မဟုတ် အုပ်ချုပ်သူထံမှ မဟုတ်ဘဲ ပြည်သူများထံမှ ရရှိကြောင်း ပြသသည်။ ၎င်းသည် ကိုယ်ပိုင်အုပ်ချုပ်ရေး၏ အဓိကအယူအဆ ဖြစ်သည်။',
+        '"ငါတို့ ပြည်သူတွေ (We the People)" ဆိုတာ အစိုးရရဲ့ အာဏာက ဘုရင် ဒါမှမဟုတ် အုပ်ချုပ်သူဆီက မဟုတ်ဘဲ ပြည်သူတွေဆီက ရတယ်ဆိုတာ ပြတာပဲ။ ဒါက ကိုယ်ပိုင်အုပ်ချုပ်ရေးရဲ့ အဓိကအယူအဆ ဖြစ်တယ်။',
       citation: 'Preamble to the Constitution',
       funFact_en:
         'The original Constitution is on display at the National Archives in Washington, D.C. The ink has faded so much that "We the People" is one of the few parts still easy to read!',
@@ -119,33 +139,33 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P04',
     question_en: 'What is an amendment?',
-    question_my: 'ပြင်ဆင်ချက်ဆိုတာ ဘာလဲ။',
+    question_my: 'ပြင်ဆင်ချက် (Amendment) ဆိုတာ ဘာလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       {
         text_en: 'a change (to the Constitution)',
-        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ပြောင်းလဲခြင်း',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ကို ပြောင်းလဲခြင်း',
       },
       {
         text_en: 'an addition (to the Constitution)',
-        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေတွင် ထပ်လောင်းထည့်ခြင်း',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) မှာ ထပ်ဖြည့်ခြင်း',
       },
     ],
     answers: [
       {
         text_en: 'a change (to the Constitution)',
-        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ပြောင်းလဲခြင်း',
+        text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ကို ပြောင်းလဲခြင်း',
         correct: true,
       },
-      { text_en: 'a new law', text_my: 'ဥပဒေအသစ်', correct: false },
+      { text_en: 'a new law', text_my: 'ဥပဒေ (Law) အသစ်', correct: false },
       { text_en: 'a court order', text_my: 'တရားရုံးအမိန့်', correct: false },
-      { text_en: 'a presidential decree', text_my: 'သမ္မတအမိန့်', correct: false },
+      { text_en: 'a presidential decree', text_my: 'သမ္မတ (President) အမိန့်', correct: false },
     ],
     explanation: {
       brief_en:
         'An amendment is a change or addition to the Constitution. The Founders designed this process so the Constitution could grow with the country while still being hard to change on a whim.',
       brief_my:
-        'ပြင်ဆင်ချက်ဆိုသည်မှာ ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ပြောင်းလဲခြင်း သို့မဟုတ် ထပ်ဖြည့်ခြင်း ဖြစ်သည်။ နိုင်ငံနှင့်အတူ တိုးတက်နိုင်စေရန် ဒီလိုလုပ်ထုံးကို ရေးဆွဲထားသော်လည်း လွယ်လွယ်ပြောင်းလဲ၍ မရပါ။',
+        'ပြင်ဆင်ချက် (Amendment) ဆိုတာ ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ကို ပြောင်းလဲခြင်း ဒါမှမဟုတ် ထပ်ဖြည့်ခြင်း ဖြစ်တယ်။ နိုင်ငံနဲ့အတူ တိုးတက်နိုင်အောင် ဒီလိုလုပ်ထုံးကို ရေးဆွဲထားပေမယ့် လွယ်လွယ်ပြောင်းလဲလို့ မရဘူး။',
       citation: 'Article V',
       relatedQuestionIds: ['GOV-P05', 'GOV-P07'],
     },
@@ -153,28 +173,42 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P05',
     question_en: 'What do we call the first ten amendments to the Constitution?',
-    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေရဲ့ ပထမဆုံး ပြင်ဆင်ချက် ဆယ်ခုကို ဘယ်လိုခေါ်လဲ။',
+    question_my:
+      'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ရဲ့ ပထမဆုံး ပြင်ဆင်ချက် (Amendment) ၁၀ ခုကို ဘယ်လိုခေါ်လဲ။',
     category: 'Principles of American Democracy',
-    studyAnswers: [{ text_en: 'the Bill of Rights', text_my: 'အခွင့်အရေးဥပဒေကြမ်း' }],
+    studyAnswers: [
+      {
+        text_en: 'the Bill of Rights',
+        text_my: 'အခွင့်အရေးဥပဒေကြမ်း (Bill of Rights)',
+      },
+    ],
     answers: [
-      { text_en: 'the Bill of Rights', text_my: 'အခွင့်အရေးဥပဒေကြမ်း', correct: true },
+      {
+        text_en: 'the Bill of Rights',
+        text_my: 'အခွင့်အရေးဥပဒေကြမ်း (Bill of Rights)',
+        correct: true,
+      },
       {
         text_en: 'the Declaration of Independence',
-        text_my: 'လွတ်လပ်ရေးကြေညာစာတမ်း',
+        text_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence)',
         correct: false,
       },
       {
         text_en: 'the Articles of Confederation',
-        text_my: 'ကွန်ဖက်ဒရေးရှင်း ဆောင်းပါးများ',
+        text_my: 'ကွန်ဖက်ဒရေးရှင်းစာချုပ် (Articles of Confederation)',
         correct: false,
       },
-      { text_en: 'the Freedom Amendments', text_my: 'လွတ်လပ်ရေး ပြင်ဆင်ချက်များ', correct: false },
+      {
+        text_en: 'the Freedom Amendments',
+        text_my: 'လွတ်လပ်ရေး ပြင်ဆင်ချက်များ',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'The Bill of Rights is the first 10 amendments, added in 1791. They guarantee essential freedoms like speech, religion, and the right to a fair trial — protections many states demanded before agreeing to the Constitution.',
       brief_my:
-        'အခွင့်အရေးဥပဒေကြမ်းသည် ၁၇၉၁ ခုနှစ်တွင် ထည့်သွင်းခဲ့သော ပထမဆုံးပြင်ဆင်ချက် ၁၀ ခုဖြစ်သည်။ ပြောဆိုခွင့်၊ ဘာသာရေးလွတ်လပ်ခွင့်နှင့် တရားမျှတစွာစီရင်ခံပိုင်ခွင့်ကဲ့သို့ မရှိမဖြစ် လွတ်လပ်ခွင့်များကို အာမခံသည်။',
+        'အခွင့်အရေးဥပဒေကြမ်း (Bill of Rights) ဟာ ၁၇၉၁ ခုနှစ်မှာ ထည့်သွင်းခဲ့တဲ့ ပထမဆုံးပြင်ဆင်ချက် ၁၀ ခု ဖြစ်တယ်။ ပြောဆိုခွင့်၊ ဘာသာရေးလွတ်လပ်ခွင့်နဲ့ တရားမျှတစွာစီရင်ခံပိုင်ခွင့်တို့လို မရှိမဖြစ် လွတ်လပ်ခွင့်တွေကို အာမခံတယ်။',
       citation: 'Amendments I-X',
       mnemonic_en: 'Bill of Rights = "Bill" means a list. It is a list of your rights!',
       mnemonic_my:
@@ -185,20 +219,24 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P06',
     question_en: 'What is one right or freedom from the First Amendment?',
-    question_my: 'ပထမပြင်ဆင်ချက်ပါ အခွင့်အရေး ဒါမှမဟုတ် လွတ်လပ်ခွင့်တစ်ခုက ဘာလဲ။',
+    question_my:
+      'ပထမ ပြင်ဆင်ချက် (First Amendment) ပါ အခွင့်အရေး ဒါမှမဟုတ် လွတ်လပ်ခွင့်တစ်ခုက ဘာလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       { text_en: 'speech', text_my: 'ပြောဆိုခွင့်' },
       { text_en: 'religion', text_my: 'ဘာသာရေး' },
       { text_en: 'assembly', text_my: 'စည်းဝေးခွင့်' },
       { text_en: 'press', text_my: 'စာနယ်ဇင်း' },
-      { text_en: 'petition the government', text_my: 'အစိုးရကို အသနားခံစာတင်ခြင်း' },
+      {
+        text_en: 'petition the government',
+        text_my: 'အစိုးရ (Government) ကို အသနားခံစာတင်ခြင်း',
+      },
     ],
     answers: [
-      { text_en: 'Speech', text_my: 'ပြောဆိုခွင့်', correct: true },
-      { text_en: 'To bear arms', text_my: 'လက်နက်ကိုင်ဆောင်ရန်', correct: false },
-      { text_en: 'Trial by jury', text_my: 'ဂျူရီလူကြီးဖြင့် စစ်ဆေးခြင်း။', correct: false },
-      { text_en: 'To vote', text_my: 'မဲပေးရန်', correct: false },
+      { text_en: 'Speech', text_my: 'ပြောဆိုခွင့် (Speech)', correct: true },
+      { text_en: 'To bear arms', text_my: 'လက်နက်ကိုင်ဆောင်ခွင့်', correct: false },
+      { text_en: 'Trial by jury', text_my: 'ဂျူရီဖြင့် စစ်ဆေးခြင်း', correct: false },
+      { text_en: 'To vote', text_my: 'မဲပေးခွင့်', correct: false },
     ],
     explanation: {
       brief_en:
@@ -218,7 +256,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P07',
     question_en: 'How many amendments does the Constitution have?',
-    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေမှာ ပြင်ဆင်ချက် ဘယ်လောက်ရှိလဲ။',
+    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) မှာ ပြင်ဆင်ချက် (Amendment) ဘယ်နှစ်ခုရှိလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [{ text_en: 'twenty-seven (27)', text_my: 'နှစ်ဆယ့်ခုနစ် (၂၇)' }],
     answers: [
@@ -243,7 +281,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P08',
     question_en: 'What did the Declaration of Independence do?',
-    question_my: 'လွတ်လပ်ရေးကြေညာစာတမ်းက ဘာလုပ်ခဲ့လဲ။',
+    question_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) က ဘာလုပ်ခဲ့လဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       {
@@ -288,15 +326,19 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P09',
     question_en: 'What are two rights in the Declaration of Independence?',
-    question_my: 'လွတ်လပ်ရေးကြေညာစာတမ်းပါ အခွင့်အရေးနှစ်ခုက ဘာတွေလဲ။',
+    question_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) ပါ အခွင့်အရေး ၂ ခုက ဘာတွေလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       { text_en: 'life', text_my: 'အသက်ရှင်သန်မှု' },
-      { text_en: 'liberty', text_my: 'လွတ်လပ်မှု' },
+      { text_en: 'liberty', text_my: 'လွတ်လပ်ခွင့် (Liberty)' },
       { text_en: 'pursuit of happiness', text_my: 'ပျော်ရွှင်မှုကိုရှာဖွေခြင်း' },
     ],
     answers: [
-      { text_en: 'life and liberty', text_my: 'အသက်ရှင်သန်မှုနှင့်လွတ်လပ်မှု', correct: true },
+      {
+        text_en: 'life and liberty',
+        text_my: 'အသက်ရှင်သန်မှုနဲ့ လွတ်လပ်ခွင့် (Life and Liberty)',
+        correct: true,
+      },
       {
         text_en: 'freedom of speech and religion',
         text_my: 'လွတ်လပ်စွာပြောဆိုခွင့်နှင့် ကိုးကွယ်ယုံကြည်ခွင့်',
@@ -328,35 +370,33 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P10',
     question_en: 'What is freedom of religion?',
-    question_my: 'ဘာသာရေးလွတ်လပ်ခွင့်ဆိုတာ ဘာလဲ။',
+    question_my: 'ဘာသာရေးလွတ်လပ်ခွင့် (Freedom of Religion) ဆိုတာ ဘာလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       {
         text_en: 'You can practice any religion, or not practice a religion.',
-        text_my:
-          'သင်သည် မည်သည့်ဘာသာကိုမဆို ကျင့်သုံးနိုင်သည်၊ သို့မဟုတ် ဘာသာတစ်ခုကို မကျင့်သုံးဘဲနေနိုင်သည်။',
+        text_my: 'ဘယ်ဘာသာကိုမဆို ကိုးကွယ်နိုင်တယ်၊ ဒါမှမဟုတ် ဘာသာတစ်ခုမှ မကိုးကွယ်ဘဲနေနိုင်တယ်။',
       },
     ],
     answers: [
       {
         text_en: 'You can practice any religion, or not practice a religion.',
-        text_my:
-          'သင်သည် မည်သည့်ဘာသာကိုမဆို ကျင့်သုံးနိုင်သည်၊ သို့မဟုတ် ဘာသာတစ်ခုကို မကျင့်သုံးဘဲနေနိုင်သည်။',
+        text_my: 'ဘယ်ဘာသာကိုမဆို ကိုးကွယ်နိုင်တယ်၊ ဒါမှမဟုတ် ဘာသာတစ်ခုမှ မကိုးကွယ်ဘဲနေနိုင်တယ်။',
         correct: true,
       },
       {
         text_en: 'You must choose a religion.',
-        text_my: 'ဘာသာတစ်ခုကို ရွေးချယ်ရမည်။',
+        text_my: 'ဘာသာတစ်ခုကို ရွေးရမယ်။',
         correct: false,
       },
       {
         text_en: 'The government can establish a national religion.',
-        text_my: 'အစိုးရသည် နိုင်ငံတော်ဘာသာကို ထူထောင်နိုင်သည်။',
+        text_my: 'အစိုးရက နိုင်ငံတော်ဘာသာကို ထူထောင်နိုင်တယ်။',
         correct: false,
       },
       {
         text_en: 'You can only practice the religion of your parents.',
-        text_my: 'မိဘဘာသာကိုသာ ကျင့်သုံးနိုင်သည်။',
+        text_my: 'မိဘရဲ့ ဘာသာကိုပဲ ကိုးကွယ်နိုင်တယ်။',
         correct: false,
       },
     ],
@@ -364,7 +404,7 @@ export const americanGovernmentQuestions: Question[] = [
       brief_en:
         'Freedom of religion means you can follow any religion you choose, or choose not to follow any religion at all. The government cannot force a religion on you or stop you from practicing yours.',
       brief_my:
-        'ဘာသာရေးလွတ်လပ်ခွင့်ဆိုသည်မှာ သင်ကြိုက်သော ဘာသာတစ်ခုခုကို ကိုးကွယ်နိုင်သည်၊ သို့မဟုတ် ဘာသာတစ်ခုမှ မကိုးကွယ်ဘဲနေနိုင်သည်။ အစိုးရက သင့်ကို ဘာသာတစ်ခုကို အတင်းမကိုးကွယ်စေနိုင်ပါ။',
+        'ဘာသာရေးလွတ်လပ်ခွင့်ဆိုတာ ကြိုက်တဲ့ဘာသာကို ကိုးကွယ်နိုင်တယ်၊ ဒါမှမဟုတ် ဘာသာတစ်ခုမှ မကိုးကွယ်ဘဲနေနိုင်တယ်။ အစိုးရက ဘာသာတစ်ခုကို အတင်းကိုးကွယ်ခိုင်းလို့ မရဘူး။',
       citation: '1st Amendment (Establishment Clause & Free Exercise Clause)',
       relatedQuestionIds: ['GOV-P06', 'RR-04'],
     },
@@ -372,7 +412,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P11',
     question_en: 'What is the economic system in the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ စီးပွားရေးစနစ်ကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်ပြည်ထောင်စုရဲ့ စီးပွားရေးစနစ်က ဘာလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       { text_en: 'capitalist economy', text_my: 'အရင်းရှင်စီးပွားရေး' },
@@ -395,7 +435,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-P12',
     question_en: 'What is the "rule of law"?',
-    question_my: '"တရားဥပဒေစိုးမိုးရေး" ဆိုတာ ဘာလဲ။',
+    question_my: 'ဥပဒေစိုးမိုးရေး (Rule of Law) ဆိုတာ ဘာလဲ။',
     category: 'Principles of American Democracy',
     studyAnswers: [
       { text_en: 'Everyone must follow the law.', text_my: 'လူတိုင်း ဥပဒေကို လိုက်နာရမယ်။' },
@@ -440,19 +480,19 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S01',
     question_en: 'Name one branch or part of the government.',
-    question_my: 'အစိုးရ၏ ဌာနခွဲ သို့မဟုတ် အစိတ်အပိုင်းတစ်ခုကို အမည်ပေးပါ။',
+    question_my: 'အစိုးရ (Government) ရဲ့ ဌာနခွဲ ဒါမှမဟုတ် အစိတ်အပိုင်းတစ်ခုကို ပြောပြပါ။',
     category: 'System of Government',
     studyAnswers: [
-      { text_en: 'Congress', text_my: 'ကွန်ဂရက်' },
-      { text_en: 'legislative', text_my: 'ဥပဒေပြု' },
-      { text_en: 'President', text_my: 'သမ္မတ' },
-      { text_en: 'executive', text_my: 'အမှုဆောင်' },
+      { text_en: 'Congress', text_my: 'ကွန်ဂရက်လွှတ်တော် (Congress)' },
+      { text_en: 'legislative', text_my: 'ဥပဒေပြုရေးဌာန (Legislative Branch)' },
+      { text_en: 'President', text_my: 'သမ္မတ (President)' },
+      { text_en: 'executive', text_my: 'အုပ်ချုပ်ရေးဌာန (Executive Branch)' },
       { text_en: 'the courts', text_my: 'တရားရုံးများ' },
-      { text_en: 'judicial', text_my: 'တရားစီရင်ရေး' },
+      { text_en: 'judicial', text_my: 'တရားစီရင်ရေးဌာန (Judicial Branch)' },
     ],
     answers: [
-      { text_en: 'Congress', text_my: 'ကွန်ဂရက်', correct: true },
-      { text_en: 'The States', text_my: 'ပြည်နယ်များ', correct: false },
+      { text_en: 'Congress', text_my: 'ကွန်ဂရက်လွှတ်တော် (Congress)', correct: true },
+      { text_en: 'The States', text_my: 'ပြည်နယ် (State) များ', correct: false },
       { text_en: 'The Military', text_my: 'စစ်တပ်', correct: false },
       { text_en: 'The Treasury', text_my: 'ဘဏ္ဍာရေးဝန်ကြီးဌာန', correct: false },
     ],
@@ -460,7 +500,7 @@ export const americanGovernmentQuestions: Question[] = [
       brief_en:
         'The U.S. government has three branches: legislative (Congress — makes laws), executive (President — enforces laws), and judicial (courts — interprets laws). This separation prevents any one group from having too much power.',
       brief_my:
-        'အမေရိကန်အစိုးရတွင် ဌာနခွဲသုံးခုရှိသည် — ဥပဒေပြု (ကွန်ဂရက်)၊ အမှုဆောင် (သမ္မတ) နှင့် တရားစီရင်ရေး (တရားရုံးများ)။ အုပ်စုတစ်ခုတည်းက အာဏာအလွန်ကြီးမားခြင်းကို ကာကွယ်သည်။',
+        'အမေရိကန်အစိုးရမှာ ဌာနခွဲ ၃ ခုရှိတယ် — ဥပဒေပြုရေးဌာန (ကွန်ဂရက်)၊ အုပ်ချုပ်ရေးဌာန (သမ္မတ) နဲ့ တရားစီရင်ရေးဌာန (တရားရုံးများ)။ အုပ်စုတစ်ခုတည်းက အာဏာအလွန်ကြီးမားတာကို ကာကွယ်တယ်။',
       citation: 'Articles I, II, III',
       relatedQuestionIds: ['GOV-S02', 'GOV-S03', 'GOV-S04', 'GOV-S25'],
     },
@@ -468,7 +508,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S02',
     question_en: 'What stops one branch of government from becoming too powerful?',
-    question_my: 'အစိုးရဌာနခွဲတစ်ခု အလွန်အင်အားကြီးမားလာခြင်းကို အဘယ်အရာက တားဆီးသနည်း။',
+    question_my: 'အစိုးရဌာနခွဲတစ်ခု အလွန်အင်အားကြီးလာတာကို ဘာက တားဆီးလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'checks and balances', text_my: 'စစ်ဆေးမှုများနှင့် ဟန်ချက်ညီမှုများ' },
@@ -477,12 +517,12 @@ export const americanGovernmentQuestions: Question[] = [
     answers: [
       {
         text_en: 'checks and balances',
-        text_my: 'စစ်ဆေးမှုများနှင့် ဟန်ချက်ညီမှုများ',
+        text_my: 'ထိန်းညှိမှုနဲ့ ဟန်ချက်ညီမှု (Checks and Balances)',
         correct: true,
       },
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: false },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: false },
       { text_en: 'the people', text_my: 'ပြည်သူတွေ', correct: false },
-      { text_en: 'the states', text_my: 'ပြည်နယ်များ', correct: false },
+      { text_en: 'the states', text_my: 'ပြည်နယ် (State) များ', correct: false },
     ],
     explanation: {
       brief_en:
@@ -496,16 +536,24 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S03',
     question_en: 'Who is in charge of the executive branch?',
-    question_my: 'အမှုဆောင်ဌာနကို ဘယ်သူက တာဝန်ယူသလဲ။',
+    question_my: 'အုပ်ချုပ်ရေးဌာန (Executive Branch) ကို ဘယ်သူက တာဝန်ယူလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ' }],
+    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ (President)' }],
     answers: [
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: true },
-      { text_en: 'the Chief Justice', text_my: 'တရားသူကြီးချုပ်', correct: false },
-      { text_en: 'the Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: false },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: true },
+      {
+        text_en: 'the Chief Justice',
+        text_my: 'တရားသူကြီးချုပ် (Chief Justice)',
+        correct: false,
+      },
+      {
+        text_en: 'the Speaker of the House',
+        text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House)',
+        correct: false,
+      },
       {
         text_en: 'the Senate Majority Leader',
-        text_my: 'အထက်လွှတ်တော်အမတ်အများစုခေါင်းဆောင်',
+        text_my: 'အထက်လွှတ်တော် အမတ်အများစုခေါင်းဆောင်',
         correct: false,
       },
     ],
@@ -513,7 +561,7 @@ export const americanGovernmentQuestions: Question[] = [
       brief_en:
         'The President leads the executive branch, which is responsible for enforcing and carrying out federal laws. The executive branch also includes the Vice President and the Cabinet.',
       brief_my:
-        'သမ္မတသည် ဖက်ဒရယ်ဥပဒေများကို အကောင်အထည်ဖော်ရန် တာဝန်ရှိသော အမှုဆောင်ဌာနကို ဦးဆောင်သည်။ အမှုဆောင်ဌာနတွင် ဒုတိယသမ္မတနှင့် အစိုးရအဖွဲ့လည်း ပါဝင်သည်။',
+        'သမ္မတ (President) က ဖက်ဒရယ် (Federal) ဥပဒေတွေကို အကောင်အထည်ဖော်ရတဲ့ အုပ်ချုပ်ရေးဌာန (Executive Branch) ကို ဦးဆောင်တယ်။ ဒီဌာနမှာ ဒုတိယသမ္မတ (Vice President) နဲ့ အစိုးရအဖွဲ့ (Cabinet) လည်း ပါဝင်တယ်။',
       citation: 'Article II, Section 1',
       relatedQuestionIds: ['GOV-S16', 'GOV-S20', 'GOV-S21'],
     },
@@ -521,24 +569,28 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S04',
     question_en: 'Who makes federal laws?',
-    question_my: 'ဖက်ဒရယ်ဥပဒေတွေကို ဘယ်သူက ပြုလုပ်တာလဲ။',
+    question_my: 'ဖက်ဒရယ် (Federal) ဥပဒေ (Law) တွေကို ဘယ်သူက ပြုလုပ်လဲ။',
     category: 'System of Government',
     studyAnswers: [
-      { text_en: 'Congress', text_my: 'ကွန်ဂရက်' },
+      { text_en: 'Congress', text_my: 'ကွန်ဂရက်လွှတ်တော် (Congress)' },
       {
         text_en: 'Senate and House (of Representatives)',
-        text_my: 'အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော် (ကိုယ်စားလှယ်များ)',
+        text_my: 'အထက်လွှတ်တော် (Senate) နဲ့ အောက်လွှတ်တော် (House of Representatives)',
       },
       {
         text_en: '(U.S. or national) legislature',
-        text_my: '(အမေရိကန် သို့မဟုတ် နိုင်ငံတော်) ဥပဒေပြုလွှတ်တော်',
+        text_my: '(အမေရိကန် ဒါမှမဟုတ် နိုင်ငံတော်) ဥပဒေပြုလွှတ်တော်',
       },
     ],
     answers: [
-      { text_en: 'Congress', text_my: 'ကွန်ဂရက်', correct: true },
-      { text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်', correct: false },
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: false },
-      { text_en: 'the states', text_my: 'ပြည်နယ်များ', correct: false },
+      { text_en: 'Congress', text_my: 'ကွန်ဂရက်လွှတ်တော် (Congress)', correct: true },
+      {
+        text_en: 'the Supreme Court',
+        text_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court)',
+        correct: false,
+      },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: false },
+      { text_en: 'the states', text_my: 'ပြည်နယ် (State) များ', correct: false },
     ],
     explanation: {
       brief_en:
@@ -552,33 +604,33 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S05',
     question_en: 'What are the two parts of the U.S. Congress?',
-    question_my: 'အမေရိကန်ကွန်ဂရက်ရဲ့ အစိတ်အပိုင်းနှစ်ခုက ဘာတွေလဲ။',
+    question_my: 'အမေရိကန် ကွန်ဂရက်လွှတ်တော် (Congress) ရဲ့ အစိတ်အပိုင်း ၂ ခုက ဘာတွေလဲ။',
     category: 'System of Government',
     studyAnswers: [
       {
         text_en: 'the Senate and House (of Representatives)',
-        text_my: 'အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော် (ကိုယ်စားလှယ်များ)',
+        text_my: 'အထက်လွှတ်တော် (Senate) နဲ့ အောက်လွှတ်တော် (House of Representatives)',
       },
     ],
     answers: [
       {
         text_en: 'the Senate and House (of Representatives)',
-        text_my: 'အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော် (ကိုယ်စားလှယ်များ)',
+        text_my: 'အထက်လွှတ်တော် (Senate) နဲ့ အောက်လွှတ်တော် (House of Representatives)',
         correct: true,
       },
       {
         text_en: 'the President and the Cabinet',
-        text_my: 'သမ္မတနှင့် အစိုးရအဖွဲ့',
+        text_my: 'သမ္မတ (President) နဲ့ အစိုးရအဖွဲ့ (Cabinet)',
         correct: false,
       },
       {
         text_en: 'the Supreme Court and the federal courts',
-        text_my: 'တရားရုံးချုပ်နှင့် ဖက်ဒရယ်တရားရုံးများ',
+        text_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court) နဲ့ ဖက်ဒရယ်တရားရုံးများ',
         correct: false,
       },
       {
         text_en: 'the Democratic and Republican parties',
-        text_my: 'ဒီမိုကရက်တစ်နှင့် ရီပတ်ဘလစ်ကန်ပါတီများ',
+        text_my: 'ဒီမိုကရက်တစ်နဲ့ ရီပတ်ဘလစ်ကန် ပါတီများ',
         correct: false,
       },
     ],
@@ -594,7 +646,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S06',
     question_en: 'How many U.S. Senators are there?',
-    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ် ဘယ်လောက်ရှိလဲ။',
+    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ် (Senator) ဘယ်နှစ်ဦးရှိလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'one hundred (100)', text_my: 'တစ်ရာ (၁၀၀)' }],
     answers: [
@@ -621,7 +673,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S07',
     question_en: 'We elect a U.S. Senator for how many years?',
-    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ်ကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်ပါသလဲ။',
+    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ် (Senator) ကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်လဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'six (6)', text_my: 'ခြောက် (၆)' }],
     answers: [
@@ -645,9 +697,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S08',
     question_en: "Who is one of your state's U.S. Senators now?",
-    question_my: 'ယခု သင့်ပြည်နယ်၏ အမေရိကန် အထက်လွှတ်တော်အမတ်တစ်ဦးက မည်သူနည်း။',
+    question_my: 'အခု သင့်ပြည်နယ်ရဲ့ အမေရိကန် အထက်လွှတ်တော်အမတ် (Senator) တစ်ဦးက ဘယ်သူလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Adam Schiff', text_my: 'အက်ဒမ် ရှစ်ဖ်' }],
+    studyAnswers: [{ text_en: 'Adam Schiff', text_my: 'အဒမ် ရှစ်ဖ် (Adam Schiff)' }],
     dynamic: {
       type: 'state',
       field: 'senators',
@@ -655,7 +707,7 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Senate elections (staggered 6-year terms)',
     },
     answers: [
-      { text_en: 'Adam Schiff', text_my: 'အက်ဒမ် ရှစ်ဖ်', correct: true },
+      { text_en: 'Adam Schiff', text_my: 'အဒမ် ရှစ်ဖ် (Adam Schiff)', correct: true },
       {
         text_en: 'The Governor of your state',
         text_my: 'သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူး',
@@ -679,7 +731,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S09',
     question_en: 'The House of Representatives has how many voting members?',
-    question_my: 'အောက်လွှတ်တော်တွင် မဲပေးခွင့်ရှိသူ ဘယ်နှစ်ဦးရှိပါသလဲ။',
+    question_my: 'အောက်လွှတ်တော် (House of Representatives) မှာ မဲပေးခွင့်ရှိသူ ဘယ်နှစ်ဦးရှိလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'four hundred thirty-five (435)', text_my: 'လေးရာ့သုံးဆယ့်ငါး (၄၃၅)' },
@@ -710,7 +762,8 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S10',
     question_en: 'We elect a U.S. Representative for how many years?',
-    question_my: 'အမေရိကန် ကိုယ်စားလှယ်တစ်ဦးကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်ပါသလဲ။',
+    question_my:
+      'အမေရိကန် အောက်လွှတ်တော်အမတ် (Representative) တစ်ဦးကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်လဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'two (2)', text_my: 'နှစ် (၂)' }],
     answers: [
@@ -734,9 +787,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S11',
     question_en: 'Name your U.S. Representative.',
-    question_my: 'သင်၏ အမေရိကန် ကိုယ်စားလှယ်ကို အမည်ပေးပါ။',
+    question_my: 'သင့်ရဲ့ အမေရိကန် အောက်လွှတ်တော်အမတ် (Representative) ကို ပြောပြပါ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး' }],
+    studyAnswers: [{ text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး (Judy Chu)' }],
     dynamic: {
       type: 'state',
       field: 'representative',
@@ -744,7 +797,7 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'House elections (every 2 years)',
     },
     answers: [
-      { text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး', correct: true },
+      { text_en: 'Judy Chu', text_my: 'ဂျူဒီ ချူး (Judy Chu)', correct: true },
       { text_en: 'The Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: false },
       {
         text_en: 'The Governor of your state',
@@ -768,7 +821,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S12',
     question_en: 'Who does a U.S. Senator represent?',
-    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ်သည် မည်သူ့ကို ကိုယ်စားပြုသနည်း။',
+    question_my: 'အမေရိကန် အထက်လွှတ်တော်အမတ် (Senator) က ဘယ်သူ့ကို ကိုယ်စားပြုလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'all people of the state', text_my: 'ပြည်နယ်၏ ပြည်သူအားလုံး' }],
     answers: [
@@ -798,7 +851,7 @@ export const americanGovernmentQuestions: Question[] = [
     id: 'GOV-S13',
     question_en: 'Why do some states have more Representatives than other states?',
     question_my:
-      'အချို့ပြည်နယ်များတွင် အခြားပြည်နယ်များထက် ကိုယ်စားလှယ်များ အဘယ်ကြောင့် ပိုများသနည်း။',
+      'အချို့ပြည်နယ် (State) တွေမှာ အခြားပြည်နယ်တွေထက် အောက်လွှတ်တော်အမတ် (Representative) တွေ ဘာကြောင့် ပိုများလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: "(because of) the state's population", text_my: 'ပြည်နယ်၏ လူဦးရေကြောင့်' },
@@ -842,7 +895,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S14',
     question_en: 'We elect a President for how many years?',
-    question_my: 'သမ္မတကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်ပါသလဲ။',
+    question_my: 'သမ္မတ (President) ကို ဘယ်နှစ်နှစ်အတွက် ရွေးကောက်တင်မြှောက်လဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'four (4)', text_my: 'လေး (၄)' }],
     answers: [
@@ -863,7 +916,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S15',
     question_en: 'In what month do we vote for President?',
-    question_my: 'သမ္မတကို ဘယ်လမှာ မဲပေးကြလဲ။',
+    question_my: 'သမ္မတ (President) ကို ဘယ်လမှာ မဲပေးကြလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'November', text_my: 'နိုဝင်ဘာ' }],
     answers: [
@@ -888,9 +941,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S16',
     question_en: 'What is the name of the President of the United States now?',
-    question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ သမ္မတအမည်ကား အဘယ်နည်း။',
+    question_my: 'အခု အမေရိကန်ပြည်ထောင်စုရဲ့ သမ္မတ (President) အမည်က ဘာလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Donald Trump', text_my: 'ဒေါ်နယ်ထရန့်' }],
+    studyAnswers: [{ text_en: 'Donald Trump', text_my: 'ဒေါ်နယ် ထရန့် (Donald Trump)' }],
     dynamic: {
       type: 'time',
       field: 'president',
@@ -898,10 +951,14 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Presidential election (every 4 years)',
     },
     answers: [
-      { text_en: 'Joe Biden', text_my: 'ဂျိုးဘိုင်ဒင်', correct: false },
-      { text_en: 'Donald Trump', text_my: 'ဒေါ်နယ်ထရန့်', correct: true },
-      { text_en: 'Barack Obama', text_my: 'ဘားရက်အိုဘားမား', correct: false },
-      { text_en: 'Kamala Harris', text_my: 'ကမလာ ဟားရစ်', correct: false },
+      { text_en: 'Joe Biden', text_my: 'ဂျိုး ဘိုင်ဒင် (Joe Biden)', correct: false },
+      { text_en: 'Donald Trump', text_my: 'ဒေါ်နယ် ထရန့် (Donald Trump)', correct: true },
+      {
+        text_en: 'Barack Obama',
+        text_my: 'ဘရက် အိုဘားမား (Barack Obama)',
+        correct: false,
+      },
+      { text_en: 'Kamala Harris', text_my: 'ကမလာ ဟားရစ် (Kamala Harris)', correct: false },
     ],
     explanation: {
       brief_en:
@@ -915,9 +972,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S17',
     question_en: 'What is the name of the Vice President of the United States now?',
-    question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ ဒုတိယသမ္မတအမည်ကား အဘယ်နည်း။',
+    question_my: 'အခု အမေရိကန်ပြည်ထောင်စုရဲ့ ဒုတိယသမ္မတ (Vice President) အမည်က ဘာလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ်' }],
+    studyAnswers: [{ text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ် (JD Vance)' }],
     dynamic: {
       type: 'time',
       field: 'vicePresident',
@@ -925,10 +982,10 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Presidential election (every 4 years)',
     },
     answers: [
-      { text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ်', correct: true },
-      { text_en: 'Mike Pence', text_my: 'မိုက်ပင့်', correct: false },
-      { text_en: 'Joe Biden', text_my: 'ဂျိုးဘိုင်ဒင်', correct: false },
-      { text_en: 'Nancy Pelosi', text_my: 'နန်စီ ပလိုစီ', correct: false },
+      { text_en: 'JD Vance', text_my: 'ဂျေဒီ ဗန်စ် (JD Vance)', correct: true },
+      { text_en: 'Mike Pence', text_my: 'မိုက် ပင့်စ် (Mike Pence)', correct: false },
+      { text_en: 'Joe Biden', text_my: 'ဂျိုး ဘိုင်ဒင် (Joe Biden)', correct: false },
+      { text_en: 'Nancy Pelosi', text_my: 'နန်စီ ပလိုစီ (Nancy Pelosi)', correct: false },
     ],
     explanation: {
       brief_en:
@@ -941,14 +998,26 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S18',
     question_en: 'If the President can no longer serve, who becomes President?',
-    question_my: 'သမ္မတက တာဝန်မထမ်းဆောင်နိုင်တော့ရင် ဘယ်သူက သမ္မတဖြစ်လာမလဲ။',
+    question_my: 'သမ္မတ (President) က တာဝန်မထမ်းဆောင်နိုင်တော့ရင် ဘယ်သူက သမ္မတဖြစ်လာမလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ' }],
+    studyAnswers: [{ text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ (Vice President)' }],
     answers: [
-      { text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ', correct: true },
-      { text_en: 'the Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: false },
+      {
+        text_en: 'the Vice President',
+        text_my: 'ဒုတိယသမ္မတ (Vice President)',
+        correct: true,
+      },
+      {
+        text_en: 'the Speaker of the House',
+        text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House)',
+        correct: false,
+      },
       { text_en: 'the Secretary of State', text_my: 'နိုင်ငံခြားရေးဝန်ကြီး', correct: false },
-      { text_en: 'the Chief Justice', text_my: 'တရားသူကြီးချုပ်', correct: false },
+      {
+        text_en: 'the Chief Justice',
+        text_my: 'တရားသူကြီးချုပ် (Chief Justice)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
@@ -964,11 +1033,20 @@ export const americanGovernmentQuestions: Question[] = [
     question_en:
       'If both the President and the Vice President can no longer serve, who becomes President?',
     question_my:
-      'သမ္မတနဲ့ ဒုတိယသမ္မတ နှစ်ယောက်စလုံး တာဝန်မထမ်းဆောင်နိုင်တော့ရင် ဘယ်သူက သမ္မတဖြစ်လာမလဲ။',
+      'သမ္မတ (President) နဲ့ ဒုတိယသမ္မတ (Vice President) နှစ်ယောက်စလုံး တာဝန်မထမ်းဆောင်နိုင်တော့ရင် ဘယ်သူက သမ္မတဖြစ်လာမလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ' }],
+    studyAnswers: [
+      {
+        text_en: 'the Speaker of the House',
+        text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House)',
+      },
+    ],
     answers: [
-      { text_en: 'the Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: true },
+      {
+        text_en: 'the Speaker of the House',
+        text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House)',
+        correct: true,
+      },
       { text_en: 'the President pro tempore', text_my: 'ယာယီသမ္မတ', correct: false },
       { text_en: 'the Secretary of State', text_my: 'နိုင်ငံခြားရေးဝန်ကြီး', correct: false },
       { text_en: 'the Chief Justice', text_my: 'တရားသူကြီးချုပ်', correct: false },
@@ -985,24 +1063,24 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S20',
     question_en: 'Who is the Commander in Chief of the military?',
-    question_my: 'စစ်တပ်၏ ကာကွယ်ရေးဦးစီးချုပ်သည် မည်သူနည်း။',
+    question_my: 'စစ်တပ်ရဲ့ ကာကွယ်ရေးဦးစီးချုပ် (Commander in Chief) က ဘယ်သူလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ' }],
+    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ (President)' }],
     answers: [
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: true },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: true },
       { text_en: 'the Secretary of Defense', text_my: 'ကာကွယ်ရေးဝန်ကြီး', correct: false },
       {
         text_en: 'the Chairman of the Joint Chiefs of Staff',
         text_my: 'ပူးတွဲစစ်ဦးစီးချုပ်များအဖွဲ့ ဥက္ကဋ္ဌ',
         correct: false,
       },
-      { text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ', correct: false },
+      { text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ (Vice President)', correct: false },
     ],
     explanation: {
       brief_en:
         'The President is Commander in Chief of the military. This means civilian (non-military) leadership controls the armed forces, which is a key principle of American democracy.',
       brief_my:
-        'သမ္မတသည် စစ်တပ်၏ ကာကွယ်ရေးဦးစီးချုပ် ဖြစ်သည်။ အရပ်သား (စစ်တပ်မဟုတ်သော) ခေါင်းဆောင်မှုက တပ်မတော်ကို ထိန်းချုပ်ကြောင်း ဆိုလိုပြီး ၎င်းသည် အမေရိကန်ဒီမိုကရေစီ၏ အဓိကမူ တစ်ခုဖြစ်သည်။',
+        'သမ္မတ (President) က စစ်တပ်ရဲ့ ကာကွယ်ရေးဦးစီးချုပ် ဖြစ်တယ်။ အရပ်သား (စစ်တပ်မဟုတ်တဲ့) ခေါင်းဆောင်မှုက တပ်မတော်ကို ထိန်းချုပ်တယ်ဆိုတာ အမေရိကန် ဒီမိုကရေစီ (Democracy) ရဲ့ အဓိကမူ တစ်ခုဖြစ်တယ်။',
       citation: 'Article II, Section 2',
       relatedQuestionIds: ['GOV-S03', 'GOV-S16'],
     },
@@ -1010,14 +1088,22 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S21',
     question_en: 'Who signs bills to become laws?',
-    question_my: 'ဥပဒေဖြစ်လာရန် ဥပဒေကြမ်းများကို မည်သူက လက်မှတ်ရေးထိုးသနည်း။',
+    question_my: 'ဥပဒေ (Law) ဖြစ်လာဖို့ ဥပဒေကြမ်းတွေကို ဘယ်သူက လက်မှတ်ထိုးလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ' }],
+    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ (President)' }],
     answers: [
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: true },
-      { text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ', correct: false },
-      { text_en: 'the Chief Justice', text_my: 'တရားသူကြီးချုပ်', correct: false },
-      { text_en: 'the Speaker of the House', text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ', correct: false },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: true },
+      { text_en: 'the Vice President', text_my: 'ဒုတိယသမ္မတ (Vice President)', correct: false },
+      {
+        text_en: 'the Chief Justice',
+        text_my: 'တရားသူကြီးချုပ် (Chief Justice)',
+        correct: false,
+      },
+      {
+        text_en: 'the Speaker of the House',
+        text_my: 'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
@@ -1031,14 +1117,22 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S22',
     question_en: 'Who vetoes bills?',
-    question_my: 'ဥပဒေကြမ်းများကို မည်သူက ဗီတိုအာဏာသုံးသနည်း။',
+    question_my: 'ဥပဒေကြမ်းတွေကို ဘယ်သူက ဗီတိုအာဏာ (Veto) သုံးလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ' }],
+    studyAnswers: [{ text_en: 'the President', text_my: 'သမ္မတ (President)' }],
     answers: [
-      { text_en: 'the President', text_my: 'သမ္မတ', correct: true },
-      { text_en: 'the Senate', text_my: 'အထက်လွှတ်တော်', correct: false },
-      { text_en: 'the House of Representatives', text_my: 'အောက်လွှတ်တော်', correct: false },
-      { text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်', correct: false },
+      { text_en: 'the President', text_my: 'သမ္မတ (President)', correct: true },
+      { text_en: 'the Senate', text_my: 'အထက်လွှတ်တော် (Senate)', correct: false },
+      {
+        text_en: 'the House of Representatives',
+        text_my: 'အောက်လွှတ်တော် (House of Representatives)',
+        correct: false,
+      },
+      {
+        text_en: 'the Supreme Court',
+        text_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
@@ -1052,14 +1146,20 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S23',
     question_en: "What does the President's Cabinet do?",
-    question_my: 'သမ္မတ၏ အစိုးရအဖွဲ့က ဘာလုပ်သလဲ။',
+    question_my: 'သမ္မတ (President) ရဲ့ အစိုးရအဖွဲ့ (Cabinet) က ဘာလုပ်လဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'advises the President', text_my: 'သမ္မတကို အကြံပေးသည်' }],
+    studyAnswers: [
+      { text_en: 'advises the President', text_my: 'သမ္မတ (President) ကို အကြံပေးတယ်' },
+    ],
     answers: [
-      { text_en: 'advises the President', text_my: 'သမ္မတကို အကြံပေးသည်', correct: true },
-      { text_en: 'makes laws', text_my: 'ဥပဒေပြုသည်', correct: false },
-      { text_en: 'interprets laws', text_my: 'ဥပဒေများကို အဓိပ္ပာယ်ဖွင့်ဆိုသည်', correct: false },
-      { text_en: 'commands the military', text_my: 'စစ်တပ်ကို အမိန့်ပေးသည်', correct: false },
+      {
+        text_en: 'advises the President',
+        text_my: 'သမ္မတ (President) ကို အကြံပေးတယ်',
+        correct: true,
+      },
+      { text_en: 'makes laws', text_my: 'ဥပဒေ (Law) ပြုတယ်', correct: false },
+      { text_en: 'interprets laws', text_my: 'ဥပဒေတွေကို အဓိပ္ပာယ်ဖွင့်ဆိုတယ်', correct: false },
+      { text_en: 'commands the military', text_my: 'စစ်တပ်ကို အမိန့်ပေးတယ်', correct: false },
     ],
     explanation: {
       brief_en:
@@ -1073,7 +1173,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S24',
     question_en: 'What are two Cabinet-level positions?',
-    question_my: 'အစိုးရအဖွဲ့အဆင့် ရာထူးနှစ်ခုက ဘာတွေလဲ။',
+    question_my: 'အစိုးရအဖွဲ့ (Cabinet) အဆင့် ရာထူး ၂ ခုက ဘာတွေလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'Secretary of Agriculture', text_my: 'စိုက်ပျိုးရေးဝန်ကြီး' },
@@ -1132,7 +1232,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S25',
     question_en: 'What does the judicial branch do?',
-    question_my: 'တရားစီရင်ရေးဌာနက ဘာလုပ်သလဲ။',
+    question_my: 'တရားစီရင်ရေးဌာန (Judicial Branch) က ဘာလုပ်လဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'reviews laws', text_my: 'ဥပဒေများကို ပြန်လည်သုံးသပ်သည်' },
@@ -1161,12 +1261,20 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S26',
     question_en: 'What is the highest court in the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ အမြင့်ဆုံးတရားရုံးကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်ပြည်ထောင်စုရဲ့ အမြင့်ဆုံးတရားရုံးက ဘာလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်' }],
+    studyAnswers: [{ text_en: 'the Supreme Court', text_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court)' }],
     answers: [
-      { text_en: 'the Supreme Court', text_my: 'တရားရုံးချုပ်', correct: true },
-      { text_en: 'the Federal Court', text_my: 'ဖက်ဒရယ်တရားရုံး', correct: false },
+      {
+        text_en: 'the Supreme Court',
+        text_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court)',
+        correct: true,
+      },
+      {
+        text_en: 'the Federal Court',
+        text_my: 'ဖက်ဒရယ် (Federal) တရားရုံး',
+        correct: false,
+      },
       { text_en: 'the Superior Court', text_my: 'အထက်တရားရုံး', correct: false },
       {
         text_en: 'the International Court of Justice',
@@ -1186,7 +1294,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S27',
     question_en: 'How many justices are on the Supreme Court?',
-    question_my: 'တရားရုံးချုပ်တွင် တရားသူကြီး ဘယ်နှစ်ဦးရှိပါသလဲ။',
+    question_my: 'တရားလွှတ်တော်ချုပ် (Supreme Court) မှာ တရားသူကြီး ဘယ်နှစ်ဦးရှိလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'nine (9)', text_my: 'ကိုး (၉)' }],
     answers: [
@@ -1208,9 +1316,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S28',
     question_en: 'Who is the Chief Justice of the United States now?',
-    question_my: 'ယခု အမေရိကန်ပြည်ထောင်စု၏ တရားသူကြီးချုပ်သည် မည်သူနည်း။',
+    question_my: 'အခု အမေရိကန်ပြည်ထောင်စုရဲ့ တရားသူကြီးချုပ် (Chief Justice) က ဘယ်သူလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ်' }],
+    studyAnswers: [{ text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ် (John Roberts)' }],
     dynamic: {
       type: 'time',
       field: 'chiefJustice',
@@ -1218,10 +1326,22 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Supreme Court appointment (lifetime tenure, changes on retirement/death)',
     },
     answers: [
-      { text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ်', correct: true },
-      { text_en: 'Clarence Thomas', text_my: 'ကလာရင့် သောမတ်', correct: false },
-      { text_en: 'Sonia Sotomayor', text_my: 'ဆိုနီယာ ဆိုတိုမေယာ', correct: false },
-      { text_en: 'Ruth Bader Ginsburg', text_my: 'ရုသ် ဘေဒါ ဂင်စဘာ့ဂ်', correct: false },
+      { text_en: 'John Roberts', text_my: 'ဂျွန် ရောဘတ် (John Roberts)', correct: true },
+      {
+        text_en: 'Clarence Thomas',
+        text_my: 'ကလာရင့်စ် သောမတ်စ် (Clarence Thomas)',
+        correct: false,
+      },
+      {
+        text_en: 'Sonia Sotomayor',
+        text_my: 'ဆိုနီယာ ဆိုတိုမေယာ (Sonia Sotomayor)',
+        correct: false,
+      },
+      {
+        text_en: 'Ruth Bader Ginsburg',
+        text_my: 'ရုသ် ဘေဒါ ဂင်းစ်ဘတ် (Ruth Bader Ginsburg)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
@@ -1236,7 +1356,7 @@ export const americanGovernmentQuestions: Question[] = [
     question_en:
       'Under our Constitution, some powers belong to the federal government. What is one power of the federal government?',
     question_my:
-      'ကျွန်ုပ်တို့၏ ဖွဲ့စည်းပုံအခြေခံဥပဒေအရ အချို့သော အာဏာများသည် ဖက်ဒရယ်အစိုးရနှင့် သက်ဆိုင်သည်။ ဖက်ဒရယ်အစိုးရ၏ အာဏာတစ်ခုကား အဘယ်နည်း။',
+      'ငါတို့ရဲ့ ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) အရ အချို့အာဏာတွေက ဖက်ဒရယ် (Federal) အစိုးရနဲ့ သက်ဆိုင်တယ်။ ဖက်ဒရယ်အစိုးရရဲ့ အာဏာတစ်ခုက ဘာလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'to print money', text_my: 'ငွေစက္ကူရိုက်နှိပ်ရန်' },
@@ -1276,7 +1396,7 @@ export const americanGovernmentQuestions: Question[] = [
     question_en:
       'Under our Constitution, some powers belong to the states. What is one power of the states?',
     question_my:
-      'ကျွန်ုပ်တို့၏ ဖွဲ့စည်းပုံအခြေခံဥပဒေအရ အချို့သော အာဏာများသည် ပြည်နယ်များနှင့် သက်ဆိုင်သည်။ ပြည်နယ်များ၏ အာဏာတစ်ခုကား အဘယ်နည်း။',
+      'ငါတို့ရဲ့ ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) အရ အချို့အာဏာတွေက ပြည်နယ် (State) တွေနဲ့ သက်ဆိုင်တယ်။ ပြည်နယ်တွေရဲ့ အာဏာတစ်ခုက ဘာလဲ။',
     category: 'System of Government',
     studyAnswers: [
       {
@@ -1313,9 +1433,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S31',
     question_en: 'Who is the Governor of your state now?',
-    question_my: 'ယခု သင်၏ပြည်နယ်အုပ်ချုပ်ရေးမှူးသည် မည်သူနည်း။',
+    question_my: 'အခု သင့်ပြည်နယ်ရဲ့ ပြည်နယ်အုပ်ချုပ်ရေးမှူး (Governor) က ဘယ်သူလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးစမ်' }],
+    studyAnswers: [{ text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးဆုမ် (Gavin Newsom)' }],
     dynamic: {
       type: 'state',
       field: 'governor',
@@ -1323,7 +1443,7 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'State gubernatorial elections (varies by state)',
     },
     answers: [
-      { text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးစမ်', correct: true },
+      { text_en: 'Gavin Newsom', text_my: 'ဂက်ဗင် နျူးဆုမ် (Gavin Newsom)', correct: true },
       { text_en: 'The President', text_my: 'သမ္မတ', correct: false },
       { text_en: 'The Mayor of your city', text_my: 'သင်၏မြို့တော်ဝန်', correct: false },
       {
@@ -1344,9 +1464,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S32',
     question_en: 'What is the capital of your state?',
-    question_my: 'သင်၏ပြည်နယ်၏ မြို့တော်ကား အဘယ်နည်း။',
+    question_my: 'သင့်ပြည်နယ် (State) ရဲ့ မြို့တော်က ဘာလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Sacramento', text_my: 'ဆက်ကရမေန်တို' }],
+    studyAnswers: [{ text_en: 'Sacramento', text_my: 'ဆက်ကရမင်တို (Sacramento)' }],
     dynamic: {
       type: 'state',
       field: 'capital',
@@ -1354,7 +1474,7 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Static - state capitals do not change',
     },
     answers: [
-      { text_en: 'Sacramento', text_my: 'ဆက်ကရမေန်တို', correct: true },
+      { text_en: 'Sacramento', text_my: 'ဆက်ကရမင်တို (Sacramento)', correct: true },
       { text_en: 'Washington, D.C.', text_my: 'ဝါရှင်တန်ဒီစီ', correct: false },
       { text_en: 'New York City', text_my: 'နယူးယောက်မြို့', correct: false },
       {
@@ -1371,14 +1491,14 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_en:
         "The state capital is NOT always the biggest city. For example, California's capital is Sacramento, not Los Angeles.",
       commonMistake_my:
-        'ပြည်နယ်မြို့တော်သည် အကြီးဆုံးမြို့ အမြဲမဟုတ်ပါ။ ဥပမာ — ကယ်လီဖိုးနီးယား၏ မြို့တော်သည် လော့စ်အိန်ဂျယ်လိစ် မဟုတ်ဘဲ ဆက်ကရမေန်တို ဖြစ်သည်။',
+        'ပြည်နယ်မြို့တော်သည် အကြီးဆုံးမြို့ အမြဲမဟုတ်ပါ။ ဥပမာ — ကယ်လီဖိုးနီးယား၏ မြို့တော်သည် လော့စ်အိန်ဂျယ်လိစ် မဟုတ်ဘဲ ဆက်ကရမင်တို (Sacramento) ဖြစ်သည်။',
       relatedQuestionIds: ['GOV-S31', 'SYM-07'],
     },
   },
   {
     id: 'GOV-S33',
     question_en: 'What are the two major political parties in the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ အဓိကနိုင်ငံရေးပါတီကြီးနှစ်ခုကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်ပြည်ထောင်စုရဲ့ အဓိက နိုင်ငံရေးပါတီ (Political Party) ကြီး ၂ ခုက ဘာတွေလဲ။',
     category: 'System of Government',
     studyAnswers: [
       { text_en: 'Democratic and Republican', text_my: 'ဒီမိုကရက်တစ်နှင့် ရီပတ်ဘလစ်ကန်' },
@@ -1409,7 +1529,7 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S34',
     question_en: 'What is the political party of the President now?',
-    question_my: 'ယခု သမ္မတ၏ နိုင်ငံရေးပါတီကား အဘယ်နည်း။',
+    question_my: 'အခု သမ္မတ (President) ရဲ့ နိုင်ငံရေးပါတီ (Political Party) က ဘာလဲ။',
     category: 'System of Government',
     studyAnswers: [{ text_en: 'Republican Party', text_my: 'ရီပတ်ဘလစ်ကန်ပါတီ' }],
     dynamic: {
@@ -1436,9 +1556,9 @@ export const americanGovernmentQuestions: Question[] = [
   {
     id: 'GOV-S35',
     question_en: 'What is the name of the Speaker of the House of Representatives now?',
-    question_my: 'ယခု အောက်လွှတ်တော်ဥက္ကဋ္ဌ၏ အမည်ကား အဘယ်နည်း။',
+    question_my: 'အခု အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker of the House) ရဲ့ အမည်က ဘာလဲ။',
     category: 'System of Government',
-    studyAnswers: [{ text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင်' }],
+    studyAnswers: [{ text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင် (Mike Johnson)' }],
     dynamic: {
       type: 'time',
       field: 'speakerOfHouse',
@@ -1446,10 +1566,14 @@ export const americanGovernmentQuestions: Question[] = [
       updateTrigger: 'Each new Congress (every 2 years) or vacancy',
     },
     answers: [
-      { text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင်', correct: true },
-      { text_en: 'Nancy Pelosi', text_my: 'နန်စီ ပလိုစီ', correct: false },
-      { text_en: 'Kevin McCarthy', text_my: 'ကီဗင် မက်ကာသီ', correct: false },
-      { text_en: 'Chuck Schumer', text_my: 'ချားလ်စ် ရှူးမား', correct: false },
+      { text_en: 'Mike Johnson', text_my: 'မိုက် ဂျွန်ဆင် (Mike Johnson)', correct: true },
+      { text_en: 'Nancy Pelosi', text_my: 'နန်စီ ပလိုစီ (Nancy Pelosi)', correct: false },
+      {
+        text_en: 'Kevin McCarthy',
+        text_my: 'ကက်ဗင် မက်ကာသီ (Kevin McCarthy)',
+        correct: false,
+      },
+      { text_en: 'Chuck Schumer', text_my: 'ချတ်ခ် ရှူးမား (Chuck Schumer)', correct: false },
     ],
     explanation: {
       brief_en:
