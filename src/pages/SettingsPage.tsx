@@ -331,7 +331,7 @@ export default function SettingsPage() {
               {showBurmese && (
                 <p className="text-xs text-muted-foreground font-myanmar mt-1">
                   {
-                    'အင်္ဂလိပ်နဲ့ မြန်မာ နှစ်ဘာသာလုံး ပြပါတယ်။ အင်္ဂလိပ်စာ အပေါ်မှာ၍ မြန်မာဘာသာ အောက်မှာ ပြပါတယ်။'
+                    'အင်္ဂလိပ်နဲ့ မြန်မာ နှစ်ဘာသာလုံး ပြပါတယ်။ အင်္ဂလိပ်စာ အပေါ်မှာ၊ မြန်မာဘာသာ အောက်မှာ ပြပါတယ်။'
                   }
                 </p>
               )}
@@ -531,7 +531,7 @@ export default function SettingsPage() {
             </div>
             <div className="flex items-center gap-3">
               <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
-                Time / <span className="font-myanmar">"အချိန်"</span>:
+                Time / <span className="font-myanmar">အချိန်</span>:
               </label>
               <input
                 type="time"

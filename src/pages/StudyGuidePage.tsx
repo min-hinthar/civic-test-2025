@@ -363,12 +363,12 @@ const StudyGuidePage = () => {
 
           <div className="mb-6 flex flex-wrap gap-3">
             <BilingualButton
-              label={{ en: 'Study as Flashcards', my: 'ကတ်များဖြင့်လေ့လာပါ' }}
+              label={{ en: 'Study as Flashcards', my: 'ကဒ်တွဲနဲ့ လေ့လာပါ' }}
               variant="primary"
               onClick={() => handleShowCards(selectedCategory)}
             />
             <BilingualButton
-              label={{ en: 'Sort Cards', my: 'ကတ်များအမျိုးအစားခွဲပါ' }}
+              label={{ en: 'Sort Cards', my: 'ကဒ်တွဲ ခွဲခြားပါ' }}
               variant="secondary"
               onClick={() => navigate(`/study#sort-${encodeURIComponent(selectedCategory)}`)}
             />
@@ -477,7 +477,13 @@ const StudyGuidePage = () => {
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                              {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
+                              {showBurmese ? (
+                                <>
+                                  Answer - <span className="font-myanmar">အဖြေ</span>
+                                </>
+                              ) : (
+                                'Answer'
+                              )}
                             </p>
                             <div className="flex gap-2">
                               <SpeechButton
@@ -563,7 +569,7 @@ const StudyGuidePage = () => {
           Tap a category to start studying. Every card you review builds your confidence!
           {showBurmese && (
             <span className="block font-myanmar mt-1">
-              လေ့လာရန် အမျိုးအစားတစ်ခုကို ရွေးပါ။ သင်ကြည့်တဲ့ကတ်တိုင်းက
+              လေ့လာရန် အမျိုးအစားတစ်ခုကို ရွေးပါ။ သင်ကြည့်တဲ့ကဒ်တိုင်းက
               သင့်ကိုယုံကြည်မှုပိုပေးပါတယ်!
             </span>
           )}
@@ -602,13 +608,13 @@ const StudyGuidePage = () => {
         {/* Action buttons: flashcards + review deck */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           <BilingualButton
-            label={{ en: 'View All Flashcards', my: 'ကတ်များအားလုံးကြည့်ပါ' }}
+            label={{ en: 'View All Flashcards', my: 'ကဒ်တွဲအားလုံး ကြည့်ပါ' }}
             variant="secondary"
             onClick={() => handleShowCards()}
           />
           <span className="relative inline-flex">
             <BilingualButton
-              label={{ en: 'Review Deck', my: 'ပြန်လည်သုံးသပ်ကတ်များ' }}
+              label={{ en: 'Review Deck', my: 'ကဒ်တွဲ ပြန်လည်သုံးသပ်' }}
               variant="outline"
               onClick={() => navigate('/study#deck')}
             />
@@ -630,7 +636,7 @@ const StudyGuidePage = () => {
               <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
               {showBurmese && (
                 <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
-                  အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကတ်များ
+                  အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကဒ်များ
                 </p>
               )}
             </div>
@@ -786,7 +792,13 @@ const StudyGuidePage = () => {
                         <div className="flex-1 flex flex-col p-6 overflow-hidden">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
                             <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                              {showBurmese ? 'Answer - အဖြေ' : 'Answer'}
+                              {showBurmese ? (
+                                <>
+                                  Answer - <span className="font-myanmar">အဖြေ</span>
+                                </>
+                              ) : (
+                                'Answer'
+                              )}
                             </p>
                             <div className="flex gap-2">
                               <SpeechButton
