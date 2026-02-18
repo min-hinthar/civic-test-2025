@@ -206,11 +206,19 @@ Plans:
   1. All UI strings (buttons, labels, messages, toasts, modals) have natural Burmese translations -- no robotic/literal phrasing
   2. Zero missing Burmese translations across all user-facing screens (verified by exhaustive audit)
   3. Recurring concepts use consistent Burmese terminology throughout (e.g., same word for "practice" everywhere)
-**Plans**: TBD
+**Plans**: 10 plans
 
 Plans:
-- [ ] 25-01: TBD
-- [ ] 25-02: TBD
+- [ ] 25-01-PLAN.md — Burmese glossary + Myanmar font infrastructure (Google Fonts + CSS line-breaking)
+- [ ] 25-02-PLAN.md — Question translations: American Government (47 questions)
+- [ ] 25-03-PLAN.md — Question translations: Remaining 6 files (81 questions) + USCIS 2025 quality check
+- [ ] 25-04-PLAN.md — Centralized strings (strings.ts) + navigation + categories + badges + nudges
+- [ ] 25-05-PLAN.md — Core page inline strings (Landing, Auth, Settings, Dashboard, Study, Hub, Onboarding)
+- [ ] 25-06-PLAN.md — Test/Interview page + session management + PWA component inline strings
+- [ ] 25-07-PLAN.md — Social, SRS, and sort mode component inline strings
+- [ ] 25-08-PLAN.md — Quiz, results, interview, and progress component inline strings
+- [ ] 25-09-PLAN.md — Font-myanmar audit + showBurmese toggle verification + responsive overflow check
+- [ ] 25-10-PLAN.md — Audio regeneration + flagged disagreements + final build verification
 
 ## Progress
 
@@ -229,13 +237,13 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 22. TTS Quality | v2.1 | 9/9 | Complete | 2026-02-15 |
 | 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
-| 25. Burmese Translation | v2.1 | 0/TBD | Not started | - |
+| 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 38/51 | In progress |
+| v2.1 | 8 | 69 | 38/51 | In progress |
 
 ---
 
