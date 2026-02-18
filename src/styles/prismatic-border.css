@@ -30,6 +30,12 @@
 .prismatic-border.fixed {
   position: fixed;
 }
+.prismatic-border.absolute {
+  position: absolute;
+}
+.prismatic-border.sticky {
+  position: sticky;
+}
 
 /* ── Animated rainbow border ring (light mode) ── */
 .prismatic-border::before {

@@ -218,12 +218,14 @@ export function Flashcard3D({
   const stripColorClass =
     subCategoryStripBg ?? (categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null);
 
-  // Common card styles -- glass-light + prismatic-border for frosted glass flashcard
+  // Card face styles — avoid glass-light (backdrop-filter) and prismatic-border
+  // (position:relative, isolation:isolate) inside preserve-3d context.
+  // These properties break 3D transforms on mobile browsers.
   // backfaceVisibility applied via inline style only (highest specificity for 3D transforms)
   const cardFaceClasses = clsx(
     'absolute inset-0 w-full h-full',
     'rounded-2xl',
-    'glass-light prismatic-border',
+    'bg-card border border-border/60',
     'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
     'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
     'flex flex-col overflow-hidden'
