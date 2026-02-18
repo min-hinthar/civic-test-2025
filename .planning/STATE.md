@@ -46,6 +46,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - FlagToggle sr-only announcement uses aria-live="polite" (not assertive) since user initiated
 - Toast container uses aria-live="polite" while individual toasts use conditional roles (alert vs status)
 - Removed aria-atomic from toast container (each toast is a separate announcement)
+- Persistent sr-only div always in DOM (not inside AnimatePresence) for reliable screen reader announcements
+- Visual animation elements marked aria-hidden=true; separate sr-only div handles announcements
+- High contrast overrides at semantic token level (--color-text-secondary, --color-border) to cascade through backward compat aliases
+- Focus moves to question area (tabIndex=-1, outline-none) after TRANSITION_COMPLETE via requestAnimationFrame
+- Skip-to-content link uses sr-only + focus:not-sr-only pattern (visible only on focus)
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -263,10 +268,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 02 complete
+Stopped at: Phase 24 plan 03 complete
 Next step: Continue Phase 24 plans (24-01, 24-04 through 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 02 complete -- screen reader announcements)*
+*Last updated: 2026-02-18 (Phase 24 plan 03 complete -- celebrations a11y, high contrast, skip link, focus management)*
