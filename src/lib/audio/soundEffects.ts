@@ -415,3 +415,23 @@ export function playMasteryComplete(): void {
     // Silently ignore
   }
 }
+
+// ---------------------------------------------------------------------------
+// Timer warning sounds
+// ---------------------------------------------------------------------------
+
+/**
+ * Short tick for per-question timer warning (at <= 5 seconds remaining).
+ * 800 Hz sine wave, 80ms duration, volume 0.15. Distinct from countdown tick
+ * by being used per-second during the warning phase.
+ */
+export function playTimerWarningTick(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+    playNote(ctx, 800, 0, 0.08, 0.15);
+  } catch {
+    // Silently ignore
+  }
+}
