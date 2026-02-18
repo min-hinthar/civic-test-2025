@@ -95,7 +95,7 @@ export function SocialOptInFlow({ open, onComplete, onCancel }: SocialOptInFlowP
           Social Features
           {showBurmese && (
             <span className="block font-myanmar text-base font-normal text-muted-foreground mt-1">
-              {'လူမှုဥရေးလုပ်ဆောင်ချက်များ'}
+              လူမှုရေးလုပ်ဆောင်ချက်များ
             </span>
           )}
         </DialogTitle>
@@ -198,9 +198,7 @@ function StepPrivacyNotice({
         <Shield className="h-5 w-5" />
         <span className="font-semibold">Privacy Notice</span>
         {showBurmese && (
-          <span className="font-myanmar text-sm text-muted-foreground">
-            / {'ကိုယ်ရေးသတိပေးချက်'}
-          </span>
+          <span className="font-myanmar text-sm text-muted-foreground">/ ကိုယ်ရေးသတိပေးချက်</span>
         )}
       </div>
 
@@ -211,9 +209,8 @@ function StepPrivacyNotice({
 
       {showBurmese && (
         <p className="font-myanmar text-sm text-muted-foreground leading-relaxed">
-          {
-            'လူမှုဥရေးလုပ်ဆောင်ချက်များကို ဖွင့်ခြင်းဖြင့် သင့်ပြသမည့်အမည်နှင့် ရမှတ်များကို ဥူးဆောင်ဘုတ်တွင် မြင်ရပါမည်။ Settings မှ အချိန်မရွေး ပိတ်နိုင်ပါသည်။'
-          }
+          လူမှုရေးလုပ်ဆောင်ချက်များကို ဖွင့်ခြင်းဖြင့် သင့်ပြသမည့်အမည်နှင့် အမှတ်များကို
+          အဆင့်ဇယားတွင် မြင်ရပါမည်။ Settings မှ အချိန်မရွေး ပိတ်နိုင်ပါသည်။
         </p>
       )}
 
@@ -263,7 +260,7 @@ function StepDisplayName({
         <User className="h-5 w-5" />
         <span className="font-semibold">Display Name</span>
         {showBurmese && (
-          <span className="font-myanmar text-sm text-muted-foreground">/ {'ပြသမည့်အမည်'}</span>
+          <span className="font-myanmar text-sm text-muted-foreground">/ ပြသမည့်အမည်</span>
         )}
       </div>
 
@@ -272,7 +269,7 @@ function StepDisplayName({
           This name will appear on the leaderboard
           {showBurmese && (
             <span className="font-myanmar block text-xs mt-0.5">
-              {'ဤအမည်သည် ဥူးဆောင်ဘုတ်တွင် ပေါ်လာပါမည်'}
+              ဤအမည်သည် အဆင့်ဇယားတွင် ပေါ်လာပါမည်
             </span>
           )}
         </label>
@@ -341,7 +338,7 @@ function StepConfirm({
         <p className="text-lg font-bold text-primary">{displayName}</p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
-            {'သင့်ပရိုဖိုင်ကို ဥူးဆောင်ဘုတ်တွင် ပြသပါမည်။'}
+            သင့်ပရိုဖိုင်ကို အဆင့်ဇယားတွင် ပြသပါမည်။
           </p>
         )}
       </div>
@@ -357,9 +354,7 @@ function StepConfirm({
           {showBurmese ? (
             <span className="flex flex-col items-center leading-tight py-1">
               <span>Enable Social</span>
-              <span className="font-myanmar text-xs opacity-80 font-normal">
-                {'လူမှုဥရေး ဖွင့်ပါ'}
-              </span>
+              <span className="font-myanmar text-xs opacity-80 font-normal">လူမှုရေး ဖွင့်ပါ</span>
             </span>
           ) : (
             'Enable Social'

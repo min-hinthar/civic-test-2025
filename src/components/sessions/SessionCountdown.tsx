@@ -48,7 +48,7 @@ export function SessionCountdown({ onComplete, subtitle }: SessionCountdownProps
   const [showSkip, setShowSkip] = useState(false);
   const skipButtonRef = useRef<HTMLButtonElement>(null);
 
-  const goText = showBurmese ? '\u1005\u1010\u1004\u103A!' : 'Go!';
+  const goText = showBurmese ? 'စတင်!' : 'Go!';
 
   // Handle skip / complete
   const handleComplete = useCallback(() => {
@@ -170,7 +170,7 @@ export function SessionCountdown({ onComplete, subtitle }: SessionCountdownProps
             <span
               className={
                 isGo
-                  ? 'block text-5xl font-black text-accent sm:text-6xl'
+                  ? `block text-5xl font-black text-accent sm:text-6xl ${showBurmese ? 'font-myanmar' : ''}`
                   : 'block text-8xl font-black text-foreground sm:text-9xl'
               }
             >
@@ -194,11 +194,9 @@ export function SessionCountdown({ onComplete, subtitle }: SessionCountdownProps
               handleComplete();
             }
           }}
-          className="mt-8 rounded-full border border-border px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className={`mt-8 rounded-full border border-border px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${showBurmese ? 'font-myanmar' : ''}`}
         >
-          {showBurmese
-            ? '\u1005\u1010\u1004\u103A\u101B\u1014\u103A \u1014\u103E\u102D\u1015\u103A\u1015\u102B'
-            : 'Tap to start'}
+          {showBurmese ? 'စတင်ရန် နှိပ်ပါ' : 'Tap to start'}
         </button>
       )}
     </div>

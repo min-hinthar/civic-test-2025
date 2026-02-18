@@ -120,9 +120,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
             <h3 className="text-sm font-semibold text-text-primary">Achievements</h3>
             {showBurmese && (
               <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
-                {
-                  '\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1019\u103E\u102F\u1019\u103B\u102C\u1038'
-                }
+                အောင်မြင်မှုများ
               </span>
             )}
           </div>
@@ -215,10 +213,10 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
         >
           {hasEarnedBadges
             ? showBurmese
-              ? `${earnedRecords.length} ဘက်ခ် ရရှိပြီး — အားလုံးကြည့်ရန် →`
+              ? `တံဆိပ် ${earnedRecords.length} ခု ရရှိပြီး — အားလုံးကြည့်ရန် →`
               : `${earnedRecords.length} badge${earnedRecords.length !== 1 ? 's' : ''} earned — View all →`
             : showBurmese
-              ? 'ဆက်လေ့လာပြီး ဘက်ခ်များ ရယူပါ →'
+              ? 'ဆက်လေ့လာပြီး တံဆိပ်များ ရယူပါ →'
               : 'Keep studying to earn badges →'}
         </button>
       </div>

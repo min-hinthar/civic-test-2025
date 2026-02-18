@@ -38,9 +38,9 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // ---------------------------------------------------------------------------
 
 const CATEGORY_LABELS: Record<'streak' | 'accuracy' | 'coverage', { en: string; my: string }> = {
-  streak: { en: 'Streak', my: 'ဆက်တိုက်' },
-  accuracy: { en: 'Accuracy', my: 'တိကျမှန်' },
-  coverage: { en: 'Coverage', my: 'လွမ်းခြုံ' },
+  streak: { en: 'Streak', my: 'ဆက်တိုက်မှု' },
+  accuracy: { en: 'Accuracy', my: 'မှန်ကန်မှု' },
+  coverage: { en: 'Coverage', my: 'ကျွမ်းကျင်မှု' },
 };
 
 // ---------------------------------------------------------------------------

@@ -158,7 +158,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
               <p
                 className={`text-xs text-muted-foreground uppercase tracking-wider ${showBurmese ? 'font-myanmar' : ''}`}
               >
-                {showBurmese ? 'ရမှတ်' : 'Score'}
+                {showBurmese ? 'အမှတ်' : 'Score'}
               </p>
               <p className="text-2xl font-bold text-foreground tabular-nums mt-1">
                 {entry.compositeScore.toLocaleString()}
@@ -243,7 +243,7 @@ export function LeaderboardProfile({ entry, open, onClose }: LeaderboardProfileP
             )}
           >
             Close
-            {showBurmese && <span className="font-myanmar ml-2 text-white/80">{'ပိတ်ပါ'}</span>}
+            {showBurmese && <span className="font-myanmar ml-2 text-white/80">ပိတ်ပါ</span>}
           </button>
         </div>
       </DialogContent>

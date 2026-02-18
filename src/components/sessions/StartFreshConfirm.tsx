@@ -20,15 +20,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const TEXT = {
   message: {
     en: 'Are you sure? Your progress will be lost.',
-    my: '\u101E\u1031\u1001\u103B\u102C\u1015\u102B\u101E\u101C\u102C\u1038? \u101E\u1004\u1037\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F \u1006\u102F\u1036\u1038\u101B\u103E\u102F\u1036\u1038\u1015\u102B\u1019\u100A\u103A\u104B',
+    my: 'သေချာပါသလား? တိုးတက်မှုတွေ ဆုံးရှုံးပါမယ်။',
   },
   discard: {
     en: 'Discard',
-    my: '\u1016\u103B\u1000\u103A\u1019\u100A\u103A',
+    my: 'ဖျက်မယ်',
   },
   cancel: {
     en: 'Cancel',
-    my: '\u1019\u101C\u102F\u1015\u103A\u1015\u102B',
+    my: 'မလုပ်ပါ',
   },
 } as const;
 
@@ -72,14 +72,18 @@ export function StartFreshConfirm({ onConfirm, onCancel }: StartFreshConfirmProp
           onClick={onCancel}
           className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
         >
-          {showBurmese ? TEXT.cancel.my : TEXT.cancel.en}
+          <span className={showBurmese ? 'font-myanmar' : ''}>
+            {showBurmese ? TEXT.cancel.my : TEXT.cancel.en}
+          </span>
         </button>
         <button
           type="button"
           onClick={onConfirm}
           className="flex-1 rounded-xl bg-destructive px-4 py-2.5 text-sm font-bold text-destructive-foreground transition-colors hover:bg-destructive-hover"
         >
-          {showBurmese ? TEXT.discard.my : TEXT.discard.en}
+          <span className={showBurmese ? 'font-myanmar' : ''}>
+            {showBurmese ? TEXT.discard.my : TEXT.discard.en}
+          </span>
         </button>
       </div>
     </motion.div>

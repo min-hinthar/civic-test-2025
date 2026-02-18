@@ -91,7 +91,7 @@ export function SocialSettings() {
         </div>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
-            {'လူမှုဥရေးလုပ်ဆောင်ချက်များကို ဖွင့်ရန် အကောင့်ဖွင့်ပါ'}
+            လူမှုရေးလုပ်ဆောင်ချက်များကို ဖွင့်ရန် ဝင်ရောက်ပါ
           </p>
         )}
       </div>
@@ -112,9 +112,7 @@ export function SocialSettings() {
             <div>
               <p className="font-medium text-foreground">Leaderboard Visibility</p>
               {showBurmese && (
-                <p className="font-myanmar text-sm text-muted-foreground">
-                  {'ဥူးဆောင်ဘုတ်ပြသခြင်း'}
-                </p>
+                <p className="font-myanmar text-sm text-muted-foreground">အဆင့်ဇယားတွင်ပြသခြင်း</p>
               )}
             </div>
           </div>
@@ -147,7 +145,7 @@ export function SocialSettings() {
               </p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                  {'သင့်ပရိုဖိုင်ကို ဥူးဆောင်ဘုတ်တွင် မြင်ရပါသည်'}
+                  သင့်ပရိုဖိုင်ကို အဆင့်ဇယားတွင် မြင်ရပါသည်
                 </p>
               )}
             </>
@@ -156,7 +154,7 @@ export function SocialSettings() {
               <p className="text-sm text-muted-foreground">Your profile is private</p>
               {showBurmese && (
                 <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
-                  {'သင့်ပရိုဖိုင်သည် ကိုယ်ရေးဖြစ်ပါသည်'}
+                  သင့်ပရိုဖိုင်သည် ကိုယ်ပိုင်ဖြစ်ပါသည်
                 </p>
               )}
             </>
@@ -169,9 +167,7 @@ export function SocialSettings() {
             <label className="mb-1 block text-sm font-medium text-foreground">
               Display Name
               {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground ml-2">
-                  {'ပြသမည့်အမည်'}
-                </span>
+                <span className="font-myanmar text-xs text-muted-foreground ml-2">ပြသမည့်အမည်</span>
               )}
             </label>
 

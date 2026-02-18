@@ -271,19 +271,19 @@ const TestPage = () => {
   const completionMessage: Record<TestEndReason, { en: string; my: string }> = {
     passThreshold: {
       en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
-      my: '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A \u1041\u1042 \u1001\u103B\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u101C\u103B\u103E\u1004\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u1015\u102B\u1010\u101A\u103A\u104B \u1005\u1031\u102C\u1005\u102E\u1038\u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u1005\u103D\u102C\u1016\u103C\u1031\u1006\u102D\u102F\u1014\u102D\u102F\u1004\u103A\u101E\u100A\u103A\u1000\u102D\u102F \u1002\u102F\u100F\u103A\u101A\u1030\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B',
+      my: 'အဖြေမှန် ၁၂ ချက်ရပြီးတဲ့အတွက် ရပ်တန့်ပါတယ်။ စောစီးစွာ အောင်မြင်ခဲ့တာ ဂုဏ်ယူပါတယ်!',
     },
     failThreshold: {
       en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
-      my: '\u1021\u1019\u103E\u102C\u1038 \u1049 \u1000\u103C\u102D\u1019\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1014\u1031\u102C\u1000\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u1010\u101A\u103A\u104B \u1011\u1015\u103A\u1019\u1036\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u101B\u1014\u103A \u1016\u103C\u1031\u1006\u102D\u102F\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1015\u102B\u104B',
+      my: 'အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက် ရပ်တန့်လိုက်ပါတယ်။ ထပ်ကြိုးစားရန် အောက်က ဖြေဆိုချက်များကို ပြန်လည်သုံးသပ်ပါ။',
     },
     time: {
       en: 'Time expired before the full set finished.',
-      my: '',
+      my: 'အချိန်ကုန်သွားပါတယ်။',
     },
     complete: {
       en: 'You completed all 20 questions.',
-      my: '',
+      my: 'မေးခွန်း ၂၀ လုံးဖြေဆိုပြီးပါပြီ။',
     },
   };
 
@@ -391,7 +391,7 @@ const TestPage = () => {
         lastWarningTime = now;
         showWarning({
           en: 'Please finish the mock test first!',
-          my: '\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1005\u103D\u102C \u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1019\u103E\u1011\u103D\u1000\u103A\u1015\u102B',
+          my: 'စမ်းသပ်စာမေးပွဲကို အရင်ပြီးအောင်ဖြေပါ!',
         });
       }
     };
@@ -436,15 +436,15 @@ const TestPage = () => {
         await saveTestSession(session);
         deleteSession(sessionId).catch(() => {});
         showSuccess({
-          en: `Mock test saved \u2014 ${finalCorrect} correct answers`,
-          my: `\u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1015\u103C\u102E\u1038 \u2014 \u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A ${finalCorrect} \u1001\u102F`,
+          en: `Mock test saved — ${finalCorrect} correct answers`,
+          my: `စမ်းသပ်စာမေးပွဲ သိမ်းဆည်းပြီး — အဖြေမှန် ${finalCorrect} ခု`,
         });
       } catch (error) {
         console.error(error);
         hasSavedSessionRef.current = false;
         showWarning({
-          en: 'Unable to save test \u2014 please check your connection',
-          my: '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1019\u101B\u1015\u102B \u2014 \u1001\u103B\u102D\u1010\u103A\u1006\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u1005\u1005\u103A\u1006\u1031\u1038\u1015\u102B',
+          en: 'Unable to save test — please check your connection',
+          my: 'စာမေးပွဲ သိမ်းဆည်းမရပါ — ချိတ်ဆက်မှုကို စစ်ဆေးပါ',
         });
       }
     };
@@ -773,6 +773,9 @@ const TestPage = () => {
       <div className="page-shell" data-tour="mock-test">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">
           Preparing your next question...
+          {showBurmese && (
+            <span className="block font-myanmar mt-1">နောက်မေးခွန်းကို ပြင်ဆင်နေပါသည်...</span>
+          )}
         </div>
       </div>
     );
@@ -907,12 +910,23 @@ const TestPage = () => {
             {/* Progress summary */}
             <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span className="text-success font-bold">{correctCount} correct</span>
-                <span className="text-warning font-bold">{incorrectCount} incorrect</span>
+                <span className="text-success font-bold">
+                  {correctCount} correct
+                  {showBurmese && <span className="font-myanmar font-normal"> မှန်</span>}
+                </span>
+                <span className="text-warning font-bold">
+                  {incorrectCount} incorrect
+                  {showBurmese && <span className="font-myanmar font-normal"> မှား</span>}
+                </span>
               </div>
               {!isPracticeMode && (
                 <p className="text-xs text-muted-foreground">
                   12 correct or 9 incorrect ends the test
+                  {showBurmese && (
+                    <span className="block font-myanmar">
+                      ၁၂ ခုမှန် သို့ ၉ ခုမှားရင် စာမေးပွဲပြီးပါမယ်
+                    </span>
+                  )}
                 </p>
               )}
             </div>
@@ -1038,6 +1052,11 @@ const TestPage = () => {
           <div>
             <p className="text-muted-foreground">
               Review your answers and retake the mock test anytime.
+              {showBurmese && (
+                <span className="block font-myanmar text-sm mt-0.5">
+                  အဖြေများကို ပြန်လည်စစ်ဆေးပြီး အချိန်မရွေး ထပ်ဖြေနိုင်ပါတယ်။
+                </span>
+              )}
             </p>
             {endReasonForDisplay && (
               <p className="mt-2 text-sm font-semibold text-primary">
@@ -1070,21 +1089,41 @@ const TestPage = () => {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-4">
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Duration</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Duration
+              {showBurmese && (
+                <span className="font-myanmar normal-case tracking-normal"> · ကြာချိန်</span>
+              )}
+            </p>
             <p className="text-2xl font-bold text-foreground">
               {Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins
             </p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Correct</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Correct
+              {showBurmese && (
+                <span className="font-myanmar normal-case tracking-normal"> · မှန်</span>
+              )}
+            </p>
             <p className="text-2xl font-bold text-success">{finalCorrect}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Incorrect</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Incorrect
+              {showBurmese && (
+                <span className="font-myanmar normal-case tracking-normal"> · မှား</span>
+              )}
+            </p>
             <p className="text-2xl font-bold text-warning">{finalIncorrect}</p>
           </div>
           <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Status
+              {showBurmese && (
+                <span className="font-myanmar normal-case tracking-normal"> · အခြေအနေ</span>
+              )}
+            </p>
             <p
               className={clsx(
                 'text-2xl font-bold',
@@ -1092,6 +1131,11 @@ const TestPage = () => {
               )}
             >
               {finalCorrect >= PASS_THRESHOLD ? 'Pass' : 'Review'}
+              {showBurmese && (
+                <span className="block font-myanmar text-sm font-semibold">
+                  {finalCorrect >= PASS_THRESHOLD ? 'အောင်မြင်' : 'ပြန်လေ့လာရန်'}
+                </span>
+              )}
             </p>
           </div>
         </div>
@@ -1155,7 +1199,7 @@ const TestPage = () => {
                 <SectionHeading
                   text={{
                     en: 'Based on this test, consider reviewing:',
-                    my: '\u1012\u102E\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1015\u1031\u102B\u103A\u1021\u1001\u103C\u1031\u1001\u1036\u104D \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A:',
+                    my: 'ဒီစာမေးပွဲအပေါ်အခြေခံပြီး ပြန်လည်လေ့လာသင့်တာတွေ:',
                   }}
                   className="mb-3"
                 />

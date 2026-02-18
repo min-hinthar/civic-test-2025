@@ -35,31 +35,31 @@ import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
 const TEXT = {
   title: {
     en: 'Welcome back!',
-    my: '\u1015\u103C\u1014\u103A\u101C\u102C\u1010\u102C \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u1010\u101A\u103A!',
+    my: 'ပြန်လာတာ ကြိုဆိုပါတယ်!',
   },
   subtitle: {
     en: 'Pick up where you left off',
-    my: '\u1016\u103C\u1031\u1006\u102D\u102F\u1011\u102C\u1038\u1010\u102C\u1000\u102D\u102F \u1006\u1000\u103A\u101C\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u102B',
+    my: 'ရပ်ထားတဲ့နေရာကနေ ဆက်လက်ဖြေဆိုပါ',
   },
   resume: {
     en: 'Resume',
-    my: '\u1006\u1000\u103A\u1016\u103C\u1031\u1019\u100A\u103A',
+    my: 'ဆက်ဖြေမယ်',
   },
   resuming: {
     en: 'Resuming...',
-    my: '\u1015\u103C\u1014\u103A\u1016\u103D\u1004\u1037\u103A\u1014\u1031\u1015\u102B\u101E\u100A\u103A...',
+    my: 'ပြန်ဖွင့်နေပါသည်...',
   },
   startFresh: {
     en: 'Start Fresh',
-    my: '\u1021\u101E\u1005\u103A\u1016\u103C\u1031\u1019\u100A\u103A',
+    my: 'အသစ်ဖြေမယ်',
   },
   notNow: {
     en: 'Not Now',
-    my: '\u1014\u1031\u102C\u1000\u103A\u1019\u103E',
+    my: 'နောက်မှ',
   },
   selectSession: {
     en: 'Select a session to continue',
-    my: '\u1006\u1000\u103A\u101C\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u101B\u1014\u103A \u1005\u1005\u103A\u101B\u103E\u100A\u103A\u104B',
+    my: 'ဆက်လက်ဖြေဆိုရန် ရွေးချယ်ပါ။',
   },
 } as const;
 
@@ -211,10 +211,14 @@ export function ResumePromptModal({
                   {resuming ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>{showBurmese ? TEXT.resuming.my : TEXT.resuming.en}</span>
+                      <span className={showBurmese ? 'font-myanmar' : ''}>
+                        {showBurmese ? TEXT.resuming.my : TEXT.resuming.en}
+                      </span>
                     </>
                   ) : (
-                    <span>{showBurmese ? TEXT.resume.my : TEXT.resume.en}</span>
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? TEXT.resume.my : TEXT.resume.en}
+                    </span>
                   )}
                 </button>
 
@@ -232,7 +236,9 @@ export function ResumePromptModal({
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
                     )}
                   >
-                    {showBurmese ? TEXT.startFresh.my : TEXT.startFresh.en}
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? TEXT.startFresh.my : TEXT.startFresh.en}
+                    </span>
                   </button>
 
                   <button
@@ -247,7 +253,9 @@ export function ResumePromptModal({
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
                     )}
                   >
-                    {showBurmese ? TEXT.notNow.my : TEXT.notNow.en}
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? TEXT.notNow.my : TEXT.notNow.en}
+                    </span>
                   </button>
                 </div>
               </motion.div>

@@ -40,7 +40,7 @@ interface StreakHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const DAY_LABELS_MY = ['', 'တန္လာ', '', 'ဗုဒ္ဓ', '', 'သော', ''];
+const DAY_LABELS_MY = ['', 'တနင်္လာ', '', 'ဗုဒ္ဓဟူး', '', 'သောကြာ', ''];
 
 const MONTH_LABELS = [
   'Jan',

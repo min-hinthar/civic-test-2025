@@ -45,22 +45,22 @@ function getSessionLabel(type: SessionSnapshot['type']): { en: string; my: strin
     case 'mock-test':
       return {
         en: 'Unfinished Mock Test',
-        my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u1005\u1019\u103A\u1038\u101E\u1015\u103A\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032',
+        my: 'မပြီးသေးတဲ့ စမ်းသပ်စာမေးပွဲ',
       };
     case 'practice':
       return {
         en: 'Unfinished Practice',
-        my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1001\u1014\u103A\u1038',
+        my: 'မပြီးသေးတဲ့ လေ့ကျင့်ခန်း',
       };
     case 'interview':
       return {
         en: 'Unfinished Interview',
-        my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038',
+        my: 'မပြီးသေးတဲ့ အင်တာဗျူး',
       };
     case 'sort':
       return {
         en: 'Unfinished Flashcard Sort',
-        my: '\u1019\u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101E\u1031\u1038\u101E\u1031\u102C \u1000\u1010\u103A\u1005\u102E\u1005\u102F\u1036',
+        my: 'မပြီးသေးတဲ့ ကဒ်စီစုံ',
       };
   }
 }

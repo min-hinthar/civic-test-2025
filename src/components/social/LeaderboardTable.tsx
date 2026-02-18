@@ -115,7 +115,7 @@ export function LeaderboardTable({
           <span
             className={`w-16 text-xs font-medium text-muted-foreground text-right ${showBurmese ? 'font-myanmar' : ''}`}
           >
-            {showBurmese ? 'ရမှတ်' : 'Score'}
+            {showBurmese ? 'အမှတ်' : 'Score'}
           </span>
         </div>
         <SkeletonRow />
@@ -132,7 +132,7 @@ export function LeaderboardTable({
         <p className="text-muted-foreground">No participants yet. Be the first!</p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground mt-1">
-            {'ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!'}
+            ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!
           </p>
         )}
       </div>
@@ -156,7 +156,7 @@ export function LeaderboardTable({
         <span
           className={`w-16 text-xs font-medium text-muted-foreground text-right ${showBurmese ? 'font-myanmar' : ''}`}
         >
-          {showBurmese ? 'ရမှတ်' : 'Score'}
+          {showBurmese ? 'အမှတ်' : 'Score'}
         </span>
       </div>
 

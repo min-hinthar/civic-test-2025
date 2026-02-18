@@ -29,7 +29,7 @@ const TYPE_CONFIG = {
     iconBg: 'bg-primary-subtle/20',
     borderColor: 'border-primary/30',
     cardBg: 'bg-primary-subtle/10',
-    label: { en: 'Mock Test', my: '\u1005\u102C\u1019\u1031\u1038\u1005\u1005\u103A' },
+    label: { en: 'Mock Test', my: 'စမ်းသပ်စာမေးပွဲ' },
   },
   practice: {
     Icon: BookOpen,
@@ -37,7 +37,7 @@ const TYPE_CONFIG = {
     iconBg: 'bg-success-subtle/20',
     borderColor: 'border-success/30',
     cardBg: 'bg-success-subtle/10',
-    label: { en: 'Practice', my: '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A' },
+    label: { en: 'Practice', my: 'လေ့ကျင့်' },
   },
   interview: {
     Icon: Mic,
@@ -47,7 +47,7 @@ const TYPE_CONFIG = {
     cardBg: 'bg-accent/5',
     label: {
       en: 'Interview',
-      my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038',
+      my: 'အင်တာဗျူး',
     },
   },
   sort: {
@@ -58,7 +58,7 @@ const TYPE_CONFIG = {
     cardBg: 'bg-accent-purple/5',
     label: {
       en: 'Flashcard Sort',
-      my: '\u1000\u1010\u103A\u1005\u102E\u1005\u102F\u1036',
+      my: 'ကဒ်စီစုံ',
     },
   },
 } as const;
@@ -158,10 +158,10 @@ function getSessionLabel(session: SessionSnapshot, showBurmese: boolean): string
       const modeLabel =
         session.mode === 'realistic'
           ? showBurmese
-            ? '\u1021\u1005\u1005\u103A'
+            ? 'အစစ်'
             : 'Realistic'
           : showBurmese
-            ? '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A'
+            ? 'လေ့ကျင့်'
             : 'Practice';
       return showBurmese ? `${config.label.my}: ${modeLabel}` : `${config.label.en}: ${modeLabel}`;
     }
@@ -185,7 +185,7 @@ function getProgressText(session: SessionSnapshot, showBurmese: boolean): string
       const correct = session.results.filter(r => r.isCorrect).length;
       const answered = session.results.length;
       return showBurmese
-        ? `${qText} \u2022 ${correct}/${answered} \u1019\u103E\u1014\u103A`
+        ? `${qText} \u2022 ${correct}/${answered} မှန်`
         : `${qText} \u2022 ${correct}/${answered} correct`;
     }
     case 'practice': {
@@ -195,7 +195,7 @@ function getProgressText(session: SessionSnapshot, showBurmese: boolean): string
       const correct = session.results.filter(r => r.isCorrect).length;
       const answered = session.results.length;
       return showBurmese
-        ? `${qText} \u2022 ${correct}/${answered} \u1019\u103E\u1014\u103A`
+        ? `${qText} \u2022 ${correct}/${answered} မှန်`
         : `${qText} \u2022 ${correct}/${answered} correct`;
     }
     case 'interview': {
@@ -203,18 +203,16 @@ function getProgressText(session: SessionSnapshot, showBurmese: boolean): string
       const total = session.questions.length;
       const qText = `Q${qNum}/${total}`;
       return showBurmese
-        ? `${qText} \u2022 ${session.correctCount} \u1019\u103E\u1014\u103A / ${session.incorrectCount} \u1019\u103E\u102C\u1038`
+        ? `${qText} \u2022 ${session.correctCount} မှန် / ${session.incorrectCount} မှား`
         : `${qText} \u2022 ${session.correctCount} correct / ${session.incorrectCount} incorrect`;
     }
     case 'sort': {
       const cardNum = session.currentIndex + 1;
       const total = session.remainingCardIds.length;
       const known = session.knownIds.length;
-      const roundLabel = showBurmese
-        ? `\u1021\u1000\u103B\u102D\u1019\u103A ${session.round}`
-        : `Round ${session.round}`;
+      const roundLabel = showBurmese ? `အကြိမ် ${session.round}` : `Round ${session.round}`;
       return showBurmese
-        ? `${roundLabel} \u2022 ${cardNum}/${total} \u2022 ${known} \u101E\u102D`
+        ? `${roundLabel} \u2022 ${cardNum}/${total} \u2022 ${known} သိ`
         : `${roundLabel} \u2022 ${cardNum}/${total} \u2022 ${known} known`;
     }
   }
@@ -224,21 +222,17 @@ function getTimerText(session: SessionSnapshot, showBurmese: boolean): string {
   switch (session.type) {
     case 'mock-test':
       return showBurmese
-        ? `\u1000\u103B\u1014\u103A\u1021\u1001\u103B\u102D\u1014\u103A: ${formatTime(session.timeLeft)}`
+        ? `ကျန်အချိန်: ${formatTime(session.timeLeft)}`
         : `Time remaining: ${formatTime(session.timeLeft)}`;
     case 'practice':
       if (!session.timerEnabled) {
-        return showBurmese
-          ? '\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103E\u102D'
-          : 'Untimed';
+        return showBurmese ? 'အချိန်မရှိ' : 'Untimed';
       }
       return showBurmese
-        ? `\u1000\u103B\u1014\u103A\u1021\u1001\u103B\u102D\u1014\u103A: ${formatTime(session.timeLeft)}`
+        ? `ကျန်အချိန်: ${formatTime(session.timeLeft)}`
         : `Time remaining: ${formatTime(session.timeLeft)}`;
     case 'interview':
     case 'sort':
-      return showBurmese
-        ? '\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u101B\u103E\u102D'
-        : 'Untimed';
+      return showBurmese ? 'အချိန်မရှိ' : 'Untimed';
   }
 }
