@@ -7,7 +7,14 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TTSCancelledError, TTSUnsupportedError } from './ttsTypes';
-import { findVoice, estimateDuration, loadVoices, createTTSEngine, safeSpeak } from './ttsCore';
+import {
+  findVoice,
+  estimateDuration,
+  loadVoices,
+  createTTSEngine,
+  safeSpeak,
+  _resetVoiceState,
+} from './ttsCore';
 
 // ---------------------------------------------------------------------------
 // Mock infrastructure
@@ -145,6 +152,7 @@ class MockSpeechSynthesisUtterance {
 beforeEach(() => {
   vi.useFakeTimers();
   resetMockState();
+  _resetVoiceState();
   installSpeechSynthesisMock();
 });
 

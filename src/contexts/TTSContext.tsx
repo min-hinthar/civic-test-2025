@@ -108,16 +108,9 @@ export function TTSProvider({ children }: { children: ReactNode }) {
     const unsub = eng.onStateChange(setState);
     setEngine(eng);
 
-    // Deferred voice loading via requestIdleCallback (with setTimeout fallback)
-    const scheduleVoiceLoad =
-      typeof requestIdleCallback === 'function'
-        ? requestIdleCallback
-        : (cb: () => void) => setTimeout(cb, 0);
-
-    const idleId = scheduleVoiceLoad(() => {
-      loadVoices().then(loadedVoices => {
-        setVoices(loadedVoices);
-      });
+    // Eager voice loading — voices must be ready before first speak
+    loadVoices().then(loadedVoices => {
+      setVoices(loadedVoices);
     });
 
     // Listen for late-arriving voices (Chrome loads online voices async after local ones)
@@ -136,10 +129,6 @@ export function TTSProvider({ children }: { children: ReactNode }) {
     return () => {
       unsub();
       eng.destroy();
-      // Cancel idle callback if it hasn't fired yet
-      if (typeof cancelIdleCallback === 'function' && typeof idleId === 'number') {
-        cancelIdleCallback(idleId);
-      }
       if ('speechSynthesis' in window) {
         window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
       }

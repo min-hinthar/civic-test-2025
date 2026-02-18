@@ -32,6 +32,16 @@ import {
 /** Global voice cache shared by all engines. */
 let voiceCache: SpeechSynthesisVoice[] | null = null;
 
+/**
+ * Reset module-level voice state. For use in tests only.
+ * Sets voiceCache to [] (loaded-but-empty) rather than null so
+ * ensureVoicesReady doesn't trigger loadVoices with fake timers.
+ */
+export function _resetVoiceState(): void {
+  voiceCache = [];
+  naturalVoiceChecked = false;
+}
+
 /** Strong reference to prevent utterance GC (Pitfall 1). */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- intentional: holds strong ref to prevent browser GC
 let currentUtterance: SpeechSynthesisUtterance | null = null;
@@ -90,6 +100,74 @@ function chunkForSpeech(text: string, maxWords = MAX_WORDS_PER_CHUNK): string[] 
 /** Wait for a specified number of milliseconds. */
 function wait(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/** Max time to wait for natural/neural voices on first speak (ms). */
+const NATURAL_VOICE_WAIT_MS = 1500;
+
+/**
+ * Ensure voice cache is populated and — on first call — briefly wait for
+ * Chrome/Edge to load high-quality natural/neural voices that arrive
+ * asynchronously via voiceschanged.  Subsequent calls are instant.
+ */
+let naturalVoiceChecked = false;
+
+async function ensureVoicesReady(lang: string): Promise<void> {
+  // Step 1: sync voice cache refresh if empty
+  if (!voiceCache || voiceCache.length === 0) {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const immediate = window.speechSynthesis.getVoices();
+      if (immediate.length > 0) voiceCache = immediate;
+    }
+  }
+
+  // No voices available — nothing to optimize
+  if (!voiceCache || voiceCache.length === 0) return;
+
+  // Step 2 (once): wait briefly for natural/neural voices if not yet present
+  if (naturalVoiceChecked) return;
+  naturalVoiceChecked = true;
+
+  const normalizedLang = lang.toLowerCase().replace(/_/g, '-');
+  const isNaturalVoice = (v: SpeechSynthesisVoice) => {
+    const vLang = v.lang?.toLowerCase().replace(/_/g, '-') ?? '';
+    const name = v.name.toLowerCase();
+    return (
+      vLang.startsWith(normalizedLang) && (name.includes('natural') || name.includes('neural'))
+    );
+  };
+
+  if (voiceCache.some(isNaturalVoice)) return;
+
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+  const synth = window.speechSynthesis;
+
+  // Guard: addEventListener may not exist (test mocks, very old browsers)
+  if (typeof synth.addEventListener !== 'function') return;
+
+  // Listen for voiceschanged with a short timeout — Chrome loads
+  // natural/neural voices asynchronously after local voices.
+  await new Promise<void>(resolve => {
+    const timer = setTimeout(() => {
+      synth.removeEventListener('voiceschanged', handler);
+      resolve();
+    }, NATURAL_VOICE_WAIT_MS);
+
+    function handler() {
+      const voices = synth.getVoices();
+      if (voices.length > 0) voiceCache = voices;
+      if (voices.some(isNaturalVoice)) {
+        clearTimeout(timer);
+        synth.removeEventListener('voiceschanged', handler);
+        resolve();
+      }
+    }
+
+    synth.addEventListener('voiceschanged', handler);
+    // Re-check immediately in case voices arrived since step 1
+    handler();
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -502,6 +580,14 @@ export function createTTSEngine(defaults?: TTSEngineDefaults): TTSEngine {
       throw new TTSCancelledError();
     }
 
+    // Ensure high-quality voices are loaded before speaking
+    const lang = overrides?.lang ?? engineDefaults.lang ?? 'en-US';
+    await ensureVoicesReady(lang);
+
+    if (cancelRequested || isDestroyed) {
+      throw new TTSCancelledError();
+    }
+
     // Chunk text for Chrome 15s defense (Pitfall 4)
     const chunks = chunkForSpeech(text);
 
@@ -559,6 +645,7 @@ export function createTTSEngine(defaults?: TTSEngineDefaults): TTSEngine {
 
   async function refreshVoices(): Promise<SpeechSynthesisVoice[]> {
     voiceCache = null;
+    naturalVoiceChecked = false;
     return loadVoices();
   }
 
