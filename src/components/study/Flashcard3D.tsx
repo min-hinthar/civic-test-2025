@@ -285,6 +285,9 @@ export function Flashcard3D({
               : {
                   WebkitBackfaceVisibility: 'hidden' as const,
                   backfaceVisibility: 'hidden' as const,
+                  // Explicit transform required — mobile browsers only honor
+                  // backface-visibility on elements that participate in 3D transforms
+                  transform: 'rotateY(0deg)',
                 }),
             pointerEvents: isFlipped ? 'none' : 'auto',
           }}
