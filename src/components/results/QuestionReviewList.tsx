@@ -105,7 +105,7 @@ export function QuestionReviewList({
       if (addedCount > 0) {
         showSuccess({
           en: `Added ${addedCount} question${addedCount > 1 ? 's' : ''} to review deck`,
-          my: `\u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u1005\u102C\u101B\u1004\u103A\u1038\u101E\u102D\u102F\u1037 ${addedCount} \u1001\u102F\u1011\u100A\u1037\u103A\u1015\u103C\u102E\u1038`,
+          my: `ပြန်လှည့်စာရင်းသို့ ${addedCount} ခုထည့်ပြီး`,
         });
       }
     } catch {
