@@ -48,9 +48,7 @@ export function NotificationPrePrompt({ onAccept, onDecline }: NotificationPrePr
         <div className="flex-1">
           <h3 className="font-medium text-foreground">Get study reminders?</h3>
           {showBurmese && (
-            <p className="font-myanmar text-sm text-muted-foreground">
-              လေ့လာရန် သတိပေးချက် လိုချင်ပါသလား။
-            </p>
+            <p className="font-myanmar text-muted-foreground">လေ့လာရန် သတိပေးချက် လိုချင်ပါသလား။</p>
           )}
           <p className="mt-1 text-sm text-muted-foreground">
             We&apos;ll send friendly reminders to help you stay on track.
@@ -67,7 +65,7 @@ export function NotificationPrePrompt({ onAccept, onDecline }: NotificationPrePr
             >
               Yes, remind me
               {showBurmese && (
-                <span className="font-myanmar ml-1 text-xs font-normal">ဟုတ်ကဲ့</span>
+                <span className="font-myanmar ml-1 text-sm font-normal">ဟုတ်ကဲ့</span>
               )}
             </button>
             <button
@@ -75,7 +73,7 @@ export function NotificationPrePrompt({ onAccept, onDecline }: NotificationPrePr
               className="rounded-md bg-muted px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/80"
             >
               No thanks
-              {showBurmese && <span className="font-myanmar ml-1 text-xs font-normal">မလိုပါ</span>}
+              {showBurmese && <span className="font-myanmar ml-1 text-sm font-normal">မလိုပါ</span>}
             </button>
           </div>
         </div>

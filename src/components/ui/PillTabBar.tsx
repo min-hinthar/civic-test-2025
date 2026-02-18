@@ -103,7 +103,7 @@ export function PillTabBar({
               </motion.span>
               {showBurmese && !isSmall && tab.labelMy && (
                 <motion.span
-                  className="font-myanmar mt-0.5 text-[10px] leading-tight opacity-70"
+                  className="font-myanmar mt-0.5 leading-tight text-muted-foreground"
                   animate={shouldReduceMotion ? {} : { scale: isActive ? 1.05 : 1 }}
                   transition={shouldReduceMotion ? { duration: 0 } : SPRING_SNAPPY}
                 >

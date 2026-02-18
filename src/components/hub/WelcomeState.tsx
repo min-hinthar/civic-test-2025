@@ -90,7 +90,7 @@ export function WelcomeState() {
         <GlassCard tier="medium" className="text-center">
           <h2 className="text-xl font-bold text-text-primary">Welcome to Your Progress Hub!</h2>
           {showBurmese && (
-            <p className="font-myanmar mt-1 text-sm text-text-secondary">
+            <p className="font-myanmar mt-1 text-xl text-muted-foreground">
               {
                 '\u101E\u1004\u103A\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F \u1017\u1000\u103A\u101E\u102D\u102F\u1037 \u1000\u103C\u102D\u102F\u1006\u102D\u102F\u1015\u102B\u101E\u100A\u103A!'
               }
@@ -100,7 +100,7 @@ export function WelcomeState() {
             Start your journey to citizenship test readiness. Here are some great first steps:
           </p>
           {showBurmese && (
-            <p className="font-myanmar mx-auto mt-1 max-w-sm text-xs text-text-secondary/70">
+            <p className="font-myanmar mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
               {
                 '\u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u101B\u1014\u103A \u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u104B'
               }
@@ -125,13 +125,11 @@ export function WelcomeState() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-text-primary">{step.label.en}</p>
                   {showBurmese && (
-                    <p className="font-myanmar text-[10px] text-text-secondary/70">
-                      {step.label.my}
-                    </p>
+                    <p className="font-myanmar text-sm text-muted-foreground">{step.label.my}</p>
                   )}
                   <p className="mt-0.5 text-xs text-text-secondary">{step.description.en}</p>
                   {showBurmese && (
-                    <p className="font-myanmar text-[10px] text-text-secondary/70">
+                    <p className="font-myanmar text-xs text-muted-foreground">
                       {step.description.my}
                     </p>
                   )}

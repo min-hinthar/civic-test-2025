@@ -198,7 +198,7 @@ function StepPrivacyNotice({
         <Shield className="h-5 w-5" />
         <span className="font-semibold">Privacy Notice</span>
         {showBurmese && (
-          <span className="font-myanmar text-sm text-muted-foreground">/ ကိုယ်ရေးသတိပေးချက်</span>
+          <span className="font-myanmar text-muted-foreground">/ ကိုယ်ရေးသတိပေးချက်</span>
         )}
       </div>
 
@@ -259,16 +259,14 @@ function StepDisplayName({
       <div className="flex items-center gap-2 text-primary">
         <User className="h-5 w-5" />
         <span className="font-semibold">Display Name</span>
-        {showBurmese && (
-          <span className="font-myanmar text-sm text-muted-foreground">/ ပြသမည့်အမည်</span>
-        )}
+        {showBurmese && <span className="font-myanmar text-muted-foreground">/ ပြသမည့်အမည်</span>}
       </div>
 
       <div>
         <label htmlFor="social-display-name" className="mb-1 block text-sm text-muted-foreground">
           This name will appear on the leaderboard
           {showBurmese && (
-            <span className="font-myanmar block text-xs mt-0.5">
+            <span className="font-myanmar block text-sm mt-0.5">
               ဤအမည်သည် အဆင့်ဇယားတွင် ပေါ်လာပါမည်
             </span>
           )}
@@ -354,7 +352,7 @@ function StepConfirm({
           {showBurmese ? (
             <span className="flex flex-col items-center leading-tight py-1">
               <span>Enable Social</span>
-              <span className="font-myanmar text-xs opacity-80 font-normal">လူမှုရေး ဖွင့်ပါ</span>
+              <span className="font-myanmar text-white/80 font-normal">လူမှုရေး ဖွင့်ပါ</span>
             </span>
           ) : (
             'Enable Social'

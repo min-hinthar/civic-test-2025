@@ -114,9 +114,7 @@ export function KnowDontKnowButtons({
         </svg>
         <span className="flex flex-col items-start leading-tight">
           <span className="text-sm font-bold">{labels.dontKnow.en}</span>
-          {showBurmese && (
-            <span className="text-xs font-myanmar opacity-80">{labels.dontKnow.my}</span>
-          )}
+          {showBurmese && <span className="font-myanmar text-white/80">{labels.dontKnow.my}</span>}
         </span>
       </button>
 
@@ -180,7 +178,7 @@ export function KnowDontKnowButtons({
       >
         <span className="flex flex-col items-end leading-tight">
           <span className="text-sm font-bold">{labels.know.en}</span>
-          {showBurmese && <span className="text-xs font-myanmar opacity-80">{labels.know.my}</span>}
+          {showBurmese && <span className="font-myanmar text-white/80">{labels.know.my}</span>}
         </span>
         {/* Check icon */}
         <svg

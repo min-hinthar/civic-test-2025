@@ -1280,7 +1280,7 @@ export function InterviewSession({
           <DialogDescription>
             {strings.interview.confirmEndMessage.en}
             {showBurmese && (
-              <span className="mt-0.5 block font-myanmar text-xs">
+              <span className="mt-0.5 block font-myanmar text-sm">
                 {strings.interview.confirmEndMessage.my}
               </span>
             )}

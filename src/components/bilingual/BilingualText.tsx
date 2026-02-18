@@ -9,15 +9,13 @@ export interface BilingualTextProps {
   text: BilingualString;
   /** Size variant */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  /** Make Burmese text same size as English (for buttons) */
-  equalSize?: boolean;
   /** Center align text */
   centered?: boolean;
   /** Additional class names */
   className?: string;
 }
 
-// Size mappings for English (primary) text
+// Size mappings — same for both languages (co-equal sizing)
 const enSizes = {
   xs: 'text-xs',
   sm: 'text-sm',
@@ -26,21 +24,12 @@ const enSizes = {
   xl: 'text-xl',
 };
 
-// Size mappings for Burmese (secondary) text - slightly smaller by default
-const mySizes = {
-  xs: 'text-xs',
-  sm: 'text-xs',
-  md: 'text-sm',
-  lg: 'text-base',
-  xl: 'text-lg',
-};
-
 /**
  * Stacked bilingual text component.
  *
  * Features:
  * - English on top, Burmese below (per user decision)
- * - Burmese is subtly lighter color/weight (present but secondary)
+ * - Burmese differentiated by color only (co-equal sizing)
  * - Configurable sizes with smart defaults
  *
  * Usage:
@@ -52,7 +41,6 @@ const mySizes = {
 export function BilingualText({
   text,
   size = 'md',
-  equalSize = false,
   centered = false,
   className,
 }: BilingualTextProps) {
@@ -62,14 +50,7 @@ export function BilingualText({
     <span className={clsx('flex flex-col', centered && 'items-center text-center', className)}>
       <span className={clsx('font-semibold text-foreground', enSizes[size])}>{text.en}</span>
       {showBurmese && (
-        <span
-          className={clsx(
-            'font-myanmar text-muted-foreground',
-            equalSize ? enSizes[size] : mySizes[size]
-          )}
-        >
-          {text.my}
-        </span>
+        <span className={clsx('font-myanmar text-muted-foreground', enSizes[size])}>{text.my}</span>
       )}
     </span>
   );

@@ -98,7 +98,7 @@ export function AnswerFeedback({
                 <p className="font-bold text-foreground">
                   {encouragement.en}
                   {showBurmese && (
-                    <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
+                    <span className="block font-myanmar text-base font-normal text-muted-foreground mt-0.5">
                       {encouragement.my}
                     </span>
                   )}

@@ -112,7 +112,7 @@ export function SocialSettings() {
             <div>
               <p className="font-medium text-foreground">Leaderboard Visibility</p>
               {showBurmese && (
-                <p className="font-myanmar text-sm text-muted-foreground">အဆင့်ဇယားတွင်ပြသခြင်း</p>
+                <p className="font-myanmar text-muted-foreground">အဆင့်ဇယားတွင်ပြသခြင်း</p>
               )}
             </div>
           </div>
@@ -144,7 +144,7 @@ export function SocialSettings() {
                 Your profile is visible on the leaderboard
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
                   သင့်ပရိုဖိုင်ကို အဆင့်ဇယားတွင် မြင်ရပါသည်
                 </p>
               )}
@@ -153,7 +153,7 @@ export function SocialSettings() {
             <>
               <p className="text-sm text-muted-foreground">Your profile is private</p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
                   သင့်ပရိုဖိုင်သည် ကိုယ်ပိုင်ဖြစ်ပါသည်
                 </p>
               )}
@@ -167,7 +167,7 @@ export function SocialSettings() {
             <label className="mb-1 block text-sm font-medium text-foreground">
               Display Name
               {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground ml-2">ပြသမည့်အမည်</span>
+                <span className="font-myanmar text-sm text-muted-foreground ml-2">ပြသမည့်အမည်</span>
               )}
             </label>
 

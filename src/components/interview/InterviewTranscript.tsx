@@ -138,7 +138,9 @@ export function InterviewTranscript({
                   {result.questionText_en}
                 </p>
                 {showBurmese && (
-                  <p className="mt-1 font-myanmar text-xs opacity-70">{result.questionText_my}</p>
+                  <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                    {result.questionText_my}
+                  </p>
                 )}
                 {showBurmese && (
                   <div className="mt-1.5">
@@ -216,7 +218,7 @@ export function InterviewTranscript({
                             <p key={i} className="mt-0.5 text-sm text-foreground">
                               {answer.text_en}
                               {showBurmese && (
-                                <span className="ml-1 font-myanmar text-xs text-muted-foreground">
+                                <span className="ml-1 font-myanmar text-sm text-muted-foreground">
                                   ({answer.text_my})
                                 </span>
                               )}

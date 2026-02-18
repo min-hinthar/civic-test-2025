@@ -137,9 +137,7 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
             <DialogTitle className="mt-5 text-xl">Badge Earned!</DialogTitle>
 
             {showBurmese && (
-              <p className="font-myanmar text-base text-muted-foreground mt-0.5">
-                တံဆိပ်ရရှိပါပြီ!
-              </p>
+              <p className="font-myanmar text-xl text-muted-foreground mt-0.5">တံဆိပ်ရရှိပါပြီ!</p>
             )}
 
             {/* Badge name */}
@@ -153,14 +151,14 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
             </motion.p>
 
             {showBurmese && (
-              <p className="font-myanmar text-lg text-muted-foreground mt-0.5">{badge.name.my}</p>
+              <p className="font-myanmar text-2xl text-muted-foreground mt-0.5">{badge.name.my}</p>
             )}
 
             {/* Badge description */}
             <DialogDescription className="mt-3 text-base">{badge.description.en}</DialogDescription>
 
             {showBurmese && (
-              <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
+              <p className="font-myanmar text-base text-muted-foreground mt-0.5">
                 {badge.description.my}
               </p>
             )}

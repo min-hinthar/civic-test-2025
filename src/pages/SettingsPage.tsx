@@ -132,7 +132,9 @@ function SettingsSection({
           </div>
           <div>
             <h2 className="text-base font-bold text-foreground">{titleEn}</h2>
-            {showBurmese && <p className="font-myanmar text-xs text-muted-foreground">{titleMy}</p>}
+            {showBurmese && (
+              <p className="font-myanmar text-base text-muted-foreground">{titleMy}</p>
+            )}
           </div>
         </div>
 
@@ -170,7 +172,7 @@ function SettingsRow({
       <div className="flex-1 mr-3">
         <p className="text-sm font-semibold text-foreground">{label}</p>
         {showBurmese && labelMy && (
-          <p className="font-myanmar text-xs text-muted-foreground">{labelMy}</p>
+          <p className="font-myanmar text-sm text-muted-foreground">{labelMy}</p>
         )}
         {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
         {showBurmese && descriptionMy && (
@@ -234,7 +236,7 @@ export default function SettingsPage() {
             <div>
               <h1 className="text-lg font-extrabold text-foreground">Settings</h1>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground leading-tight">
+                <p className="font-myanmar text-lg text-muted-foreground leading-tight">
                   ဆက်တင်များ
                 </p>
               )}
@@ -258,7 +260,7 @@ export default function SettingsPage() {
               <div className="flex-1 mr-3">
                 <p className="text-sm font-semibold text-foreground">Display Language</p>
                 {showBurmese && (
-                  <p className="font-myanmar text-xs text-muted-foreground">{'ပြသည့်ဘာသာ'}</p>
+                  <p className="font-myanmar text-sm text-muted-foreground">{'ပြသည့်ဘာသာ'}</p>
                 )}
               </div>
               <FlagToggle />
@@ -384,7 +386,7 @@ export default function SettingsPage() {
               <Globe className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Speech Speed</p>
               {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground">
+                <span className="font-myanmar text-sm text-muted-foreground">
                   {'စကားပြောနှုန်း'}
                 </span>
               )}
@@ -405,7 +407,7 @@ export default function SettingsPage() {
                 >
                   <span>{option.en}</span>
                   {showBurmese && (
-                    <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                    <span className="block font-myanmar text-sm mt-0.5 font-normal">
                       {option.my}
                     </span>
                   )}
@@ -443,7 +445,7 @@ export default function SettingsPage() {
             <div className="py-3 border-b border-border/40">
               <div className="flex items-center gap-2 mb-2">
                 <p className="text-sm font-semibold text-foreground">Auto-Read Language</p>
-                <span className="font-myanmar text-xs text-muted-foreground">
+                <span className="font-myanmar text-sm text-muted-foreground">
                   {'အလိုအလျောက်ဖတ်ပြမယ့် ဘာသာ'}
                 </span>
               </div>
@@ -463,7 +465,7 @@ export default function SettingsPage() {
                   >
                     <span>{option.en}</span>
                     {showBurmese && (
-                      <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                      <span className="block font-myanmar text-sm mt-0.5 font-normal">
                         {option.my}
                       </span>
                     )}
@@ -510,7 +512,7 @@ export default function SettingsPage() {
               <Bell className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Study Reminders</p>
               {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground">
+                <span className="font-myanmar text-sm text-muted-foreground">
                   {'လေ့လာရန် သတိပေးချက်'}
                 </span>
               )}
@@ -524,7 +526,7 @@ export default function SettingsPage() {
               <Clock className="h-4 w-4 text-primary" />
               <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
               {showBurmese && (
-                <span className="font-myanmar text-xs text-muted-foreground">
+                <span className="font-myanmar text-sm text-muted-foreground">
                   {'သတိပေးချက် အချိန်'}
                 </span>
               )}

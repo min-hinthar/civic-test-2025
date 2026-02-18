@@ -142,7 +142,7 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
           <div>
             <h2 className="text-lg font-bold text-foreground">What&apos;s New</h2>
             {showBurmese && (
-              <p className="font-myanmar text-sm text-muted-foreground">ဘာအသစ်တွေရှိလဲ</p>
+              <p className="font-myanmar text-lg text-muted-foreground">ဘာအသစ်တွေရှိလဲ</p>
             )}
           </div>
         </div>
@@ -159,7 +159,7 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
               <div className="min-w-0">
                 <p className="font-semibold text-foreground">{feature.titleEn}</p>
                 {showBurmese && (
-                  <p className="font-myanmar text-sm font-medium text-foreground/80">
+                  <p className="font-myanmar font-medium text-muted-foreground">
                     {feature.titleMy}
                   </p>
                 )}

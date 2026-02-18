@@ -131,7 +131,7 @@ export function SRSBatchAdd({ unknownIds, showBurmese }: SRSBatchAddProps) {
           <p className="text-sm font-semibold text-foreground">Add to Review Deck</p>
         </div>
         {showBurmese && (
-          <p className="font-myanmar text-xs text-muted-foreground mt-0.5 ml-6">
+          <p className="font-myanmar text-sm text-muted-foreground mt-0.5 ml-6">
             ပြန်လှည့်စာရင်းသို့ထည့်ပါ
           </p>
         )}
@@ -248,7 +248,7 @@ export function SRSBatchAdd({ unknownIds, showBurmese }: SRSBatchAddProps) {
               Add {selectedCount} card{selectedCount !== 1 ? 's' : ''} to review deck
             </span>
             {showBurmese && (
-              <span className="font-myanmar text-sm opacity-80">
+              <span className="font-myanmar text-sm text-white/80">
                 ကတ် {toMyanmarNumeral(selectedCount)} ခုကို ပြန်လှည့်စာရင်းသို့ထည့်ပါ
               </span>
             )}

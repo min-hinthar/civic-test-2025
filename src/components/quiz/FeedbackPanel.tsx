@@ -96,7 +96,7 @@ function StreakBadge({
       <span>
         {count} in a row!
         {showBurmese && (
-          <span className="ml-1 font-myanmar text-xs font-normal">{count} ဆက်တိုက်!</span>
+          <span className="ml-1 font-myanmar text-sm font-normal">{count} ဆက်တိုက်!</span>
         )}
       </span>
     </motion.div>
@@ -295,7 +295,7 @@ export function FeedbackPanel({
                   <p className="text-lg font-bold text-foreground">
                     {encouragement.en}
                     {showBurmese && (
-                      <span className="block font-myanmar text-sm font-normal text-muted-foreground mt-0.5">
+                      <span className="block font-myanmar text-lg font-normal text-muted-foreground mt-0.5">
                         {encouragement.my}
                       </span>
                     )}

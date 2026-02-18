@@ -80,7 +80,7 @@ export function TimerExtensionToast({ show, onExtend, showBurmese }: TimerExtens
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">Time running low!</p>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground">
+              <p className="font-myanmar text-sm text-muted-foreground">
                 {
                   '\u1021\u1001\u103B\u102D\u1014\u103A\u1014\u100A\u103A\u1038\u1014\u1031\u1015\u102B\u1015\u103C\u102E!'
                 }

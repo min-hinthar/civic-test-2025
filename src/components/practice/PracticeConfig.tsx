@@ -316,7 +316,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                             {SUB_CATEGORY_NAMES[sub].en}
                           </p>
                           {showBurmese && (
-                            <p className="font-myanmar text-xs text-muted-foreground truncate">
+                            <p className="font-myanmar text-sm text-muted-foreground truncate">
                               {SUB_CATEGORY_NAMES[sub].my}
                             </p>
                           )}
@@ -386,7 +386,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             <div>
               <p className="text-sm font-medium text-foreground">{strings.practice.timer.en}</p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {strings.practice.timer.my}
                 </p>
               )}
@@ -429,7 +429,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             <Volume2 className="h-4 w-4 text-primary" />
             <p className="text-sm font-semibold text-foreground">Speech Speed</p>
             {showBurmese && (
-              <span className="font-myanmar text-xs text-muted-foreground">
+              <span className="font-myanmar text-sm text-muted-foreground">
                 {
                   '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
                 }
@@ -455,7 +455,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
               >
                 <span>{option.en}</span>
                 {showBurmese && (
-                  <span className="block font-myanmar text-xs mt-0.5 font-normal">{option.my}</span>
+                  <span className="block font-myanmar text-sm mt-0.5 font-normal">{option.my}</span>
                 )}
               </button>
             ))}
@@ -466,7 +466,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
             <div>
               <p className="text-sm font-medium text-foreground">Auto-Read</p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {
                     '\u1021\u101C\u102D\u102F\u1021\u101C\u103B\u103E\u1031\u102C\u1000\u103A\u1016\u1010\u103A\u1015\u102B'
                   }
@@ -513,7 +513,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                 {strings.practice.alreadyMastered.en}
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {strings.practice.alreadyMastered.my}
                 </p>
               )}

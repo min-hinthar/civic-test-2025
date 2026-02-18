@@ -21,11 +21,11 @@ export interface BilingualHeadingProps {
 }
 
 const sizeClasses = {
-  sm: { en: 'text-lg font-bold', my: 'text-sm' },
-  md: { en: 'text-xl font-bold', my: 'text-base' },
-  lg: { en: 'text-2xl font-bold', my: 'text-lg' },
-  xl: { en: 'text-3xl font-bold', my: 'text-xl' },
-  '2xl': { en: 'text-4xl font-bold', my: 'text-2xl' },
+  sm: { en: 'text-lg font-bold', my: 'text-lg' },
+  md: { en: 'text-xl font-bold', my: 'text-xl' },
+  lg: { en: 'text-2xl font-bold', my: 'text-2xl' },
+  xl: { en: 'text-3xl font-bold', my: 'text-3xl' },
+  '2xl': { en: 'text-4xl font-bold', my: 'text-4xl' },
 };
 
 /**

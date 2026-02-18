@@ -367,7 +367,9 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
         >
           <h2 className="text-2xl font-extrabold text-foreground">{labels.youKnowThemAll.en}</h2>
           {showBurmese && (
-            <p className="text-lg font-myanmar text-muted-foreground">{labels.youKnowThemAll.my}</p>
+            <p className="text-2xl font-myanmar text-muted-foreground">
+              {labels.youKnowThemAll.my}
+            </p>
           )}
           <p className={clsx('text-base text-muted-foreground', showBurmese && 'font-myanmar')}>
             {showBurmese ? labels.amazing.my : labels.amazing.en}

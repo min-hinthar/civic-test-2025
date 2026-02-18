@@ -91,7 +91,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
           Install US Civics App
         </h2>
         {showBurmese && (
-          <p className="mb-4 text-center font-myanmar text-lg text-muted-foreground">
+          <p className="mb-4 text-center font-myanmar text-xl text-muted-foreground">
             US Civics App ကို ထည့်သွင်းပါ
           </p>
         )}
@@ -161,7 +161,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
           className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-foreground"
         >
           Maybe later
-          {showBurmese && <span className="font-myanmar ml-1 text-xs">နောက်မှ</span>}
+          {showBurmese && <span className="font-myanmar ml-1 text-sm">နောက်မှ</span>}
         </button>
       </div>
     </div>

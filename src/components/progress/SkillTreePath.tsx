@@ -292,7 +292,7 @@ function NodeLabel({
         {name?.en ?? 'Unknown'}
       </p>
       {showBurmese && name?.my && (
-        <p className="text-xs font-myanmar text-muted-foreground leading-tight truncate mt-0.5">
+        <p className="text-sm font-myanmar text-muted-foreground leading-tight truncate mt-0.5">
           {name.my}
         </p>
       )}

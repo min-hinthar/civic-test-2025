@@ -168,7 +168,7 @@ export function ReadinessRing({ percentage, size = 180, strokeWidth = 14 }: Read
         </span>
         <span className="mt-0.5 text-xs font-semibold text-text-secondary">{tier.en}</span>
         {showBurmese && (
-          <span className="font-myanmar text-[10px] text-text-secondary/70">{tier.my}</span>
+          <span className="font-myanmar text-xs text-muted-foreground">{tier.my}</span>
         )}
       </div>
     </div>

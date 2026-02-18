@@ -211,7 +211,7 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
         </span>
         <span className="text-xs font-medium text-text-secondary">{def.label.en}</span>
         {showBurmese && (
-          <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
+          <span className="font-myanmar text-xs leading-tight text-muted-foreground">
             {def.label.my}
           </span>
         )}

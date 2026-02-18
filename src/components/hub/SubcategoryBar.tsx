@@ -59,7 +59,7 @@ export function SubcategoryBar({ percentage, label, onClick }: SubcategoryBarPro
       </div>
 
       {showBurmese && (
-        <p className="font-myanmar -mt-0.5 mb-1 truncate text-[10px] text-text-secondary/70">
+        <p className="font-myanmar -mt-0.5 mb-1 truncate text-sm text-muted-foreground">
           {label.my}
         </p>
       )}

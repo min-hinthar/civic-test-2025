@@ -127,7 +127,7 @@ export function PreTestScreen({
           This simulates the real USCIS civics test — questions are in English only.
         </p>
         {showBurmese && (
-          <p className="font-myanmar mt-1 text-xs text-muted-foreground text-center">
+          <p className="font-myanmar mt-1 text-sm text-muted-foreground text-center">
             {
               '\u1024\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1001\u1014\u103A\u1038\u101E\u100A\u103A \u1010\u1000\u101A\u1037\u103A USCIS \u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1000\u102D\u102F \u1010\u1030\u100A\u102E\u1005\u1031\u1015\u102B\u101E\u100A\u103A \u2014 \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u101E\u100A\u103A \u1021\u1004\u1039\u1002\u101C\u102D\u1015\u103A\u1018\u102C\u101E\u102C\u1016\u103C\u1004\u1037\u103A\u101E\u102C \u1016\u103C\u1005\u103A\u1015\u102B\u101E\u100A\u103A\u104B'
             }
@@ -209,7 +209,7 @@ export function PreTestScreen({
                 20 questions. Pass at 12 correct. Fail at 9 incorrect.
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {
                     '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038 \u1042\u1040\u104B \u1041\u1042 \u1001\u102F\u1019\u103E\u1014\u103A\u101C\u103B\u103E\u1004\u103A \u1021\u1031\u102C\u1004\u103A\u1019\u103C\u1004\u103A\u104B \u1049 \u1001\u102F\u1019\u103E\u102C\u1038\u101C\u103B\u103E\u1004\u103A \u1000\u103B\u101B\u103E\u102F\u1036\u1038\u104B'
                   }
@@ -237,7 +237,7 @@ export function PreTestScreen({
                 Get feedback after each question. Great for learning!
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {
                     '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1010\u1005\u103A\u1001\u102F\u1015\u103C\u102E\u1038\u1010\u102D\u102F\u1004\u103A\u1038 \u1021\u1000\u103C\u1036\u1015\u103C\u102F\u1001\u103B\u1000\u103A\u101B\u101B\u103E\u102D\u1015\u102B\u101E\u100A\u103A\u104B \u101E\u1004\u103A\u101A\u1030\u101B\u1014\u103A \u1021\u1000\u1031\u102C\u1004\u103A\u1038\u1006\u102F\u1036\u1038\u104B'
                   }
@@ -280,7 +280,7 @@ export function PreTestScreen({
                 <Volume2 className="h-4 w-4 text-primary" />
                 <p className="text-sm font-semibold text-foreground">Speech Speed</p>
                 {showBurmese && (
-                  <span className="font-myanmar text-xs text-muted-foreground">
+                  <span className="font-myanmar text-sm text-muted-foreground">
                     {
                       '\u1005\u1000\u102C\u1038\u1015\u103C\u1031\u102C\u1014\u103E\u102F\u1014\u103A\u1038'
                     }
@@ -304,7 +304,7 @@ export function PreTestScreen({
                   >
                     <span>{option.en}</span>
                     {showBurmese && (
-                      <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                      <span className="block font-myanmar text-sm mt-0.5 font-normal">
                         {option.my}
                       </span>
                     )}
@@ -325,7 +325,7 @@ export function PreTestScreen({
                       {strings.quiz.perQuestionTimer.en}
                     </p>
                     {showBurmese && (
-                      <p className="font-myanmar text-xs text-muted-foreground">
+                      <p className="font-myanmar text-sm text-muted-foreground">
                         {strings.quiz.perQuestionTimer.my}
                       </p>
                     )}
@@ -418,7 +418,7 @@ export function PreTestScreen({
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">Practice by Category</p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   {
                     '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1021\u101C\u102D\u102F\u1000\u103A \u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1015\u102B'
                   }

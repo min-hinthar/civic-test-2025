@@ -140,7 +140,7 @@ export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProp
             {icon && <span className="mb-0.5">{icon}</span>}
             <span className="font-semibold leading-tight">{label.en}</span>
             {showBurmese && (
-              <span className="text-sm font-normal font-myanmar opacity-80 leading-tight">
+              <span className="font-normal font-myanmar text-white/80 leading-tight">
                 {label.my}
               </span>
             )}

@@ -48,9 +48,7 @@ export function StatCard({ icon: Icon, label, value, onClick, badge }: StatCardP
       <span className="text-2xl font-extrabold tabular-nums text-text-primary">{value}</span>
       <span className="text-xs font-medium text-text-secondary">{label.en}</span>
       {showBurmese && (
-        <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
-          {label.my}
-        </span>
+        <span className="font-myanmar text-xs leading-tight text-muted-foreground">{label.my}</span>
       )}
       {badge && (
         <span className="mt-1 inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold text-primary">

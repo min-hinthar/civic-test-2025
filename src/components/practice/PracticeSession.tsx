@@ -215,7 +215,7 @@ function SegmentReviewDialog({
         >
           {strings.actions.back.en}
           {showBurmese && (
-            <span className="ml-2 font-myanmar text-xs">{strings.actions.back.my}</span>
+            <span className="ml-2 font-myanmar text-sm">{strings.actions.back.my}</span>
           )}
         </button>
       </div>
@@ -256,7 +256,7 @@ function ExitConfirmInline({
       <div className="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl text-center">
         <h3 className="text-lg font-bold text-foreground">{strings.quiz.exit.en}?</h3>
         {showBurmese && (
-          <p className="mt-1 font-myanmar text-sm text-muted-foreground">{strings.quiz.exit.my}?</p>
+          <p className="mt-1 font-myanmar text-lg text-muted-foreground">{strings.quiz.exit.my}?</p>
         )}
         <p className="mt-2 text-sm text-muted-foreground">
           Your progress is saved. You can resume this session later.

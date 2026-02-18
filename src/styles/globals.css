@@ -138,6 +138,7 @@ html.theme-transitioning .page-shell {
     'Segoe UI',
     sans-serif;
   letter-spacing: 0.02em;
+  line-height: 1.4;
   /* Myanmar line-breaking: prevent mid-syllable breaks */
   overflow-wrap: anywhere;
   word-break: keep-all;

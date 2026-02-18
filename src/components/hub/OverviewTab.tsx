@@ -171,7 +171,7 @@ export function OverviewTab({
             {strings.hub.categoryMastery.en}
           </h3>
           {showBurmese && (
-            <p className="font-myanmar -mt-2 mb-3 text-xs text-text-secondary">
+            <p className="font-myanmar -mt-2 mb-3 text-lg text-muted-foreground">
               {strings.hub.categoryMastery.my}
             </p>
           )}
@@ -202,7 +202,9 @@ export function OverviewTab({
                     <div className="min-w-0 flex-1">
                       <h4 className="text-base font-semibold text-text-primary">{def.name.en}</h4>
                       {showBurmese && (
-                        <p className="font-myanmar text-xs text-text-secondary">{def.name.my}</p>
+                        <p className="font-myanmar text-base text-muted-foreground">
+                          {def.name.my}
+                        </p>
                       )}
                     </div>
 

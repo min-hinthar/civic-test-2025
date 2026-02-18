@@ -66,7 +66,7 @@ export function MissedCardsList({ unknownIds, sourceCards, showBurmese }: Missed
         <div className="flex-1 min-w-0">
           <span className="text-sm font-semibold text-foreground">View missed cards ({count})</span>
           {showBurmese && (
-            <span className="font-myanmar text-xs text-muted-foreground ml-2">
+            <span className="font-myanmar text-sm text-muted-foreground ml-2">
               မမှန်ကတ်များကြည့်ပါ ({count})
             </span>
           )}
@@ -99,7 +99,7 @@ export function MissedCardsList({ unknownIds, sourceCards, showBurmese }: Missed
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground leading-snug">{card.question_en}</p>
                       {showBurmese && (
-                        <p className="font-myanmar text-xs text-muted-foreground mt-0.5 leading-snug">
+                        <p className="font-myanmar text-sm text-muted-foreground mt-0.5 leading-snug">
                           {card.question_my}
                         </p>
                       )}

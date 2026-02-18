@@ -189,7 +189,7 @@ export function QuestionReviewList({
                 wrong. Add {wrongNotInDeck.length > 1 ? 'them' : 'it'} to your review deck?
               </p>
               {showBurmese && (
-                <p className="text-xs text-muted-foreground font-myanmar">
+                <p className="text-sm text-muted-foreground font-myanmar">
                   {wrongNotInDeck.length} ခု မှားပါတယ်။ ပြန်လေ့လာစာရင်းသို့ ထည့်မလား?
                 </p>
               )}
@@ -396,7 +396,7 @@ export function QuestionReviewList({
                 : 'No results to display.'}
             </p>
             {showBurmese && (
-              <p className="text-xs font-myanmar mt-1">
+              <p className="text-sm font-myanmar mt-1">
                 {filter === 'incorrect'
                   ? 'မှားတဲ့အဖြေမရှိပါ - အရမ်းကောင်းပါတယ်!'
                   : 'ပြစရာရလဒ်မရှိပါ။'}
@@ -407,7 +407,7 @@ export function QuestionReviewList({
         {filter === 'skipped' && skippedQuestions.length === 0 && (
           <div className="py-8 text-center text-muted-foreground">
             <p className="text-sm">No skipped questions.</p>
-            {showBurmese && <p className="text-xs font-myanmar mt-1">ကျော်ထားတဲ့မေးခွန်းမရှိပါ။</p>}
+            {showBurmese && <p className="text-sm font-myanmar mt-1">ကျော်ထားတဲ့မေးခွန်းမရှိပါ။</p>}
           </div>
         )}
       </div>

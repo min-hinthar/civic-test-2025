@@ -128,7 +128,7 @@ export function StreakReward({ count, show, showBurmese }: StreakRewardProps) {
               <span className="text-sm">
                 {count} {strings.quiz.streakInRow.en}
                 {showBurmese && (
-                  <span className="ml-1 font-myanmar text-xs font-normal">
+                  <span className="ml-1 font-myanmar text-sm font-normal">
                     {count} {strings.quiz.streakInRow.my}
                   </span>
                 )}

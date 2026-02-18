@@ -103,7 +103,7 @@ export function ExitConfirmDialog({
           {/* Title */}
           <Dialog.Title className="text-xl font-bold text-foreground">{title.en}</Dialog.Title>
           {showBurmese && (
-            <p className="mt-0.5 font-myanmar text-base text-muted-foreground">{title.my}</p>
+            <p className="mt-0.5 font-myanmar text-xl text-muted-foreground">{title.my}</p>
           )}
 
           {/* Message */}
@@ -132,7 +132,7 @@ export function ExitConfirmDialog({
             >
               <span className="block">{keepGoing.en}</span>
               {showBurmese && (
-                <span className="block font-myanmar text-xs text-muted-foreground">
+                <span className="block font-myanmar text-sm text-muted-foreground">
                   {keepGoing.my}
                 </span>
               )}
@@ -152,7 +152,7 @@ export function ExitConfirmDialog({
             >
               <span className="block">{exitLabel.en}</span>
               {showBurmese && (
-                <span className="block font-myanmar text-xs opacity-90">{exitLabel.my}</span>
+                <span className="block font-myanmar text-sm text-white/80">{exitLabel.my}</span>
               )}
             </button>
           </div>

@@ -89,7 +89,7 @@ function StaticCardPreview({
             {question.question_en}
           </p>
           {showBurmese && (
-            <p className="mt-2 text-base font-myanmar text-muted-foreground leading-relaxed line-clamp-3">
+            <p className="mt-2 text-lg font-myanmar text-muted-foreground leading-relaxed line-clamp-3">
               {question.question_my}
             </p>
           )}

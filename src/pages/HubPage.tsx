@@ -274,7 +274,7 @@ export default function HubPage() {
             {user?.name ? `${user.name.split(' ')[0]}'s Progress` : strings.hub.pageTitle.en}
           </h1>
           {showBurmese && (
-            <p className="font-myanmar mt-0.5 text-sm text-text-secondary">
+            <p className="font-myanmar mt-0.5 text-2xl text-text-secondary">
               {user?.name ? `${user.name.split(' ')[0]} ၏ တိုးတက်မှု` : strings.hub.pageTitle.my}
             </p>
           )}

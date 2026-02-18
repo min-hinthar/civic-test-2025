@@ -89,7 +89,7 @@ export function CategoryBreakdown({ results, showBurmese }: CategoryBreakdownPro
                     {name?.en ?? stat.category}
                   </p>
                   {showBurmese && name?.my && (
-                    <p className="text-xs text-muted-foreground font-myanmar truncate">{name.my}</p>
+                    <p className="text-sm text-muted-foreground font-myanmar truncate">{name.my}</p>
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">

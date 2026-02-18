@@ -71,7 +71,7 @@ export function AnswerReveal({ question, audioURL, mode }: AnswerRevealProps) {
           </div>
           <p className="text-lg font-semibold text-foreground">{primaryAnswer.text_en}</p>
           {showBurmese && (
-            <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+            <p className="mt-0.5 font-myanmar text-lg text-muted-foreground">
               {primaryAnswer.text_my}
             </p>
           )}

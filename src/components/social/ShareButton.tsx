@@ -94,7 +94,7 @@ export function ShareButton({ data, variant = 'default', className }: ShareButto
           <Share2 className="h-4 w-4 shrink-0" />
           <span className="flex flex-col text-left">
             <span className="text-sm font-semibold">{LABEL.en}</span>
-            {showBurmese && <span className="font-myanmar text-xs opacity-80">{LABEL.my}</span>}
+            {showBurmese && <span className="font-myanmar text-sm text-white/80">{LABEL.my}</span>}
           </span>
         </motion.button>
       )}

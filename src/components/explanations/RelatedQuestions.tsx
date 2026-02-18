@@ -50,7 +50,7 @@ export function RelatedQuestions({ questionIds, allQuestions, className }: Relat
           {strings.explanations.seeAlso.en}
         </span>
         {showBurmese && (
-          <span className="font-myanmar text-xs text-muted-foreground/70">
+          <span className="font-myanmar text-xs text-muted-foreground">
             {strings.explanations.seeAlso.my}
           </span>
         )}
@@ -138,7 +138,7 @@ function RelatedQuestionItem({ question }: { question: Question }) {
                     {question.explanation.brief_en}
                   </p>
                   {showBurmese && (
-                    <p className="mt-0.5 font-myanmar text-xs text-muted-foreground/80 leading-relaxed">
+                    <p className="mt-0.5 font-myanmar text-xs text-muted-foreground leading-relaxed">
                       {question.explanation.brief_my}
                     </p>
                   )}

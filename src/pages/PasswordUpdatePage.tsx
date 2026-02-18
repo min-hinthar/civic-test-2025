@@ -73,7 +73,7 @@ const PasswordUpdatePage = () => {
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">Update Your Password</h1>
             {showBurmese && (
-              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              <p className="mt-1 font-myanmar text-2xl text-muted-foreground">
                 သင့်လျှို့ဝှက်စာကို အသစ်ပြောင်းပါ
               </p>
             )}
@@ -95,7 +95,7 @@ const PasswordUpdatePage = () => {
                 <label className="text-sm font-semibold text-foreground">
                   New password{' '}
                   {showBurmese && (
-                    <span className="font-myanmar text-xs text-muted-foreground">
+                    <span className="font-myanmar text-sm text-muted-foreground">
                       လျှို့ဝှက်စာအသစ်
                     </span>
                   )}
@@ -116,7 +116,7 @@ const PasswordUpdatePage = () => {
                 <label className="text-sm font-semibold text-foreground">
                   Confirm password{' '}
                   {showBurmese && (
-                    <span className="font-myanmar text-xs text-muted-foreground">အတည်ပြုပါ</span>
+                    <span className="font-myanmar text-sm text-muted-foreground">အတည်ပြုပါ</span>
                   )}
                 </label>
                 <input
@@ -147,7 +147,7 @@ const PasswordUpdatePage = () => {
               <Link className="font-semibold text-primary" to="/auth/forgot">
                 Request a new reset email
               </Link>
-              {showBurmese && <span className="font-myanmar text-xs"> · လင့်ခ်အသစ် တောင်းပါ</span>}
+              {showBurmese && <span className="font-myanmar text-sm"> · လင့်ခ်အသစ် တောင်းပါ</span>}
             </p>
           </div>
         </FadeIn>

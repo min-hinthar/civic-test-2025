@@ -358,7 +358,7 @@ export function AchievementsTab({
                     <CatIcon className="h-4 w-4 text-muted-foreground" />
                     <h3 className="text-sm font-semibold text-foreground">{cat.en}</h3>
                     {showBurmese && (
-                      <span className="text-xs font-myanmar text-muted-foreground">/ {cat.my}</span>
+                      <span className="text-sm font-myanmar text-muted-foreground">/ {cat.my}</span>
                     )}
                   </div>
 
@@ -607,7 +607,7 @@ function BadgeCard({
           {badge.name.en}
         </p>
         {showBurmese && (
-          <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
+          <p className="text-xs font-myanmar text-muted-foreground mt-0.5 leading-tight">
             {badge.name.my}
           </p>
         )}

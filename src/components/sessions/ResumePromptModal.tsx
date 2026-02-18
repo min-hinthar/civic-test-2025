@@ -140,7 +140,7 @@ export function ResumePromptModal({
         <DialogTitle className="text-center text-xl">
           {TEXT.title.en}
           {showBurmese && (
-            <span className="mt-0.5 block font-myanmar text-base font-semibold text-foreground/70">
+            <span className="mt-0.5 block font-myanmar text-xl font-semibold text-muted-foreground">
               {TEXT.title.my}
             </span>
           )}
@@ -150,7 +150,7 @@ export function ResumePromptModal({
         <DialogDescription className="text-center">
           {TEXT.subtitle.en}
           {showBurmese && (
-            <span className="mt-0.5 block font-myanmar text-xs text-muted-foreground/80">
+            <span className="mt-0.5 block font-myanmar text-muted-foreground">
               {TEXT.subtitle.my}
             </span>
           )}

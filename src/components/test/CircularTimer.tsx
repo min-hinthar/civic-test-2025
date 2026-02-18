@@ -143,7 +143,7 @@ export function CircularTimer({
           <span className="flex flex-col leading-tight">
             <span>{toggleLabel.en}</span>
             {showBurmese && (
-              <span className="font-myanmar text-xs opacity-70">{toggleLabel.my}</span>
+              <span className="font-myanmar text-sm text-muted-foreground">{toggleLabel.my}</span>
             )}
           </span>
         </button>

@@ -104,7 +104,7 @@ export function BadgeGrid({ earnedBadges, lockedBadges, className }: BadgeGridPr
             <div className="mb-3">
               <h3 className="text-sm font-semibold text-foreground">{label.en}</h3>
               {showBurmese && (
-                <p className="text-xs font-myanmar text-muted-foreground">{label.my}</p>
+                <p className="text-sm font-myanmar text-muted-foreground">{label.my}</p>
               )}
             </div>
 
@@ -181,7 +181,7 @@ function BadgeCard({
       {/* Badge name */}
       <p className="text-sm font-semibold text-foreground leading-tight">{badge.name.en}</p>
       {showBurmese && (
-        <p className="text-xs font-myanmar text-muted-foreground mt-0.5 leading-tight">
+        <p className="text-sm font-myanmar text-muted-foreground mt-0.5 leading-tight">
           {badge.name.my}
         </p>
       )}

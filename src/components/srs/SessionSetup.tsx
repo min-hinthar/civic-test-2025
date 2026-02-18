@@ -140,7 +140,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           <Sparkles className="h-12 w-12 text-success mx-auto mb-4" />
           <h2 className="text-xl font-bold text-foreground">All caught up!</h2>
           {showBurmese && (
-            <p className="font-myanmar text-base text-muted-foreground mt-1">
+            <p className="font-myanmar text-xl text-muted-foreground mt-1">
               အားလုံးပြန်လည်သုံးသပ်ပြီးပါပြီ!
             </p>
           )}
@@ -179,7 +179,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
           <StaggeredItem>
             <h2 className="text-xl font-bold text-foreground">Review Session</h2>
             {showBurmese && (
-              <p className="font-myanmar text-base text-muted-foreground mt-0.5">
+              <p className="font-myanmar text-xl text-muted-foreground mt-0.5">
                 ပြန်လည်သုံးသပ်ခြင်း
               </p>
             )}
@@ -232,7 +232,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 >
                   <span className="block">{option.labelEn}</span>
                   {showBurmese && (
-                    <span className="font-myanmar text-xs block opacity-80 mt-0.5">
+                    <span className="font-myanmar text-sm block text-muted-foreground mt-0.5">
                       {option.labelMy}
                     </span>
                   )}
@@ -249,7 +249,7 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
                 <div>
                   <p className="text-sm font-medium text-foreground">Enable Timer</p>
                   {showBurmese && (
-                    <p className="font-myanmar text-xs text-muted-foreground">
+                    <p className="font-myanmar text-sm text-muted-foreground">
                       {'အချိန်တိုင်းကိရိယာ ဖွင့်ပါ'}
                     </p>
                   )}
@@ -308,7 +308,9 @@ export function SessionSetup({ totalDue, onStart, onBack, className }: SessionSe
               <span className="flex flex-col items-center">
                 <span>Start Review</span>
                 {showBurmese && (
-                  <span className="font-myanmar text-sm opacity-80">ပြန်လည်သုံးသပ်ခြင်းစတင်ပါ</span>
+                  <span className="font-myanmar text-sm text-white/80">
+                    ပြန်လည်သုံးသပ်ခြင်းစတင်ပါ
+                  </span>
                 )}
               </span>
             </Button>

@@ -60,7 +60,7 @@ export function StartFreshConfirm({ onConfirm, onCancel }: StartFreshConfirmProp
       {/* Warning message */}
       <p className="text-center text-sm text-foreground">{TEXT.message.en}</p>
       {showBurmese && (
-        <p className="-mt-2 text-center font-myanmar text-xs text-muted-foreground">
+        <p className="-mt-2 text-center font-myanmar text-sm text-muted-foreground">
           {TEXT.message.my}
         </p>
       )}

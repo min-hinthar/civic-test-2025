@@ -154,7 +154,7 @@ function StepFinish() {
         Every question you practice brings you closer to your citizenship. You can do this!
       </p>
       {showBurmese && (
-        <p className="font-myanmar text-muted-foreground mt-2">
+        <p className="font-myanmar text-sm text-muted-foreground mt-2">
           သင်လေ့ကျင့်တဲ့ မေးခွန်းတိုင်းက နိုင်ငံသားဖြစ်မှုနဲ့ နီးစေပါတယ်။ သင်လုပ်နိုင်ပါတယ်!
         </p>
       )}

@@ -140,7 +140,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
                 Recommended for you
               </span>
               {showBurmese && (
-                <span className="ml-1 font-myanmar text-[10px] text-primary/70">
+                <span className="ml-1 font-myanmar text-xs text-muted-foreground">
                   သင့်အတွက် အကြံပြုချက်
                 </span>
               )}
@@ -160,7 +160,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
                   {nbaState.title.en}
                 </h2>
                 {showBurmese && (
-                  <p className="mt-0.5 font-myanmar text-sm leading-tight text-foreground/70">
+                  <p className="mt-0.5 font-myanmar text-lg leading-tight text-muted-foreground">
                     {nbaState.title.my}
                   </p>
                 )}
@@ -168,7 +168,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
                 {/* Hint */}
                 <p className="mt-1.5 text-sm text-muted-foreground">{nbaState.hint.en}</p>
                 {showBurmese && (
-                  <p className="mt-0.5 font-myanmar text-xs text-muted-foreground/80">
+                  <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
                     {nbaState.hint.my}
                   </p>
                 )}
@@ -190,9 +190,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
               >
                 <span>{nbaState.cta.label.en}</span>
                 {showBurmese && (
-                  <span className="font-myanmar text-xs text-white/80">
-                    {nbaState.cta.label.my}
-                  </span>
+                  <span className="font-myanmar text-white/80">{nbaState.cta.label.my}</span>
                 )}
               </Link>
 

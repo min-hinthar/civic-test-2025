@@ -196,7 +196,9 @@ const StudyGuidePage = () => {
         Study Guide
       </motion.h1>
       {showBurmese && (
-        <p className="mt-1 text-base text-muted-foreground font-myanmar">လေ့လာမှုလမ်းညွှန်</p>
+        <p className="mt-1 text-3xl text-muted-foreground font-myanmar sm:text-4xl">
+          လေ့လာမှုလမ်းညွှန်
+        </p>
       )}
     </div>
   );
@@ -452,7 +454,7 @@ const StudyGuidePage = () => {
                               {question.question_en}
                             </p>
                             {showBurmese && (
-                              <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                              <p className="text-xl text-muted-foreground font-myanmar leading-relaxed">
                                 {question.question_my}
                               </p>
                             )}
@@ -635,7 +637,7 @@ const StudyGuidePage = () => {
             <div>
               <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
               {showBurmese && (
-                <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
+                <p className="text-2xl text-muted-foreground font-myanmar mt-0.5">
                   အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကဒ်များ
                 </p>
               )}
@@ -682,7 +684,7 @@ const StudyGuidePage = () => {
             <div className="text-center py-12">
               <p className="text-lg font-bold text-muted-foreground">No questions found</p>
               {showBurmese && (
-                <p className="text-sm text-muted-foreground font-myanmar mt-1">
+                <p className="text-lg text-muted-foreground font-myanmar mt-1">
                   မေးခွန်းမတွေ့ပါ - ရှာဖွေမှုကိုပြောင်းကြည့်ပါ
                 </p>
               )}
@@ -767,7 +769,7 @@ const StudyGuidePage = () => {
                               {question.question_en}
                             </p>
                             {showBurmese && (
-                              <p className="text-base text-muted-foreground font-myanmar leading-relaxed">
+                              <p className="text-xl text-muted-foreground font-myanmar leading-relaxed">
                                 {question.question_my}
                               </p>
                             )}

@@ -177,7 +177,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           This simulates the real USCIS civics test — questions are in English only.
         </p>
         {showBurmese && (
-          <p className="font-myanmar mt-1 text-xs text-muted-foreground text-center">
+          <p className="font-myanmar mt-1 text-sm text-muted-foreground text-center">
             ဤလေ့ကျင့်ခန်းသည် တကယ့် USCIS နိုင်ငံသားစာမေးပွဲကို တူညီစေပါသည် — မေးခွန်းများသည်
             အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖြစ်ပါသည်။
           </p>
@@ -259,7 +259,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 20 questions. Pass at 12 correct. Fail at 9 incorrect.
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   မေးခွန်း ၂၀။ ၁၂ ခုမှန်လျှင် အောင်မြင်။ ၉ ခုမှားလျှင် ကျရှုံး။
                 </p>
               )}
@@ -282,7 +282,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 Get feedback after each question. Great for learning!
               </p>
               {showBurmese && (
-                <p className="font-myanmar text-xs text-muted-foreground">
+                <p className="font-myanmar text-sm text-muted-foreground">
                   မေးခွန်းတစ်ခုပြီးတိုင်း အကြံပြုချက်ရရှိပါသည်။ သင်ယူရန် အကောင်းဆုံး။
                 </p>
               )}
@@ -307,7 +307,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                 <Volume2 className="h-4 w-4 text-primary" />
                 <p className="text-sm font-semibold text-foreground">Speech Speed</p>
                 {showBurmese && (
-                  <span className="font-myanmar text-xs text-muted-foreground">စကားပြောနှုန်း</span>
+                  <span className="font-myanmar text-sm text-muted-foreground">စကားပြောနှုန်း</span>
                 )}
               </div>
               <div className="flex gap-2" role="radiogroup" aria-label="Speech speed">
@@ -327,7 +327,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                   >
                     <span>{option.en}</span>
                     {showBurmese && (
-                      <span className="block font-myanmar text-xs mt-0.5 font-normal">
+                      <span className="block font-myanmar text-sm mt-0.5 font-normal">
                         {option.my}
                       </span>
                     )}
@@ -378,7 +378,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
               <Mic className="h-4 w-4 text-success" />
               <span className="font-bold">Microphone ready</span>
               {showBurmese && (
-                <span className="font-myanmar text-xs">· မိုက်ခရိုဖုန်း အဆင်သင့်</span>
+                <span className="font-myanmar text-sm">· မိုက်ခရိုဖုန်း အဆင်သင့်</span>
               )}
             </>
           ) : micPermission === 'denied' ? (
@@ -423,7 +423,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                   <h3 className="mb-2 text-sm font-bold text-foreground">
                     Real Exam
                     {showBurmese && (
-                      <span className="ml-1 font-myanmar font-normal text-xs text-muted-foreground">
+                      <span className="ml-1 font-myanmar font-normal text-sm text-muted-foreground">
                         {strings.interview.realisticMode.my}
                       </span>
                     )}
@@ -443,7 +443,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                   <h3 className="mb-2 text-sm font-bold text-foreground">
                     Practice
                     {showBurmese && (
-                      <span className="ml-1 font-myanmar font-normal text-xs text-muted-foreground">
+                      <span className="ml-1 font-myanmar font-normal text-sm text-muted-foreground">
                         {strings.interview.practiceMode.my}
                       </span>
                     )}
@@ -474,7 +474,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             <p className="text-4xl mb-2">🎤</p>
             <p className="text-sm font-bold text-muted-foreground">First time? Give it a try!</p>
             {showBurmese && (
-              <p className="mt-1 font-myanmar text-xs text-muted-foreground">
+              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
                 ပထမဆုံးအကြိမ်လား? စမ်းကြည့်ပါ!
               </p>
             )}

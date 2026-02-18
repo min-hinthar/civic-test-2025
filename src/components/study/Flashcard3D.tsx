@@ -313,7 +313,7 @@ export function Flashcard3D({
             <div className="flex-1 flex flex-col justify-center">
               <p className="text-lg font-semibold text-foreground leading-relaxed">{questionEn}</p>
               {showBurmese && (
-                <p className="mt-2 text-base font-myanmar text-muted-foreground leading-relaxed">
+                <p className="mt-2 text-lg font-myanmar text-muted-foreground leading-relaxed">
                   {questionMy}
                 </p>
               )}
@@ -387,7 +387,7 @@ export function Flashcard3D({
               <div>
                 <p className="text-xl font-bold text-foreground leading-relaxed">{answerEn}</p>
                 {showBurmese && (
-                  <p className="mt-3 text-lg font-myanmar text-muted-foreground leading-relaxed">
+                  <p className="mt-3 text-xl font-myanmar text-muted-foreground leading-relaxed">
                     {answerMy}
                   </p>
                 )}

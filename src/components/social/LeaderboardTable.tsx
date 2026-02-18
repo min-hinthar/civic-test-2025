@@ -131,7 +131,7 @@ export function LeaderboardTable({
       <div className="rounded-xl border border-border/60 bg-card p-8 text-center">
         <p className="text-muted-foreground">No participants yet. Be the first!</p>
         {showBurmese && (
-          <p className="font-myanmar text-sm text-muted-foreground mt-1">
+          <p className="font-myanmar text-muted-foreground mt-1">
             ပါဝင်သူများ မရှိသေးပါ။ ပထမဆုံး ဖြစ်ပါ!
           </p>
         )}

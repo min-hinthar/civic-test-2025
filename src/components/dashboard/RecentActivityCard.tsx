@@ -86,7 +86,7 @@ export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCar
           <div>
             <h3 className="text-sm font-semibold text-text-primary">Recent Activity</h3>
             {showBurmese && (
-              <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
+              <span className="font-myanmar text-sm leading-tight text-muted-foreground">
                 {
                   '\u1019\u1000\u103C\u102C\u101E\u1031\u1038\u1019\u102E\u1000 \u101C\u103E\u102F\u1015\u103A\u101B\u103E\u102C\u1038\u1019\u103E\u102F'
                 }
@@ -100,7 +100,7 @@ export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCar
           <p className="text-sm text-text-secondary">
             Take a mock test to see your history
             {showBurmese && (
-              <span className="block font-myanmar text-[10px] mt-0.5">
+              <span className="block font-myanmar text-sm mt-0.5">
                 {
                   '\u101E\u1019\u102D\u102F\u1004\u103A\u1038\u1000\u102D\u102F \u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1005\u102C\u1019\u1031\u1038\u1015\u103C\u1031\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
                 }

@@ -119,7 +119,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
           <div>
             <h3 className="text-sm font-semibold text-text-primary">Achievements</h3>
             {showBurmese && (
-              <span className="font-myanmar text-[10px] leading-tight text-text-secondary/70">
+              <span className="font-myanmar text-sm leading-tight text-muted-foreground">
                 အောင်မြင်မှုများ
               </span>
             )}
@@ -185,7 +185,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
                   {badge.name.en}
                 </p>
                 {showBurmese && (
-                  <p className="text-[10px] font-myanmar text-muted-foreground mt-0.5 leading-tight">
+                  <p className="text-xs font-myanmar text-muted-foreground mt-0.5 leading-tight">
                     {badge.name.my}
                   </p>
                 )}

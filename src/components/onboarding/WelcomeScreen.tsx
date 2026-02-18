@@ -54,12 +54,12 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
 
             {/* Burmese */}
             {showBurmese && (
-              <h2 className="mt-4 font-myanmar text-xl font-bold text-foreground">
+              <h2 className="mt-4 font-myanmar text-2xl sm:text-3xl font-bold text-muted-foreground">
                 နိုင်ငံသားစာမေးပွဲ ပြင်ဆင်ရေးသို့ ကြိုဆိုပါတယ်!
               </h2>
             )}
             {showBurmese && (
-              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              <p className="mt-1 font-myanmar text-sm sm:text-base text-muted-foreground">
                 အမေရိကန်နိုင်ငံသားဖြစ်ဖို့ ခရီးကို ဒီကနေ စလိုက်ပါ။
               </p>
             )}

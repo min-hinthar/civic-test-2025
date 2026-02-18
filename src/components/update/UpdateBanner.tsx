@@ -39,7 +39,7 @@ export function UpdateBanner({ showBurmese = true, className }: UpdateBannerProp
         Updated for USCIS 2025 Civics Test &mdash; 128 Questions
       </p>
       {showBurmese && (
-        <p className="font-myanmar text-xs text-primary/80">
+        <p className="font-myanmar text-xs text-primary">
           USCIS 2025 နိုင်ငံသားရေးရာစာမေးပွဲအတွက် မွမ်းမံပြီး &mdash; မေးခွန်း ၁၂၈ ခု
         </p>
       )}

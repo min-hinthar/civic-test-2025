@@ -211,7 +211,7 @@ export function TestResultsScreen({
               : strings.practice.practiceComplete.en}
           </h1>
           {showBurmese && (
-            <p className="font-myanmar text-base text-muted-foreground mt-1">
+            <p className="font-myanmar text-2xl text-muted-foreground mt-1">
               {mode === 'mock-test'
                 ? strings.test.testComplete.my
                 : strings.practice.practiceComplete.my}
@@ -257,7 +257,7 @@ export function TestResultsScreen({
                 {completionMessages[endReason].en}
               </p>
               {showBurmese && completionMessages[endReason].my && (
-                <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
                   {completionMessages[endReason].my}
                 </p>
               )}

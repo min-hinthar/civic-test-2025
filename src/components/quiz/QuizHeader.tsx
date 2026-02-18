@@ -82,7 +82,7 @@ export function QuizHeader({
           {`${strings.quiz.questionNofM.en} ${questionNumber} ${strings.quiz.of.en} ${totalQuestions}`}
         </span>
         {showBurmese && (
-          <span className="text-xs font-myanmar text-muted-foreground truncate">
+          <span className="text-sm font-myanmar text-muted-foreground truncate">
             {questionLabel}
           </span>
         )}

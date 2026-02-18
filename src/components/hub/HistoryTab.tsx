@@ -163,7 +163,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
           <div>
             <h2 className="text-lg font-bold text-foreground">{strings.hub.mockTests.en}</h2>
             {showBurmese && (
-              <p className="text-sm text-muted-foreground font-myanmar">
+              <p className="text-lg text-muted-foreground font-myanmar">
                 {strings.hub.mockTests.my}
               </p>
             )}
@@ -480,7 +480,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
           <div>
             <h2 className="text-lg font-bold text-foreground">{strings.hub.interviews.en}</h2>
             {showBurmese && (
-              <p className="text-sm text-muted-foreground font-myanmar">
+              <p className="text-lg text-muted-foreground font-myanmar">
                 {strings.hub.interviews.my}
               </p>
             )}
@@ -645,7 +645,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
                                       {result.questionText_en}
                                     </p>
                                     {showBurmese && (
-                                      <p className="text-xs text-muted-foreground font-myanmar mt-0.5">
+                                      <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
                                         {result.questionText_my}
                                       </p>
                                     )}

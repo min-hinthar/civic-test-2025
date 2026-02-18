@@ -78,12 +78,14 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         {/* Welcome header */}
         <h2 className="mb-1 text-2xl font-bold text-foreground">Welcome!</h2>
         {showBurmese && (
-          <p className="font-myanmar mb-1 text-xl font-bold text-foreground">ကြိုဆိုပါတယ်!</p>
+          <p className="font-myanmar mb-1 text-2xl font-bold text-muted-foreground">
+            ကြိုဆိုပါတယ်!
+          </p>
         )}
         <p className="mb-6 text-muted-foreground">
           Your app is ready. Here are some tips:
           {showBurmese && (
-            <span className="block font-myanmar text-sm mt-0.5">
+            <span className="block font-myanmar mt-0.5">
               အက်ပ်အသင့်ဖြစ်ပါပြီ။ အကြံပြုချက်တချို့ကြည့်ပါ:
             </span>
           )}
@@ -100,7 +102,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <p className="font-medium text-foreground">
                 Works offline
                 {showBurmese && (
-                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                  <span className="font-myanmar block font-normal text-muted-foreground">
                     အင်တာနက်မရှိလည်း အလုပ်လုပ်ပါတယ်
                   </span>
                 )}
@@ -123,7 +125,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <p className="font-medium text-foreground">
                 Auto-syncs your progress
                 {showBurmese && (
-                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                  <span className="font-myanmar block font-normal text-muted-foreground">
                     တိုးတက်မှုကို အလိုအလျောက် ချိန်ကိုက်ပေးပါတယ်
                   </span>
                 )}
@@ -148,7 +150,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <p className="font-medium text-foreground">
                 Open from home screen
                 {showBurmese && (
-                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                  <span className="font-myanmar block font-normal text-muted-foreground">
                     Home screen ကနေ ဖွင့်ပါ
                   </span>
                 )}

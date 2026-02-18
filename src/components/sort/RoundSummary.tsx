@@ -114,7 +114,7 @@ function CategoryBreakdownRow({
             {names?.en ?? item.category}
           </p>
           {showBurmese && names?.my && (
-            <p className="font-myanmar text-xs text-muted-foreground truncate">{names.my}</p>
+            <p className="font-myanmar text-sm text-muted-foreground truncate">{names.my}</p>
           )}
         </div>
         <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
@@ -284,7 +284,7 @@ export function RoundSummary({
         </div>
         <p className="text-lg font-semibold text-foreground mt-1">Known</p>
         {showBurmese && (
-          <p className="font-myanmar text-base text-muted-foreground">
+          <p className="font-myanmar text-lg text-muted-foreground">
             {toMyanmarNumeral(percentage)}% သိပါတယ်
           </p>
         )}
@@ -298,7 +298,7 @@ export function RoundSummary({
         >
           <Star className="h-5 w-5 fill-warning" />
           <span className="text-sm font-bold">New Personal Best!</span>
-          {showBurmese && <span className="font-myanmar text-xs">ကိုယ်ပိုင်စံချိန်သစ်!</span>}
+          {showBurmese && <span className="font-myanmar text-sm">ကိုယ်ပိုင်စံချိန်သစ်!</span>}
           <Star className="h-5 w-5 fill-warning" />
         </motion.div>
       )}
@@ -382,7 +382,7 @@ export function RoundSummary({
                   {improvementDelta} more known vs last round
                 </p>
                 {showBurmese && (
-                  <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                  <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
                     {improvementDelta > 0 ? '+' : ''}
                     {toMyanmarNumeral(improvementDelta)} ယခင်အကြိမ်ထက်ပိုသိသည်
                   </p>
@@ -391,7 +391,7 @@ export function RoundSummary({
                   {improvementMessage.en}
                 </p>
                 {showBurmese && (
-                  <p className={clsx('font-myanmar text-xs mt-0.5', improvementMessage.color)}>
+                  <p className={clsx('font-myanmar text-sm mt-0.5', improvementMessage.color)}>
                     {improvementMessage.my}
                   </p>
                 )}
@@ -447,7 +447,7 @@ export function RoundSummary({
             <span className="flex flex-col items-center">
               <span>Study Missed Cards</span>
               {showBurmese && (
-                <span className="font-myanmar text-sm opacity-80">မမှန်ကတ်များကိုလေ့လာပါ</span>
+                <span className="font-myanmar text-sm text-white/80">မမှန်ကတ်များကိုလေ့လာပါ</span>
               )}
             </span>
           </Button>
@@ -456,7 +456,7 @@ export function RoundSummary({
         <Button variant="outline" size="lg" fullWidth onClick={onFinishSession}>
           <span className="flex flex-col items-center">
             <span>Finish</span>
-            {showBurmese && <span className="font-myanmar text-sm opacity-80">ပြီးပါပြီ</span>}
+            {showBurmese && <span className="font-myanmar text-sm text-white/80">ပြီးပါပြီ</span>}
           </span>
         </Button>
       </motion.div>

@@ -196,7 +196,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
             className="flex-1 rounded-full border border-border px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           >
             <span>Close</span>
-            {showBurmese && <span className="ml-1 font-myanmar text-xs opacity-80">ပိတ်ပါ</span>}
+            {showBurmese && <span className="ml-1 font-myanmar text-sm text-white/80">ပိတ်ပါ</span>}
           </button>
           <button
             type="button"
@@ -226,7 +226,7 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
               <>
                 <span>Share</span>
                 {showBurmese && (
-                  <span className="ml-1 font-myanmar text-xs opacity-80">မျှဝေပါ</span>
+                  <span className="ml-1 font-myanmar text-sm text-white/80">မျှဝေပါ</span>
                 )}
               </>
             )}

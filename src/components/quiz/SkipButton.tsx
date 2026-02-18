@@ -70,7 +70,7 @@ export function SkipButton({ onSkip, disabled = false, showBurmese }: SkipButton
       <span className="flex flex-col items-start leading-tight">
         <span className="text-sm font-semibold">{strings.quiz.skip.en}</span>
         {showBurmese && (
-          <span className="text-xs font-myanmar opacity-80">{strings.quiz.skip.my}</span>
+          <span className="text-sm font-myanmar text-muted-foreground">{strings.quiz.skip.my}</span>
         )}
       </span>
     </button>

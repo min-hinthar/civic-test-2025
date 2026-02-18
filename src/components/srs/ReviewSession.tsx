@@ -288,7 +288,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
             Card {currentIndex + 1} of {sessionSize}
           </p>
           {showBurmese && (
-            <p className="font-myanmar text-xs text-muted-foreground">
+            <p className="font-myanmar text-sm text-muted-foreground">
               {'ကတ်'} {toBurmeseNumeral(currentIndex + 1)} / {toBurmeseNumeral(sessionSize)}
             </p>
           )}
@@ -347,7 +347,7 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
         <p className="text-center text-sm text-muted-foreground">
           Tap card to reveal answer
           {showBurmese && (
-            <span className="font-myanmar block text-xs mt-0.5">
+            <span className="font-myanmar block text-sm mt-0.5">
               {'အဖြေကိုကြည့်ရန် ကတ်ကိုနှိပ်ပါ'}
             </span>
           )}

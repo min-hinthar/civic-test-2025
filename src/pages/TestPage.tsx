@@ -958,7 +958,9 @@ const TestPage = () => {
           >
             {strings.quiz.check.en}
             {showBurmese && (
-              <span className="ml-2 font-myanmar text-sm font-normal">{strings.quiz.check.my}</span>
+              <span className="ml-2 font-myanmar text-base font-normal">
+                {strings.quiz.check.my}
+              </span>
             )}
           </button>
         </div>
@@ -1053,7 +1055,7 @@ const TestPage = () => {
             <p className="text-muted-foreground">
               Review your answers and retake the mock test anytime.
               {showBurmese && (
-                <span className="block font-myanmar text-sm mt-0.5">
+                <span className="block font-myanmar text-muted-foreground mt-0.5">
                   အဖြေများကို ပြန်လည်စစ်ဆေးပြီး အချိန်မရွေး ထပ်ဖြေနိုင်ပါတယ်။
                 </span>
               )}
@@ -1132,7 +1134,7 @@ const TestPage = () => {
             >
               {finalCorrect >= PASS_THRESHOLD ? 'Pass' : 'Review'}
               {showBurmese && (
-                <span className="block font-myanmar text-sm font-semibold">
+                <span className="block font-myanmar text-2xl font-semibold">
                   {finalCorrect >= PASS_THRESHOLD ? 'အောင်မြင်' : 'ပြန်လေ့လာရန်'}
                 </span>
               )}

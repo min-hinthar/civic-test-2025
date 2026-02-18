@@ -70,7 +70,7 @@ const AuthPage = () => {
               {mode === 'forgot' && 'Reset Password'}
             </h1>
             {showBurmese && (
-              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              <p className="mt-1 font-myanmar text-2xl text-muted-foreground sm:text-3xl">
                 {mode === 'login' && 'ပြန်လာတာ ကြိုဆိုပါတယ်'}
                 {mode === 'register' && 'အကောင့်အသစ်ဖွင့်ပါ'}
                 {mode === 'forgot' && 'လျှို့ဝှက်စာ ပြန်သတ်မှတ်ပါ'}
@@ -127,7 +127,7 @@ const AuthPage = () => {
                   <label className="text-sm font-semibold text-foreground">
                     Full name{' '}
                     {showBurmese && (
-                      <span className="font-myanmar text-xs text-muted-foreground">
+                      <span className="font-myanmar text-sm text-muted-foreground">
                         အမည်အပြည့်အစုံ
                       </span>
                     )}
@@ -145,7 +145,7 @@ const AuthPage = () => {
                 <label className="text-sm font-semibold text-foreground">
                   Email{' '}
                   {showBurmese && (
-                    <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                    <span className="font-myanmar text-sm text-muted-foreground">အီးမေးလ်</span>
                   )}
                 </label>
                 <input
@@ -163,7 +163,7 @@ const AuthPage = () => {
                     <label className="text-sm font-semibold text-foreground">
                       Password{' '}
                       {showBurmese && (
-                        <span className="font-myanmar text-xs text-muted-foreground">
+                        <span className="font-myanmar text-sm text-muted-foreground">
                           လျှို့ဝှက်စာ
                         </span>
                       )}
@@ -233,7 +233,7 @@ const AuthPage = () => {
               <Link className="font-semibold text-primary" to="/">
                 Back to home
               </Link>
-              {showBurmese && <span className="font-myanmar text-xs"> · ပင်မစာမျက်နှာသို့</span>}
+              {showBurmese && <span className="font-myanmar text-sm"> · ပင်မစာမျက်နှာသို့</span>}
             </p>
           </div>
         </FadeIn>

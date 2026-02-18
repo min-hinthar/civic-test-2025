@@ -84,7 +84,7 @@ export function ExplanationCard({
               {strings.explanations.why.en}
             </span>
             {showBurmese && (
-              <span className="font-myanmar text-xs text-muted-foreground">
+              <span className="font-myanmar text-sm text-muted-foreground">
                 {strings.explanations.why.my}
               </span>
             )}
@@ -132,7 +132,7 @@ export function ExplanationCard({
               <div>
                 <p className="text-sm text-foreground leading-relaxed">{explanation.brief_en}</p>
                 {showBurmese && (
-                  <p className="mt-1 font-myanmar text-xs text-muted-foreground leading-relaxed">
+                  <p className="mt-1 font-myanmar text-sm text-muted-foreground leading-relaxed">
                     {explanation.brief_my}
                   </p>
                 )}

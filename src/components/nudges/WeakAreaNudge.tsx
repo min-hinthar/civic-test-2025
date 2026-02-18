@@ -84,7 +84,7 @@ export function WeakAreaNudge({
           <Play className="h-3.5 w-3.5" />
           <span>{strings.progress.practiceNow.en}</span>
           {showBurmese && (
-            <span className="font-myanmar text-[10px]">{strings.progress.practiceNow.my}</span>
+            <span className="font-myanmar text-xs">{strings.progress.practiceNow.my}</span>
           )}
         </button>
         <button
@@ -99,7 +99,7 @@ export function WeakAreaNudge({
           <BookOpen className="h-3.5 w-3.5" />
           <span>{strings.progress.reviewInGuide.en}</span>
           {showBurmese && (
-            <span className="font-myanmar text-[10px]">{strings.progress.reviewInGuide.my}</span>
+            <span className="font-myanmar text-xs">{strings.progress.reviewInGuide.my}</span>
           )}
         </button>
       </div>

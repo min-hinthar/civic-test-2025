@@ -142,7 +142,7 @@ export function SessionSummary({
         <Trophy className="h-12 w-12 text-success mx-auto mb-3" />
         <h2 className="text-2xl font-bold text-foreground">Session Complete</h2>
         {showBurmese && (
-          <p className="font-myanmar text-base text-muted-foreground mt-1">
+          <p className="font-myanmar text-2xl text-muted-foreground mt-1">
             ပြန်လည်သုံးသပ်ခြင်းပြီးပါပြီ
           </p>
         )}
@@ -180,7 +180,7 @@ export function SessionSummary({
       <motion.div variants={fadeVariants} className="text-center">
         <p className="text-base font-medium text-foreground">{encouragement.en}</p>
         {showBurmese && (
-          <p className="font-myanmar text-sm text-muted-foreground mt-1">{encouragement.my}</p>
+          <p className="font-myanmar text-base text-muted-foreground mt-1">{encouragement.my}</p>
         )}
       </motion.div>
 
@@ -193,7 +193,7 @@ export function SessionSummary({
               <p className="text-sm font-semibold text-foreground">Practice these categories</p>
             </div>
             {showBurmese && (
-              <p className="font-myanmar text-xs text-muted-foreground mb-3">
+              <p className="font-myanmar text-sm text-muted-foreground mb-3">
                 ဤအမျိုးအစားများကို လေ့ကျင့်ပါ
               </p>
             )}
@@ -220,7 +220,7 @@ export function SessionSummary({
                     <div>
                       <p className="text-sm font-medium text-foreground">{name.en}</p>
                       {showBurmese && (
-                        <p className="font-myanmar text-xs text-muted-foreground">{name.my}</p>
+                        <p className="font-myanmar text-sm text-muted-foreground">{name.my}</p>
                       )}
                     </div>
                   </div>
@@ -240,7 +240,7 @@ export function SessionSummary({
           <span className="flex flex-col items-center">
             <span>Back to Deck</span>
             {showBurmese && (
-              <span className="font-myanmar text-sm opacity-80">ကတ်များဆီသို့ပြန်သွားပါ</span>
+              <span className="font-myanmar text-sm text-white/80">ကတ်များဆီသို့ပြန်သွားပါ</span>
             )}
           </span>
         </Button>

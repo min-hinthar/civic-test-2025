@@ -258,7 +258,7 @@ export function SkippedReviewPhase({
       <div className="mb-4 text-center">
         <h2 className="text-lg font-bold text-foreground">{reviewLabels.reviewingSkipped.en}</h2>
         {showBurmese && (
-          <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
+          <p className="font-myanmar text-lg text-muted-foreground mt-0.5">
             {reviewLabels.reviewingSkipped.my}
           </p>
         )}
@@ -395,7 +395,7 @@ export function SkippedReviewPhase({
             >
               {reviewLabels.finishWithout.en}
               {showBurmese && (
-                <span className="ml-2 font-myanmar text-xs">{reviewLabels.finishWithout.my}</span>
+                <span className="ml-2 font-myanmar text-sm">{reviewLabels.finishWithout.my}</span>
               )}
             </button>
           </div>

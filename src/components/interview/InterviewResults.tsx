@@ -482,7 +482,7 @@ export function InterviewResults({
             <p className="mt-2 text-sm text-slate-400">
               {END_REASON_TEXT[endReason].en}
               {showBurmese && (
-                <span className="ml-1 font-myanmar text-xs">
+                <span className="ml-1 font-myanmar text-sm">
                   {' \u00B7 '}
                   {END_REASON_TEXT[endReason].my}
                 </span>
@@ -531,7 +531,7 @@ export function InterviewResults({
           <div className="mt-4 text-center">
             <p className="text-sm text-slate-300">{recommendation.en}</p>
             {showBurmese && (
-              <p className="mt-0.5 font-myanmar text-xs text-slate-400">{recommendation.my}</p>
+              <p className="mt-0.5 font-myanmar text-sm text-slate-400">{recommendation.my}</p>
             )}
           </div>
         </FadeIn>
@@ -725,7 +725,7 @@ export function InterviewResults({
                 <p className="text-center text-sm text-slate-400">
                   Complete more interviews to see trends.
                   {showBurmese && (
-                    <span className="mt-0.5 block font-myanmar text-xs text-slate-500">
+                    <span className="mt-0.5 block font-myanmar text-sm text-slate-500">
                       လမ်းကြောင်းများကိုကြည့်ရန် နောက်ထပ်အင်တာဗျူးများဖြေဆိုပါ။
                     </span>
                   )}
@@ -747,7 +747,7 @@ export function InterviewResults({
                       {incorrectNotInDeck.length > 1 ? 's' : ''} to your review deck?
                     </p>
                     {showBurmese && (
-                      <p className="mt-0.5 font-myanmar text-xs text-slate-400">
+                      <p className="mt-0.5 font-myanmar text-sm text-slate-400">
                         မှားယွင်းအဖြေ {incorrectNotInDeck.length} ခုကို ပြန်လေ့လာစာရင်းသို့
                         ထည့်မလား?
                       </p>

@@ -347,7 +347,7 @@ function DeckCardItem({ record, question, onRemove, showBurmese }: DeckCardItemP
             {question?.question_en ?? `Question ${record.questionId}`}
           </p>
           {showBurmese && question?.question_my && (
-            <p className="text-xs text-muted-foreground font-myanmar mt-0.5 leading-relaxed">
+            <p className="text-sm text-muted-foreground font-myanmar mt-0.5 leading-relaxed">
               {question.question_my}
             </p>
           )}

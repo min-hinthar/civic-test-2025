@@ -47,7 +47,7 @@ const PasswordResetPage = () => {
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">Forgot Password</h1>
             {showBurmese && (
-              <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+              <p className="mt-1 font-myanmar text-2xl text-muted-foreground">
                 လျှို့ဝှက်စာ မေ့နေပါသလား?
               </p>
             )}
@@ -69,7 +69,7 @@ const PasswordResetPage = () => {
                 <label className="text-sm font-semibold text-foreground">
                   Email{' '}
                   {showBurmese && (
-                    <span className="font-myanmar text-xs text-muted-foreground">အီးမေးလ်</span>
+                    <span className="font-myanmar text-sm text-muted-foreground">အီးမေးလ်</span>
                   )}
                 </label>
                 <input
@@ -98,7 +98,7 @@ const PasswordResetPage = () => {
                 Sign in
               </Link>
               {showBurmese && (
-                <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာ မှတ်မိပါသလား?</span>
+                <span className="font-myanmar text-sm"> · လျှို့ဝှက်စာ မှတ်မိပါသလား?</span>
               )}
             </p>
           </div>

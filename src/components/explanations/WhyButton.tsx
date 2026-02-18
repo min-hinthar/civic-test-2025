@@ -83,7 +83,7 @@ export function WhyButton({
             {strings.explanations.why.en}
           </span>
           {!compact && showBurmese && (
-            <span className="font-myanmar text-xs text-muted-foreground">
+            <span className="font-myanmar text-sm text-muted-foreground">
               {strings.explanations.why.my}
             </span>
           )}
