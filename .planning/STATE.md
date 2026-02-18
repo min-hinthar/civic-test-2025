@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 25 of 25 (Burmese Translation Audit)
 Plan: 4 of 10 in current phase
 Status: In progress
-Last activity: 2026-02-18 -- Completed 25-03-PLAN.md (Remaining Questions Translation)
+Last activity: 2026-02-18 -- Completed 25-02-PLAN.md (American Government Translations)
 
-Progress: [###.......] 30% (3/10 plans complete)
+Progress: [####......] 40% (4/10 plans complete)
 
 ## Completed Milestones
 
@@ -52,6 +52,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Japanese character (への) found and fixed in RR-11 study answer
 - Non-standard Burmese "motto" (မိုထိုး) replaced with correct ဆောင်ပုဒ်
 - Broken phonetic "senator" (ဆင်နေတာ) replaced with proper အထက်လွှတ်တော်အမတ် (Senator)
+- American Government: formal question endings (အဘယ်နည်း/သနည်း) converted to casual (ဘာလဲ/ဘယ်သူလဲ)
+- American Government: ယခု (formal "now") replaced with အခု (casual) in dynamic questions
+- American Government: အမှုဆောင်ဌာန changed to glossary-standard အုပ်ချုပ်ရေးဌာန (Executive Branch)
+- American Government: တရားရုံးချုပ် changed to glossary-standard တရားလွှတ်တော်ချုပ် (Supreme Court)
+- American Government: ကွန်ဂရက် expanded to ကွန်ဂရက်လွှတ်တော် (Congress) for clarity
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -310,11 +315,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 03 complete (Remaining Questions Translation)
-Next step: Phase 25 Plan 02 or 05
-Resume file: .planning/phases/25-burmese-translation-audit/25-03-SUMMARY.md
+Stopped at: Phase 25 Plan 02 complete (American Government Translations)
+Next step: Phase 25 Plan 05
+Resume file: .planning/phases/25-burmese-translation-audit/25-02-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 03 complete)*
+*Last updated: 2026-02-18 (Phase 25 Plan 02 complete)*
