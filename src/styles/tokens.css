@@ -391,3 +391,31 @@
   --success-green: var(--color-success);
   --accent-purple-foreground: 0 0% 100%;
 }
+
+/* ═══════════════════════════════════════════════════
+   HIGH CONTRAST MODE
+   Increases contrast on muted text, borders, and
+   disabled states for users with prefers-contrast: more.
+   ═══════════════════════════════════════════════════ */
+
+@media (prefers-contrast: more) {
+  :root {
+    /* Muted text: bump from slate-500 (35% L) to slate-600 (25% L) */
+    --color-text-secondary: var(--slate-600);
+    /* Borders: bump from slate-200 (92% L) to slate-400 (55% L) */
+    --color-border: var(--slate-400);
+    --color-border-muted: var(--slate-200);
+    /* Input borders match main borders */
+    --color-input: var(--slate-400);
+  }
+
+  .dark {
+    /* Muted text: bump from 65% L to brighter for dark bg */
+    --color-text-secondary: 215 20% 80%;
+    /* Borders: bump from 25% L to slate-400 (55% L) for visibility */
+    --color-border: var(--slate-400);
+    --color-border-muted: 217 33% 35%;
+    /* Input borders match main borders */
+    --color-input: var(--slate-400);
+  }
+}

@@ -133,10 +133,11 @@ const TestPage = () => {
   // Session ID (stable across renders)
   const [sessionId] = useState(() => `session-mock-test-${Date.now()}`);
 
-  // Refs for timeout cleanup and save guard
+  // Refs for timeout cleanup, save guard, and focus management
   const checkDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasSavedSessionRef = useRef(false);
   const resumeDataRef = useRef<MockTestSnapshot | null>(null);
+  const questionAreaRef = useRef<HTMLDivElement>(null);
 
   // Questions (lazy-initialized, can be replaced by resume)
   const [questions, setQuestions] = useState(() =>
@@ -577,6 +578,10 @@ const TestPage = () => {
     // After a brief moment for the transition animation, complete the transition
     setTimeout(() => {
       dispatch({ type: 'TRANSITION_COMPLETE' });
+      // Focus question area after advancing to next question (A11Y-02)
+      requestAnimationFrame(() => {
+        questionAreaRef.current?.focus({ preventScroll: true });
+      });
     }, 50);
   }, [quizState, quizConfig, questions.length]);
 
@@ -752,8 +757,12 @@ const TestPage = () => {
           transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
         >
           <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
-            {/* Question area */}
-            <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
+            {/* Question area -- focusable for a11y after Continue */}
+            <div
+              ref={questionAreaRef}
+              tabIndex={-1}
+              className="rounded-2xl border border-border/50 bg-muted/30 p-5 outline-none"
+            >
               <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
                 {currentQuestion?.category}
               </p>

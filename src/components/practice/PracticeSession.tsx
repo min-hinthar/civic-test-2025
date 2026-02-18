@@ -550,6 +550,9 @@ export function PracticeSession({
     timeLeft,
   ]);
 
+  // Ref for focusing question area after Continue
+  const questionAreaRef = useRef<HTMLDivElement>(null);
+
   // Transition complete
   useEffect(() => {
     if (quizState.phase !== 'transitioning') return;
@@ -557,6 +560,10 @@ export function PracticeSession({
     const timer = setTimeout(
       () => {
         dispatch({ type: 'TRANSITION_COMPLETE' });
+        // Focus question area after advancing to next question (A11Y-02)
+        requestAnimationFrame(() => {
+          questionAreaRef.current?.focus({ preventScroll: true });
+        });
       },
       shouldReduceMotion ? 0 : 300
     );
@@ -788,8 +795,12 @@ export function PracticeSession({
             exit={shouldReduceMotion ? { opacity: 0 } : { x: -60, opacity: 0 }}
             transition={shouldReduceMotion ? { duration: 0.15 } : SPRING_SNAPPY}
           >
-            {/* Question area */}
-            <div className="rounded-2xl border border-border/50 bg-muted/30 p-5">
+            {/* Question area -- focusable for a11y after Continue */}
+            <div
+              ref={questionAreaRef}
+              tabIndex={-1}
+              className="rounded-2xl border border-border/50 bg-muted/30 p-5 outline-none"
+            >
               <p className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
                 {currentQuestion.category}
               </p>
