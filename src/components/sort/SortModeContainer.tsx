@@ -32,6 +32,7 @@ import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { playMasteryComplete } from '@/lib/audio/soundEffects';
 import { MAX_ROUNDS } from '@/lib/sort/sortTypes';
@@ -103,11 +104,15 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   } = useSortSession();
 
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
   const { settings: tts } = useTTSSettings();
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
 
   // Exit dialog state
   const [showExitDialog, setShowExitDialog] = useState(false);
+
+  // Pending sort direction for reduced motion button-initiated sorts
+  const [pendingDirection, setPendingDirection] = useState<'know' | 'dont-know' | null>(null);
 
   // Resume modal state
   const [showResumeModal, setShowResumeModal] = useState(false);
@@ -193,10 +198,18 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   const handleSortWithAnnouncement = useCallback(
     (direction: 'know' | 'dont-know') => {
       handleSort(direction);
-      // For button-initiated sorts, immediately complete the 'animating' phase.
-      // Drag-initiated sorts fire onAnimationComplete from SwipeableCard after
-      // the spring fling — the second dispatch is a no-op (phase guard).
-      handleAnimationComplete();
+
+      if (shouldReduceMotion) {
+        // Under reduced motion, let SwipeableCard run a quick 200ms linear slide
+        // before completing. setPendingDirection triggers the slide animation.
+        setPendingDirection(direction);
+      } else {
+        // For button-initiated sorts, immediately complete the 'animating' phase.
+        // Drag-initiated sorts fire onAnimationComplete from SwipeableCard after
+        // the spring fling -- the second dispatch is a no-op (phase guard).
+        handleAnimationComplete();
+      }
+
       setAnnouncement(
         direction === 'know'
           ? showBurmese
@@ -207,8 +220,14 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
             : labels.sortedAsDontKnow.en
       );
     },
-    [handleSort, handleAnimationComplete, showBurmese]
+    [handleSort, handleAnimationComplete, shouldReduceMotion, showBurmese]
   );
+
+  // Wrap handleAnimationComplete to clear pendingDirection
+  const handleAnimationCompleteWithClear = useCallback(() => {
+    setPendingDirection(null);
+    handleAnimationComplete();
+  }, [handleAnimationComplete]);
 
   // Exit handlers
   const handleExitRequest = useCallback(() => {
@@ -485,7 +504,8 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
         currentIndex={state.currentIndex}
         isAnimating={state.phase === 'animating'}
         onSwipe={handleSortWithAnnouncement}
-        onAnimationComplete={handleAnimationComplete}
+        onAnimationComplete={handleAnimationCompleteWithClear}
+        pendingDirection={pendingDirection}
         showBurmese={showBurmese}
         speedLabel={speedLabel}
         className="my-2"

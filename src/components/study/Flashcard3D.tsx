@@ -157,7 +157,7 @@ export function DynamicAnswerNote({
  * - Tap/click to flip
  * - Keyboard accessible (Enter/Space to flip)
  * - TTS buttons for both languages
- * - Respects prefers-reduced-motion (instant flip)
+ * - Respects prefers-reduced-motion (crossfade between faces, no 3D rotation)
  *
  * Usage:
  * ```tsx
@@ -264,19 +264,25 @@ export function Flashcard3D({
       <motion.div
         className="relative w-full h-full"
         style={{
-          transformStyle: 'preserve-3d',
-          willChange: 'transform',
+          // Under reduced motion, skip 3D transforms (crossfade instead)
+          transformStyle: shouldReduceMotion ? undefined : 'preserve-3d',
+          willChange: shouldReduceMotion ? undefined : 'transform',
           transformOrigin: 'center center',
         }}
-        animate={{
-          rotateY: isFlipped ? 180 : 0,
-        }}
+        animate={shouldReduceMotion ? {} : { rotateY: isFlipped ? 180 : 0 }}
         transition={shouldReduceMotion ? { duration: 0 } : FLIP_SPRING}
       >
         {/* Front - Question */}
         <div
           className={cardFaceClasses}
-          style={{ backfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
+          style={{
+            // Reduced motion: crossfade via CSS opacity transition (200ms)
+            // Normal: hide back face via 3D backfaceVisibility
+            ...(shouldReduceMotion
+              ? { opacity: isFlipped ? 0 : 1, transition: 'opacity 200ms ease-in-out' }
+              : { backfaceVisibility: 'hidden' as const }),
+            pointerEvents: isFlipped ? 'none' : 'auto',
+          }}
         >
           {colorStrip}
           <div className={clsx('absolute inset-0 rounded-2xl bg-gradient-to-br', gradient)} />
@@ -307,7 +313,11 @@ export function Flashcard3D({
 
             {/* TTS and flip hint */}
             <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4">
-              <div className="flex gap-2" onClick={handleTTSClick}>
+              <div
+                className="flex gap-2"
+                onClick={handleTTSClick}
+                style={{ isolation: 'isolate', transform: 'translateZ(0)' }}
+              >
                 <SpeechButton
                   text={questionEn}
                   questionId={questionId}
@@ -341,8 +351,14 @@ export function Flashcard3D({
         <div
           className={cardFaceClasses}
           style={{
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
+            // Reduced motion: crossfade via CSS opacity transition (200ms)
+            // Normal: rotate 180deg in 3D space, hide back face
+            ...(shouldReduceMotion
+              ? { opacity: isFlipped ? 1 : 0, transition: 'opacity 200ms ease-in-out' }
+              : {
+                  backfaceVisibility: 'hidden' as const,
+                  transform: 'rotateY(180deg)',
+                }),
             pointerEvents: isFlipped ? 'auto' : 'none',
           }}
         >
@@ -398,7 +414,11 @@ export function Flashcard3D({
 
             {/* TTS and flip hint */}
             <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4 shrink-0">
-              <div className="flex gap-2" onClick={handleTTSClick}>
+              <div
+                className="flex gap-2"
+                onClick={handleTTSClick}
+                style={{ isolation: 'isolate', transform: 'translateZ(0)' }}
+              >
                 <SpeechButton
                   text={answerEn}
                   questionId={questionId}
