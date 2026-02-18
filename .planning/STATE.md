@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 25 in progress
+**Current focus:** v2.1 Quality & Polish -- Phase 25 COMPLETE
 
 ## Current Position
 
 Phase: 25 of 25 (Burmese Translation Audit)
-Plan: 9 of 10 in current phase
-Status: In progress
-Last activity: 2026-02-18 -- Completed 25-09-PLAN.md (Rendering Layer Audit)
+Plan: 10 of 10 in current phase
+Status: Phase complete
+Last activity: 2026-02-18 -- Completed 25-10-PLAN.md (Audio Regeneration & Final Verification)
 
-Progress: [#########.] 90% (9/10 plans complete)
+Progress: [##########] 100% (10/10 plans complete)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 59 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12, Phase 22: 9, Phase 23: 9, Phase 24: 10)
+- v2.1: 69 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12, Phase 22: 9, Phase 23: 9, Phase 24: 10, Phase 25: 10)
 
 ## Accumulated Context
 
@@ -74,6 +74,9 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Rendering audit: 75 TSX files with Myanmar Unicode, 101 with font-myanmar, only 1 gap found (OpEdPage)
 - Rendering audit: All 108 showBurmese-using components verified -- zero unguarded Burmese text
 - Rendering audit: No responsive overflow issues -- font-myanmar class includes overflow-wrap: anywhere
+- Audio regeneration: deleted all existing female files and regenerated from scratch for consistency
+- Audio regeneration: male voice (ThihaNeural) generated in addition to female (NilarNeural) for complete coverage
+- Waves 3+ (component inline strings) applied directly with no cross-check needed (UI chrome, not civics content)
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -332,11 +335,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 09 complete (Rendering Layer Audit)
-Next step: Phase 25 Plan 10 remaining (final verification/sign-off)
-Resume file: .planning/phases/25-burmese-translation-audit/25-09-SUMMARY.md
+Stopped at: Phase 25 Plan 10 complete (Audio Regeneration & Final Verification)
+Next step: Phase 25 complete. User to perform 3-AI cross-check review at their pace.
+Resume file: .planning/phases/25-burmese-translation-audit/25-10-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 09 complete)*
+*Last updated: 2026-02-18 (Phase 25 Plan 10 complete -- Phase complete)*
