@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 24 complete, Phase 25 next
+**Current focus:** v2.1 Quality & Polish -- Phase 25 in progress
 
 ## Current Position
 
-Phase: 24 of 25 (Accessibility & Performance) — COMPLETE
-Plan: 10 of 10 in current phase
-Status: Phase verified (5/5 must-haves passed) and approved
-Last activity: 2026-02-18 -- Phase 24 verified and closed
+Phase: 25 of 25 (Burmese Translation Audit)
+Plan: 1 of 10 in current phase
+Status: In progress
+Last activity: 2026-02-18 -- Completed 25-01-PLAN.md (Glossary & Typography)
 
-Progress: [##########] 100% (10/10 plans complete, verified)
+Progress: [#.........] 10% (1/10 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,12 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 25 decisions:**
+- Glossary organized in 8 sections: no-translate, civics/government, UI actions, navigation, study tabs, achievements, number formatting, sentence patterns
+- Practice (လေ့ကျင့်) vs Test (စာမေးပွဲ) use clearly distinct Burmese words
+- Noto Sans Myanmar loaded from Google Fonts CDN (CSP already allows fonts.googleapis.com and fonts.gstatic.com)
+- Myanmar line-breaking uses overflow-wrap: anywhere + word-break: keep-all + line-break: strict
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -295,10 +301,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 complete and verified
-Next step: Phase 25 (Burmese Translation Audit)
+Stopped at: Phase 25 Plan 01 complete (Glossary & Typography)
+Next step: Phase 25 Plan 02
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 complete -- verified and approved)*
+*Last updated: 2026-02-18 (Phase 25 Plan 01 complete)*
