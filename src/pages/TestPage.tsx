@@ -40,7 +40,13 @@ import { FadeIn } from '@/components/animations/StaggeredList';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { Filter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { playCorrect, playIncorrect, playLevelUp, playMilestone } from '@/lib/audio/soundEffects';
+import {
+  playCorrect,
+  playIncorrect,
+  playLevelUp,
+  playMilestone,
+  playTimerWarningTick,
+} from '@/lib/audio/soundEffects';
 import { saveSession, getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import type { MockTestSnapshot } from '@/lib/sessions/sessionTypes';
 import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
@@ -67,6 +73,8 @@ import { SkipButton } from '@/components/quiz/SkipButton';
 import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 import { StreakReward, STREAK_DISPLAY_DURATION_MS } from '@/components/quiz/StreakReward';
 import { XPPopup } from '@/components/quiz/XPPopup';
+import { usePerQuestionTimer } from '@/hooks/usePerQuestionTimer';
+import { PerQuestionTimer } from '@/components/quiz/PerQuestionTimer';
 
 const TEST_DURATION_SECONDS = 20 * 60;
 const PASS_THRESHOLD = 12;
@@ -276,8 +284,36 @@ const TestPage = () => {
   };
 
   // ---------------------------------------------------------------------------
+  // Per-question timer (mock test: always ON, no extension)
+  // ---------------------------------------------------------------------------
+
+  // Use refs for expire handler to avoid circular dependency with handleCheck
+  const perQuestionExpireRef = useRef<() => void>(() => {});
+
+  const handleTimerWarning = useCallback(() => {
+    playTimerWarningTick();
+    hapticLight();
+  }, []);
+
+  const perQuestionTimer = usePerQuestionTimer({
+    duration: 30,
+    isPaused: quizState.phase !== 'answering' || showPreTest || showCountdown || isFinished,
+    onExpire: useCallback(() => perQuestionExpireRef.current(), []),
+    onWarning: handleTimerWarning,
+    allowExtension: false,
+  });
+
+  // ---------------------------------------------------------------------------
   // Effects
   // ---------------------------------------------------------------------------
+
+  // Reset per-question timer when advancing to next question
+  useEffect(() => {
+    if (!showPreTest && !showCountdown && !isFinished) {
+      perQuestionTimer.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset on index change only
+  }, [quizState.currentIndex]);
 
   // Navigation lock via context: lock when test is active
   useEffect(() => {
@@ -594,6 +630,16 @@ const TestPage = () => {
     }, 50);
   }, [quizState.phase]);
 
+  // Keep per-question expire ref in sync with latest handlers
+  perQuestionExpireRef.current = () => {
+    if (quizState.phase !== 'answering') return;
+    if (quizState.selectedAnswer) {
+      handleCheck();
+    } else {
+      handleSkip();
+    }
+  };
+
   // Exit dialog handlers
   const handleExitRequest = useCallback(() => {
     setShowExitDialog(true);
@@ -726,13 +772,20 @@ const TestPage = () => {
         mode="mock-test"
         onExit={handleExitRequest}
         timerSlot={
-          <CircularTimer
-            duration={TEST_DURATION_SECONDS}
-            remainingTime={timeLeft}
-            isPlaying={quizState.phase !== 'feedback' && quizState.phase !== 'checked'}
-            size="sm"
-            allowHide
-          />
+          <div className="flex items-center gap-2">
+            <PerQuestionTimer
+              timeLeft={perQuestionTimer.timeLeft}
+              duration={30}
+              isWarning={perQuestionTimer.isWarning}
+            />
+            <CircularTimer
+              duration={TEST_DURATION_SECONDS}
+              remainingTime={timeLeft}
+              isPlaying={quizState.phase !== 'feedback' && quizState.phase !== 'checked'}
+              size="sm"
+              allowHide
+            />
+          </div>
         }
         showBurmese={showBurmese}
       />

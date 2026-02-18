@@ -28,8 +28,11 @@ import type { PracticeSnapshot } from '@/lib/sessions/sessionTypes';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { playCorrect, playIncorrect } from '@/lib/audio/soundEffects';
+import { playCorrect, playIncorrect, playTimerWarningTick } from '@/lib/audio/soundEffects';
 import { hapticLight, hapticDouble } from '@/lib/haptics';
+import { usePerQuestionTimer } from '@/hooks/usePerQuestionTimer';
+import { PerQuestionTimer } from '@/components/quiz/PerQuestionTimer';
+import { TimerExtensionToast } from '@/components/quiz/TimerExtensionToast';
 import type { Answer, Question, QuestionResult } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -413,6 +416,26 @@ export function PracticeSession({
   const correctAnswer = currentQuestion?.answers.find(a => a.correct);
 
   // -----------------------------------------------------------------------
+  // Per-question timer (optional, with WCAG extension in practice mode)
+  // -----------------------------------------------------------------------
+
+  // Ref for expire handler to avoid circular dependency with handleCheck/handleSkip
+  const perQuestionExpireRef = useRef<() => void>(() => {});
+
+  const handleTimerWarning = useCallback(() => {
+    playTimerWarningTick();
+    hapticLight();
+  }, []);
+
+  const perQuestionTimer = usePerQuestionTimer({
+    duration: 30,
+    isPaused: !timerEnabled || quizState.phase !== 'answering' || isFinished || isInSkippedReview,
+    onExpire: useCallback(() => perQuestionExpireRef.current(), []),
+    onWarning: handleTimerWarning,
+    allowExtension: timerEnabled,
+  });
+
+  // -----------------------------------------------------------------------
   // Handlers
   // -----------------------------------------------------------------------
 
@@ -550,6 +573,16 @@ export function PracticeSession({
     timeLeft,
   ]);
 
+  // Keep per-question expire ref in sync with latest handlers
+  perQuestionExpireRef.current = () => {
+    if (quizState.phase !== 'answering') return;
+    if (quizState.selectedAnswer) {
+      handleCheck();
+    } else {
+      handleSkip();
+    }
+  };
+
   // Ref for focusing question area after Continue
   const questionAreaRef = useRef<HTMLDivElement>(null);
 
@@ -570,6 +603,14 @@ export function PracticeSession({
 
     return () => clearTimeout(timer);
   }, [quizState.phase, shouldReduceMotion]);
+
+  // Reset per-question timer when advancing to next question
+  useEffect(() => {
+    if (timerEnabled && !isFinished && !isInSkippedReview) {
+      perQuestionTimer.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset on index change only
+  }, [quizState.currentIndex]);
 
   // Segment tap for review
   const handleSegmentTap = useCallback(
@@ -760,12 +801,19 @@ export function PracticeSession({
         onExit={handleExitRequest}
         timerSlot={
           timerEnabled ? (
-            <CircularTimer
-              duration={PRACTICE_DURATION_SECONDS}
-              remainingTime={timeLeft}
-              size="sm"
-              allowHide
-            />
+            <div className="flex items-center gap-2">
+              <PerQuestionTimer
+                timeLeft={perQuestionTimer.timeLeft}
+                duration={30}
+                isWarning={perQuestionTimer.isWarning}
+              />
+              <CircularTimer
+                duration={PRACTICE_DURATION_SECONDS}
+                remainingTime={timeLeft}
+                size="sm"
+                allowHide
+              />
+            </div>
           ) : undefined
         }
         showBurmese={showBurmese}
@@ -884,6 +932,17 @@ export function PracticeSession({
                 </span>
               )}
             </button>
+          </div>
+        )}
+
+        {/* Timer extension toast (practice only, above feedback panel) */}
+        {timerEnabled && (
+          <div className="mt-4">
+            <TimerExtensionToast
+              show={perQuestionTimer.showExtensionPrompt}
+              onExtend={perQuestionTimer.extend}
+              showBurmese={showBurmese}
+            />
           </div>
         )}
 
