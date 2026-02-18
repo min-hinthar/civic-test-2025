@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 25 of 25 (Burmese Translation Audit)
-Plan: 8 of 10 in current phase
+Plan: 6 of 10 in current phase
 Status: In progress
-Last activity: 2026-02-18 -- Completed 25-08-PLAN.md (Quiz, Interview & Progress Inline Burmese)
+Last activity: 2026-02-18 -- Completed 25-06-PLAN.md (Test/Session/PWA Burmese Translations)
 
-Progress: [#####.....] 50% (5/10 plans complete)
+Progress: [######....] 60% (6/10 plans complete)
 
 ## Completed Milestones
 
@@ -60,6 +60,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Quiz/Interview/Progress: QuizHeader, AnswerOption, SkipButton already centralized -- no changes needed
 - Quiz/Interview/Progress: ExaminerCharacter is pure SVG with no visible text -- skipped
 - Quiz/Interview/Progress: Arabic numerals kept for scores/counts/percentages in technical display
+- PWA buttons: "English / Burmese" slash pattern replaced with English primary + Burmese <span> subtitle
+- Formal ပါသည် endings replaced with casual ပါတယ် in PWA/session components
+- Transliterated loanwords (စင့်ခ်) replaced with natural Burmese (ချိန်ကိုက်)
+- WhatsNew State Personalization title simplified: ပြည်နယ်ပုဂ္ဂိုလ်ရေးသတ်မှတ်ခြင်း -> ပြည်နယ်အလိုက် ပြင်ဆင်ခြင်း
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -318,11 +322,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 08 complete (Quiz, Interview & Progress Inline Burmese)
-Next step: Phase 25 Plans 05, 07 summaries pending; then Plans 06, 09, 10
-Resume file: .planning/phases/25-burmese-translation-audit/25-08-SUMMARY.md
+Stopped at: Phase 25 Plan 06 complete (Test/Session/PWA Burmese Translations)
+Next step: Phase 25 Plans 05, 07 summaries pending; then Plans 09, 10
+Resume file: .planning/phases/25-burmese-translation-audit/25-06-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 08 complete)*
+*Last updated: 2026-02-18 (Phase 25 Plan 06 complete)*
