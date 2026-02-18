@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 25 of 25 (Burmese Translation Audit)
 Plan: 4 of 10 in current phase
 Status: In progress
-Last activity: 2026-02-18 -- Completed 25-04-PLAN.md (Centralized Strings)
+Last activity: 2026-02-18 -- Completed 25-03-PLAN.md (Remaining Questions Translation)
 
-Progress: [##........] 20% (2/10 plans complete)
+Progress: [###.......] 30% (3/10 plans complete)
 
 ## Completed Milestones
 
@@ -47,6 +47,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Hub nav label uses "တိုးတက်မှု" (Progress) matching glossary
 - All Unicode escape sequences converted to literal Myanmar characters for readability
 - @verified TSDoc markers on all centralized string files (pending 3-AI consensus)
+- Proper noun transliterations standardized to glossary canonical forms across all question files
+- USCIS 2025 additions: targeted fixes only (not rewrites) to preserve good existing translations
+- Japanese character (への) found and fixed in RR-11 study answer
+- Non-standard Burmese "motto" (မိုထိုး) replaced with correct ဆောင်ပုဒ်
+- Broken phonetic "senator" (ဆင်နေတာ) replaced with proper အထက်လွှတ်တော်အမတ် (Senator)
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -305,10 +310,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 04 complete (Centralized Strings)
-Next step: Phase 25 Plan 05
+Stopped at: Phase 25 Plan 03 complete (Remaining Questions Translation)
+Next step: Phase 25 Plan 02 or 05
+Resume file: .planning/phases/25-burmese-translation-audit/25-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 04 complete)*
+*Last updated: 2026-02-18 (Phase 25 Plan 03 complete)*
