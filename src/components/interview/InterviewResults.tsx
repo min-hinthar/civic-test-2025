@@ -56,19 +56,19 @@ import { useThemeContext } from '@/contexts/ThemeContext';
 const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = {
   passThreshold: {
     en: 'Reached 12 correct answers',
-    my: '\u1041\u1042 \u1001\u102F\u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1005\u103D\u102C\u1016\u103C\u1031\u1006\u102D\u102F\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1015\u103C\u102E',
+    my: '၁၂ ခုမှန်ကန်စွာဖြေဆိုနိုင်ပါပြီ',
   },
   failThreshold: {
     en: 'Reached 9 incorrect answers',
-    my: '\u1049 \u1001\u102F\u1019\u103E\u102C\u1038\u101A\u103D\u1004\u103A\u1038\u1005\u103D\u102C\u1016\u103C\u1031\u1006\u102D\u102F\u1019\u102D\u1015\u102B\u1015\u103C\u102E',
+    my: '၉ ခုမှားယွင်းစွာဖြေဆိုမိပါပြီ',
   },
   complete: {
     en: 'Completed all 20 questions',
-    my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038 \u1042\u1040 \u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E',
+    my: 'မေးခွန်း ၂၀ အားလုံးဖြေဆိုပြီးပါပြီ',
   },
   quit: {
     en: 'Interview ended early',
-    my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1000\u102D\u102F \u1005\u1031\u102C\u1005\u102E\u1038\u1005\u103D\u102C\u101B\u1015\u103A\u1006\u102D\u102F\u1004\u103A\u1038\u1015\u102B\u1015\u103C\u102E',
+    my: 'အင်တာဗျူးကို စောစီးစွာရပ်ဆိုင်းပါပြီ',
   },
 };
 
@@ -93,22 +93,20 @@ function getRecommendation(score: number, weakCategory: string | null): { en: st
   if (score >= 16) {
     return {
       en: "You're ready for the real interview! Consider scheduling your appointment.",
-      my: '\u101C\u1000\u103A\u1010\u103D\u1031\u1037\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1021\u1010\u103D\u1000\u103A \u1021\u1006\u1004\u103A\u101E\u1004\u103A\u1037\u1016\u103C\u1005\u103A\u1015\u102B\u1015\u103C\u102E! \u101B\u1000\u103A\u1001\u103B\u102D\u1014\u103A\u1038\u101A\u1030\u1015\u102B\u104B',
+      my: 'လက်တွေ့အင်တာဗျူးအတွက် အဆင်သင့်ဖြစ်ပါပြီ! ရက်ချိန်းယူပါ။',
     };
   }
   if (score >= 12) {
     const topicText = weakCategory ? ` Focus on ${weakCategory} to boost your score.` : '';
-    const topicTextMy = weakCategory
-      ? ` ${weakCategory} \u1000\u102D\u102F \u1021\u102C\u101B\u102F\u1036\u1005\u102D\u102F\u1000\u103A\u1015\u102B\u104B`
-      : '';
+    const topicTextMy = weakCategory ? ` ${weakCategory} ကို အာရုံစိုက်ပါ။` : '';
     return {
       en: `You're close to mastery!${topicText}`,
-      my: `\u1000\u103B\u103D\u1019\u103A\u1038\u1000\u103B\u1004\u103A\u1019\u103E\u102F\u1014\u103E\u1004\u103A\u1037\u1014\u102E\u1038\u1005\u1015\u103A\u1015\u102B\u1015\u103C\u102E!${topicTextMy}`,
+      my: `ကျွမ်းကျင်မှုနှင့်နီးစပ်ပါပြီ!${topicTextMy}`,
     };
   }
   return {
     en: 'Keep practicing! Review the topics below and try again.',
-    my: '\u1006\u1000\u103A\u101C\u1000\u103A\u1000\u103B\u1004\u103A\u1037\u1015\u102B! \u1021\u1031\u102C\u1000\u103A\u1015\u102B\u1021\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u103C\u102E\u1038 \u1011\u1015\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B',
+    my: 'ဆက်လက်လေ့ကျင့်ပါ! အောက်ပါအကြောင်းများကို ပြန်လေ့လာပြီး ထပ်ကြိုးစားပါ။',
   };
 }
 
@@ -419,7 +417,7 @@ export function InterviewResults({
       if (added > 0) {
         showSuccess({
           en: `Added ${added} question${added > 1 ? 's' : ''} to review deck`,
-          my: `${added} \u1001\u102F \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1005\u102C\u101B\u1004\u103A\u1038\u101E\u102D\u102F\u1037\u1011\u100A\u103A\u1037\u1015\u103C\u102E\u1038`,
+          my: `${added} ခု ပြန်လေ့လာစာရင်းသို့ထည့်ပြီး`,
         });
       }
     } catch {
@@ -544,7 +542,7 @@ export function InterviewResults({
             <SectionHeading
               text={{
                 en: 'Session Analytics',
-                my: '\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103B\u1000\u103A\u1019\u103B\u102C\u1038',
+                my: 'စစ်ဆေးချက်များ',
               }}
             />
             <div className="grid grid-cols-2 gap-3">
@@ -552,7 +550,10 @@ export function InterviewResults({
               <Card className="bg-slate-800/50 border-slate-700/50 p-3" elevated={false}>
                 <div className="flex items-center gap-2 text-slate-400">
                   <Clock className="h-4 w-4" />
-                  <span className="text-xs">Time</span>
+                  <span className="text-xs">
+                    Time
+                    {showBurmese && <span className="font-myanmar ml-1">ကြာချိန်</span>}
+                  </span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-slate-100">
                   {formatDuration(durationSeconds)}
@@ -563,7 +564,10 @@ export function InterviewResults({
               <Card className="bg-slate-800/50 border-slate-700/50 p-3" elevated={false}>
                 <div className="flex items-center gap-2 text-slate-400">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-xs">Score</span>
+                  <span className="text-xs">
+                    Score
+                    {showBurmese && <span className="font-myanmar ml-1">ရမှတ်</span>}
+                  </span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-slate-100">
                   {score}/{totalQuestions}
@@ -573,7 +577,10 @@ export function InterviewResults({
               {/* Avg confidence */}
               {confidenceStats && (
                 <Card className="bg-slate-800/50 border-slate-700/50 p-3" elevated={false}>
-                  <div className="text-xs text-slate-400">Avg Confidence</div>
+                  <div className="text-xs text-slate-400">
+                    Avg Confidence
+                    {showBurmese && <span className="font-myanmar ml-1">ပျမ်းမျှယုံကြည်မှု</span>}
+                  </div>
                   <p className="mt-1 text-lg font-bold text-slate-100">{confidenceStats.avg}%</p>
                   <p className="text-[10px] text-slate-500">
                     {confidenceStats.min}% - {confidenceStats.max}%
@@ -584,7 +591,10 @@ export function InterviewResults({
               {/* Previous comparison */}
               {previousScore !== null && (
                 <Card className="bg-slate-800/50 border-slate-700/50 p-3" elevated={false}>
-                  <div className="text-xs text-slate-400">Previous</div>
+                  <div className="text-xs text-slate-400">
+                    Previous
+                    {showBurmese && <span className="font-myanmar ml-1">ယခင်</span>}
+                  </div>
                   <p className="mt-1 text-lg font-bold text-slate-100">
                     {previousScore}/{totalQuestions}
                   </p>
@@ -597,6 +607,7 @@ export function InterviewResults({
                     >
                       {scoreDiff > 0 ? '+' : ''}
                       {scoreDiff} from last
+                      {showBurmese && <span className="font-myanmar ml-0.5">ယခင်နှင့်</span>}
                     </p>
                   )}
                 </Card>
@@ -611,7 +622,7 @@ export function InterviewResults({
             <SectionHeading
               text={{
                 en: 'Category Breakdown',
-                my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1021\u101C\u102D\u102F\u1000\u103A\u1001\u103D\u1032\u1001\u103C\u1019\u103A\u1038\u1005\u102D\u1010\u103A\u1016\u103C\u102C\u1019\u103E\u102F',
+                my: 'အမျိုးအစားခွဲခြမ်းချက်',
               }}
             />
             <div className="space-y-3">
@@ -666,7 +677,7 @@ export function InterviewResults({
             <SectionHeading
               text={{
                 en: 'Score Trend',
-                my: '\u1021\u1019\u103E\u1010\u103A\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F',
+                my: 'အမှတ်တိုးတက်မှု',
               }}
             />
             {trendData.length >= 2 ? (
@@ -715,9 +726,7 @@ export function InterviewResults({
                   Complete more interviews to see trends.
                   {showBurmese && (
                     <span className="mt-0.5 block font-myanmar text-xs text-slate-500">
-                      {
-                        '\u101C\u1019\u103A\u1038\u1000\u103C\u1031\u102C\u1004\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F\u1000\u103C\u100A\u103A\u1037\u101B\u1014\u103A \u1014\u1031\u102C\u1000\u103A\u1011\u1015\u103A\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103B\u102C\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u102B\u104B'
-                      }
+                      လမ်းကြောင်းများကိုကြည့်ရန် နောက်ထပ်အင်တာဗျူးများဖြေဆိုပါ။
                     </span>
                   )}
                 </p>
@@ -739,13 +748,8 @@ export function InterviewResults({
                     </p>
                     {showBurmese && (
                       <p className="mt-0.5 font-myanmar text-xs text-slate-400">
-                        {
-                          '\u1019\u103E\u102C\u1038\u101A\u103D\u1004\u103A\u1038\u1021\u1016\u103C\u1031 '
-                        }
-                        {incorrectNotInDeck.length}
-                        {
-                          ' \u1001\u102F\u1000\u102D\u102F \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u103A\u1037\u1005\u102C\u101B\u1004\u103A\u1038\u101E\u102D\u102F\u1037 \u1011\u100A\u103A\u1037\u1019\u101C\u102C\u1038?'
-                        }
+                        မှားယွင်းအဖြေ {incorrectNotInDeck.length} ခုကို ပြန်လေ့လာစာရင်းသို့
+                        ထည့်မလား?
                       </p>
                     )}
                   </div>
@@ -764,6 +768,11 @@ export function InterviewResults({
                   >
                     <Plus className="h-4 w-4" />
                     {isAddingAll ? 'Adding...' : 'Add All'}
+                    {showBurmese && (
+                      <span className="font-myanmar ml-1">
+                        {isAddingAll ? 'ထည့်နေသည်...' : 'အားလုံးထည့်'}
+                      </span>
+                    )}
                   </motion.button>
                 </div>
               </Card>
@@ -777,7 +786,7 @@ export function InterviewResults({
             <SectionHeading
               text={{
                 en: 'Interview Transcript',
-                my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038',
+                my: 'အင်တာဗျူးမှတ်တမ်း',
               }}
             />
             <InterviewTranscript
@@ -804,7 +813,7 @@ export function InterviewResults({
             <BilingualButton
               label={{
                 en: 'Review Transcript',
-                my: '\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1015\u103C\u1014\u103A\u1000\u103C\u100A\u103A\u1037\u1015\u102B',
+                my: 'မှတ်တမ်းပြန်ကြည့်ပါ',
               }}
               variant="secondary"
               onClick={handleScrollToTranscript}
@@ -837,10 +846,7 @@ export function InterviewResults({
               <span>
                 {showBurmese ? (
                   <>
-                    Dashboard {'\u00B7'}{' '}
-                    <span className="font-myanmar">
-                      {'\u1012\u1000\u103A\u101B\u103E\u103A\u1018\u102F\u1010\u103A'}
-                    </span>
+                    Dashboard {'\u00B7'} <span className="font-myanmar">ဒက်ရှ်ဘုတ်</span>
                   </>
                 ) : (
                   'Dashboard'

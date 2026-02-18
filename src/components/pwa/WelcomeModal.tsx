@@ -80,7 +80,14 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         {showBurmese && (
           <p className="font-myanmar mb-1 text-xl font-bold text-foreground">ကြိုဆိုပါတယ်!</p>
         )}
-        <p className="mb-6 text-muted-foreground">Your app is ready. Here are some tips:</p>
+        <p className="mb-6 text-muted-foreground">
+          Your app is ready. Here are some tips:
+          {showBurmese && (
+            <span className="block font-myanmar text-sm mt-0.5">
+              အက်ပ်အသင့်ဖြစ်ပါပြီ။ အကြံပြုချက်တချို့ကြည့်ပါ:
+            </span>
+          )}
+        </p>
 
         {/* Tips */}
         <div className="mb-6 space-y-4">
@@ -90,11 +97,18 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <WifiOff className="h-4 w-4 text-success-600" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Works offline</p>
+              <p className="font-medium text-foreground">
+                Works offline
+                {showBurmese && (
+                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                    အင်တာနက်မရှိလည်း အလုပ်လုပ်ပါတယ်
+                  </span>
+                )}
+              </p>
               <p className="text-sm text-muted-foreground">Study anytime, even without internet.</p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
+                  အင်တာနက်မရှိလည်း အချိန်မရွေး လေ့လာနိုင်ပါတယ်။
                 </p>
               )}
             </div>
@@ -106,13 +120,20 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <RefreshCw className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Auto-syncs your progress</p>
+              <p className="font-medium text-foreground">
+                Auto-syncs your progress
+                {showBurmese && (
+                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                    တိုးတက်မှုကို အလိုအလျောက် ချိန်ကိုက်ပေးပါတယ်
+                  </span>
+                )}
+              </p>
               <p className="text-sm text-muted-foreground">
                 Your test results sync when you&apos;re back online.
               </p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် စင့်ခ်လုပ်ပါမယ်။
+                  အင်တာနက်ပြန်ရတဲ့အခါ သင့်ရလဒ်များ အလိုအလျောက် ချိန်ကိုက်ပေးပါမယ်။
                 </p>
               )}
             </div>
@@ -124,13 +145,20 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
               <Smartphone className="h-4 w-4 text-purple-600" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Open from home screen</p>
+              <p className="font-medium text-foreground">
+                Open from home screen
+                {showBurmese && (
+                  <span className="font-myanmar block text-sm font-normal text-muted-foreground">
+                    Home screen ကနေ ဖွင့်ပါ
+                  </span>
+                )}
+              </p>
               <p className="text-sm text-muted-foreground">
                 For the best experience, open the app from your home screen.
               </p>
               {showBurmese && (
                 <p className="font-myanmar text-sm text-muted-foreground">
-                  အကောင်းဆုံး အတွေ့အကြုံအတွက် Home screen မှ ဖွင့်ပါ။
+                  အကောင်းဆုံးအတွေ့အကြုံအတွက် Home screen ကနေ ဖွင့်ပါ။
                 </p>
               )}
             </div>
@@ -155,7 +183,8 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
           onClick={handleClose}
           className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
-          {showBurmese ? 'Get Started / စတင်ပါ' : 'Get Started'}
+          Get Started
+          {showBurmese && <span className="font-myanmar ml-2 text-sm font-normal">စတင်ပါ</span>}
         </button>
       </div>
     </div>

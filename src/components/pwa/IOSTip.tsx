@@ -69,9 +69,7 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
           {/* Friendly tip - not a warning */}
           <p className="text-sm font-medium text-warning-800">Quick tip for the best experience</p>
           {showBurmese && (
-            <p className="font-myanmar text-sm text-warning-700">
-              အကောင်းဆုံး အတွေ့အကြုံအတွက် အကြံပြုချက်
-            </p>
+            <p className="font-myanmar text-sm text-warning-700">ပိုကောင်းအောင် အကြံပြုချက်လေး</p>
           )}
 
           <p className="mt-2 text-sm text-warning-700">
@@ -80,8 +78,8 @@ export function IOSTip({ onDismiss }: IOSTipProps) {
           </p>
           {showBurmese && (
             <p className="mt-1 font-myanmar text-sm text-warning-600">
-              သင့်လေ့လာမှု တိုးတက်မှုကို သိမ်းဆည်းထားဖို့ တစ်ပတ်လျှင် အနည်းဆုံး တစ်ကြိမ် အက်ပ်ကို
-              ဖွင့်ပါ။ Home screen မှာ ထည့်ရင် ပိုကောင်းပါတယ်!
+              လေ့လာမှုတိုးတက်မှုကို သိမ်းထားဖို့ တစ်ပတ်လျှင် အနည်းဆုံး တစ်ကြိမ် အက်ပ်ကို ဖွင့်ပါ။
+              Home screen မှာ ထည့်ရင် ပိုကောင်းပါတယ်!
             </p>
           )}
         </div>

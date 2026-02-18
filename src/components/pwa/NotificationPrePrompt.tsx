@@ -65,13 +65,17 @@ export function NotificationPrePrompt({ onAccept, onDecline }: NotificationPrePr
               onClick={onAccept}
               className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary/90"
             >
-              {showBurmese ? 'Yes, remind me / ဟုတ်ကဲ့' : 'Yes, remind me'}
+              Yes, remind me
+              {showBurmese && (
+                <span className="font-myanmar ml-1 text-xs font-normal">ဟုတ်ကဲ့</span>
+              )}
             </button>
             <button
               onClick={onDecline}
               className="rounded-md bg-muted px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/80"
             >
-              {showBurmese ? 'No thanks / မလိုပါ' : 'No thanks'}
+              No thanks
+              {showBurmese && <span className="font-myanmar ml-1 text-xs font-normal">မလိုပါ</span>}
             </button>
           </div>
         </div>

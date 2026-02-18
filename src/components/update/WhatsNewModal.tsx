@@ -75,7 +75,7 @@ const features = [
     titleEn: '128 Questions',
     titleMy: 'မေးခွန်း ၁၂၈ ခု',
     descEn: '8 new civics questions added to match the official USCIS 2025 test.',
-    descMy: 'USCIS 2025 စာမေးပွဲနှင့် ကိုက်ညီရန် နိုင်ငံသားရေးရာမေးခွန်း ၈ ခု ထပ်ထည့်ထားသည်။',
+    descMy: 'USCIS 2025 စာမေးပွဲနဲ့ ကိုက်ညီအောင် နိုင်ငံသားရေးရာ မေးခွန်း ၈ ခု ထပ်ထည့်ထားပါတယ်။',
     iconBg: 'bg-primary-subtle',
     iconColor: 'text-primary',
   },
@@ -85,18 +85,18 @@ const features = [
     titleMy: 'USCIS 2025 မွမ်းမံပြီး',
     descEn: 'All questions verified against the latest USCIS 2025 civics test content.',
     descMy:
-      'မေးခွန်းအားလုံးကို နောက်ဆုံး USCIS 2025 နိုင်ငံသားရေးရာ အကြောင်းအရာနှင့် စစ်ဆေးပြီးဖြစ်သည်။',
+      'မေးခွန်းအားလုံးကို နောက်ဆုံး USCIS 2025 နိုင်ငံသားရေးရာ အကြောင်းအရာနဲ့ စစ်ဆေးပြီးပါပြီ။',
     iconBg: 'bg-success-subtle',
     iconColor: 'text-success',
   },
   {
     icon: MapPin,
     titleEn: 'State Personalization',
-    titleMy: 'ပြည်နယ်ပုဂ္ဂိုလ်ရေးသတ်မှတ်ခြင်း',
+    titleMy: 'ပြည်နယ်အလိုက် ပြင်ဆင်ခြင်း',
     descEn:
       'Select your state to see your governor, senators, and state capital in study questions.',
     descMy:
-      'သင့်ပြည်နယ်ကို ရွေးချယ်ပြီး လေ့လာမေးခွန်းများတွင် သင့်အုပ်ချုပ်ရေးမှူး၊ အထက်လွှတ်တော်အမတ်များနှင့် ပြည်နယ်မြို့တော်ကို ကြည့်ပါ။',
+      'သင့်ပြည်နယ်ကို ရွေးချယ်ပြီး လေ့လာမေးခွန်းတွေမှာ သင့် ပြည်နယ်အုပ်ချုပ်ရေးမှူး (Governor)၊ အထက်လွှတ်တော်အမတ် (Senator) များနဲ့ ပြည်နယ်မြို့တော်ကို ကြည့်ပါ။',
     iconBg: 'bg-warning-subtle',
     iconColor: 'text-warning',
   },
@@ -180,12 +180,7 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
           className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
           Got it!
-          {showBurmese && (
-            <>
-              {' '}
-              / <span className="font-myanmar">ရပြီ!</span>
-            </>
-          )}
+          {showBurmese && <span className="font-myanmar ml-2 text-sm font-normal">ရပြီ!</span>}
         </button>
       </div>
     </div>

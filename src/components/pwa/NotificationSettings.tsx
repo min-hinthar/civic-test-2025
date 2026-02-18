@@ -82,7 +82,7 @@ export function NotificationSettings() {
         </p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-muted-foreground">
-            {'ဤဘရောင်ဇာတွင် အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။'}
+            ဒီ browser မှာ အကြောင်းကြားချက်များကို မပံ့ပိုးပါ။
           </p>
         )}
       </div>
@@ -102,7 +102,7 @@ export function NotificationSettings() {
         </p>
         {showBurmese && (
           <p className="font-myanmar text-sm text-warning-600">
-            {'အကြောင်းကြားချက်များ ပိတ်ထားပါသည်။ ဘရောင်ဇာ ဆက်တင်မှ ပြင်ဆင်ပါ။'}
+            အကြောင်းကြားချက်များ ပိတ်ထားပါတယ်။ Browser ဆက်တင်ကနေ ပြင်ဆင်ပါ။
           </p>
         )}
       </div>
@@ -118,19 +118,14 @@ export function NotificationSettings() {
       <p className="text-sm text-muted-foreground mb-1">Get friendly reminders to keep studying</p>
       {showBurmese && (
         <p className="font-myanmar text-sm text-muted-foreground mb-4">
-          {'လေ့လာရန် သတိပေးချက်များ ရယူပါ'}
+          လေ့လာရန် သတိပေးချက်များ ရယူပါ
         </p>
       )}
 
       <div className="flex items-center gap-3">
         <label htmlFor="reminder-frequency" className="text-sm text-foreground">
-          {showBurmese ? (
-            <>
-              Frequency / <span className="font-myanmar">{'ကြိမ်နှုန်း'}</span>:
-            </>
-          ) : (
-            'Frequency:'
-          )}
+          Frequency:
+          {showBurmese && <span className="font-myanmar ml-1">ကြိမ်နှုန်း:</span>}
         </label>
         <select
           id="reminder-frequency"
@@ -149,13 +144,9 @@ export function NotificationSettings() {
 
       {isSubscribed && reminderFrequency !== 'off' && (
         <p className="mt-3 text-sm text-success-600">
-          {showBurmese ? (
-            <>
-              Notifications enabled /{' '}
-              <span className="font-myanmar">{'အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ'}</span>
-            </>
-          ) : (
-            'Notifications enabled'
+          Notifications enabled
+          {showBurmese && (
+            <span className="font-myanmar ml-2">အကြောင်းကြားချက်များ ဖွင့်ထားပါပြီ</span>
           )}
         </p>
       )}

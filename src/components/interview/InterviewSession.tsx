@@ -974,9 +974,17 @@ export function InterviewSession({
           <div className="flex items-center gap-3">
             <span className="text-xs font-semibold text-white/70">
               Question {currentIndex + 1} of {QUESTIONS_PER_SESSION}
+              {showBurmese && (
+                <span className="font-myanmar ml-1">
+                  မေးခွန်း {currentIndex + 1} မှ {QUESTIONS_PER_SESSION}
+                </span>
+              )}
             </span>
             {mode === 'practice' && (
-              <span className="text-xs text-white/50">{correctCount} correct</span>
+              <span className="text-xs text-white/50">
+                {correctCount} correct
+                {showBurmese && <span className="font-myanmar ml-1">{correctCount} မှန်</span>}
+              </span>
             )}
           </div>
 
@@ -993,7 +1001,10 @@ export function InterviewSession({
                 )}
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Exit</span>
+                <span className="hidden sm:inline">
+                  Exit
+                  {showBurmese && <span className="font-myanmar ml-1">ထွက်ရန်</span>}
+                </span>
               </button>
             )}
           </div>
@@ -1074,7 +1085,14 @@ export function InterviewSession({
           {/* Self-grade fallback (no speech recognition) */}
           {showSelfGradeButtons && (
             <div className="py-2">
-              <p className="mb-2 text-center text-xs text-white/50">Did you answer correctly?</p>
+              <p className="mb-2 text-center text-xs text-white/50">
+                Did you answer correctly?
+                {showBurmese && (
+                  <span className="block font-myanmar mt-0.5">
+                    မှန်ကန်စွာ ဖြေဆိုနိုင်ခဲ့ပါသလား?
+                  </span>
+                )}
+              </p>
               <SelfGradeButtons onGrade={handleSelfGrade} />
             </div>
           )}
@@ -1146,7 +1164,10 @@ export function InterviewSession({
               {isListening && (
                 <div className="flex items-center justify-center gap-2">
                   <Mic className="h-3.5 w-3.5 animate-pulse text-primary" />
-                  <span className="text-xs text-white/50">Listening...</span>
+                  <span className="text-xs text-white/50">
+                    Listening...
+                    {showBurmese && <span className="font-myanmar ml-1">နားထောင်နေသည်...</span>}
+                  </span>
                 </div>
               )}
 
@@ -1163,6 +1184,13 @@ export function InterviewSession({
                   {hasSpeechError
                     ? 'Speech recognition failed. Type your answer instead.'
                     : 'No microphone. Type your answer below.'}
+                  {showBurmese && (
+                    <span className="block font-myanmar mt-0.5">
+                      {hasSpeechError
+                        ? 'အသံမှတ်သားမှု မအောင်မြင်ပါ။ အဖြေကို ရိုက်ထည့်ပါ။'
+                        : 'မိုက်ခရိုဖုန်း မရှိပါ။ အောက်တွင် ရိုက်ထည့်ပါ။'}
+                    </span>
+                  )}
                 </span>
               </div>
               <form
@@ -1209,6 +1237,9 @@ export function InterviewSession({
                   className="text-xs text-white/30 underline hover:text-white/50 transition-colors"
                 >
                   Skip — self-grade instead
+                  {showBurmese && (
+                    <span className="block font-myanmar">ကျော် — ကိုယ်တိုင်အကဲဖြတ်ပါ</span>
+                  )}
                 </button>
               </div>
             </div>
@@ -1220,6 +1251,15 @@ export function InterviewSession({
                   : questionPhase === 'grading' || questionPhase === 'feedback'
                     ? 'Reviewing your answer...'
                     : ''}
+                {showBurmese && (
+                  <span className="block font-myanmar mt-0.5">
+                    {isGreeting
+                      ? 'စစ်ဆေးသူက နှုတ်ဆက်နေပါသည်...'
+                      : questionPhase === 'grading' || questionPhase === 'feedback'
+                        ? 'သင့်အဖြေကို စစ်ဆေးနေပါသည်...'
+                        : ''}
+                  </span>
+                )}
               </span>
             </div>
           )}

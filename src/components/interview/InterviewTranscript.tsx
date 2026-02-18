@@ -189,6 +189,11 @@ export function InterviewTranscript({
                       <ChevronDown className="h-3.5 w-3.5" />
                     )}
                     {isExpanded ? 'Hide correct answer' : 'Show correct answer'}
+                    {showBurmese && (
+                      <span className="font-myanmar ml-1">
+                        {isExpanded ? 'မှန်ကန်တဲ့အဖြေဝှက်ပါ' : 'မှန်ကန်တဲ့အဖြေပြပါ'}
+                      </span>
+                    )}
                   </button>
 
                   <AnimatePresence>
@@ -201,7 +206,12 @@ export function InterviewTranscript({
                         className="overflow-hidden"
                       >
                         <div className="rounded-lg border border-success/30 bg-success-subtle/30 px-3 py-2.5">
-                          <p className="text-xs font-semibold text-success">Correct answer:</p>
+                          <p className="text-xs font-semibold text-success">
+                            Correct answer:
+                            {showBurmese && (
+                              <span className="font-myanmar ml-1">မှန်ကန်တဲ့အဖြေ:</span>
+                            )}
+                          </p>
                           {result.correctAnswers.map((answer, i) => (
                             <p key={i} className="mt-0.5 text-sm text-foreground">
                               {answer.text_en}

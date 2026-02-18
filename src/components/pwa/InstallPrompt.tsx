@@ -102,7 +102,7 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
         </p>
         {showBurmese && (
           <p className="mb-6 text-center font-myanmar text-sm text-muted-foreground">
-            အင်တာနက်မရှိလည်း လေ့လာနိုင်ပါသည်။
+            အင်တာနက်မရှိလည်း အချိန်မရွေး လေ့လာနိုင်ပါတယ်။
           </p>
         )}
 
@@ -127,7 +127,10 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
                 onClick={handleDismiss}
                 className="mt-4 w-full rounded-lg bg-muted px-4 py-2 font-medium text-foreground hover:bg-muted/80"
               >
-                {showBurmese ? 'Got it / နားလည်ပါပြီ' : 'Got it'}
+                Got it
+                {showBurmese && (
+                  <span className="font-myanmar ml-2 text-sm font-normal">နားလည်ပါပြီ</span>
+                )}
               </button>
             </div>
           ) : (
@@ -135,7 +138,10 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
               onClick={handleIOSClick}
               className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
             >
-              {showBurmese ? 'Show me how / ပြသပါ' : 'Show me how'}
+              Show me how
+              {showBurmese && (
+                <span className="font-myanmar ml-2 text-sm font-normal">ပြပေးပါ</span>
+              )}
             </button>
           )
         ) : (
@@ -143,7 +149,10 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
             onClick={handleInstall}
             className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
           >
-            {showBurmese ? 'Install Now / အခုထည့်သွင်းပါ' : 'Install Now'}
+            Install Now
+            {showBurmese && (
+              <span className="font-myanmar ml-2 text-sm font-normal">အခုထည့်သွင်းပါ</span>
+            )}
           </button>
         )}
 
@@ -151,7 +160,8 @@ export function InstallPrompt({ onInstalled }: InstallPromptProps) {
           onClick={handleDismiss}
           className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-foreground"
         >
-          {showBurmese ? 'Maybe later / နောက်မှ' : 'Maybe later'}
+          Maybe later
+          {showBurmese && <span className="font-myanmar ml-1 text-xs">နောက်မှ</span>}
         </button>
       </div>
     </div>

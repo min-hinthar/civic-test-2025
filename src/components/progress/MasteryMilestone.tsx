@@ -175,6 +175,7 @@ export function MasteryMilestone({ milestone, onDismiss }: MasteryMilestoneProps
               )}
             >
               Continue
+              {showBurmese && <span className="font-myanmar ml-1">ဆက်လက်ပါ</span>}
             </button>
           </div>
         </DialogContent>

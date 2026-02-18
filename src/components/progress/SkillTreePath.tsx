@@ -68,9 +68,9 @@ function getMedalLevel(mastery: number): MedalLevel {
 /** Medal label text */
 const MEDAL_LABELS: Record<MedalLevel, { en: string; my: string } | null> = {
   none: null,
-  bronze: { en: 'Bronze', my: '\u1000\u103C\u1031\u1038\u1010\u1036\u1006\u102D\u1015\u103A' },
-  silver: { en: 'Silver', my: '\u1004\u103D\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
-  gold: { en: 'Gold', my: '\u101B\u103D\u103E\u1031\u1010\u1036\u1006\u102D\u1015\u103A' },
+  bronze: { en: 'Bronze', my: 'ကြေးတံဆိပ်' },
+  silver: { en: 'Silver', my: 'ငွေတံဆိပ်' },
+  gold: { en: 'Gold', my: 'ရွှေတံဆိပ်' },
 };
 
 export interface SkillTreePathProps {
