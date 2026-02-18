@@ -5,6 +5,7 @@ import type { Question } from '@/types';
  *
  * These questions extend the 100-question civics bank to 128 questions,
  * using the same category structure and stable IDs.
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 export const uscis2025Additions: Question[] = [
   // ============================================
@@ -211,7 +212,7 @@ export const uscis2025Additions: Question[] = [
       brief_en:
         "The White House at 1600 Pennsylvania Avenue in Washington, D.C. has been the official residence of every U.S. President since John Adams in 1800. It serves as both the President's home and the center of executive branch operations.",
       brief_my:
-        'ဝါရှင်တန်ဒီစီရှိ ပင်ဆယ်လ်ဗေးနီးယားလမ်း ၁၆၀၀ ရှိ အိမ်ဖြူတော် (White House) သည် ၁၈၀၀ ခုနှစ် ဂျွန်အဒမ်စ် လက်ထက်မှစ၍ သမ္မတတိုင်း၏ တရားဝင်နေအိမ်ဖြစ်သည်။ သမ္မတ၏နေအိမ်နှင့် အုပ်ချုပ်ရေးဌာနခွဲ ဗဟိုဌာနအဖြစ် နှစ်မျိုးလုံး ဆောင်ရွက်သည်။',
+        'ဝါရှင်တန်ဒီစီရှိ ပင်ဆယ်ဗေးနီးယားလမ်း ၁၆၀၀ ရှိ အိမ်ဖြူတော် (White House) သည် ၁၈၀၀ ခုနှစ် ဂျွန်အဒမ်စ် လက်ထက်မှစ၍ သမ္မတတိုင်း၏ တရားဝင်နေအိမ်ဖြစ်သည်။ သမ္မတ၏နေအိမ်နှင့် အုပ်ချုပ်ရေးဌာနခွဲ ဗဟိုဌာနအဖြစ် နှစ်မျိုးလုံး ဆောင်ရွက်သည်။',
       relatedQuestionIds: ['GOV-S12', 'GOV-S13'],
     },
   },
@@ -281,7 +282,7 @@ export const uscis2025Additions: Question[] = [
     studyAnswers: [
       {
         text_en: 'give up loyalty to other countries',
-        text_my: 'အခြားနိုင်ငံများへの သစ္စာကို စွန့်လွှတ်မည်',
+        text_my: 'အခြားနိုင်ငံများအပေါ် သစ္စာကို စွန့်လွှတ်မည်',
       },
       { text_en: 'defend the Constitution', text_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ကာကွယ်မည်' },
       { text_en: 'obey the laws of the United States', text_my: 'အမေရိကန်ဥပဒေများကို လိုက်နာမည်' },
@@ -421,13 +422,13 @@ export const uscis2025Additions: Question[] = [
     question_my: 'မူလ ကိုလိုနီ ၁၃ ခုထဲမှ တစ်ခုကို အမည်ပေးပါ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
-      { text_en: 'Massachusetts', text_my: 'မက်ဆာချူဆက်' },
+      { text_en: 'Massachusetts', text_my: 'မက်ဆာချူးဆက်' },
       { text_en: 'Virginia', text_my: 'ဗာဂျီးနီးယား' },
-      { text_en: 'Pennsylvania', text_my: 'ပင်စီလ်ဗေးနီးယား' },
+      { text_en: 'Pennsylvania', text_my: 'ပင်ဆယ်ဗေးနီးယား' },
     ],
     answers: [
       { text_en: 'Virginia', text_my: 'ဗာဂျီးနီးယား', correct: true },
-      { text_en: 'Alaska', text_my: 'အလာစကာ', correct: false },
+      { text_en: 'Alaska', text_my: 'အလက်စကာ', correct: false },
       { text_en: 'Hawaii', text_my: 'ဟာဝိုင်', correct: false },
       { text_en: 'California', text_my: 'ကယ်လီဖိုးနီးယား', correct: false },
     ],
@@ -435,11 +436,11 @@ export const uscis2025Additions: Question[] = [
       brief_en:
         'The original 13 colonies — including Virginia, Massachusetts, Pennsylvania, and others — were British settlements along the Atlantic coast. After declaring independence in 1776, they became the first states of the United States.',
       brief_my:
-        'မူလကိုလိုနီ ၁၃ ခု — ဗာဂျီးနီးယား၊ မက်ဆာချူဆက်၊ ပင်စီလ်ဗေးနီးယားနှင့် အခြားတို့ — သည် အတ္တလန္တိတ်ကမ်းရိုးတန်းတစ်လျှောက် ဗြိတိသျှအခြေချနေရာများဖြစ်သည်။ ၁၇၇၆ တွင် လွတ်လပ်ရေးကြေညာပြီးနောက် အမေရိကန်ပြည်ထောင်စု၏ ပထမဆုံးပြည်နယ်များ ဖြစ်လာခဲ့သည်။',
+        'မူလကိုလိုနီ ၁၃ ခု — ဗာဂျီးနီးယား၊ မက်ဆာချူးဆက်၊ ပင်ဆယ်ဗေးနီးယားနှင့် အခြားတို့ — သည် အတ္တလန္တိတ်ကမ်းရိုးတန်းတစ်လျှောက် ဗြိတိသျှအခြေချနေရာများဖြစ်သည်။ ၁၇၇၆ တွင် လွတ်လပ်ရေးကြေညာပြီးနောက် အမေရိကန်ပြည်ထောင်စု၏ ပထမဆုံးပြည်နယ်များ ဖြစ်လာခဲ့သည်။',
       commonMistake_en:
         'Alaska, Hawaii, and California were not among the original 13 colonies — they became states much later.',
       commonMistake_my:
-        'အလာစကာ၊ ဟာဝိုင်နှင့် ကယ်လီဖိုးနီးယားတို့သည် မူလကိုလိုနီ ၁၃ ခုတွင် မပါဝင်ပါ — ၎င်းတို့ ပိုမိုနောက်ကျမှ ပြည်နယ်ဖြစ်လာခဲ့သည်။',
+        'အလက်စကာ၊ ဟာဝိုင်နှင့် ကယ်လီဖိုးနီးယားတို့သည် မူလကိုလိုနီ ၁၃ ခုတွင် မပါဝင်ပါ — ၎င်းတို့ ပိုမိုနောက်ကျမှ ပြည်နယ်ဖြစ်လာခဲ့သည်။',
       relatedQuestionIds: ['HIST-C01', 'HIST-C02'],
     },
   },
@@ -484,7 +485,11 @@ export const uscis2025Additions: Question[] = [
         correct: true,
       },
       { text_en: 'a general in World War I', text_my: 'ပထမကမ္ဘာစစ်တပ်မှူး', correct: false },
-      { text_en: 'the first female senator', text_my: 'ပထမဆုံး အမျိုးသမီးဆင်နေတာ', correct: false },
+      {
+        text_en: 'the first female senator',
+        text_my: 'ပထမဆုံး အမျိုးသမီး အထက်လွှတ်တော်အမတ် (Senator)',
+        correct: false,
+      },
       { text_en: 'a Supreme Court justice', text_my: 'တရားရုံးချုပ်တရားသူကြီး', correct: false },
     ],
     explanation: {
@@ -617,7 +622,7 @@ export const uscis2025Additions: Question[] = [
   {
     id: 'SYM-14',
     question_en: 'What is the national motto of the United States?',
-    question_my: 'အမေရိကန်နိုင်ငံ၏ အမျိုးသားမိုထိုး (national motto) က ဘာလဲ။',
+    question_my: 'အမေရိကန်နိုင်ငံ၏ အမျိုးသားဆောင်ပုဒ် (national motto) က ဘာလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'In God We Trust', text_my: 'ဘုရားကို ယုံကြည်သည်' }],
     answers: [
@@ -630,11 +635,11 @@ export const uscis2025Additions: Question[] = [
       brief_en:
         '"In God We Trust" became the official national motto in 1956, though it appeared on U.S. coins as early as the 1860s. "E Pluribus Unum" ("Out of many, one") is a traditional motto but was never formally adopted by law as the national motto.',
       brief_my:
-        '"In God We Trust" သည် ၁၉၅၆ ခုနှစ်တွင် တရားဝင်အမျိုးသားမိုထိုး ဖြစ်လာခဲ့သော်လည်း ၁၈၆၀ ခုနှစ်များကတည်းက အမေရိကန်ဒင်္ဂါးများပေါ်တွင် ပေါ်ခဲ့ပြီးဖြစ်သည်။ "E Pluribus Unum" ("များစွာထဲမှ တစ်ခုတည်း") သည် ရိုးရာမိုထိုးဖြစ်သော်လည်း ဥပဒေဖြင့် တရားဝင် အမျိုးသားမိုထိုးအဖြစ် သတ်မှတ်ခြင်း မခံရပါ။',
+        '"In God We Trust" သည် ၁၉၅၆ ခုနှစ်တွင် တရားဝင်အမျိုးသားဆောင်ပုဒ် ဖြစ်လာခဲ့သော်လည်း ၁၈၆၀ ခုနှစ်များကတည်းက အမေရိကန်ဒင်္ဂါးများပေါ်တွင် ပေါ်ခဲ့ပြီးဖြစ်သည်။ "E Pluribus Unum" ("များစွာထဲမှ တစ်ခုတည်း") သည် ရိုးရာဆောင်ပုဒ်ဖြစ်သော်လည်း ဥပဒေဖြင့် တရားဝင် အမျိုးသားဆောင်ပုဒ်အဖြစ် သတ်မှတ်ခြင်း မခံရပါ။',
       commonMistake_en:
         'Many confuse "E Pluribus Unum" with the official motto. While important, it is not the legally designated national motto — "In God We Trust" is.',
       commonMistake_my:
-        'လူများစွာက "E Pluribus Unum" ကို တရားဝင်မိုထိုးဟု ထင်မှတ်ကြသည်။ အရေးကြီးသော်လည်း ဥပဒေအရ သတ်မှတ်ထားသော အမျိုးသားမိုထိုးမှာ "In God We Trust" ဖြစ်သည်။',
+        'လူများစွာက "E Pluribus Unum" ကို တရားဝင်ဆောင်ပုဒ်ဟု ထင်မှတ်ကြသည်။ အရေးကြီးသော်လည်း ဥပဒေအရ သတ်မှတ်ထားသော အမျိုးသားဆောင်ပုဒ်မှာ "In God We Trust" ဖြစ်သည်။',
       relatedQuestionIds: ['SYM-01', 'SYM-02'],
     },
   },
@@ -876,7 +881,7 @@ export const uscis2025Additions: Question[] = [
       brief_en:
         'The 22nd Amendment, ratified in 1951, limits the President to two four-year terms. This was enacted after Franklin D. Roosevelt won four consecutive terms, breaking the two-term tradition set by George Washington to prevent the concentration of power.',
       brief_my:
-        '၁၉၅၁ ခုနှစ်တွင် အတည်ပြုခဲ့သော ပြင်ဆင်ချက် ၂၂ (22nd Amendment) က သမ္မတကို လေးနှစ်သက်တမ်း နှစ်ခုသာ ကန့်သတ်သည်။ ဖရန့်ကလင်ဒီရူးစဗဲ့ (FDR) က ဆက်တိုက်လေးကြိမ် ရွေးကောက်ခံရပြီး ဂျော့ဝါရှင်တန် ချမှတ်ခဲ့သော နှစ်ကြိမ်ဓလေ့ကို ချိုးဖောက်ခဲ့သဖြင့် အာဏာစုစည်းမှုကို တားဆီးရန် ဤပြင်ဆင်ချက်ကို ပြဌာန်းခဲ့သည်။',
+        '၁၉၅၁ ခုနှစ်တွင် အတည်ပြုခဲ့သော ပြင်ဆင်ချက် ၂၂ (22nd Amendment) က သမ္မတကို လေးနှစ်သက်တမ်း နှစ်ခုသာ ကန့်သတ်သည်။ ဖရန်ကလင် ရူးဆဗဲ့ (Franklin Roosevelt) က ဆက်တိုက်လေးကြိမ် ရွေးကောက်ခံရပြီး ဂျော့ဝါရှင်တန် ချမှတ်ခဲ့သော နှစ်ကြိမ်ဓလေ့ကို ချိုးဖောက်ခဲ့သဖြင့် အာဏာစုစည်းမှုကို တားဆီးရန် ဤပြင်ဆင်ချက်ကို ပြဌာန်းခဲ့သည်။',
       citation: '22nd Amendment (1951)',
       relatedQuestionIds: ['GOV-S12', 'GOV-P04'],
     },
