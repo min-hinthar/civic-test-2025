@@ -4,6 +4,7 @@ import type { Question } from '@/types';
  * Rights and Responsibilities
  *
  * ID Prefix: RR-## (10 questions)
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const rightsResponsibilitiesQuestions: Question[] = [
@@ -12,7 +13,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
     question_en:
       'There are four amendments to the Constitution about who can vote. Describe one of them.',
     question_my:
-      'ဖွဲ့စည်းပုံအခြေခံဥပဒေတွင် မည်သူမဲပေးနိုင်သည်နှင့် ပတ်သက်၍ ပြင်ဆင်ချက်လေးခုရှိသည်။ ၎င်းတို့ထဲမှ တစ်ခုကို ဖော်ပြပါ။',
+      'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) မှာ ဘယ်သူတွေ မဲပေးနိုင်တယ်ဆိုတဲ့ ပြင်ဆင်ချက် (Amendment) လေးခု ရှိတယ်။ တစ်ခုကို ပြောပြပါ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -66,7 +67,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-02',
     question_en: 'What is one responsibility that is only for United States citizens?',
-    question_my: 'အမေရိကန်နိုင်ငံသားများအတွက်သာဖြစ်သော တာဝန်တစ်ခုကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်နိုင်ငံသား (Citizen) တွေအတွက်ပဲ ဖြစ်တဲ့ တာဝန်တစ်ခုက ဘာလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -103,7 +104,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-03',
     question_en: 'Name one right only for United States citizens.',
-    question_my: 'အမေရိကန်နိုင်ငံသားများအတွက်သာဖြစ်သော အခွင့်အရေးတစ်ခုကို အမည်ပေးပါ။',
+    question_my: 'အမေရိကန်နိုင်ငံသား (Citizen) တွေအတွက်ပဲ ဖြစ်တဲ့ အခွင့်အရေးတစ်ခုကို ပြောပါ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -152,7 +153,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-04',
     question_en: 'What are two rights of everyone living in the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စုတွင် နေထိုင်သူတိုင်း၏ အခွင့်အရေးနှစ်ခုကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်မှာ နေထိုင်သူတိုင်းရဲ့ အခွင့်အရေး (Rights) နှစ်ခုက ဘာတွေလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -202,7 +203,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-05',
     question_en: 'What do we show loyalty to when we say the Pledge of Allegiance?',
-    question_my: 'သစ္စာဆိုသည့်အခါ ကျွန်ုပ်တို့သည် မည်သည့်အရာကို သစ္စာစောင့်သိကြောင်း ပြသသနည်း။',
+    question_my: 'သစ္စာခံကတိ (Pledge of Allegiance) ဆိုတဲ့အခါ ငါတို့ ဘာကို သစ္စာခံတာလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       { text_en: 'the United States', text_my: 'အမေရိကန်ပြည်ထောင်စု' },
@@ -229,7 +230,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-06',
     question_en: 'What is one promise you make when you become a United States citizen?',
-    question_my: 'သင် အမေရိကန်နိုင်ငံသားဖြစ်လာသည့်အခါ သင်ပေးသော ကတိတစ်ခုကား အဘယ်နည်း။',
+    question_my: 'သင် အမေရိကန်နိုင်ငံသား (Citizen) ဖြစ်လာတဲ့အခါ ပေးတဲ့ ကတိတစ်ခုက ဘာလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -294,7 +295,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-07',
     question_en: 'How old do citizens have to be to vote for President?',
-    question_my: 'သမ္မတကို မဲပေးရန် နိုင်ငံသားများသည် အသက်ဘယ်လောက်ရှိရမည်နည်း။',
+    question_my: 'သမ္မတ (President) ကို မဲပေးဖို့ နိုင်ငံသားတွေ အသက်ဘယ်လောက် ရှိရမလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -337,7 +338,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
     id: 'RR-08',
     question_en: 'What are two ways that Americans can participate in their democracy?',
     question_my:
-      'အမေရိကန်များသည် ၎င်းတို့၏ ဒီမိုကရေစီတွင် မည်သည့်နည်းလမ်းနှစ်ခုဖြင့် ပါဝင်နိုင်သနည်း။',
+      'အမေရိကန်တွေက သူတို့ရဲ့ ဒီမိုကရေစီ (Democracy) မှာ ဘယ်လိုနည်းလမ်းနှစ်ခုနဲ့ ပါဝင်နိုင်သလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       { text_en: 'vote', text_my: 'မဲပေးပါ' },
@@ -403,7 +404,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-09',
     question_en: 'When is the last day you can send in federal income tax forms?',
-    question_my: 'ဖက်ဒရယ်ဝင်ငွေခွန်ပုံစံများကို သင် နောက်ဆုံး ဘယ်နေ့ ပေးပို့နိုင်သနည်း။',
+    question_my: 'ဖက်ဒရယ် (Federal) ဝင်ငွေခွန်ပုံစံတွေကို နောက်ဆုံးဘယ်နေ့ ပေးပို့နိုင်သလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [{ text_en: 'April 15', text_my: 'ဧပြီ ၁၅' }],
     answers: [
@@ -425,7 +426,8 @@ export const rightsResponsibilitiesQuestions: Question[] = [
   {
     id: 'RR-10',
     question_en: 'When must all men register for the Selective Service?',
-    question_my: 'အမျိုးသားအားလုံးသည် Selective Service အတွက် ဘယ်အချိန်မှာ မှတ်ပုံတင်ရမလဲ။',
+    question_my:
+      'အမျိုးသားအားလုံး ဆီလက်တစ်ဆားဗစ် (Selective Service) အတွက် ဘယ်အချိန်မှာ မှတ်ပုံတင်ရမလဲ။',
     category: 'Rights and Responsibilities',
     studyAnswers: [
       {
@@ -463,7 +465,7 @@ export const rightsResponsibilitiesQuestions: Question[] = [
       brief_en:
         'All men living in the U.S. must register for the Selective Service between ages 18 and 26. This is a requirement for both citizens and non-citizens. Women are not currently required to register.',
       brief_my:
-        'အမေရိကန်တွင် နေထိုင်သော အမျိုးသားအားလုံးသည် အသက် ၁၈ နှစ်နှင့် ၂၆ နှစ်ကြား Selective Service အတွက် မှတ်ပုံတင်ရမည်။ နိုင်ငံသားနှင့် နိုင်ငံသားမဟုတ်သူ နှစ်မျိုးလုံးအတွက် လိုအပ်ချက် ဖြစ်သည်။',
+        'အမေရိကန်မှာ နေထိုင်တဲ့ အမျိုးသားအားလုံးက အသက် ၁၈ နှစ်နဲ့ ၂၆ နှစ်ကြား ဆီလက်တစ်ဆားဗစ် (Selective Service) အတွက် မှတ်ပုံတင်ရတယ်။ နိုင်ငံသား (Citizen) ရော နိုင်ငံသားမဟုတ်သူပါ နှစ်မျိုးလုံးအတွက် လိုအပ်ချက်ပါ။',
       relatedQuestionIds: ['RR-07'],
     },
   },

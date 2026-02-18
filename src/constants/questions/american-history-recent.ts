@@ -4,6 +4,7 @@ import type { Question } from '@/types';
  * Recent American History and Other Important Historical Information
  *
  * ID Prefix: HIST-R## (10 questions)
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const recentHistoryQuestions: Question[] = [
@@ -41,44 +42,57 @@ export const recentHistoryQuestions: Question[] = [
   {
     id: 'HIST-R02',
     question_en: 'Who was President during World War I?',
-    question_my: 'ပထမကမ္ဘာစစ်အတွင်း သမ္မတသည် မည်သူနည်း။',
+    question_my: 'ပထမကမ္ဘာစစ် (World War I) အတွင်း သမ္မတ (President) က ဘယ်သူလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [{ text_en: '(Woodrow) Wilson', text_my: '(ဝုဒ်ရိုး) ဝီလ်ဆင်' }],
     answers: [
       { text_en: '(Woodrow) Wilson', text_my: '(ဝုဒ်ရိုး) ဝီလ်ဆင်', correct: true },
-      { text_en: 'Franklin Roosevelt', text_my: 'ဖရန်ကလင် ရုစဗဲ့', correct: false },
-      { text_en: 'Theodore Roosevelt', text_my: 'သီအိုဒေါ ရုစဗဲ့', correct: false },
-      { text_en: 'Abraham Lincoln', text_my: 'အာဗြဟံ လင်ကွန်း', correct: false },
+      {
+        text_en: 'Franklin Roosevelt',
+        text_my: 'ဖရန်ကလင် ရူးဆဗဲ့ (Franklin Roosevelt)',
+        correct: false,
+      },
+      {
+        text_en: 'Theodore Roosevelt',
+        text_my: 'သီအိုဒေါ ရူးဆဗဲ့ (Theodore Roosevelt)',
+        correct: false,
+      },
+      {
+        text_en: 'Abraham Lincoln',
+        text_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'Woodrow Wilson was President during World War I (1914-1918). He tried to keep America neutral at first but eventually asked Congress to declare war in 1917. After the war, he proposed the League of Nations to prevent future wars.',
       brief_my:
-        'ဝုဒ်ရိုး ဝီလ်ဆင်သည် ပထမကမ္ဘာစစ် (၁၉၁၄-၁၉၁၈) အတွင်း သမ္မတဖြစ်ခဲ့သည်။ အစပိုင်းတွင် အမေရိကကို ကြားနေထားရန် ကြိုးစားခဲ့သော်လည်း ၁၉၁၇ ခုနှစ်တွင် ကွန်ဂရက်ကို စစ်ကြေညာရန် တောင်းဆိုခဲ့သည်။',
+        'ဝုဒ်ရို ဝီလ်ဆင် (Woodrow Wilson)သည် ပထမကမ္ဘာစစ် (၁၉၁၄-၁၉၁၈) အတွင်း သမ္မတဖြစ်ခဲ့သည်။ အစပိုင်းတွင် အမေရိကကို ကြားနေထားရန် ကြိုးစားခဲ့သော်လည်း ၁၉၁၇ ခုနှစ်တွင် ကွန်ဂရက်ကို စစ်ကြေညာရန် တောင်းဆိုခဲ့သည်။',
       commonMistake_en:
         "Don't confuse the two Roosevelts: Theodore Roosevelt was president before WWI; Franklin Roosevelt was president during WWII.",
       commonMistake_my:
-        'ရုစဗဲ့ နှစ်ဦးကို မရောထွေးပါနှင့် — သီအိုဒေါ ရုစဗဲ့သည် ပထမကမ္ဘာစစ်မတိုင်မီ သမ္မတဖြစ်ခဲ့ပြီး ဖရန်ကလင် ရုစဗဲ့သည် ဒုတိယကမ္ဘာစစ်အတွင်း သမ္မတဖြစ်ခဲ့သည်။',
+        'ရုစဗဲ့ နှစ်ဦးကို မရောထွေးပါနှင့် — သီအိုဒေါ ရူးဆဗဲ့ (Theodore Roosevelt)သည် ပထမကမ္ဘာစစ်မတိုင်မီ သမ္မတဖြစ်ခဲ့ပြီး ဖရန်ကလင် ရူးဆဗဲ့ (Franklin Roosevelt)သည် ဒုတိယကမ္ဘာစစ်အတွင်း သမ္မတဖြစ်ခဲ့သည်။',
       relatedQuestionIds: ['HIST-R01', 'HIST-R03'],
     },
   },
   {
     id: 'HIST-R03',
     question_en: 'Who was President during the Great Depression and World War II?',
-    question_my: 'မဟာစီးပွားပျက်ကပ်နှင့် ဒုတိယကမ္ဘာစစ်အတွင်း သမ္မတသည် မည်သူနည်း။',
+    question_my:
+      'မဟာစီးပွားပျက်ကပ် (Great Depression) နဲ့ ဒုတိယကမ္ဘာစစ် (World War II) အတွင်း သမ္မတက ဘယ်သူလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [{ text_en: '(Franklin) Roosevelt', text_my: '(ဖရန်ကလင်) ရုစဗဲ့' }],
     answers: [
       { text_en: '(Franklin) Roosevelt', text_my: '(ဖရန်ကလင်) ရုစဗဲ့', correct: true },
       { text_en: 'Harry Truman', text_my: 'ဟယ်ရီ ထရူးမင်း', correct: false },
       { text_en: 'Herbert Hoover', text_my: 'ဟာဘတ် ဟူဗာ', correct: false },
-      { text_en: 'Woodrow Wilson', text_my: 'ဝုဒ်ရိုး ဝီလ်ဆင်', correct: false },
+      { text_en: 'Woodrow Wilson', text_my: 'ဝုဒ်ရို ဝီလ်ဆင် (Woodrow Wilson)', correct: false },
     ],
     explanation: {
       brief_en:
         'Franklin Roosevelt (FDR) was President during both the Great Depression and World War II. He served an unprecedented four terms and created the New Deal programs to help Americans recover from economic hardship.',
       brief_my:
-        'ဖရန်ကလင် ရုစဗဲ့ (FDR) သည် မဟာစီးပွားပျက်ကပ်နှင့် ဒုတိယကမ္ဘာစစ် နှစ်ခုလုံးအတွင်း သမ္မတဖြစ်ခဲ့သည်။ သမ္မတသက်တမ်း ၄ ကြိမ် တာဝန်ထမ်းဆောင်ခဲ့ပြီး စီးပွားရေးအကျပ်အတည်းမှ လူအများ ပြန်လည်ထူထောင်ရန် New Deal အစီအစဉ်များ ဖန်တီးခဲ့သည်။',
+        'ဖရန်ကလင် ရူးဆဗဲ့ (Franklin Roosevelt) (FDR) သည် မဟာစီးပွားပျက်ကပ်နှင့် ဒုတိယကမ္ဘာစစ် နှစ်ခုလုံးအတွင်း သမ္မတဖြစ်ခဲ့သည်။ သမ္မတသက်တမ်း ၄ ကြိမ် တာဝန်ထမ်းဆောင်ခဲ့ပြီး စီးပွားရေးအကျပ်အတည်းမှ လူအများ ပြန်လည်ထူထောင်ရန် New Deal အစီအစဉ်များ ဖန်တီးခဲ့သည်။',
       funFact_en:
         'FDR is the only president to serve more than two terms. After his four terms, the 22nd Amendment was passed to limit presidents to two terms.',
       funFact_my:
@@ -89,7 +103,7 @@ export const recentHistoryQuestions: Question[] = [
   {
     id: 'HIST-R04',
     question_en: 'Who did the United States fight in World War II?',
-    question_my: 'ဒုတိယကမ္ဘာစစ်တွင် အမေရိကန်ပြည်ထောင်စုသည် မည်သူ့ကို တိုက်ခိုက်ခဲ့သနည်း။',
+    question_my: 'ဒုတိယကမ္ဘာစစ် (World War II) မှာ အမေရိကန်က ဘယ်သူတွေကို တိုက်ခိုက်ခဲ့သလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [{ text_en: 'Japan, Germany, and Italy', text_my: 'ဂျပန်၊ ဂျာမနီနှင့် အီတလီ' }],
     answers: [
@@ -132,7 +146,7 @@ export const recentHistoryQuestions: Question[] = [
     id: 'HIST-R05',
     question_en: 'Before he was President, Eisenhower was a general. What war was he in?',
     question_my:
-      'သမ္မတမဖြစ်မီ၊ အိုက်စင်ဟောင်ဝါသည် ဗိုလ်ချုပ်တစ်ဦးဖြစ်ခဲ့သည်။ သူသည် မည်သည့်စစ်ပွဲတွင် ပါဝင်ခဲ့သနည်း။',
+      'သမ္မတ မဖြစ်ခင်မှာ အိုက်ဇင်ဟောဝါ (Eisenhower) က ဗိုလ်ချုပ်တစ်ဦးဖြစ်ခဲ့တယ်။ သူ ဘယ်စစ်ပွဲမှာ ပါဝင်ခဲ့သလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [{ text_en: 'World War II', text_my: 'ဒုတိယကမ္ဘာစစ်' }],
     answers: [
@@ -145,18 +159,18 @@ export const recentHistoryQuestions: Question[] = [
       brief_en:
         'Dwight D. Eisenhower was a five-star general who led the Allied forces in Europe during World War II, including the D-Day invasion of Normandy in 1944. He later served as the 34th President from 1953 to 1961.',
       brief_my:
-        'ဒွိုက် ဒီ အိုက်စင်ဟောင်ဝါသည် ဒုတိယကမ္ဘာစစ်အတွင်း ဥရောပတွင် မဟာမိတ်တပ်ဖွဲ့များကို ဦးဆောင်ခဲ့သော ကြယ်ငါးပွင့်တပ်ချုပ် ဖြစ်ခဲ့သည်။ ၁၉၄၄ ခုနှစ် D-Day နော်မန်ဒီကျူးကျော်မှုကို ဦးဆောင်ခဲ့ပြီး ၃၄ ကြိမ်မြောက် သမ္မတအဖြစ် တာဝန်ထမ်းဆောင်ခဲ့သည်။',
+        'ဒွိုက် ဒီ အိုက်ဇင်ဟောဝါ (Eisenhower)သည် ဒုတိယကမ္ဘာစစ်အတွင်း ဥရောပတွင် မဟာမိတ်တပ်ဖွဲ့များကို ဦးဆောင်ခဲ့သော ကြယ်ငါးပွင့်တပ်ချုပ် ဖြစ်ခဲ့သည်။ ၁၉၄၄ ခုနှစ် D-Day နော်မန်ဒီကျူးကျော်မှုကို ဦးဆောင်ခဲ့ပြီး ၃၄ ကြိမ်မြောက် သမ္မတအဖြစ် တာဝန်ထမ်းဆောင်ခဲ့သည်။',
       funFact_en:
         'Eisenhower created the Interstate Highway System, which is one of the largest public works projects in American history.',
       funFact_my:
-        'အိုက်စင်ဟောင်ဝါသည် အပြည်ပြည်ဆိုင်ရာ အဝေးပြေးလမ်းမကြီးစနစ်ကို ဖန်တီးခဲ့ပြီး အမေရိကန်သမိုင်းတွင် အကြီးမားဆုံး အများပြည်သူ လုပ်ငန်းစီမံကိန်းများထဲမှ တစ်ခု ဖြစ်သည်။',
+        'အိုက်ဇင်ဟောဝါ (Eisenhower)သည် အပြည်ပြည်ဆိုင်ရာ အဝေးပြေးလမ်းမကြီးစနစ်ကို ဖန်တီးခဲ့ပြီး အမေရိကန်သမိုင်းတွင် အကြီးမားဆုံး အများပြည်သူ လုပ်ငန်းစီမံကိန်းများထဲမှ တစ်ခု ဖြစ်သည်။',
       relatedQuestionIds: ['HIST-R03', 'HIST-R04'],
     },
   },
   {
     id: 'HIST-R06',
     question_en: 'During the Cold War, what was the main concern of the United States?',
-    question_my: 'စစ်အေးတိုက်ပွဲအတွင်း၊ အမေရိကန်ပြည်ထောင်စု၏ အဓိကစိုးရိမ်မှုကား အဘယ်နည်း။',
+    question_my: 'စစ်အေးကာလ (Cold War) အတွင်း အမေရိကန်ရဲ့ အဓိကစိုးရိမ်မှုက ဘာလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [{ text_en: 'Communism', text_my: 'ကွန်မြူနစ်ဝါဒ' }],
     answers: [
@@ -180,7 +194,7 @@ export const recentHistoryQuestions: Question[] = [
   {
     id: 'HIST-R07',
     question_en: 'What movement tried to end racial discrimination?',
-    question_my: 'မည်သည့်လှုပ်ရှားမှုက လူမျိုးရေးခွဲခြားမှုကို အဆုံးသတ်ရန် ကြိုးစားခဲ့သနည်း။',
+    question_my: 'ဘယ်လှုပ်ရှားမှုက လူမျိုးရေးခွဲခြားမှုကို အဆုံးသတ်ဖို့ ကြိုးစားခဲ့သလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [
       { text_en: 'civil rights (movement)', text_my: 'ပြည်သူ့အခွင့်အရေး (လှုပ်ရှားမှု)' },
@@ -222,7 +236,7 @@ export const recentHistoryQuestions: Question[] = [
   {
     id: 'HIST-R08',
     question_en: 'What did Martin Luther King, Jr. do?',
-    question_my: 'မာတင် လူသာ ကင်း၊ ဂျူနီယာက ဘာလုပ်ခဲ့သလဲ။',
+    question_my: 'မာတင်လူသာကင်းဂျူနီယာ (Martin Luther King Jr.) က ဘာလုပ်ခဲ့သလဲ။',
     category: 'Recent American History and Other Important Historical Information',
     studyAnswers: [
       {

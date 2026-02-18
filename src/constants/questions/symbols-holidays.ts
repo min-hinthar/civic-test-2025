@@ -4,13 +4,14 @@ import type { Question } from '@/types';
  * Civics: Symbols and Holidays
  *
  * ID Prefix: SYM-## (13 questions)
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-01',
     question_en: 'Name one of the two longest rivers in the United States.',
-    question_my: 'အမေရိကန်ပြည်ထောင်စုရှိ အရှည်ဆုံးမြစ်နှစ်စင်းထဲမှ တစ်စင်းကို အမည်ပေးပါ။',
+    question_my: 'အမေရိကန်မှာ အရှည်ဆုံးမြစ်နှစ်စင်းထဲက တစ်စင်းကို ပြောပါ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [
       { text_en: 'Missouri (River)', text_my: 'မစ်ဆူရီ (မြစ်)' },
@@ -52,7 +53,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-02',
     question_en: 'What ocean is on the West Coast of the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ အနောက်ဘက်ကမ်းရိုးတန်းတွင် မည်သည့်သမုဒ္ဒရာ ရှိသနည်း။',
+    question_my: 'အမေရိကန်ရဲ့ အနောက်ဘက်ကမ်းရိုးတန်းမှာ ဘယ်သမုဒ္ဒရာ ရှိသလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'Pacific (Ocean)', text_my: 'ပစိဖိတ် (သမုဒ္ဒရာ)' }],
     answers: [
@@ -92,7 +93,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-03',
     question_en: 'What ocean is on the East Coast of the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ အရှေ့ဘက်ကမ်းရိုးတန်းတွင် မည်သည့်သမုဒ္ဒရာ ရှိသနည်း။',
+    question_my: 'အမေရိကန်ရဲ့ အရှေ့ဘက်ကမ်းရိုးတန်းမှာ ဘယ်သမုဒ္ဒရာ ရှိသလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'Atlantic (Ocean)', text_my: 'အတ္တလန္တိတ် (သမုဒ္ဒရာ)' }],
     answers: [
@@ -235,7 +236,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-07',
     question_en: 'What is the capital of the United States?',
-    question_my: 'အမေရိကန်ပြည်ထောင်စု၏ မြို့တော်ကား အဘယ်နည်း။',
+    question_my: 'အမေရိကန်ပြည်ထောင်စုရဲ့ မြို့တော်က ဘယ်မြို့လဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'Washington, D.C.', text_my: 'ဝါရှင်တန်ဒီစီ' }],
     answers: [
@@ -271,7 +272,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-08',
     question_en: 'Where is the Statue of Liberty?',
-    question_my: 'လွတ်လပ်ရေးရုပ်ထုသည် ဘယ်မှာလဲ။',
+    question_my: 'လွတ်လပ်ရေးရုပ်ထု (Statue of Liberty) က ဘယ်မှာလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [
       { text_en: 'New York (Harbor)', text_my: 'နယူးယောက် (ဆိပ်ကမ်း)' },
@@ -408,7 +409,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-11',
     question_en: 'What is the name of the national anthem?',
-    question_my: 'နိုင်ငံတော်သီချင်း၏ အမည်ကား အဘယ်နည်း။',
+    question_my: 'နိုင်ငံတော်သီချင်း (national anthem) ရဲ့ အမည်က ဘာလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'The Star-Spangled Banner', text_my: 'ကြယ်စုံလွှင့်အလံ' }],
     answers: [
@@ -448,7 +449,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-12',
     question_en: 'When do we celebrate Independence Day?',
-    question_my: 'လွတ်လပ်ရေးနေ့ကို ဘယ်အချိန်မှာ ကျင်းပသလဲ။',
+    question_my: 'လွတ်လပ်ရေးနေ့ (Independence Day) ကို ဘယ်အချိန်မှာ ကျင်းပသလဲ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [{ text_en: 'July 4', text_my: 'ဇူလိုင် ၄' }],
     answers: [
@@ -472,7 +473,7 @@ export const symbolsHolidaysQuestions: Question[] = [
   {
     id: 'SYM-13',
     question_en: 'Name two national U.S. holidays.',
-    question_my: 'အမေရိကန်နိုင်ငံ၏ နိုင်ငံတော်အားလပ်ရက်နှစ်ခုကို အမည်ပေးပါ။',
+    question_my: 'အမေရိကန်ရဲ့ နိုင်ငံတော်အားလပ်ရက် နှစ်ခုကို ပြောပါ။',
     category: 'Civics: Symbols and Holidays',
     studyAnswers: [
       { text_en: "New Year's Day", text_my: 'နှစ်သစ်ကူးနေ့' },

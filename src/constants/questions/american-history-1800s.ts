@@ -4,6 +4,7 @@ import type { Question } from '@/types';
  * American History: 1800s
  *
  * ID Prefix: HIST-1## (7 questions)
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const history1800sQuestions: Question[] = [
@@ -72,7 +73,7 @@ export const history1800sQuestions: Question[] = [
   {
     id: 'HIST-103',
     question_en: 'Name the U.S. war between the North and the South.',
-    question_my: 'မြောက်ပိုင်းနှင့် တောင်ပိုင်းကြားရှိ အမေရိကန်စစ်ပွဲကို အမည်ပေးပါ။',
+    question_my: 'မြောက်ပိုင်းနဲ့ တောင်ပိုင်းကြားက အမေရိကန်စစ်ပွဲကို ဘယ်လိုခေါ်သလဲ။',
     category: 'American History: 1800s',
     studyAnswers: [
       { text_en: 'the Civil War', text_my: 'ပြည်တွင်းစစ်' },
@@ -103,7 +104,7 @@ export const history1800sQuestions: Question[] = [
   {
     id: 'HIST-104',
     question_en: 'Name one problem that led to the Civil War.',
-    question_my: 'ပြည်တွင်းစစ်သို့ ဦးတည်စေသော ပြဿနာတစ်ခုကို အမည်ပေးပါ။',
+    question_my: 'ပြည်တွင်းစစ် (Civil War) ဆီ ဦးတည်စေခဲ့တဲ့ ပြဿနာတစ်ခုကို ပြောပါ။',
     category: 'American History: 1800s',
     studyAnswers: [
       { text_en: 'slavery', text_my: 'ကျွန်စနစ်' },
@@ -131,7 +132,7 @@ export const history1800sQuestions: Question[] = [
   {
     id: 'HIST-105',
     question_en: 'What was one important thing that Abraham Lincoln did?',
-    question_my: 'အာဗြဟံ လင်ကွန်း လုပ်ခဲ့သော အရေးကြီးသည့်အရာတစ်ခုကား အဘယ်နည်း။',
+    question_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln) လုပ်ခဲ့တဲ့ အရေးကြီးတဲ့အရာတစ်ခုက ဘာလဲ။',
     category: 'American History: 1800s',
     studyAnswers: [
       {
@@ -173,7 +174,7 @@ export const history1800sQuestions: Question[] = [
       brief_en:
         "Abraham Lincoln freed the slaves through the Emancipation Proclamation, preserved the Union by winning the Civil War, and led the country through its most difficult period. He is widely considered one of America's greatest presidents.",
       brief_my:
-        'အာဗြဟံ လင်ကွန်းသည် လွတ်မြောက်ရေးကြေညာချက်ဖြင့် ကျွန်များကို လွတ်မြောက်စေခဲ့ပြီး ပြည်တွင်းစစ်ကို အနိုင်ရကာ ပြည်ထောင်စုကို ထိန်းသိမ်းခဲ့သည်။ အမေရိက၏ အကြီးမြတ်ဆုံးသမ္မတများထဲမှ တစ်ဦးအဖြစ် လူသိများသည်။',
+        'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)သည် လွတ်မြောက်ရေးကြေညာချက်ဖြင့် ကျွန်များကို လွတ်မြောက်စေခဲ့ပြီး ပြည်တွင်းစစ်ကို အနိုင်ရကာ ပြည်ထောင်စုကို ထိန်းသိမ်းခဲ့သည်။ အမေရိက၏ အကြီးမြတ်ဆုံးသမ္မတများထဲမှ တစ်ဦးအဖြစ် လူသိများသည်။',
       funFact_en:
         'Lincoln taught himself law by reading books — he never went to law school. He is on both the penny and the $5 bill.',
       funFact_my:
@@ -188,7 +189,7 @@ export const history1800sQuestions: Question[] = [
   {
     id: 'HIST-106',
     question_en: 'What did the Emancipation Proclamation do?',
-    question_my: 'လွတ်မြောက်ရေး ကြေညာချက်က ဘာလုပ်ခဲ့သလဲ။',
+    question_my: 'ကျွန်စနစ်ဖျက်သိမ်းကြေညာစာ (Emancipation Proclamation) က ဘာလုပ်ခဲ့သလဲ။',
     category: 'American History: 1800s',
     studyAnswers: [
       { text_en: 'freed the slaves', text_my: 'ကျွန်များကို လွတ်မြောက်စေခဲ့သည်' },
@@ -243,7 +244,7 @@ export const history1800sQuestions: Question[] = [
   {
     id: 'HIST-107',
     question_en: 'What did Susan B. Anthony do?',
-    question_my: 'ဆူဇန် ဘီ အန်သိုနီက ဘာလုပ်ခဲ့သလဲ။',
+    question_my: 'ဆူဆန် ဘီ အန်သနီ (Susan B. Anthony) က ဘာလုပ်ခဲ့သလဲ။',
     category: 'American History: 1800s',
     studyAnswers: [
       {
@@ -281,7 +282,7 @@ export const history1800sQuestions: Question[] = [
       brief_en:
         "Susan B. Anthony was a leader in the women's rights and civil rights movements. She fought tirelessly for women's right to vote, which was finally achieved with the 19th Amendment in 1920 — 14 years after her death.",
       brief_my:
-        'ဆူဇန် ဘီ အန်သိုနီသည် အမျိုးသမီးအခွင့်အရေးနှင့် ပြည်သူ့အခွင့်အရေး လှုပ်ရှားမှုများ၏ ခေါင်းဆောင် ဖြစ်ခဲ့သည်။ အမျိုးသမီးမဲပေးခွင့်အတွက် မနားမနေ တိုက်ပွဲဝင်ခဲ့ပြီး ၁၉၂၀ ခုနှစ် ၁၉ ကြိမ်မြောက် ပြင်ဆင်ချက်ဖြင့် အောင်မြင်ခဲ့သည်။',
+        'ဆူဆန် ဘီ အန်သနီ (Susan B. Anthony)သည် အမျိုးသမီးအခွင့်အရေးနှင့် ပြည်သူ့အခွင့်အရေး လှုပ်ရှားမှုများ၏ ခေါင်းဆောင် ဖြစ်ခဲ့သည်။ အမျိုးသမီးမဲပေးခွင့်အတွက် မနားမနေ တိုက်ပွဲဝင်ခဲ့ပြီး ၁၉၂၀ ခုနှစ် ၁၉ ကြိမ်မြောက် ပြင်ဆင်ချက်ဖြင့် အောင်မြင်ခဲ့သည်။',
       funFact_en:
         'In 1872, Anthony was arrested for voting illegally as a woman. She was fined $100 but refused to pay. She appears on the U.S. dollar coin.',
       funFact_my:

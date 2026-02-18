@@ -4,13 +4,14 @@ import type { Question } from '@/types';
  * American History: Colonial Period and Independence
  *
  * ID Prefix: HIST-C## (13 questions)
+ * @verified claude-initial-pass 2026-02-18 — pending 3-AI consensus
  */
 
 export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C01',
     question_en: 'What is one reason colonists came to America?',
-    question_my: 'ကိုလိုနိစ်များ အမေရိကသို့ လာရောက်ရသည့် အကြောင်းရင်းတစ်ခုကား အဘယ်နည်း။',
+    question_my: 'ကိုလိုနီသားတွေ အမေရိကကို လာရောက်ခဲ့တဲ့ အကြောင်းရင်းတစ်ခုက ဘာလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       { text_en: 'freedom', text_my: 'လွတ်လပ်မှု' },
@@ -47,7 +48,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C02',
     question_en: 'Who lived in America before the Europeans arrived?',
-    question_my: 'ဥရောပသားများ မရောက်လာမီ အမေရိကတွင် မည်သူ နေထိုင်ခဲ့သနည်း။',
+    question_my: 'ဥရောပသားတွေ မရောက်လာခင် အမေရိကမှာ ဘယ်သူတွေ နေထိုင်ခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       { text_en: 'American Indians', text_my: 'အမေရိကန် အင်ဒီးယန်းများ' },
@@ -74,7 +75,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C03',
     question_en: 'What group of people was taken to America and sold as slaves?',
-    question_my: 'မည်သည့်လူမျိုးအုပ်စုကို အမေရိကသို့ ခေါ်ဆောင်ပြီး ကျွန်အဖြစ် ရောင်းချခဲ့သနည်း။',
+    question_my: 'ဘယ်လူမျိုးအုပ်စုကို အမေရိကကို ခေါ်ဆောင်လာပြီး ကျွန်အဖြစ် ရောင်းချခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       { text_en: 'Africans', text_my: 'အာဖရိကန်များ' },
@@ -101,7 +102,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C04',
     question_en: 'Why did the colonists fight the British?',
-    question_my: 'ကိုလိုနိစ်များသည် ဗြိတိသျှတို့ကို အဘယ်ကြောင့် တိုက်ခိုက်ခဲ့သနည်း။',
+    question_my: 'ကိုလိုနီသားတွေက ဗြိတိသျှတို့ကို ဘာကြောင့် တိုက်ခိုက်ခဲ့တာလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       {
@@ -151,20 +152,38 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C05',
     question_en: 'Who wrote the Declaration of Independence?',
-    question_my: 'လွတ်လပ်ရေးကြေညာစာတမ်းကို မည်သူ ရေးသားခဲ့သနည်း။',
+    question_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) ကို ဘယ်သူ ရေးသားခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
-    studyAnswers: [{ text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင်' }],
+    studyAnswers: [
+      { text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)' },
+    ],
     answers: [
-      { text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင်', correct: true },
-      { text_en: 'George Washington', text_my: 'ဂျော့ခ်ျ ဝါရှင်တန်', correct: false },
-      { text_en: 'Abraham Lincoln', text_my: 'အာဗြဟံ လင်ကွန်း', correct: false },
-      { text_en: 'Benjamin Franklin', text_my: 'ဘင်ဂျမင် ဖရန်ကလင်', correct: false },
+      {
+        text_en: 'Thomas Jefferson',
+        text_my: 'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)',
+        correct: true,
+      },
+      {
+        text_en: 'George Washington',
+        text_my: 'ဂျော့ချ် ဝါရှင်တန် (George Washington)',
+        correct: false,
+      },
+      {
+        text_en: 'Abraham Lincoln',
+        text_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)',
+        correct: false,
+      },
+      {
+        text_en: 'Benjamin Franklin',
+        text_my: 'ဘင်ဂျမင် ဖရန်ကလင် (Benjamin Franklin)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'Thomas Jefferson wrote the Declaration of Independence in 1776. At just 33 years old, he was chosen by the Continental Congress to draft this historic document declaring America free from British rule.',
       brief_my:
-        'သောမတ်စ် ဂျက်ဖာဆင်သည် ၁၇၇၆ ခုနှစ်တွင် လွတ်လပ်ရေးကြေညာစာတမ်းကို ရေးသားခဲ့သည်။ အသက် ၃၃ နှစ်အရွယ်တွင် တိုက်ကြီးကွန်ဂရက်က ဤသမိုင်းဝင်စာတမ်းကို ရေးသားရန် ရွေးချယ်ခဲ့သည်။',
+        'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)သည် ၁၇၇၆ ခုနှစ်တွင် လွတ်လပ်ရေးကြေညာစာတမ်းကို ရေးသားခဲ့သည်။ အသက် ၃၃ နှစ်အရွယ်တွင် တိုက်ကြီးကွန်ဂရက်က ဤသမိုင်းဝင်စာတမ်းကို ရေးသားရန် ရွေးချယ်ခဲ့သည်။',
       funFact_en:
         'Jefferson wrote the Declaration in just 17 days while staying in a rented room in Philadelphia. He later became the 3rd President of the United States.',
       funFact_my:
@@ -172,14 +191,14 @@ export const colonialHistoryQuestions: Question[] = [
       commonMistake_en:
         'Benjamin Franklin helped edit it, and George Washington led the army, but Jefferson was the primary author of the Declaration.',
       commonMistake_my:
-        'ဘင်ဂျမင် ဖရန်ကလင်က ပြင်ဆင်ကူညီခဲ့ပြီး ဂျော့ခ်ျ ဝါရှင်တန်က စစ်တပ်ကို ဦးဆောင်ခဲ့သော်လည်း ဂျက်ဖာဆင်သည် ကြေညာစာတမ်း၏ အဓိကစာရေးဆရာ ဖြစ်သည်။',
+        'ဘင်ဂျမင် ဖရန်ကလင် (Benjamin Franklin)က ပြင်ဆင်ကူညီခဲ့ပြီး ဂျော့ချ် ဝါရှင်တန် (George Washington)က စစ်တပ်ကို ဦးဆောင်ခဲ့သော်လည်း ဂျက်ဖာဆင်သည် ကြေညာစာတမ်း၏ အဓိကစာရေးဆရာ ဖြစ်သည်။',
       relatedQuestionIds: ['HIST-C06', 'HIST-C12', 'HIST-C13'],
     },
   },
   {
     id: 'HIST-C06',
     question_en: 'When was the Declaration of Independence adopted?',
-    question_my: 'လွတ်လပ်ရေးကြေညာစာတမ်းကို ဘယ်အချိန်မှာ အတည်ပြုခဲ့သလဲ။',
+    question_my: 'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) ကို ဘယ်အချိန်မှာ အတည်ပြုခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [{ text_en: 'July 4, 1776', text_my: 'ဇူလိုင် ၄၊ ၁၇၇၆' }],
     answers: [
@@ -259,7 +278,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C08',
     question_en: 'What happened at the Constitutional Convention?',
-    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေညီလာခံတွင် ဘာဖြစ်ခဲ့သလဲ။',
+    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ညီလာခံမှာ ဘာဖြစ်ခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       {
@@ -289,7 +308,7 @@ export const colonialHistoryQuestions: Question[] = [
       },
       {
         text_en: 'George Washington was elected President.',
-        text_my: 'ဂျော့ခ်ျ ဝါရှင်တန်ကို သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခဲ့သည်။',
+        text_my: 'ဂျော့ချ် ဝါရှင်တန် (George Washington)ကို သမ္မတအဖြစ် ရွေးကောက်တင်မြှောက်ခဲ့သည်။',
         correct: false,
       },
     ],
@@ -308,7 +327,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C09',
     question_en: 'When was the Constitution written?',
-    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေကို ဘယ်အချိန်မှာ ရေးသားခဲ့သလဲ။',
+    question_my: 'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ကို ဘယ်အချိန်မှာ ရေးသားခဲ့သလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [{ text_en: '1787', text_my: '၁၇၈၇' }],
     answers: [
@@ -343,9 +362,21 @@ export const colonialHistoryQuestions: Question[] = [
     ],
     answers: [
       { text_en: '(Alexander) Hamilton', text_my: '(အလက်ဇန္ဒား) ဟာမီလ်တန်', correct: true },
-      { text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင်', correct: false },
-      { text_en: 'George Washington', text_my: 'ဂျော့ခ်ျ ဝါရှင်တန်', correct: false },
-      { text_en: 'Abraham Lincoln', text_my: 'အာဗြဟံ လင်ကွန်း', correct: false },
+      {
+        text_en: 'Thomas Jefferson',
+        text_my: 'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)',
+        correct: false,
+      },
+      {
+        text_en: 'George Washington',
+        text_my: 'ဂျော့ချ် ဝါရှင်တန် (George Washington)',
+        correct: false,
+      },
+      {
+        text_en: 'Abraham Lincoln',
+        text_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
@@ -364,7 +395,7 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C11',
     question_en: 'What is one thing Benjamin Franklin is famous for?',
-    question_my: 'ဘင်ဂျမင် ဖရန်ကလင်သည် မည်သည့်အရာတစ်ခုကြောင့် ကျော်ကြားသနည်း။',
+    question_my: 'ဘင်ဂျမင် ဖရန်ကလင် (Benjamin Franklin) က ဘာတစ်ခုကြောင့် ကျော်ကြားသလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [
       { text_en: 'U.S. diplomat', text_my: 'အမေရိကန် သံတမန်' },
@@ -407,7 +438,7 @@ export const colonialHistoryQuestions: Question[] = [
       brief_en:
         'Benjamin Franklin was a true polymath — he served as a U.S. diplomat, was the oldest delegate at the Constitutional Convention, became the first Postmaster General, started free libraries, and invented bifocal glasses and the lightning rod.',
       brief_my:
-        'ဘင်ဂျမင် ဖရန်ကလင်သည် အမေရိကန်သံတမန်အဖြစ် ဆောင်ရွက်ခဲ့ပြီး ဖွဲ့စည်းပုံညီလာခံ၏ အသက်အကြီးဆုံးကိုယ်စားလှယ်ဖြစ်ကာ ပထမဆုံးစာတိုက်ဦးစီးချုပ်ဖြစ်ခဲ့ပြီး အခမဲ့စာကြည့်တိုက်များကို စတင်ခဲ့သည်။',
+        'ဘင်ဂျမင် ဖရန်ကလင် (Benjamin Franklin)သည် အမေရိကန်သံတမန်အဖြစ် ဆောင်ရွက်ခဲ့ပြီး ဖွဲ့စည်းပုံညီလာခံ၏ အသက်အကြီးဆုံးကိုယ်စားလှယ်ဖြစ်ကာ ပထမဆုံးစာတိုက်ဦးစီးချုပ်ဖြစ်ခဲ့ပြီး အခမဲ့စာကြည့်တိုက်များကို စတင်ခဲ့သည်။',
       funFact_en:
         'Franklin is on the $100 bill despite never being president! He was 81 at the Constitutional Convention — by far the oldest delegate.',
       funFact_my:
@@ -418,20 +449,32 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C12',
     question_en: 'Who is the "Father of Our Country"?',
-    question_my: '"ကျွန်ုပ်တို့နိုင်ငံ၏ ဖခင်" သည် မည်သူနည်း။',
+    question_my: '"ငါတို့နိုင်ငံရဲ့ ဖခင်" (Father of Our Country) ဆိုတာ ဘယ်သူလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [{ text_en: '(George) Washington', text_my: '(ဂျော့ခ်ျ) ဝါရှင်တန်' }],
     answers: [
       { text_en: '(George) Washington', text_my: '(ဂျော့ခ်ျ) ဝါရှင်တန်', correct: true },
-      { text_en: 'Abraham Lincoln', text_my: 'အာဗြဟံ လင်ကွန်း', correct: false },
-      { text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင်', correct: false },
-      { text_en: 'Benjamin Franklin', text_my: 'ဘင်ဂျမင် ဖရန်ကလင်', correct: false },
+      {
+        text_en: 'Abraham Lincoln',
+        text_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)',
+        correct: false,
+      },
+      {
+        text_en: 'Thomas Jefferson',
+        text_my: 'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)',
+        correct: false,
+      },
+      {
+        text_en: 'Benjamin Franklin',
+        text_my: 'ဘင်ဂျမင် ဖရန်ကလင် (Benjamin Franklin)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'George Washington is called the "Father of Our Country" because he led the Continental Army to victory in the Revolutionary War and then served as the first President, setting many precedents for the new nation.',
       brief_my:
-        'ဂျော့ခ်ျ ဝါရှင်တန်ကို "ကျွန်ုပ်တို့နိုင်ငံ၏ ဖခင်" ဟုခေါ်သည် — တော်လှန်ရေးစစ်ပွဲတွင် တိုက်ကြီးစစ်တပ်ကို အောင်ပွဲဆင်နွှဲစေပြီး ပထမဆုံးသမ္မတအဖြစ် ဆောင်ရွက်ကာ နိုင်ငံသစ်အတွက် နမူနာများစွာ ချမှတ်ခဲ့သည်။',
+        'ဂျော့ချ် ဝါရှင်တန် (George Washington)ကို "ကျွန်ုပ်တို့နိုင်ငံ၏ ဖခင်" ဟုခေါ်သည် — တော်လှန်ရေးစစ်ပွဲတွင် တိုက်ကြီးစစ်တပ်ကို အောင်ပွဲဆင်နွှဲစေပြီး ပထမဆုံးသမ္မတအဖြစ် ဆောင်ရွက်ကာ နိုင်ငံသစ်အတွက် နမူနာများစွာ ချမှတ်ခဲ့သည်။',
       funFact_en:
         'Washington voluntarily stepped down after two terms as president, setting the tradition of peaceful transfer of power that continues today.',
       funFact_my:
@@ -442,20 +485,28 @@ export const colonialHistoryQuestions: Question[] = [
   {
     id: 'HIST-C13',
     question_en: 'Who was the first President?',
-    question_my: 'ပထမဆုံးသမ္မတသည် မည်သူနည်း။',
+    question_my: 'ပထမဆုံး သမ္မတ (President) က ဘယ်သူလဲ။',
     category: 'American History: Colonial Period and Independence',
     studyAnswers: [{ text_en: '(George) Washington', text_my: '(ဂျော့ခ်ျ) ဝါရှင်တန်' }],
     answers: [
       { text_en: '(George) Washington', text_my: '(ဂျော့ခ်ျ) ဝါရှင်တန်', correct: true },
       { text_en: 'John Adams', text_my: 'ဂျွန် အဒမ်', correct: false },
-      { text_en: 'Thomas Jefferson', text_my: 'သောမတ်စ် ဂျက်ဖာဆင်', correct: false },
-      { text_en: 'Abraham Lincoln', text_my: 'အာဗြဟံ လင်ကွန်း', correct: false },
+      {
+        text_en: 'Thomas Jefferson',
+        text_my: 'သောမတ်စ် ဂျက်ဖာဆင် (Thomas Jefferson)',
+        correct: false,
+      },
+      {
+        text_en: 'Abraham Lincoln',
+        text_my: 'အေဘရာဟမ် လင်ကွန်း (Abraham Lincoln)',
+        correct: false,
+      },
     ],
     explanation: {
       brief_en:
         'George Washington was the first President of the United States, serving from 1789 to 1797. He was unanimously elected by the Electoral College — the only president in history to achieve this.',
       brief_my:
-        'ဂျော့ခ်ျ ဝါရှင်တန်သည် ၁၇၈၉ မှ ၁၇၉၇ ခုနှစ်အထိ တာဝန်ထမ်းဆောင်ခဲ့သော အမေရိကန်ပြည်ထောင်စု၏ ပထမဆုံးသမ္မတ ဖြစ်သည်။ ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့က တညီတညွတ်တည်း ရွေးချယ်ခဲ့သည်။',
+        'ဂျော့ချ် ဝါရှင်တန် (George Washington)သည် ၁၇၈၉ မှ ၁၇၉၇ ခုနှစ်အထိ တာဝန်ထမ်းဆောင်ခဲ့သော အမေရိကန်ပြည်ထောင်စု၏ ပထမဆုံးသမ္မတ ဖြစ်သည်။ ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့က တညီတညွတ်တည်း ရွေးချယ်ခဲ့သည်။',
       funFact_en:
         "Washington is the only president to have a state named after him. The nation's capital, Washington D.C., is also named in his honor.",
       funFact_my:
