@@ -43,7 +43,7 @@ const OpEdPage = () => {
             </p>
             <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
               <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
-                English · မြန်မာ
+                English · <span className="font-myanmar">မြန်မာ</span>
               </span>
               <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
                 5 min read
@@ -137,8 +137,12 @@ const OpEdPage = () => {
               },
               {
                 title: 'Community guardrails',
-                description:
-                  'Ways churches, mosques, and temples can post accurate renewal steps in English and မြန်မာ.',
+                description: (
+                  <>
+                    Ways churches, mosques, and temples can post accurate renewal steps in English
+                    and <span className="font-myanmar">မြန်မာ</span>.
+                  </>
+                ),
                 icon: Shield,
               },
             ].map(tile => (
@@ -181,7 +185,8 @@ const OpEdPage = () => {
             <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-destructive/10 via-destructive/10 to-destructive/5 p-4 shadow-inner">
               <h3 className="text-lg font-semibold text-foreground">Host a bilingual teach-in</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Use the talking points to hold community sessions in English and မြန်မာ.
+                Use the talking points to hold community sessions in English and{' '}
+                <span className="font-myanmar">မြန်မာ</span>.
               </p>
             </div>
             <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-primary/10 to-primary/5 p-4 shadow-inner">
