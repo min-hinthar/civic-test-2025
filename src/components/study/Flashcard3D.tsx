@@ -16,7 +16,7 @@ import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
  * Lower damping (18) compared to standard SPRING_BOUNCY (15) gives
  * a visible settle at the target while stiffness 250 keeps it snappy.
  */
-const FLIP_SPRING = { type: 'spring' as const, stiffness: 250, damping: 18, mass: 0.8 };
+const FLIP_SPRING = { type: 'spring' as const, stiffness: 250, damping: 22, mass: 0.8 };
 
 interface Flashcard3DProps {
   /** Question ID for Burmese audio lookup */
@@ -219,14 +219,14 @@ export function Flashcard3D({
     subCategoryStripBg ?? (categoryColor ? CATEGORY_STRIP_COLORS[categoryColor] : null);
 
   // Common card styles -- glass-light + prismatic-border for frosted glass flashcard
+  // backfaceVisibility applied via inline style only (highest specificity for 3D transforms)
   const cardFaceClasses = clsx(
     'absolute inset-0 w-full h-full',
     'rounded-2xl',
     'glass-light prismatic-border',
     'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
     'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
-    'flex flex-col overflow-hidden',
-    'backface-hidden' // CSS for hiding back face
+    'flex flex-col overflow-hidden'
   );
 
   // Category color header strip
@@ -253,7 +253,7 @@ export function Flashcard3D({
         'perspective-1000', // Enable 3D space
         className
       )}
-      style={{ perspective: '1000px' }}
+      style={{ perspective: '1000px', isolation: 'isolate' }}
       onClick={handleFlip}
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -263,7 +263,11 @@ export function Flashcard3D({
     >
       <motion.div
         className="relative w-full h-full"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
+          transformOrigin: 'center center',
+        }}
         animate={{
           rotateY: isFlipped ? 180 : 0,
         }}
