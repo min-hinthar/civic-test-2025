@@ -184,12 +184,19 @@ Plans:
   3. User can extend the test timer by 50% via a clearly visible option (WCAG 2.2.1 timing adjustable)
   4. Reduced motion preference triggers alternative fade animations instead of disabling all animation
   5. Web Vitals (LCP, INP, CLS) are captured and reported to Sentry for real-user monitoring
-**Plans**: TBD
+**Plans**: 10 plans
 
 Plans:
-- [ ] 24-01: TBD
-- [ ] 24-02: TBD
-- [ ] 24-03: TBD
+- [ ] 24-01-PLAN.md -- A11Y tooling: eslint-plugin-jsx-a11y + vitest-axe setup + initial a11y tests
+- [ ] 24-02-PLAN.md -- Screen reader: FeedbackPanel announcements, toast roles, progress bar labels, language toggle
+- [ ] 24-03-PLAN.md -- Focus management, celebrations announcements, high contrast mode, skip-to-content
+- [ ] 24-04-PLAN.md -- Reduced motion alternatives: flashcard crossfade, sort quick-slide, static celebrations
+- [ ] 24-05-PLAN.md -- Per-question timer hook + PerQuestionTimer component + TimerExtensionToast
+- [ ] 24-06-PLAN.md -- Timer integration: TestPage + PracticeSession + PreTestScreen toggle
+- [ ] 24-07-PLAN.md -- Web Vitals via Sentry, bundle analyzer, font optimization, SW caching audit
+- [ ] 24-08-PLAN.md -- Flashcard3D bug fixes: backfaceVisibility, flickering, deck transparency, layout shift
+- [ ] 24-09-PLAN.md -- SwipeableCard bug fixes: gesture threshold, animation freeze, overlay, auto-read, speech button
+- [ ] 24-10-PLAN.md -- Final build verification + visual checkpoint
 
 ### Phase 25: Burmese Translation Audit
 **Goal**: Every Burmese translation in the app reads naturally to a native speaker with consistent terminology
