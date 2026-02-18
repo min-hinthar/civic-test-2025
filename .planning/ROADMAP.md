@@ -164,15 +164,15 @@ Plans:
 **Plans**: 9 plans
 
 Plans:
-- [ ] 23-01-PLAN.md -- Sort mode types + state machine reducer
-- [ ] 23-02-PLAN.md -- Sort sound effects + SortSnapshot session type
-- [ ] 23-03-PLAN.md -- Sort reducer unit tests (TDD)
-- [ ] 23-04-PLAN.md -- SwipeableCard + SwipeableStack gesture components
-- [ ] 23-05-PLAN.md -- SortProgress, KnowDontKnowButtons, SortCountdown UI
-- [ ] 23-06-PLAN.md -- SortModeContainer orchestrator + StudyGuidePage integration
-- [ ] 23-07-PLAN.md -- RoundSummary + MissedCardsList + SRSBatchAdd
-- [ ] 23-08-PLAN.md -- Session persistence + resume prompt for sort mode
-- [ ] 23-09-PLAN.md -- Full integration, polish, and visual verification
+- [x] 23-01-PLAN.md -- Sort mode types + state machine reducer
+- [x] 23-02-PLAN.md -- Sort sound effects + SortSnapshot session type
+- [x] 23-03-PLAN.md -- Sort reducer unit tests (TDD)
+- [x] 23-04-PLAN.md -- SwipeableCard + SwipeableStack gesture components
+- [x] 23-05-PLAN.md -- SortProgress, KnowDontKnowButtons, SortCountdown UI
+- [x] 23-06-PLAN.md -- SortModeContainer orchestrator + StudyGuidePage integration
+- [x] 23-07-PLAN.md -- RoundSummary + MissedCardsList + SRSBatchAdd
+- [x] 23-08-PLAN.md -- Session persistence + resume prompt for sort mode
+- [x] 23-09-PLAN.md -- Full integration, polish, and visual verification
 
 ### Phase 24: Accessibility & Performance
 **Goal**: The app meets WCAG 2.2 accessibility standards and reports performance metrics for ongoing monitoring
@@ -187,16 +187,16 @@ Plans:
 **Plans**: 10 plans
 
 Plans:
-- [ ] 24-01-PLAN.md -- A11Y tooling: eslint-plugin-jsx-a11y + vitest-axe setup + initial a11y tests
-- [ ] 24-02-PLAN.md -- Screen reader: FeedbackPanel announcements, toast roles, progress bar labels, language toggle
-- [ ] 24-03-PLAN.md -- Focus management, celebrations announcements, high contrast mode, skip-to-content
-- [ ] 24-04-PLAN.md -- Reduced motion alternatives: flashcard crossfade, sort quick-slide, static celebrations
-- [ ] 24-05-PLAN.md -- Per-question timer hook + PerQuestionTimer component + TimerExtensionToast
-- [ ] 24-06-PLAN.md -- Timer integration: TestPage + PracticeSession + PreTestScreen toggle
-- [ ] 24-07-PLAN.md -- Web Vitals via Sentry, bundle analyzer, font optimization, SW caching audit
-- [ ] 24-08-PLAN.md -- Flashcard3D bug fixes: backfaceVisibility, flickering, deck transparency, layout shift
-- [ ] 24-09-PLAN.md -- SwipeableCard bug fixes: gesture threshold, animation freeze, overlay, auto-read, speech button
-- [ ] 24-10-PLAN.md -- Final build verification + visual checkpoint
+- [x] 24-01-PLAN.md -- A11Y tooling: eslint-plugin-jsx-a11y + vitest-axe setup + initial a11y tests
+- [x] 24-02-PLAN.md -- Screen reader: FeedbackPanel announcements, toast roles, progress bar labels, language toggle
+- [x] 24-03-PLAN.md -- Focus management, celebrations announcements, high contrast mode, skip-to-content
+- [x] 24-04-PLAN.md -- Reduced motion alternatives: flashcard crossfade, sort quick-slide, static celebrations
+- [x] 24-05-PLAN.md -- Per-question timer hook + PerQuestionTimer component + TimerExtensionToast
+- [x] 24-06-PLAN.md -- Timer integration: TestPage + PracticeSession + PreTestScreen toggle
+- [x] 24-07-PLAN.md -- Web Vitals via Sentry, bundle analyzer, font optimization, SW caching audit
+- [x] 24-08-PLAN.md -- Flashcard3D bug fixes: backfaceVisibility, flickering, deck transparency, layout shift
+- [x] 24-09-PLAN.md -- SwipeableCard bug fixes: gesture threshold, animation freeze, overlay, auto-read, speech button
+- [x] 24-10-PLAN.md -- Final build verification + visual checkpoint
 
 ### Phase 25: Burmese Translation Audit
 **Goal**: Every Burmese translation in the app reads naturally to a native speaker with consistent terminology
@@ -227,15 +227,15 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 20. Session Persistence | v2.1 | 6/6 | Complete | 2026-02-15 |
 | 21. Test & Practice UX | v2.1 | 12/12 | Complete | 2026-02-15 |
 | 22. TTS Quality | v2.1 | 9/9 | Complete | 2026-02-15 |
-| 23. Flashcard Sort Mode | v2.1 | 0/TBD | Not started | - |
-| 24. Accessibility & Perf | v2.1 | 0/TBD | Not started | - |
+| 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
+| 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | TBD | 27/51 | In progress |
+| v2.1 | 8 | TBD | 38/51 | In progress |
 
 ---
 
