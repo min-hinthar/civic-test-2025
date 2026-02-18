@@ -112,7 +112,7 @@ export function SessionCountdown({ onComplete, subtitle }: SessionCountdownProps
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 backdrop-blur-md">
       {/* Countdown ring + number area */}
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center h-48 sm:h-56">
         {/* SVG circular progress ring */}
         {!shouldReduceMotion && !isGo && (
           <svg

@@ -977,7 +977,7 @@ const TestPage = () => {
       </div>
 
       {/* Feedback panel -- slides up from bottom (TPUX-02) */}
-      <div className="fixed inset-x-0 bottom-0 z-40">
+      <div className="fixed inset-x-0 bottom-0 z-50">
         <FeedbackPanel
           isCorrect={quizState.isCorrect ?? false}
           show={quizState.phase === 'feedback'}

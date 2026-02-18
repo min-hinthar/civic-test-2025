@@ -84,10 +84,8 @@ export function ResumePromptModal({
 }: ResumePromptModalProps) {
   const { showBurmese } = useLanguage();
 
-  // Selected session ID (auto-selected when single session)
-  const [selectedId, setSelectedId] = useState<string | null>(() =>
-    sessions.length === 1 ? sessions[0].id : null
-  );
+  // User-selected session ID (only needed for multi-session picker)
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Inline confirmation state
   const [confirmingFresh, setConfirmingFresh] = useState(false);
@@ -95,8 +93,11 @@ export function ResumePromptModal({
   // Loading state for resume
   const [resuming, setResuming] = useState(false);
 
-  const selectedSession = sessions.find(s => s.id === selectedId) ?? null;
+  // Derive effective selection: auto-select when single session, otherwise use user pick.
+  // This avoids the stale-initializer bug when sessions load async from IndexedDB.
   const hasMultiple = sessions.length > 1;
+  const effectiveId = hasMultiple ? selectedId : (sessions[0]?.id ?? null);
+  const selectedSession = sessions.find(s => s.id === effectiveId) ?? null;
 
   // ---------------------------------------------------------------------------
   // Handlers
@@ -162,14 +163,14 @@ export function ResumePromptModal({
             <ResumeSessionCard
               key={session.id}
               session={session}
-              isSelected={session.id === selectedId}
+              isSelected={session.id === effectiveId}
               onSelect={hasMultiple ? () => setSelectedId(session.id) : undefined}
             />
           ))}
         </div>
 
         {/* Selection prompt for multiple sessions */}
-        {hasMultiple && !selectedId && (
+        {hasMultiple && !effectiveId && (
           <p className="mt-2 text-center text-xs text-muted-foreground">
             {showBurmese ? TEXT.selectSession.my : TEXT.selectSession.en}
           </p>
