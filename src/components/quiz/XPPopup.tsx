@@ -44,19 +44,26 @@ export function XPPopup({ points, show }: XPPopupProps) {
   if (points <= 0) return null;
 
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          key={`xp-${points}-${animKey}`}
-          initial={shouldReduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-          animate={shouldReduceMotion ? { opacity: 0 } : { y: -40, opacity: 0 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="pointer-events-none text-sm font-bold text-amber-500 dark:text-amber-400"
-          aria-hidden="true"
-        >
-          +{points} XP
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <>
+      {/* Persistent sr-only live region -- always in DOM for reliable announcements */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {show ? `+${points} XP earned` : ''}
+      </div>
+
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            key={`xp-${points}-${animKey}`}
+            initial={shouldReduceMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+            animate={shouldReduceMotion ? { opacity: 0 } : { y: -40, opacity: 0 }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+            className="pointer-events-none text-sm font-bold text-amber-500 dark:text-amber-400"
+            aria-hidden="true"
+          >
+            +{points} XP
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

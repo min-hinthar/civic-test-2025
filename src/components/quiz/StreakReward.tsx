@@ -98,42 +98,46 @@ export function StreakReward({ count, show, showBurmese }: StreakRewardProps) {
   const tier = getBadgeTier(count);
 
   return (
-    <AnimatePresence>
-      {shouldShow && (
-        <motion.div
-          key={`streak-${count}`}
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.5, y: 10 }}
-          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: tier.scale, y: 0 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -20 }}
-          transition={shouldReduceMotion ? { duration: 0.2 } : SPRING_BOUNCY}
-          className="flex justify-center pointer-events-none"
-          // Auto-remove handled by parent via show prop timing,
-          // but this sets the display duration expectation
-          aria-live="polite"
-          role="status"
-        >
-          <div
-            className={clsx(
-              'inline-flex items-center gap-2 rounded-full px-4 py-2',
-              'font-bold shadow-lg',
-              tier.colorClass
-            )}
+    <>
+      {/* Persistent sr-only live region -- always in DOM for reliable announcements */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {shouldShow ? `${count} correct in a row!` : ''}
+      </div>
+
+      <AnimatePresence>
+        {shouldShow && (
+          <motion.div
+            key={`streak-${count}`}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.5, y: 10 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: tier.scale, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -20 }}
+            transition={shouldReduceMotion ? { duration: 0.2 } : SPRING_BOUNCY}
+            className="flex justify-center pointer-events-none"
+            aria-hidden="true"
           >
-            <span aria-hidden="true" className="text-lg">
-              {tier.emoji}
-            </span>
-            <span className="text-sm">
-              {count} {strings.quiz.streakInRow.en}
-              {showBurmese && (
-                <span className="ml-1 font-myanmar text-xs font-normal">
-                  {count} {strings.quiz.streakInRow.my}
-                </span>
+            <div
+              className={clsx(
+                'inline-flex items-center gap-2 rounded-full px-4 py-2',
+                'font-bold shadow-lg',
+                tier.colorClass
               )}
-            </span>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            >
+              <span aria-hidden="true" className="text-lg">
+                {tier.emoji}
+              </span>
+              <span className="text-sm">
+                {count} {strings.quiz.streakInRow.en}
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar text-xs font-normal">
+                    {count} {strings.quiz.streakInRow.my}
+                  </span>
+                )}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
