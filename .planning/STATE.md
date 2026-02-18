@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 25 of 25 (Burmese Translation Audit)
-Plan: 6 of 10 in current phase
+Plan: 7 of 10 in current phase
 Status: In progress
-Last activity: 2026-02-18 -- Completed 25-06-PLAN.md (Test/Session/PWA Burmese Translations)
+Last activity: 2026-02-18 -- Completed 25-07-PLAN.md (Social, SRS & Sort Inline Burmese)
 
-Progress: [######....] 60% (6/10 plans complete)
+Progress: [########..] 80% (8/10 plans complete)
 
 ## Completed Milestones
 
@@ -64,6 +64,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Formal ပါသည် endings replaced with casual ပါတယ် in PWA/session components
 - Transliterated loanwords (စင့်ခ်) replaced with natural Burmese (ချိန်ကိုက်)
 - WhatsNew State Personalization title simplified: ပြည်နယ်ပုဂ္ဂိုလ်ရေးသတ်မှတ်ခြင်း -> ပြည်နယ်အလိုက် ပြင်ဆင်ခြင်း
+- Review terminology standardized: 'ပြန်လှည့်' (turn back) replaced with 'ပြန်လည်သုံးသပ်' (review) across SRS components
+- SRS context terms fixed: 'စာမေးပွဲ' (test/exam) replaced with 'ပြန်လည်သုံးသပ်' (review) in SRSWidget
+- Leaderboard term standardized: 'ဥူးဆောင်ဘုတ်' replaced with glossary 'အဆင့်ဇယား' across social components
+- Points term standardized: 'ရမှတ်' replaced with glossary 'အမှတ်' across leaderboard components
+- Node.js scripts needed for Myanmar Unicode text replacement (Edit tool has encoding issues with Myanmar combining characters)
 
 **Phase 24 decisions:**
 - jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
@@ -322,11 +327,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 06 complete (Test/Session/PWA Burmese Translations)
-Next step: Phase 25 Plans 05, 07 summaries pending; then Plans 09, 10
-Resume file: .planning/phases/25-burmese-translation-audit/25-06-SUMMARY.md
+Stopped at: Phase 25 Plan 07 complete (Social, SRS & Sort Inline Burmese)
+Next step: Phase 25 Plans 09, 10 remaining (plan 05 summary pending)
+Resume file: .planning/phases/25-burmese-translation-audit/25-07-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 06 complete)*
+*Last updated: 2026-02-18 (Phase 25 Plan 07 complete)*
