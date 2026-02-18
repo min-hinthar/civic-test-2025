@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.2 Flashcard Sort Mode -- Phase 23 code complete, pending visual verification
+**Current focus:** v2.3 Accessibility & Performance -- Phase 24 in progress
 
 ## Current Position
 
-Phase: 23 of 25 (Flashcard Sort Mode)
-Plan: 09 of 9 in current phase
-Status: Code complete — awaiting human visual checkpoint (Task 2 of 23-09)
-Last activity: 2026-02-17 -- All 9 plans executed, full integration wired
+Phase: 24 of 25 (Accessibility & Performance)
+Plan: 03 of 10 in current phase
+Status: In progress (plans 02, 03 complete)
+Last activity: 2026-02-18 -- Completed 24-03-PLAN.md (celebrations a11y, high contrast, skip link, focus management)
 
-Progress: [#########] 100% (9/9 plans code complete)
+Progress: [##........] 20% (2/10 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,15 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 24 decisions:**
+- sr-only assertive region placed outside animated panel div to avoid animation delays affecting screen reader announcements
+- Mock test verdict uses simpler text (no explanation) for USCIS simulation fidelity
+- Segment container changed from role="progressbar" to role="list" for individual segment accessibility
+- Segment status labels capitalized for screen reader clarity (Correct not correct)
+- FlagToggle sr-only announcement uses aria-live="polite" (not assertive) since user initiated
+- Toast container uses aria-live="polite" while individual toasts use conditional roles (alert vs status)
+- Removed aria-atomic from toast container (each toast is a separate announcement)
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -253,11 +262,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-17
-Stopped at: All 9 plans code complete (23-01 through 23-09)
-Next step: Human visual verification checkpoint (Task 2 of 23-09) then Phase 24
+Last session: 2026-02-18
+Stopped at: Phase 24 plan 02 complete
+Next step: Continue Phase 24 plans (24-01, 24-04 through 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-17 (Phase 23 all plans complete -- awaiting visual verification)*
+*Last updated: 2026-02-18 (Phase 24 plan 02 complete -- screen reader announcements)*
