@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 24 of 25 (Accessibility & Performance)
-Plan: 04 of 10 in current phase
-Status: In progress (plans 02, 03, 04, 07, 08 complete)
-Last activity: 2026-02-18 -- Completed 24-04-PLAN.md (reduced motion alternatives)
+Plan: 09 of 10 in current phase
+Status: In progress (plans 01, 02, 03, 04, 07, 08, 09 complete)
+Last activity: 2026-02-18 -- Completed 24-01-PLAN.md (a11y linting and testing infrastructure)
 
-Progress: [#####.....] 50% (5/10 plans complete)
+Progress: [#######...] 70% (7/10 plans complete)
 
 ## Completed Milestones
 
@@ -39,6 +39,9 @@ See `.planning/MILESTONES.md` for details.
 All decisions archived in PROJECT.md Key Decisions table.
 
 **Phase 24 decisions:**
+- jsx-a11y/no-autofocus disabled (project intentionally uses autoFocus for modals and UX flows)
+- Interactive pattern jsx-a11y rules set to warn (components manage focus programmatically via useRovingFocus etc.)
+- vitest-axe registered via expect.extend(matchers) not import extend-expect (extend-expect.js is empty in v0.1.0)
 - sr-only assertive region placed outside animated panel div to avoid animation delays affecting screen reader announcements
 - Mock test verdict uses simpler text (no explanation) for USCIS simulation fidelity
 - Segment container changed from role="progressbar" to role="list" for individual segment accessibility
@@ -281,10 +284,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 04 complete
-Next step: Continue Phase 24 plans (24-01, 24-05, 24-06, 24-09, 24-10 remaining)
+Stopped at: Phase 24 plan 01 complete (a11y linting + testing infra)
+Next step: Continue Phase 24 plans (24-05, 24-06, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 04 complete -- reduced motion alternatives)*
+*Last updated: 2026-02-18 (Phase 24 plan 01 complete -- a11y linting and testing infrastructure)*
