@@ -23,7 +23,7 @@ const PasswordResetPage = () => {
       await sendPasswordReset(email, `${window.location.origin}/auth/update-password`);
       showSuccess({
         en: 'Reset email sent — check your inbox for the recovery link',
-        my: 'လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ',
+        my: 'လျှို့ဝှက်စာ ပြန်သတ်မှတ်ရန် လင့်ခ်ကို အီးမေးလ်မှာ စစ်ပါ',
       });
       setEmail('');
     } catch (error) {
@@ -48,7 +48,7 @@ const PasswordResetPage = () => {
             <h1 className="text-2xl font-extrabold text-foreground">Forgot Password</h1>
             {showBurmese && (
               <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                လျှို့ဝှက်စာနံပါတ် မေ့နေပါသလား
+                လျှို့ဝှက်စာ မေ့နေပါသလား?
               </p>
             )}
           </div>
@@ -60,7 +60,7 @@ const PasswordResetPage = () => {
               We will email you a recovery link that redirects back to this app.{' '}
               {showBurmese && (
                 <span className="font-myanmar">
-                  ပြန်လည်ရယူရန် လင့်ခ်ကို အီးမေးလ်ဖြင့်ပို့ပေးပါမည်။
+                  ပြန်လည်ရယူရန် လင့်ခ်ကို အီးမေးလ်နဲ့ ပို့ပေးပါမယ်။
                 </span>
               )}
             </p>
@@ -98,7 +98,7 @@ const PasswordResetPage = () => {
                 Sign in
               </Link>
               {showBurmese && (
-                <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာမှတ်မိပါသလား</span>
+                <span className="font-myanmar text-xs"> · လျှို့ဝှက်စာ မှတ်မိပါသလား?</span>
               )}
             </p>
           </div>

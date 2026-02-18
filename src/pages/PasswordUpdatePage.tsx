@@ -22,7 +22,7 @@ const PasswordUpdatePage = () => {
     const timer = setTimeout(() => {
       showError({
         en: 'Open from the secure email link to update your password',
-        my: 'လျှို့ဝှက်စာပြောင်းရန် အီးမေးလ်လင့်ခ်မှဖွင့်ပါ',
+        my: 'လျှို့ဝှက်စာ ပြောင်းရန် အီးမေးလ်ထဲက လင့်ခ်ကိုဖွင့်ပါ',
       });
     }, 500);
     return () => clearTimeout(timer);
@@ -33,14 +33,14 @@ const PasswordUpdatePage = () => {
     if (passwords.password !== passwords.confirm) {
       showWarning({
         en: 'Passwords must match — please confirm the same password',
-        my: 'လျှို့ဝှက်စာနံပါတ်များ တူညီရပါမည်',
+        my: 'လျှို့ဝှက်စာ နှစ်ခု တူညီရပါမယ်',
       });
       return;
     }
     if (passwords.password.length < 12) {
       showWarning({
         en: 'Password too short — use at least 12 characters',
-        my: 'လျှို့ဝှက်စာတိုလွန်းသည် — အနည်းဆုံး ၁၂ လုံး ထည့်ပါ',
+        my: 'လျှို့ဝှက်စာ တိုလွန်းပါတယ် — အနည်းဆုံး ၁၂ လုံး ထည့်ပါ',
       });
       return;
     }
@@ -49,7 +49,7 @@ const PasswordUpdatePage = () => {
       await updatePassword(passwords.password);
       showSuccess({
         en: 'Password updated! Your new password is active.',
-        my: 'လျှို့ဝှက်စာနံပါတ်အသစ် အသုံးပြုနိုင်ပါပြီ',
+        my: 'လျှို့ဝှက်စာအသစ် သုံးလို့ရပါပြီ!',
       });
       navigate('/dashboard', { replace: true });
     } catch (error) {
@@ -74,7 +74,7 @@ const PasswordUpdatePage = () => {
             <h1 className="text-2xl font-extrabold text-foreground">Update Your Password</h1>
             {showBurmese && (
               <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                သင့်လျှို့ဝှက်စာနံပါတ်ကို အသစ်ပြောင်းပါ
+                သင့်လျှို့ဝှက်စာကို အသစ်ပြောင်းပါ
               </p>
             )}
           </div>
@@ -86,7 +86,7 @@ const PasswordUpdatePage = () => {
               Choose a strong new password (12+ characters).{' '}
               {showBurmese && (
                 <span className="font-myanmar">
-                  ခိုင်မာသော လျှို့ဝှက်စာနံပါတ်အသစ်ရွေးပါ (၁၂ လုံးအထက်)။
+                  ခိုင်မာတဲ့ လျှို့ဝှက်စာအသစ် ရွေးပါ (၁၂ လုံးအထက်)။
                 </span>
               )}
             </p>
@@ -147,9 +147,7 @@ const PasswordUpdatePage = () => {
               <Link className="font-semibold text-primary" to="/auth/forgot">
                 Request a new reset email
               </Link>
-              {showBurmese && (
-                <span className="font-myanmar text-xs"> · ပြန်လည်ရယူရေးလင့်ခ် တောင်းပါ</span>
-              )}
+              {showBurmese && <span className="font-myanmar text-xs"> · လင့်ခ်အသစ် တောင်းပါ</span>}
             </p>
           </div>
         </FadeIn>

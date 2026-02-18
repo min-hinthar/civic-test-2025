@@ -55,12 +55,12 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
             {/* Burmese */}
             {showBurmese && (
               <h2 className="mt-4 font-myanmar text-xl font-bold text-foreground">
-                {'ကိုက်စာစမ်းပြင်ဆင်ရေးလေ့ကျင့်မှုသို့ ကြိုဆိုပါသည်!'}
+                နိုင်ငံသားစာမေးပွဲ ပြင်ဆင်ရေးသို့ ကြိုဆိုပါတယ်!
               </h2>
             )}
             {showBurmese && (
               <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                {'အမေရိကန်နိုင်ငံသားဖြစ်ပွဲခရီးသည် ဒီနေရာမှစတင်ပါသည်။'}
+                အမေရိကန်နိုင်ငံသားဖြစ်ဖို့ ခရီးကို ဒီကနေ စလိုက်ပါ။
               </p>
             )}
 
@@ -78,7 +78,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
               )}
             >
               Get Started
-              {showBurmese && <span className="font-myanmar ml-2 text-white/80">{'စတင်ပါ'}</span>}
+              {showBurmese && <span className="font-myanmar ml-2 text-white/80">စတင်ပါ</span>}
             </button>
           </motion.div>
         </div>

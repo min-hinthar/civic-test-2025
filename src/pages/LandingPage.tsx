@@ -25,38 +25,38 @@ const features = [
   {
     icon: BookOpen,
     titleEn: `${totalQuestions} USCIS Questions`,
-    titleMy: `USCIS မေးခွန်း ${totalQuestions}`,
+    titleMy: `USCIS မေးခွန်း ${totalQuestions} ခု`,
     descEn: 'All official civics questions with detailed bilingual explanations and memory tips.',
-    descMy: 'အဖြေရှင်းလင်းချက်နှင့် မှတ်ဉာဏ်အကူများပါသော USCIS မေးခွန်းအားလုံး။',
+    descMy: 'ရှင်းလင်းချက်တွေနဲ့ မှတ်ဉာဏ်အကူတွေပါတဲ့ USCIS မေးခွန်းအားလုံး။',
   },
   {
     icon: Brain,
     titleEn: 'Spaced Repetition',
-    titleMy: 'ထပ်ခါထပ်ခါ မှတ်မိအောင်လေ့ကျင့်',
+    titleMy: 'အချိန်ခြားပြီး ထပ်ခါထပ်ခါ လေ့ကျင့်',
     descEn: 'Smart flashcard system schedules reviews at the perfect time for long-term memory.',
-    descMy: 'ရေရှည်မှတ်မိနိုင်ရန် အချိန်မှန်မှန် ပြန်လည်လေ့ကျင့်ပေးသော စနစ်။',
+    descMy: 'ရေရှည်မှတ်မိအောင် အချိန်မှန်မှန် ပြန်လည်လေ့ကျင့်ပေးတဲ့ စနစ်။',
   },
   {
     icon: Clock,
     titleEn: 'Timed Mock Tests',
-    titleMy: 'အချိန်သတ်မှတ် စာမေးပွဲ',
+    titleMy: 'အချိန်သတ်မှတ် စမ်းသပ်စာမေးပွဲ',
     descEn: 'Realistic 20-question tests with instant scoring and detailed review.',
-    descMy: 'အမှတ်ချက်ချင်းပေးပြီး ပြန်လည်လေ့လာနိုင်သော မေးခွန်း ၂၀ စာမေးပွဲ။',
+    descMy: 'အမှတ်ချက်ချင်းပေးပြီး ပြန်လည်လေ့လာနိုင်တဲ့ မေးခွန်း ၂၀ စာမေးပွဲ။',
   },
   {
     icon: Mic,
     titleEn: 'Interview Practice',
-    titleMy: 'အင်တာဗျူးလေ့ကျင့်မှု',
+    titleMy: 'အင်တာဗျူးလေ့ကျင့်',
     descEn: 'Practice speaking answers aloud with voice recording and TTS pronunciation.',
-    descMy: 'အသံဖမ်းခြင်းနှင့် အသံထွက်လေ့ကျင့်ခြင်းဖြင့် အင်တာဗျူးပြင်ဆင်ပါ။',
+    descMy: 'အသံဖမ်းတာနဲ့ အသံထွက်လေ့ကျင့်ပြီး အင်တာဗျူးပြင်ဆင်ပါ။',
   },
 ];
 
 const stats = [
-  { emoji: '📚', labelEn: `${totalQuestions} Questions`, labelMy: `မေးခွန်း ${totalQuestions}` },
+  { emoji: '📚', labelEn: `${totalQuestions} Questions`, labelMy: `မေးခွန်း ${totalQuestions} ခု` },
   { emoji: '🗽', labelEn: 'EN + MY Bilingual', labelMy: 'နှစ်ဘာသာ' },
-  { emoji: '📱', labelEn: 'Offline Ready', labelMy: 'အင်တာနက်မလို' },
-  { emoji: '🏆', labelEn: 'Track Progress', labelMy: 'တိုးတက်မှုမှတ်တမ်း' },
+  { emoji: '📱', labelEn: 'Offline Ready', labelMy: 'အင်တာနက်မလိုပါ' },
+  { emoji: '🏆', labelEn: 'Track Progress', labelMy: 'တိုးတက်မှု ခြေရာခံ' },
 ];
 
 const LandingPage = () => {
@@ -92,7 +92,7 @@ const LandingPage = () => {
           </h1>
           {showBurmese && (
             <p className="mt-2 font-myanmar text-lg text-muted-foreground sm:text-xl">
-              အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲသင်ရိုး
+              အမေရိကန်နိုင်ငံသားစာမေးပွဲ ပြင်ဆင်ရေး
             </p>
           )}
 
@@ -103,8 +103,8 @@ const LandingPage = () => {
           </p>
           {showBurmese && (
             <p className="mx-auto mt-1.5 max-w-xl font-myanmar text-sm leading-relaxed text-muted-foreground sm:text-base">
-              အင်္ဂလိပ်နှင့်မြန်မာနှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ကို
-              ကျွမ်းကျင်စွာလေ့လာပါ။ ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
+              အင်္ဂလိပ်နဲ့ မြန်မာ နှစ်ဘာသာဖြင့် USCIS မေးခွန်း {totalQuestions} ခုကို လေ့လာပါ။
+              ယုံကြည်မှုနဲ့ အောင်မြင်ပါ။
             </p>
           )}
         </FadeIn>
@@ -130,7 +130,7 @@ const LandingPage = () => {
           </div>
           {showBurmese && (
             <p className="mt-3 font-myanmar text-sm text-muted-foreground">
-              အခမဲ့စတင်ပါ - အကောင့်ဖွင့်ရန်မလိုပါ
+              အခမဲ့စတင်ပါ — အကောင့်မလိုပါ
             </p>
           )}
         </FadeIn>
@@ -166,7 +166,7 @@ const LandingPage = () => {
               </h2>
               {showBurmese && (
                 <p className="mt-1 font-myanmar text-base text-muted-foreground">
-                  အောင်မြင်ရန် လိုအပ်သမျှအားလုံး
+                  အောင်မြင်ဖို့ လိုအပ်တာအားလုံး ဒီမှာရှိပါတယ်
                 </p>
               )}
             </div>
@@ -214,7 +214,7 @@ const LandingPage = () => {
               </h2>
               {showBurmese && (
                 <p className="mt-1 font-myanmar text-base text-muted-foreground">
-                  မြန်မာလေ့လာသူများအတွက် အထူးပြုလုပ်ထားသည်
+                  မြန်မာလေ့လာသူတွေအတွက် အထူးပြုလုပ်ထားပါတယ်
                 </p>
               )}
             </div>
@@ -229,7 +229,7 @@ const LandingPage = () => {
                 <h3 className="text-lg font-bold text-foreground">Study Your Way</h3>
                 {showBurmese && (
                   <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                    သင့်ပုံစံနဲ့ လေ့လာပါ
+                    သင်ကြိုက်တဲ့ပုံစံနဲ့ လေ့လာပါ
                   </p>
                 )}
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -246,7 +246,7 @@ const LandingPage = () => {
                 <h3 className="text-lg font-bold text-foreground">Works on Any Device</h3>
                 {showBurmese && (
                   <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                    မည်သည့်စက်ပစ္စည်းတွင်မဆို
+                    ဘယ်စက်မှာမဆို အသုံးပြုနိုင်ပါတယ်
                   </p>
                 )}
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -263,7 +263,7 @@ const LandingPage = () => {
                 <h3 className="text-lg font-bold text-foreground">Track Your Progress</h3>
                 {showBurmese && (
                   <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                    တိုးတက်မှုကို ခြေရာခံပါ
+                    သင့်တိုးတက်မှုကို ခြေရာခံပါ
                   </p>
                 )}
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -289,7 +289,7 @@ const LandingPage = () => {
                 </h3>
                 {showBurmese && (
                   <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
-                    အင်တာနက်မရှိလည်း လေ့လာနိုင်ပြီး ပြန်ချိတ်ဆက်သောအခါ အလိုအလျောက်ချိတ်ဆက်ပေးပါသည်
+                    အင်တာနက်မရှိလည်း လေ့လာနိုင်ပြီး ပြန်ချိတ်ဆက်ရင် အလိုအလျောက် sync လုပ်ပေးပါတယ်
                   </p>
                 )}
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -315,7 +315,7 @@ const LandingPage = () => {
             </h2>
             {showBurmese && (
               <p className="mt-1 font-myanmar text-base text-muted-foreground">
-                သင့်ခရီးစတင်ဖို့ အဆင်သင့်ဖြစ်ပြီလား
+                သင့်ခရီးစတင်ဖို့ အဆင်သင့်ဖြစ်ပြီလား?
               </p>
             )}
             <p className="mt-3 text-muted-foreground">
@@ -343,7 +343,7 @@ const LandingPage = () => {
           </p>
           {showBurmese && (
             <p className="mt-1 font-myanmar text-xs">
-              အမေရိကန်နိုင်ငံသားရေးရာစာမေးပွဲအတွက် အခမဲ့နှစ်ဘာသာလေ့လာရေးကိရိယာ
+              အမေရိကန်နိုင်ငံသားစာမေးပွဲအတွက် အခမဲ့ နှစ်ဘာသာ လေ့လာရေးကိရိယာ
             </p>
           )}
         </div>

@@ -30,13 +30,13 @@ const AuthPage = () => {
         await register(form.name, form.email, form.password);
         showSuccess({
           en: 'Account created! Check your email to confirm.',
-          my: 'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ဖြင့် အတည်ပြုပါ။',
+          my: 'အကောင့်ဖွင့်ပြီးပါပြီ! အီးမေးလ်စစ်ပြီး အတည်ပြုပါ။',
         });
       } else {
         await sendPasswordReset(form.email, `${window.location.origin}/auth/update-password`);
         showInfo({
           en: 'Check your inbox — we sent a password reset link',
-          my: 'လျှို့ဝှက်စာလင့်ခ်ကို အီးမေးလ်တွင်စစ်ပါ',
+          my: 'လျှို့ဝှက်စာ ပြန်သတ်မှတ်ရန် လင့်ခ်ကို အီးမေးလ်မှာ စစ်ပါ',
         });
         setMode('login');
         return;
@@ -71,9 +71,9 @@ const AuthPage = () => {
             </h1>
             {showBurmese && (
               <p className="mt-1 font-myanmar text-sm text-muted-foreground">
-                {mode === 'login' && 'ပြန်လာတာကို ကြိုဆိုပါတယ်'}
-                {mode === 'register' && 'ကျွန်ုပ်တို့နှင့်ပူးပေါင်းပါ'}
-                {mode === 'forgot' && 'လျှို့ဝှက်စာနံပါတ်ပြန်လည်သတ်မှတ်ပါ'}
+                {mode === 'login' && 'ပြန်လာတာ ကြိုဆိုပါတယ်'}
+                {mode === 'register' && 'အကောင့်အသစ်ဖွင့်ပါ'}
+                {mode === 'forgot' && 'လျှို့ဝှက်စာ ပြန်သတ်မှတ်ပါ'}
               </p>
             )}
           </div>
@@ -111,7 +111,9 @@ const AuthPage = () => {
                   <span className="h-px flex-1 bg-border" />
                   <span>
                     or use email
-                    {showBurmese && <span className="font-myanmar"> · သို့မဟုတ် အီးမေးလ်</span>}
+                    {showBurmese && (
+                      <span className="font-myanmar"> · သို့မဟုတ် အီးမေးလ်သုံးပါ</span>
+                    )}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -162,7 +164,7 @@ const AuthPage = () => {
                       Password{' '}
                       {showBurmese && (
                         <span className="font-myanmar text-xs text-muted-foreground">
-                          လျှို့ဝှက်စာနံပါတ်
+                          လျှို့ဝှက်စာ
                         </span>
                       )}
                     </label>
@@ -231,7 +233,7 @@ const AuthPage = () => {
               <Link className="font-semibold text-primary" to="/">
                 Back to home
               </Link>
-              {showBurmese && <span className="font-myanmar text-xs"> · ပင်မသို့ပြန်ပါ</span>}
+              {showBurmese && <span className="font-myanmar text-xs"> · ပင်မစာမျက်နှာသို့</span>}
             </p>
           </div>
         </FadeIn>
