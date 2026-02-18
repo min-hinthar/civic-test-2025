@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 Phase: 24 of 25 (Accessibility & Performance)
 Plan: 09 of 10 in current phase
 Status: In progress (plans 01, 02, 03, 04, 07, 08, 09 complete)
-Last activity: 2026-02-18 -- Completed 24-01-PLAN.md (a11y linting and testing infrastructure)
+Last activity: 2026-02-18 -- Completed 24-09-PLAN.md (sort mode swipe/gesture bug fixes)
 
 Progress: [#######...] 70% (7/10 plans complete)
 
@@ -63,6 +63,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Bundle analyzer wraps inside Sentry in config chain (Sentry must be outermost for source map upload)
 - Myanmar font preload skipped -- webpack hashes paths per build; @fontsource v5 already sets font-display: swap
 - No SW changes needed -- audio files already cached with CacheFirst (1200 entries, 90 days)
+- Lower swipe threshold from 40% to 25% card width (~75px on 300px mobile card)
+- Lower velocity threshold from 800 to 500px/s for easier flick commits
+- Combined commit: velocity > 300 AND distance > 15% catches medium gestures
+- dragElastic reduced from 1 to 0.6 for less bounceback
+- Auto-read uses 500ms delay (not onAnimationComplete callback) for simplicity
+- Auto-read triggerKey is card ID (unique), not currentIndex (could repeat across rounds)
 - Crossfade via CSS opacity transition (not motion/react) for Flashcard3D reduced motion flip
 - pendingDirection state prop defers SwipeableCard animation to useEffect for button-initiated sorts under reduced motion
 - 150ms easeOut standard for interactive control reduced motion transitions; 200ms for progress bars
@@ -284,10 +290,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 01 complete (a11y linting + testing infra)
+Stopped at: Phase 24 plan 09 complete (sort mode swipe/gesture bug fixes)
 Next step: Continue Phase 24 plans (24-05, 24-06, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 01 complete -- a11y linting and testing infrastructure)*
+*Last updated: 2026-02-18 (Phase 24 plan 09 complete -- sort mode swipe/gesture bug fixes)*
