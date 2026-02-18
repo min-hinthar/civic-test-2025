@@ -18,7 +18,7 @@ import { useToast } from '@/components/BilingualToast';
 import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { CircularTimer } from '@/components/test/CircularTimer';
-import { PreTestScreen, type SpeechOverrides } from '@/components/test/PreTestScreen';
+import { PreTestScreen, type SessionOverrides } from '@/components/test/PreTestScreen';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
@@ -100,7 +100,7 @@ const TestPage = () => {
   const { settings: tts } = useTTSSettings();
 
   // Per-session speech overrides from PreTestScreen
-  const [speechOverrides, setSpeechOverrides] = useState<SpeechOverrides | null>(null);
+  const [speechOverrides, setSpeechOverrides] = useState<SessionOverrides | null>(null);
   const effectiveSpeed = speechOverrides?.speedOverride ?? tts.rate;
   const effectiveAutoRead = speechOverrides?.autoReadOverride ?? tts.autoRead;
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[effectiveSpeed];

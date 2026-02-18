@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Volume2 } from 'lucide-react';
+import { BookOpen, Timer, Volume2 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
@@ -30,6 +30,11 @@ export interface SpeechOverrides {
   autoReadOverride: boolean;
 }
 
+/** Extended overrides including per-question timer setting */
+export interface SessionOverrides extends SpeechOverrides {
+  timerEnabled: boolean;
+}
+
 /** Speed pill options matching Settings page pattern */
 const SPEED_OPTIONS: { value: 'slow' | 'normal' | 'fast'; en: string; my: string }[] = [
   { value: 'slow', en: 'Slow', my: '\u1014\u103E\u1031\u1038' },
@@ -40,7 +45,7 @@ const SPEED_OPTIONS: { value: 'slow' | 'normal' | 'fast'; en: string; my: string
 interface PreTestScreenProps {
   questionCount: number;
   durationMinutes: number;
-  onReady: (overrides?: SpeechOverrides) => void;
+  onReady: (overrides?: SessionOverrides) => void;
   /** Optional callback for question count selection */
   onCountChange?: (count: number) => void;
 }
@@ -75,6 +80,7 @@ export function PreTestScreen({
   // Per-session overrides (initialized from global, NOT synced back)
   const [sessionSpeed, setSessionSpeed] = useState<'slow' | 'normal' | 'fast'>(globalTTS.rate);
   const [sessionAutoRead, setSessionAutoRead] = useState(globalTTS.autoRead);
+  const [timerEnabled, setTimerEnabled] = useState(true);
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center glass-medium rounded-2xl mx-4 my-6 py-8">
@@ -245,12 +251,58 @@ export function PreTestScreen({
         </div>
       )}
 
+      {/* Per-question timer toggle */}
+      <div className="mb-6 w-full max-w-sm">
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Timer className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {strings.quiz.perQuestionTimer.en}
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground">
+                  {strings.quiz.perQuestionTimer.my}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {strings.quiz.thirtySecondsPerQuestion.en}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={timerEnabled}
+            aria-label="Toggle per-question timer"
+            onClick={() => setTimerEnabled(prev => !prev)}
+            className="relative inline-flex min-h-[48px] min-w-[48px] shrink-0 cursor-pointer items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <span
+              className={clsx(
+                'inline-flex h-7 w-12 items-center rounded-full border-2 border-transparent transition-colors duration-200',
+                timerEnabled ? 'bg-primary' : 'bg-muted'
+              )}
+            >
+              <span
+                className={clsx(
+                  'pointer-events-none inline-block h-6 w-6 rounded-full bg-surface shadow-md ring-0 transition-transform duration-200',
+                  timerEnabled ? 'translate-x-5' : 'translate-x-0'
+                )}
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+
       {/* Ready button - 3D chunky */}
       <BilingualButton
         label={strings.actions.iAmReady}
         variant="chunky"
         size="lg"
-        onClick={() => onReady({ speedOverride: sessionSpeed, autoReadOverride: sessionAutoRead })}
+        onClick={() =>
+          onReady({ speedOverride: sessionSpeed, autoReadOverride: sessionAutoRead, timerEnabled })
+        }
       />
 
       {/* Pass threshold info */}
