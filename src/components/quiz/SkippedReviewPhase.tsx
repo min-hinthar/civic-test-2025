@@ -24,23 +24,23 @@ import type { PracticeSnapshot } from '@/lib/sessions/sessionTypes';
 const reviewLabels = {
   reviewingSkipped: {
     en: 'Reviewing Skipped Questions',
-    my: '\u1000\u103B\u1031\u102C\u103A\u1001\u1032\u1037\u101E\u1031\u102C \u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038 \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1005\u1005\u103A\u1006\u1031\u1038\u1001\u103C\u1004\u103A\u1038',
+    my: 'ကျော်ခဲ့သော မေးခွန်းများ ပြန်လည်စစ်ဆေးခြင်း',
   },
   ofSkipped: {
     en: 'of',
-    my: '\u1019\u103E',
+    my: 'မှ',
   },
   skipped: {
     en: 'skipped',
-    my: '\u1000\u103B\u1031\u102C\u103A\u1001\u1032\u1037',
+    my: 'ကျော်ခဲ့',
   },
   finishWithout: {
     en: 'Finish Without Reviewing',
-    my: '\u1015\u103C\u1014\u103A\u1019\u101C\u100A\u103A\u1018\u1032 \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u101B\u1014\u103A',
+    my: 'မစစ်ဆေးဘဲ ပြီးဆုံးရန်',
   },
   check: {
     en: 'Check',
-    my: '\u1005\u1005\u103A\u1006\u1031\u1038\u1015\u102B',
+    my: 'စစ်ဆေးပါ',
   },
 };
 

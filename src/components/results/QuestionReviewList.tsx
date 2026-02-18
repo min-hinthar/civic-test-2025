@@ -167,7 +167,7 @@ export function QuestionReviewList({
                 )}
               >
                 Skipped ({skippedCount})
-                {showBurmese && <span className="ml-1 font-myanmar">{strings.quiz.skip.my}</span>}
+                {showBurmese && <span className="ml-1 font-myanmar">ကျော်ထားသော</span>}
               </button>
             )}
           </div>
@@ -190,10 +190,7 @@ export function QuestionReviewList({
               </p>
               {showBurmese && (
                 <p className="text-xs text-muted-foreground font-myanmar">
-                  {wrongNotInDeck.length} \u1001\u102F
-                  \u1019\u103E\u102C\u1038\u1015\u102B\u1010\u101A\u103A\u104B
-                  \u1015\u103C\u1014\u103A\u101C\u103E\u100A\u1037\u103A\u1005\u102C\u101B\u1004\u103A\u1038\u101E\u102D\u102F\u1037
-                  \u1011\u100A\u1037\u103A\u1019\u101C\u102C\u1038\u104B
+                  {wrongNotInDeck.length} ခု မှားပါတယ်။ ပြန်လေ့လာစာရင်းသို့ ထည့်မလား?
                 </p>
               )}
             </div>
@@ -213,6 +210,7 @@ export function QuestionReviewList({
             >
               <Plus className="h-4 w-4" />
               Add All
+              {showBurmese && <span className="font-myanmar ml-1">အားလုံးထည့်</span>}
             </button>
           </div>
         </FadeIn>
@@ -243,7 +241,7 @@ export function QuestionReviewList({
                 </div>
                 <p className="mt-3 text-sm font-semibold text-amber-500">
                   Skipped
-                  {showBurmese && <span className="ml-1 font-myanmar">{strings.quiz.skip.my}</span>}
+                  {showBurmese && <span className="ml-1 font-myanmar">ကျော်ထားသည်</span>}
                 </p>
 
                 {/* Show correct answer for skipped questions */}
@@ -397,11 +395,19 @@ export function QuestionReviewList({
                 ? 'No incorrect answers - great job!'
                 : 'No results to display.'}
             </p>
+            {showBurmese && (
+              <p className="text-xs font-myanmar mt-1">
+                {filter === 'incorrect'
+                  ? 'မှားတဲ့အဖြေမရှိပါ - အရမ်းကောင်းပါတယ်!'
+                  : 'ပြစရာရလဒ်မရှိပါ။'}
+              </p>
+            )}
           </div>
         )}
         {filter === 'skipped' && skippedQuestions.length === 0 && (
           <div className="py-8 text-center text-muted-foreground">
             <p className="text-sm">No skipped questions.</p>
+            {showBurmese && <p className="text-xs font-myanmar mt-1">ကျော်ထားတဲ့မေးခွန်းမရှိပါ။</p>}
           </div>
         )}
       </div>

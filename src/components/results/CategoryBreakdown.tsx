@@ -99,11 +99,13 @@ export function CategoryBreakdown({ results, showBurmese }: CategoryBreakdownPro
                   {isWeak && (
                     <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-bold text-warning">
                       Needs Review
+                      {showBurmese && <span className="font-myanmar ml-0.5">ပြန်လေ့လာပါ</span>}
                     </span>
                   )}
                   {isStrong && (
                     <span className="rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-bold text-success">
                       Strong
+                      {showBurmese && <span className="font-myanmar ml-0.5">ကောင်းမွန်</span>}
                     </span>
                   )}
                 </div>

@@ -23,34 +23,34 @@ interface ExitConfirmDialogProps {
 const titles: Record<ExitConfirmDialogProps['mode'], { en: string; my: string }> = {
   'mock-test': {
     en: 'Exit Quiz?',
-    my: '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
+    my: 'စာမေးပွဲမှထွက်မလား?',
   },
   practice: {
     en: 'Exit Practice?',
-    my: '\u101C\u1031\u1037\u1000\u103B\u1004\u1037\u103A\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
+    my: 'လေ့ကျင့်မှုမှထွက်မလား?',
   },
   interview: {
     en: 'Exit Interview?',
-    my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
+    my: 'အင်တာဗျူးမှထွက်မလား?',
   },
   sort: {
     en: 'Exit Sort?',
-    my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1001\u103D\u1032\u1019\u103E\u1011\u103D\u1000\u103A\u1019\u101C\u102C\u1038',
+    my: 'အမျိုးအစားခွဲမှထွက်မလား?',
   },
 };
 
 const message = {
   en: 'Your progress is saved. You can resume this session later.',
-  my: '\u101E\u1004\u103A\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1000\u102D\u102F \u101E\u102D\u1019\u103A\u1038\u1006\u100A\u103A\u1038\u1011\u102C\u1038\u1015\u102B\u1010\u101A\u103A\u104B \u1014\u1031\u102C\u1000\u103A\u1019\u103E \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1006\u1000\u103A\u101C\u1000\u103A\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u1010\u101A\u103A\u104B',
+  my: 'သင့်တိုးတက်မှုကို သိမ်းဆည်းထားပါတယ်။ နောက်မှ ပြန်လည်ဆက်လုပ်နိုင်ပါတယ်။',
 };
 
 const keepGoing = {
   en: 'Keep Going',
-  my: '\u1006\u1000\u103A\u101C\u1000\u103A\u1015\u102B',
+  my: 'ဆက်လက်ပါ',
 };
 const exitLabel = {
   en: 'Exit',
-  my: '\u1011\u103D\u1000\u103A\u101B\u1014\u103A',
+  my: 'ထွက်ရန်',
 };
 
 // ---------------------------------------------------------------------------

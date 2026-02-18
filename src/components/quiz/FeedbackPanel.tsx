@@ -96,9 +96,7 @@ function StreakBadge({
       <span>
         {count} in a row!
         {showBurmese && (
-          <span className="ml-1 font-myanmar text-xs font-normal">
-            {count} {'\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A'}!
-          </span>
+          <span className="ml-1 font-myanmar text-xs font-normal">{count} ဆက်တိုက်!</span>
         )}
       </span>
     </motion.div>

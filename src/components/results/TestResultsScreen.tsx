@@ -69,19 +69,19 @@ interface TestResultsScreenProps {
 const completionMessages: Record<TestEndReason, { en: string; my: string }> = {
   passThreshold: {
     en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
-    my: '\u1021\u1016\u103C\u1031\u1019\u103E\u1014\u103A \u1041\u1042 \u1001\u103B\u1000\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u101C\u103B\u103E\u1004\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u1015\u102B\u1010\u101A\u103A\u104B',
+    my: 'အဖြေမှန် ၁၂ ချက်ဖြေဆိုပြီးလျှင်ရပ်တန့်ပါတယ်။ အောင်မြင်ပါတယ်!',
   },
   failThreshold: {
     en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
-    my: '\u1021\u1019\u103E\u102C\u1038 \u1049 \u1000\u103C\u102D\u1019\u103A\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1014\u1031\u102C\u1000\u103A\u101B\u1015\u103A\u1010\u1014\u103A\u1037\u101C\u102D\u102F\u1000\u103A\u1015\u102B\u1010\u101A\u103A\u104B',
+    my: 'အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက်ရပ်တန့်လိုက်ပါတယ်။ အောက်ပါအကြံပြုချက်များကို ပြန်ကြည့်ပါ။',
   },
   time: {
     en: 'Time expired before the full set finished.',
-    my: '\u1021\u1001\u103B\u102D\u1014\u103A\u1000\u102F\u1014\u103A\u1001\u103B\u102D\u1014\u103A\u1019\u1010\u102D\u102F\u1004\u103A\u1019\u102E \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u102B\u1015\u103C\u102E\u104B',
+    my: 'အချိန်ကုန်ချိန်မတိုင်မီ ပြီးဆုံးပါပြီ။',
   },
   complete: {
     en: 'You completed all questions. Well done!',
-    my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1021\u102C\u1038\u101C\u102F\u1036\u1038\u1016\u103C\u1031\u1006\u102D\u102F\u1015\u103C\u102E\u1038\u1015\u102B\u1015\u103C\u102E\u104B',
+    my: 'မေးခွန်းအားလုံးဖြေဆိုပြီးပါပြီ။ အရမ်းကောင်းပါတယ်!',
   },
 };
 
@@ -273,7 +273,12 @@ export function TestResultsScreen({
             {/* Duration (only shown when timeTaken is provided) */}
             {timeTaken > 0 && (
               <div className="rounded-2xl border border-border bg-muted/30 p-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Duration</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                  Duration
+                  {showBurmese && (
+                    <span className="font-myanmar normal-case tracking-normal ml-1">ကြာချိန်</span>
+                  )}
+                </p>
                 <p className="text-2xl font-bold text-foreground">{timeDisplay}</p>
                 {improvement !== null && (
                   <p
@@ -287,6 +292,7 @@ export function TestResultsScreen({
                     )}
                   >
                     {improvement > 0 ? `+${improvement}` : improvement} vs last
+                    {showBurmese && <span className="font-myanmar ml-1">ယခင်နှင့်</span>}
                   </p>
                 )}
               </div>
@@ -307,11 +313,21 @@ export function TestResultsScreen({
             </div>
             {/* Status */}
             <div className="rounded-2xl border border-border bg-muted/30 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Status</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                Status
+                {showBurmese && (
+                  <span className="font-myanmar normal-case tracking-normal ml-1">အခြေအနေ</span>
+                )}
+              </p>
               <p
                 className={clsx('text-2xl font-bold', isPassing ? 'text-success' : 'text-warning')}
               >
                 {isPassing ? 'Pass' : 'Review'}
+                {showBurmese && (
+                  <span className="block font-myanmar text-sm font-normal">
+                    {isPassing ? 'အောင်မြင်' : 'ပြန်လေ့လာပါ'}
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -401,7 +417,7 @@ export function TestResultsScreen({
             <SectionHeading
               text={{
                 en: 'Category Breakdown',
-                my: '\u1021\u1019\u103B\u102D\u102F\u1038\u1021\u1005\u102C\u1038\u1001\u103D\u1032\u1001\u103C\u1019\u103A\u1038\u1001\u103B\u1000\u103A',
+                my: 'အမျိုးအစားခွဲခြမ်းချက်',
               }}
               className="mb-4"
             />
@@ -428,7 +444,7 @@ export function TestResultsScreen({
                 <SectionHeading
                   text={{
                     en: 'Based on this test, consider reviewing:',
-                    my: '\u1012\u102E\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032\u1021\u1015\u1031\u102B\u103A\u1021\u1001\u103C\u1031\u1001\u1036\u104D \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A:',
+                    my: 'ဒီစာမေးပွဲအပေါ်အခြေခံ၍ ပြန်လည်လေ့လာရန်:',
                   }}
                   className="mb-3"
                 />
@@ -460,7 +476,7 @@ export function TestResultsScreen({
           <SectionHeading
             text={{
               en: 'Question Review',
-              my: '\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1001\u103B\u1000\u103A',
+              my: 'မေးခွန်းပြန်လည်သုံးသပ်ချက်',
             }}
             className="mb-4"
           />
