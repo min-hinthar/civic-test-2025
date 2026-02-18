@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 24 of 25 (Accessibility & Performance)
-Plan: 08 of 10 in current phase
-Status: In progress (plans 02, 03, 08 complete)
-Last activity: 2026-02-18 -- Completed 24-08-PLAN.md (flashcard 3D rendering bug fixes)
+Plan: 07 of 10 in current phase
+Status: In progress (plans 02, 03, 07, 08 complete)
+Last activity: 2026-02-18 -- Completed 24-07-PLAN.md (performance monitoring and optimization)
 
-Progress: [###.......] 30% (3/10 plans complete)
+Progress: [####......] 40% (4/10 plans complete)
 
 ## Completed Milestones
 
@@ -55,6 +55,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Damping 22 (up from 18) eliminates flip overshoot flicker without noticeable animation change
 - OPACITY_STEP set to 0 in SwipeableStack for fully opaque behind-cards
 - isolation: isolate creates new stacking context preventing compositing issues with siblings
+- No separate web-vitals library -- Sentry SDK v10+ captures all Web Vitals via browserTracingIntegration
+- Production tracesSampleRate set to 0.2 (20%), development stays at 1.0 (100%)
+- Bundle analyzer wraps inside Sentry in config chain (Sentry must be outermost for source map upload)
+- Myanmar font preload skipped -- webpack hashes paths per build; @fontsource v5 already sets font-display: swap
+- No SW changes needed -- audio files already cached with CacheFirst (1200 entries, 90 days)
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -272,10 +277,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 08 complete
-Next step: Continue Phase 24 plans (24-01, 24-04 through 24-07, 24-09, 24-10 remaining)
+Stopped at: Phase 24 plan 07 complete
+Next step: Continue Phase 24 plans (24-01, 24-04, 24-05, 24-06, 24-09, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 08 complete -- flashcard 3D rendering bug fixes)*
+*Last updated: 2026-02-18 (Phase 24 plan 07 complete -- performance monitoring and optimization)*
