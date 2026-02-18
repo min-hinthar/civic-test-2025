@@ -20,11 +20,11 @@ import {
 } from '@/components/ui/Dialog';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useTTS } from '@/hooks/useTTS';
-import { TTSCancelledError } from '@/lib/ttsTypes';
 import {
   createAudioPlayer,
   getEnglishAudioUrl,
   getBurmeseAudioUrl,
+  getInterviewAudioUrl,
   type AudioPlayer,
 } from '@/lib/audio/audioPlayer';
 import { useInterviewSpeech } from '@/hooks/useSpeechRecognition';
@@ -156,7 +156,7 @@ export function InterviewSession({
 }: InterviewSessionProps) {
   const { showBurmese, mode: languageMode } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const { speak, cancel: cancelTTS, settings: ttsSettings } = useTTS();
+  const { cancel: cancelTTS, settings: ttsSettings } = useTTS();
 
   // Effective speed: Real mode always normal, Practice mode uses override or global setting
   const effectiveSpeed = mode === 'realistic' ? 'normal' : (speedOverride ?? ttsSettings.rate);
@@ -223,6 +223,7 @@ export function InterviewSession({
   // Audio players for pre-generated MP3 playback
   const englishPlayerRef = useRef<AudioPlayer | null>(null);
   const burmesePlayerRef = useRef<AudioPlayer | null>(null);
+  const interviewPlayerRef = useRef<AudioPlayer | null>(null);
   const getEnglishPlayer = useCallback((): AudioPlayer => {
     if (!englishPlayerRef.current) {
       englishPlayerRef.current = createAudioPlayer();
@@ -234,6 +235,12 @@ export function InterviewSession({
       burmesePlayerRef.current = createAudioPlayer();
     }
     return burmesePlayerRef.current;
+  }, []);
+  const getInterviewPlayer = useCallback((): AudioPlayer => {
+    if (!interviewPlayerRef.current) {
+      interviewPlayerRef.current = createAudioPlayer();
+    }
+    return interviewPlayerRef.current;
   }, []);
 
   // Stable ref for onComplete
@@ -275,20 +282,6 @@ export function InterviewSession({
     }
   }, [chatMessages, questionPhase, shouldReduceMotion]);
 
-  // --- Safe speak wrapper for dynamic text (greetings, feedback, acks) ---
-  const safeSpeakLocal = useCallback(
-    async (text: string) => {
-      try {
-        await speak(text, { rate: numericRate });
-        return 'completed' as const;
-      } catch (err) {
-        if (err instanceof TTSCancelledError) return 'cancelled' as const;
-        return 'error' as const;
-      }
-    },
-    [speak, numericRate]
-  );
-
   // --- Safe play for question text (uses pre-generated English MP3) ---
   const safePlayQuestion = useCallback(
     async (questionId: string) => {
@@ -301,6 +294,20 @@ export function InterviewSession({
       }
     },
     [numericRate, getEnglishPlayer]
+  );
+
+  // --- Safe play for interview audio (greetings, closings, feedback prefixes) ---
+  const safePlayInterview = useCallback(
+    async (audioName: string) => {
+      try {
+        const url = getInterviewAudioUrl(audioName);
+        await getInterviewPlayer().play(url, numericRate);
+        return 'completed' as const;
+      } catch {
+        return 'error' as const;
+      }
+    },
+    [numericRate, getInterviewPlayer]
   );
 
   // --- Silence detection: auto-stop recording after 2s silence ---
@@ -362,6 +369,7 @@ export function InterviewSession({
       cleanupRecorder();
       englishPlayerRef.current?.cancel();
       burmesePlayerRef.current?.cancel();
+      interviewPlayerRef.current?.cancel();
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
       }
@@ -382,15 +390,15 @@ export function InterviewSession({
     });
 
     let cancelled = false;
-    const greeting = getRandomGreeting();
+    const { text: greetingText, audio: greetingAudio } = getRandomGreeting();
 
     setExaminerState('speaking');
-    addMessage('examiner', greeting);
+    addMessage('examiner', greetingText);
 
-    safeSpeakLocal(greeting).then(speakResult => {
+    safePlayInterview(greetingAudio).then(speakResult => {
       if (cancelled) return;
       setExaminerState('idle');
-      // Always advance — even if TTS failed or was cancelled
+      // Always advance — even if audio failed
       const delay = speakResult === 'completed' ? 800 : 0;
       transitionTimerRef.current = setTimeout(() => {
         if (!cancelled) setQuestionPhase('chime');
@@ -399,9 +407,10 @@ export function InterviewSession({
 
     return () => {
       cancelled = true;
+      interviewPlayerRef.current?.cancel();
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
-  }, [questionPhase, safeSpeakLocal, addMessage, mode, languageMode]);
+  }, [questionPhase, safePlayInterview, addMessage, mode, languageMode]);
 
   // --- Phase: CHIME ---
   useEffect(() => {
@@ -594,7 +603,7 @@ export function InterviewSession({
           transitionTimerRef.current = setTimeout(() => {
             addMessage('examiner', "Congratulations! You've passed the civics test.");
             setExaminerState('speaking');
-            safeSpeakLocal("Congratulations! You've passed the civics test.").then(() => {
+            safePlayInterview('pass-announce').then(() => {
               setExaminerState('idle');
               const duration = Math.round((Date.now() - startTime) / 1000);
               onCompleteRef.current(newResults, duration, 'passThreshold');
@@ -606,13 +615,11 @@ export function InterviewSession({
           transitionTimerRef.current = setTimeout(() => {
             addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
             setExaminerState('speaking');
-            safeSpeakLocal("Unfortunately, you didn't reach the passing score this time.").then(
-              () => {
-                setExaminerState('idle');
-                const duration = Math.round((Date.now() - startTime) / 1000);
-                onCompleteRef.current(newResults, duration, 'failThreshold');
-              }
-            );
+            safePlayInterview('fail-announce').then(() => {
+              setExaminerState('idle');
+              const duration = Math.round((Date.now() - startTime) / 1000);
+              onCompleteRef.current(newResults, duration, 'failThreshold');
+            });
           }, 500);
           return;
         }
@@ -645,7 +652,7 @@ export function InterviewSession({
     currentIndex,
     mode,
     startTime,
-    safeSpeakLocal,
+    safePlayInterview,
   ]);
 
   const handleReRecord = useCallback(() => {
@@ -715,7 +722,7 @@ export function InterviewSession({
         transitionTimerRef.current = setTimeout(() => {
           addMessage('examiner', "Congratulations! You've passed the civics test.");
           setExaminerState('speaking');
-          safeSpeakLocal("Congratulations! You've passed the civics test.").then(() => {
+          safePlayInterview('pass-announce').then(() => {
             setExaminerState('idle');
             const duration = Math.round((Date.now() - startTime) / 1000);
             onCompleteRef.current(newResults, duration, 'passThreshold');
@@ -727,13 +734,11 @@ export function InterviewSession({
         transitionTimerRef.current = setTimeout(() => {
           addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
           setExaminerState('speaking');
-          safeSpeakLocal("Unfortunately, you didn't reach the passing score this time.").then(
-            () => {
-              setExaminerState('idle');
-              const duration = Math.round((Date.now() - startTime) / 1000);
-              onCompleteRef.current(newResults, duration, 'failThreshold');
-            }
-          );
+          safePlayInterview('fail-announce').then(() => {
+            setExaminerState('idle');
+            const duration = Math.round((Date.now() - startTime) / 1000);
+            onCompleteRef.current(newResults, duration, 'failThreshold');
+          });
         }, 500);
         return;
       }
@@ -759,7 +764,7 @@ export function InterviewSession({
     currentIndex,
     mode,
     startTime,
-    safeSpeakLocal,
+    safePlayInterview,
   ]);
 
   // Keep ref in sync for handleTimerExpired to call
@@ -791,16 +796,29 @@ export function InterviewSession({
         lastResult.selfGrade === 'correct'
           ? `Correct! The answer is: ${primaryAnswer}`
           : `The correct answer is: ${primaryAnswer}`;
+      const prefixAudio =
+        lastResult.selfGrade === 'correct' ? 'correct-prefix' : 'incorrect-prefix';
 
       addMessage('examiner', feedbackText, lastResult.selfGrade === 'correct');
 
-      safeSpeakLocal(feedbackText).then(_speakResult => {
-        if (cancelled) return;
-        // Auto-advance after feedback
-        transitionTimerRef.current = setTimeout(() => {
-          if (!cancelled) advanceToNext();
-        }, TRANSITION_DELAY_MS);
-      });
+      // Play prefix audio ("Correct! The answer is:") then answer audio
+      safePlayInterview(prefixAudio)
+        .then(async () => {
+          if (cancelled) return;
+          try {
+            const answerUrl = getEnglishAudioUrl(currentQuestion.id, 'a');
+            await getEnglishPlayer().play(answerUrl, numericRate);
+          } catch {
+            // Answer audio failure is non-blocking
+          }
+        })
+        .then(() => {
+          if (cancelled) return;
+          // Auto-advance after feedback
+          transitionTimerRef.current = setTimeout(() => {
+            if (!cancelled) advanceToNext();
+          }, TRANSITION_DELAY_MS);
+        });
     } else {
       // Real mode: brief acknowledgment
       const acks = ['Thank you.', 'Next question.', 'Alright.'];
@@ -814,6 +832,8 @@ export function InterviewSession({
 
     return () => {
       cancelled = true;
+      interviewPlayerRef.current?.cancel();
+      englishPlayerRef.current?.cancel();
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

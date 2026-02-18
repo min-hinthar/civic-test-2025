@@ -36,6 +36,16 @@ export function getBurmeseAudioUrl(questionId: string, type: AudioType): string 
   return `/audio/my-MM/female/${questionId}-${type}.mp3`;
 }
 
+/**
+ * Build the URL path for a pre-generated interview audio file.
+ *
+ * @param name - e.g. "greeting-01", "pass-announce", "correct-prefix"
+ * @returns URL path like "/audio/en-US/ava/interview/greeting-01.mp3"
+ */
+export function getInterviewAudioUrl(name: string): string {
+  return `/audio/en-US/ava/interview/${name}.mp3`;
+}
+
 // ---------------------------------------------------------------------------
 // Player State
 // ---------------------------------------------------------------------------

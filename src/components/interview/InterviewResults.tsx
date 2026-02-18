@@ -42,6 +42,7 @@ import { useSRS } from '@/contexts/SRSContext';
 import { useToast } from '@/components/BilingualToast';
 import { saveInterviewSession, getInterviewHistory } from '@/lib/interview/interviewStore';
 import { getClosingStatement } from '@/lib/interview/interviewGreetings';
+import { createAudioPlayer, getInterviewAudioUrl } from '@/lib/audio/audioPlayer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { playCompletionSparkle } from '@/lib/audio/soundEffects';
 import { USCIS_CATEGORIES, CATEGORY_COLORS, getUSCISCategory } from '@/lib/mastery/categoryMapping';
@@ -165,7 +166,9 @@ export function InterviewResults({
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
-  const { speak, cancel: cancelTTS, isSpeaking, settings: ttsSettings } = useTTS();
+  const { settings: ttsSettings } = useTTS();
+  const closingPlayerRef = useRef(createAudioPlayer());
+  const [isClosingSpeaking, setIsClosingSpeaking] = useState(false);
 
   // Effective speed for speech button labels in transcript
   const effectiveSpeed = mode === 'realistic' ? 'normal' : (speedOverride ?? ttsSettings.rate);
@@ -367,18 +370,25 @@ export function InterviewResults({
     showBurmese,
   ]);
 
-  // --- TTS closing statement ---
+  // --- Pre-generated closing statement audio ---
   useEffect(() => {
+    const player = closingPlayerRef.current;
     const timer = setTimeout(() => {
-      const closing = getClosingStatement(passed);
-      speak(closing).catch(() => {}); // fire-and-forget
+      const { audio } = getClosingStatement(passed);
+      const url = getInterviewAudioUrl(audio);
+      setIsClosingSpeaking(true);
+      player
+        .play(url)
+        .catch(() => {})
+        .finally(() => setIsClosingSpeaking(false));
     }, 1000);
 
     return () => {
       clearTimeout(timer);
-      cancelTTS();
+      player.cancel();
+      setIsClosingSpeaking(false);
     };
-  }, [passed, speak, cancelTTS]);
+  }, [passed]);
 
   // --- Confetti + sound for passing ---
   useEffect(() => {
@@ -443,7 +453,7 @@ export function InterviewResults({
         {/* Examiner character at top */}
         <FadeIn>
           <div className="mb-4 flex justify-center">
-            <ExaminerCharacter state={isSpeaking ? 'speaking' : 'idle'} size="md" />
+            <ExaminerCharacter state={isClosingSpeaking ? 'speaking' : 'idle'} size="md" />
           </div>
         </FadeIn>
 
