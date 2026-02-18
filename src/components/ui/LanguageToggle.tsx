@@ -52,7 +52,11 @@ export function LanguageToggle({ size = 'md', showLabel = false, className }: La
         sizeClasses[size],
         className
       )}
-      aria-label={showBurmese ? 'Switch to English only' : 'Switch to bilingual'}
+      aria-label={
+        showBurmese
+          ? 'Language: Bilingual English and Burmese. Press to switch to English only.'
+          : 'Language: English only. Press to switch to bilingual English and Burmese.'
+      }
       title={
         showBurmese
           ? 'Currently: Bilingual (English + Burmese)\nClick for English-only practice'
@@ -118,7 +122,11 @@ export function LanguageToggleCompact({ className }: { className?: string }) {
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className
       )}
-      aria-label={showBurmese ? 'Switch to English only' : 'Switch to bilingual'}
+      aria-label={
+        showBurmese
+          ? 'Language: Bilingual English and Burmese. Press to switch to English only.'
+          : 'Language: English only. Press to switch to bilingual English and Burmese.'
+      }
     >
       <Languages className="h-5 w-5 text-muted-foreground" />
       {!showBurmese && (

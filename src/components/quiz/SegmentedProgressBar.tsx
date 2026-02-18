@@ -45,6 +45,18 @@ const segmentColorClass: Record<SegmentStatus, string> = {
 };
 
 // ---------------------------------------------------------------------------
+// Capitalized status labels for screen reader clarity
+// ---------------------------------------------------------------------------
+
+const statusLabels: Record<SegmentStatus, string> = {
+  correct: 'Correct',
+  incorrect: 'Incorrect',
+  skipped: 'Skipped',
+  current: 'Current',
+  unanswered: 'Unanswered',
+};
+
+// ---------------------------------------------------------------------------
 // Individual Segment (React.memo for perf -- only re-renders when props change)
 // ---------------------------------------------------------------------------
 
@@ -82,22 +94,10 @@ const Segment = memo(function Segment({
     [isTappable, onTap, index]
   );
 
-  // Status label for accessibility
-  const statusLabel =
-    status === 'correct'
-      ? 'correct'
-      : status === 'incorrect'
-        ? 'incorrect'
-        : status === 'skipped'
-          ? 'skipped'
-          : status === 'current'
-            ? 'current'
-            : 'unanswered';
-
   return (
     <div
-      role="presentation"
-      aria-label={`Question ${index + 1}: ${statusLabel}`}
+      role="listitem"
+      aria-label={`Question ${index + 1}: ${statusLabels[status]}`}
       className={clsx(
         'flex-1 min-w-[8px] h-full rounded-full transition-colors duration-300',
         segmentColorClass[status],
@@ -117,7 +117,7 @@ const Segment = memo(function Segment({
 
 export function SegmentedProgressBar({
   segments,
-  currentIndex,
+  currentIndex: _currentIndex,
   totalCount,
   correctCount,
   allowTap = false,
@@ -183,10 +183,8 @@ export function SegmentedProgressBar({
 
       {/* Segmented bar */}
       <div
-        role="progressbar"
-        aria-valuenow={currentIndex + 1}
-        aria-valuemax={totalCount}
-        aria-label={`Progress: question ${currentIndex + 1} of ${totalCount}`}
+        role="list"
+        aria-label="Quiz progress"
         className={clsx(
           'flex gap-[2px] h-2.5 w-full rounded-full',
           allFilled && !shouldReduceMotion && 'shadow-[0_0_12px_hsl(var(--success))]',
