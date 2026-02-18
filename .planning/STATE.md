@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 24 of 25 (Accessibility & Performance)
-Plan: 03 of 10 in current phase
-Status: In progress (plans 02, 03 complete)
-Last activity: 2026-02-18 -- Completed 24-03-PLAN.md (celebrations a11y, high contrast, skip link, focus management)
+Plan: 08 of 10 in current phase
+Status: In progress (plans 02, 03, 08 complete)
+Last activity: 2026-02-18 -- Completed 24-08-PLAN.md (flashcard 3D rendering bug fixes)
 
-Progress: [##........] 20% (2/10 plans complete)
+Progress: [###.......] 30% (3/10 plans complete)
 
 ## Completed Milestones
 
@@ -51,6 +51,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - High contrast overrides at semantic token level (--color-text-secondary, --color-border) to cascade through backward compat aliases
 - Focus moves to question area (tabIndex=-1, outline-none) after TRANSITION_COMPLETE via requestAnimationFrame
 - Skip-to-content link uses sr-only + focus:not-sr-only pattern (visible only on focus)
+- Inline backfaceVisibility only (removed backface-hidden class) for reliable cross-browser 3D
+- Damping 22 (up from 18) eliminates flip overshoot flicker without noticeable animation change
+- OPACITY_STEP set to 0 in SwipeableStack for fully opaque behind-cards
+- isolation: isolate creates new stacking context preventing compositing issues with siblings
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -268,10 +272,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 03 complete
-Next step: Continue Phase 24 plans (24-01, 24-04 through 24-10 remaining)
+Stopped at: Phase 24 plan 08 complete
+Next step: Continue Phase 24 plans (24-01, 24-04 through 24-07, 24-09, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 03 complete -- celebrations a11y, high contrast, skip link, focus management)*
+*Last updated: 2026-02-18 (Phase 24 plan 08 complete -- flashcard 3D rendering bug fixes)*

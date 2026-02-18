@@ -1,5 +1,8 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
+
+const analyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
 
 const withSerwist = withSerwistInit({
   swSrc: 'src/lib/pwa/sw.ts',
@@ -30,7 +33,7 @@ const nextConfig = {
   },
 };
 
-export default withSentryConfig(withSerwist(nextConfig), {
+export default withSentryConfig(analyzer(withSerwist(nextConfig)), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
