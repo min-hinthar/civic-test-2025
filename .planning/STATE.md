@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 24 of 25 (Accessibility & Performance)
-Plan: 09 of 10 in current phase
-Status: In progress (plans 01, 02, 03, 04, 07, 08, 09 complete)
-Last activity: 2026-02-18 -- Completed 24-09-PLAN.md (sort mode swipe/gesture bug fixes)
+Plan: 05 of 10 in current phase
+Status: In progress (plans 01, 02, 03, 04, 05, 07, 08, 09 complete)
+Last activity: 2026-02-18 -- Completed 24-05-PLAN.md (per-question timer components)
 
-Progress: [#######...] 70% (7/10 plans complete)
+Progress: [########..] 80% (8/10 plans complete)
 
 ## Completed Milestones
 
@@ -73,6 +73,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - pendingDirection state prop defers SwipeableCard animation to useEffect for button-initiated sorts under reduced motion
 - 150ms easeOut standard for interactive control reduced motion transitions; 200ms for progress bars
 - SessionCountdown and StreakReward already had adequate reduced motion handling -- no changes needed
+- Timer color uses CSS custom properties (--color-success, --color-warning, --color-destructive) for theme awareness
+- sr-only announcement fires at exactly timeLeft === 5 (not range) to avoid repeated announcements
+- Callback refs synced via useEffect (not render-time assignment) for React Compiler safety
+- One-shot warning/expiry flags use refs accessed only inside setInterval callback (handler context)
+- Timer extension toast uses E keyboard shortcut with input/textarea guard
 
 **Phase 23 decisions:**
 - Single Know swipe = mastered for session (no consecutive-correct tracking)
@@ -290,10 +295,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 24 plan 09 complete (sort mode swipe/gesture bug fixes)
-Next step: Continue Phase 24 plans (24-05, 24-06, 24-10 remaining)
+Stopped at: Phase 24 plan 05 complete (per-question timer components)
+Next step: Continue Phase 24 plans (24-06, 24-10 remaining)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 24 plan 09 complete -- sort mode swipe/gesture bug fixes)*
+*Last updated: 2026-02-18 (Phase 24 plan 05 complete -- per-question timer components)*
