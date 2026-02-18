@@ -13,7 +13,7 @@ interface UsePerQuestionTimerOptions {
   isPaused?: boolean;
   /** Called when the timer reaches 0. */
   onExpire: () => void;
-  /** Called once when timeLeft crosses the warning threshold (5s). */
+  /** Called each second while timeLeft is in the warning zone (1-5s). */
   onWarning?: () => void;
   /** Whether the WCAG 2.2.1 extension prompt is available. */
   allowExtension?: boolean;
@@ -49,8 +49,7 @@ export function usePerQuestionTimer({
   // Ref for interval ID -- only accessed in effects/handlers
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // One-shot flags -- only accessed in effects/handlers (never during render)
-  const warningFiredRef = useRef(false);
+  // One-shot flag for expiry -- only accessed in effects/handlers (never during render)
   const expiredFiredRef = useRef(false);
 
   // ---------------------------------------------------------------------------
@@ -86,9 +85,8 @@ export function usePerQuestionTimer({
       setTimeLeft(prev => {
         const next = prev - 1;
 
-        // Fire warning callback once when crossing 5-second threshold
-        if (next <= 5 && next > 0 && !warningFiredRef.current) {
-          warningFiredRef.current = true;
+        // Fire warning callback each second during the last 5 seconds
+        if (next <= 5 && next > 0) {
           // Schedule outside setState updater to avoid nested dispatch
           setTimeout(() => onWarningRef.current?.(), 0);
         }
@@ -118,8 +116,7 @@ export function usePerQuestionTimer({
   const extend = useCallback(() => {
     const bonus = Math.ceil(duration * 0.5);
     setTimeLeft(prev => prev + bonus);
-    // Reset one-shot flags so callbacks can fire again (handler context = safe)
-    warningFiredRef.current = false;
+    // Reset expiry flag so callback can fire again (handler context = safe)
     expiredFiredRef.current = false;
   }, [duration]);
 
@@ -130,8 +127,7 @@ export function usePerQuestionTimer({
     (newDuration?: number) => {
       const d = newDuration ?? duration;
       setTimeLeft(d);
-      // Reset one-shot flags (handler context = safe)
-      warningFiredRef.current = false;
+      // Reset expiry flag (handler context = safe)
       expiredFiredRef.current = false;
     },
     [duration]

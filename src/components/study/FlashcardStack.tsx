@@ -62,7 +62,7 @@ export function FlashcardStack({
   const currentQuestion = questions[currentIndex];
   useAutoRead({
     text: currentQuestion?.question_en ?? '',
-    enabled: tts.autoRead,
+    enabled: true,
     triggerKey: currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,

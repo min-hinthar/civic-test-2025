@@ -22,7 +22,7 @@ const DEFAULT_SETTINGS: TTSSettings = {
   rate: 'normal',
   pitch: 1.02,
   lang: 'en-US',
-  autoRead: false,
+  autoRead: true,
   autoReadLang: 'both',
 };
 

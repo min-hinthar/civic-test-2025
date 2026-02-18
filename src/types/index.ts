@@ -81,6 +81,8 @@ export interface QuestionResult {
 
 export type TestEndReason = 'passThreshold' | 'failThreshold' | 'time' | 'complete';
 
+export type MockTestMode = 'practice' | 'real-exam';
+
 // Re-export Supabase types for convenience
 export type {
   ProfileRow,

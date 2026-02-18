@@ -263,17 +263,17 @@ describe('Phase 22: TTSSettings persistence', () => {
       vi.advanceTimersByTime(10);
     });
 
-    // Default: autoRead = false
-    expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
+    // Default: autoRead = true
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('true');
 
-    // Update autoRead to true
+    // Update autoRead to false
     await act(async () => {
-      updateFn?.({ autoRead: true });
+      updateFn?.({ autoRead: false });
       vi.advanceTimersByTime(10);
     });
 
     // React state should reflect the change
-    expect(screen.getByTestId('auto-read')).toHaveTextContent('true');
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
   });
 
   it('updateSettings changes autoReadLang in React state', async () => {
@@ -318,7 +318,7 @@ describe('Phase 22: TTSSettings persistence', () => {
     });
 
     // Default fields should be present
-    expect(screen.getByTestId('auto-read')).toHaveTextContent('false');
+    expect(screen.getByTestId('auto-read')).toHaveTextContent('true');
     expect(screen.getByTestId('auto-read-lang')).toHaveTextContent('both');
     expect(screen.getByTestId('auto-read-lang-value')).toHaveTextContent('both');
     // Original defaults still present

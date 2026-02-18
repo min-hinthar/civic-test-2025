@@ -80,9 +80,15 @@ export function PerQuestionTimer({ timeLeft, duration, isWarning }: PerQuestionT
       aria-label={`${timeLeft} seconds remaining`}
       className={clsx(
         'relative flex items-center justify-center',
-        isWarning && !shouldReduceMotion && 'animate-pulse'
+        isWarning && !shouldReduceMotion && 'animate-timer-warning'
       )}
-      style={{ width: SIZE, height: SIZE }}
+      style={{
+        width: SIZE,
+        height: SIZE,
+        ...(isWarning
+          ? { boxShadow: '0 0 8px 2px hsl(var(--color-destructive) / 0.5)', borderRadius: '50%' }
+          : {}),
+      }}
     >
       <svg
         width={SIZE}

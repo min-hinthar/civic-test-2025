@@ -121,7 +121,7 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
   // Auto-read question text after card animation settles (500ms delay)
   useAutoRead({
     text: currentCard?.question_en ?? '',
-    enabled: tts.autoRead && currentCard !== null,
+    enabled: currentCard !== null,
     triggerKey: currentCard?.id ?? '',
     lang: 'en-US',
     delay: 500, // Wait for card entrance animation to complete

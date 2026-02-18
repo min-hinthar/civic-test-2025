@@ -19,6 +19,7 @@ import { BilingualHeading, SectionHeading } from '@/components/bilingual/Bilingu
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { PreTestScreen, type SessionOverrides } from '@/components/test/PreTestScreen';
+import type { MockTestMode } from '@/types';
 import { Confetti } from '@/components/celebrations/Confetti';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
@@ -109,10 +110,13 @@ const TestPage = () => {
 
   // Per-session speech overrides from PreTestScreen
   const [speechOverrides, setSpeechOverrides] = useState<SessionOverrides | null>(null);
+  const testMode: MockTestMode = speechOverrides?.mode ?? 'real-exam';
+  const isPracticeMode = testMode === 'practice';
   const effectiveSpeed = speechOverrides?.speedOverride ?? tts.rate;
   const effectiveAutoRead = speechOverrides?.autoReadOverride ?? tts.autoRead;
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[effectiveSpeed];
   const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[effectiveSpeed];
+  const timerEnabled = speechOverrides?.timerEnabled ?? !isPracticeMode;
 
   // Pre-quiz UI state
   const [showPreTest, setShowPreTest] = useState(true);
@@ -297,7 +301,12 @@ const TestPage = () => {
 
   const perQuestionTimer = usePerQuestionTimer({
     duration: 30,
-    isPaused: quizState.phase !== 'answering' || showPreTest || showCountdown || isFinished,
+    isPaused:
+      !timerEnabled ||
+      quizState.phase !== 'answering' ||
+      showPreTest ||
+      showCountdown ||
+      isFinished,
     onExpire: useCallback(() => perQuestionExpireRef.current(), []),
     onWarning: handleTimerWarning,
     allowExtension: false,
@@ -315,11 +324,11 @@ const TestPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- reset on index change only
   }, [quizState.currentIndex]);
 
-  // Navigation lock via context: lock when test is active
+  // Navigation lock via context: lock when test is active (Real Exam only)
   useEffect(() => {
-    const shouldLock = !showPreTest && !isFinished && !showCountdown;
+    const shouldLock = !isPracticeMode && !showPreTest && !isFinished && !showCountdown;
     setLock(shouldLock, lockMessage);
-  }, [showPreTest, isFinished, showCountdown, setLock]);
+  }, [isPracticeMode, showPreTest, isFinished, showCountdown, setLock]);
 
   // Release lock on unmount
   useEffect(() => () => setLock(false), [setLock]);
@@ -343,7 +352,9 @@ const TestPage = () => {
   }, []);
 
   // Timer countdown (pauses during feedback/checked phases and countdown animation)
+  // Only active in Real Exam mode — Practice mode has no overall time limit
   useEffect(() => {
+    if (isPracticeMode) return;
     if (isFinished || showPreTest || showCountdown) return;
     if (quizState.phase === 'feedback' || quizState.phase === 'checked') return;
     const timer = setInterval(() => {
@@ -357,10 +368,12 @@ const TestPage = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isFinished, showPreTest, showCountdown, quizState.phase]);
+  }, [isPracticeMode, isFinished, showPreTest, showCountdown, quizState.phase]);
 
   // Navigation lock -- throttle history API to stay under browser's 100/10s limit
+  // Only active in Real Exam mode — Practice mode allows free navigation
   useEffect(() => {
+    if (isPracticeMode) return;
     if (isFinished || showPreTest || showCountdown) return;
     const beforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -389,7 +402,7 @@ const TestPage = () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFinished, showPreTest, showCountdown, showWarning]);
+  }, [isPracticeMode, isFinished, showPreTest, showCountdown, showWarning]);
 
   // Save session on finish (batch SRS recording)
   useEffect(() => {
@@ -599,11 +612,11 @@ const TestPage = () => {
     setShowStreakReward(false);
     setShowXP(false);
 
-    // Defensive: finish if all questions answered or thresholds met
+    // Defensive: finish if all questions answered (or thresholds met in Real Exam mode)
     if (
       quizState.currentIndex + 1 >= questions.length ||
-      hasPassedThreshold(quizState, quizConfig) ||
-      hasFailedThreshold(quizState, quizConfig)
+      (!isPracticeMode &&
+        (hasPassedThreshold(quizState, quizConfig) || hasFailedThreshold(quizState, quizConfig)))
     ) {
       dispatch({ type: 'FINISH' });
       return;
@@ -619,7 +632,7 @@ const TestPage = () => {
         questionAreaRef.current?.focus({ preventScroll: true });
       });
     }, 50);
-  }, [quizState, quizConfig, questions.length]);
+  }, [quizState, quizConfig, questions.length, isPracticeMode]);
 
   // Handle Skip
   const handleSkip = useCallback(() => {
@@ -713,7 +726,13 @@ const TestPage = () => {
           questionCount={questionCount}
           durationMinutes={20}
           onReady={overrides => {
-            if (overrides) setSpeechOverrides(overrides);
+            if (overrides) {
+              setSpeechOverrides(overrides);
+              // Real Exam mode forces 20 questions
+              if (overrides.mode === 'real-exam' && questionCount !== 20) {
+                handleCountChange(20);
+              }
+            }
             setShowPreTest(false);
             setShowCountdown(true);
           }}
@@ -773,18 +792,22 @@ const TestPage = () => {
         onExit={handleExitRequest}
         timerSlot={
           <div className="flex items-center gap-2">
-            <PerQuestionTimer
-              timeLeft={perQuestionTimer.timeLeft}
-              duration={30}
-              isWarning={perQuestionTimer.isWarning}
-            />
-            <CircularTimer
-              duration={TEST_DURATION_SECONDS}
-              remainingTime={timeLeft}
-              isPlaying={quizState.phase !== 'feedback' && quizState.phase !== 'checked'}
-              size="sm"
-              allowHide
-            />
+            {timerEnabled && (
+              <PerQuestionTimer
+                timeLeft={perQuestionTimer.timeLeft}
+                duration={30}
+                isWarning={perQuestionTimer.isWarning}
+              />
+            )}
+            {!isPracticeMode && (
+              <CircularTimer
+                duration={TEST_DURATION_SECONDS}
+                remainingTime={timeLeft}
+                isPlaying={quizState.phase !== 'feedback' && quizState.phase !== 'checked'}
+                size="sm"
+                allowHide
+              />
+            )}
           </div>
         }
         showBurmese={showBurmese}
@@ -887,9 +910,11 @@ const TestPage = () => {
                 <span className="text-success font-bold">{correctCount} correct</span>
                 <span className="text-warning font-bold">{incorrectCount} incorrect</span>
               </div>
-              <p className="text-xs text-muted-foreground">
-                12 correct or 9 incorrect ends the test
-              </p>
+              {!isPracticeMode && (
+                <p className="text-xs text-muted-foreground">
+                  12 correct or 9 incorrect ends the test
+                </p>
+              )}
             </div>
           </div>
         </motion.div>
