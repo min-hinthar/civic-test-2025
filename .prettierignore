@@ -4,3 +4,4 @@ dist
 coverage
 *.md
 package-lock.json
+pnpm-lock.yaml
