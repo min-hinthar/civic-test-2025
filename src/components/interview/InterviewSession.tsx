@@ -390,11 +390,11 @@ export function InterviewSession({
     safeSpeakLocal(greeting).then(speakResult => {
       if (cancelled) return;
       setExaminerState('idle');
-      if (speakResult === 'completed') {
-        transitionTimerRef.current = setTimeout(() => {
-          if (!cancelled) setQuestionPhase('chime');
-        }, 800);
-      }
+      // Always advance — even if TTS failed or was cancelled
+      const delay = speakResult === 'completed' ? 800 : 0;
+      transitionTimerRef.current = setTimeout(() => {
+        if (!cancelled) setQuestionPhase('chime');
+      }, delay);
     });
 
     return () => {
@@ -458,16 +458,14 @@ export function InterviewSession({
 
       if (cancelled) return;
       setExaminerState('listening');
-      if (speakResult === 'completed') {
-        setResponseStartTime(Date.now());
-        // Start speech recognition if supported
-        if (canUseSpeech) {
-          resetTranscript();
-          startListening().catch(() => {});
-          startRecording();
-        }
-        setQuestionPhase('responding');
+      // Always advance — even if audio playback failed
+      setResponseStartTime(Date.now());
+      if (canUseSpeech) {
+        resetTranscript();
+        startListening().catch(() => {});
+        startRecording();
       }
+      setQuestionPhase('responding');
     });
 
     return () => {
