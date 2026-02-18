@@ -392,35 +392,41 @@ export function SortModeContainer({ categoryFilter, onExit }: SortModeContainerP
 
   if (state.phase === 'round-summary' || state.phase === 'countdown') {
     return (
-      <RoundSummary
-        round={state.round}
-        totalCards={state.cards.length}
-        knownCount={state.knownIds.size}
-        unknownCount={state.unknownIds.size}
-        durationMs={Date.now() - state.startTime}
-        unknownIds={[...state.unknownIds]}
-        allUnknownIds={[...state.allUnknownIds]}
-        roundHistory={state.roundHistory}
-        sourceCards={state.sourceCards}
-        personalBest={personalBest}
-        onStartNextRound={startNextRound}
-        onStartCountdown={handleStartCountdown}
-        onFinishSession={handleConfirmExit}
-        isMaxRounds={state.round >= MAX_ROUNDS}
-        showBurmese={showBurmese}
-      >
-        {/* SRS batch add prompt */}
-        <SRSBatchAdd unknownIds={[...state.unknownIds]} showBurmese={showBurmese} />
-        {/* Countdown for auto-start next round */}
-        {state.phase === 'countdown' && (
-          <SortCountdown
-            onComplete={handleCountdownComplete}
-            onSkip={handleCountdownSkip}
-            onCancel={handleCountdownCancel}
-            showBurmese={showBurmese}
-          />
-        )}
-      </RoundSummary>
+      <>
+        {/* Screen reader announcement for round completion */}
+        <div role="status" aria-live="polite" className="sr-only">
+          {`Round complete. ${state.knownIds.size} correct, ${state.unknownIds.size} to study.`}
+        </div>
+        <RoundSummary
+          round={state.round}
+          totalCards={state.cards.length}
+          knownCount={state.knownIds.size}
+          unknownCount={state.unknownIds.size}
+          durationMs={Date.now() - state.startTime}
+          unknownIds={[...state.unknownIds]}
+          allUnknownIds={[...state.allUnknownIds]}
+          roundHistory={state.roundHistory}
+          sourceCards={state.sourceCards}
+          personalBest={personalBest}
+          onStartNextRound={startNextRound}
+          onStartCountdown={handleStartCountdown}
+          onFinishSession={handleConfirmExit}
+          isMaxRounds={state.round >= MAX_ROUNDS}
+          showBurmese={showBurmese}
+        >
+          {/* SRS batch add prompt */}
+          <SRSBatchAdd unknownIds={[...state.unknownIds]} showBurmese={showBurmese} />
+          {/* Countdown for auto-start next round */}
+          {state.phase === 'countdown' && (
+            <SortCountdown
+              onComplete={handleCountdownComplete}
+              onSkip={handleCountdownSkip}
+              onCancel={handleCountdownCancel}
+              showBurmese={showBurmese}
+            />
+          )}
+        </RoundSummary>
+      </>
     );
   }
 
