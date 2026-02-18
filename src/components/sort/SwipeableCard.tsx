@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useAnimate, PanInfo } from 'motion/react';
 import clsx from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -18,6 +18,8 @@ interface SwipeableCardProps {
   onSwipe: (direction: 'know' | 'dont-know') => void;
   onAnimationComplete: () => void;
   isAnimating: boolean;
+  /** Direction for button-initiated sort under reduced motion (quick linear slide) */
+  pendingDirection?: 'know' | 'dont-know' | null;
   showBurmese: boolean;
   speedLabel: string;
   className?: string;
@@ -52,11 +54,11 @@ function getAnswerText(q: Question): { en: string; my: string } {
  * Features:
  * - Horizontal drag with rotation following finger position
  * - Green overlay (know) when dragged right, amber overlay (don't know) when left
- * - Velocity-based commit: fast flick always commits; slow drag needs ~40% card width
+ * - Velocity-based commit: fast flick always commits; slow drag needs ~25% card width
  * - Spring-physics fling off-screen with velocity inheritance
  * - Snap-back to center when drag does not commit
  * - Bilingual zone labels (FLSH-08)
- * - Reduced motion: disables drag entirely (swipe only via parent buttons)
+ * - Reduced motion: disables drag, button sorts use quick 200ms linear slide (no rotation)
  * - Accessible: role="group" with aria-label, aria-live region for results
  */
 export function SwipeableCard({
@@ -64,6 +66,7 @@ export function SwipeableCard({
   onSwipe,
   onAnimationComplete,
   isAnimating,
+  pendingDirection,
   showBurmese,
   speedLabel,
   className,
@@ -91,6 +94,28 @@ export function SwipeableCard({
   // Announce sort result for screen readers
   const announceRef = useRef<HTMLDivElement>(null);
 
+  // Reduced motion: handle button-initiated sort with quick linear slide
+  useEffect(() => {
+    if (!shouldReduceMotion || !pendingDirection || !scope.current) return;
+
+    const direction = pendingDirection;
+    const exitX = direction === 'know' ? 300 : -300;
+
+    // Quick 200ms linear slide off-screen, no rotation
+    animate(scope.current, { x: exitX, opacity: 0 }, { duration: 0.2, ease: 'linear' })
+      .then(() => {
+        if (announceRef.current) {
+          announceRef.current.textContent =
+            direction === 'know' ? 'Sorted as: Know' : "Sorted as: Don't Know";
+        }
+        onAnimationComplete();
+      })
+      .catch(() => {
+        // Component unmounted during animation
+        onAnimationComplete();
+      });
+  }, [shouldReduceMotion, pendingDirection, scope, animate, onAnimationComplete]);
+
   const handleDragStart = useCallback(() => {
     isDraggingRef.current = true;
   }, []);
@@ -101,10 +126,18 @@ export function SwipeableCard({
 
       const { offset, velocity } = info;
       const cardWidth = scope.current?.offsetWidth ?? 300;
-      const threshold = cardWidth * 0.4;
 
-      // Commit if: fast flick OR sufficient distance
-      const isCommitted = Math.abs(velocity.x) > 800 || Math.abs(offset.x) > threshold;
+      // Lower distance threshold for comfortable mobile swipe (~75px on 300px card)
+      const distanceThreshold = cardWidth * 0.25;
+      // Lower velocity threshold for easier flick commits
+      const velocityThreshold = 500;
+      // Combined check: medium-speed + medium-distance catches gestures that fall through
+      const combinedCommit = Math.abs(velocity.x) > 300 && Math.abs(offset.x) > cardWidth * 0.15;
+
+      const isCommitted =
+        Math.abs(velocity.x) > velocityThreshold ||
+        Math.abs(offset.x) > distanceThreshold ||
+        combinedCommit;
       const direction: 'know' | 'dont-know' = offset.x > 0 ? 'know' : 'dont-know';
 
       if (isCommitted) {
@@ -112,8 +145,23 @@ export function SwipeableCard({
         const exitX = direction === 'know' ? window.innerWidth + 100 : -(window.innerWidth + 100);
         const exitRotation = direction === 'know' ? 30 : -30;
 
+        // Guard against null scope (component may unmount during spring fling)
+        if (!scope.current) {
+          onSwipe(direction);
+          onAnimationComplete();
+          isDraggingRef.current = false;
+          return;
+        }
+
+        // Timeout safety: force-complete if animation hangs longer than 1.5s
+        const safetyTimeout = setTimeout(() => {
+          onSwipe(direction);
+          onAnimationComplete();
+          isDraggingRef.current = false;
+        }, 1500);
+
         animate(
-          scope.current!,
+          scope.current,
           { x: exitX, rotate: exitRotation },
           {
             type: 'spring',
@@ -121,29 +169,47 @@ export function SwipeableCard({
             stiffness: 200,
             damping: 30,
           }
-        ).then(() => {
-          // Announce result for screen readers
-          if (announceRef.current) {
-            announceRef.current.textContent =
-              direction === 'know' ? 'Sorted as: Know' : "Sorted as: Don't Know";
-          }
-          onSwipe(direction);
-          onAnimationComplete();
-          isDraggingRef.current = false;
-        });
+        )
+          .then(() => {
+            clearTimeout(safetyTimeout);
+            // Announce result for screen readers
+            if (announceRef.current) {
+              announceRef.current.textContent =
+                direction === 'know' ? 'Sorted as: Know' : "Sorted as: Don't Know";
+            }
+            onSwipe(direction);
+            onAnimationComplete();
+            isDraggingRef.current = false;
+          })
+          .catch(() => {
+            // Component unmounted during animation -- expected on fast swipes
+            clearTimeout(safetyTimeout);
+            onSwipe(direction);
+            onAnimationComplete();
+            isDraggingRef.current = false;
+          });
       } else {
         // Snap back to center
+        if (!scope.current) {
+          isDraggingRef.current = false;
+          return;
+        }
         animate(
-          scope.current!,
+          scope.current,
           { x: 0, rotate: 0 },
           {
             type: 'spring',
             stiffness: 500,
             damping: 30,
           }
-        ).then(() => {
-          isDraggingRef.current = false;
-        });
+        )
+          .then(() => {
+            isDraggingRef.current = false;
+          })
+          .catch(() => {
+            // Component unmounted during snap-back
+            isDraggingRef.current = false;
+          });
       }
     },
     [isAnimating, scope, animate, onSwipe, onAnimationComplete]
@@ -171,55 +237,66 @@ export function SwipeableCard({
       {/* Draggable card wrapper */}
       <motion.div
         ref={scope}
-        style={{ x, rotate }}
+        style={{ x, rotate: shouldReduceMotion ? 0 : rotate }}
         drag={shouldReduceMotion ? false : 'x'}
-        dragElastic={1}
+        dragElastic={0.6}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        className="relative cursor-grab active:cursor-grabbing touch-none"
+        className={clsx(
+          'relative touch-none select-none',
+          !shouldReduceMotion && 'cursor-grab active:cursor-grabbing'
+        )}
       >
-        {/* Green "Know" overlay */}
-        <motion.div
-          style={{ opacity: knowOpacity }}
-          className="absolute inset-0 bg-success/30 rounded-2xl pointer-events-none z-10"
-          aria-hidden="true"
-        />
+        {/* Green "Know" overlay -- hidden under reduced motion (no drag) */}
+        {!shouldReduceMotion && (
+          <motion.div
+            style={{ opacity: knowOpacity }}
+            className="absolute inset-0 bg-success/30 rounded-2xl pointer-events-none"
+            aria-hidden="true"
+          />
+        )}
 
-        {/* Amber "Don't Know" overlay */}
-        <motion.div
-          style={{ opacity: dontKnowOpacity }}
-          className="absolute inset-0 bg-warning/30 rounded-2xl pointer-events-none z-10"
-          aria-hidden="true"
-        />
+        {/* Amber "Don't Know" overlay -- hidden under reduced motion */}
+        {!shouldReduceMotion && (
+          <motion.div
+            style={{ opacity: dontKnowOpacity }}
+            className="absolute inset-0 bg-warning/30 rounded-2xl pointer-events-none"
+            aria-hidden="true"
+          />
+        )}
 
-        {/* Zone labels that appear during drag */}
-        {/* Right side: "Know" */}
-        <motion.div
-          style={{ opacity: knowOpacity }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none text-right"
-          aria-hidden="true"
-        >
-          <span className="text-lg font-bold text-success drop-shadow-md">Know</span>
-          {isBurmese && (
-            <span className="block text-sm font-myanmar text-success/80 drop-shadow-md">
-              {'သိပါတယ်'}
-            </span>
-          )}
-        </motion.div>
+        {/* Zone labels that appear during drag -- hidden under reduced motion */}
+        {!shouldReduceMotion && (
+          <>
+            {/* Right side: "Know" */}
+            <motion.div
+              style={{ opacity: knowOpacity }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none text-right"
+              aria-hidden="true"
+            >
+              <span className="text-lg font-bold text-success drop-shadow-md">Know</span>
+              {isBurmese && (
+                <span className="block text-sm font-myanmar text-success/80 drop-shadow-md">
+                  {'\u101E\u102D\u1015\u102B\u1010\u101A\u103A'}
+                </span>
+              )}
+            </motion.div>
 
-        {/* Left side: "Don't Know" */}
-        <motion.div
-          style={{ opacity: dontKnowOpacity }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
-          aria-hidden="true"
-        >
-          <span className="text-lg font-bold text-warning drop-shadow-md">Don&apos;t Know</span>
-          {isBurmese && (
-            <span className="block text-sm font-myanmar text-warning/80 drop-shadow-md">
-              {'မသိပါ'}
-            </span>
-          )}
-        </motion.div>
+            {/* Left side: "Don't Know" */}
+            <motion.div
+              style={{ opacity: dontKnowOpacity }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
+              aria-hidden="true"
+            >
+              <span className="text-lg font-bold text-warning drop-shadow-md">Don&apos;t Know</span>
+              {isBurmese && (
+                <span className="block text-sm font-myanmar text-warning/80 drop-shadow-md">
+                  {'\u1019\u101E\u102D\u1015\u102B'}
+                </span>
+              )}
+            </motion.div>
+          </>
+        )}
 
         {/* Card content: Flashcard3D with click interception during drag */}
         <div onClickCapture={handleCardClick} className="relative">
