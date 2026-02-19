@@ -9,7 +9,8 @@
     "execution": false,
     "debug": true,
     "map_codebase": true,
-    "verify_work": true
+    "verify_work": true,
+    "discuss": true
   },
   "workflow": {
     "research": true,

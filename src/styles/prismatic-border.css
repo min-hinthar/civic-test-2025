@@ -46,21 +46,17 @@
   padding: 1px;
   background: conic-gradient(
     from var(--prismatic-angle),
-    hsl(0 80% 60% / 0.4),
-    hsl(60 80% 60% / 0.35),
-    hsl(120 80% 60% / 0.4),
-    hsl(180 80% 60% / 0.35),
-    hsl(240 80% 60% / 0.4),
-    hsl(300 80% 60% / 0.35),
-    hsl(0 80% 60% / 0.4)
+    hsl(0deg 80% 60% / 0.4),
+    hsl(60deg 80% 60% / 0.35),
+    hsl(120deg 80% 60% / 0.4),
+    hsl(180deg 80% 60% / 0.35),
+    hsl(240deg 80% 60% / 0.4),
+    hsl(300deg 80% 60% / 0.35),
+    hsl(0deg 80% 60% / 0.4)
   );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
   mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(rgb(255 255 255) 0 0) content-box,
+    linear-gradient(rgb(255 255 255) 0 0);
   mask-composite: exclude;
   animation: prismatic-rotate 4s linear infinite;
   pointer-events: none;
@@ -71,13 +67,13 @@
 .dark .prismatic-border::before {
   background: conic-gradient(
     from var(--prismatic-angle),
-    hsl(0 80% 60% / 0.7),
-    hsl(60 80% 60% / 0.6),
-    hsl(120 80% 60% / 0.7),
-    hsl(180 80% 60% / 0.6),
-    hsl(240 80% 60% / 0.7),
-    hsl(300 80% 60% / 0.6),
-    hsl(0 80% 60% / 0.7)
+    hsl(0deg 80% 60% / 0.7),
+    hsl(60deg 80% 60% / 0.6),
+    hsl(120deg 80% 60% / 0.7),
+    hsl(180deg 80% 60% / 0.6),
+    hsl(240deg 80% 60% / 0.7),
+    hsl(300deg 80% 60% / 0.6),
+    hsl(0deg 80% 60% / 0.7)
   );
   filter: blur(0.5px);
 }
@@ -100,6 +96,7 @@
 @media (prefers-reduced-motion: reduce) {
   .prismatic-border::before {
     animation: none;
+
     --prismatic-angle: 45deg;
   }
 }

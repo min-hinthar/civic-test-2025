@@ -79,8 +79,8 @@ body {
 .dark .page-shell::before {
   background:
     radial-gradient(ellipse at 10% 20%, hsl(var(--color-accent-purple) / 0.25), transparent 55%),
-    radial-gradient(ellipse at 85% 10%, hsl(270 60% 30% / 0.2), transparent 60%),
-    radial-gradient(ellipse at 50% 85%, hsl(320 60% 25% / 0.15), transparent 60%);
+    radial-gradient(ellipse at 85% 10%, hsl(270deg 60% 30% / 0.2), transparent 60%),
+    radial-gradient(ellipse at 50% 85%, hsl(320deg 60% 25% / 0.15), transparent 60%);
   opacity: 0.8;
 }
 
@@ -100,8 +100,8 @@ body::before {
 .dark body::before {
   background:
     radial-gradient(ellipse at 10% 20%, hsl(var(--color-accent-purple) / 0.3), transparent 55%),
-    radial-gradient(ellipse at 85% 10%, hsl(270 60% 30% / 0.25), transparent 60%),
-    radial-gradient(ellipse at 50% 85%, hsl(320 60% 25% / 0.2), transparent 60%);
+    radial-gradient(ellipse at 85% 10%, hsl(270deg 60% 30% / 0.25), transparent 60%),
+    radial-gradient(ellipse at 50% 85%, hsl(320deg 60% 25% / 0.2), transparent 60%);
   opacity: 0.7;
 }
 
@@ -139,6 +139,7 @@ html.theme-transitioning .page-shell {
     sans-serif;
   letter-spacing: 0.02em;
   line-height: 1.4;
+
   /* Myanmar line-breaking: prevent mid-syllable breaks */
   overflow-wrap: anywhere;
   word-break: keep-all;
@@ -205,7 +206,6 @@ html.theme-transitioning .page-shell {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
@@ -348,11 +348,10 @@ html.theme-transitioning .page-shell {
   .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
     backdrop-filter: blur(var(--glass-light-blur));
-    -webkit-backdrop-filter: blur(var(--glass-light-blur));
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.12),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.12),
       0 4px 12px -2px hsl(var(--color-overlay) / 0.1);
     transition:
       box-shadow var(--duration-slow) var(--ease-out),
@@ -362,11 +361,10 @@ html.theme-transitioning .page-shell {
   .glass-medium {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
     backdrop-filter: blur(var(--glass-medium-blur));
-    -webkit-backdrop-filter: blur(var(--glass-medium-blur));
     border: 1px solid hsl(var(--color-border) / 0.35);
     border-radius: var(--radius-2xl);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.15),
       0 8px 24px -4px hsl(var(--color-overlay) / 0.15);
     transition:
       box-shadow var(--duration-slow) var(--ease-out),
@@ -376,11 +374,10 @@ html.theme-transitioning .page-shell {
   .glass-heavy {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
     backdrop-filter: blur(var(--glass-heavy-blur));
-    -webkit-backdrop-filter: blur(var(--glass-heavy-blur));
     border: 1px solid hsl(var(--color-border) / 0.4);
     border-radius: var(--radius-2xl);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.2),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.2),
       0 12px 40px -8px hsl(var(--color-overlay) / 0.2);
     transition:
       box-shadow var(--duration-slow) var(--ease-out),
@@ -392,7 +389,7 @@ html.theme-transitioning .page-shell {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
-      inset 0 0 0 1px hsl(0 0% 100% / 0.05),
+      inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 6px 16px -3px hsl(var(--color-overlay) / 0.25);
   }
 
@@ -400,7 +397,7 @@ html.theme-transitioning .page-shell {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
-      inset 0 0 0 1px hsl(0 0% 100% / 0.05),
+      inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 10px 28px -5px hsl(var(--color-overlay) / 0.3);
   }
 
@@ -408,7 +405,7 @@ html.theme-transitioning .page-shell {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
-      inset 0 0 0 1px hsl(0 0% 100% / 0.05),
+      inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 14px 44px -10px hsl(var(--color-overlay) / 0.35);
   }
 
@@ -416,12 +413,11 @@ html.theme-transitioning .page-shell {
   .glass-card {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
     backdrop-filter: blur(var(--glass-light-blur));
-    -webkit-backdrop-filter: blur(var(--glass-light-blur));
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
     padding: 1.25rem;
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.12),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.12),
       0 4px 12px -2px hsl(var(--color-overlay) / 0.1);
     transition:
       box-shadow var(--duration-slow) var(--ease-out),
@@ -432,7 +428,7 @@ html.theme-transitioning .page-shell {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
-      inset 0 0 0 1px hsl(0 0% 100% / 0.05),
+      inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 6px 16px -3px hsl(var(--color-overlay) / 0.25);
   }
 
@@ -499,9 +495,9 @@ html.theme-transitioning .page-shell {
     background: linear-gradient(
       120deg,
       transparent 20%,
-      rgba(245, 158, 11, 0.18) 40%,
-      rgba(253, 224, 71, 0.25) 50%,
-      rgba(245, 158, 11, 0.18) 60%,
+      rgb(245 158 11 / 0.18) 40%,
+      rgb(253 224 71 / 0.25) 50%,
+      rgb(245 158 11 / 0.18) 60%,
       transparent 80%
     );
     background-size: 250% 100%;
@@ -525,14 +521,14 @@ html.theme-transitioning .page-shell {
   .glass-nav {
     background-image: linear-gradient(to bottom, hsl(var(--color-surface) / 0.15), transparent);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.15),
       1px 0 0 0 hsl(var(--color-border) / 0.2);
   }
 
   .dark .glass-nav {
     background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.08),
+      inset 0 1px 0 0 hsl(0deg 0% 100% / 0.08),
       1px 0 0 0 hsl(var(--color-border) / 0.3);
   }
 

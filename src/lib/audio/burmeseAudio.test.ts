@@ -56,6 +56,10 @@ describe('createBurmesePlayer', () => {
       class MockAudioElement {
         src = '';
         playbackRate = 1;
+        // Property-based event handlers (used by createAudioPlayer)
+        onended: (() => void) | null = null;
+        onerror: (() => void) | null = null;
+        onloadedmetadata: (() => void) | null = null;
         private _listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
 
         pause = mockPause;
@@ -76,6 +80,9 @@ describe('createBurmesePlayer', () => {
           if (autoFireEnded) {
             // Schedule 'ended' event to fire asynchronously (simulates audio finishing)
             Promise.resolve().then(() => {
+              // Fire property handler (used by createAudioPlayer)
+              if (this.onended) this.onended();
+              // Fire addEventListener handlers
               const handlers = this._listeners['ended'] ?? [];
               handlers.forEach(h => h());
             });
@@ -85,6 +92,10 @@ describe('createBurmesePlayer', () => {
 
         /** Test helper: manually fire an event */
         _fireEvent(name: string) {
+          // Fire property handler
+          const propHandler = (this as Record<string, unknown>)[`on${name}`];
+          if (typeof propHandler === 'function') (propHandler as () => void)();
+          // Fire addEventListener handlers
           const handlers = this._listeners[name] ?? [];
           handlers.forEach(h => h());
         }
