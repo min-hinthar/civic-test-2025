@@ -102,54 +102,54 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VISC-01 | — | Pending |
-| VISC-02 | — | Pending |
-| VISC-03 | — | Pending |
-| VISC-04 | — | Pending |
-| VISC-05 | — | Pending |
-| VISC-06 | — | Pending |
-| VISC-07 | — | Pending |
-| MOBI-01 | — | Pending |
-| MOBI-02 | — | Pending |
-| MOBI-03 | — | Pending |
-| MOBI-04 | — | Pending |
-| MOBI-05 | — | Pending |
-| MOBI-06 | — | Pending |
-| ANIM-01 | — | Pending |
-| ANIM-02 | — | Pending |
-| ANIM-03 | — | Pending |
-| ANIM-04 | — | Pending |
-| ANIM-05 | — | Pending |
-| ANIM-06 | — | Pending |
-| CELB-01 | — | Pending |
-| CELB-02 | — | Pending |
-| CELB-03 | — | Pending |
-| CELB-04 | — | Pending |
-| CELB-05 | — | Pending |
-| CELB-06 | — | Pending |
-| CELB-07 | — | Pending |
-| CELB-08 | — | Pending |
-| CELB-09 | — | Pending |
-| CELB-10 | — | Pending |
-| STAT-01 | — | Pending |
-| STAT-02 | — | Pending |
-| STAT-03 | — | Pending |
-| STAT-04 | — | Pending |
-| STAT-05 | — | Pending |
-| STAT-06 | — | Pending |
-| STAT-07 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| CONT-05 | — | Pending |
-| CONT-06 | — | Pending |
+| VISC-01 | Phase 29 | Pending |
+| VISC-02 | Phase 29 | Pending |
+| VISC-03 | Phase 29 | Pending |
+| VISC-04 | Phase 29 | Pending |
+| VISC-05 | Phase 29 | Pending |
+| VISC-06 | Phase 29 | Pending |
+| VISC-07 | Phase 29 | Pending |
+| MOBI-01 | Phase 30 | Pending |
+| MOBI-02 | Phase 30 | Pending |
+| MOBI-03 | Phase 30 | Pending |
+| MOBI-04 | Phase 30 | Pending |
+| MOBI-05 | Phase 30 | Pending |
+| MOBI-06 | Phase 30 | Pending |
+| ANIM-01 | Phase 31 | Pending |
+| ANIM-02 | Phase 31 | Pending |
+| ANIM-03 | Phase 31 | Pending |
+| ANIM-04 | Phase 31 | Pending |
+| ANIM-05 | Phase 31 | Pending |
+| ANIM-06 | Phase 31 | Pending |
+| CELB-01 | Phase 32 | Pending |
+| CELB-02 | Phase 32 | Pending |
+| CELB-03 | Phase 32 | Pending |
+| CELB-04 | Phase 32 | Pending |
+| CELB-05 | Phase 32 | Pending |
+| CELB-06 | Phase 32 | Pending |
+| CELB-07 | Phase 32 | Pending |
+| CELB-08 | Phase 32 | Pending |
+| CELB-09 | Phase 32 | Pending |
+| CELB-10 | Phase 32 | Pending |
+| STAT-01 | Phase 33 | Pending |
+| STAT-02 | Phase 33 | Pending |
+| STAT-03 | Phase 33 | Pending |
+| STAT-04 | Phase 33 | Pending |
+| STAT-05 | Phase 33 | Pending |
+| STAT-06 | Phase 33 | Pending |
+| STAT-07 | Phase 33 | Pending |
+| CONT-01 | Phase 34 | Pending |
+| CONT-02 | Phase 34 | Pending |
+| CONT-03 | Phase 34 | Pending |
+| CONT-04 | Phase 34 | Pending |
+| CONT-05 | Phase 34 | Pending |
+| CONT-06 | Phase 34 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 39 total
-- Mapped to phases: 0
-- Unmapped: 39
+- Mapped to phases: 39
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after initial definition*
+*Last updated: 2026-02-19 after roadmap creation*
