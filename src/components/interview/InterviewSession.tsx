@@ -44,6 +44,7 @@ import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { gradeAnswer } from '@/lib/interview/answerGrader';
 import { playChime } from '@/lib/interview/audioChime';
 import { getRandomGreeting } from '@/lib/interview/interviewGreetings';
+import { getCorrectFeedback, getIncorrectFeedback } from '@/lib/interview/interviewFeedback';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import { allQuestions } from '@/constants/questions';
 import { saveSession } from '@/lib/sessions/sessionStore';
@@ -883,14 +884,14 @@ export function InterviewSession({
     }, 600);
 
     if (mode === 'practice') {
-      // Practice: show correct answer and feedback
+      // Practice: show correct answer with randomized feedback phrase
       const primaryAnswer = currentQuestion.studyAnswers[0]?.text_en ?? '';
+      const feedback =
+        lastResult.selfGrade === 'correct' ? getCorrectFeedback() : getIncorrectFeedback();
       const feedbackText =
         lastResult.selfGrade === 'correct'
-          ? `Correct! The answer is: ${primaryAnswer}`
-          : `The correct answer is: ${primaryAnswer}`;
-      const prefixAudio =
-        lastResult.selfGrade === 'correct' ? 'correct-prefix' : 'incorrect-prefix';
+          ? `${feedback.text} The answer is: ${primaryAnswer}`
+          : `${feedback.text} The correct answer is: ${primaryAnswer}`;
 
       addMessage(
         'examiner',
@@ -901,8 +902,8 @@ export function InterviewSession({
         lastGradeResult ?? undefined
       );
 
-      // Play prefix audio ("Correct! The answer is:") then answer audio
-      safePlayInterview(prefixAudio)
+      // Play feedback audio phrase then answer audio
+      safePlayInterview(feedback.audio)
         .then(async () => {
           if (cancelled) return;
           try {
@@ -926,14 +927,18 @@ export function InterviewSession({
           }, TRANSITION_DELAY_MS);
         });
     } else {
-      // Real mode: brief acknowledgment
-      const acks = ['Thank you.', 'Next question.', 'Alright.'];
-      const ackText = acks[currentIndex % acks.length];
-      addMessage('examiner', ackText);
+      // Real mode: brief feedback acknowledgment (no answer reveal)
+      const feedback =
+        lastResult.selfGrade === 'correct' ? getCorrectFeedback() : getIncorrectFeedback();
+      addMessage('examiner', feedback.text);
 
-      transitionTimerRef.current = setTimeout(() => {
-        if (!cancelled) advanceToNext();
-      }, 800);
+      // Play brief feedback audio then advance
+      safePlayInterview(feedback.audio).then(() => {
+        if (cancelled) return;
+        transitionTimerRef.current = setTimeout(() => {
+          if (!cancelled) advanceToNext();
+        }, 500);
+      });
     }
 
     return () => {

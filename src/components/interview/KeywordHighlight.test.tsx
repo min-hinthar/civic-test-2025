@@ -1,8 +1,31 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { isValidElement, type ReactElement } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { highlightKeywords, KeywordHighlight } from './KeywordHighlight';
+
+// Mock localStorage for LanguageProvider (jsdom sometimes lacks full implementation)
+beforeAll(() => {
+  const store: Record<string, string> = {};
+  Object.defineProperty(window, 'localStorage', {
+    value: {
+      getItem: vi.fn((key: string) => store[key] ?? null),
+      setItem: vi.fn((key: string, value: string) => {
+        store[key] = value;
+      }),
+      removeItem: vi.fn((key: string) => {
+        delete store[key];
+      }),
+      clear: vi.fn(() => {
+        Object.keys(store).forEach(key => delete store[key]);
+      }),
+      key: vi.fn(),
+      length: 0,
+    },
+    writable: true,
+    configurable: true,
+  });
+});
 
 /** Wrap component in required providers */
 function renderWithProviders(ui: React.ReactElement) {
@@ -136,7 +159,8 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    const wrapper = container.firstElementChild?.firstElementChild;
+    // Find the space-y-2 wrapper div (the KeywordHighlight root)
+    const wrapper = container.querySelector('.space-y-2, [class*="text-sm"]');
     expect(wrapper?.className).toContain('text-sm');
   });
 
@@ -150,7 +174,8 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    const wrapper = container.firstElementChild?.firstElementChild;
+    // Find the space-y-2 wrapper div (the KeywordHighlight root)
+    const wrapper = container.querySelector('.space-y-2, [class*="text-base"]');
     expect(wrapper?.className).toContain('text-base');
   });
 
