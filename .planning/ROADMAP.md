@@ -272,7 +272,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 | 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
 | 27. Gap Closure (Timer A11Y) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
-| 28. Interview UX & Voice Flow | 9/9 | Complete   | 2026-02-19 | - |
+| 28. Interview UX & Voice Flow | 9/9 | Complete    | 2026-02-19 | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
