@@ -37,7 +37,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 - [ ] **Phase 23: Flashcard Sort Mode** - Quizlet-style Know/Don't Know card sorting with SRS integration
 - [ ] **Phase 24: Accessibility & Performance** - WCAG compliance, screen reader support, Web Vitals, bundle analysis
 - [ ] **Phase 25: Burmese Translation Audit** - Natural phrasing, missing translations, consistent terminology
-- [ ] **Phase 26: Gap Closure — Session, Navigation & TTS Fixes** - Fix mock test resume, sort route, interview English-only, voice picker
+- [x] **Phase 26: Gap Closure — Session, Navigation & TTS Fixes** - Fix mock test resume, sort route, interview English-only, voice picker (completed 2026-02-19)
 - [ ] **Phase 27: Gap Closure — Timer Accessibility** - Overall timer announcements + extension scope
 
 ## Phase Details
@@ -266,7 +266,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
-| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 3/3 | Complete | 2026-02-18 |
+| 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
 | 27. Gap Closure (Timer A11Y) | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
