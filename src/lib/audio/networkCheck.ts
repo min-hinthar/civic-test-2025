@@ -41,7 +41,7 @@ const PROBE_TIMEOUT_MS = 2000;
 export async function checkNetworkQuality(): Promise<NetworkQuality> {
   try {
     // Try Network Information API first (Chrome/Edge/Android)
-    const nav = navigator as Record<string, unknown>;
+    const nav = navigator as unknown as Record<string, unknown>;
     const connection = nav.connection as { downlink?: number } | undefined;
     if (connection && typeof connection.downlink === 'number') {
       return connection.downlink < SLOW_DOWNLINK_MBPS ? 'slow' : 'fast';
