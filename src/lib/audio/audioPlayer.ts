@@ -81,11 +81,17 @@ export interface AudioPlayer {
 // Player Factory
 // ---------------------------------------------------------------------------
 
+/** Fixed ceiling if metadata never loads (covers longest interview clips). */
+const MAX_FALLBACK_MS = 30_000;
+/** Buffer added to known duration to account for playback jitter. */
+const TIMEOUT_BUFFER_MS = 3_000;
+
 /**
  * Create an audio player wrapping HTMLAudioElement.
  *
  * - play() creates a new Audio element each time, sets playbackRate, resolves on ended
  * - Retries once on load error before rejecting
+ * - Timeout fallback auto-resolves if `ended` event never fires (browser quirk safety net)
  * - State subscription via Set<callback> (same pattern as ttsCore.ts)
  */
 export function createAudioPlayer(): AudioPlayer {
@@ -119,6 +125,17 @@ export function createAudioPlayer(): AudioPlayer {
       el.playbackRate = rate;
       audio = el;
 
+      let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+      function startFallbackTimer(ms: number) {
+        if (fallbackTimer !== null) clearTimeout(fallbackTimer);
+        fallbackTimer = setTimeout(() => {
+          cleanup();
+          resetState();
+          resolve();
+        }, ms);
+      }
+
       const onEnded = () => {
         cleanup();
         resetState();
@@ -130,13 +147,30 @@ export function createAudioPlayer(): AudioPlayer {
         reject(new Error('Audio load failed'));
       };
 
+      // When metadata loads, tighten the fallback to actual duration + buffer
+      const onMetadata = () => {
+        if (el.duration && isFinite(el.duration)) {
+          const durationMs = (el.duration / (rate || 1)) * 1000 + TIMEOUT_BUFFER_MS;
+          startFallbackTimer(durationMs);
+        }
+      };
+
       function cleanup() {
+        if (fallbackTimer !== null) {
+          clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        }
         el.removeEventListener('ended', onEnded);
         el.removeEventListener('error', onError);
+        el.removeEventListener('loadedmetadata', onMetadata);
       }
 
       el.addEventListener('ended', onEnded);
       el.addEventListener('error', onError);
+      el.addEventListener('loadedmetadata', onMetadata);
+
+      // Start with fixed ceiling — tightened to real duration once metadata arrives
+      startFallbackTimer(MAX_FALLBACK_MS);
 
       el.play().catch(onError);
     });
