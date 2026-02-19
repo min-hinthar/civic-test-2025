@@ -269,7 +269,22 @@
   --glass-heavy-blur: 32px;
   --glass-heavy-opacity: 0.45;
 
-  /* ── Typography ── */
+  /* ── Typography Scale (defined in tailwind.config.js fontSize) ── */
+  /* caption:    0.625rem / 10px  — micro-labels, badges, chip counts */
+  /* body-xs:    0.75rem  / 12px  — secondary labels, timestamps */
+  /* body-sm:    0.875rem / 14px  — body small, form labels */
+  /* body:       1rem     / 16px  — default body text */
+  /* body-lg:    1.125rem / 18px  — emphasized body, lead text */
+  /* heading-sm: 1.25rem  / 20px  — section headings (semibold) */
+  /* heading:    1.75rem  / 28px  — page headings (bold) */
+  /* display:    2.25rem  / 36px  — hero/display text (extrabold) */
+  /*
+   * Usage: `text-caption`, `text-body-sm`, `text-heading`, etc.
+   * All Tailwind default sizes (text-xs through text-9xl) remain available.
+   * Prefer semantic names for new code; migrate existing ad-hoc sizes gradually.
+   */
+
+  /* ── Typography (font families & weights) ── */
   --font-sans: 'Inter', 'Noto Sans Myanmar', system-ui, -apple-system, sans-serif;
   --font-myanmar: 'Noto Sans Myanmar', 'Inter', system-ui, -apple-system, sans-serif;
   --font-weight-normal: 400;

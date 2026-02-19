@@ -149,6 +149,16 @@ module.exports = {
         chunky: 'var(--shadow-chunky)',
         'chunky-active': 'var(--shadow-chunky-active)',
       },
+      fontSize: {
+        caption: ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.01em' }],
+        'body-xs': ['0.75rem', { lineHeight: '1rem' }],
+        'body-sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        body: ['1rem', { lineHeight: '1.5rem' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'heading-sm': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }],
+        heading: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '700' }],
+        display: ['2.25rem', { lineHeight: '2.75rem', fontWeight: '800' }],
+      },
       transitionDuration: {
         instant: 'var(--duration-instant)',
         fast: 'var(--duration-fast)',
