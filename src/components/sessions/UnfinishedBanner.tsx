@@ -75,7 +75,7 @@ function getSessionRoute(type: SessionSnapshot['type']): string {
     case 'interview':
       return '/interview';
     case 'sort':
-      return '/sort';
+      return '/study#sort';
   }
 }
 

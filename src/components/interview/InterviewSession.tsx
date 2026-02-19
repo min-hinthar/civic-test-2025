@@ -154,7 +154,8 @@ export function InterviewSession({
   initialIncorrectCount,
   initialStartTime,
 }: InterviewSessionProps) {
-  const { showBurmese, mode: languageMode } = useLanguage();
+  const { showBurmese: globalShowBurmese, mode: languageMode } = useLanguage();
+  const showBurmese = mode === 'realistic' ? false : globalShowBurmese;
   const shouldReduceMotion = useReducedMotion();
   const { cancel: cancelTTS, settings: ttsSettings } = useTTS();
 
