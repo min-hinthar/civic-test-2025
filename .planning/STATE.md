@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 28 of 28 (Interview UX & Voice Flow Polish)
-Plan: 2 of 9 in current phase
+Plan: 3 of 9 in current phase
 Status: In progress (Wave 1)
-Last activity: 2026-02-19 -- Completed 28-02-PLAN.md (TextAnswerInput + KeywordHighlight components)
+Last activity: 2026-02-19 -- Completed 28-03-PLAN.md (useInterviewGuard + useOrientationLock + useVisibilityPause hooks)
 
-Progress: [##--------] 22% (2/9 plans complete)
+Progress: [###-------] 33% (3/9 plans complete)
 
 ## Completed Milestones
 
@@ -335,10 +335,18 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Old LanguageToggle has zero consumers after migration -- ready for deletion
 - SRSWidget and AchievementsTab already used conditional class pattern (showBurmese ? 'font-myanmar' : '') -- no changes needed
 - TestPage and StudyGuidePage required wrapping font-myanmar blocks with {showBurmese && (...)}
+- [Phase 28]: Cache name audio-v2 matches SW CacheFirst config for seamless offline playback
+- [Phase 28]: Batch size of 6 parallel fetches balances speed vs connection saturation
+- [Phase 28]: Partial failures tracked (not thrown) so interview starts with whatever cached
+- [Phase 28]: checkNetworkQuality defaults to fast on unexpected errors to avoid blocking interview start
+- [Phase 28]: Navigator connection typed via Record<string, unknown> to avoid eslint no-explicit-any
 - [Phase 28]: highlightKeywords exported as pure utility for testability
 - [Phase 28]: Word boundary regex with longest-first keyword sorting prevents partial-word highlights
 - [Phase 28]: iOS Safari detection auto-detected via UA string, overridable via showIOSSafariHint prop
 - [Phase 28]: TextAnswerInput uses textarea with no Enter key submit -- accepts multiline naturally
+- [Phase 28]: ScreenOrientationWithLock interface extends ScreenOrientation for type-safe lock/unlock (TypeScript DOM lib omits lock method)
+- [Phase 28]: History guard uses state object marker ({ interviewGuard: true }) to distinguish back press from hash routing popstate
+- [Phase 28]: Orientation lock returns { locked, supported } tuple for conditional CSS landscape overlay fallback
 
 ### Roadmap Evolution
 
@@ -359,11 +367,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 28-02-PLAN.md
-Next step: Continue Phase 28 Wave 1 (plans 01, 03 in parallel) then Wave 2
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-02-SUMMARY.md
+Stopped at: Completed 28-03-PLAN.md
+Next step: Continue Phase 28 Wave 1 (plan 01 if not done) then Wave 2
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-19 (Phase 28 plan 02 complete)*
+*Last updated: 2026-02-19 (Phase 28 plan 03 complete)*
