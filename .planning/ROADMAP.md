@@ -232,6 +232,12 @@ Plans:
   2. Dashboard UnfinishedBanner for sort sessions navigates to the study page sort tab (not a dead route)
   3. Interview realistic mode shows zero Burmese UI text (TTS/STT already English-only; now UI chrome too)
   4. User can select their preferred TTS voice from a dropdown in Settings > Speech & Audio
+**Plans**: 3 plans
+
+Plans:
+- [ ] 26-01-PLAN.md — Mock test resume: RESUME_SESSION action + TestPage dispatch wiring
+- [ ] 26-02-PLAN.md — VoicePicker: TTSSettings extension + voice dropdown in Settings
+- [ ] 26-03-PLAN.md — Interview English-only override + sort route fix
 
 ### Phase 27: Gap Closure — Timer Accessibility
 **Goal**: The overall mock test timer meets WCAG screen reader requirements and timer extension scope is clarified
@@ -260,7 +266,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
-| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 0/TBD | Not started | - |
+| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 0/3 | Not started | - |
 | 27. Gap Closure (Timer A11Y) | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
