@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 28 of 28 (Interview UX & Voice Flow Polish)
-Plan: 3 of 9 in current phase
-Status: In progress (Wave 1)
-Last activity: 2026-02-19 -- Completed 28-03-PLAN.md (useInterviewGuard + useOrientationLock + useVisibilityPause hooks)
+Plan: 4 of 9 in current phase
+Status: In progress (Wave 2)
+Last activity: 2026-02-19 -- Completed 28-04-PLAN.md (InterviewCountdown audio loading, TTSFallbackBadge, LandscapeOverlay)
 
-Progress: [###-------] 33% (3/9 plans complete)
+Progress: [####------] 44% (4/9 plans complete)
 
 ## Completed Milestones
 
@@ -347,6 +347,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28]: ScreenOrientationWithLock interface extends ScreenOrientation for type-safe lock/unlock (TypeScript DOM lib omits lock method)
 - [Phase 28]: History guard uses state object marker ({ interviewGuard: true }) to distinguish back press from hash routing popstate
 - [Phase 28]: Orientation lock returns { locked, supported } tuple for conditional CSS landscape overlay fallback
+- [Phase 28]: Loading phase runs precacheInterviewAudio and checkNetworkQuality in parallel
+- [Phase 28]: 300ms delay after loading completes before transitioning to countdown for visual smoothness
+- [Phase 28]: useRef loadingStarted flag prevents double-invocation in StrictMode
+- [Phase 28]: TTSFallbackBadge uses compact (icon-only) and full (icon+text) variants
+- [Phase 28]: LandscapeOverlay uses Tailwind landscape:flex portrait:hidden for CSS-only orientation detection
+- [Phase 28]: Burmese rotation prompt text: simple imperative sentence for clarity
 
 ### Roadmap Evolution
 
@@ -367,9 +373,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 28-03-PLAN.md
-Next step: Continue Phase 28 Wave 1 (plan 01 if not done) then Wave 2
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-03-SUMMARY.md
+Stopped at: Completed 28-04-PLAN.md
+Next step: Continue Phase 28 Wave 2 (plans 05-06)
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-04-SUMMARY.md
 
 ---
 

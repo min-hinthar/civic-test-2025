@@ -272,7 +272,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 | 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
 | 27. Gap Closure (Timer A11Y) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
-| 28. Interview UX & Voice Flow | 3/9 | In Progress|  | - |
+| 28. Interview UX & Voice Flow | 4/9 | In Progress|  | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
@@ -296,7 +296,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
   8. Network quality warning shown before start on slow/offline connections
   9. Screen reader announcements for new features (timer urgency, keyword highlights, mode badge)
   10. Production build succeeds with no regressions
-**Plans:** 3/9 plans executed
+**Plans:** 4/9 plans executed
 
 Plans:
 - [ ] 28-01-PLAN.md -- Audio pre-cache module + network quality check + unit tests
