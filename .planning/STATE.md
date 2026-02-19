@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 28 of 28 (Interview UX & Voice Flow Polish)
-Plan: 5 of 9 in current phase
-Status: In progress (Wave 2)
-Last activity: 2026-02-19 -- Completed 28-05-PLAN.md (ModeBadge, InterviewProgress, InterviewTimer enhancement, LongPressButton)
+Plan: 8 of 9 in current phase
+Status: In progress (Wave 3)
+Last activity: 2026-02-19 -- Completed 28-08-PLAN.md (Interview feedback phrases + audio generation)
 
-Progress: [#####-----] 55% (5/9 plans complete)
+Progress: [########--] 88% (8/9 plans complete)
 
 ## Completed Milestones
 
@@ -359,6 +359,8 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28]: Three-tier urgency: white (>5s), amber (5s-3s), red (<3s) using CSS custom properties
 - [Phase 28]: LongPressButton uses requestAnimationFrame (not setInterval) for smooth 60fps progress
 - [Phase 28]: Refs only in event handlers (not render) for React Compiler safety in LongPressButton
+- [Phase 28]: Python script extended (not new TS script) for feedback audio -- existing generate-interview-audio.py pattern
+- [Phase 28]: INTERVIEW_AUDIO_NAMES changed from as-const tuple to readonly string[] for FEEDBACK_AUDIO_NAMES spread
 
 ### Roadmap Evolution
 
@@ -379,9 +381,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 28-05-PLAN.md
-Next step: Continue Phase 28 Wave 2 (plan 06) then Wave 3
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-05-SUMMARY.md
+Stopped at: Completed 28-08-PLAN.md
+Next step: Continue Phase 28 Wave 4 (plan 09 - final)
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-08-SUMMARY.md
 
 ---
 
