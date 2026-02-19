@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 28 of 28 (Interview UX & Voice Flow Polish)
-Plan: 8 of 9 in current phase
-Status: In progress (Wave 3)
-Last activity: 2026-02-19 -- Completed 28-08-PLAN.md (Interview feedback phrases + audio generation)
+Plan: 9 of 9 in current phase
+Status: COMPLETE
+Last activity: 2026-02-19 -- Completed 28-09-PLAN.md (Final integration polish, bilingual strings, build verification)
 
-Progress: [########--] 88% (8/9 plans complete)
+Progress: [##########] 100% (9/9 plans complete)
 
 ## Completed Milestones
 
@@ -30,7 +30,7 @@ See `.planning/MILESTONES.md` for details.
 **Velocity:**
 - v1.0: 72 plans in ~14 hours (~11 min/plan avg)
 - v2.0: 47 plans in ~5 days, 162 commits, +32K/-8K lines
-- v2.1: 69 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12, Phase 22: 9, Phase 23: 9, Phase 24: 10, Phase 25: 10)
+- v2.1: 78 plans (Phase 18: 7, Phase 19: 6, Phase 20: 6, Phase 21: 12, Phase 22: 9, Phase 23: 9, Phase 24: 10, Phase 25: 10, Phase 28: 9)
 
 ## Accumulated Context
 
@@ -372,6 +372,11 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28-06]: inputMode defaults to 'text' when canUseSpeech is false
 - [Phase 28-06]: Visibility pause cancels all audio players + TTS, shows brief overlay
 - [Phase 28-06]: LandscapeOverlay rendered when orientation lock API unsupported
+- [Phase 28-09]: Timer urgency sr-only assertive at exactly 5s and 3s (matching Phase 27 pattern)
+- [Phase 28-09]: Feedback phrases randomized from interviewFeedback module in both Practice and Real modes
+- [Phase 28-09]: Real mode plays brief feedback audio acknowledgment (no answer reveal)
+- [Phase 28-09]: Missing keywords label uses centralized bilingual string
+- [Phase 28-09]: KeywordHighlight tests wrapped in LanguageProvider with localStorage mock for jsdom
 
 ### Roadmap Evolution
 
@@ -392,9 +397,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 28-08-PLAN.md
-Next step: Continue Phase 28 Wave 4 (plan 09 - final)
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-08-SUMMARY.md
+Stopped at: Completed 28-09-PLAN.md (Phase 28 COMPLETE)
+Next step: Phase 28 complete. All 9 plans executed. v2.1 milestone ready for final audit.
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-09-SUMMARY.md
 
 ---
 
