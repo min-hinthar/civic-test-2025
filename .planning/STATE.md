@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 27 COMPLETE
+**Current focus:** v2.1 Quality & Polish -- Phase 28 in progress
 
 ## Current Position
 
-Phase: 27 of 27 (Gap Closure -- Timer Accessibility)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-02-18 -- Completed 27-01-PLAN.md (sr-only timer announcements + WCAG 2.2.1 exception)
+Phase: 28 of 28 (Interview UX & Voice Flow Polish)
+Plan: 2 of 9 in current phase
+Status: In progress (Wave 1)
+Last activity: 2026-02-19 -- Completed 28-02-PLAN.md (TextAnswerInput + KeywordHighlight components)
 
-Progress: [##########] 100% (1/1 plans complete)
+Progress: [##--------] 22% (2/9 plans complete)
 
 ## Completed Milestones
 
@@ -335,6 +335,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - Old LanguageToggle has zero consumers after migration -- ready for deletion
 - SRSWidget and AchievementsTab already used conditional class pattern (showBurmese ? 'font-myanmar' : '') -- no changes needed
 - TestPage and StudyGuidePage required wrapping font-myanmar blocks with {showBurmese && (...)}
+- [Phase 28]: highlightKeywords exported as pure utility for testability
+- [Phase 28]: Word boundary regex with longest-first keyword sorting prevents partial-word highlights
+- [Phase 28]: iOS Safari detection auto-detected via UA string, overridable via showIOSSafariHint prop
+- [Phase 28]: TextAnswerInput uses textarea with no Enter key submit -- accepts multiline naturally
 
 ### Roadmap Evolution
 
@@ -354,12 +358,12 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: Phase 28 context gathered
-Next step: Plan Phase 28 (Interview UX & Voice Flow Polish)
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-CONTEXT.md
+Last session: 2026-02-19
+Stopped at: Completed 28-02-PLAN.md
+Next step: Continue Phase 28 Wave 1 (plans 01, 03 in parallel) then Wave 2
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-02-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 28 context gathered)*
+*Last updated: 2026-02-19 (Phase 28 plan 02 complete)*
