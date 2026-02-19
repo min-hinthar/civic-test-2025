@@ -84,7 +84,14 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
   3. Border radius is consistent per component type (pills=full, buttons=xl, cards=2xl, modals=3xl, inputs=lg) with no per-screen overrides
   4. All interactive elements pass a 44x44px minimum touch target audit (including icon buttons, filter chips, and close buttons)
   5. Dark mode glass panels have tuned contrast, shadow depth, and text readability — no washed-out or unreadable text on glass surfaces
-**Plans**: TBD
+**Plans**: 7 plans in 2 waves
+  - [ ] 29-01-PLAN.md — Define semantic typography scale in Tailwind config
+  - [ ] 29-02-PLAN.md — Document spacing grid + fix border radius inconsistency
+  - [ ] 29-03-PLAN.md — Fix touch target violations (ShareButton, AddToDeckButton, Dialog)
+  - [ ] 29-04-PLAN.md — Migrate glass-panel to three-tier system + remove legacy class
+  - [ ] 29-05-PLAN.md — Unify motion tokens between CSS and JS systems
+  - [ ] 29-06-PLAN.md — Migrate text-[10px] to text-caption (18 files)
+  - [ ] 29-07-PLAN.md — Audit and add micro-interactions to interactive elements
 
 ### Phase 30: Mobile Native Feel
 **Goal**: The app feels like an installed native app on mobile — no rubber-band white flash, no accidental text selection, proper safe area handling, and tactile haptic feedback on key interactions
