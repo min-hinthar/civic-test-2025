@@ -146,12 +146,13 @@ export function TTSProvider({ children }: { children: ReactNode }) {
         } catch {
           // localStorage full or unavailable
         }
-        // Sync numeric rate to engine
+        // Sync numeric rate and voice preference to engine
         if (engine) {
           engine.setDefaults({
             rate: RATE_MAP[next.rate],
             pitch: next.pitch,
             lang: next.lang,
+            preferredVoiceName: next.preferredVoiceName,
           });
         }
         return next;

@@ -17,6 +17,7 @@ import {
   Globe,
   LogOut,
   MapPin,
+  Mic,
   Palette,
   RotateCcw,
   Settings,
@@ -36,6 +37,7 @@ import { SocialSettings } from '@/components/social/SocialSettings';
 import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { VoicePicker } from '@/components/settings/VoicePicker';
 import type { AutoReadLang } from '@/lib/ttsTypes';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
@@ -420,6 +422,26 @@ export default function SettingsPage() {
             {showBurmese && (
               <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
                 {'စာဖတ်ပြတဲ့ အမြန်နှုန်းကို ချိန်ညှိပါ။'}
+              </p>
+            )}
+          </div>
+
+          {/* Voice Selection */}
+          <div className="py-3 border-b border-border/40">
+            <div className="flex items-center gap-2 mb-2">
+              <Mic className="h-4 w-4 text-primary" />
+              <p className="text-sm font-semibold text-foreground">Voice</p>
+              {showBurmese && (
+                <span className="font-myanmar text-sm text-muted-foreground">{'အသံ'}</span>
+              )}
+            </div>
+            <VoicePicker showBurmese={showBurmese} />
+            <p className="mt-2 text-xs text-muted-foreground">
+              Choose which voice reads questions aloud.
+            </p>
+            {showBurmese && (
+              <p className="font-myanmar text-xs text-muted-foreground mt-0.5">
+                {'မေးခွန်းများကို ဖတ်ပြမည့် အသံကို ရွေးချယ်ပါ။'}
               </p>
             )}
           </div>

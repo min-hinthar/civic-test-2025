@@ -63,6 +63,7 @@ export type TTSSettings = {
   lang: string;
   autoRead: boolean;
   autoReadLang: AutoReadLang;
+  preferredVoiceName?: string;
 };
 
 /** Per-call overrides for speak(). */
