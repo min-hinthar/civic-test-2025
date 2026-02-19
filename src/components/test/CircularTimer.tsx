@@ -60,6 +60,15 @@ function getTimerColor(remainingTime: number, duration: number): string {
  * - Bilingual show/hide labels
  * - Respects prefers-reduced-motion
  * - Trail color uses semantic border token
+ * - Screen reader announcements at 5min, 2min, 1min milestones
+ *
+ * WCAG 2.2.1 Timer Extension Exception:
+ * The overall mock test timer does NOT offer extension. This is an intentional
+ * exception under WCAG 2.2.1 for "essential" timing — the 20-minute limit
+ * simulates real USCIS naturalization interview conditions. Accommodations:
+ * - Per-question timer already offers 50% extension (TimerExtensionToast)
+ * - Practice mode has no overall time limit
+ * - Timer can be visually hidden for anxiety reduction
  */
 export function CircularTimer({
   duration,
@@ -85,11 +94,28 @@ export function CircularTimer({
 
   const toggleLabel = isHidden ? timerLabels.showTimer : timerLabels.hideTimer;
 
+  // Milestone announcements for screen readers at 5min, 2min, 1min.
+  // Fires at exact threshold (not range) to avoid repeated announcements.
+  // Content change triggers aria-live="assertive" announcement.
+  // Same pattern as PerQuestionTimer (timeLeft === 5 fires once at threshold).
+  const announcementText =
+    remainingTime === 300
+      ? '5 minutes remaining'
+      : remainingTime === 120
+        ? '2 minutes remaining'
+        : remainingTime === 60
+          ? '1 minute remaining'
+          : '';
+
   // Trail color from semantic border token (theme-aware)
   const trailColor = (getTokenColor('--color-border') || '#E5E7EB') as `#${string}`;
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div
+      className="flex flex-col items-center gap-2"
+      role="timer"
+      aria-label={`${Math.floor(remainingTime / 60)} minutes ${remainingTime % 60} seconds remaining`}
+    >
       {/* Timer display */}
       <div
         className={clsx(
@@ -126,6 +152,11 @@ export function CircularTimer({
           )}
         </CountdownCircleTimer>
       </div>
+
+      {/* Screen reader announcement at milestone thresholds (outside aria-hidden wrapper so it works when timer is visually hidden) */}
+      <span className="sr-only" aria-live="assertive" role="alert">
+        {announcementText}
+      </span>
 
       {/* Hide/Show toggle */}
       {allowHide && (
