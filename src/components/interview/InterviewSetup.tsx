@@ -1,7 +1,17 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Shield, BookOpen, ChevronDown, Mic, MicOff, Volume2 } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+  Shield,
+  BookOpen,
+  ChevronDown,
+  Mic,
+  MicOff,
+  Volume2,
+  Star,
+  Wifi,
+  WifiOff,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
 import { Card } from '@/components/ui/Card';
@@ -10,6 +20,7 @@ import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualText } from '@/components/bilingual/BilingualText';
 import { InterviewerAvatar } from '@/components/interview/InterviewerAvatar';
 import { getInterviewHistory } from '@/lib/interview';
+import { checkNetworkQuality, type NetworkQuality } from '@/lib/audio/networkCheck';
 import { strings } from '@/lib/i18n/strings';
 import { SPRING_GENTLE } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -95,12 +106,13 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
   const [tipsExpanded, setTipsExpanded] = useState(false);
   const [recentSessions, setRecentSessions] = useState<InterviewSession[]>([]);
   const [micPermission, setMicPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+  const [networkQuality, setNetworkQuality] = useState<NetworkQuality | null>(null);
 
   // Per-session speed override (initialized from global, NOT synced back)
   // Only applicable in Practice mode; Real mode uses fixed normal speed
   const [sessionSpeed, setSessionSpeed] = useState<'slow' | 'normal' | 'fast'>(globalTTS.rate);
 
-  // Load recent interview history
+  // Load recent interview history + check network quality
   useEffect(() => {
     let cancelled = false;
     getInterviewHistory().then(history => {
@@ -108,10 +120,47 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
         setRecentSessions(history.slice(0, 5));
       }
     });
+    checkNetworkQuality().then(quality => {
+      if (!cancelled) {
+        setNetworkQuality(quality);
+      }
+    });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  // Detect iOS Safari (UA check: Safari + NOT Chrome + iPhone/iPad)
+  const isIOSSafari = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent;
+    return /iPhone|iPad/.test(ua) && /Safari/.test(ua) && !/CriOS|Chrome/.test(ua);
+  }, []);
+
+  // Best score identification: highest correct/total ratio
+  const bestSessionIndex = useMemo(() => {
+    if (recentSessions.length === 0) return -1;
+    let bestIdx = 0;
+    let bestRatio = recentSessions[0].score / (recentSessions[0].totalQuestions || 1);
+    for (let i = 1; i < recentSessions.length; i++) {
+      const ratio = recentSessions[i].score / (recentSessions[i].totalQuestions || 1);
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
+  }, [recentSessions]);
+
+  // Display sessions: last 3 recent + best (if best is outside the 3)
+  const displaySessions = useMemo(() => {
+    if (recentSessions.length === 0) return [];
+    const last3 = recentSessions.slice(0, 3);
+    // If best is within the 3 most recent, just show last 3
+    if (bestSessionIndex < 3) return last3;
+    // Otherwise, show last 3 + best session
+    return [...last3, recentSessions[bestSessionIndex]];
+  }, [recentSessions, bestSessionIndex]);
 
   // Proactively request microphone permission
   useEffect(() => {
@@ -354,6 +403,34 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           >
             {showBurmese ? <span className="font-myanmar">စတင်ပါ</span> : 'Start Interview'}
           </button>
+
+          {/* Network quality warning */}
+          {networkQuality === 'slow' && (
+            <div className="mt-2 flex items-center gap-1.5 text-center">
+              <Wifi className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+              <p className="text-xs text-amber-500">
+                Slow connection detected. Audio may take longer to load.
+                {showBurmese && (
+                  <span className="font-myanmar block mt-0.5">
+                    အင်တာနက်နှေးနေပါသည်။ အသံဖိုင်များ ပိုကြာနိုင်ပါသည်။
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+          {networkQuality === 'offline' && (
+            <div className="mt-2 flex items-center gap-1.5 text-center">
+              <WifiOff className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
+              <p className="text-xs text-destructive">
+                You&apos;re offline. Interview audio may use voice synthesis.
+                {showBurmese && (
+                  <span className="font-myanmar block mt-0.5">
+                    အင်တာနက်မရှိပါ။ အသံဖိုင်အစား အသံတုကို သုံးနိုင်ပါသည်။
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -382,10 +459,24 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
               )}
             </>
           ) : micPermission === 'denied' ? (
-            <>
-              <MicOff className="h-4 w-4 text-warning" />
-              <span className="font-bold">Recording unavailable - answer verbally</span>
-            </>
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <MicOff className="h-4 w-4 text-warning" />
+                <span className="font-bold">
+                  Recording unavailable - you can still type your answers
+                </span>
+              </div>
+              {showBurmese && (
+                <span className="font-myanmar text-xs text-muted-foreground">
+                  အသံဖမ်း၍မရပါ - အဖြေများကို စာရိုက်နိုင်ပါသည်
+                </span>
+              )}
+              {isIOSSafari && (
+                <span className="text-xs text-muted-foreground mt-0.5">
+                  For voice input, try Chrome
+                </span>
+              )}
+            </div>
           ) : (
             <>
               <Mic className="h-4 w-4" />
@@ -469,7 +560,7 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           <BilingualText text={strings.interview.recentScores} size="sm" />
         </h3>
 
-        {recentSessions.length === 0 ? (
+        {displaySessions.length === 0 ? (
           <Card elevated={false} className="text-center">
             <p className="text-4xl mb-2">🎤</p>
             <p className="text-sm font-bold text-muted-foreground">First time? Give it a try!</p>
@@ -481,32 +572,48 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
           </Card>
         ) : (
           <div className="flex flex-wrap gap-3">
-            {recentSessions.map((session, i) => (
-              <div
-                key={session.id ?? i}
-                className="flex items-center gap-2 rounded-2xl border border-border/60 bg-card px-3.5 py-2.5 text-sm shadow-sm"
-              >
-                <span className="text-muted-foreground">{formatDate(session.date)}</span>
-                {session.mode === 'realistic' ? (
-                  <Shield className="h-3.5 w-3.5 text-primary" />
-                ) : (
-                  <BookOpen className="h-3.5 w-3.5 text-accent-foreground" />
-                )}
-                <span className="font-bold">
-                  {session.score}/{session.totalQuestions}
-                </span>
-                <span
+            {displaySessions.map((session, i) => {
+              // Determine if this session is the best overall
+              const actualIndex = recentSessions.indexOf(session);
+              const isBest = actualIndex === bestSessionIndex;
+              const isBestFromOlder = isBest && bestSessionIndex >= 3;
+
+              return (
+                <div
+                  key={session.id ?? i}
                   className={clsx(
-                    'rounded-full px-2.5 py-0.5 text-xs font-bold',
-                    session.passed
-                      ? 'bg-success-100 text-success-600 dark:text-success'
-                      : 'bg-warning-100 text-warning'
+                    'flex items-center gap-2 rounded-2xl border bg-card px-3.5 py-2.5 text-sm shadow-sm',
+                    isBest ? 'border-2 border-amber-400' : 'border border-border/60'
                   )}
                 >
-                  {session.passed ? strings.interview.passed.en : strings.interview.failed.en}
-                </span>
-              </div>
-            ))}
+                  {isBest && (
+                    <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400 flex-shrink-0" />
+                  )}
+                  {isBestFromOlder && (
+                    <span className="text-xs font-semibold text-amber-500">Best:</span>
+                  )}
+                  <span className="text-muted-foreground">{formatDate(session.date)}</span>
+                  {session.mode === 'realistic' ? (
+                    <Shield className="h-3.5 w-3.5 text-primary" />
+                  ) : (
+                    <BookOpen className="h-3.5 w-3.5 text-accent-foreground" />
+                  )}
+                  <span className="font-bold">
+                    {session.score}/{session.totalQuestions}
+                  </span>
+                  <span
+                    className={clsx(
+                      'rounded-full px-2.5 py-0.5 text-xs font-bold',
+                      session.passed
+                        ? 'bg-success-100 text-success-600 dark:text-success'
+                        : 'bg-warning-100 text-warning'
+                    )}
+                  >
+                    {session.passed ? strings.interview.passed.en : strings.interview.failed.en}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
