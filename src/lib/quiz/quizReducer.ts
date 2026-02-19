@@ -274,6 +274,22 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
     }
 
     // -------------------------------------------------------------------
+    // RESUME_SESSION — restore state from a saved session snapshot
+    // Not phase-guarded (resume can happen from initial answering at index 0)
+    // -------------------------------------------------------------------
+    case 'RESUME_SESSION': {
+      return {
+        ...state,
+        phase: 'answering',
+        currentIndex: action.currentIndex,
+        results: action.results,
+        selectedAnswer: null,
+        isCorrect: null,
+        streakCount: 0,
+      };
+    }
+
+    // -------------------------------------------------------------------
     // FINISH — transitions to finished from any phase
     // -------------------------------------------------------------------
     case 'FINISH': {

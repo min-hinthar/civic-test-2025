@@ -510,9 +510,18 @@ const TestPage = () => {
     setShowResumeModal(false);
   }, []);
 
-  // Countdown complete handler
+  // Countdown complete handler — dispatches RESUME_SESSION if resuming a saved session
   const handleCountdownComplete = useCallback(() => {
     setShowCountdown(false);
+    const resumeData = resumeDataRef.current;
+    if (resumeData) {
+      dispatch({
+        type: 'RESUME_SESSION',
+        currentIndex: resumeData.currentIndex,
+        results: resumeData.results,
+      });
+      setTimeLeft(resumeData.timeLeft > 0 ? resumeData.timeLeft : TEST_DURATION_SECONDS);
+    }
     resumeDataRef.current = null;
   }, []);
 

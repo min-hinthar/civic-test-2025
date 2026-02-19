@@ -71,7 +71,8 @@ export type QuizAction =
   | { type: 'SKIP' }
   | { type: 'TRANSITION_COMPLETE' }
   | { type: 'START_SKIPPED_REVIEW' }
-  | { type: 'FINISH' };
+  | { type: 'FINISH' }
+  | { type: 'RESUME_SESSION'; currentIndex: number; results: QuestionResult[] };
 
 // ---------------------------------------------------------------------------
 // Config
