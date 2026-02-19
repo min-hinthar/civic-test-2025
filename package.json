@@ -85,11 +85,9 @@
       "sharp",
       "unrs-resolver"
     ],
-    "overrides": {
-      "minimatch@<10.2.1": "^10.2.1"
-    },
     "auditConfig": {
       "ignoreCves": [
+        "CVE-2026-26996",
         "CVE-2025-69873"
       ]
     }
