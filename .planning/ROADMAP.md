@@ -38,7 +38,7 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 - [ ] **Phase 24: Accessibility & Performance** - WCAG compliance, screen reader support, Web Vitals, bundle analysis
 - [ ] **Phase 25: Burmese Translation Audit** - Natural phrasing, missing translations, consistent terminology
 - [x] **Phase 26: Gap Closure — Session, Navigation & TTS Fixes** - Fix mock test resume, sort route, interview English-only, voice picker (completed 2026-02-19)
-- [ ] **Phase 27: Gap Closure — Timer Accessibility** - Overall timer announcements + extension scope
+- [x] **Phase 27: Gap Closure — Timer Accessibility** - Overall timer announcements + extension scope (completed 2026-02-18)
 
 ## Phase Details
 
@@ -250,7 +250,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 27-01-PLAN.md — sr-only timer announcements at 5/2/1 min + WCAG 2.2.1 exception documentation
+- [x] 27-01-PLAN.md — sr-only timer announcements at 5/2/1 min + WCAG 2.2.1 exception documentation
 
 ## Progress
 
@@ -271,7 +271,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 | 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
-| 27. Gap Closure (Timer A11Y) | v2.1 | 0/1 | Planned | - |
+| 27. Gap Closure (Timer A11Y) | v2.1 | 1/1 | Complete | 2026-02-18 |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|

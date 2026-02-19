@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 26 COMPLETE
+**Current focus:** v2.1 Quality & Polish -- Phase 27 COMPLETE
 
 ## Current Position
 
-Phase: 26 of 27 (Gap Closure -- Session, Navigation & TTS Fixes)
-Plan: 3 of 3 in current phase
+Phase: 27 of 27 (Gap Closure -- Timer Accessibility)
+Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-02-18 -- Completed 26-03-PLAN.md (Interview English-only override + sort route fix)
+Last activity: 2026-02-18 -- Completed 27-01-PLAN.md (sr-only timer announcements + WCAG 2.2.1 exception)
 
-Progress: [##########] 100% (3/3 plans complete)
+Progress: [##########] 100% (1/1 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,13 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 27 decisions:**
+- Exact threshold matching (=== 300/120/60) not range for sr-only announcements -- fires once per threshold crossing
+- sr-only span placed outside aria-hidden wrapper so announcements work when timer is visually hidden
+- Overall timer documented as WCAG 2.2.1 essential timing exception (USCIS simulation)
+- role="timer" with aria-label on outer container for continuous accessible label
+- Followed PerQuestionTimer pattern: simple derived value, no refs or flags needed
 
 **Phase 26 decisions:**
 - RESUME_SESSION action not phase-guarded (resume can happen from initial answering phase at index 0)
@@ -344,9 +351,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 27 context gathered
-Next step: Plan Phase 27 (Gap Closure -- Timer Accessibility)
-Resume file: .planning/phases/27-gap-closure-timer-a11y/27-CONTEXT.md
+Stopped at: Phase 27 complete
+Next step: Phase 25 (Burmese Translation Audit) is the only remaining unstarted phase
+Resume file: .planning/phases/27-gap-closure-timer-a11y/27-VERIFICATION.md
 
 ---
 
