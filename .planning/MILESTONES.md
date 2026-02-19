@@ -1,5 +1,28 @@
 # Milestones
 
+## v2.1 Quality & Polish (Shipped: 2026-02-19)
+
+**Phases:** 18-28 (11 phases, 82 plans)
+**Commits:** 315 | **Files:** 1,613 | **Lines:** +69,119 / -9,004
+**Timeline:** 6 days (2026-02-14 → 2026-02-19)
+**Requirements:** 65/66 satisfied + 1 partial (BRMSE-01 — human review needed)
+
+**Key accomplishments:**
+1. Duolingo-inspired test/practice UX with Check/Continue flow, feedback panels, segmented progress bar, haptics, and keyboard navigation
+2. Chat-style interview simulation with Practice/Real modes, speech recognition, animated examiner, USCIS 2025 rules, audio pre-caching, and text input fallback
+3. Comprehensive TTS system — shared ttsCore module, voice selection, speed control, 256 pre-generated Burmese MP3s, pause/resume
+4. Flashcard sort mode with swipeable Know/Don't Know cards, multi-round drilling, and SRS batch integration
+5. Session persistence via IndexedDB with resume prompts for interrupted mock tests, practice sessions, and flashcard sorts
+6. WCAG 2.2 accessibility — screen reader support, focus management, reduced motion alternatives, per-question timer with extension, high contrast mode
+7. Burmese translation audit — standardized glossary, natural phrasing across 503 font-myanmar usages, Noto Sans Myanmar integration
+
+### Known Gaps
+- **BRMSE-01**: All UI strings have Burmese translations and infrastructure is verified, but translation naturalness requires native Myanmar speaker assessment (cannot be programmatically verified)
+
+See `.planning/milestones/v2.1-ROADMAP.md` for full phase archive.
+
+---
+
 ## v2.0 Unified Learning Hub (Shipped: 2026-02-13)
 
 **Phases:** 11-17 (7 phases, 47 plans)

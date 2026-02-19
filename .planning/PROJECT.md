@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, with a premium iOS-inspired UI featuring glass-morphism, spring micro-interactions, and frosted dark mode. English mode shows English only; Myanmar mode shows bilingual content (English + Burmese) throughout — Burmese-only users can navigate and use the entire app comfortably.
+A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, featuring a premium iOS-inspired UI with glass-morphism and spring micro-interactions. Offers five study modes: timed mock tests, category practice, flashcard sorting, spaced repetition, and voice-driven interview simulation with Practice/Real USCIS modes. English mode shows English only; Myanmar mode shows bilingual content throughout. All 128 USCIS 2025 questions available with pre-generated Burmese audio.
 
 ## Core Value
 
@@ -69,23 +69,55 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ 44px minimum touch targets on all interactive elements — v2.0
 - ✓ Micro-interactions (button press, tab switch, progress fill with springs) — v2.0
 - ✓ Frosted dark mode with glass card variants and border glow — v2.0
+- ✓ English-only / bilingual language mode toggle across all screens — v2.1
+- ✓ Interview forces English-only regardless of global toggle — v2.1
+- ✓ Mock test USCIS simulation message in English-only mode — v2.1
+- ✓ TTS logic consolidated into shared ttsCore module — v2.1
+- ✓ Session persistence with IndexedDB store and 24h expiry — v2.1
+- ✓ Resume prompts for interrupted mock tests, practice, and flashcard sorts — v2.1
+- ✓ Dashboard warning for unfinished sessions — v2.1
+- ✓ Duolingo-style Check/Continue test/practice flow — v2.1
+- ✓ Bottom feedback panel with correct answer display — v2.1
+- ✓ Segmented progress bar with color-coded question segments — v2.1
+- ✓ Full keyboard navigation for quiz flow — v2.1
+- ✓ Haptic feedback on answer check — v2.1
+- ✓ Streak/XP micro-reward animations — v2.1
+- ✓ Chat-style interview with animated examiner and speech recognition — v2.1
+- ✓ Interview Practice/Real modes with USCIS 2025 rules — v2.1
+- ✓ Interview transcript with per-answer grading and confidence scores — v2.1
+- ✓ Re-record up to 3 times before grading — v2.1
+- ✓ Voice selection and speech rate control in Settings — v2.1
+- ✓ TTS pause/resume and animated speaking indicator — v2.1
+- ✓ 256 pre-generated Burmese MP3s via edge-tts — v2.1
+- ✓ Flashcard sort mode (Know/Don't Know) with swipe gestures — v2.1
+- ✓ Multi-round drilling of missed flashcards — v2.1
+- ✓ SRS batch add from sort results — v2.1
+- ✓ Sort session persistence with resume — v2.1
+- ✓ Screen reader feedback announcements via aria-live — v2.1
+- ✓ Focus management (feedback panel, next question) — v2.1
+- ✓ Reduced motion alternatives (fade instead of slide/flip) — v2.1
+- ✓ High contrast mode support — v2.1
+- ✓ Per-question timer with WCAG 2.2.1 extension — v2.1
+- ✓ Overall timer sr-only announcements at 5/2/1 min — v2.1
+- ✓ Web Vitals reported to Sentry — v2.1
+- ✓ eslint-plugin-jsx-a11y + vitest-axe integrated — v2.1
+- ✓ Burmese glossary with consistent terminology — v2.1
+- ✓ Noto Sans Myanmar font integration — v2.1
+- ✓ 503 font-myanmar usages verified with showBurmese guards — v2.1
+- ✓ Interview audio pre-caching with progress bar — v2.1
+- ✓ TTS fallback with badge indication on pre-cache failure — v2.1
+- ✓ Text input fallback for speech-unavailable browsers — v2.1
+- ✓ Keyword highlighting in Practice feedback and results — v2.1
+- ✓ Real mode: monochrome progress, hidden score, long-press exit — v2.1
+- ✓ Practice mode: colored progress, keyword feedback, answer read-aloud — v2.1
+- ✓ Back navigation interception during interview — v2.1
+- ✓ Auto-pause on tab/app focus loss — v2.1
+- ✓ Portrait orientation lock during interview — v2.1
+- ✓ Network quality warning before interview start — v2.1
 
 ### Active
 
-#### Current Milestone: v2.1 Quality & Polish
-
-**Goal:** Make the core learning experience (test, practice, interview, study) feel premium with redesigned UX, natural TTS, proper language toggle behavior, polished Burmese translations, and performance/accessibility improvements.
-
-**Target features:**
-- Mock Test / Practice / Interview UX overhaul (layout, flow, feedback, session persistence)
-- Language toggle behavior change (English = English only, Myanmar = bilingual except navbar)
-- Burmese translation quality polish (natural phrasing, missing translations, consistent terminology)
-- TTS audio quality improvements (natural voices, better pronunciation, proper pacing, both languages)
-- Study guide / flashcard overhaul (flip animation, card navigation, content layout, Burmese TTS)
-- Dashboard / Progress Hub refinements
-- Performance audit and optimization (bundle size, load times, animation smoothness)
-- Accessibility audit and fixes (screen reader, keyboard nav, WCAG compliance)
-- Bug fixes and tech debt cleanup (discovered during audits)
+(No active milestone — ready for next planning cycle)
 
 ### Out of Scope
 
@@ -98,18 +130,24 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - Full Liquid Glass component library — immature libraries, bundle size, browser compat
 - Burmese translation crowd-editing — quality control nightmare, vandalism risk
 - Supporting both 2008 and 2025 USCIS tests — 2008 test audience is diminishing
+- Interview session persistence — simulates real USCIS conditions where you can't pause
 
 ## Context
 
-**Current state (post v2.0):** Premium bilingual PWA with 84 validated requirements across 2 milestones (v1.0 + v2.0). 42,205 LOC TypeScript across ~200 source files. 293+ tests passing, zero TS/ESLint errors.
+**Current state (post v2.1):** Premium bilingual PWA with 149 validated requirements across 3 milestones (v1.0 + v2.0 + v2.1). 66,051 LOC TypeScript across ~250 source files. 315 commits in v2.1 alone. 9 IndexedDB stores. 256 pre-generated Burmese MP3 files.
 
-**Tech stack:** Next.js 15.5 + React 19 + Supabase + React Router DOM (SPA inside Next.js catch-all route). Tailwind CSS with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking. Deployed on Vercel.
+**Tech stack:** Next.js 15.5 + React 19 + Supabase + React Router DOM (SPA inside Next.js catch-all route). Tailwind CSS with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. Deployed on Vercel.
 
-**Architecture:** Provider hierarchy: ErrorBoundary → Offline → Language → Theme → Toast → Auth → Social → SRS → State → Navigation → Router. IndexedDB for offline storage (7 stores), Supabase for cloud sync. CSP middleware with hash-based allowlisting. JWT-verified push API with rate limiting.
+**Architecture:** Provider hierarchy: ErrorBoundary → Language → Theme → TTS → Toast → Offline → Auth → Social → SRS → State → Navigation → Router. IndexedDB for offline storage (9 stores including sessions), Supabase for cloud sync. CSP middleware with hash-based allowlisting. JWT-verified push API with rate limiting.
 
 **User base:** Burmese immigrants preparing for the US naturalization civics test. Many users are more comfortable in Burmese than English. The app feels warm and supportive.
 
-**Design direction:** iOS-inspired glass-morphism with 3 glass tiers (light/medium/heavy), prismatic animated borders, spring physics (BOUNCY/SNAPPY/GENTLE configs), and frosted dark mode with purple-tinted elevation hierarchy. English mode = English only; Myanmar mode = bilingual. 44px minimum touch targets. Duolingo + Quizlet-inspired test/study UX.
+**Design direction:** iOS-inspired glass-morphism with 3 glass tiers, prismatic animated borders, spring physics, and frosted dark mode. English mode = English only; Myanmar mode = bilingual. Duolingo-inspired Check/Continue flow for tests. Quizlet-inspired flashcard sorting. Chat-style interview simulation with speech recognition.
+
+**Known issues:**
+- BRMSE-01: Burmese translation naturalness needs native speaker assessment
+- 28 USCIS 2025 questions missing explanation objects (data gap, not code bug)
+- errorBoundary.test.tsx has 9 pre-existing test failures (localStorage mock issue, not production)
 
 ## Constraints
 
@@ -131,16 +169,21 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | FSRS over SM-2 for spaced repetition | Newer, more accurate, actively maintained | ✓ Validated — ts-fsrs integrated, 31 tests passing |
 | Privacy-first social features | Immigrant users cautious about visibility | ✓ Validated — opt-in leaderboard, RLS, bilingual privacy notice |
 | Canvas-only share cards | No external images avoids CORS issues in PWA | ✓ Validated — 1080x1080 bilingual cards render without server |
-| IndexedDB primary, Supabase sync | Offline-first for unreliable connectivity | ✓ Validated — 7 stores, fire-and-forget sync |
+| IndexedDB primary, Supabase sync | Offline-first for unreliable connectivity | ✓ Validated — 9 stores, fire-and-forget sync |
 | Two-tier design tokens (CSS vars → Tailwind) | Single source of truth, dark mode via variable swap | ✓ Validated — eliminated 3-way fragmentation |
 | CSP hash-based (not nonce) | Pages Router on Vercel can't forward nonce headers to _document | ✓ Validated — hash allowlisting works in prod |
 | NBA Dashboard over multi-widget | Users overwhelmed by 11 sections; single CTA is clearer | ✓ Validated — contextual recommendations based on user state |
 | Progress Hub consolidation | 3 separate pages → 1 tabbed page reduces navigation | ✓ Validated — Overview/Categories/History/Achievements tabs |
 | Glass-morphism tiers (light/medium/heavy) | Consistent visual hierarchy across all surfaces | ✓ Validated — 3 tiers with CSS custom properties |
 | Spring physics library (motion/react) | Consistent micro-interaction feel across components | ✓ Validated — BOUNCY/SNAPPY/GENTLE configs shared app-wide |
-| BRMSE deferred to v2.1+ | Translation trust features lower priority than UX polish | ⚠️ Revisit — community feedback may reprioritize |
-| Language toggle = mode switch | English mode = English only; Myanmar mode = bilingual (except navbar) | — Pending |
-| Duolingo + Quizlet UX inspiration | Best of both: Duolingo's playful feedback + Quizlet's card-based progress flow | — Pending |
+| Language toggle = mode switch | English mode = English only; Myanmar mode = bilingual (except navbar) | ✓ Validated — 59 components updated, 503 font-myanmar usages |
+| Duolingo + Quizlet UX inspiration | Best of both: Duolingo's playful feedback + Quizlet's card-based sorting | ✓ Validated — Check/Continue flow + swipeable sort mode |
+| Shared ttsCore module | Eliminate duplicated voice logic across TTS contexts | ✓ Validated — single module, both hooks delegate to core |
+| Pre-generated Burmese audio via edge-tts | No browser-native Myanmar TTS voices available | ✓ Validated — 256 MP3s, SW-cached, works offline |
+| Session persistence in IndexedDB | Users lose progress on accidental close; localStorage too small | ✓ Validated — resume prompts for test/practice/sort with 24h expiry |
+| Chat-style interview over form-based | More immersive, better simulates real USCIS interview experience | ✓ Validated — animated examiner, speech input, Practice/Real modes |
+| Keyword-based answer grading | Flexible matching for civics answers with multiple valid phrasings | ✓ Validated — fuzzy matching with confidence scores |
+| Audio pre-caching during countdown | Prevents audio delays during interview flow | ✓ Validated — progress bar, TTS fallback on failure |
 
 ## Milestones
 
@@ -148,7 +191,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 |---------|--------|------|-------------|
 | v1.0 | Complete | 2026-02-08 | 55/55 |
 | v2.0 | Complete | 2026-02-13 | 29/29 |
-| v2.1 | Active | — | TBD |
+| v2.1 | Complete | 2026-02-19 | 65/66 |
 
 ---
-*Last updated: 2026-02-13 after v2.1 milestone started*
+*Last updated: 2026-02-19 after v2.1 milestone completion*
