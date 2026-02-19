@@ -108,8 +108,8 @@ export const DialogContent = forwardRef<
             {showCloseButton && (
               <DialogPrimitive.Close
                 className={clsx(
-                  'absolute right-4 top-4',
-                  'rounded-full p-2',
+                  'absolute right-3 top-3',
+                  'rounded-full p-3 min-h-[44px] min-w-[44px] inline-flex items-center justify-center',
                   'text-muted-foreground hover:text-foreground',
                   'hover:bg-muted/50',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',

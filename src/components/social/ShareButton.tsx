@@ -63,7 +63,7 @@ export function ShareButton({ data, variant = 'default', className }: ShareButto
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           className={clsx(
             'inline-flex items-center justify-center rounded-full',
-            'h-8 w-8',
+            'h-8 w-8 min-h-[44px] min-w-[44px]',
             'border border-border text-muted-foreground',
             'transition-colors duration-150',
             'hover:text-foreground hover:border-foreground/30',
