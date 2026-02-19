@@ -574,14 +574,16 @@ export function PracticeSession({
   ]);
 
   // Keep per-question expire ref in sync with latest handlers
-  perQuestionExpireRef.current = () => {
-    if (quizState.phase !== 'answering') return;
-    if (quizState.selectedAnswer) {
-      handleCheck();
-    } else {
-      handleSkip();
-    }
-  };
+  useEffect(() => {
+    perQuestionExpireRef.current = () => {
+      if (quizState.phase !== 'answering') return;
+      if (quizState.selectedAnswer) {
+        handleCheck();
+      } else {
+        handleSkip();
+      }
+    };
+  });
 
   // Ref for focusing question area after Continue
   const questionAreaRef = useRef<HTMLDivElement>(null);

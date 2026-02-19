@@ -151,7 +151,9 @@ export function AddToDeckButton({
       <Icon className="h-4 w-4 shrink-0" />
       <span className="flex flex-col text-left">
         <span className="text-sm font-semibold">{label.en}</span>
-        {showBurmese && <span className="font-myanmar text-sm text-white/80">{label.my}</span>}
+        {showBurmese && (
+          <span className="font-myanmar text-sm text-muted-foreground">{label.my}</span>
+        )}
       </span>
     </motion.button>
   );
