@@ -6,6 +6,10 @@
  * the same subscriber pattern as ttsCore.ts.
  *
  * Supports both English (Ava) and Burmese (Nilar) pre-generated audio.
+ *
+ * Mobile autoplay: Uses persistent Audio elements + unlockAudioSession()
+ * to bypass mobile autoplay restrictions. Call unlockAudioSession() from
+ * a user gesture handler before any audio needs to play.
  */
 
 // ---------------------------------------------------------------------------
@@ -78,6 +82,97 @@ export interface AudioPlayer {
 }
 
 // ---------------------------------------------------------------------------
+// Mobile Autoplay Unlock
+// ---------------------------------------------------------------------------
+
+/**
+ * Pool of HTMLAudioElements pre-unlocked from a user gesture.
+ * Elements are consumed by createAudioPlayer() in FIFO order.
+ */
+const _unlockedPool: HTMLAudioElement[] = [];
+
+/** Cached blob URL for a minimal silent WAV file. */
+let _silenceUrl: string | null = null;
+
+function getSilenceUrl(): string {
+  if (_silenceUrl) return _silenceUrl;
+
+  // Minimal WAV: 44-byte header + 2 bytes of silence (1 sample, 16-bit mono, 44100 Hz)
+  const buf = new ArrayBuffer(46);
+  const v = new DataView(buf);
+  const writeStr = (offset: number, str: string) => {
+    for (let i = 0; i < str.length; i++) v.setUint8(offset + i, str.charCodeAt(i));
+  };
+
+  writeStr(0, 'RIFF');
+  v.setUint32(4, 38, true);
+  writeStr(8, 'WAVE');
+  writeStr(12, 'fmt ');
+  v.setUint32(16, 16, true); // fmt chunk size
+  v.setUint16(20, 1, true); // PCM
+  v.setUint16(22, 1, true); // mono
+  v.setUint32(24, 44100, true); // sample rate
+  v.setUint32(28, 88200, true); // byte rate
+  v.setUint16(32, 2, true); // block align
+  v.setUint16(34, 16, true); // bits per sample
+  writeStr(36, 'data');
+  v.setUint32(40, 2, true); // data size
+  v.setInt16(44, 0, true); // one silent sample
+
+  _silenceUrl = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  return _silenceUrl;
+}
+
+/**
+ * Unlock audio playback on mobile browsers.
+ *
+ * Must be called from a user gesture handler (click/tap) BEFORE any audio
+ * needs to play. Pre-creates Audio elements that bypass autoplay restrictions
+ * and unlocks the Web Audio API context.
+ *
+ * Call once per interview session (e.g., on "Start Interview" button click).
+ */
+export function unlockAudioSession(): void {
+  // Pre-create 3 Audio elements (English, Burmese, Interview) and play silence
+  // to "bless" them with user gesture context. createAudioPlayer() will consume
+  // these from the pool instead of creating new (restricted) elements.
+  const silenceUrl = getSilenceUrl();
+  for (let i = 0; i < 3; i++) {
+    const el = new Audio();
+    el.src = silenceUrl;
+    el.volume = 0.01;
+    el.play()
+      .then(() => {
+        el.pause();
+        el.currentTime = 0;
+        el.volume = 1;
+      })
+      .catch(() => {
+        el.volume = 1;
+      });
+    _unlockedPool.push(el);
+  }
+
+  // Also unlock AudioContext (belt-and-suspenders for Chrome MEI scoring)
+  try {
+    const Ctx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (Ctx) {
+      const ctx = new Ctx();
+      if (ctx.state === 'suspended') void ctx.resume();
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    }
+  } catch {
+    // AudioContext unlock failed — non-critical
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Player Factory
 // ---------------------------------------------------------------------------
 
@@ -87,17 +182,26 @@ const MAX_FALLBACK_MS = 30_000;
 const TIMEOUT_BUFFER_MS = 3_000;
 
 /**
- * Create an audio player wrapping HTMLAudioElement.
+ * Create an audio player wrapping a persistent HTMLAudioElement.
  *
- * - play() creates a new Audio element each time, sets playbackRate, resolves on ended
+ * Uses a single Audio element per player instance (reused across plays by
+ * changing src) rather than creating new elements. This allows mobile
+ * browsers to reuse the "gesture-blessed" element from unlockAudioSession().
+ *
+ * - play() sets src on the persistent element, resolves on ended
  * - Retries once on load error before rejecting
  * - Timeout fallback auto-resolves if `ended` event never fires (browser quirk safety net)
  * - State subscription via Set<callback> (same pattern as ttsCore.ts)
  */
 export function createAudioPlayer(): AudioPlayer {
-  let audio: HTMLAudioElement | null = null;
+  // Consume a pre-unlocked element from the pool, or create a new one
+  const el: HTMLAudioElement | null =
+    _unlockedPool.shift() ?? (typeof window !== 'undefined' ? new Audio() : null);
+
   let state: AudioPlayerState = { isSpeaking: false, isPaused: false, currentFile: null };
   let cancelledFlag = false; // Prevents retry after explicit cancel()
+  let playId = 0; // Monotonic counter to invalidate stale callbacks
+  let activeReject: ((reason: Error) => void) | null = null;
   const listeners = new Set<StateCallback>();
 
   function notify() {
@@ -110,76 +214,92 @@ export function createAudioPlayer(): AudioPlayer {
     notify();
   }
 
-  function cleanupAudio() {
-    if (audio) {
-      audio.pause();
-      audio.removeAttribute('src');
-      audio.load(); // Reset the element
-      audio = null;
+  function stopPlayback() {
+    if (el) {
+      el.pause();
+      el.onended = null;
+      el.onerror = null;
+      el.onloadedmetadata = null;
     }
   }
 
   function attemptPlay(url: string, rate: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      const el = new Audio(url);
-      el.playbackRate = rate;
-      audio = el;
+      if (!el) return reject(new Error('No audio element'));
+
+      const thisPlayId = ++playId;
+      activeReject = reject;
+
+      // Clear any leftover handlers from previous play
+      el.onended = null;
+      el.onerror = null;
+      el.onloadedmetadata = null;
 
       let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
       function startFallbackTimer(ms: number) {
         if (fallbackTimer !== null) clearTimeout(fallbackTimer);
         fallbackTimer = setTimeout(() => {
+          if (playId !== thisPlayId) return;
           cleanup();
           resetState();
           resolve();
         }, ms);
       }
 
-      const onEnded = () => {
-        cleanup();
-        resetState();
-        resolve();
-      };
-
-      const onError = () => {
-        cleanup();
-        reject(new Error('Audio load failed'));
-      };
-
-      // When metadata loads, tighten the fallback to actual duration + buffer
-      const onMetadata = () => {
-        if (el.duration && isFinite(el.duration)) {
-          const durationMs = (el.duration / (rate || 1)) * 1000 + TIMEOUT_BUFFER_MS;
-          startFallbackTimer(durationMs);
-        }
-      };
-
       function cleanup() {
         if (fallbackTimer !== null) {
           clearTimeout(fallbackTimer);
           fallbackTimer = null;
         }
-        el.removeEventListener('ended', onEnded);
-        el.removeEventListener('error', onError);
-        el.removeEventListener('loadedmetadata', onMetadata);
+        if (el) {
+          el.onended = null;
+          el.onerror = null;
+          el.onloadedmetadata = null;
+        }
+        if (activeReject === reject) activeReject = null;
       }
 
-      el.addEventListener('ended', onEnded);
-      el.addEventListener('error', onError);
-      el.addEventListener('loadedmetadata', onMetadata);
+      el.onended = () => {
+        if (playId !== thisPlayId) return;
+        cleanup();
+        resetState();
+        resolve();
+      };
+
+      el.onerror = () => {
+        if (playId !== thisPlayId) return;
+        cleanup();
+        reject(new Error('Audio load failed'));
+      };
+
+      el.onloadedmetadata = () => {
+        if (playId !== thisPlayId) return;
+        if (el!.duration && isFinite(el!.duration)) {
+          const durationMs = (el!.duration / (rate || 1)) * 1000 + TIMEOUT_BUFFER_MS;
+          startFallbackTimer(durationMs);
+        }
+      };
+
+      // Set source and play (reusing persistent element)
+      el.src = url;
+      el.playbackRate = rate;
 
       // Start with fixed ceiling — tightened to real duration once metadata arrives
       startFallbackTimer(MAX_FALLBACK_MS);
 
-      el.play().catch(onError);
+      el.play().catch(err => {
+        if (playId !== thisPlayId) return;
+        cleanup();
+        reject(err);
+      });
     });
   }
 
   return {
     async play(url: string, rate = 1): Promise<void> {
       // Cancel any existing playback
-      cleanupAudio();
+      stopPlayback();
       cancelledFlag = false; // Reset on new play
 
       // Update state to speaking
@@ -196,12 +316,16 @@ export function createAudioPlayer(): AudioPlayer {
         }
         // Retry once on load/network failure
         try {
-          cleanupAudio();
+          stopPlayback();
           state = { isSpeaking: true, isPaused: false, currentFile: url };
           notify();
 
           await attemptPlay(url, rate);
         } catch {
+          if (cancelledFlag) {
+            resetState();
+            return;
+          }
           resetState();
           throw new Error('Audio unavailable');
         }
@@ -209,16 +333,16 @@ export function createAudioPlayer(): AudioPlayer {
     },
 
     pause() {
-      if (audio && state.isSpeaking && !state.isPaused) {
-        audio.pause();
+      if (el && state.isSpeaking && !state.isPaused) {
+        el.pause();
         state = { ...state, isPaused: true };
         notify();
       }
     },
 
     resume() {
-      if (audio && state.isPaused) {
-        void audio.play();
+      if (el && state.isPaused) {
+        void el.play();
         state = { ...state, isPaused: false };
         notify();
       }
@@ -226,7 +350,13 @@ export function createAudioPlayer(): AudioPlayer {
 
     cancel() {
       cancelledFlag = true;
-      cleanupAudio();
+      playId++; // Invalidate any pending callbacks
+      stopPlayback();
+      // Reject any pending attemptPlay promise so callers don't hang
+      if (activeReject) {
+        activeReject(new Error('Cancelled'));
+        activeReject = null;
+      }
       resetState();
     },
 

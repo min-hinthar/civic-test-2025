@@ -12,6 +12,7 @@ import { getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { allQuestions } from '@/constants/questions';
 import { fisherYatesShuffle } from '@/lib/shuffle';
+import { unlockAudioSession } from '@/lib/audio/audioPlayer';
 import type { PrecacheProgress } from '@/lib/audio/audioPrecache';
 import type { InterviewSnapshot, SessionSnapshot } from '@/lib/sessions/sessionTypes';
 import type { InterviewSpeechOverrides } from '@/components/interview/InterviewSetup';
@@ -84,6 +85,9 @@ const InterviewPage = () => {
   // --- Resume / Start Fresh / Not Now handlers ---
 
   const handleResume = useCallback((session: SessionSnapshot) => {
+    // Unlock audio playback for mobile (must happen during user gesture)
+    unlockAudioSession();
+
     const snap = session as InterviewSnapshot;
     setMode(snap.mode);
     setResumeData(snap);
@@ -121,6 +125,9 @@ const InterviewPage = () => {
 
   const handleStart = useCallback(
     (selectedMode: InterviewMode, overrides?: InterviewSpeechOverrides) => {
+      // Unlock audio playback for mobile (must happen during user gesture)
+      unlockAudioSession();
+
       setMode(selectedMode);
       if (overrides) {
         setSpeedOverride(overrides.speedOverride);
@@ -152,6 +159,7 @@ const InterviewPage = () => {
   );
 
   const handleRetry = useCallback(() => {
+    unlockAudioSession();
     setSessionResults([]);
     setSessionDuration(0);
     setEndReason('complete');
@@ -162,6 +170,7 @@ const InterviewPage = () => {
   }, []);
 
   const handleSwitchMode = useCallback((newMode: InterviewMode) => {
+    unlockAudioSession();
     setSessionResults([]);
     setSessionDuration(0);
     setEndReason('complete');

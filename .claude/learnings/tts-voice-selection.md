@@ -80,4 +80,21 @@ cancel() {
 }
 ```
 
+**Supersedes:** Original `cleanupAudio()` pattern that nullified the element — now uses persistent element with `stopPlayback()` instead.
+
 **Apply when:** Any audio/media player with retry logic and explicit cancel support.
+
+## AudioPlayer Uses Persistent Element (Not new Audio() Per Play)
+
+**Context:** `createAudioPlayer()` was creating `new Audio(url)` on every `attemptPlay()`. On mobile, each new element needs gesture context, so questions (triggered from `useEffect`) were silently blocked while answers (triggered after button tap) worked.
+
+**Learning:** `audioPlayer.ts` now uses a **persistent HTMLAudioElement** per player instance. Elements are pre-created and "gesture-blessed" via `unlockAudioSession()` (called from InterviewPage's Start/Resume/Retry/SwitchMode handlers), stored in a module-level pool, and consumed by `createAudioPlayer()`.
+
+Key architecture:
+- `_unlockedPool`: module-level `HTMLAudioElement[]` — populated by `unlockAudioSession()`, consumed by `createAudioPlayer()`
+- `attemptPlay()` sets `el.src = url` on persistent element instead of `new Audio(url)`
+- `stopPlayback()` pauses + clears handlers (does NOT destroy element)
+- `cancel()` uses `playId++` to invalidate stale callbacks + `activeReject` to prevent hanging promises
+- `InterviewPage.tsx` calls `unlockAudioSession()` from every user-gesture entry point
+
+**Apply when:** Modifying `audioPlayer.ts`, adding new AudioPlayer consumers, or debugging mobile audio issues in interview flow.
