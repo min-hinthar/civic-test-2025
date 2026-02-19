@@ -247,6 +247,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Screen reader announces overall timer status at 5 minutes, 2 minutes, and 1 minute remaining during mock test
   2. Timer extension scope is either implemented for mock test or documented as intentional USCIS simulation exception
+**Plans**: 1 plan
+
+Plans:
+- [ ] 27-01-PLAN.md — sr-only timer announcements at 5/2/1 min + WCAG 2.2.1 exception documentation
 
 ## Progress
 
@@ -267,7 +271,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 | 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
-| 27. Gap Closure (Timer A11Y) | v2.1 | 0/TBD | Not started | - |
+| 27. Gap Closure (Timer A11Y) | v2.1 | 0/1 | Planned | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
