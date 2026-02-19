@@ -361,6 +361,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28]: Refs only in event handlers (not render) for React Compiler safety in LongPressButton
 - [Phase 28]: Python script extended (not new TS script) for feedback audio -- existing generate-interview-audio.py pattern
 - [Phase 28]: INTERVIEW_AUDIO_NAMES changed from as-const tuple to readonly string[] for FEEDBACK_AUDIO_NAMES spread
+- [Phase 28]: Best score uses highest correct/total ratio with gold border highlight
+- [Phase 28]: Real mode score reveal uses 1200ms suspense delay before showing pass/fail
+- [Phase 28]: Questions shuffled once at page level, shared between countdown (IDs for pre-cache) and session
+- [Phase 28]: Practice exit shows Continue/Exit dialog; Real exit discards session and navigates home
 
 ### Roadmap Evolution
 
