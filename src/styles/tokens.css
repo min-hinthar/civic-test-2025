@@ -268,7 +268,14 @@
   --shadow-chunky: 0 4px 0 hsl(var(--color-primary-active));
   --shadow-chunky-active: 0 1px 0 hsl(var(--color-primary-active));
 
-  /* ── Motion ── */
+  /* ── Motion (CSS-only transitions) ── */
+  /* These tokens are for CSS transitions on non-React elements (glass hover effects,
+   * pure-CSS animations). For React component animations, use the JS spring system
+   * in src/lib/motion-config.ts (SPRING_BOUNCY, SPRING_SNAPPY, SPRING_GENTLE).
+   *
+   * Usage: var(--duration-slow), var(--ease-out), etc.
+   * Consumers: .glass-light, .glass-medium, .glass-heavy transitions
+   */
   --duration-instant: 0ms;
   --duration-fast: 150ms;
   --duration-normal: 200ms;
