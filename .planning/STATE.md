@@ -365,6 +365,13 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28]: Real mode score reveal uses 1200ms suspense delay before showing pass/fail
 - [Phase 28]: Questions shuffled once at page level, shared between countdown (IDs for pre-cache) and session
 - [Phase 28]: Practice exit shows Continue/Exit dialog; Real exit discards session and navigates home
+- [Phase 28-06]: failedUrls tracked via useMemo Set for O(1) TTS fallback lookup
+- [Phase 28-06]: TTS fallback cascades: check failed Set first, then catch MP3 play errors at runtime
+- [Phase 28-06]: processGradeResult shared helper eliminates duplicated grading logic
+- [Phase 28-06]: interviewActive derived from questionPhase for hook activation (excludes greeting/transition)
+- [Phase 28-06]: inputMode defaults to 'text' when canUseSpeech is false
+- [Phase 28-06]: Visibility pause cancels all audio players + TTS, shows brief overlay
+- [Phase 28-06]: LandscapeOverlay rendered when orientation lock API unsupported
 
 ### Roadmap Evolution
 
