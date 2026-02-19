@@ -117,7 +117,18 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ### Active
 
-(No active milestone — ready for next planning cycle)
+## Current Milestone: v3.0 World-Class UX
+
+**Goal:** Elevate every screen to Duolingo-level polish with consistent visual language, delightful micro-interactions, native-app mobile feel, content completeness, and an About page honoring the app's inspirational figures.
+
+**Target features:**
+- Holistic visual consistency pass (spacing, typography, animation language across all screens)
+- Dashboard & home screen premium first impression with clear daily engagement loop
+- Smooth study mode transitions (test → practice → flashcard → interview → SRS)
+- Impactful results & celebration moments with Duolingo-quality feedback animations
+- Mobile-native feel (gestures, smooth scrolling, no jank)
+- Complete the 28 missing USCIS 2025 question explanations
+- About page honoring Dwight D. Clark (Volunteers in Asia, Stanford), Dorothy & James Guyot (Pre-Collegiate Program, Yangon)
 
 ### Out of Scope
 
@@ -194,4 +205,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v2.1 | Complete | 2026-02-19 | 65/66 |
 
 ---
-*Last updated: 2026-02-19 after v2.1 milestone completion*
+*Last updated: 2026-02-19 after v3.0 milestone started*
