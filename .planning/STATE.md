@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v2.1 Quality & Polish -- Phase 25 COMPLETE
+**Current focus:** v2.1 Quality & Polish -- Phase 26 COMPLETE
 
 ## Current Position
 
-Phase: 25 of 25 (Burmese Translation Audit)
-Plan: 10 of 10 in current phase
+Phase: 26 of 27 (Gap Closure -- Session, Navigation & TTS Fixes)
+Plan: 3 of 3 in current phase
 Status: Phase complete
-Last activity: 2026-02-18 -- Completed 25-10-PLAN.md (Audio Regeneration & Final Verification)
+Last activity: 2026-02-18 -- Completed 26-03-PLAN.md (Interview English-only override + sort route fix)
 
-Progress: [##########] 100% (10/10 plans complete)
+Progress: [##########] 100% (3/3 plans complete)
 
 ## Completed Milestones
 
@@ -37,6 +37,15 @@ See `.planning/MILESTONES.md` for details.
 ### Decisions
 
 All decisions archived in PROJECT.md Key Decisions table.
+
+**Phase 26 decisions:**
+- RESUME_SESSION action not phase-guarded (resume can happen from initial answering phase at index 0)
+- Read resumeDataRef.current into local variable before clearing to ensure dispatch happens before null
+- VoicePicker uses native <select> for accessibility (per Phase 22 decision)
+- English voices filtered and sorted local-first then alphabetical in VoicePicker
+- Mic icon used for Voice row in Settings to differentiate from Volume2 section header icon
+- Interview realistic mode overrides showBurmese locally (destructure as globalShowBurmese, derive from mode)
+- Sort route in UnfinishedBanner uses /study#sort matching StudyGuidePage hash-based tab navigation
 
 **Phase 25 decisions:**
 - Glossary organized in 8 sections: no-translate, civics/government, UI actions, navigation, study tabs, achievements, number formatting, sentence patterns
@@ -335,11 +344,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 25 Plan 10 complete (Audio Regeneration & Final Verification)
-Next step: Phase 25 complete. User to perform 3-AI cross-check review at their pace.
-Resume file: .planning/phases/25-burmese-translation-audit/25-10-SUMMARY.md
+Stopped at: Phase 26 Plan 3 complete (Interview English-only override + sort route fix)
+Next step: Phase 26 complete. Proceed to Phase 27 (Gap Closure -- Timer Accessibility) or run verification.
+Resume file: .planning/phases/26-gap-closure-session-nav-tts/26-03-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 25 Plan 10 complete -- Phase complete)*
+*Last updated: 2026-02-18 (Phase 26 Plan 3 complete -- Phase complete)*

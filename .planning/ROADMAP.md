@@ -235,9 +235,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 26-01-PLAN.md — Mock test resume: RESUME_SESSION action + TestPage dispatch wiring
-- [ ] 26-02-PLAN.md — VoicePicker: TTSSettings extension + voice dropdown in Settings
-- [ ] 26-03-PLAN.md — Interview English-only override + sort route fix
+- [x] 26-01-PLAN.md — Mock test resume: RESUME_SESSION action + TestPage dispatch wiring
+- [x] 26-02-PLAN.md — VoicePicker: TTSSettings extension + voice dropdown in Settings
+- [x] 26-03-PLAN.md — Interview English-only override + sort route fix
 
 ### Phase 27: Gap Closure — Timer Accessibility
 **Goal**: The overall mock test timer meets WCAG screen reader requirements and timer extension scope is clarified
@@ -266,7 +266,7 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
-| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 0/3 | Not started | - |
+| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 3/3 | Complete | 2026-02-18 |
 | 27. Gap Closure (Timer A11Y) | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
