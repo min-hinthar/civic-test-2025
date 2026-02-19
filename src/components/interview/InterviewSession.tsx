@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { RotateCcw, LogOut, Mic, Square, Send, Keyboard } from 'lucide-react';
+import { RotateCcw, LogOut, Mic, Square, Keyboard } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ExaminerCharacter } from '@/components/interview/ExaminerCharacter';
 import { ChatBubble } from '@/components/interview/ChatBubble';
@@ -11,6 +11,13 @@ import { TranscriptionReview } from '@/components/interview/TranscriptionReview'
 import { AudioWaveform } from '@/components/interview/AudioWaveform';
 import { SelfGradeButtons } from '@/components/interview/SelfGradeButtons';
 import { InterviewTimer } from '@/components/interview/InterviewTimer';
+import { TTSFallbackBadge } from '@/components/interview/TTSFallbackBadge';
+import { ModeBadge } from '@/components/interview/ModeBadge';
+import { InterviewProgress } from '@/components/interview/InterviewProgress';
+import { LongPressButton } from '@/components/interview/LongPressButton';
+import { LandscapeOverlay } from '@/components/interview/LandscapeOverlay';
+import { TextAnswerInput } from '@/components/interview/TextAnswerInput';
+import { KeywordHighlight } from '@/components/interview/KeywordHighlight';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +27,9 @@ import {
 } from '@/components/ui/Dialog';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useTTS } from '@/hooks/useTTS';
+import { useInterviewGuard } from '@/hooks/useInterviewGuard';
+import { useOrientationLock } from '@/hooks/useOrientationLock';
+import { useVisibilityPause } from '@/hooks/useVisibilityPause';
 import {
   createAudioPlayer,
   getEnglishAudioUrl,
@@ -27,6 +37,7 @@ import {
   getInterviewAudioUrl,
   type AudioPlayer,
 } from '@/lib/audio/audioPlayer';
+import type { PrecacheProgress } from '@/lib/audio/audioPrecache';
 import { useInterviewSpeech } from '@/hooks/useSpeechRecognition';
 import { useSilenceDetection } from '@/hooks/useSilenceDetection';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
@@ -88,6 +99,8 @@ interface ChatMessage {
   confidence?: number;
   /** Question ID for Burmese replay button (examiner question messages only) */
   questionId?: string;
+  /** Grade result for keyword highlighting in feedback */
+  gradeResult?: GradeResult;
 }
 
 /** Rate map for named speed to numeric playback rate */
@@ -124,6 +137,8 @@ interface InterviewSessionProps {
   initialIncorrectCount?: number;
   /** Original session start timestamp (resume) */
   initialStartTime?: number;
+  /** Pre-cache result from InterviewCountdown (failed URLs for TTS fallback) */
+  precacheResult?: PrecacheProgress;
 }
 
 /**
@@ -131,15 +146,17 @@ interface InterviewSessionProps {
  * and dual Practice/Real modes.
  *
  * Visual layout:
+ * - ModeBadge in top-right corner
  * - ExaminerCharacter at top
+ * - InterviewProgress below character
  * - Chat messages area (scrollable)
- * - Recording area at bottom (mic + waveform)
+ * - Recording area / TextAnswerInput at bottom
  *
  * Chat flow:
  * greeting -> (typing -> reading -> responding -> transcription -> grading -> feedback -> transition) * N
  *
- * Practice mode: per-question feedback, always 20 questions, exit allowed
- * Real mode: no per-question feedback, early termination at 12/9, no exit
+ * Practice mode: per-question feedback with keyword highlights, always 20 questions, exit allowed
+ * Real mode: no per-question feedback, early termination at 12/9, no exit, monochrome progress, score hidden
  */
 export function InterviewSession({
   mode,
@@ -153,11 +170,12 @@ export function InterviewSession({
   initialCorrectCount,
   initialIncorrectCount,
   initialStartTime,
+  precacheResult,
 }: InterviewSessionProps) {
   const { showBurmese: globalShowBurmese, mode: languageMode } = useLanguage();
   const showBurmese = mode === 'realistic' ? false : globalShowBurmese;
   const shouldReduceMotion = useReducedMotion();
-  const { cancel: cancelTTS, settings: ttsSettings } = useTTS();
+  const { speak: ttsFallbackSpeak, cancel: cancelTTS, settings: ttsSettings } = useTTS();
 
   // Effective speed: Real mode always normal, Practice mode uses override or global setting
   const effectiveSpeed = mode === 'realistic' ? 'normal' : (speedOverride ?? ttsSettings.rate);
@@ -184,6 +202,20 @@ export function InterviewSession({
   // Unified check: speech recognition API available AND mic permission granted
   const canUseSpeech = speechSupported && micPermission;
 
+  // --- Pre-cache failure tracking for TTS fallback ---
+  const failedUrls: Set<string> = useMemo(() => {
+    if (!precacheResult?.failed?.length) return new Set<string>();
+    return new Set(precacheResult.failed);
+  }, [precacheResult]);
+
+  // Track whether current audio is using TTS fallback
+  const [usingTTSFallback, setUsingTTSFallback] = useState(false);
+
+  // --- Input mode: voice or text ---
+  const [inputMode, setInputMode] = useState<'voice' | 'text'>(() =>
+    canUseSpeech ? 'voice' : 'text'
+  );
+
   // --- Session state ---
   const [questions] = useState<Question[]>(
     () => initialQuestions ?? fisherYatesShuffle(allQuestions).slice(0, QUESTIONS_PER_SESSION)
@@ -206,13 +238,51 @@ export function InterviewSession({
   );
   const [responseStartTime, setResponseStartTime] = useState<number | null>(null);
   const [typedAnswer, setTypedAnswer] = useState('');
-  const textInputRef = useRef<HTMLInputElement | null>(null);
+  const [previousTranscription, setPreviousTranscription] = useState('');
+  const [interviewPaused, setInterviewPaused] = useState(false);
+
+  // Latest grade result for keyword highlighting in Practice feedback
+  const [lastGradeResult, setLastGradeResult] = useState<GradeResult | null>(null);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  /** Separate ref for advanceToNext timer — prevents feedback effect cleanup from cancelling it */
+  /** Separate ref for advanceToNext timer -- prevents feedback effect cleanup from cancelling it */
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const msgIdCounter = useRef(0);
+
+  // Interview active state (for hooks: guard, orientation, visibility)
+  const interviewActive =
+    questionPhase !== 'greeting' && questionPhase !== 'transition' && !showQuitDialog;
+
+  // --- Edge case hooks ---
+
+  // Back navigation guard
+  const handleBackAttempt = useCallback(() => {
+    setShowQuitDialog(true);
+  }, []);
+  useInterviewGuard(interviewActive, handleBackAttempt);
+
+  // Orientation lock (portrait)
+  const { supported: orientationSupported } = useOrientationLock(interviewActive);
+
+  // Visibility pause (tab backgrounding)
+  const handleVisibilityHidden = useCallback(() => {
+    // Pause all audio players
+    englishPlayerRef.current?.cancel();
+    burmesePlayerRef.current?.cancel();
+    interviewPlayerRef.current?.cancel();
+    cancelTTS();
+    setInterviewPaused(true);
+  }, [cancelTTS]);
+
+  const handleVisibilityVisible = useCallback(() => {
+    // Brief delay then resume
+    setTimeout(() => {
+      setInterviewPaused(false);
+    }, 500);
+  }, []);
+
+  useVisibilityPause(interviewActive, handleVisibilityHidden, handleVisibilityVisible);
 
   // Initialize audio recorder stream for waveform + silence detection
   useEffect(() => {
@@ -252,6 +322,20 @@ export function InterviewSession({
 
   const currentQuestion = questions[currentIndex];
 
+  // --- Progress results for InterviewProgress ---
+  const progressResults: Array<{ isCorrect: boolean } | null> = useMemo(() => {
+    const arr: Array<{ isCorrect: boolean } | null> = [];
+    for (let i = 0; i < QUESTIONS_PER_SESSION; i++) {
+      const r = results[i];
+      if (r) {
+        arr.push({ isCorrect: r.selfGrade === 'correct' });
+      } else {
+        arr.push(null);
+      }
+    }
+    return arr;
+  }, [results]);
+
   // --- Helpers ---
 
   const nextMsgId = useCallback(() => {
@@ -265,11 +349,12 @@ export function InterviewSession({
       text: string,
       isCorrect?: boolean,
       confidence?: number,
-      questionId?: string
+      questionId?: string,
+      gradeResult?: GradeResult
     ) => {
       setChatMessages(prev => [
         ...prev,
-        { id: nextMsgId(), sender, text, isCorrect, confidence, questionId },
+        { id: nextMsgId(), sender, text, isCorrect, confidence, questionId, gradeResult },
       ]);
     },
     [nextMsgId]
@@ -283,18 +368,43 @@ export function InterviewSession({
     }
   }, [chatMessages, questionPhase, shouldReduceMotion]);
 
-  // --- Safe play for question text (uses pre-generated English MP3) ---
+  // --- Safe play for question text (uses pre-generated English MP3 with TTS fallback) ---
   const safePlayQuestion = useCallback(
-    async (questionId: string) => {
+    async (questionId: string, questionText?: string) => {
+      const url = getEnglishAudioUrl(questionId, 'q');
+
+      // Check if audio URL failed pre-caching
+      if (failedUrls.has(url)) {
+        // TTS fallback
+        setUsingTTSFallback(true);
+        try {
+          if (questionText) {
+            await ttsFallbackSpeak(questionText, { rate: numericRate });
+          }
+          return 'completed' as const;
+        } catch {
+          return 'error' as const;
+        }
+      }
+
       try {
-        const url = getEnglishAudioUrl(questionId, 'q');
+        setUsingTTSFallback(false);
         await getEnglishPlayer().play(url, numericRate);
         return 'completed' as const;
       } catch {
-        return 'error' as const;
+        // MP3 play failed at runtime -- try TTS fallback
+        setUsingTTSFallback(true);
+        try {
+          if (questionText) {
+            await ttsFallbackSpeak(questionText, { rate: numericRate });
+          }
+          return 'completed' as const;
+        } catch {
+          return 'error' as const;
+        }
       }
     },
-    [numericRate, getEnglishPlayer]
+    [numericRate, getEnglishPlayer, failedUrls, ttsFallbackSpeak]
   );
 
   // --- Safe play for interview audio (greetings, closings, feedback prefixes) ---
@@ -313,7 +423,7 @@ export function InterviewSession({
 
   // --- Silence detection: auto-stop recording after 2s silence ---
   // Only transitions if user has spoken (transcript exists) to avoid premature cutoff.
-  // Does not require isListening — recognition may have auto-ended (continuous: false).
+  // Does not require isListening -- recognition may have auto-ended (continuous: false).
   const handleSilenceDetected = useCallback(() => {
     if (questionPhase === 'responding' && transcript.trim()) {
       stopListening();
@@ -330,15 +440,16 @@ export function InterviewSession({
   });
 
   // --- Auto-handle speech recognition ending during responding phase ---
-  // When recognition ends (isListening → false) while still in responding:
+  // When recognition ends (isListening -> false) while still in responding:
   //   - With transcript: auto-transition to transcription review
   //   - Without transcript + no error: restart recognition (user may not have spoken yet)
   //   - With error: text input fallback shows via hasSpeechError (no action needed)
   useEffect(() => {
-    if (questionPhase !== 'responding' || !canUseSpeech || isListening) return;
+    if (questionPhase !== 'responding' || !canUseSpeech || isListening || inputMode !== 'voice')
+      return;
 
     if (transcript.trim()) {
-      // User spoke and recognition ended — auto-advance to transcription
+      // User spoke and recognition ended -- auto-advance to transcription
       const timer = setTimeout(() => {
         stopRecording();
         setQuestionPhase('transcription');
@@ -347,13 +458,13 @@ export function InterviewSession({
     }
 
     if (!speechError) {
-      // No transcript, no error — recognition timed out (no-speech). Restart.
+      // No transcript, no error -- recognition timed out (no-speech). Restart.
       const timer = setTimeout(() => {
         startListening().catch(() => {});
       }, 500);
       return () => clearTimeout(timer);
     }
-    // speechError exists → hasSpeechError shows text input fallback automatically
+    // speechError exists -> hasSpeechError shows text input fallback automatically
   }, [
     questionPhase,
     canUseSpeech,
@@ -362,6 +473,7 @@ export function InterviewSession({
     speechError,
     startListening,
     stopRecording,
+    inputMode,
   ]);
 
   // --- Cleanup on unmount ---
@@ -399,7 +511,7 @@ export function InterviewSession({
     safePlayInterview(greetingAudio).then(speakResult => {
       if (cancelled) return;
       setExaminerState('idle');
-      // Always advance — even if audio failed
+      // Always advance -- even if audio failed
       const delay = speakResult === 'completed' ? 800 : 0;
       transitionTimerRef.current = setTimeout(() => {
         if (!cancelled) setQuestionPhase('chime');
@@ -440,7 +552,7 @@ export function InterviewSession({
     };
   }, [questionPhase]);
 
-  // --- Phase: READING (TTS reads question, then Burmese audio if applicable, then responding) ---
+  // --- Phase: READING (plays question audio, then Burmese audio if applicable, then responding) ---
   useEffect(() => {
     if (questionPhase !== 'reading') return;
     if (!currentQuestion) return;
@@ -449,9 +561,10 @@ export function InterviewSession({
     const questionText = currentQuestion.question_en;
 
     setExaminerState('speaking');
+    setUsingTTSFallback(false);
     addMessage('examiner', questionText, undefined, undefined, currentQuestion.id);
 
-    safePlayQuestion(currentQuestion.id).then(async speakResult => {
+    safePlayQuestion(currentQuestion.id, questionText).then(async speakResult => {
       if (cancelled) return;
 
       // Practice mode + Myanmar mode: play Burmese audio after English MP3
@@ -468,9 +581,10 @@ export function InterviewSession({
 
       if (cancelled) return;
       setExaminerState('listening');
-      // Always advance — even if audio playback failed
+      setUsingTTSFallback(false);
+      // Always advance -- even if audio playback failed
       setResponseStartTime(Date.now());
-      if (canUseSpeech) {
+      if (canUseSpeech && inputMode === 'voice') {
         resetTranscript();
         startListening().catch(() => {});
         startRecording();
@@ -482,6 +596,7 @@ export function InterviewSession({
       cancelled = true;
       englishPlayerRef.current?.cancel();
       burmesePlayerRef.current?.cancel();
+      cancelTTS();
     };
   }, [
     questionPhase,
@@ -496,6 +611,8 @@ export function InterviewSession({
     mode,
     numericRate,
     getBurmesePlayer,
+    inputMode,
+    cancelTTS,
   ]);
 
   // --- Manual submit (stop recording + move to transcription) ---
@@ -513,12 +630,102 @@ export function InterviewSession({
     stopListening();
     stopRecording();
     // If user typed something, auto-submit it; otherwise fall to self-grade
-    if (!canUseSpeech && typedAnswer.trim()) {
+    if (inputMode === 'text' && typedAnswer.trim()) {
+      handleTypedSubmitRef.current();
+    } else if (!canUseSpeech && typedAnswer.trim()) {
       handleTypedSubmitRef.current();
     } else {
       setQuestionPhase('grading');
     }
-  }, [stopListening, stopRecording, canUseSpeech, typedAnswer]);
+  }, [stopListening, stopRecording, canUseSpeech, typedAnswer, inputMode]);
+
+  // --- Toggle input mode ---
+  const handleToggleInputMode = useCallback(() => {
+    if (inputMode === 'voice') {
+      // Switch to text: cancel speech recognition and recording
+      stopListening();
+      stopRecording();
+      setInputMode('text');
+    } else {
+      // Switch to voice: start listening
+      setInputMode('voice');
+      if (canUseSpeech) {
+        resetTranscript();
+        startListening().catch(() => {});
+        startRecording();
+      }
+    }
+  }, [
+    inputMode,
+    stopListening,
+    stopRecording,
+    canUseSpeech,
+    resetTranscript,
+    startListening,
+    startRecording,
+  ]);
+
+  // --- Helper: Save session snapshot ---
+  const saveSessionSnapshot = useCallback(
+    (newResults: InterviewResult[], newCorrect: number, newIncorrect: number) => {
+      if (!sessionId) return;
+      const snapshot: InterviewSnapshot = {
+        id: sessionId,
+        type: 'interview',
+        savedAt: new Date().toISOString(),
+        version: SESSION_VERSION,
+        questions,
+        results: newResults,
+        currentIndex: currentIndex + 1,
+        correctCount: newCorrect,
+        incorrectCount: newIncorrect,
+        mode,
+        startTime,
+      };
+      try {
+        saveSession(snapshot).catch(() => {});
+      } catch {
+        // QuotaExceededError -- don't block the interview
+        // eslint-disable-next-line no-console
+        console.debug('[interview] Session save failed (storage quota)');
+      }
+    },
+    [sessionId, questions, currentIndex, mode, startTime]
+  );
+
+  // --- Helper: Check early termination (real mode) ---
+  const checkEarlyTermination = useCallback(
+    (newResults: InterviewResult[], newCorrect: number, newIncorrect: number): boolean => {
+      if (mode !== 'realistic') return false;
+
+      if (newCorrect >= PASS_THRESHOLD) {
+        transitionTimerRef.current = setTimeout(() => {
+          addMessage('examiner', "Congratulations! You've passed the civics test.");
+          setExaminerState('speaking');
+          safePlayInterview('pass-announce').then(() => {
+            setExaminerState('idle');
+            const duration = Math.round((Date.now() - startTime) / 1000);
+            onCompleteRef.current(newResults, duration, 'passThreshold');
+          });
+        }, 500);
+        return true;
+      }
+      if (newIncorrect >= FAIL_THRESHOLD) {
+        transitionTimerRef.current = setTimeout(() => {
+          addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
+          setExaminerState('speaking');
+          safePlayInterview('fail-announce').then(() => {
+            setExaminerState('idle');
+            const duration = Math.round((Date.now() - startTime) / 1000);
+            onCompleteRef.current(newResults, duration, 'failThreshold');
+          });
+        }, 500);
+        return true;
+      }
+      return false;
+    },
+    [mode, addMessage, safePlayInterview, startTime]
+  );
 
   // --- Advance to next question or finish ---
   const advanceToNext = useCallback(() => {
@@ -537,24 +744,18 @@ export function InterviewSession({
       setRecordAttempt(1);
       resetTranscript();
       setTypedAnswer('');
+      setPreviousTranscription('');
+      setLastGradeResult(null);
+      setUsingTTSFallback(false);
       setQuestionPhase('chime');
     }, TRANSITION_DELAY_MS);
   }, [currentIndex, startTime, results, resetTranscript]);
 
-  // --- Transcription: user confirms or re-records ---
-  const handleTranscriptConfirm = useCallback(() => {
-    // Calculate response time
-    const responseTimeMs = responseStartTime ? Date.now() - responseStartTime : undefined;
+  // --- Process grading result (shared between speech and text paths) ---
+  const processGradeResult = useCallback(
+    (userText: string, gradeResult: GradeResult, responseTimeMs: number | undefined) => {
+      if (!currentQuestion) return;
 
-    // Add user's answer to chat
-    const userText = transcript.trim() || '(no answer)';
-    addMessage('user', userText);
-
-    // If speech recognition available, grade automatically
-    if (canUseSpeech && currentQuestion) {
-      const gradeResult: GradeResult = gradeAnswer(transcript, currentQuestion.studyAnswers);
-
-      // Store result
       const interviewResult: InterviewResult = {
         questionId: currentQuestion.id,
         questionText_en: currentQuestion.question_en,
@@ -567,6 +768,9 @@ export function InterviewSession({
         category: currentQuestion.category,
         confidence: gradeResult.confidence,
         responseTimeMs,
+        transcript: userText,
+        matchedKeywords: gradeResult.matchedKeywords,
+        missingKeywords: gradeResult.missingKeywords,
       };
 
       const newResults = [...results, interviewResult];
@@ -576,87 +780,60 @@ export function InterviewSession({
       setResults(newResults);
       setCorrectCount(newCorrect);
       setIncorrectCount(newIncorrect);
+      setLastGradeResult(gradeResult);
 
-      // Save session snapshot
-      if (sessionId) {
-        const snapshot: InterviewSnapshot = {
-          id: sessionId,
-          type: 'interview',
-          savedAt: new Date().toISOString(),
-          version: SESSION_VERSION,
-          questions,
-          results: newResults,
-          currentIndex: currentIndex + 1,
-          correctCount: newCorrect,
-          incorrectCount: newIncorrect,
-          mode,
-          startTime,
-        };
-        saveSession(snapshot).catch(() => {});
-      }
-
+      saveSessionSnapshot(newResults, newCorrect, newIncorrect);
       clearRecording();
       setQuestionPhase('feedback');
 
-      // Check early termination (real mode)
-      if (mode === 'realistic') {
-        if (newCorrect >= PASS_THRESHOLD) {
-          transitionTimerRef.current = setTimeout(() => {
-            addMessage('examiner', "Congratulations! You've passed the civics test.");
-            setExaminerState('speaking');
-            safePlayInterview('pass-announce').then(() => {
-              setExaminerState('idle');
-              const duration = Math.round((Date.now() - startTime) / 1000);
-              onCompleteRef.current(newResults, duration, 'passThreshold');
-            });
-          }, 500);
-          return;
-        }
-        if (newIncorrect >= FAIL_THRESHOLD) {
-          transitionTimerRef.current = setTimeout(() => {
-            addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
-            setExaminerState('speaking');
-            safePlayInterview('fail-announce').then(() => {
-              setExaminerState('idle');
-              const duration = Math.round((Date.now() - startTime) / 1000);
-              onCompleteRef.current(newResults, duration, 'failThreshold');
-            });
-          }, 500);
-          return;
-        }
-      }
+      if (checkEarlyTermination(newResults, newCorrect, newIncorrect)) return;
 
-      // Check if all questions answered
       if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
         transitionTimerRef.current = setTimeout(() => {
           const duration = Math.round((Date.now() - startTime) / 1000);
           onCompleteRef.current(newResults, duration, 'complete');
         }, TRANSITION_DELAY_MS);
-        return;
       }
+    },
+    [
+      currentQuestion,
+      results,
+      correctCount,
+      incorrectCount,
+      saveSessionSnapshot,
+      clearRecording,
+      checkEarlyTermination,
+      currentIndex,
+      startTime,
+    ]
+  );
+
+  // --- Transcription: user confirms or re-records ---
+  const handleTranscriptConfirm = useCallback(() => {
+    const responseTimeMs = responseStartTime ? Date.now() - responseStartTime : undefined;
+    const userText = transcript.trim() || '(no answer)';
+    addMessage('user', userText);
+
+    if (canUseSpeech && currentQuestion) {
+      const gradeResult: GradeResult = gradeAnswer(userText, currentQuestion.studyAnswers);
+      processGradeResult(userText, gradeResult, responseTimeMs);
     } else {
-      // No speech recognition - fall through to self-grade
       setQuestionPhase('grading');
     }
   }, [
     transcript,
     canUseSpeech,
     currentQuestion,
-    results,
-    correctCount,
-    incorrectCount,
     responseStartTime,
     addMessage,
-    clearRecording,
-    sessionId,
-    questions,
-    currentIndex,
-    mode,
-    startTime,
-    safePlayInterview,
+    processGradeResult,
   ]);
 
   const handleReRecord = useCallback(() => {
+    // Save current transcript as previous transcription for context
+    if (transcript.trim()) {
+      setPreviousTranscription(transcript.trim());
+    }
     setRecordAttempt(prev => prev + 1);
     resetTranscript();
     if (canUseSpeech) {
@@ -664,109 +841,24 @@ export function InterviewSession({
       startRecording();
     }
     setQuestionPhase('responding');
-  }, [resetTranscript, canUseSpeech, startListening, startRecording]);
+  }, [transcript, resetTranscript, canUseSpeech, startListening, startRecording]);
 
-  // --- Typed answer submit (no-mic fallback) ---
-  const handleTypedSubmit = useCallback(() => {
-    if (!currentQuestion || !typedAnswer.trim()) return;
+  // --- Typed answer submit ---
+  const handleTypedSubmit = useCallback(
+    (text?: string) => {
+      if (!currentQuestion) return;
+      const userText = (text ?? typedAnswer).trim();
+      if (!userText) return;
 
-    const responseTimeMs = responseStartTime ? Date.now() - responseStartTime : undefined;
-    const userText = typedAnswer.trim();
-    addMessage('user', userText);
+      const responseTimeMs = responseStartTime ? Date.now() - responseStartTime : undefined;
+      addMessage('user', userText);
 
-    const gradeResult: GradeResult = gradeAnswer(userText, currentQuestion.studyAnswers);
-
-    const interviewResult: InterviewResult = {
-      questionId: currentQuestion.id,
-      questionText_en: currentQuestion.question_en,
-      questionText_my: currentQuestion.question_my,
-      correctAnswers: currentQuestion.studyAnswers.map(a => ({
-        text_en: a.text_en,
-        text_my: a.text_my,
-      })),
-      selfGrade: gradeResult.isCorrect ? 'correct' : 'incorrect',
-      category: currentQuestion.category,
-      confidence: gradeResult.confidence,
-      responseTimeMs,
-    };
-
-    const newResults = [...results, interviewResult];
-    const newCorrect = gradeResult.isCorrect ? correctCount + 1 : correctCount;
-    const newIncorrect = gradeResult.isCorrect ? incorrectCount : incorrectCount + 1;
-
-    setResults(newResults);
-    setCorrectCount(newCorrect);
-    setIncorrectCount(newIncorrect);
-
-    if (sessionId) {
-      const snapshot: InterviewSnapshot = {
-        id: sessionId,
-        type: 'interview',
-        savedAt: new Date().toISOString(),
-        version: SESSION_VERSION,
-        questions,
-        results: newResults,
-        currentIndex: currentIndex + 1,
-        correctCount: newCorrect,
-        incorrectCount: newIncorrect,
-        mode,
-        startTime,
-      };
-      saveSession(snapshot).catch(() => {});
-    }
-
-    setQuestionPhase('feedback');
-
-    // Check early termination (real mode)
-    if (mode === 'realistic') {
-      if (newCorrect >= PASS_THRESHOLD) {
-        transitionTimerRef.current = setTimeout(() => {
-          addMessage('examiner', "Congratulations! You've passed the civics test.");
-          setExaminerState('speaking');
-          safePlayInterview('pass-announce').then(() => {
-            setExaminerState('idle');
-            const duration = Math.round((Date.now() - startTime) / 1000);
-            onCompleteRef.current(newResults, duration, 'passThreshold');
-          });
-        }, 500);
-        return;
-      }
-      if (newIncorrect >= FAIL_THRESHOLD) {
-        transitionTimerRef.current = setTimeout(() => {
-          addMessage('examiner', "Unfortunately, you didn't reach the passing score this time.");
-          setExaminerState('speaking');
-          safePlayInterview('fail-announce').then(() => {
-            setExaminerState('idle');
-            const duration = Math.round((Date.now() - startTime) / 1000);
-            onCompleteRef.current(newResults, duration, 'failThreshold');
-          });
-        }, 500);
-        return;
-      }
-    }
-
-    if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
-      transitionTimerRef.current = setTimeout(() => {
-        const duration = Math.round((Date.now() - startTime) / 1000);
-        onCompleteRef.current(newResults, duration, 'complete');
-      }, TRANSITION_DELAY_MS);
-      return;
-    }
-  }, [
-    typedAnswer,
-    currentQuestion,
-    results,
-    correctCount,
-    incorrectCount,
-    responseStartTime,
-    addMessage,
-    sessionId,
-    questions,
-    currentIndex,
-    mode,
-    startTime,
-    safePlayInterview,
-  ]);
+      const gradeResult: GradeResult = gradeAnswer(userText, currentQuestion.studyAnswers);
+      processGradeResult(userText, gradeResult, responseTimeMs);
+      setTypedAnswer('');
+    },
+    [typedAnswer, currentQuestion, responseStartTime, addMessage, processGradeResult]
+  );
 
   // Keep ref in sync for handleTimerExpired to call
   useEffect(() => {
@@ -800,7 +892,14 @@ export function InterviewSession({
       const prefixAudio =
         lastResult.selfGrade === 'correct' ? 'correct-prefix' : 'incorrect-prefix';
 
-      addMessage('examiner', feedbackText, lastResult.selfGrade === 'correct');
+      addMessage(
+        'examiner',
+        feedbackText,
+        lastResult.selfGrade === 'correct',
+        undefined,
+        undefined,
+        lastGradeResult ?? undefined
+      );
 
       // Play prefix audio ("Correct! The answer is:") then answer audio
       safePlayInterview(prefixAudio)
@@ -808,7 +907,13 @@ export function InterviewSession({
           if (cancelled) return;
           try {
             const answerUrl = getEnglishAudioUrl(currentQuestion.id, 'a');
-            await getEnglishPlayer().play(answerUrl, numericRate);
+            // Check if answer audio failed pre-caching
+            if (failedUrls.has(answerUrl)) {
+              // TTS fallback for answer
+              await ttsFallbackSpeak(primaryAnswer, { rate: numericRate });
+            } else {
+              await getEnglishPlayer().play(answerUrl, numericRate);
+            }
           } catch {
             // Answer audio failure is non-blocking
           }
@@ -835,6 +940,7 @@ export function InterviewSession({
       cancelled = true;
       interviewPlayerRef.current?.cancel();
       englishPlayerRef.current?.cancel();
+      cancelTTS();
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -865,39 +971,10 @@ export function InterviewSession({
       setCorrectCount(newCorrect);
       setIncorrectCount(newIncorrect);
 
-      // Save session snapshot
-      if (sessionId) {
-        const snapshot: InterviewSnapshot = {
-          id: sessionId,
-          type: 'interview',
-          savedAt: new Date().toISOString(),
-          version: SESSION_VERSION,
-          questions,
-          results: newResults,
-          currentIndex: currentIndex + 1,
-          correctCount: newCorrect,
-          incorrectCount: newIncorrect,
-          mode,
-          startTime,
-        };
-        saveSession(snapshot).catch(() => {});
-      }
-
+      saveSessionSnapshot(newResults, newCorrect, newIncorrect);
       clearRecording();
 
-      // Check thresholds (realistic mode)
-      if (mode === 'realistic') {
-        if (newCorrect >= PASS_THRESHOLD) {
-          const duration = Math.round((Date.now() - startTime) / 1000);
-          onCompleteRef.current(newResults, duration, 'passThreshold');
-          return;
-        }
-        if (newIncorrect >= FAIL_THRESHOLD) {
-          const duration = Math.round((Date.now() - startTime) / 1000);
-          onCompleteRef.current(newResults, duration, 'failThreshold');
-          return;
-        }
-      }
+      if (checkEarlyTermination(newResults, newCorrect, newIncorrect)) return;
 
       if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
         const duration = Math.round((Date.now() - startTime) / 1000);
@@ -912,6 +989,9 @@ export function InterviewSession({
         setRecordAttempt(1);
         resetTranscript();
         setTypedAnswer('');
+        setPreviousTranscription('');
+        setLastGradeResult(null);
+        setUsingTTSFallback(false);
         setQuestionPhase('chime');
       }, TRANSITION_DELAY_MS);
     },
@@ -921,11 +1001,10 @@ export function InterviewSession({
       correctCount,
       incorrectCount,
       clearRecording,
-      mode,
+      saveSessionSnapshot,
+      checkEarlyTermination,
       currentIndex,
       startTime,
-      sessionId,
-      questions,
       resetTranscript,
     ]
   );
@@ -941,10 +1020,10 @@ export function InterviewSession({
 
     setExaminerState('speaking');
     await new Promise(resolve => setTimeout(resolve, 500));
-    const speakResult = await safePlayQuestion(currentQuestion.id);
+    const speakResult = await safePlayQuestion(currentQuestion.id, currentQuestion.question_en);
     setExaminerState('listening');
 
-    if (speakResult === 'completed' && canUseSpeech) {
+    if (speakResult === 'completed' && canUseSpeech && inputMode === 'voice') {
       resetTranscript();
       startListening().catch(() => {});
       startRecording();
@@ -959,6 +1038,7 @@ export function InterviewSession({
     resetTranscript,
     startListening,
     startRecording,
+    inputMode,
   ]);
 
   // --- Quit handler ---
@@ -973,42 +1053,72 @@ export function InterviewSession({
     onCompleteRef.current(results, duration, 'quit');
   }, [cancelTTS, stopListening, stopRecording, cleanupRecorder, results, startTime]);
 
+  // --- Emergency exit handler (Real mode long press) ---
+  const handleEmergencyExit = useCallback(() => {
+    cancelTTS();
+    englishPlayerRef.current?.cancel();
+    burmesePlayerRef.current?.cancel();
+    interviewPlayerRef.current?.cancel();
+    stopListening();
+    stopRecording();
+    cleanupRecorder();
+    const duration = Math.round((Date.now() - startTime) / 1000);
+    onCompleteRef.current(results, duration, 'quit');
+  }, [cancelTTS, stopListening, stopRecording, cleanupRecorder, results, startTime]);
+
+  // --- TextAnswerInput submit handler ---
+  const handleTextAnswerSubmit = useCallback(
+    (text: string) => {
+      handleTypedSubmit(text);
+    },
+    [handleTypedSubmit]
+  );
+
   // --- Render helpers ---
   const isGreeting = questionPhase === 'greeting';
   const isTransition = questionPhase === 'transition';
   const showTimer = mode === 'realistic' && questionPhase === 'responding';
-  const showSelfGradeButtons = questionPhase === 'grading' && !canUseSpeech;
-  // Show mic recording when speech works and no error; show text input as fallback
+  const showSelfGradeButtons = questionPhase === 'grading';
+  // Show mic recording when voice mode, speech works, and no error
   const hasSpeechError = !!speechError && !isListening;
-  const showRecordingArea = questionPhase === 'responding' && canUseSpeech && !hasSpeechError;
-  const showTextInputFallback = questionPhase === 'responding' && (!canUseSpeech || hasSpeechError);
+  const showRecordingArea =
+    questionPhase === 'responding' && inputMode === 'voice' && canUseSpeech && !hasSpeechError;
+  const showTextInput =
+    questionPhase === 'responding' && (inputMode === 'text' || !canUseSpeech || hasSpeechError);
   const showTranscriptionReview = questionPhase === 'transcription' && canUseSpeech;
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col">
+      {/* Mode badge (top-right corner) */}
+      <ModeBadge mode={mode} />
+
+      {/* Landscape overlay for browsers without orientation lock */}
+      {!orientationSupported && <LandscapeOverlay active={interviewActive} />}
+
       {/* Dark interview background */}
       <div className="flex flex-1 flex-col bg-gradient-to-b from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-t-2xl overflow-hidden">
         {/* Header bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold text-white/70">
-              Question {currentIndex + 1} of {QUESTIONS_PER_SESSION}
-              {showBurmese && (
-                <span className="font-myanmar ml-1">
-                  မေးခွန်း {currentIndex + 1} မှ {QUESTIONS_PER_SESSION}
-                </span>
-              )}
-            </span>
+            {/* InterviewProgress replaces old text-based progress */}
+            <InterviewProgress
+              mode={mode}
+              currentIndex={currentIndex}
+              totalQuestions={QUESTIONS_PER_SESSION}
+              results={progressResults}
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Score display (Practice only -- Real hides score) */}
             {mode === 'practice' && (
               <span className="text-xs text-white/50">
                 {correctCount} correct
                 {showBurmese && <span className="font-myanmar ml-1">{correctCount} မှန်</span>}
               </span>
             )}
-          </div>
 
-          <div className="flex items-center gap-2">
-            {mode === 'practice' && (
+            {mode === 'practice' ? (
               <button
                 type="button"
                 onClick={() => setShowQuitDialog(true)}
@@ -1025,18 +1135,13 @@ export function InterviewSession({
                   {showBurmese && <span className="font-myanmar ml-1">ထွက်ရန်</span>}
                 </span>
               </button>
+            ) : (
+              /* Real mode: long-press exit (hidden emergency exit) */
+              <LongPressButton onLongPress={handleEmergencyExit}>
+                <LogOut className="h-3.5 w-3.5" />
+              </LongPressButton>
             )}
           </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="h-0.5 w-full bg-white/5">
-          <motion.div
-            className="h-full bg-primary"
-            initial={{ width: 0 }}
-            animate={{ width: `${((currentIndex + 1) / QUESTIONS_PER_SESSION) * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
         </div>
 
         {/* Timer for realistic mode */}
@@ -1055,6 +1160,19 @@ export function InterviewSession({
           <ExaminerCharacter state={examinerState} size="md" />
         </div>
 
+        {/* Paused overlay */}
+        {interviewPaused && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-900/80">
+            <div className="text-center">
+              <p className="text-xl font-bold text-white">Interview Paused</p>
+              {showBurmese && (
+                <p className="font-myanmar text-base text-white/70 mt-1">အင်တာဗျူး ရပ်နားထားသည်</p>
+              )}
+              <p className="text-sm text-white/50 mt-2">Resuming...</p>
+            </div>
+          </div>
+        )}
+
         {/* Chat messages area */}
         <div className="flex-1 overflow-y-auto px-4 pb-2 space-y-3 min-h-0">
           <AnimatePresence>
@@ -1067,6 +1185,14 @@ export function InterviewSession({
                 >
                   {msg.text}
                 </ChatBubble>
+
+                {/* TTS Fallback badge for examiner messages when using TTS */}
+                {msg.sender === 'examiner' && msg.questionId && usingTTSFallback && (
+                  <div className="mt-0.5 ml-10">
+                    <TTSFallbackBadge visible compact />
+                  </div>
+                )}
+
                 {/* Burmese replay button for examiner question messages (Practice + Myanmar mode) */}
                 {msg.questionId &&
                   msg.sender === 'examiner' &&
@@ -1080,6 +1206,21 @@ export function InterviewSession({
                         className="!py-1 !px-2.5 !text-[10px] !min-h-[32px]"
                         showSpeedLabel
                         speedLabel={effectiveSpeed === 'normal' ? undefined : effectiveSpeed}
+                      />
+                    </div>
+                  )}
+
+                {/* Keyword highlights in Practice mode feedback messages */}
+                {msg.gradeResult &&
+                  mode === 'practice' &&
+                  msg.sender === 'examiner' &&
+                  results[results.length - 1]?.transcript && (
+                    <div className="mt-2 ml-10 mr-4">
+                      <KeywordHighlight
+                        userAnswer={results[results.length - 1]?.transcript ?? ''}
+                        matchedKeywords={msg.gradeResult.matchedKeywords}
+                        missingKeywords={msg.gradeResult.missingKeywords}
+                        compact
                       />
                     </div>
                   )}
@@ -1101,7 +1242,7 @@ export function InterviewSession({
             />
           )}
 
-          {/* Self-grade fallback (no speech recognition) */}
+          {/* Self-grade fallback */}
           {showSelfGradeButtons && (
             <div className="py-2">
               <p className="mb-2 text-center text-xs text-white/50">
@@ -1161,7 +1302,7 @@ export function InterviewSession({
                   </button>
                 )}
 
-                {/* Manual submit button — always visible so user can advance */}
+                {/* Manual submit button -- always visible so user can advance */}
                 {questionPhase === 'responding' && (
                   <button
                     type="button"
@@ -1175,6 +1316,23 @@ export function InterviewSession({
                   >
                     <Square className="h-3 w-3" />
                     <span>Done</span>
+                  </button>
+                )}
+
+                {/* Toggle to text input */}
+                {canUseSpeech && questionPhase === 'responding' && (
+                  <button
+                    type="button"
+                    onClick={handleToggleInputMode}
+                    className={clsx(
+                      'flex items-center gap-1 rounded-xl border border-white/20 px-2.5 py-2',
+                      'text-xs text-white/50',
+                      'transition-colors hover:bg-white/10 hover:text-white/80',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30'
+                    )}
+                    title="Switch to text input"
+                  >
+                    <Keyboard className="h-3.5 w-3.5" />
                   </button>
                 )}
               </div>
@@ -1195,60 +1353,48 @@ export function InterviewSession({
                 <p className="text-center text-xs text-warning">{speechError}</p>
               )}
             </div>
-          ) : showTextInputFallback ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-1.5 py-1 text-white/40">
-                <Keyboard className="h-3.5 w-3.5" />
-                <span className="text-xs">
-                  {hasSpeechError
-                    ? 'Speech recognition failed. Type your answer instead.'
-                    : 'No microphone. Type your answer below.'}
-                  {showBurmese && (
-                    <span className="block font-myanmar mt-0.5">
-                      {hasSpeechError
-                        ? 'အသံမှတ်သားမှု မအောင်မြင်ပါ။ အဖြေကို ရိုက်ထည့်ပါ။'
-                        : 'မိုက်ခရိုဖုန်း မရှိပါ။ အောက်တွင် ရိုက်ထည့်ပါ။'}
-                    </span>
-                  )}
-                </span>
+          ) : showTextInput ? (
+            <div className="space-y-2">
+              {/* Header with toggle back to voice */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-white/40">
+                  <Keyboard className="h-3.5 w-3.5" />
+                  <span className="text-xs">
+                    {hasSpeechError
+                      ? 'Speech recognition failed. Type your answer.'
+                      : !canUseSpeech
+                        ? 'No microphone. Type your answer.'
+                        : 'Type your answer'}
+                  </span>
+                </div>
+                {canUseSpeech && !hasSpeechError && questionPhase === 'responding' && (
+                  <button
+                    type="button"
+                    onClick={handleToggleInputMode}
+                    className="flex items-center gap-1 text-xs text-white/50 hover:text-white/80 transition-colors"
+                    title="Switch to voice input"
+                  >
+                    <Mic className="h-3.5 w-3.5" />
+                    <span>Voice</span>
+                  </button>
+                )}
               </div>
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  handleTypedSubmit();
-                }}
-                className="flex gap-2"
-              >
-                <input
-                  ref={textInputRef}
-                  type="text"
-                  value={typedAnswer}
-                  onChange={e => setTypedAnswer(e.target.value)}
-                  placeholder="Type your answer..."
-                  autoFocus
-                  className={clsx(
-                    'flex-1 rounded-xl border border-white/20 bg-white/5 px-3 py-2',
-                    'text-sm text-white placeholder:text-white/30',
-                    'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
-                  )}
-                />
-                <button
-                  type="submit"
-                  disabled={!typedAnswer.trim()}
-                  className={clsx(
-                    'flex items-center gap-1.5 rounded-xl px-4 py-2',
-                    'text-xs font-semibold text-white',
-                    typedAnswer.trim()
-                      ? 'bg-primary hover:bg-primary/90'
-                      : 'bg-white/10 text-white/30 cursor-not-allowed',
-                    'transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500'
-                  )}
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  <span>Submit</span>
-                </button>
-              </form>
+
+              {/* TextAnswerInput component */}
+              <TextAnswerInput
+                onSubmit={handleTextAnswerSubmit}
+                disabled={questionPhase !== 'responding'}
+                previousTranscription={previousTranscription || undefined}
+              />
+
+              {/* Mic permission denied prompt */}
+              {!canUseSpeech && !micPermission && (
+                <p className="text-center text-xs text-white/30">
+                  Microphone access denied. Use text input instead.
+                </p>
+              )}
+
+              {/* Skip to self-grade */}
               <div className="flex justify-center">
                 <button
                   type="button"
