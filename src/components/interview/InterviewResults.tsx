@@ -187,6 +187,9 @@ export function InterviewResults({
   const [previousScore, setPreviousScore] = useState<number | null>(null);
   const [isAddingAll, setIsAddingAll] = useState(false);
 
+  // Real mode: score was hidden during session, reveal it with animation
+  const [scoreRevealed, setScoreRevealed] = useState(mode !== 'realistic');
+
   // Ref for scroll-to-transcript
   const transcriptRef = useRef<HTMLDivElement | null>(null);
 
@@ -390,17 +393,28 @@ export function InterviewResults({
     };
   }, [passed]);
 
+  // --- Real mode score reveal (delayed to build suspense) ---
+  useEffect(() => {
+    if (mode !== 'realistic') return;
+    const timer = setTimeout(() => {
+      setScoreRevealed(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [mode]);
+
   // --- Confetti + sound for passing ---
   useEffect(() => {
     if (passed) {
+      // Delay confetti slightly more for real mode (after reveal)
+      const delay = mode === 'realistic' ? 1800 : 800;
       const timer = setTimeout(() => {
         setShowConfetti(true);
         playCompletionSparkle();
-      }, 800);
+      }, delay);
       return () => clearTimeout(timer);
     }
     return undefined;
-  }, [passed]);
+  }, [passed, mode]);
 
   const handleConfettiComplete = useCallback(() => {
     setShowConfetti(false);
@@ -457,84 +471,102 @@ export function InterviewResults({
           </div>
         </FadeIn>
 
-        {/* 1. Pass/Fail Banner with glow */}
-        <FadeIn delay={200}>
-          <div
-            className={clsx(
-              'rounded-2xl px-6 py-5 text-center',
-              passed
-                ? 'bg-gradient-to-br from-success/20 to-success/5 shadow-[0_0_30px_rgba(16,185,129,0.2)]'
-                : 'bg-gradient-to-br from-warning/20 to-warning/5 shadow-[0_0_30px_rgba(245,158,11,0.15)]'
-            )}
-          >
-            <div className="mb-2 flex items-center justify-center gap-2">
-              {passed ? (
-                <CheckCircle2 className="h-7 w-7 text-success" />
-              ) : (
-                <XCircle className="h-7 w-7 text-warning" />
-              )}
-              <span
-                className={clsx('text-2xl font-bold', passed ? 'text-success' : 'text-warning')}
-              >
-                {passed ? strings.interview.passed.en : strings.interview.failed.en}
-              </span>
-            </div>
-            {showBurmese && (
-              <p
-                className={clsx(
-                  'font-myanmar text-sm',
-                  passed ? 'text-success/80' : 'text-warning/80'
-                )}
-              >
-                {passed ? strings.interview.passed.my : strings.interview.failed.my}
-              </p>
-            )}
-            <p className="mt-2 text-sm text-slate-400">
-              {END_REASON_TEXT[endReason].en}
+        {/* Real mode: score reveal with suspense */}
+        {mode === 'realistic' && !scoreRevealed && (
+          <FadeIn delay={200}>
+            <div className="rounded-2xl bg-gradient-to-br from-slate-700/40 to-slate-700/20 px-6 py-8 text-center">
+              <p className="text-lg font-bold text-slate-300">Revealing your score...</p>
               {showBurmese && (
-                <span className="ml-1 font-myanmar text-sm">
-                  {' \u00B7 '}
-                  {END_REASON_TEXT[endReason].my}
-                </span>
+                <p className="mt-1 font-myanmar text-sm text-slate-400">
+                  သင့်ရမှတ်ကို ပြသနေပါသည်...
+                </p>
               )}
-            </p>
-          </div>
-        </FadeIn>
+            </div>
+          </FadeIn>
+        )}
+
+        {/* 1. Pass/Fail Banner with glow */}
+        {scoreRevealed && (
+          <FadeIn delay={mode === 'realistic' ? 0 : 200}>
+            <div
+              className={clsx(
+                'rounded-2xl px-6 py-5 text-center',
+                passed
+                  ? 'bg-gradient-to-br from-success/20 to-success/5 shadow-[0_0_30px_rgba(16,185,129,0.2)]'
+                  : 'bg-gradient-to-br from-warning/20 to-warning/5 shadow-[0_0_30px_rgba(245,158,11,0.15)]'
+              )}
+            >
+              <div className="mb-2 flex items-center justify-center gap-2">
+                {passed ? (
+                  <CheckCircle2 className="h-7 w-7 text-success" />
+                ) : (
+                  <XCircle className="h-7 w-7 text-warning" />
+                )}
+                <span
+                  className={clsx('text-2xl font-bold', passed ? 'text-success' : 'text-warning')}
+                >
+                  {passed ? strings.interview.passed.en : strings.interview.failed.en}
+                </span>
+              </div>
+              {showBurmese && (
+                <p
+                  className={clsx(
+                    'font-myanmar text-sm',
+                    passed ? 'text-success/80' : 'text-warning/80'
+                  )}
+                >
+                  {passed ? strings.interview.passed.my : strings.interview.failed.my}
+                </p>
+              )}
+              <p className="mt-2 text-sm text-slate-400">
+                {END_REASON_TEXT[endReason].en}
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar text-sm">
+                    {' \u00B7 '}
+                    {END_REASON_TEXT[endReason].my}
+                  </span>
+                )}
+              </p>
+            </div>
+          </FadeIn>
+        )}
 
         {/* 2. Animated Score */}
-        <FadeIn delay={400}>
-          <div className="mt-6 flex justify-center">
-            <CountUpScore
-              score={score}
-              total={totalQuestions || 20}
-              size="xl"
-              delay={600}
-              duration={2}
-            />
-          </div>
-          <div className="mt-1 flex items-center justify-center gap-3">
-            <span className="text-lg text-slate-400">{percentage}%</span>
-            {/* Comparison to previous attempt */}
-            {scoreDiff !== null && scoreDiff !== 0 && (
-              <span
-                className={clsx(
-                  'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-semibold',
-                  scoreDiff > 0
-                    ? 'bg-success/20 text-success'
-                    : 'bg-destructive/20 text-destructive'
-                )}
-              >
-                {scoreDiff > 0 ? (
-                  <TrendingUp className="h-3 w-3" />
-                ) : (
-                  <TrendingDown className="h-3 w-3" />
-                )}
-                {scoreDiff > 0 ? '+' : ''}
-                {scoreDiff}
-              </span>
-            )}
-          </div>
-        </FadeIn>
+        {scoreRevealed && (
+          <FadeIn delay={mode === 'realistic' ? 200 : 400}>
+            <div className="mt-6 flex justify-center">
+              <CountUpScore
+                score={score}
+                total={totalQuestions || 20}
+                size="xl"
+                delay={mode === 'realistic' ? 400 : 600}
+                duration={2}
+              />
+            </div>
+            <div className="mt-1 flex items-center justify-center gap-3">
+              <span className="text-lg text-slate-400">{percentage}%</span>
+              {/* Comparison to previous attempt */}
+              {scoreDiff !== null && scoreDiff !== 0 && (
+                <span
+                  className={clsx(
+                    'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-semibold',
+                    scoreDiff > 0
+                      ? 'bg-success/20 text-success'
+                      : 'bg-destructive/20 text-destructive'
+                  )}
+                >
+                  {scoreDiff > 0 ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                  {scoreDiff > 0 ? '+' : ''}
+                  {scoreDiff}
+                </span>
+              )}
+            </div>
+          </FadeIn>
+        )}
 
         {/* 3. Personalized recommendation */}
         <FadeIn delay={550}>

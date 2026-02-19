@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ChatBubble } from '@/components/interview/ChatBubble';
 import { ExaminerCharacter } from '@/components/interview/ExaminerCharacter';
+import { KeywordHighlight } from '@/components/interview/KeywordHighlight';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -156,15 +157,27 @@ export function InterviewTranscript({
                 )}
               </ChatBubble>
 
-              {/* User answer bubble (right) */}
+              {/* User answer bubble (right) with keyword highlights */}
               <ChatBubble sender="user" isCorrect={isCorrect} confidence={result.confidence}>
-                <p>
-                  {result.transcript
-                    ? `"${result.transcript}"`
-                    : isCorrect
-                      ? '[Self-graded: Correct]'
-                      : '[Self-graded: Incorrect]'}
-                </p>
+                {result.transcript &&
+                result.matchedKeywords &&
+                result.matchedKeywords.length > 0 ? (
+                  <KeywordHighlight
+                    userAnswer={result.transcript}
+                    matchedKeywords={result.matchedKeywords}
+                    missingKeywords={result.missingKeywords ?? []}
+                    showMissing={false}
+                    compact
+                  />
+                ) : (
+                  <p>
+                    {result.transcript
+                      ? `"${result.transcript}"`
+                      : isCorrect
+                        ? '[Self-graded: Correct]'
+                        : '[Self-graded: Incorrect]'}
+                  </p>
+                )}
                 {result.responseTimeMs !== undefined && (
                   <p className="mt-0.5 text-xs opacity-60">
                     {(result.responseTimeMs / 1000).toFixed(1)}s response time
@@ -225,16 +238,26 @@ export function InterviewTranscript({
                             </p>
                           ))}
 
-                          {/* Matched/missing keywords */}
+                          {/* Matched/missing keywords with bilingual labels */}
                           {result.matchedKeywords && result.matchedKeywords.length > 0 && (
                             <p className="mt-2 text-xs text-muted-foreground">
-                              <span className="font-medium text-success">Matched:</span>{' '}
+                              <span className="font-medium text-success">
+                                Matched:
+                                {showBurmese && (
+                                  <span className="font-myanmar ml-1">ကိုက်ညီသော:</span>
+                                )}
+                              </span>{' '}
                               {result.matchedKeywords.join(', ')}
                             </p>
                           )}
                           {result.missingKeywords && result.missingKeywords.length > 0 && (
                             <p className="mt-0.5 text-xs text-muted-foreground">
-                              <span className="font-medium text-destructive">Missing:</span>{' '}
+                              <span className="font-medium text-destructive">
+                                Missing:
+                                {showBurmese && (
+                                  <span className="font-myanmar ml-1">လွတ်နေသော:</span>
+                                )}
+                              </span>{' '}
                               {result.missingKeywords.join(', ')}
                             </p>
                           )}
