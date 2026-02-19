@@ -336,6 +336,10 @@ All decisions archived in PROJECT.md Key Decisions table.
 - SRSWidget and AchievementsTab already used conditional class pattern (showBurmese ? 'font-myanmar' : '') -- no changes needed
 - TestPage and StudyGuidePage required wrapping font-myanmar blocks with {showBurmese && (...)}
 
+### Roadmap Evolution
+
+- Phase 28 added: Interview UX & Voice Flow Polish (Real/Practice mode UI/UX, voice flow improvements, error/fallback fixes)
+
 ### Research Notes
 
 - Language mode touches 59 files, 334 font-myanmar occurrences, 171 conditional render points
@@ -351,11 +355,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 27 complete
-Next step: Phase 25 (Burmese Translation Audit) is the only remaining unstarted phase
-Resume file: .planning/phases/27-gap-closure-timer-a11y/27-VERIFICATION.md
+Stopped at: Phase 28 context gathered
+Next step: Plan Phase 28 (Interview UX & Voice Flow Polish)
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-CONTEXT.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-18 (Phase 27 context gathered)*
+*Last updated: 2026-02-18 (Phase 28 context gathered)*
