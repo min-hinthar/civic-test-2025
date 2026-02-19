@@ -445,3 +445,9 @@ coverage/
 
 # Generated build artifacts
 scripts/questions-export.json
+
+# One-off planning scripts
+.planning/*.js
+
+# Windows NUL device artifact
+NUL
