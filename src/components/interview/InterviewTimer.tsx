@@ -41,24 +41,34 @@ export function InterviewTimer({ duration = 15, onExpired, isActive }: Interview
     onExpiredRef.current = onExpired;
   }, [onExpired]);
 
-  // Countdown interval
+  // Track whether expiry has been handled to avoid double-fire
+  const expiredRef = useRef(false);
+
+  // Countdown interval — keep state updater pure (no side effects inside)
   useEffect(() => {
     if (!isActive) return;
+    expiredRef.current = false;
 
     const interval = setInterval(() => {
       setTimeRemaining(prev => {
-        const next = prev - 1;
-        if (next <= 0) {
+        if (prev <= 1) {
           clearInterval(interval);
-          onExpiredRef.current();
           return 0;
         }
-        return next;
+        return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
   }, [isActive]);
+
+  // Separate effect to fire expiry callback when timer reaches 0
+  useEffect(() => {
+    if (timeRemaining <= 0 && isActive && !expiredRef.current) {
+      expiredRef.current = true;
+      onExpiredRef.current();
+    }
+  }, [timeRemaining, isActive]);
 
   if (!isActive) return null;
 

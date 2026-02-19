@@ -43,6 +43,7 @@ import { useToast } from '@/components/BilingualToast';
 import { saveInterviewSession, getInterviewHistory } from '@/lib/interview/interviewStore';
 import { getClosingStatement } from '@/lib/interview/interviewGreetings';
 import { createAudioPlayer, getInterviewAudioUrl } from '@/lib/audio/audioPlayer';
+import type { AudioPlayer } from '@/lib/audio/audioPlayer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { playCompletionSparkle } from '@/lib/audio/soundEffects';
 import { USCIS_CATEGORIES, CATEGORY_COLORS, getUSCISCategory } from '@/lib/mastery/categoryMapping';
@@ -167,7 +168,14 @@ export function InterviewResults({
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { settings: ttsSettings } = useTTS();
-  const closingPlayerRef = useRef(createAudioPlayer());
+  // Lazy-init audio player to avoid side-effectful call during render (React Compiler safety)
+  const closingPlayerRef = useRef<AudioPlayer | null>(null);
+  const getClosingPlayer = useCallback((): AudioPlayer => {
+    if (!closingPlayerRef.current) {
+      closingPlayerRef.current = createAudioPlayer();
+    }
+    return closingPlayerRef.current;
+  }, []);
   const [isClosingSpeaking, setIsClosingSpeaking] = useState(false);
 
   // Effective speed for speech button labels in transcript
@@ -184,7 +192,7 @@ export function InterviewResults({
   const [showConfetti, setShowConfetti] = useState(false);
   const [trendData, setTrendData] = useState<Array<{ date: string; score: number }>>([]);
   const [hasSaved, setHasSaved] = useState(false);
-  const [previousScore, setPreviousScore] = useState<number | null>(null);
+  const [previousScore, setPreviousScore] = useState<{ score: number; total: number } | null>(null);
   const [isAddingAll, setIsAddingAll] = useState(false);
 
   // Real mode: score was hidden during session, reveal it with animation
@@ -337,7 +345,7 @@ export function InterviewResults({
       if (!cancelled) {
         // Previous score (second most recent, since first is the current session)
         if (history.length >= 2) {
-          setPreviousScore(history[1].score);
+          setPreviousScore({ score: history[1].score, total: history[1].totalQuestions });
         }
 
         // Build trend data (oldest first, last 10 sessions)
@@ -375,7 +383,7 @@ export function InterviewResults({
 
   // --- Pre-generated closing statement audio ---
   useEffect(() => {
-    const player = closingPlayerRef.current;
+    const player = getClosingPlayer();
     const timer = setTimeout(() => {
       const { audio } = getClosingStatement(passed);
       const url = getInterviewAudioUrl(audio);
@@ -391,7 +399,7 @@ export function InterviewResults({
       player.cancel();
       setIsClosingSpeaking(false);
     };
-  }, [passed]);
+  }, [passed, getClosingPlayer]);
 
   // --- Real mode score reveal (delayed to build suspense) ---
   useEffect(() => {
@@ -452,7 +460,7 @@ export function InterviewResults({
   }, [isAddingAll, incorrectNotInDeck, addCard, showSuccess]);
 
   // Score improvement from previous attempt
-  const scoreDiff = previousScore !== null ? score - previousScore : null;
+  const scoreDiff = previousScore !== null ? score - previousScore.score : null;
 
   // Recommendation text
   const recommendation = getRecommendation(score, weakestCategory);
@@ -638,7 +646,7 @@ export function InterviewResults({
                     {showBurmese && <span className="font-myanmar ml-1">ယခင်</span>}
                   </div>
                   <p className="mt-1 text-lg font-bold text-slate-100">
-                    {previousScore}/{totalQuestions}
+                    {previousScore.score}/{previousScore.total}
                   </p>
                   {scoreDiff !== null && scoreDiff !== 0 && (
                     <p

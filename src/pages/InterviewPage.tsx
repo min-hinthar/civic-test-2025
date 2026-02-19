@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -37,7 +36,6 @@ const QUESTIONS_PER_SESSION = 20;
  * cache result are forwarded to InterviewSession.
  */
 const InterviewPage = () => {
-  const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const { setLock } = useNavigation();
   const [phase, setPhase] = useState<InterviewPhase>('setup');
@@ -59,8 +57,7 @@ const InterviewPage = () => {
   // Pre-cache result from InterviewCountdown (for TTS fallback in session)
   const [precacheResult, setPrecacheResult] = useState<PrecacheProgress | undefined>();
 
-  // Practice exit confirmation dialog
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  // Practice exit is handled by InterviewSession's built-in quit dialog
 
   // --- Session persistence state ---
   const [savedSessions, setSavedSessions] = useState<InterviewSnapshot[]>([]);
@@ -177,27 +174,6 @@ const InterviewPage = () => {
     setPhase('countdown');
   }, []);
 
-  // Practice exit: save progress and show confirmation dialog
-  const handleExitRequest = useCallback(() => {
-    if (mode === 'practice') {
-      setShowExitConfirm(true);
-    } else {
-      // Real mode long-press exit: discard session, navigate home
-      deleteSession(sessionId).catch(() => {});
-      navigate('/');
-    }
-  }, [mode, sessionId, navigate]);
-
-  const handleExitConfirm = useCallback(() => {
-    setShowExitConfirm(false);
-    deleteSession(sessionId).catch(() => {});
-    navigate('/');
-  }, [sessionId, navigate]);
-
-  const handleExitCancel = useCallback(() => {
-    setShowExitConfirm(false);
-  }, []);
-
   // Navigation lock via context: lock during active interview session
   const interviewActive = phase === 'session';
   useEffect(() => {
@@ -206,9 +182,6 @@ const InterviewPage = () => {
 
   // Release lock on unmount
   useEffect(() => () => setLock(false), [setLock]);
-
-  // Keep handleExitRequest reference stable for potential downstream use
-  void handleExitRequest;
 
   return (
     <div className="page-shell">
@@ -253,52 +226,6 @@ const InterviewPage = () => {
             initialStartTime={resumeData?.startTime}
             precacheResult={precacheResult}
           />
-
-          {/* Practice exit confirmation dialog */}
-          {showExitConfirm && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-              <div className="mx-4 w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl">
-                <h3 className="text-lg font-bold text-foreground">
-                  Exit Interview?
-                  {showBurmese && (
-                    <span className="mt-1 block font-myanmar text-sm font-normal text-muted-foreground">
-                      အင်တာဗျူးမှ ထွက်မလား?
-                    </span>
-                  )}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Your progress will be saved. You can resume later.
-                  {showBurmese && (
-                    <span className="mt-1 block font-myanmar">
-                      တိုးတက်မှုကို သိမ်းဆည်းပါမည်။ နောက်မှ ဆက်လုပ်နိုင်ပါသည်။
-                    </span>
-                  )}
-                </p>
-                <div className="mt-4 flex gap-3">
-                  <button
-                    type="button"
-                    onClick={handleExitCancel}
-                    className="min-h-[44px] flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
-                  >
-                    Continue
-                    {showBurmese && (
-                      <span className="block font-myanmar text-xs font-normal">ဆက်လုပ်ပါ</span>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleExitConfirm}
-                    className="min-h-[44px] flex-1 rounded-xl bg-destructive px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-destructive/90"
-                  >
-                    Exit
-                    {showBurmese && (
-                      <span className="block font-myanmar text-xs font-normal">ထွက်ပါ</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </>
       )}
       {phase === 'results' && (

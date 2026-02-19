@@ -14,7 +14,7 @@ function createMockCache(failUrls: string[] = []) {
       }
       return Promise.resolve();
     }),
-    match: vi.fn((url: string) => {
+    match: vi.fn((url: string): Promise<Response | undefined> => {
       // Default: return undefined (not cached)
       void url;
       return Promise.resolve(undefined);

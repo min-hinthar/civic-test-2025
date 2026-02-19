@@ -788,13 +788,8 @@ export function InterviewSession({
       setQuestionPhase('feedback');
 
       if (checkEarlyTermination(newResults, newCorrect, newIncorrect)) return;
-
-      if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
-        transitionTimerRef.current = setTimeout(() => {
-          const duration = Math.round((Date.now() - startTime) / 1000);
-          onCompleteRef.current(newResults, duration, 'complete');
-        }, TRANSITION_DELAY_MS);
-      }
+      // Note: last-question completion is handled by the FEEDBACK effect → advanceToNext().
+      // Do NOT schedule onComplete here to avoid double-completion.
     },
     [
       currentQuestion,
@@ -804,8 +799,6 @@ export function InterviewSession({
       saveSessionSnapshot,
       clearRecording,
       checkEarlyTermination,
-      currentIndex,
-      startTime,
     ]
   );
 
