@@ -186,7 +186,7 @@ export function TestResultsScreen({
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
       <Confetti fire={showConfetti} intensity={isPassing ? 'celebration' : 'burst'} />
 
-      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
+      <div className="glass-light p-6 shadow-2xl shadow-primary/20 transition duration-500 hover:-translate-y-1 hover:shadow-primary/30 focus-within:ring-2 focus-within:ring-primary/40">
         {/* ---------------------------------------------------------------- */}
         {/* Header: Trophy + Score                                           */}
         {/* ---------------------------------------------------------------- */}

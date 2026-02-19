@@ -23,7 +23,7 @@ const OpEdPage = () => {
     <div className="page-shell">
       <GlassHeader showBack backHref="/" />
       <main className="mx-auto max-w-4xl px-6 py-10 space-y-10">
-        <header className="glass-panel relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-[hsl(var(--color-background))] via-[hsl(var(--color-surface))] to-[hsl(var(--color-background))] p-8 text-white shadow-2xl shadow-primary/25">
+        <header className="glass-medium relative overflow-hidden border border-border/70 bg-gradient-to-br from-[hsl(var(--color-background))] via-[hsl(var(--color-surface))] to-[hsl(var(--color-background))] p-8 text-white shadow-2xl shadow-primary/25 transition duration-500 hover:-translate-y-1 hover:shadow-primary/30">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-20 right-10 h-64 w-64 rounded-full bg-accent/20 blur-[120px]" />
           <div className="relative space-y-4">

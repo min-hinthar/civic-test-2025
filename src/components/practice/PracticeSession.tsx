@@ -834,7 +834,7 @@ export function PracticeSession({
       </div>
 
       {/* Question card with slide-left transitions */}
-      <div className="glass-panel rounded-2xl p-6 shadow-2xl shadow-primary/20">
+      <div className="glass-light p-6 shadow-2xl shadow-primary/20 transition duration-500 hover:-translate-y-1 hover:shadow-primary/30 focus-within:ring-2 focus-within:ring-primary/40">
         <AnimatePresence mode="wait">
           <motion.div
             key={quizState.currentIndex}
