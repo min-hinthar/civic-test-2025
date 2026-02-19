@@ -409,10 +409,10 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             <div className="mt-2 flex items-center gap-1.5 text-center">
               <Wifi className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
               <p className="text-xs text-amber-500">
-                Slow connection detected. Audio may take longer to load.
+                {strings.interview.slowConnection.en}
                 {showBurmese && (
                   <span className="font-myanmar block mt-0.5">
-                    အင်တာနက်နှေးနေပါသည်။ အသံဖိုင်များ ပိုကြာနိုင်ပါသည်။
+                    {strings.interview.slowConnection.my}
                   </span>
                 )}
               </p>
@@ -422,10 +422,10 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
             <div className="mt-2 flex items-center gap-1.5 text-center">
               <WifiOff className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
               <p className="text-xs text-destructive">
-                You&apos;re offline. Interview audio may use voice synthesis.
+                {strings.interview.offlineAudio.en}
                 {showBurmese && (
                   <span className="font-myanmar block mt-0.5">
-                    အင်တာနက်မရှိပါ။ အသံဖိုင်အစား အသံတုကို သုံးနိုင်ပါသည်။
+                    {strings.interview.offlineAudio.my}
                   </span>
                 )}
               </p>
@@ -473,7 +473,10 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
               )}
               {isIOSSafari && (
                 <span className="text-xs text-muted-foreground mt-0.5">
-                  For voice input, try Chrome
+                  {strings.interview.voiceInputHint.en}
+                  {showBurmese && (
+                    <span className="font-myanmar ml-1">{strings.interview.voiceInputHint.my}</span>
+                  )}
                 </span>
               )}
             </div>
@@ -590,7 +593,9 @@ export function InterviewSetup({ onStart }: InterviewSetupProps) {
                     <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400 flex-shrink-0" />
                   )}
                   {isBestFromOlder && (
-                    <span className="text-xs font-semibold text-amber-500">Best:</span>
+                    <span className="text-xs font-semibold text-amber-500">
+                      {strings.interview.bestScore.en}:
+                    </span>
                   )}
                   <span className="text-muted-foreground">{formatDate(session.date)}</span>
                   {session.mode === 'realistic' ? (

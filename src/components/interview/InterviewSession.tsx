@@ -1162,13 +1162,24 @@ export function InterviewSession({
 
         {/* Paused overlay */}
         {interviewPaused && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-900/80">
+          <div
+            className="absolute inset-0 z-30 flex items-center justify-center bg-slate-900/80"
+            role="alertdialog"
+            aria-label={strings.interview.paused.en}
+          >
             <div className="text-center">
-              <p className="text-xl font-bold text-white">Interview Paused</p>
+              <p className="text-xl font-bold text-white">{strings.interview.paused.en}</p>
               {showBurmese && (
-                <p className="font-myanmar text-base text-white/70 mt-1">အင်တာဗျူး ရပ်နားထားသည်</p>
+                <p className="font-myanmar text-base text-white/70 mt-1">
+                  {strings.interview.paused.my}
+                </p>
               )}
-              <p className="text-sm text-white/50 mt-2">Resuming...</p>
+              <p className="text-sm text-white/50 mt-2">{strings.interview.resuming.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-white/40 mt-0.5">
+                  {strings.interview.resuming.my}
+                </p>
+              )}
             </div>
           </div>
         )}

@@ -249,6 +249,33 @@ export const strings = {
     recordingUnavailable: { en: 'Recording unavailable', my: 'အသံဖမ်း၍မရပါ' },
     listening: { en: 'Listening...', my: 'နားထောင်နေသည်...' },
     correctCount: { en: 'Correct', my: 'မှန်' },
+    loadingAudio: { en: 'Loading audio...', my: 'အသံဖိုင်ဖတ်နေသည်...' },
+    paused: { en: 'Interview Paused', my: 'အင်တာဗျူး ရပ်နားထားသည်' },
+    resuming: { en: 'Resuming...', my: 'ပြန်လည်စတင်နေသည်...' },
+    voiceInputHint: { en: 'For voice input, try Chrome', my: 'အသံဖြင့်ဖြေဆိုရန် Chrome သုံးပါ' },
+    slowConnection: {
+      en: 'Slow connection detected. Audio may take longer to load.',
+      my: 'အင်တာနက်နှေးနေပါသည်။ အသံဖိုင်များ ပိုကြာနိုင်ပါသည်။',
+    },
+    offlineAudio: {
+      en: "You're offline. Some audio may use voice synthesis.",
+      my: 'အင်တာနက်မရှိပါ။ အသံဖိုင်အစား အသံတုကို သုံးနိုင်ပါသည်။',
+    },
+    leaveConfirm: {
+      en: 'Leave interview? Progress will be saved.',
+      my: 'အင်တာဗျူးမှ ထွက်မည်လား? တိုးတက်မှုကို သိမ်းဆည်းပါမည်။',
+    },
+    rotateLandscape: {
+      en: 'Please rotate your device to portrait',
+      my: 'သင့်ဖုန်းကို ဒေါင်လိုက်သို့ လှည့်ပါ',
+    },
+    matchedKeywords: { en: 'Matched keywords:', my: 'ကိုက်ညီသော စကားလုံးများ:' },
+    missingKeywords: { en: 'Missing keywords:', my: 'ကျန်ရှိသော စကားလုံးများ:' },
+    noAnswer: { en: 'No answer given', my: 'အဖြေမပေးရသေးပါ' },
+    bestScore: { en: 'Best Score', my: 'အကောင်းဆုံးရမှတ်' },
+    typeAnswer: { en: 'Type your answer...', my: 'သင့်အဖြေကို ရိုက်ထည့်ပါ...' },
+    saveFailed: { en: "Couldn't save progress", my: 'တိုးတက်မှုကို သိမ်းဆည်း၍မရပါ' },
+    usingSynthesis: { en: 'Using voice synthesis', my: 'အသံတုကို အသုံးပြုနေသည်' },
   },
 
   // Progress Hub

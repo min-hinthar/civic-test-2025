@@ -108,7 +108,8 @@ export function LongPressButton({
       onPointerUp={cancelHold}
       onPointerLeave={cancelHold}
       onPointerCancel={cancelHold}
-      aria-label="Hold to exit"
+      aria-label="Hold for 3 seconds to exit"
+      aria-roledescription="long press button"
       className={clsx(
         'relative inline-flex items-center justify-center',
         'rounded-full p-2',

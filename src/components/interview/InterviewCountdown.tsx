@@ -6,6 +6,7 @@ import { InterviewerAvatar } from '@/components/interview/InterviewerAvatar';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { precacheInterviewAudio, type PrecacheProgress } from '@/lib/audio/audioPrecache';
 import { checkNetworkQuality, type NetworkQuality } from '@/lib/audio/networkCheck';
+import { strings } from '@/lib/i18n/strings';
 
 interface InterviewCountdownProps {
   /** Called when the countdown sequence completes (after "Begin" shows) */
@@ -149,8 +150,13 @@ export function InterviewCountdown({
             className="flex flex-col items-center gap-4 px-6"
           >
             <p className="text-lg font-medium text-primary">
-              Loading audio: {loadProgress.loaded}/{loadProgress.total}
+              {strings.interview.loadingAudio.en} {loadProgress.loaded}/{loadProgress.total}
             </p>
+
+            {/* sr-only live region for audio loading progress */}
+            <span className="sr-only" aria-live="polite">
+              Loading audio: {loadProgress.loaded} of {loadProgress.total}
+            </span>
 
             {/* Progress bar */}
             <div className="h-2 w-64 max-w-[80vw] overflow-hidden rounded-full bg-slate-700">
@@ -165,12 +171,12 @@ export function InterviewCountdown({
             {/* Network warning */}
             {networkWarning === 'slow' && (
               <p className="max-w-xs text-center text-sm text-amber-400">
-                Slow connection detected. Audio may take longer to load.
+                {strings.interview.slowConnection.en}
               </p>
             )}
             {networkWarning === 'offline' && (
               <p className="max-w-xs text-center text-sm text-amber-400">
-                You&apos;re offline. Some audio may use voice synthesis.
+                {strings.interview.offlineAudio.en}
               </p>
             )}
           </motion.div>

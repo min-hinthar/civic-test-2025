@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
+import { strings } from '@/lib/i18n/strings';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Highlight matched keywords in user's answer text.
@@ -45,6 +47,7 @@ export function highlightKeywords(text: string, matchedKeywords: string[]): Reac
       <mark
         key={`kw-${keyIdx++}`}
         className="bg-success/20 text-success-foreground dark:text-success px-0.5 rounded"
+        aria-label={`Correct keyword: ${matchText}`}
       >
         {matchText}
       </mark>
@@ -93,11 +96,18 @@ export function KeywordHighlight({
   showMissing = true,
   compact = false,
 }: KeywordHighlightProps) {
+  const { showBurmese } = useLanguage();
+
   // Handle empty answer
   if (!userAnswer.trim()) {
     return (
       <div className={clsx(compact ? 'text-sm' : 'text-base')}>
-        <p className="italic text-white/40">No answer given</p>
+        <p className="italic text-white/40">
+          {strings.interview.noAnswer.en}
+          {showBurmese && (
+            <span className="font-myanmar ml-1">{strings.interview.noAnswer.my}</span>
+          )}
+        </p>
       </div>
     );
   }
@@ -109,14 +119,29 @@ export function KeywordHighlight({
       {/* Highlighted answer text */}
       <p className="text-white/90 leading-relaxed">{highlighted}</p>
 
+      {/* Matched keywords label */}
+      {matchedKeywords.length > 0 && (
+        <p className="sr-only">
+          {strings.interview.matchedKeywords.en} {matchedKeywords.join(', ')}
+        </p>
+      )}
+
       {/* Missing keywords */}
       {showMissing && missingKeywords.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-white/50">Missing:</span>
+          <span className="text-xs font-medium text-white/50">
+            {strings.interview.missingKeywords.en.replace(':', '')}:
+            {showBurmese && (
+              <span className="font-myanmar ml-1">
+                {strings.interview.missingKeywords.my.replace(':', '')}:
+              </span>
+            )}
+          </span>
           {missingKeywords.map(keyword => (
             <span
               key={keyword}
               className="bg-warning/20 text-warning text-xs px-2 py-0.5 rounded-full"
+              aria-label={`Missing keyword: ${keyword}`}
             >
               {keyword}
             </span>

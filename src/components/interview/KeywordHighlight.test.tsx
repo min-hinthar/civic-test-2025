@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { isValidElement } from 'react';
+import { isValidElement, type ReactElement } from 'react';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { highlightKeywords, KeywordHighlight } from './KeywordHighlight';
+
+/** Wrap component in required providers */
+function renderWithProviders(ui: React.ReactElement) {
+  return render(<LanguageProvider>{ui}</LanguageProvider>);
+}
 
 // --- highlightKeywords utility tests ---
 
@@ -19,7 +25,7 @@ describe('highlightKeywords', () => {
     const result = highlightKeywords('The President leads', ['president']);
     expect(result).toHaveLength(3);
     // The <mark> element should contain the original case "President"
-    const markEl = result[1] as React.ReactElement;
+    const markEl = result[1] as ReactElement<{ children: string }>;
     expect(markEl.props.children).toBe('President');
   });
 
@@ -71,7 +77,7 @@ describe('highlightKeywords', () => {
 
 describe('KeywordHighlight', () => {
   it('renders matched keywords with <mark> elements', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads the country"
         matchedKeywords={['president', 'country']}
@@ -88,7 +94,7 @@ describe('KeywordHighlight', () => {
   });
 
   it('renders missing keywords as pill chips when showMissing=true', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads"
         matchedKeywords={['president']}
@@ -97,7 +103,7 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    expect(screen.getByText('Missing:')).toBeInTheDocument();
+    expect(screen.getByText(/Missing keywords/)).toBeInTheDocument();
     expect(screen.getByText('constitution')).toBeInTheDocument();
     expect(screen.getByText('supreme')).toBeInTheDocument();
 
@@ -107,7 +113,7 @@ describe('KeywordHighlight', () => {
   });
 
   it('hides missing keywords section when showMissing=false', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads"
         matchedKeywords={['president']}
@@ -116,12 +122,12 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    expect(screen.queryByText('Missing:')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Missing keywords/)).not.toBeInTheDocument();
     expect(screen.queryByText('constitution')).not.toBeInTheDocument();
   });
 
   it('applies smaller text in compact mode', () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads"
         matchedKeywords={['president']}
@@ -130,12 +136,12 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    const wrapper = container.firstElementChild;
+    const wrapper = container.firstElementChild?.firstElementChild;
     expect(wrapper?.className).toContain('text-sm');
   });
 
   it('applies base text in normal mode', () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads"
         matchedKeywords={['president']}
@@ -144,12 +150,12 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    const wrapper = container.firstElementChild;
+    const wrapper = container.firstElementChild?.firstElementChild;
     expect(wrapper?.className).toContain('text-base');
   });
 
   it('shows "No answer given" for empty answer', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight
         userAnswer=""
         matchedKeywords={['president']}
@@ -161,7 +167,7 @@ describe('KeywordHighlight', () => {
   });
 
   it('shows "No answer given" for whitespace-only answer', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight userAnswer="   " matchedKeywords={['president']} missingKeywords={[]} />
     );
 
@@ -169,7 +175,7 @@ describe('KeywordHighlight', () => {
   });
 
   it('does not show Missing section when missingKeywords is empty', () => {
-    render(
+    renderWithProviders(
       <KeywordHighlight
         userAnswer="The president leads the country"
         matchedKeywords={['president', 'country']}
@@ -178,6 +184,6 @@ describe('KeywordHighlight', () => {
       />
     );
 
-    expect(screen.queryByText('Missing:')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Missing keywords/)).not.toBeInTheDocument();
   });
 });

@@ -94,6 +94,7 @@ export function TextAnswerInput({
           placeholder={placeholder}
           disabled={disabled}
           rows={3}
+          aria-label="Type your answer"
           className={clsx(
             'flex-1 resize-none rounded-xl border border-slate-600 bg-slate-800 px-3 py-2',
             'text-sm text-white placeholder:text-slate-400',

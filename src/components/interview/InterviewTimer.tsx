@@ -142,10 +142,17 @@ export function InterviewTimer({ duration = 15, onExpired, isActive }: Interview
         />
       </div>
 
-      {/* Screen reader announcement */}
-      <span className="sr-only" aria-live="polite">
-        {timeRemaining} seconds remaining
-      </span>
+      {/* Screen reader announcement at urgency thresholds */}
+      {timeRemaining === 5 && (
+        <span className="sr-only" aria-live="assertive">
+          5 seconds remaining
+        </span>
+      )}
+      {timeRemaining === 3 && (
+        <span className="sr-only" aria-live="assertive">
+          3 seconds remaining
+        </span>
+      )}
     </div>
   );
 }
