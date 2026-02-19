@@ -207,6 +207,7 @@ html.theme-transitioning .page-shell {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  -webkit-backface-visibility: hidden; /* stylelint-disable-line property-no-vendor-prefix -- Safari requires this for 3D flip */
   backface-visibility: hidden;
 }
 
@@ -348,6 +349,9 @@ html.theme-transitioning .page-shell {
   /* ── Three-tier glass-morphism system ── */
   .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
+    -webkit-backdrop-filter: blur(
+      var(--glass-light-blur)
+    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
     backdrop-filter: blur(var(--glass-light-blur));
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
@@ -361,6 +365,9 @@ html.theme-transitioning .page-shell {
 
   .glass-medium {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
+    -webkit-backdrop-filter: blur(
+      var(--glass-medium-blur)
+    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
     backdrop-filter: blur(var(--glass-medium-blur));
     border: 1px solid hsl(var(--color-border) / 0.35);
     border-radius: var(--radius-2xl);
@@ -374,6 +381,9 @@ html.theme-transitioning .page-shell {
 
   .glass-heavy {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
+    -webkit-backdrop-filter: blur(
+      var(--glass-heavy-blur)
+    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
     backdrop-filter: blur(var(--glass-heavy-blur));
     border: 1px solid hsl(var(--color-border) / 0.4);
     border-radius: var(--radius-2xl);
@@ -413,6 +423,9 @@ html.theme-transitioning .page-shell {
   /* Backward compatibility alias: .glass-card -> .glass-light equivalent */
   .glass-card {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
+    -webkit-backdrop-filter: blur(
+      var(--glass-light-blur)
+    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
     backdrop-filter: blur(var(--glass-light-blur));
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
