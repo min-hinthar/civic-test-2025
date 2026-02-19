@@ -272,12 +272,42 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
 | 26. Gap Closure (Session/Nav/TTS) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
 | 27. Gap Closure (Timer A11Y) | v2.1 | Complete    | 2026-02-19 | 2026-02-18 |
+| 28. Interview UX & Voice Flow | v2.1 | 0/9 | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 10 | 69+ | 49/56 | In progress (gap closure) |
+| v2.1 | 11 | 78+ | 49/66 | In progress |
+
+### Phase 28: Interview UX & Voice Flow Polish
+
+**Goal:** The interview simulation is reliable, mode-differentiated, and handles all mobile edge cases -- audio pre-caches for offline reliability, Real mode feels like USCIS, Practice mode provides educational keyword feedback, text input works when speech is unavailable, and mobile issues (back swipe, rotation, keyboard, focus loss) are handled gracefully
+**Depends on:** Phase 27
+**Requirements:** IVPOL-01, IVPOL-02, IVPOL-03, IVPOL-04, IVPOL-05, IVPOL-06, IVPOL-07, IVPOL-08, IVPOL-09, IVPOL-10
+**Success Criteria** (what must be TRUE):
+  1. All interview audio (questions, greetings, closings, feedback) pre-caches during countdown with progress indication
+  2. Pre-cache failures gracefully fall back to browser TTS with subtle badge indication
+  3. Text input fallback available when speech recognition unavailable (Firefox, Safari iOS)
+  4. Keyword highlighting shows matched/missing keywords in Practice feedback and both mode results
+  5. Real mode: monochrome progress, hidden score, amber/red timer, long-press emergency exit
+  6. Practice mode: colored progress, keyword feedback, answer read-aloud after grading
+  7. Back navigation intercepted, portrait locked, auto-pause on tab switch, keyboard scrolling works
+  8. Network quality warning shown before start on slow/offline connections
+  9. Screen reader announcements for new features (timer urgency, keyword highlights, mode badge)
+  10. Production build succeeds with no regressions
+**Plans:** 9 plans
+
+Plans:
+- [ ] 28-01-PLAN.md -- Audio pre-cache module + network quality check + unit tests
+- [ ] 28-02-PLAN.md -- TextAnswerInput + KeywordHighlight components + tests
+- [ ] 28-03-PLAN.md -- useInterviewGuard + useOrientationLock + useVisibilityPause hooks
+- [ ] 28-04-PLAN.md -- InterviewCountdown pre-cache integration + TTSFallbackBadge + LandscapeOverlay
+- [ ] 28-05-PLAN.md -- ModeBadge + InterviewProgress + InterviewTimer polish + LongPressButton
+- [ ] 28-06-PLAN.md -- InterviewSession full integration (audio, text input, mode UI, edge case hooks)
+- [ ] 28-07-PLAN.md -- InterviewSetup + InterviewResults + InterviewPage orchestrator updates
+- [ ] 28-08-PLAN.md -- Feedback phrase audio generation + interviewFeedback module
+- [ ] 28-09-PLAN.md -- Bilingual strings + screen reader polish + build verification + visual checkpoint
 
 ---
 

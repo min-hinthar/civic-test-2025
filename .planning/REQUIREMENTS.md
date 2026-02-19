@@ -82,6 +82,19 @@ Requirements for v2.1 Quality & Polish milestone. Each maps to roadmap phases.
 - [x] **INTV-04**: Interview shows full transcript with per-answer grading and confidence scores in results
 - [x] **INTV-05**: User sees transcription before grading and can re-record up to 3 times
 
+### Interview Voice & UX Polish
+
+- [ ] **IVPOL-01**: All interview audio (questions, greetings, closings, feedback) pre-caches during countdown with progress bar
+- [ ] **IVPOL-02**: Pre-cache failures fall back to browser TTS with subtle badge indication
+- [ ] **IVPOL-03**: Text input fallback available when speech recognition unavailable (Firefox, Safari iOS)
+- [ ] **IVPOL-04**: Keyword highlighting shows matched/missing keywords in Practice feedback and results transcript
+- [ ] **IVPOL-05**: Real mode uses monochrome progress, hidden score, amber/red urgent timer, and long-press emergency exit
+- [ ] **IVPOL-06**: Practice mode shows colored progress, keyword feedback, and reads correct answer aloud after grading
+- [ ] **IVPOL-07**: Browser back navigation intercepted with confirmation dialog during interview
+- [ ] **IVPOL-08**: Interview auto-pauses when tab/app loses focus and resumes when focus returns
+- [ ] **IVPOL-09**: Portrait orientation locked during interview (CSS fallback on unsupported browsers)
+- [ ] **IVPOL-10**: Network quality warning shown before interview start on slow/offline connections
+
 ### Burmese Translation Quality
 
 - [ ] **BRMSE-01**: All UI strings have natural Burmese translations (not robotic/literal) *(human verification needed)*
@@ -184,11 +197,22 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTV-03 | Phase 21 | Satisfied |
 | INTV-04 | Phase 21 | Satisfied |
 | INTV-05 | Phase 21 | Satisfied |
+| IVPOL-01 | Phase 28 | Planned |
+| IVPOL-02 | Phase 28 | Planned |
+| IVPOL-03 | Phase 28 | Planned |
+| IVPOL-04 | Phase 28 | Planned |
+| IVPOL-05 | Phase 28 | Planned |
+| IVPOL-06 | Phase 28 | Planned |
+| IVPOL-07 | Phase 28 | Planned |
+| IVPOL-08 | Phase 28 | Planned |
+| IVPOL-09 | Phase 28 | Planned |
+| IVPOL-10 | Phase 28 | Planned |
 
 **Coverage:**
-- v2.1 requirements: 56 total
+- v2.1 requirements: 66 total
 - Satisfied: 55
 - Partial (human review): 1 (BRMSE-01)
+- Planned: 10 (IVPOL-01 through IVPOL-10)
 - Unmapped: 0
 
 ---
