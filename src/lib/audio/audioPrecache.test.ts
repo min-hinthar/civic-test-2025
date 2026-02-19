@@ -42,22 +42,22 @@ afterEach(() => {
 describe('precacheInterviewAudio', () => {
   const questionIds = Array.from({ length: 20 }, (_, i) => `Q-${i + 1}`);
 
-  it('builds correct URL count for English-only (20 questions x 2 + 11 interview = 51)', async () => {
+  it('builds correct URL count for English-only (20 questions x 2 + 17 interview = 57)', async () => {
     const result = await precacheInterviewAudio(questionIds);
 
-    // 20 questions * 2 (q + a) = 40, plus 11 interview audio = 51
-    expect(result.total).toBe(51);
-    expect(result.loaded).toBe(51);
+    // 20 questions * 2 (q + a) = 40, plus 17 interview audio = 57
+    expect(result.total).toBe(57);
+    expect(result.loaded).toBe(57);
     expect(result.failed).toHaveLength(0);
   });
 
-  it('builds correct URL count with Burmese (20*2 + 20*2 + 11 = 91)', async () => {
+  it('builds correct URL count with Burmese (20*2 + 20*2 + 17 = 97)', async () => {
     const result = await precacheInterviewAudio(questionIds, {
       includeBurmese: true,
     });
 
-    expect(result.total).toBe(91);
-    expect(result.loaded).toBe(91);
+    expect(result.total).toBe(97);
+    expect(result.loaded).toBe(97);
     expect(result.failed).toHaveLength(0);
   });
 
@@ -65,16 +65,16 @@ describe('precacheInterviewAudio', () => {
     const onProgress = vi.fn();
     await precacheInterviewAudio(questionIds, {}, onProgress);
 
-    // 51 URLs / batch of 6 = 9 batches (8 full + 1 partial)
-    expect(onProgress).toHaveBeenCalledTimes(9);
+    // 57 URLs / batch of 6 = 10 batches (9 full + 1 partial)
+    expect(onProgress).toHaveBeenCalledTimes(10);
 
     // First batch should report 6 loaded
     expect(onProgress.mock.calls[0][0].loaded).toBe(6);
 
-    // Last batch should report all 51 loaded
+    // Last batch should report all 57 loaded
     const lastCall = onProgress.mock.calls[onProgress.mock.calls.length - 1];
-    expect(lastCall[0].loaded).toBe(51);
-    expect(lastCall[0].total).toBe(51);
+    expect(lastCall[0].loaded).toBe(57);
+    expect(lastCall[0].total).toBe(57);
   });
 
   it('tracks partial failures in failed array without throwing', async () => {
@@ -87,7 +87,7 @@ describe('precacheInterviewAudio', () => {
 
     const result = await precacheInterviewAudio(questionIds);
 
-    expect(result.loaded).toBe(49);
+    expect(result.loaded).toBe(55);
     expect(result.failed).toHaveLength(2);
     expect(result.failed).toContain(failUrl1);
     expect(result.failed).toContain(failUrl2);
@@ -99,17 +99,21 @@ describe('precacheInterviewAudio', () => {
     const result = await precacheInterviewAudio(questionIds);
 
     expect(result.loaded).toBe(0);
-    expect(result.failed).toHaveLength(51);
-    expect(result.total).toBe(51);
+    expect(result.failed).toHaveLength(57);
+    expect(result.total).toBe(57);
   });
 
-  it('includes all 11 interview audio names', () => {
-    expect(INTERVIEW_AUDIO_NAMES).toHaveLength(11);
+  it('includes all 17 interview audio names (11 base + 6 feedback)', () => {
+    expect(INTERVIEW_AUDIO_NAMES).toHaveLength(17);
     expect(INTERVIEW_AUDIO_NAMES).toContain('greeting-01');
     expect(INTERVIEW_AUDIO_NAMES).toContain('pass-announce');
     expect(INTERVIEW_AUDIO_NAMES).toContain('fail-announce');
     expect(INTERVIEW_AUDIO_NAMES).toContain('correct-prefix');
     expect(INTERVIEW_AUDIO_NAMES).toContain('incorrect-prefix');
+    expect(INTERVIEW_AUDIO_NAMES).toContain('feedback-correct-01');
+    expect(INTERVIEW_AUDIO_NAMES).toContain('feedback-correct-03');
+    expect(INTERVIEW_AUDIO_NAMES).toContain('feedback-incorrect-01');
+    expect(INTERVIEW_AUDIO_NAMES).toContain('feedback-incorrect-03');
   });
 });
 

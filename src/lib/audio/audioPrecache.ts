@@ -12,6 +12,7 @@ import {
   getBurmeseAudioUrl,
   getInterviewAudioUrl,
 } from '@/lib/audio/audioPlayer';
+import { FEEDBACK_AUDIO_NAMES } from '@/lib/interview/interviewFeedback';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -41,7 +42,7 @@ const BATCH_SIZE = 6;
  * All interview-specific audio filenames (without extension or path prefix).
  * These are greeting, closing, feedback, and result announcement clips.
  */
-export const INTERVIEW_AUDIO_NAMES = [
+export const INTERVIEW_AUDIO_NAMES: readonly string[] = [
   'greeting-01',
   'greeting-02',
   'greeting-03',
@@ -53,7 +54,8 @@ export const INTERVIEW_AUDIO_NAMES = [
   'incorrect-prefix',
   'pass-announce',
   'fail-announce',
-] as const;
+  ...FEEDBACK_AUDIO_NAMES,
+];
 
 // ---------------------------------------------------------------------------
 // Pre-cache

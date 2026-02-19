@@ -38,6 +38,14 @@ INTERVIEW_AUDIO = [
     ('closing-pass-02', "Great job. You've passed the civics test. You should be very proud of your preparation."),
     ('closing-fail-01', "Thank you for your effort today. You can retake this test to continue preparing for your interview."),
     ('closing-fail-02', "Don't be discouraged. Many people need extra practice. You can try again when you're ready."),
+    # Practice mode feedback variations (correct)
+    ('feedback-correct-01', "That's correct."),
+    ('feedback-correct-02', "Yes, that's right."),
+    ('feedback-correct-03', "Correct."),
+    # Practice mode feedback variations (incorrect)
+    ('feedback-incorrect-01', "That's not quite right."),
+    ('feedback-incorrect-02', "I'm sorry, that's not correct."),
+    ('feedback-incorrect-03', "Not quite."),
 ]
 
 
