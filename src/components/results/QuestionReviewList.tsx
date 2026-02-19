@@ -16,8 +16,10 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { Filter, Plus, BookOpen } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SPRING_BOUNCY, SPRING_SNAPPY } from '@/lib/motion-config';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
@@ -127,9 +129,11 @@ export function QuestionReviewList({
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-muted-foreground" />
           <div className="flex rounded-lg border border-border bg-muted/30 p-0.5">
-            <button
+            <motion.button
               type="button"
               onClick={() => onFilterChange('all')}
+              whileTap={{ scale: 0.97 }}
+              transition={SPRING_SNAPPY}
               className={clsx(
                 'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                 filter === 'all'
@@ -139,10 +143,12 @@ export function QuestionReviewList({
             >
               {strings.test.showAll.en} ({totalCount})
               {showBurmese && <span className="ml-1 font-myanmar">{strings.test.showAll.my}</span>}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
               onClick={() => onFilterChange('incorrect')}
+              whileTap={{ scale: 0.97 }}
+              transition={SPRING_SNAPPY}
               className={clsx(
                 'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                 filter === 'incorrect'
@@ -154,11 +160,13 @@ export function QuestionReviewList({
               {showBurmese && (
                 <span className="ml-1 font-myanmar">{strings.test.incorrectOnly.my}</span>
               )}
-            </button>
+            </motion.button>
             {skippedCount > 0 && (
-              <button
+              <motion.button
                 type="button"
                 onClick={() => onFilterChange('skipped')}
+                whileTap={{ scale: 0.97 }}
+                transition={SPRING_SNAPPY}
                 className={clsx(
                   'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                   filter === 'skipped'
@@ -168,7 +176,7 @@ export function QuestionReviewList({
               >
                 Skipped ({skippedCount})
                 {showBurmese && <span className="ml-1 font-myanmar">ကျော်ထားသော</span>}
-              </button>
+              </motion.button>
             )}
           </div>
         </div>
@@ -194,10 +202,12 @@ export function QuestionReviewList({
                 </p>
               )}
             </div>
-            <button
+            <motion.button
               type="button"
               onClick={handleAddAllWrong}
               disabled={isAddingAll}
+              whileTap={{ scale: 0.95 }}
+              transition={SPRING_BOUNCY}
               className={clsx(
                 'inline-flex items-center gap-1.5 rounded-xl px-4 py-2',
                 'min-h-[44px] text-sm font-bold',
@@ -211,7 +221,7 @@ export function QuestionReviewList({
               <Plus className="h-4 w-4" />
               Add All
               {showBurmese && <span className="font-myanmar ml-1">အားလုံးထည့်</span>}
-            </button>
+            </motion.button>
           </div>
         </FadeIn>
       )}

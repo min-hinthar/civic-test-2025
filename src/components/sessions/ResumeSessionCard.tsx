@@ -11,8 +11,10 @@
  * accent color, and metadata display. Bilingual text follows language mode.
  */
 
+import { motion } from 'motion/react';
 import { ClipboardCheck, BookOpen, Mic, Layers } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { timeAgo } from '@/lib/sessions/timeAgo';
@@ -91,9 +93,11 @@ export function ResumeSessionCard({ session, isSelected, onSelect }: ResumeSessi
   const relative = timeAgo(session.savedAt);
 
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onSelect}
+      whileTap={{ scale: 0.97 }}
+      transition={SPRING_SNAPPY}
       className={clsx(
         'w-full rounded-2xl border p-4 shadow-sm text-left transition-all',
         config.borderColor,
@@ -136,7 +140,7 @@ export function ResumeSessionCard({ session, isSelected, onSelect }: ResumeSessi
           </p>
         </div>
       </div>
-    </button>
+    </motion.button>
   );
 }
 

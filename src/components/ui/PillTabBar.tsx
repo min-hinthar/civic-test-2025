@@ -82,11 +82,13 @@ export function PillTabBar({
           const Icon = tab.icon;
 
           return (
-            <button
+            <motion.button
               key={tab.id}
               role="tab"
               aria-selected={isActive}
               onClick={() => onTabChange(tab.id)}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+              transition={SPRING_SNAPPY}
               className={clsx(
                 'relative z-10 flex flex-col items-center justify-center rounded-xl font-medium transition-colors duration-200',
                 isSmall ? 'min-h-[36px] px-2 py-1.5 text-xs' : 'min-h-[44px] px-2 py-2 text-sm',
@@ -116,7 +118,7 @@ export function PillTabBar({
                   {tab.badge}
                 </span>
               )}
-            </button>
+            </motion.button>
           );
         })}
       </div>

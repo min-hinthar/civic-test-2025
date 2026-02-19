@@ -28,7 +28,7 @@ import {
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { SPRING_GENTLE } from '@/lib/motion-config';
+import { SPRING_BOUNCY, SPRING_GENTLE, SPRING_SNAPPY } from '@/lib/motion-config';
 import type { NBAState, NBAStateType } from '@/lib/nba';
 
 // ---------------------------------------------------------------------------
@@ -184,22 +184,32 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
 
             {/* CTA + Skip row */}
             <div className="flex items-center gap-3">
-              <Link
-                to={nbaState.cta.to}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-bold text-white transition-colors hover:bg-primary/90"
+              <motion.div
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+                transition={SPRING_BOUNCY}
               >
-                <span>{nbaState.cta.label.en}</span>
-                {showBurmese && (
-                  <span className="font-myanmar text-white/80">{nbaState.cta.label.my}</span>
-                )}
-              </Link>
+                <Link
+                  to={nbaState.cta.to}
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-bold text-white transition-colors hover:bg-primary/90"
+                >
+                  <span>{nbaState.cta.label.en}</span>
+                  {showBurmese && (
+                    <span className="font-myanmar text-white/80">{nbaState.cta.label.my}</span>
+                  )}
+                </Link>
+              </motion.div>
 
-              <Link
-                to={nbaState.skip.to}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              <motion.div
+                whileTap={shouldReduceMotion ? undefined : { opacity: 0.7 }}
+                transition={SPRING_SNAPPY}
               >
-                {nbaState.skip.label.en}
-              </Link>
+                <Link
+                  to={nbaState.skip.to}
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {nbaState.skip.label.en}
+                </Link>
+              </motion.div>
             </div>
           </div>
         </GlassCard>

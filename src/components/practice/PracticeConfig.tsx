@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { Target, Timer, ChevronDown, Zap, BookOpen, Award, Volume2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useTTS } from '@/hooks/useTTS';
@@ -196,6 +197,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
         initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: staggerDelay(0) }}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
         onClick={() => handleCategorySelect('weak')}
         className={clsx(
           'mb-6 flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors min-h-[56px]',
@@ -236,8 +238,10 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
               transition={{ delay: staggerDelay(index + 1) }}
             >
               {/* Main category card */}
-              <button
+              <motion.button
                 onClick={() => handleCategorySelect(cat)}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+                transition={SPRING_SNAPPY}
                 className={clsx(
                   'flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-colors min-h-[56px]',
                   isSelected
@@ -280,7 +284,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </motion.div>
                 </button>
-              </button>
+              </motion.button>
 
               {/* Sub-categories */}
               {isExpanded && (
@@ -291,9 +295,11 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                     const isSubSelected = selectedCategory === sub;
 
                     return (
-                      <button
+                      <motion.button
                         key={sub}
                         onClick={() => handleCategorySelect(sub)}
+                        whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+                        transition={SPRING_SNAPPY}
                         className={clsx(
                           'flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors min-h-[44px]',
                           isSubSelected
@@ -322,7 +328,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                           )}
                           <p className="text-xs text-muted-foreground">{subCount} questions</p>
                         </div>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -440,12 +446,14 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
           {/* Speed pill selector */}
           <div className="flex gap-2" role="radiogroup" aria-label="Speech speed">
             {SPEED_OPTIONS.map(option => (
-              <button
+              <motion.button
                 key={option.value}
                 type="button"
                 role="radio"
                 aria-checked={sessionSpeed === option.value}
                 onClick={() => setSessionSpeed(option.value)}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+                transition={SPRING_SNAPPY}
                 className={clsx(
                   'flex-1 rounded-xl border-2 px-3 py-2.5 text-center text-sm font-bold transition-all duration-150 min-h-[44px]',
                   sessionSpeed === option.value
@@ -457,7 +465,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                 {showBurmese && (
                   <span className="block font-myanmar text-sm mt-0.5 font-normal">{option.my}</span>
                 )}
-              </button>
+              </motion.button>
             ))}
           </div>
 

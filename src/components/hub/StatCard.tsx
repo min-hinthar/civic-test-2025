@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { SPRING_BOUNCY } from '@/lib/motion-config';
+import { SPRING_BOUNCY, SPRING_SNAPPY } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -60,13 +60,15 @@ export function StatCard({ icon: Icon, label, value, onClick, badge }: StatCardP
 
   const card = onClick ? (
     <GlassCard interactive tier="light" className="min-w-0 flex-1 rounded-2xl p-0">
-      <button
+      <motion.button
         type="button"
         className="flex w-full items-center justify-center min-h-[44px]"
         onClick={onClick}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+        transition={SPRING_SNAPPY}
       >
         {content}
-      </button>
+      </motion.button>
     </GlassCard>
   ) : (
     <GlassCard tier="light" className="min-w-0 flex-1 rounded-2xl p-0">

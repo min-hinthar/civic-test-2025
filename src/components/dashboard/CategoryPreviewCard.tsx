@@ -1,8 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
+import { motion } from 'motion/react';
 import { BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SubcategoryBar } from '@/components/hub/SubcategoryBar';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -157,13 +159,15 @@ export function CategoryPreviewCard({
 
         {/* Footer */}
         {hasData && (
-          <button
+          <motion.button
             type="button"
             className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
             onClick={() => navigate('/hub/categories')}
+            whileTap={{ opacity: 0.7 }}
+            transition={SPRING_SNAPPY}
           >
             View all in Hub &rarr;
-          </button>
+          </motion.button>
         )}
       </div>
     </GlassCard>
