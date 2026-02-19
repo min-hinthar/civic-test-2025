@@ -1,0 +1,183 @@
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { isValidElement } from 'react';
+import { highlightKeywords, KeywordHighlight } from './KeywordHighlight';
+
+// --- highlightKeywords utility tests ---
+
+describe('highlightKeywords', () => {
+  it('highlights exact keyword match in answer text', () => {
+    const result = highlightKeywords('The president leads the country', ['president']);
+    // Should have 3 parts: "The ", <mark>president</mark>, " leads the country"
+    expect(result).toHaveLength(3);
+    expect(result[0]).toBe('The ');
+    expect(isValidElement(result[1])).toBe(true);
+    expect(result[2]).toBe(' leads the country');
+  });
+
+  it('is case-insensitive: "president" matches "President" in answer', () => {
+    const result = highlightKeywords('The President leads', ['president']);
+    expect(result).toHaveLength(3);
+    // The <mark> element should contain the original case "President"
+    const markEl = result[1] as React.ReactElement;
+    expect(markEl.props.children).toBe('President');
+  });
+
+  it('highlights multiple keywords independently', () => {
+    const result = highlightKeywords('The president leads the country', ['president', 'country']);
+    // "The " + <mark>president</mark> + " leads the " + <mark>country</mark>
+    expect(result).toHaveLength(4);
+    expect(result[0]).toBe('The ');
+    expect(isValidElement(result[1])).toBe(true);
+    expect(result[2]).toBe(' leads the ');
+    expect(isValidElement(result[3])).toBe(true);
+  });
+
+  it('uses word boundary: "the" does not match "their" or "there"', () => {
+    const result = highlightKeywords('their answer is there somewhere', ['the']);
+    // No word "the" exists as a standalone word, so no highlights
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe('their answer is there somewhere');
+  });
+
+  it('returns original text unchanged when matchedKeywords is empty', () => {
+    const result = highlightKeywords('The supreme law of the land', []);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe('The supreme law of the land');
+  });
+
+  it('returns empty string for empty answer', () => {
+    const result = highlightKeywords('', ['president']);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe('');
+  });
+
+  it('handles keyword at the very start of text', () => {
+    const result = highlightKeywords('Freedom of speech', ['freedom']);
+    expect(result).toHaveLength(2);
+    expect(isValidElement(result[0])).toBe(true);
+    expect(result[1]).toBe(' of speech');
+  });
+
+  it('handles keyword at the very end of text', () => {
+    const result = highlightKeywords('We have freedom', ['freedom']);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toBe('We have ');
+    expect(isValidElement(result[1])).toBe(true);
+  });
+});
+
+// --- KeywordHighlight component tests ---
+
+describe('KeywordHighlight', () => {
+  it('renders matched keywords with <mark> elements', () => {
+    render(
+      <KeywordHighlight
+        userAnswer="The president leads the country"
+        matchedKeywords={['president', 'country']}
+        missingKeywords={[]}
+      />
+    );
+
+    const marks = screen.getAllByText(/president|country/);
+    // Each matched keyword should be rendered
+    expect(marks.length).toBeGreaterThanOrEqual(2);
+    // Check that the mark elements exist in the DOM
+    const markEls = document.querySelectorAll('mark');
+    expect(markEls).toHaveLength(2);
+  });
+
+  it('renders missing keywords as pill chips when showMissing=true', () => {
+    render(
+      <KeywordHighlight
+        userAnswer="The president leads"
+        matchedKeywords={['president']}
+        missingKeywords={['constitution', 'supreme']}
+        showMissing={true}
+      />
+    );
+
+    expect(screen.getByText('Missing:')).toBeInTheDocument();
+    expect(screen.getByText('constitution')).toBeInTheDocument();
+    expect(screen.getByText('supreme')).toBeInTheDocument();
+
+    // Check pill chip styling
+    const pill = screen.getByText('constitution');
+    expect(pill.className).toContain('rounded-full');
+  });
+
+  it('hides missing keywords section when showMissing=false', () => {
+    render(
+      <KeywordHighlight
+        userAnswer="The president leads"
+        matchedKeywords={['president']}
+        missingKeywords={['constitution']}
+        showMissing={false}
+      />
+    );
+
+    expect(screen.queryByText('Missing:')).not.toBeInTheDocument();
+    expect(screen.queryByText('constitution')).not.toBeInTheDocument();
+  });
+
+  it('applies smaller text in compact mode', () => {
+    const { container } = render(
+      <KeywordHighlight
+        userAnswer="The president leads"
+        matchedKeywords={['president']}
+        missingKeywords={[]}
+        compact={true}
+      />
+    );
+
+    const wrapper = container.firstElementChild;
+    expect(wrapper?.className).toContain('text-sm');
+  });
+
+  it('applies base text in normal mode', () => {
+    const { container } = render(
+      <KeywordHighlight
+        userAnswer="The president leads"
+        matchedKeywords={['president']}
+        missingKeywords={[]}
+        compact={false}
+      />
+    );
+
+    const wrapper = container.firstElementChild;
+    expect(wrapper?.className).toContain('text-base');
+  });
+
+  it('shows "No answer given" for empty answer', () => {
+    render(
+      <KeywordHighlight
+        userAnswer=""
+        matchedKeywords={['president']}
+        missingKeywords={['constitution']}
+      />
+    );
+
+    expect(screen.getByText('No answer given')).toBeInTheDocument();
+  });
+
+  it('shows "No answer given" for whitespace-only answer', () => {
+    render(
+      <KeywordHighlight userAnswer="   " matchedKeywords={['president']} missingKeywords={[]} />
+    );
+
+    expect(screen.getByText('No answer given')).toBeInTheDocument();
+  });
+
+  it('does not show Missing section when missingKeywords is empty', () => {
+    render(
+      <KeywordHighlight
+        userAnswer="The president leads the country"
+        matchedKeywords={['president', 'country']}
+        missingKeywords={[]}
+        showMissing={true}
+      />
+    );
+
+    expect(screen.queryByText('Missing:')).not.toBeInTheDocument();
+  });
+});
