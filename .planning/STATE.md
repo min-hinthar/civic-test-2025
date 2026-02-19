@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 28 of 28 (Interview UX & Voice Flow Polish)
-Plan: 4 of 9 in current phase
+Plan: 5 of 9 in current phase
 Status: In progress (Wave 2)
-Last activity: 2026-02-19 -- Completed 28-04-PLAN.md (InterviewCountdown audio loading, TTSFallbackBadge, LandscapeOverlay)
+Last activity: 2026-02-19 -- Completed 28-05-PLAN.md (ModeBadge, InterviewProgress, InterviewTimer enhancement, LongPressButton)
 
-Progress: [####------] 44% (4/9 plans complete)
+Progress: [#####-----] 55% (5/9 plans complete)
 
 ## Completed Milestones
 
@@ -353,6 +353,12 @@ All decisions archived in PROJECT.md Key Decisions table.
 - [Phase 28]: TTSFallbackBadge uses compact (icon-only) and full (icon+text) variants
 - [Phase 28]: LandscapeOverlay uses Tailwind landscape:flex portrait:hidden for CSS-only orientation detection
 - [Phase 28]: Burmese rotation prompt text: simple imperative sentence for clarity
+- [Phase 28]: ModeBadge uses fixed positioning (top-4 right-4 z-40) with backdrop-blur for visibility
+- [Phase 28]: InterviewProgress uses progressbar role with aria-valuenow/max for accessibility
+- [Phase 28]: InterviewTimer SVG ring uses strokeDashoffset with CSS transition for smooth countdown
+- [Phase 28]: Three-tier urgency: white (>5s), amber (5s-3s), red (<3s) using CSS custom properties
+- [Phase 28]: LongPressButton uses requestAnimationFrame (not setInterval) for smooth 60fps progress
+- [Phase 28]: Refs only in event handlers (not render) for React Compiler safety in LongPressButton
 
 ### Roadmap Evolution
 
@@ -373,11 +379,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 28-04-PLAN.md
-Next step: Continue Phase 28 Wave 2 (plans 05-06)
-Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-04-SUMMARY.md
+Stopped at: Completed 28-05-PLAN.md
+Next step: Continue Phase 28 Wave 2 (plan 06) then Wave 3
+Resume file: .planning/phases/28-interview-ux-voice-flow-polish/28-05-SUMMARY.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-19 (Phase 28 plan 03 complete)*
+*Last updated: 2026-02-19 (Phase 28 plan 05 complete)*

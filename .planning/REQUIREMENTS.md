@@ -88,8 +88,8 @@ Requirements for v2.1 Quality & Polish milestone. Each maps to roadmap phases.
 - [x] **IVPOL-02**: Pre-cache failures fall back to browser TTS with subtle badge indication
 - [x] **IVPOL-03**: Text input fallback available when speech recognition unavailable (Firefox, Safari iOS)
 - [x] **IVPOL-04**: Keyword highlighting shows matched/missing keywords in Practice feedback and results transcript
-- [ ] **IVPOL-05**: Real mode uses monochrome progress, hidden score, amber/red urgent timer, and long-press emergency exit
-- [ ] **IVPOL-06**: Practice mode shows colored progress, keyword feedback, and reads correct answer aloud after grading
+- [x] **IVPOL-05**: Real mode uses monochrome progress, hidden score, amber/red urgent timer, and long-press emergency exit
+- [x] **IVPOL-06**: Practice mode shows colored progress, keyword feedback, and reads correct answer aloud after grading
 - [x] **IVPOL-07**: Browser back navigation intercepted with confirmation dialog during interview
 - [x] **IVPOL-08**: Interview auto-pauses when tab/app loses focus and resumes when focus returns
 - [x] **IVPOL-09**: Portrait orientation locked during interview (CSS fallback on unsupported browsers)
