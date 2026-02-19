@@ -150,7 +150,7 @@ module.exports = {
         'chunky-active': 'var(--shadow-chunky-active)',
       },
       fontSize: {
-        caption: ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.01em' }],
+        caption: ['0.625rem', { lineHeight: '1rem' }],
         'body-xs': ['0.75rem', { lineHeight: '1rem' }],
         'body-sm': ['0.875rem', { lineHeight: '1.25rem' }],
         body: ['1rem', { lineHeight: '1.5rem' }],

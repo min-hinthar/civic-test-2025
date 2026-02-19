@@ -137,8 +137,9 @@ html.theme-transitioning .page-shell {
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
+  font-size: max(0.75rem, 1em);
   letter-spacing: 0.02em;
-  line-height: 1.4;
+  line-height: 1.6;
 
   /* Myanmar line-breaking: prevent mid-syllable breaks */
   overflow-wrap: anywhere;
