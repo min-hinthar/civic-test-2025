@@ -541,7 +541,7 @@ const StudyGuidePage = () => {
                                 <ExplanationCard
                                   explanation={question.explanation}
                                   allQuestions={allQuestions}
-                                  className="!border-white/20 !bg-black/20 [&_*]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.text-foreground]:!text-white [&_.text-primary]:!text-white/80 [&_.text-success]:!text-white [&_.text-warning]:!text-white [&_button]:hover:!bg-white/10 [&_.border-border\\/40]:!border-white/20 [&_.border-border\\/60]:!border-white/20 [&_.bg-muted\\/30]:!bg-white/10 [&_.bg-warning-subtle]:!bg-white/10 [&_.dark\\:bg-warning\\/10]:!bg-white/10 [&_.bg-primary-subtle]:!bg-white/10 [&_.dark\\:bg-primary\\/10]:!bg-white/10 [&_.border-warning\\/30]:!border-white/20 [&_.border-primary\\/30]:!border-white/20"
+                                  className="text-sm"
                                 />
                               </div>
                             )}
@@ -856,7 +856,7 @@ const StudyGuidePage = () => {
                                 <ExplanationCard
                                   explanation={question.explanation}
                                   allQuestions={allQuestions}
-                                  className="!border-white/20 !bg-black/20 [&_*]:!text-white [&_.text-muted-foreground]:!text-white/70 [&_.text-foreground]:!text-white [&_.text-primary]:!text-white/80 [&_.text-success]:!text-white [&_.text-warning]:!text-white [&_button]:hover:!bg-white/10 [&_.border-border\\/40]:!border-white/20 [&_.border-border\\/60]:!border-white/20 [&_.bg-muted\\/30]:!bg-white/10 [&_.bg-warning-subtle]:!bg-white/10 [&_.dark\\:bg-warning\\/10]:!bg-white/10 [&_.bg-primary-subtle]:!bg-white/10 [&_.dark\\:bg-primary\\/10]:!bg-white/10 [&_.border-warning\\/30]:!border-white/20 [&_.border-primary\\/30]:!border-white/20"
+                                  className="text-sm"
                                 />
                               </div>
                             )}

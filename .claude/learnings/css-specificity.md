@@ -1,4 +1,4 @@
-# CSS Specificity Issues
+# CSS Specificity & Tailwind Class Conflicts
 
 ## prismatic-border Overrides position: fixed
 
@@ -11,3 +11,13 @@
 **Why it hid:** In dev mode with HMR, CSS injection order can differ from the production build. The compiled production CSS places Tailwind utilities before custom styles, so the override only manifests in production.
 
 **Apply when:** Adding `prismatic-border` to any fixed/absolute/sticky element. Or adding any custom CSS class that sets `position` alongside Tailwind positioning utilities.
+
+## Tailwind Class Conflicts on Component Overrides
+
+**Context:** `StudyGuidePage.tsx` passes `bg-black/20 [&_*]:text-white` to `ExplanationCard` via className on flip card backs. After Phase 29 added new entries to `tailwind.config.js`, CSS generation order shifted — `ExplanationCard`'s internal `bg-card` (white) appeared later in compiled CSS and won over the parent's `bg-black/20`, causing white-on-white text in light theme.
+
+**Learning:** Tailwind utility conflicts between parent className overrides and child component internals are **CSS source order dependent**, not HTML class order. Adding/removing entries in `tailwind.config.js` can silently shift which utility appears last in the compiled CSS. The fix is to use Tailwind's `!important` modifier (`!bg-black/20`, `[&_*]:!text-white`) on the parent override classes — this guarantees they win regardless of source order.
+
+**Why it hid:** Worked in dev (HMR injection order differs from production build). Also worked before Phase 29 because the old CSS generation order happened to place `bg-black/20` after `bg-card`.
+
+**Apply when:** Passing Tailwind className overrides to child components that have their own background/text classes. Especially after modifying `tailwind.config.js` — always recheck component overrides for visual regressions.

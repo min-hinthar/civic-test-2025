@@ -98,3 +98,27 @@ Key architecture:
 - `InterviewPage.tsx` calls `unlockAudioSession()` from every user-gesture entry point
 
 **Apply when:** Modifying `audioPlayer.ts`, adding new AudioPlayer consumers, or debugging mobile audio issues in interview flow.
+
+## Mock Audio Must Support Property-Based Event Handlers
+
+**Context:** `burmeseAudio.test.ts` timed out (5s) because mock `Audio` class only implemented `addEventListener('ended', ...)` but `createAudioPlayer()` uses `el.onended = handler` property assignment.
+
+**Learning:** `createAudioPlayer()` in `audioPlayer.ts` uses **property-based** event handlers (`el.onended`, `el.onerror`, `el.onloadedmetadata`), not `addEventListener`. Test mocks must support both patterns:
+
+```typescript
+class MockAudioElement {
+  onended: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  onloadedmetadata: (() => void) | null = null;
+
+  play(): Promise<void> {
+    Promise.resolve().then(() => {
+      if (this.onended) this.onended();           // Property handler
+      this._listeners['ended']?.forEach(h => h()); // addEventListener handler
+    });
+    return Promise.resolve();
+  }
+}
+```
+
+**Apply when:** Writing tests that mock `HTMLAudioElement` for any audio player code. Always check whether the production code uses property handlers or addEventListener — they're separate systems.
