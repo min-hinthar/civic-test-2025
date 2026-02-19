@@ -131,7 +131,7 @@ export function QuestionReviewList({
               type="button"
               onClick={() => onFilterChange('all')}
               className={clsx(
-                'rounded-md px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
+                'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                 filter === 'all'
                   ? 'bg-card text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -144,7 +144,7 @@ export function QuestionReviewList({
               type="button"
               onClick={() => onFilterChange('incorrect')}
               className={clsx(
-                'rounded-md px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
+                'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                 filter === 'incorrect'
                   ? 'bg-card text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -160,7 +160,7 @@ export function QuestionReviewList({
                 type="button"
                 onClick={() => onFilterChange('skipped')}
                 className={clsx(
-                  'rounded-md px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
+                  'rounded-xl px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
                   filter === 'skipped'
                     ? 'bg-card text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'

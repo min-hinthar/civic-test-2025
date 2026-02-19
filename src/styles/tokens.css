@@ -221,7 +221,14 @@
    ═══════════════════════════════════════════════════ */
 
 :root {
-  /* ── Spacing (informational, Tailwind handles these) ── */
+  /* ── Spacing Grid (4px base, Tailwind enforced) ── */
+  /* Standard: All padding/margin values use Tailwind's default spacing scale (4px grid).
+   * Approved exceptions (do NOT change):
+   *   gap-[2px]     — SegmentedProgressBar segment gaps
+   *   bottom-[140px] — TestPage toast offset
+   *   h-[5px]        — decorative card accent stripes
+   * Half-steps (0.5 = 2px) are valid Tailwind values, not exceptions.
+   */
   --space-1: 0.25rem; /* 4px */
   --space-2: 0.5rem; /* 8px */
   --space-3: 0.75rem; /* 12px */
@@ -230,7 +237,18 @@
   --space-6: 1.5rem; /* 24px */
   --space-8: 2rem; /* 32px */
 
-  /* ── Border Radius ── */
+  /* ── Border Radius (component mapping) ── */
+  /* rounded-full  = pill buttons, badges, circles, avatar rings */
+  /* rounded-xl    = standard action buttons, inputs, filter chips */
+  /* rounded-2xl   = cards, modals, containers, dialogs */
+  /* rounded-lg    = tooltips, nav chrome elements */
+  /* rounded-md    = flag toggles, inline secondary actions ONLY */
+  /* rounded-sm    = data-viz cells ONLY */
+  /* rounded-none  = full-bleed nav bars */
+  /*
+   * Rule: New components MUST use the mapping above.
+   * Exception process: document in this comment block with rationale.
+   */
   --radius-sm: 0.5rem; /* 8px - small elements */
   --radius-md: 0.75rem; /* 12px - buttons */
   --radius-lg: 1rem; /* 16px - inputs */
