@@ -37,6 +37,8 @@ This roadmap tracks all development phases for the Civic Test Prep app. Two mile
 - [ ] **Phase 23: Flashcard Sort Mode** - Quizlet-style Know/Don't Know card sorting with SRS integration
 - [ ] **Phase 24: Accessibility & Performance** - WCAG compliance, screen reader support, Web Vitals, bundle analysis
 - [ ] **Phase 25: Burmese Translation Audit** - Natural phrasing, missing translations, consistent terminology
+- [ ] **Phase 26: Gap Closure — Session, Navigation & TTS Fixes** - Fix mock test resume, sort route, interview English-only, voice picker
+- [ ] **Phase 27: Gap Closure — Timer Accessibility** - Overall timer announcements + extension scope
 
 ## Phase Details
 
@@ -220,6 +222,26 @@ Plans:
 - [ ] 25-09-PLAN.md — Font-myanmar audit + showBurmese toggle verification + responsive overflow check
 - [ ] 25-10-PLAN.md — Audio regeneration + flagged disagreements + final build verification
 
+### Phase 26: Gap Closure — Session, Navigation & TTS Fixes
+**Goal**: All critical audit gaps from v2.1-MILESTONE-AUDIT.md are closed — mock test resume works, sort navigation works, interview forces English-only, and voice picker exists
+**Depends on**: Phase 20, Phase 21, Phase 22, Phase 23
+**Requirements**: SESS-01, SESS-06, FLSH-07, LANG-03, TTS-01
+**Gap Closure:** Closes gaps from audit
+**Success Criteria** (what must be TRUE):
+  1. User who resumes an interrupted mock test continues from their saved question with previous answers preserved
+  2. Dashboard UnfinishedBanner for sort sessions navigates to the study page sort tab (not a dead route)
+  3. Interview realistic mode shows zero Burmese UI text (TTS/STT already English-only; now UI chrome too)
+  4. User can select their preferred TTS voice from a dropdown in Settings > Speech & Audio
+
+### Phase 27: Gap Closure — Timer Accessibility
+**Goal**: The overall mock test timer meets WCAG screen reader requirements and timer extension scope is clarified
+**Depends on**: Phase 24, Phase 26
+**Requirements**: A11Y-04, A11Y-05
+**Gap Closure:** Closes gaps from audit
+**Success Criteria** (what must be TRUE):
+  1. Screen reader announces overall timer status at 5 minutes, 2 minutes, and 1 minute remaining during mock test
+  2. Timer extension scope is either implemented for mock test or documented as intentional USCIS simulation exception
+
 ## Progress
 
 **Execution Order:**
@@ -238,12 +260,14 @@ Note: Phases 22 and 23 can run in parallel (independent after their shared depen
 | 23. Flashcard Sort Mode | v2.1 | 9/9 | Complete | 2026-02-17 |
 | 24. Accessibility & Perf | v2.1 | 10/10 | Complete | 2026-02-18 |
 | 25. Burmese Translation | v2.1 | 0/10 | Not started | - |
+| 26. Gap Closure (Session/Nav/TTS) | v2.1 | 0/TBD | Not started | - |
+| 27. Gap Closure (Timer A11Y) | v2.1 | 0/TBD | Not started | - |
 
 | Milestone | Phases | Plans | Requirements | Status |
 |-----------|--------|-------|-------------|--------|
 | v1.0 | 10 | 72 | 55/55 | Complete |
 | v2.0 | 7 | 47 | 29/29 | Complete |
-| v2.1 | 8 | 69 | 38/51 | In progress |
+| v2.1 | 10 | 69+ | 49/56 | In progress (gap closure) |
 
 ---
 

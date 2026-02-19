@@ -130,18 +130,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | LANG-01 | Phase 18 | Pending |
 | LANG-02 | Phase 18 | Pending |
-| LANG-03 | Phase 18 | Pending |
+| LANG-03 | Phase 26 | Pending |
 | LANG-04 | Phase 18 | Pending |
 | LANG-05 | Phase 18 | Pending |
 | LANG-06 | Phase 18 | Pending |
 | INFRA-01 | Phase 19 | Pending |
 | INFRA-02 | Phase 20 | Pending |
-| SESS-01 | Phase 20 | Pending |
+| SESS-01 | Phase 26 | Pending |
 | SESS-02 | Phase 20 | Pending |
 | SESS-03 | Phase 20 | Pending |
 | SESS-04 | Phase 20 | Pending |
 | SESS-05 | Phase 20 | Pending |
-| SESS-06 | Phase 20 | Pending |
+| SESS-06 | Phase 26 | Pending |
 | TPUX-01 | Phase 21 | Pending |
 | TPUX-02 | Phase 21 | Pending |
 | TPUX-03 | Phase 21 | Pending |
@@ -150,7 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TPUX-06 | Phase 21 | Pending |
 | TPUX-07 | Phase 21 | Pending |
 | TPUX-08 | Phase 21 | Pending |
-| TTS-01 | Phase 22 | Pending |
+| TTS-01 | Phase 26 | Pending |
 | TTS-02 | Phase 22 | Pending |
 | TTS-03 | Phase 22 | Pending |
 | TTS-04 | Phase 22 | Pending |
@@ -162,14 +162,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FLSH-04 | Phase 23 | Pending |
 | FLSH-05 | Phase 23 | Pending |
 | FLSH-06 | Phase 23 | Pending |
-| FLSH-07 | Phase 23 | Pending |
+| FLSH-07 | Phase 26 | Pending |
 | FLSH-08 | Phase 23 | Pending |
 | FLSH-09 | Phase 23 | Pending |
 | A11Y-01 | Phase 24 | Pending |
 | A11Y-02 | Phase 24 | Pending |
 | A11Y-03 | Phase 24 | Pending |
-| A11Y-04 | Phase 24 | Pending |
-| A11Y-05 | Phase 24 | Pending |
+| A11Y-04 | Phase 27 | Pending |
+| A11Y-05 | Phase 27 | Pending |
 | A11Y-06 | Phase 24 | Pending |
 | A11Y-07 | Phase 24 | Pending |
 | PERF-01 | Phase 24 | Pending |
@@ -192,4 +192,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-13*
-*Last updated: 2026-02-13 after roadmap creation*
+*Last updated: 2026-02-18 after gap closure phase creation*
