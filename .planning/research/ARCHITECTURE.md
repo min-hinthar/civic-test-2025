@@ -1,681 +1,739 @@
-# Architecture Research: v2.1 Quality & Polish Integration
+# Architecture Research: UX Elevation -- Celebration, Gesture, Transition & Consistency Systems
 
-**Domain:** Bilingual Civics Test Prep PWA -- v2.1 feature integration (language mode, session persistence, TTS improvements, UX overhaul)
-**Researched:** 2026-02-13
-**Confidence:** HIGH (based on direct codebase analysis of all 59 files consuming useLanguage, all 7 IndexedDB stores, all 3 session page state machines, and the TTS pipeline)
+**Domain:** Bilingual Civics Test Prep PWA -- Duolingo-level UX polish integration
+**Researched:** 2026-02-19
+**Confidence:** HIGH (based on direct codebase analysis of existing animation system, component inventory, provider hierarchy, and motion/react v12.33.0 API surface)
 
 ---
 
 ## Executive Summary
 
-The v2.1 milestone touches four architectural crosscutting concerns: language visibility semantics, session lifecycle persistence, TTS quality/abstraction, and test/practice/interview UX restructuring. Unlike v2.0 (primarily UI reshuffling), v2.1 changes the **behavioral contract** of LanguageContext -- the most widely consumed context in the app (59 files). This makes the LanguageContext refactor the highest-risk, highest-priority change that must be completed first, since every subsequent feature depends on consistent language visibility semantics.
+The UX elevation milestone introduces five architectural capabilities: celebration animations, gesture systems, screen transition choreography, visual consistency enforcement, and an About page. The critical insight from codebase analysis is that **the existing architecture already has strong foundations for all five** -- the work is primarily about extracting shared abstractions and filling gaps, not building new infrastructure from scratch.
 
-The session persistence change adds a new IndexedDB store (the 8th) following the well-established `idb-keyval` + `createStore` pattern. The TTS improvements centralize duplicated voice-finding logic into a shared service. The UX overhaul extracts session state machines from monolithic page components into reusable hooks.
+The codebase already has:
+- **Confetti** (`react-canvas-confetti`) with 3 intensity levels and a `useConfetti` hook
+- **Spring presets** (`SPRING_BOUNCY/SNAPPY/GENTLE`) in `motion-config.ts`
+- **Page transitions** (`PageTransition.tsx`) with direction-aware slide + scale
+- **Gesture handling** (`SwipeableCard.tsx`) with full drag + fling physics
+- **Sound effects** (14 functions in `soundEffects.ts`) via Web Audio API
+- **Reduced motion** (`useReducedMotion`) respected consistently across all animations
 
-**Key principle:** All changes extend existing patterns. No new providers, no new dependencies, no Supabase schema changes, no build config changes.
+What's missing: a **unified celebration orchestrator** that coordinates confetti + sound + haptics + visual feedback as a single API, a **gesture abstraction layer** for reusable swipe/pull-to-refresh patterns beyond the sort mode, **richer transition choreography** with shared element animations and per-route transition variants, a **visual consistency audit** system, and the **About page** itself.
+
+**Key architectural principle: Extend, don't replace.** Every new capability must compose with the existing provider hierarchy, design token system, and motion/react patterns already in use.
 
 ---
 
-## Current Architecture (As-Built v2.0)
+## Current Architecture Inventory
 
-### Provider Hierarchy (AppShell.tsx, line 186-315)
+### Animation System (As-Built)
+
+```
+src/lib/motion-config.ts          -- Spring presets (BOUNCY, SNAPPY, GENTLE) + stagger timing
+src/hooks/useReducedMotion.ts      -- Wraps motion/react's useReducedMotion
+src/styles/animations.css          -- CSS keyframes (shimmer, pulse-glow, fade-in-up, breathe, flame)
+src/components/animations/
+  PageTransition.tsx               -- Direction-aware slide+scale with AnimatePresence
+  StaggeredList.tsx                -- StaggeredList, StaggeredItem, StaggeredGrid, FadeIn
+src/components/celebrations/
+  Confetti.tsx                     -- 3 intensity levels (sparkle, burst, celebration) + useConfetti hook
+  CountUpScore.tsx                 -- Animated score counter + OdometerNumber
+```
+
+### Gesture System (As-Built)
+
+```
+src/components/sort/SwipeableCard.tsx  -- Full Tinder-style drag with:
+  - useMotionValue + useTransform for drag position
+  - useAnimate for imperative fling/snap-back
+  - Velocity-based commit thresholds
+  - Green/amber overlay zones
+  - Safety timeouts for animation hangs
+  - Reduced motion: button-initiated linear slides
+```
+
+### Sound Effects System (As-Built)
+
+```
+src/lib/audio/soundEffects.ts  -- 14 sound functions:
+  playCorrect, playIncorrect, playLevelUp, playMilestone,
+  playSwoosh, playCountdownTick, playCountdownGo,
+  playSkip, playStreak, playPanelReveal, playCompletionSparkle,
+  playFling, playKnow, playDontKnow, playMasteryComplete,
+  playTimerWarningTick
+  + mute/unmute management via localStorage
+```
+
+### Existing Celebration Surfaces
+
+| Surface | Components | Celebration Type |
+|---------|-----------|-----------------|
+| Test results | `TestResultsScreen` | CountUpScore + Confetti (celebration/burst) + playMilestone/playLevelUp |
+| Mastery milestone | `MasteryMilestone` | Dialog + Confetti (sparkle/burst/celebration) + MasteryBadge |
+| Streak reward | `StreakReward` | Floating badge + playStreak (>=10) |
+| XP popup | `XPPopup` | Float-up "+X XP" text |
+| Correct answer | `FeedbackPanel` | Green flash + playCorrect |
+
+### Provider Hierarchy (AppShell.tsx)
 
 ```
 ErrorBoundary
-  LanguageProvider           <-- mode: bilingual | english-only, showBurmese boolean
-    ThemeProvider             <-- dark/light mode
-      ToastProvider           <-- bilingual toast notifications
-        OfflineProvider       <-- online/offline detection, questions cache, sync queue
-          AuthProvider        <-- Supabase auth, test session save, Google SSO
-            SocialProvider    <-- social profile, leaderboard, streak sync
-              SRSProvider     <-- FSRS deck, due count, add/remove/grade
-                StateProvider <-- user's US state, governor/senators/capital
-                  Router (BrowserRouter)
-                    NavigationProvider  <-- nav lock, tab state
-                      NavigationShell   <-- header/sidebar/bottom-tab
-                        PageTransition  <-- route transitions
-                          Routes        <-- 14 routes
-                      PWAOnboardingFlow
-                      OnboardingTour
-                      GreetingFlow
-                      SyncStatusIndicator
+  LanguageProvider
+    ThemeProvider
+      TTSProvider
+        ToastProvider
+          OfflineProvider
+            AuthProvider
+              SocialProvider
+                SRSProvider
+                  StateProvider
+                    BrowserRouter
+                      NavigationProvider
+                        NavigationShell
+                          PageTransition  <-- animation boundary
+                            Routes (14 routes)
+                        PWAOnboardingFlow
+                        OnboardingTour
+                        GreetingFlow
+                        SyncStatusIndicator
 ```
 
-### IndexedDB Stores (7 total, all via `idb-keyval createStore`)
+### Design Token Architecture
 
-| Store Name | Object Store | Key Strategy | Data Shape | Used By |
-|---|---|---|---|---|
-| `civic-prep-questions` | `questions` | Single key `all-questions` | `Question[]` | OfflineContext |
-| `civic-prep-sync` | `pending-results` | `pending-{timestamp}-{rand}` | `PendingTestResult` | syncQueue.ts |
-| `civic-prep-mastery` | `answer-history` | Single key `answers` | `StoredAnswer[]` | masteryStore.ts |
-| `civic-prep-interview` | `sessions` | Single key `interview-sessions` | `InterviewSession[]` | interviewStore.ts |
-| `civic-prep-srs` | `cards` | Per-question key `{questionId}` | `SRSCardRecord` | srsStore.ts |
-| `civic-prep-srs-sync` | `pending-reviews` | Per-operation key | Sync metadata | srsSync.ts |
-| `civic-prep-streaks` | `streak-data` | Single key `streak` | `StreakData` | streakStore.ts |
-| `civic-prep-badges` | `badge-data` | `earned-badges` + `shown-badges` | `EarnedBadge[]` | badgeStore.ts |
+```
+tokens.css (CSS custom properties)
+  :root   -- primitives (blue, purple, green, amber, red, slate, etc.)
+  :root   -- semantic tokens (surface, text, primary, success, warning, etc.)
+  :root   -- non-color tokens (spacing, radius, shadows, motion, glass, typography)
+  .dark   -- dark theme overrides (semantic tokens only)
+  @media (prefers-contrast: more) -- high contrast adjustments
 
-### Session Page State Machines
-
-**TestPage** (src/pages/TestPage.tsx, 819 lines): Inline state machine with `showPreTest` / `isFinished` booleans. State: `{showPreTest, timeLeft, currentIndex, isFinished, endReason, results, selectedAnswer, showFeedback, explanationExpanded, showAllResults}`. No extractable hook pattern -- all logic is in the page component.
-
-**PracticePage** (src/pages/PracticePage.tsx, 157 lines): Clean 3-phase state machine: `config -> session -> results`. Each phase is a separate child component. State lifted to page level: `{phase, practiceQuestions, practiceResults, timerEnabled, categoryName, categoryColor, previousMastery}`.
-
-**InterviewPage** (src/pages/InterviewPage.tsx, 124 lines): Clean 4-phase state machine: `setup -> countdown -> session -> results`. Each phase is a separate child component. State lifted to page level: `{phase, mode, micPermission, sessionResults, sessionDuration, endReason}`.
-
-### TTS Pipeline (duplicated)
-
-**useSpeechSynthesis** (src/lib/useSpeechSynthesis.ts): General-purpose hook. Voice loading retry loop, voice preference matching (Apple/Android/Enhanced), `speak(text, options)` API, `cancel()`. Returns `{speak, cancel, isSupported}`.
-
-**useInterviewTTS** (src/hooks/useInterviewTTS.ts): Interview-specific hook. Duplicates 100% of voice-loading and voice-finding logic from useSpeechSynthesis. Adds: `onEnd` callbacks, timeout fallback for Chrome/Android `onend` unreliability, speech rate preference from localStorage, `isSpeaking` state. Returns `{speakWithCallback, cancel, isSpeaking, isSupported}`.
-
-**SpeechButton** (src/components/ui/SpeechButton.tsx): Thin wrapper consuming useSpeechSynthesis. Hardcoded to `Samantha` voice preference, `en-US` default.
-
-### Bilingual Component Pattern
-
-All 4 bilingual components consume `useLanguage().showBurmese`:
-
-- **BilingualText**: Conditionally renders `{text.my}` when `showBurmese` is true
-- **BilingualHeading**: Same pattern for heading elements
-- **BilingualButton**: Same pattern inside motion.button
-- **BilingualToast**: Always shows both languages (does NOT check showBurmese -- hardcoded bilingual)
-
-Additionally, **35+ other components** directly call `useLanguage()` and conditionally render Burmese text inline (not via bilingual components). These are the components that will need manual review when language semantics change.
+globals.css
+  glass-light / glass-medium / glass-heavy  -- 3-tier glass-morphism
+  glass-card / glass-panel / glass-nav      -- composable glass utilities
+  chunky-shadow-*                           -- Duolingo-style 3D button shadows
+  prismatic-border.css                      -- Animated rainbow border (conic-gradient)
+```
 
 ---
 
-## Integration Architecture for v2.1 Features
+## Recommended Architecture: New Capabilities
 
-### 1. LanguageContext Refactor: Mode-Controlled Visibility
+### 1. Celebration Orchestrator
 
-#### Current Contract
+**Problem:** Celebrations are currently assembled ad-hoc in each component (TestResultsScreen manually fires confetti + sound, MasteryMilestone manually fires confetti + dialog, etc.). There's no single API for "celebrate at intensity X with coordinated audio + visual + haptic feedback."
+
+**Solution: `useCelebration` hook + `CelebrationOverlay` component**
+
+```
+src/lib/celebrations/
+  celebrationOrchestrator.ts   -- Core orchestration logic
+  haptics.ts                   -- Navigator.vibrate() wrapper with patterns
+  types.ts                     -- CelebrationEvent, CelebrationLevel types
+
+src/hooks/useCelebration.ts    -- Hook: celebrate(level, options?)
+src/components/celebrations/
+  CelebrationOverlay.tsx       -- Portal-mounted overlay (confetti canvas + effects)
+  StarBurst.tsx                -- SVG/canvas star burst effect (lighter than confetti)
+  SuccessCheckmark.tsx         -- Animated checkmark with draw-on effect
+```
+
+**Architecture:**
 
 ```typescript
-type LanguageMode = 'bilingual' | 'english-only';
-interface LanguageContextValue {
-  mode: LanguageMode;
-  showBurmese: boolean;  // derived: mode === 'bilingual'
-  toggleMode: () => void;
-  setMode: (mode: LanguageMode) => void;
+// celebrationOrchestrator.ts
+export type CelebrationLevel = 'micro' | 'small' | 'medium' | 'large' | 'epic';
+
+export interface CelebrationConfig {
+  level: CelebrationLevel;
+  sound?: keyof typeof soundMap;     // Maps to soundEffects.ts functions
+  confetti?: 'sparkle' | 'burst' | 'celebration' | false;
+  haptic?: 'light' | 'medium' | 'heavy' | false;
+  visual?: 'checkmark' | 'starburst' | 'glow' | false;
+}
+
+// Preset configurations -- one place to tune all celebrations
+const PRESETS: Record<CelebrationLevel, CelebrationConfig> = {
+  micro:  { level: 'micro',  sound: 'correct',      confetti: false,         haptic: 'light',  visual: 'checkmark' },
+  small:  { level: 'small',  sound: 'levelUp',      confetti: 'sparkle',     haptic: 'light',  visual: 'starburst' },
+  medium: { level: 'medium', sound: 'milestone',     confetti: 'burst',       haptic: 'medium', visual: 'starburst' },
+  large:  { level: 'large',  sound: 'milestone',     confetti: 'celebration', haptic: 'medium', visual: 'glow' },
+  epic:   { level: 'epic',   sound: 'masteryComplete', confetti: 'celebration', haptic: 'heavy', visual: 'glow' },
+};
+```
+
+```typescript
+// useCelebration.ts (hook)
+export function useCelebration() {
+  const shouldReduceMotion = useReducedMotion();
+
+  const celebrate = useCallback((level: CelebrationLevel, overrides?: Partial<CelebrationConfig>) => {
+    const config = { ...PRESETS[level], ...overrides };
+
+    // Sound (always plays unless muted)
+    if (config.sound) playSoundByKey(config.sound);
+
+    // Haptics (only on supported devices)
+    if (config.haptic && !shouldReduceMotion) triggerHaptic(config.haptic);
+
+    // Visual effects dispatched via custom event to CelebrationOverlay
+    if (!shouldReduceMotion) {
+      window.dispatchEvent(new CustomEvent('celebration', { detail: config }));
+    }
+  }, [shouldReduceMotion]);
+
+  return { celebrate };
 }
 ```
 
-#### Proposed New Contract
+**Integration point:** `CelebrationOverlay` mounts once in `AppShell.tsx`, after `NavigationProvider`, listening for `celebration` CustomEvents. No new React Context needed -- uses DOM events for zero-coupling.
 
-The context type stays the same -- `showBurmese` already encapsulates visibility. The change is **semantic**: currently `mode` is a global persistent preference. For v2.1, certain pages/contexts should override the mode temporarily:
+**Why not a Context:** Celebrations are fire-and-forget. They don't need to share state across components. DOM CustomEvent avoids adding another provider to the already-deep hierarchy.
 
-```typescript
-// LanguageContext.tsx -- ADD session-scoped override
-type LanguageMode = 'bilingual' | 'english-only';
+### 2. Gesture Abstraction Layer
 
-interface LanguageContextValue {
-  mode: LanguageMode;
-  showBurmese: boolean;
-  toggleMode: () => void;
-  setMode: (mode: LanguageMode) => void;
-  /** Temporarily override mode for a session (e.g., interview forces english-only) */
-  pushOverride: (mode: LanguageMode) => void;
-  /** Remove the session override, restore user preference */
-  popOverride: () => void;
-}
+**Problem:** `SwipeableCard` has excellent gesture code, but it's tightly coupled to the sort-mode use case. Horizontal swipe patterns could be reused for dismissing cards, navigating between flashcards, or pull-to-refresh.
+
+**Solution: Extract reusable gesture primitives from motion/react's existing API**
+
+```
+src/hooks/gestures/
+  useSwipeDismiss.ts    -- Horizontal swipe-to-dismiss with threshold + velocity
+  useSwipeNavigation.ts -- Left/right swipe for prev/next navigation
+  useLongPress.ts       -- Long press detection with haptic feedback
+  usePullAction.ts      -- Vertical pull gesture (pull-to-refresh pattern)
+  gestureConfig.ts      -- Shared thresholds and spring configs
 ```
 
-#### Why Override Instead of Direct setMode
+**Key design decisions:**
 
-Interview simulation needs English-only mode during the session but should restore the user's preference when they exit. If we just call `setMode('english-only')` on entering interview and `setMode('bilingual')` on exit, we corrupt the user's actual preference (what if they were already in english-only mode by choice?). The override stack pattern:
+1. **Use motion/react's built-in drag, not @use-gesture.** The project already depends on motion/react v12.33.0 which provides `drag`, `useMotionValue`, `useTransform`, and `useAnimate`. Adding `@use-gesture` would create a second gesture system. motion/react's drag API is sufficient for all planned gestures.
 
-```typescript
-// Inside LanguageProvider
-const [userMode, setUserMode] = useState<LanguageMode>(() => { ... from localStorage });
-const [override, setOverride] = useState<LanguageMode | null>(null);
-
-const mode = override ?? userMode;
-const showBurmese = mode === 'bilingual';
-
-const pushOverride = useCallback((m: LanguageMode) => setOverride(m), []);
-const popOverride = useCallback(() => setOverride(null), []);
-```
-
-#### Ripple Effect Analysis
-
-**Zero-change components (35 files):** Any component that only reads `showBurmese` to conditionally render Burmese text will work correctly with no changes. The override transparently changes what `showBurmese` returns.
-
-**Behavioral change components (4 files):**
-- `InterviewSession.tsx` -- should call `pushOverride('english-only')` on mount, `popOverride()` on unmount
-- `InterviewPage.tsx` -- may want to push override at countdown phase
-- `LanguageToggle.tsx` -- should be disabled or hidden during an active override (show visual indicator)
-- `LanguageToggleCompact.tsx` -- same
-
-**BilingualToast** (1 file): Currently hardcoded to always show both languages regardless of `showBurmese`. This is correct behavior -- error messages should always be bilingual for comprehension. No change needed.
-
-**Risk:** LOW. The `showBurmese` API surface is unchanged. Only the provider internals change. The override mechanism is additive.
-
-### 2. Session Persistence: New IndexedDB Store
-
-#### Problem
-
-All three session types (test, practice, interview) lose in-progress state on page refresh, navigation, or accidental tab close. The app already has `beforeunload` handlers but these only show browser warnings -- they don't preserve state.
-
-#### Proposed Schema: `civic-prep-sessions` Store
+2. **Gesture hooks return motion props, not rendered elements.** This composability pattern lets any component become swipeable:
 
 ```typescript
-// src/lib/session/sessionStore.ts
+// useSwipeDismiss.ts
+export function useSwipeDismiss(onDismiss: () => void, options?: SwipeDismissOptions) {
+  const x = useMotionValue(0);
+  const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
+  const [scope, animate] = useAnimate();
 
-import { createStore, get, set, del } from 'idb-keyval';
+  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
+    const { offset, velocity } = info;
+    const threshold = options?.threshold ?? 100;
+    const velocityThreshold = options?.velocityThreshold ?? 500;
 
-const sessionDb = createStore('civic-prep-sessions', 'active-sessions');
+    if (Math.abs(velocity.x) > velocityThreshold || Math.abs(offset.x) > threshold) {
+      const exitX = offset.x > 0 ? window.innerWidth : -window.innerWidth;
+      animate(scope.current, { x: exitX, opacity: 0 }, { type: 'spring', velocity: velocity.x })
+        .then(onDismiss);
+    } else {
+      animate(scope.current, { x: 0, opacity: 1 }, { type: 'spring', stiffness: 500, damping: 30 });
+    }
+  }, [onDismiss, options, scope, animate]);
 
-type SessionType = 'test' | 'practice' | 'interview';
-
-interface PersistedSession<T = unknown> {
-  /** Discriminator for which page owns this session */
-  type: SessionType;
-  /** Timestamp when session was started */
-  startedAt: string;
-  /** Timestamp of last state update */
-  updatedAt: string;
-  /** The full session state snapshot */
-  state: T;
-  /** Session-specific config (e.g., practice category, interview mode) */
-  config: Record<string, unknown>;
-}
-
-// Single active session per type (only one test/practice/interview at a time)
-const SESSION_KEY_PREFIX = 'active-';
-
-export async function saveSessionState<T>(
-  type: SessionType,
-  state: T,
-  config: Record<string, unknown>
-): Promise<void> {
-  const session: PersistedSession<T> = {
-    type,
-    startedAt: (await getActiveSession(type))?.startedAt ?? new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    state,
-    config,
+  return {
+    ref: scope,
+    style: { x, opacity },
+    drag: 'x' as const,
+    dragElastic: 0.6,
+    onDragEnd: handleDragEnd,
   };
-  await set(`${SESSION_KEY_PREFIX}${type}`, session, sessionDb);
 }
 
-export async function getActiveSession<T>(
-  type: SessionType
-): Promise<PersistedSession<T> | undefined> {
-  return get<PersistedSession<T>>(`${SESSION_KEY_PREFIX}${type}`, sessionDb);
-}
-
-export async function clearSession(type: SessionType): Promise<void> {
-  await del(`${SESSION_KEY_PREFIX}${type}`, sessionDb);
+// Usage in any component:
+function DismissableCard({ onDismiss, children }) {
+  const gestureProps = useSwipeDismiss(onDismiss);
+  return <motion.div {...gestureProps}>{children}</motion.div>;
 }
 ```
 
-#### What Gets Persisted Per Session Type
-
-**Test Session:**
-```typescript
-interface PersistedTestState {
-  questions: Question[];       // The shuffled question set (stable for resume)
-  currentIndex: number;
-  results: QuestionResult[];
-  timeLeft: number;            // Remaining seconds
-  endReason: TestEndReason | null;
-  isFinished: boolean;
-}
-```
-
-**Practice Session:**
-```typescript
-interface PersistedPracticeState {
-  questions: Question[];
-  currentIndex: number;
-  results: QuestionResult[];
-  timeLeft: number;
-  timerEnabled: boolean;
-}
-// Config: { category, count, categoryName, categoryColor }
-```
-
-**Interview Session:**
-```typescript
-interface PersistedInterviewState {
-  questions: Question[];
-  currentIndex: number;
-  results: InterviewResult[];
-  correctCount: number;
-  incorrectCount: number;
-  questionPhase: QuestionPhase;
-  startTime: number;
-}
-// Config: { mode: InterviewMode, micPermission: boolean }
-```
-
-#### Write Throttling
-
-Session state changes frequently (every answer, every timer tick for tests). Writing to IndexedDB on every state change is wasteful. Use a debounced write pattern:
+3. **Gesture config centralized alongside motion-config.ts:**
 
 ```typescript
-// useSessionPersistence.ts hook
-function useSessionPersistence<T>(
-  type: SessionType,
-  state: T,
-  config: Record<string, unknown>,
-  { enabled = true, debounceMs = 2000 }: Options = {}
-) {
-  // Debounced write: 2s after last state change
-  // Immediate write: on beforeunload and visibilitychange='hidden'
-  // Clear: when session completes normally
-}
+// gestureConfig.ts
+export const SWIPE_THRESHOLDS = {
+  distance: 100,       // px minimum drag distance to commit
+  velocity: 500,       // px/s minimum velocity for flick commit
+  combined: {          // Lower thresholds when both distance and velocity present
+    distance: 0.15,    // fraction of card width
+    velocity: 300,
+  },
+};
+
+export const SNAP_BACK_SPRING = { type: 'spring' as const, stiffness: 500, damping: 30 };
+export const FLING_SPRING = { type: 'spring' as const, stiffness: 200, damping: 30 };
 ```
 
-#### Resume Flow
+**Refactoring opportunity:** `SwipeableCard` can be refactored to use `useSwipeDismiss` internally, validating the abstraction against the existing production-quality implementation.
 
-When a session page mounts, check for an active persisted session:
+### 3. Screen Transition Choreography
+
+**Problem:** Current `PageTransition` provides direction-aware slide+scale based on tab order, which works well for tab navigation. But specific transitions (e.g., quiz -> results, study guide -> flashcard detail, dashboard -> practice) could benefit from route-specific transition variants and shared element animations.
+
+**Solution: Enhanced transition system with route-specific variants + layoutId for shared elements**
 
 ```
-Mount -> getActiveSession(type)
-  -> null: Normal fresh start (show config/pre-test)
-  -> found:
-    -> Check staleness (>24h? discard)
-    -> Show "Resume Session?" prompt
-    -> User confirms: Hydrate state from snapshot
-    -> User declines: clearSession(type), fresh start
+src/components/animations/
+  PageTransition.tsx            -- MODIFY: add route-specific variant lookup
+  TransitionConfig.ts           -- Route-to-variant mapping
+  SharedElementWrapper.tsx      -- layoutId wrapper for card-to-page morph transitions
 ```
 
-#### Integration Pattern with Existing Pages
-
-The persistence hook wraps the existing state machine without changing it. Example for PracticePage:
+**Architecture:**
 
 ```typescript
-// PracticePage.tsx changes (conceptual, not literal code)
-const [phase, setPhase] = useState<PracticePhase>(() => {
-  const saved = savedSession; // from useSessionPersistence restore
-  return saved ? 'session' : 'config';
-});
+// TransitionConfig.ts
+export type TransitionVariant = 'slide' | 'fade' | 'zoom' | 'slideUp' | 'none';
 
-// The persistence hook observes state and auto-saves:
-useSessionPersistence('practice', {
-  questions: practiceQuestions,
-  currentIndex,
-  results,
-  timeLeft,
-  timerEnabled,
-}, { category, count }, { enabled: phase === 'session' });
+// Route pairs that get custom transitions instead of default slide
+const ROUTE_TRANSITIONS: Record<string, TransitionVariant> = {
+  // Quiz flow: slide up for immersive entry, fade for results reveal
+  '/test': 'slideUp',
+  '/interview': 'slideUp',
+  '/practice': 'slideUp',
+
+  // Auth and landing: fade (no directional context)
+  '/': 'fade',
+  '/auth': 'fade',
+
+  // Default: 'slide' (existing behavior via getSlideDirection)
+};
+
+export function getTransitionVariant(pathname: string): TransitionVariant {
+  // Exact match first, then prefix match
+  return ROUTE_TRANSITIONS[pathname]
+    ?? Object.entries(ROUTE_TRANSITIONS).find(([k]) => pathname.startsWith(k + '/'))?.[1]
+    ?? 'slide';
+}
 ```
 
-### 3. TTS Service Abstraction
+**Shared Element Animations (layoutId):**
 
-#### Problem
-
-`useSpeechSynthesis` and `useInterviewTTS` duplicate 60+ lines of identical voice-loading and voice-finding logic. Any quality improvement (better voice selection, rate control) must be applied in two places.
-
-#### Proposed Architecture: Shared Core + Specialized Hooks
-
-```
-src/lib/tts/
-  ttsCore.ts          -- Voice loading, voice finding, utterance creation (pure functions)
-  ttsVoicePrefs.ts    -- Voice preference storage (localStorage)
-  useTTS.ts           -- General-purpose hook (replaces useSpeechSynthesis)
-  useInterviewTTS.ts  -- Interview-specific hook (onEnd, timeout, isSpeaking)
-```
-
-**ttsCore.ts** (new, extracts shared logic):
+The project already uses `motion/react` which supports `layoutId`. For transitions like "category card on dashboard morphs into category detail header," wrap both elements with the same `layoutId`:
 
 ```typescript
-// Shared constants
-export const APPLE_US_VOICES = ['samantha', 'siri', 'ava', 'allison', 'alex', 'victoria', 'karen'];
-export const ANDROID_US_VOICES = ['google us english', 'google en-us', 'english united states'];
-export const ENHANCED_HINTS = ['enhanced', 'premium'];
+// On Dashboard: category card
+<motion.div layoutId={`category-${cat.id}`}>
+  <CategoryCard category={cat} />
+</motion.div>
 
-// Shared voice-finding (currently duplicated between two hooks)
-export function findBestVoice(
-  voices: SpeechSynthesisVoice[],
-  lang: string,
-  preferredVoiceName?: string
-): SpeechSynthesisVoice | undefined { ... }
-
-// Voice loading with retry (currently duplicated)
-export function createVoiceLoader(
-  synth: SpeechSynthesis,
-  onVoicesReady: (voices: SpeechSynthesisVoice[]) => void
-): { cleanup: () => void } { ... }
-
-// Utterance factory with quality defaults
-export function createUtterance(
-  text: string,
-  voice: SpeechSynthesisVoice | undefined,
-  options: { lang?: string; rate?: number; pitch?: number }
-): SpeechSynthesisUtterance { ... }
-
-// Duration estimation for timeout fallback
-export function estimateSpeechDuration(text: string, rate: number): number { ... }
+// On StudyGuidePage: category header
+<motion.div layoutId={`category-${cat.id}`}>
+  <CategoryHeader category={cat} />
+</motion.div>
 ```
 
-**Impact on existing code:**
+**Constraint:** `layoutId` shared animations require both elements to be in the same `LayoutGroup`. Since `PageTransition` uses `AnimatePresence mode="wait"`, the old page unmounts before the new page mounts, which breaks cross-page `layoutId`. The solution is to use `mode="popLayout"` or render a persistent `layoutId` element outside the transition boundary.
 
-- `useSpeechSynthesis.ts` -> `useTTS.ts`: Simplified to ~40 lines (delegates to ttsCore)
-- `useInterviewTTS.ts`: Simplified to ~80 lines (callback/timeout logic only, delegates voice management to ttsCore)
-- `SpeechButton.tsx`: Import path changes from `@/lib/useSpeechSynthesis` to `@/lib/tts/useTTS`
+**Recommended approach for this project:** Keep `mode="wait"` (it's working well and avoids overlapping pages) and use `layoutId` only for **within-page** transitions (e.g., list item expands into detail panel on the same page). Cross-page shared element animations add significant complexity for marginal UX benefit in this app's navigation model.
 
-#### Quality Improvements Enabled by Abstraction
+**Per-route transition variants are the higher-value change:** immersive modes (test, interview, practice) sliding up from bottom creates a clear "entering focused mode" feeling, while results pages fading in creates a "reveal" moment.
 
-Once voice management is centralized:
+### 4. Visual Consistency Enforcement
 
-1. **Voice quality ranking**: Score voices by naturalness (Neural > Enhanced > Standard) rather than name matching
-2. **Rate persistence**: `ttsVoicePrefs.ts` stores user's preferred rate globally (currently only interview has rate control)
-3. **Voice caching**: Remember the best voice per language instead of re-searching on every speak call
-4. **Burmese TTS readiness**: `findBestVoice('my')` will select Burmese voices when adding Burmese audio support later
+**Problem:** With ~100 component files and growing, visual inconsistencies can creep in: inconsistent spacing, mixed use of tokens vs. hardcoded values, inconsistent border-radius, missing dark mode adaptation, accessibility gaps.
 
-### 4. Test/Practice/Interview UX Restructuring
-
-#### Current Problem
-
-TestPage is a single 819-line component with 15+ useState calls, 10+ useEffect calls, and both the active quiz and results view inline. This makes it hard to add features (pause, resume, explanation panel) without the file becoming unmanageable.
-
-#### Proposed Component Architecture
+**Solution: Multi-layered consistency enforcement**
 
 ```
-src/hooks/
-  useTestSession.ts           -- Test state machine hook (extracted from TestPage)
-  usePracticeSession.ts       -- Practice state machine hook (extracted from PracticeSession)
-  useInterviewSession.ts      -- Interview state machine hook (extracted from InterviewSession)
-  useSessionPersistence.ts    -- IndexedDB persistence hook (shared by all three)
-
-src/components/session/       -- NEW shared session UI components
-  SessionProgress.tsx         -- Progress bar + question counter + timer
-  AnswerGrid.tsx              -- Answer options with 3D chunky buttons
-  SessionFeedback.tsx         -- Correct/incorrect feedback + explanation
-  SessionHeader.tsx           -- Mode label + navigation lock indicator
-  ResumePrompt.tsx            -- "Resume previous session?" dialog
-
-src/pages/
-  TestPage.tsx                -- Thinner: delegates to useTestSession + session components
-  PracticePage.tsx            -- Already clean, minor extraction
-  InterviewPage.tsx           -- Already clean, minor extraction
-
-src/components/test/          -- EXISTING, keep specialized components
-  CircularTimer.tsx
-  PreTestScreen.tsx
-  AnswerFeedback.tsx
-
-src/components/practice/      -- EXISTING, refactor internals
-  PracticeConfig.tsx
-  PracticeSession.tsx         -- Delegates to usePracticeSession
-  PracticeResults.tsx
-
-src/components/interview/     -- EXISTING, refactor internals
-  InterviewSetup.tsx
-  InterviewSession.tsx        -- Delegates to useInterviewSession
-  InterviewResults.tsx
+src/components/ui/                -- Shared primitive component library
+  tokens.ts                        -- NEW: TypeScript token exports for use in JS
+scripts/
+  audit-visual-consistency.ts      -- NEW: Static analysis script
+.storybook/                        -- OPTIONAL: Component catalog (defer if overhead too high)
 ```
 
-#### State Machine Hook Pattern
+**Layer 1: TypeScript Design Tokens**
+
+Export tokens from CSS to TypeScript for type-safe usage in JS contexts (e.g., Recharts colors, motion animation targets, canvas rendering):
 
 ```typescript
-// useTestSession.ts
-interface TestSessionState {
-  phase: 'pretest' | 'active' | 'finished';
-  questions: Question[];
-  currentIndex: number;
-  results: QuestionResult[];
-  timeLeft: number;
-  selectedAnswer: Answer | null;
-  showFeedback: boolean;
-  endReason: TestEndReason | null;
-  explanationExpanded: boolean;
-}
+// src/components/ui/tokens.ts
+export const colors = {
+  primary: 'hsl(var(--color-primary))',
+  success: 'hsl(var(--color-success))',
+  warning: 'hsl(var(--color-warning))',
+  // ... etc
+} as const;
 
-interface TestSessionActions {
-  start: () => void;
-  selectAnswer: (answer: Answer) => void;
-  advanceToNext: () => void;
-  expandExplanation: (expanded: boolean) => void;
-}
+export const springs = {
+  bouncy: { type: 'spring', stiffness: 400, damping: 15, mass: 0.8 },
+  snappy: { type: 'spring', stiffness: 500, damping: 25 },
+  gentle: { type: 'spring', stiffness: 200, damping: 20 },
+} as const;
 
-function useTestSession(): [TestSessionState, TestSessionActions] {
-  // All state + effects extracted from TestPage
-  // Persistence via useSessionPersistence('test', state, config)
-  // Timer countdown effect
-  // Navigation lock effect
-  // Answer processing + threshold logic
-}
+export const spacing = { 1: '0.25rem', 2: '0.5rem', /* ... */ } as const;
 ```
 
-#### Shared Session Components
+**Layer 2: Composable UI Primitives**
 
-The test and practice pages share significant UI:
-- Both have `Progress` bar with question counter
-- Both have `CircularTimer` (optional in practice)
-- Both have 3D chunky answer buttons with identical styling
-- Both have `AnswerFeedback` + `WhyButton` inline explanation
-- Both have `SpeechButton` pairs for question + answer audio
-- Both show correct/incorrect count summary
+The existing `Button`, `GlassCard`, `Dialog`, `Progress` components form a solid foundation. What's needed is filling gaps:
 
-Extract into shared `SessionProgress`, `AnswerGrid`, and `SessionFeedback` components that accept configuration props:
-
-```typescript
-// AnswerGrid.tsx
-interface AnswerGridProps {
-  answers: Answer[];
-  selectedAnswer: Answer | null;
-  showFeedback: boolean;
-  onSelect: (answer: Answer) => void;
-  showBurmese: boolean;
-}
-```
-
-### 5. Study Guide Flashcard Overhaul
-
-#### Current Architecture
-
-`StudyGuidePage` (huge page) renders flashcards via `FlashcardStack` -> `Flashcard3D`. The flashcard shows question on front, answer on back, with a 3D flip animation. It's embedded in a "Browse" tab alongside a category list.
-
-#### Integration Points for Overhaul
-
-The flashcard system needs:
-1. **SRS integration**: "Add to deck" button on each card (already exists via `AddToDeckButton`)
-2. **Mastery indicator**: Show per-question accuracy dot (already exists via `QuestionAccuracyDot`)
-3. **Audio playback**: SpeechButton on both sides (already exists, needs wiring)
-
-The structure is already componentized. The overhaul is primarily about:
-- Making flashcards full-screen swipeable (vs. embedded in category section)
-- Adding keyboard shortcuts for flip/next/prev
-- Connecting to session persistence for "pick up where you left off"
-
-No new architectural patterns needed -- these are prop/feature additions to existing components.
-
----
-
-## Data Flow Diagrams
-
-### Language Mode Data Flow (After Refactor)
-
-```
-LanguageProvider
-  |-- userMode (from localStorage)
-  |-- override (from pushOverride/popOverride)
-  |-- mode = override ?? userMode
-  |-- showBurmese = mode === 'bilingual'
-  |
-  +-> BilingualText       reads showBurmese -> conditionally renders .my
-  +-> BilingualHeading    reads showBurmese -> conditionally renders .my
-  +-> BilingualButton     reads showBurmese -> conditionally renders .my
-  +-> 35+ inline uses     reads showBurmese -> conditional JSX
-  +-> BilingualToast      IGNORES showBurmese (always shows both)
-  +-> InterviewSession    calls pushOverride('english-only') on mount
-  +-> LanguageToggle      reads mode, disabled when override active
-```
-
-### Session Persistence Data Flow
-
-```
-TestPage mount
-  |-> useSessionPersistence('test')
-  |     |-> getActiveSession('test') from IndexedDB
-  |     |-> found? -> set resumeData state
-  |     +-> auto-save: debounced write on state change
-  |
-  +-> ResumePrompt (if resumeData exists)
-  |     |-> "Resume" -> hydrate state from resumeData
-  |     +-> "New Test" -> clearSession('test')
-  |
-  +-> During session: every state change -> debounced IndexedDB write
-  +-> On finish: clearSession('test') + save results normally
-  +-> On beforeunload: immediate flush
-  +-> On visibilitychange='hidden': immediate flush
-```
-
-### TTS Data Flow (After Refactor)
-
-```
-ttsCore.ts (shared)
-  |-- createVoiceLoader()  -> called by both hooks on mount
-  |-- findBestVoice()      -> called on every speak()
-  |-- createUtterance()    -> constructs SpeechSynthesisUtterance
-  |-- estimateSpeechDuration() -> timeout fallback calculation
-  |
-  +-> useTTS (general)
-  |     |-- speak(text, options)
-  |     |-- cancel()
-  |     +-- isSupported
-  |     +-> consumed by SpeechButton
-  |
-  +-> useInterviewTTS (specialized)
-        |-- speakWithCallback(text, {onEnd, rate})
-        |-- cancel()
-        |-- isSpeaking
-        +-- isSupported
-        +-> consumed by InterviewSession
-```
-
----
-
-## Component Inventory: New vs Modified
-
-### New Components/Modules
-
-| Component | Purpose | Complexity |
+| Existing Primitive | Status | Gap |
 |---|---|---|
-| `src/lib/tts/ttsCore.ts` | Shared TTS voice loading + finding | Low |
-| `src/lib/tts/ttsVoicePrefs.ts` | TTS preference storage (rate, voice) | Low |
-| `src/lib/session/sessionStore.ts` | IndexedDB store for active sessions | Low |
-| `src/hooks/useSessionPersistence.ts` | Debounced session persistence hook | Medium |
-| `src/hooks/useTestSession.ts` | Test state machine extraction | High |
-| `src/components/session/ResumePrompt.tsx` | Resume dialog UI | Low |
-| `src/components/session/AnswerGrid.tsx` | Shared answer button grid | Medium |
-| `src/components/session/SessionProgress.tsx` | Shared progress bar + timer | Low |
+| `Button` | Complete | -- |
+| `GlassCard` | Complete | -- |
+| `Dialog` | Complete | -- |
+| `Progress` | Complete | -- |
+| `Card` | Complete | -- |
+| `Skeleton` | Complete | -- |
+| `SpeechButton` | Complete | -- |
+| **Toggle/Switch** | Inline in SettingsPage | Extract to shared component |
+| **Badge** | Scattered implementations | Unify into shared `Badge` component |
+| **Chip/Tag** | No shared component | Create `Chip` for category labels, filter pills |
+| **Divider** | Inline `border-b` | Consider `Divider` for consistency |
+| **Avatar** | `InterviewerAvatar` only | Create generic `Avatar` |
+| **Tooltip** | CSS-only `[data-tooltip]` | Consider upgrading for accessibility |
 
-### Modified Components
+**Layer 3: Static Analysis Script (Audit)**
 
-| Component | Change | Risk |
-|---|---|---|
-| `LanguageContext.tsx` | Add override stack (pushOverride/popOverride) | LOW -- additive API |
-| `LanguageToggle.tsx` | Disable during override | LOW |
-| `InterviewSession.tsx` | Call pushOverride/popOverride | LOW |
-| `InterviewPage.tsx` | Minor -- override at countdown phase | LOW |
-| `useSpeechSynthesis.ts` -> `useTTS.ts` | Delegate to ttsCore, rename | MEDIUM -- 1 import consumer |
-| `useInterviewTTS.ts` | Delegate to ttsCore | MEDIUM -- 1 import consumer |
-| `SpeechButton.tsx` | Update import path | LOW |
-| `TestPage.tsx` | Extract to useTestSession, use shared components | HIGH -- 819 lines |
-| `PracticeSession.tsx` | Add persistence, extract to usePracticeSession | MEDIUM |
-| `PracticePage.tsx` | Add resume flow | LOW |
-| `InterviewSession.tsx` | Add persistence | MEDIUM |
-| `InterviewPage.tsx` | Add resume flow | LOW |
+A Node.js script that scans source files for visual consistency issues:
 
-### Untouched Components (Verification)
+```typescript
+// scripts/audit-visual-consistency.ts
+// Checks for:
+// 1. Hardcoded hex colors (stylelint already catches in CSS, but not in TSX className strings)
+// 2. Inconsistent border-radius (raw 'rounded-lg' vs 'rounded-xl' vs 'rounded-2xl')
+// 3. Missing dark: variants on bg-/text- classes that use non-token colors
+// 4. Hardcoded pixel values that should use spacing tokens
+// 5. Missing min-h-[44px] on interactive elements (touch target audit)
+// 6. Missing aria-label on icon-only buttons
+// 7. Missing font-myanmar on Burmese text containers
+```
 
-These 59 files consume `useLanguage()` but only read `showBurmese` for conditional rendering. They require **zero changes** because the override mechanism is transparent:
+This is cheaper than Storybook + Chromatic for a team of this size. Run it as a CI check or pre-commit hook.
 
-- All `BilingualText`, `BilingualHeading`, `BilingualButton` uses
-- Dashboard, HubPage, SettingsPage, and all hub tab components
-- All SRS components (ReviewCard, DeckManager, etc.)
-- All social components (BadgeCelebration, Leaderboard, etc.)
-- All nudge and progress components
+**Layer 4: Visual Regression (Defer)**
+
+Storybook + Chromatic is the gold standard for visual regression testing, but the overhead is significant for a solo/small team project. Recommendation: **Defer Storybook** and rely on the static analysis script + manual visual review for this milestone. Add Storybook only if the component library grows beyond ~30 shared primitives.
+
+### 5. About Page
+
+**Problem:** No About page exists. Users need version info, credits, legal links, and the mission statement.
+
+**Solution: Standalone route at `/about`, linked from Settings page**
+
+```
+src/pages/AboutPage.tsx            -- New page component
+src/components/about/
+  VersionInfo.tsx                   -- Build version, last updated
+  TeamCredits.tsx                   -- Credits and attributions
+  LegalLinks.tsx                    -- Privacy policy, terms, open source licenses
+```
+
+**Routing integration:**
+
+```typescript
+// In AppShell.tsx Routes:
+<Route path="/about" element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
+
+// In navConfig.ts HIDDEN_ROUTES (About is linked from Settings, not in nav tabs):
+export const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-password', '/op-ed', '/about'];
+```
+
+**Settings page integration:** Add an "About" row in the Help & Guidance section of SettingsPage that navigates to `/about`.
+
+**Design:** Glass-morphism card layout matching Settings page aesthetic. Animated flag pair (reuse `AmericanFlag` + `MyanmarFlag` components from WelcomeScreen). Bilingual throughout.
 
 ---
 
-## Recommended Build Order
+## Component Boundaries
 
-The dependency graph dictates a strict ordering:
+| Component / Module | Responsibility | Communicates With |
+|---|---|---|
+| `CelebrationOverlay` | Renders celebration effects (confetti, starburst) | Listens to DOM `celebration` events |
+| `useCelebration` hook | Fire-and-forget celebration API | Dispatches DOM events, calls soundEffects |
+| `celebrationOrchestrator` | Preset configs, coordinates audio + visual + haptic | soundEffects.ts, haptics.ts |
+| `haptics.ts` | Navigator.vibrate() wrapper | Browser Vibration API |
+| `useSwipeDismiss` hook | Reusable horizontal swipe gesture | motion/react's drag API |
+| `useSwipeNavigation` hook | Left/right swipe for prev/next | motion/react's drag API |
+| `useLongPress` hook | Long press with haptic | Browser touch events + haptics.ts |
+| `TransitionConfig` | Route-to-transition-variant mapping | navConfig.ts |
+| Enhanced `PageTransition` | Route-aware transition variants | TransitionConfig, motion/react |
+| `SharedElementWrapper` | layoutId convenience wrapper | motion/react's layoutId |
+| UI primitives (Toggle, Badge, Chip) | Shared visual atoms | Design tokens |
+| `audit-visual-consistency.ts` | Static analysis for visual issues | Source file scanning |
+| `AboutPage` | Version, credits, legal | SettingsPage (navigation) |
+
+---
+
+## Data Flow
+
+### Celebration Flow
 
 ```
-Phase 1: LanguageContext Override (foundation -- everything depends on this)
-  |
-  v
-Phase 2: TTS Core Extraction (no external dependencies, enables quality work)
-  |
-  v
-Phase 3: Session Persistence Store + Hook (new IndexedDB store, reusable hook)
-  |
-  v
-Phase 4: Test/Practice/Interview State Machine Extraction
-  |  (depends on: session persistence hook from Phase 3)
-  |
-  v
-Phase 5: Shared Session UI Components (AnswerGrid, SessionProgress)
-  |  (depends on: extracted state machines from Phase 4)
-  |
-  v
-Phase 6: UX Integration + Flashcard Overhaul
-  |  (depends on: all above)
-  |
-  v
-Phase 7: Accessibility + Performance Polish
+User action (correct answer, milestone reached, etc.)
+  -> Component calls celebrate('medium')
+  -> useCelebration dispatches:
+       1. Sound: playMilestone() via soundEffects.ts
+       2. Haptic: navigator.vibrate([50, 30, 100]) via haptics.ts
+       3. DOM CustomEvent('celebration', { confetti: 'burst', visual: 'starburst' })
+  -> CelebrationOverlay (mounted in AppShell) receives event
+  -> Renders confetti canvas + starburst SVG animation
+  -> Auto-cleans after animation duration
 ```
 
-**Why this order:**
-1. **LanguageContext first**: The override is consumed by interview (Phase 4+). Must be in place before session work begins.
-2. **TTS before sessions**: TTS quality improvements affect all sessions. Better to have the clean API before integrating persistence.
-3. **Persistence before extraction**: The hook is consumed by the extracted state machines. Must exist first.
-4. **Extraction before shared UI**: Shared components need to know the state interface they're consuming.
-5. **Integration last**: Wiring everything together is the final step.
+### Gesture Flow
+
+```
+User touches card and drags horizontally
+  -> motion.div drag='x' tracks position via useMotionValue
+  -> useTransform derives opacity/rotation from x position
+  -> On drag end, useSwipeDismiss checks velocity + distance thresholds
+  -> If committed: useAnimate flings element off-screen, calls onDismiss
+  -> If not committed: useAnimate spring-snaps back to center
+  -> Reduced motion: drag disabled, button actions trigger linear slide
+```
+
+### Transition Flow
+
+```
+User navigates to new route (e.g., /home -> /test)
+  -> React Router updates location
+  -> PageTransition reads new pathname
+  -> getTransitionVariant('/test') returns 'slideUp'
+  -> AnimatePresence unmounts old page with exit variant
+  -> New page mounts with 'slideUp' initial -> animate variant
+  -> If slide (default): getSlideDirection determines left/right based on tab order
+```
+
+---
+
+## Patterns to Follow
+
+### Pattern 1: Fire-and-Forget Event Bus (for Celebrations)
+
+**What:** Use DOM CustomEvents to decouple celebration triggers from visual rendering. No React Context needed.
+
+**When:** When effects are one-directional (fire -> display) with no return value needed.
+
+**Why:** Avoids adding another provider to the 10-deep provider hierarchy. Any component can trigger celebrations without prop drilling. The overlay component handles all cleanup.
+
+```typescript
+// Trigger (any component)
+window.dispatchEvent(new CustomEvent('celebration', {
+  detail: { level: 'medium', confetti: 'burst', sound: 'milestone' }
+}));
+
+// Listen (CelebrationOverlay, mounted once)
+useEffect(() => {
+  const handler = (e: CustomEvent) => startCelebration(e.detail);
+  window.addEventListener('celebration', handler);
+  return () => window.removeEventListener('celebration', handler);
+}, []);
+```
+
+### Pattern 2: Gesture Hook Returns Motion Props
+
+**What:** Gesture hooks return an object spread directly onto `motion.div` elements.
+
+**When:** Any reusable gesture pattern (swipe dismiss, swipe navigate, long press).
+
+**Why:** Maximum composability -- the hook doesn't render anything, so the consuming component controls layout and styling completely.
+
+```typescript
+const gestureProps = useSwipeDismiss(onDismiss);
+return <motion.div {...gestureProps} className="my-card">{children}</motion.div>;
+```
+
+### Pattern 3: Consistent Reduced Motion Handling
+
+**What:** Every animation component/hook checks `useReducedMotion()` and provides a graceful fallback.
+
+**When:** Always. Every animation in this codebase.
+
+**Pattern already established:**
+- Confetti: Returns `null` when reduced motion
+- PageTransition: Uses instant variants
+- StaggeredList: Uses no-animation variants
+- SwipeableCard: Disables drag, uses linear slide
+- CountUpScore: Shows final value immediately
+
+**New components must follow this pattern.** The `useCelebration` hook should skip visual effects and haptics when reduced motion is active, but still play sounds (as audio is not covered by `prefers-reduced-motion`).
+
+### Pattern 4: Spring Presets from motion-config.ts
+
+**What:** All motion/react spring configurations use the shared presets from `motion-config.ts`.
+
+**When:** Any new animation using spring physics.
+
+**Extension needed:** Add celebration-specific presets:
+
+```typescript
+// motion-config.ts additions
+export const SPRING_CELEBRATION = {
+  type: 'spring' as const,
+  stiffness: 300,
+  damping: 12,
+  mass: 0.6,
+}; // Very bouncy, exuberant
+
+export const SPRING_DISMISS = {
+  type: 'spring' as const,
+  stiffness: 200,
+  damping: 30,
+}; // Quick settle, no overshoot -- for swipe-away
+```
 
 ---
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Prop-Drilling Language Override
-**What:** Passing `forceEnglishOnly` prop through component trees instead of using context override.
-**Why bad:** 35+ components already consume `useLanguage()` -- adding a prop bypasses the context and creates inconsistency.
-**Instead:** Use the pushOverride/popOverride pattern in LanguageContext. Components continue to read `showBurmese` as before.
+### Anti-Pattern 1: New React Context for Celebrations
 
-### Anti-Pattern 2: localStorage for Session Persistence
-**What:** Using localStorage instead of IndexedDB for active session state.
-**Why bad:** Session state includes full Question arrays (100+ objects with bilingual strings). localStorage has a 5-10MB limit and is synchronous (blocks main thread for large writes). IndexedDB is async and handles structured data natively.
-**Instead:** Use idb-keyval with a dedicated store, matching the existing 7-store pattern.
+**What:** Creating a `CelebrationProvider` / `CelebrationContext`.
 
-### Anti-Pattern 3: Persisting Derived State
-**What:** Storing `correctCount`, `incorrectCount`, `progressPercent` in IndexedDB alongside `results`.
-**Why bad:** These are derivable from `results` array. Storing them creates potential inconsistency and larger payloads.
-**Instead:** Only persist source-of-truth state. Recompute derived values on restore.
+**Why bad:** The provider hierarchy is already 10 levels deep. Celebrations are stateless fire-and-forget events, not shared state. Adding a context creates unnecessary re-renders and deepens the provider tree.
 
-### Anti-Pattern 4: Inline TTS Improvements
-**What:** Improving voice quality by modifying useInterviewTTS directly without extracting shared logic first.
-**Why bad:** Improvements won't apply to SpeechButton usage. Future changes must be applied in two places.
-**Instead:** Extract ttsCore.ts first, then improve once.
+**Instead:** Use DOM CustomEvents (Pattern 1). The `CelebrationOverlay` component is the only consumer.
 
-### Anti-Pattern 5: Big-Bang TestPage Rewrite
-**What:** Rewriting TestPage from scratch with new architecture in a single commit.
-**Why bad:** TestPage is 819 lines with subtle timing logic (feedback delays, auto-advance pausing, explanation expansion). A big-bang rewrite risks regressions in USCIS threshold logic (12 correct / 9 incorrect).
-**Instead:** Extract incrementally: (1) state machine hook, (2) answer grid component, (3) results view component, (4) wire persistence. Each step is independently testable.
+### Anti-Pattern 2: @use-gesture Alongside motion/react
+
+**What:** Adding `@use-gesture/react` as a dependency for gesture handling.
+
+**Why bad:** motion/react v12 already provides `drag`, `useMotionValue`, `useTransform`, `PanInfo`, and `useAnimate` -- everything needed for swipe, fling, and pull gestures. Adding `@use-gesture` creates two competing gesture systems, increases bundle size (~8KB gzipped), and means developers need to know two APIs.
+
+**Instead:** Build gesture hooks using motion/react's native drag API. The existing `SwipeableCard` proves this works well.
+
+### Anti-Pattern 3: layoutId for Cross-Page Transitions
+
+**What:** Using `layoutId` to animate shared elements between different routes (e.g., category card on dashboard morphs into category header on study page).
+
+**Why bad:** `AnimatePresence mode="wait"` unmounts the old page before mounting the new one, breaking the `layoutId` connection. Workarounds (mode="popLayout", persistent elements outside transition boundary) add significant complexity and risk regressions in the existing transition system.
+
+**Instead:** Use `layoutId` for within-page transitions only (expanding cards, tab underlines, list item -> detail on same page). For cross-page transitions, the route-specific variants (slideUp, fade, zoom) provide sufficient visual distinction.
+
+### Anti-Pattern 4: Storybook for Visual Audit
+
+**What:** Setting up Storybook + Chromatic for visual regression testing.
+
+**Why bad for this project right now:** Significant setup overhead (config, story files for ~100 components, CI integration). Overkill for a solo/small team project at this stage. The ROI is best when multiple developers are making changes to shared components.
+
+**Instead:** Use the static analysis script for automated checks, plus manual visual review. Revisit Storybook if the project grows a larger contributor team.
+
+### Anti-Pattern 5: Lottie for Celebration Animations
+
+**What:** Adding Lottie (lottie-web, lottie-react) for celebration effects.
+
+**Why bad:** Lottie adds ~60KB gzipped to the bundle. The existing `react-canvas-confetti` + motion/react spring animations can achieve all needed celebration effects. Lottie is best when you need designer-authored After Effects animations, which isn't the case here.
+
+**Instead:** Compose celebrations from canvas-confetti + SVG animations driven by motion/react + CSS keyframes.
 
 ---
 
 ## Scalability Considerations
 
-| Concern | Current (v2.0) | After v2.1 |
+| Concern | Current (~12 routes) | At 20+ routes | At 50+ components |
+|---------|---------------------|---------------|-------------------|
+| Provider depth | 10 levels -- functional | Same (no new providers) | Same |
+| Animation bundle | motion/react + canvas-confetti (~45KB) | Same | Same |
+| Transition configs | 14 route entries | O(n) lookup, negligible | N/A |
+| Gesture hooks | 3-4 hooks, ~2KB total | Same | Same |
+| Visual audit | Script scans ~250 files in <5s | Still fast | May need caching |
+| Celebration presets | 5 levels | May add custom levels | Same |
+
+---
+
+## File Impact Map
+
+### New Files
+
+| File | Purpose | Dependencies |
 |---|---|---|
-| IndexedDB stores | 7 (8 with badges) | 8 (9 with sessions) -- well within browser limits |
-| Context providers | 8 | 8 (no new providers) |
-| LanguageContext rerenders | Mode changes rerender 59 consumers | Same -- override changes are rare (session boundaries only) |
-| Session persistence writes | N/A | Debounced to 2s intervals + flush on visibility change |
-| TTS voice loading | 2 parallel retry loops (duplicated) | 1 shared voice loader (deduped) |
-| TestPage component size | 819 lines (1 file) | ~200 lines page + ~300 lines hook + ~100 lines each shared component |
+| `src/lib/celebrations/celebrationOrchestrator.ts` | Preset configs, orchestration logic | soundEffects.ts |
+| `src/lib/celebrations/haptics.ts` | Navigator.vibrate() wrapper | None (browser API) |
+| `src/lib/celebrations/types.ts` | TypeScript types for celebration system | None |
+| `src/hooks/useCelebration.ts` | Hook: `celebrate(level)` | celebrationOrchestrator, useReducedMotion |
+| `src/components/celebrations/CelebrationOverlay.tsx` | Portal-mounted overlay | Confetti.tsx, motion/react |
+| `src/components/celebrations/StarBurst.tsx` | SVG star burst animation | motion/react |
+| `src/components/celebrations/SuccessCheckmark.tsx` | Animated checkmark | motion/react |
+| `src/hooks/gestures/useSwipeDismiss.ts` | Horizontal swipe-to-dismiss | motion/react |
+| `src/hooks/gestures/useSwipeNavigation.ts` | Left/right swipe navigation | motion/react |
+| `src/hooks/gestures/useLongPress.ts` | Long press detection | haptics.ts |
+| `src/hooks/gestures/gestureConfig.ts` | Shared thresholds | motion-config.ts |
+| `src/components/animations/TransitionConfig.ts` | Route-to-variant mapping | navConfig.ts |
+| `src/components/ui/Toggle.tsx` | Shared toggle switch | motion/react, tokens |
+| `src/components/ui/Badge.tsx` | Unified badge component | tokens |
+| `src/components/ui/Chip.tsx` | Filter pills, category labels | tokens |
+| `src/components/ui/tokens.ts` | TypeScript token exports | tokens.css |
+| `src/pages/AboutPage.tsx` | About page | AmericanFlag, MyanmarFlag |
+| `scripts/audit-visual-consistency.ts` | Static analysis | Node.js fs |
+
+### Modified Files
+
+| File | Change | Risk |
+|---|---|---|
+| `src/AppShell.tsx` | Add `CelebrationOverlay` after `NavigationProvider`, add `/about` route | LOW -- additive |
+| `src/components/animations/PageTransition.tsx` | Add route-specific variant lookup | MEDIUM -- core transition |
+| `src/lib/motion-config.ts` | Add SPRING_CELEBRATION, SPRING_DISMISS presets | LOW -- additive |
+| `src/components/navigation/navConfig.ts` | Add '/about' to HIDDEN_ROUTES | LOW -- additive |
+| `src/pages/SettingsPage.tsx` | Add "About" link in Help section | LOW -- additive |
+| `src/components/results/TestResultsScreen.tsx` | Migrate to `useCelebration` hook | MEDIUM -- replace manual wiring |
+| `src/components/progress/MasteryMilestone.tsx` | Migrate to `useCelebration` hook | MEDIUM -- replace manual wiring |
+| `src/components/sort/SwipeableCard.tsx` | Extract gesture logic to `useSwipeDismiss` | MEDIUM -- refactor |
+| `src/styles/animations.css` | Add keyframes for starburst, checkmark draw-on | LOW -- additive |
+
+---
+
+## Suggested Build Order
+
+Build order is driven by dependency chains:
+
+```
+Phase 1: Foundation (no dependencies)
+  1a. motion-config.ts additions (SPRING_CELEBRATION, SPRING_DISMISS)
+  1b. haptics.ts (browser API, no deps)
+  1c. celebration types + orchestrator
+  1d. gestureConfig.ts
+  1e. UI primitive extraction (Toggle, Badge, Chip from existing code)
+  1f. TypeScript token exports (tokens.ts)
+
+Phase 2: Core Hooks (depends on Phase 1)
+  2a. useCelebration hook
+  2b. useSwipeDismiss hook
+  2c. useSwipeNavigation hook
+  2d. useLongPress hook
+
+Phase 3: Visual Components (depends on Phase 1-2)
+  3a. CelebrationOverlay (mount in AppShell)
+  3b. StarBurst animation
+  3c. SuccessCheckmark animation
+  3d. Enhanced PageTransition with route variants
+
+Phase 4: Integration (depends on Phase 1-3)
+  4a. Migrate TestResultsScreen to useCelebration
+  4b. Migrate MasteryMilestone to useCelebration
+  4c. Refactor SwipeableCard to use useSwipeDismiss
+  4d. Add celebration points throughout quiz/practice flows
+
+Phase 5: New Content (depends on Phase 1)
+  5a. AboutPage + routing
+  5b. Settings page "About" link
+
+Phase 6: Quality (depends on all above)
+  6a. Visual consistency audit script
+  6b. Run audit, fix findings
+  6c. Cross-browser testing of new animations
+```
+
+**Phase ordering rationale:**
+- Foundation first because everything depends on shared configs and types
+- Hooks before visual components because overlays need the hook API
+- Integration after components because we need working celebration/gesture systems
+- About page is independent and can be built in parallel with Phases 2-4
+- Quality audit last because it should scan the final state of all changes
 
 ---
 
 ## Sources
 
-- Direct codebase analysis of all source files referenced above
-- Existing v2.0 architecture research at `.planning/research/ARCHITECTURE.md` (2026-02-09)
-- React documentation: Context override patterns (verified via training data, standard React pattern)
-- idb-keyval documentation: createStore API (verified via existing codebase usage in 7 stores)
-- Web Speech API: SpeechSynthesisUtterance events (verified via existing useInterviewTTS implementation)
+- Direct codebase analysis of all files listed in the Component Boundaries table
+- [Motion/React Layout Animations](https://motion.dev/docs/react-layout-animations) -- layoutId, LayoutGroup, FLIP transforms
+- [Motion/React Gestures](https://motion.dev/docs/react-gestures) -- drag, hover, tap, pan APIs
+- [Motion/React LayoutGroup](https://motion.dev/docs/react-layout-group) -- namespace scoping for layoutId
+- [canvas-confetti](https://github.com/catdad/canvas-confetti) -- underlying library for react-canvas-confetti
+- [Duolingo micro-interactions analysis](https://medium.com/@Bundu/little-touches-big-impact-the-micro-interactions-on-duolingo-d8377876f682)
+- [Duolingo iOS 60fps animations](https://60fps.design/apps/duolingo)
+- [Chromatic visual regression testing](https://www.chromatic.com/storybook) -- evaluated and deferred
+- [Navigator.vibrate() Web API](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/vibrate) -- haptic feedback

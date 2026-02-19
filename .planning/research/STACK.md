@@ -1,281 +1,256 @@
-# Technology Stack: v2.1 Quality & Polish
+# Technology Stack: UX Polish Milestone
 
-**Project:** Civic Test Prep 2025 - v2.1 Milestone
-**Researched:** 2026-02-13
+**Project:** Civic Test Prep 2025 - Duolingo-Level UX Polish
+**Researched:** 2026-02-19
 **Overall confidence:** HIGH
 
 ---
 
-## Existing Stack (Validated in v1.0 + v2.0 -- DO NOT RE-ADD)
+## Existing Stack (Validated in v1.0-v2.1 -- DO NOT RE-ADD)
 
-| Technology | Current Version | Status |
-|------------|----------------|--------|
-| Next.js (Pages Router) | 15.5.12 | Keep |
-| React | 19.2.0 | Keep |
-| motion/react | 12.33.0 | Keep -- already has drag/gesture/useMotionValue/useTransform |
-| Tailwind CSS | 3.4.17 | Keep |
-| @radix-ui/react-dialog | 1.1.15 | Keep |
-| @radix-ui/react-progress | 1.1.8 | Keep |
-| @serwist/next + serwist | 9.5.4 | Keep -- handles precaching and runtime caching |
-| Web Speech API (browser built-in) | N/A | Keep for English TTS; Burmese TTS addressed below |
-| Vitest + @testing-library/react | 4.0.18 / 16.3.2 | Keep |
-| ESLint 9 flat config | 9.17.0+ | Keep |
+| Technology | Current Version | Status | UX Polish Role |
+|------------|----------------|--------|----------------|
+| motion/react | 12.33.0 | **Keep -- primary animation engine** | Spring physics, drag gestures, layout transitions, page transitions, micro-interactions. Already used in 92 files. |
+| react-canvas-confetti | 2.0.7 | **Keep -- confetti celebrations** | Already wrapped in `Confetti.tsx` with 3 intensity levels (sparkle/burst/celebration). Respects reduced motion. |
+| react-countup | 6.5.3 | **Keep -- score animations** | `CountUpScore.tsx` and `OdometerNumber` already working. |
+| react-countdown-circle-timer | 3.2.1 | **Keep -- timer UI** | Used in quiz/interview countdown displays. |
+| tailwindcss-animate | 1.0.7 | **Keep -- CSS animation utilities** | Extends Tailwind with animation utility classes. |
+| Tailwind CSS | 3.4.17 | **Keep -- utility-first styling** | Design token architecture (tokens.css) already mature with 3-tier glass, chunky shadows, spring easing curves. |
+| lucide-react | 0.475.0 | **Keep -- icon library** | Consistent, tree-shakeable SVG icons. |
+| Web Audio API (browser) | N/A | **Keep -- sound effects** | `soundEffects.ts` already has 14 synthesized sounds (correct, incorrect, level-up, milestone, fling, streak, etc.) using AudioContext oscillators. |
+| @radix-ui/react-dialog | 1.1.15 | **Keep -- accessible modals** | Foundation for celebration overlays, achievement dialogs. |
+
+**Key assessment:** The existing animation stack is already quite capable. The project has spring physics configs (`SPRING_BOUNCY`, `SPRING_SNAPPY`, `SPRING_GENTLE`), staggered animations, page transitions, 3D card flips, Tinder-style swipe gestures, confetti, count-up scores, streak rewards, and 14 synthesized sound effects. The gap is NOT missing libraries -- it is missing polish, consistency, and celebration moments.
 
 ---
 
 ## Recommended Stack Additions
 
-### 1. @andresaya/edge-tts -- Pre-Generated Burmese Audio (Build-Time Only)
+### 1. @lottiefiles/dotlottie-react -- Rich Micro-Animations for Celebrations
 
 | Technology | Version | Purpose | Why |
 |------------|---------|---------|-----|
-| @andresaya/edge-tts | ^1.2.0 | Build script to pre-generate Burmese MP3 audio files | Microsoft Edge neural voices are the ONLY free TTS option that supports Burmese (my-MM). Two voices available: NilarNeural (female) and ThihaNeural (male). Google Cloud TTS does not support Burmese. Kokoro TTS does not support Burmese. Web Speech API has no Burmese voices in Chrome/Firefox/Safari. |
+| @lottiefiles/dotlottie-react | ^0.18.1 | Designer-quality celebration/success/achievement animations | Confetti particles exist already, but Duolingo-level polish needs richer celebration animations: animated checkmarks, star bursts, trophy reveals, streak flame effects, badge unlocks. These are impractical to build from scratch with motion/react. DotLottie format is 80% smaller than Lottie JSON. |
 
-**Confidence: HIGH** -- Microsoft Edge TTS voice list verified: `my-MM-NilarNeural` and `my-MM-ThihaNeural` are confirmed available. Edge TTS is free, requires no API key.
+**Confidence: HIGH** -- React 19 compatible (peer dep: `^17 || ^18 || ^19`). Published 17 days ago (actively maintained). 644K weekly downloads. Uses WASM renderer for 60fps performance. Duolingo themselves use Lottie for micro-animations and celebration effects.
 
-**Why pre-generated, not runtime:**
-1. `edge-tts-universal` (the browser client) stopped working in non-Edge browsers as of December 2025 -- Microsoft now requires an Edge user-agent header on the Read Aloud API WebSocket connection.
-2. Pre-generated MP3 files work offline (critical for PWA use case).
-3. Audio quality is consistent -- no variation by device/browser.
-4. ~128 questions x 4 strings (question_en, question_my, answer_en, answer_my) = ~512 files. At ~3-5KB per short sentence MP3, total is ~2-3 MB. Well within Vercel's 100MB deploy limit.
+**Why DotLottie, not plain lottie-react:**
+- DotLottie format compresses animation JSON into `.lottie` (ZIP) files -- 80% smaller than raw Lottie JSON
+- WASM-based renderer: 60fps vs lottie-web's 17fps in benchmarks with complex animations
+- Lower CPU/memory: 32% CPU vs 92% for lottie-web, 7MB heap vs 17MB
+- lottie-react v2.4.1 hasn't been updated in over a year; DotLottie is actively maintained by LottieFiles
 
-**Why NOT these alternatives:**
+**Why NOT Rive (@rive-app/react-canvas):**
 
-| Alternative | Why Not |
-|-------------|---------|
-| Google Cloud TTS | Does not support Burmese (my-MM) at all |
-| Kokoro TTS (WASM) | Supports only English, French, Korean, Japanese, Mandarin. No Burmese. |
-| Amazon Polly | Paid API. No free tier for Burmese. |
-| Web Speech API for Burmese | No browser ships Burmese voices natively. Chrome/Firefox/Safari all return zero voices for `my` or `my-MM` locale. |
-| edge-tts-universal (client-side) | Blocked in non-Edge browsers since Dec 2025 due to user-agent requirement |
-| edge-tts (Python) | Requires Python in CI. Node.js alternative available. |
+| Criterion | DotLottie | Rive |
+|-----------|-----------|------|
+| Bundle size | ~51KB min+gzip (WASM) | ~44KB min+gzip + 78KB WASM module |
+| Animation ecosystem | Massive (LottieFiles.com: thousands of free animations) | Smaller community, need to create from scratch |
+| Designer workflow | After Effects export (industry standard) | Rive editor (proprietary tool, learning curve) |
+| Use case fit | Pre-made celebration animations we download and use | Interactive characters we would need to design |
+| Cost | Free animations on LottieFiles (Simple License) | Free editor, but animations must be created |
 
-**Build script approach:**
-```bash
-# Dev dependency only -- runs at build time, not shipped to client
-pnpm add -D @andresaya/edge-tts
-```
+Rive is superior for interactive characters (like Duolingo's Duo owl reacting to answers), but this project does not have custom characters. We need pre-made celebration effects -- checkmarks, stars, confetti, trophies -- where the LottieFiles ecosystem is unmatched.
 
+**Integration plan:**
 ```typescript
-// scripts/generate-audio.ts (run before deploy)
-import { EdgeTTS } from '@andresaya/edge-tts';
+// Lazy-load DotLottie to avoid blocking initial page load
+import { lazy, Suspense } from 'react';
+const DotLottieReact = lazy(() =>
+  import('@lottiefiles/dotlottie-react').then(m => ({ default: m.DotLottieReact }))
+);
 
-const tts = new EdgeTTS();
-
-// Burmese question audio
-await tts.synthesize(questionMy, 'my-MM-NilarNeural');
-await tts.toFile(`public/audio/my/${questionId}-q.mp3`);
-
-// English question audio (higher quality than Web Speech API)
-await tts.synthesize(questionEn, 'en-US-AriaNeural');
-await tts.toFile(`public/audio/en/${questionId}-q.mp3`);
+// Usage in celebration component
+<Suspense fallback={null}>
+  <DotLottieReact
+    src="/animations/success-checkmark.lottie"
+    autoplay
+    loop={false}
+    style={{ width: 120, height: 120 }}
+  />
+</Suspense>
 ```
 
-**English TTS strategy:** Keep Web Speech API as the default for English (works well, zero bandwidth cost). The pre-generated English audio files serve as a fallback for devices where Web Speech API is unsupported or has poor voice quality. The build script generates both languages so the fallback path is consistent.
+**Animation file budget:**
+- Each .lottie file: 5-20KB (vs 50-200KB raw JSON)
+- Estimated 8-12 celebration animations needed
+- Total: ~100-200KB in `public/animations/`
+- Service worker caches on first use (runtime CacheFirst)
 
-**Service worker integration:** Pre-generated audio files in `public/audio/` are static assets. Serwist will precache them automatically if added to the manifest, or they can be cached at runtime with a cache-first strategy.
+**Specific animations to source from LottieFiles:**
+1. Success checkmark (correct answer)
+2. Star burst (streak milestone)
+3. Trophy / cup (test completion, high score)
+4. Badge unlock (achievement earned)
+5. Flame / fire (streak active)
+6. Confetti rain (supplement canvas-confetti for variety)
+7. Level-up glow (mastery progression)
+8. Sparkle / shimmer (XP gain)
 
-### 2. vitest-axe -- Accessibility Testing in Unit Tests
+### 2. NO Additional Gesture Library Needed
+
+**Assessment: motion/react's built-in gesture system is sufficient.**
+
+The project already implements:
+- **Tinder-style swipe** (`SwipeableCard.tsx`): horizontal drag with rotation, velocity-based commit, spring fling, snap-back. Includes bilingual zone labels.
+- **Pan detection** with `onDragEnd` + `PanInfo` velocity/offset thresholds
+- **Drag constraints** with `dragElastic` rubber-banding
+- **Touch handling** with `touch-none` CSS and `active:cursor-grabbing`
+
+What motion/react does NOT support (and we do NOT need):
+- Pinch/zoom (not relevant for quiz cards)
+- Multi-touch (not relevant for single-card interactions)
+- Scroll gestures (handled by CSS `scroll-driven-animations` or `IntersectionObserver`)
+
+**@use-gesture/react was evaluated and rejected:**
+- Version 10.3.1 (last published 2 years ago, no React 19-specific updates)
+- Would add ~12KB for gesture detection that motion/react already handles
+- Creates two competing gesture systems (motion drag + use-gesture drag)
+- The only value-add would be pinch/scroll gestures, which this project does not need
+
+### 3. Vibration API (Browser Built-In) -- Haptic Feedback
 
 | Technology | Version | Purpose | Why |
 |------------|---------|---------|-----|
-| vitest-axe | ^0.1.0 | axe-core integration for Vitest | Adds `toHaveNoViolations()` matcher to existing Vitest + @testing-library/react test suite. Catches WCAG violations in component tests automatically. |
+| navigator.vibrate() | Web API | Haptic feedback on correct/incorrect answers, milestone celebrations | Makes the app feel native on Android. Short 50ms buzz for correct, pattern [100, 50, 100] for milestone. Zero bundle cost -- it is a browser API. |
 
-**Confidence: MEDIUM** -- Package works but hasn't been updated in 3 years (v0.1.0). However, it's a thin wrapper around axe-core which IS actively maintained. The API surface is tiny (one matcher function), so staleness risk is low. Compatible with Vitest 4.x and jsdom environment.
+**Confidence: HIGH** -- Supported in Chrome (Android), Firefox (Android), Edge (Android). NOT supported in Safari/iOS (WebKit limitation). Must be called in response to user gesture (tap, not auto-play).
 
-**Known limitations:**
-- JSDOM does not support CSS rendering, so `color-contrast` rules will not work (expected -- visual contrast must be tested in browser).
-- Must use `jsdom` environment, not `happy-dom` (project already uses jsdom).
-- React 19 compatible -- vitest-axe doesn't depend on React directly; it runs axe-core on rendered DOM.
-
-**Alternative considered: @chialab/vitest-axe** (v0.19.0, published 6 months ago). More actively maintained fork. If vitest-axe causes issues, swap to this.
-
-```bash
-pnpm add -D vitest-axe
-```
-
-**Test setup integration:**
+**Integration approach:**
 ```typescript
-// src/__tests__/setup.ts (extend existing file)
-import 'vitest-axe/extend-expect';
+// src/lib/haptics.ts
+export function hapticTap(): void {
+  navigator.vibrate?.(50);
+}
+
+export function hapticSuccess(): void {
+  navigator.vibrate?.([50, 30, 80]);
+}
+
+export function hapticMilestone(): void {
+  navigator.vibrate?.([100, 50, 100, 50, 200]);
+}
+
+// Pair with existing sound effects:
+// playCorrect() + hapticSuccess() on correct answer
+// playMilestone() + hapticMilestone() on test completion
 ```
 
-```typescript
-// Example: src/components/ui/__tests__/SpeechButton.a11y.test.tsx
-import { render } from '@testing-library/react';
-import { axe } from 'vitest-axe';
-import SpeechButton from '../SpeechButton';
+**No library needed.** The Vibration API is a single method (`navigator.vibrate()`). Feature-detect with `navigator.vibrate?.(pattern)`. Fails silently on iOS.
 
-test('SpeechButton has no accessibility violations', async () => {
-  const { container } = render(
-    <SpeechButton text="test" label="Listen" />
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
-```
-
-### 3. eslint-plugin-jsx-a11y -- Static Accessibility Linting
+### 4. CSS Scroll-Driven Animations (Browser Built-In) -- Progress & Parallax
 
 | Technology | Version | Purpose | Why |
 |------------|---------|---------|-----|
-| eslint-plugin-jsx-a11y | ^6.10.2 | Static AST analysis for accessibility issues in JSX | Catches missing alt text, improper ARIA attributes, missing labels, non-interactive element handlers at lint time. Complements runtime vitest-axe testing. |
+| CSS `animation-timeline: scroll()` | CSS Spec | Scroll-linked progress bars, parallax effects, scroll-reveal transitions | Cross-browser baseline as of early 2026 (Chrome 115+, Firefox, Safari 26). Zero JavaScript overhead for scroll-triggered animations. Use for study guide progress, dashboard scroll reveals, and hub page parallax effects. |
 
-**Confidence: HIGH** -- v6.10.2 (January 2025). Supports ESLint 9 flat config via `flatConfigs.recommended`. 11M+ weekly downloads.
+**Confidence: MEDIUM** -- Safari 26 support is new (early 2026). The app's PWA target audience (mobile Chrome/Safari) should have support, but older Safari versions will need a fallback. Motion/react's `whileInView` is the graceful degradation path.
 
-**Integration with existing ESLint config:**
-```bash
-pnpm add -D eslint-plugin-jsx-a11y
-```
+**Integration approach:**
+```css
+/* tokens.css addition */
+@supports (animation-timeline: scroll()) {
+  .scroll-progress-bar {
+    animation: grow-progress linear;
+    animation-timeline: scroll();
+    transform-origin: left;
+  }
 
-```javascript
-// eslint.config.mjs (add to existing config)
-import jsxA11y from 'eslint-plugin-jsx-a11y';
-
-export default [
-  // ... existing config ...
-  jsxA11y.flatConfigs.recommended,
-  // ... rest of config ...
-];
-```
-
-**Why NOT @axe-core/react (dev overlay):** Does NOT support React 18+. Confirmed on npm: "This package does not support React 18 and above." The project uses React 19. Deque recommends their paid "axe Developer Hub" product instead. Not viable.
-
-### 4. @next/bundle-analyzer -- Bundle Size Analysis
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| @next/bundle-analyzer | ^15.5.0 | Visual treemap of client/server bundle sizes | Identifies oversized dependencies, code splitting opportunities, and dead code. Generates interactive HTML reports for client, edge, and nodejs bundles. |
-
-**Confidence: HIGH** -- Official Next.js package. Version matches Next.js 15.5.x. Well-documented.
-
-```bash
-pnpm add -D @next/bundle-analyzer
-```
-
-**Integration:**
-```javascript
-// next.config.mjs (wrap existing config)
-import bundleAnalyzer from '@next/bundle-analyzer';
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-// Wrap: withSentryConfig(withSerwist(withBundleAnalyzer(nextConfig)), ...)
-```
-
-**Usage:** `ANALYZE=true pnpm build` opens three HTML reports in browser. Run ad-hoc during development, not in CI.
-
-### 5. web-vitals -- Runtime Performance Monitoring
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| web-vitals | ^4.2.0 | Measure LCP, INP, CLS, FCP, TTFB in production | Reports real user metrics to console or Sentry. Next.js Pages Router supports `reportWebVitals` in `_app.tsx` but web-vitals gives more control and the latest metric definitions (INP replaced FID). |
-
-**Confidence: HIGH** -- Official Google library. 4.x is latest stable. ~5M weekly downloads. Tiny (1.5KB gzipped).
-
-```bash
-pnpm add web-vitals
-```
-
-**Integration with Sentry (already installed):**
-```typescript
-// src/lib/vitals.ts
-import { onCLS, onINP, onLCP, onFCP, onTTFB } from 'web-vitals';
-import * as Sentry from '@sentry/nextjs';
-
-export function reportWebVitals() {
-  const sendToSentry = ({ name, value, id }: { name: string; value: number; id: string }) => {
-    Sentry.metrics.distribution(`web_vital.${name}`, value, {
-      unit: 'millisecond',
-      tags: { vital_id: id },
-    });
-  };
-
-  onCLS(sendToSentry);
-  onINP(sendToSentry);
-  onLCP(sendToSentry);
-  onFCP(sendToSentry);
-  onTTFB(sendToSentry);
+  @keyframes grow-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
 }
 ```
 
----
+**Fallback:** Use motion/react `useScroll()` + `useTransform()` for scroll-linked animations when CSS scroll-driven animations are not supported. This is what the project would naturally use anyway.
 
-## NO New Libraries Needed -- Existing Stack Covers These Features
+### 5. Playwright -- Visual Regression & E2E Testing for UX Consistency
 
-### Swipeable Card Interactions (Duolingo/Quizlet-style)
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| @playwright/test | ^1.50.0 | Visual regression screenshot testing + E2E testing | Built-in `toMatchSnapshot()` and `toHaveScreenshot()` assertions for pixel-level visual regression. Catches unintended UI changes across light/dark themes, desktop/mobile viewports, and English/Burmese layouts. Free, local, no SaaS dependency. |
 
-**What's needed:** Tinder-like swipe-to-dismiss cards for flashcard review. Swipe right = "I know this", swipe left = "Study more". Rotation on drag, spring-back animation, stacked card depth effect.
+**Confidence: HIGH** -- Playwright is the industry standard for visual regression testing as of 2026. `toHaveScreenshot()` auto-generates baselines on first run, configurable `maxDiffPixels` threshold, built-in retry logic. No need for Chromatic ($150+/mo) or Percy ($599+/mo) for a project this size.
 
-**Already have everything in motion/react v12.33.0:**
-- `drag` prop on `motion.div` -- enables pointer-based dragging
-- `dragConstraints` -- limits drag area
-- `dragElastic` -- rubber-band feel at constraints
-- `dragDirectionLock` -- lock to first axis (horizontal swipe)
-- `useMotionValue()` -- tracks drag offset without re-renders
-- `useTransform()` -- maps drag X to rotation, opacity, scale
-- `useSpring()` -- smooth spring-connected values
-- `AnimatePresence` -- exit animations when card is dismissed
-- `onDragEnd` callback with velocity + offset for swipe detection
-- `PanInfo` type for gesture event data
+**Why Playwright over Chromatic/Percy:**
 
-**The project already uses this pattern.** `FlashcardStack.tsx` implements horizontal swipe navigation with `drag="x"`, `dragConstraints`, `dragElastic`, and `onDragEnd` with velocity/threshold detection. Upgrading to Tinder-style dismiss is an enhancement of the existing pattern, not a new capability.
+| Criterion | Playwright | Chromatic | Percy |
+|-----------|-----------|-----------|-------|
+| Cost | Free | $149+/mo | $599+/mo |
+| Hosting | Local / CI | SaaS | SaaS |
+| Integration | Standalone | Requires Storybook | Framework-agnostic |
+| Storybook needed? | No | Yes | No |
+| Setup complexity | Low (npm install) | Medium (Storybook + config) | Medium (CI integration) |
+| False positive handling | `maxDiffPixels` threshold | Pixel-level diffing | AI-based (2025 update) |
 
-**Implementation upgrade path:**
-```typescript
-// Current (FlashcardStack.tsx line 139-154): swipe changes index
-// Upgrade: swipe dismisses card with rotation + fly-off animation
+This project does NOT use Storybook and adding it solely for visual regression testing would be significant overhead. Playwright tests can screenshot actual routes directly.
 
-const x = useMotionValue(0);
-const rotate = useTransform(x, [-200, 200], [-15, 15]);
-const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
-
-<motion.div
-  drag="x"
-  dragConstraints={{ left: 0, right: 0 }}
-  style={{ x, rotate, opacity }}
-  onDragEnd={(_, info) => {
-    if (Math.abs(info.offset.x) > 100) {
-      // Swipe detected: animate off-screen, then advance
-      animate(x, info.offset.x > 0 ? 500 : -500, {
-        type: 'spring', stiffness: 300, damping: 30,
-        onComplete: () => onSwipe(info.offset.x > 0 ? 'right' : 'left')
-      });
-    }
-  }}
->
+**Integration plan:**
+```bash
+pnpm add -D @playwright/test
+npx playwright install chromium  # Just Chromium for visual testing
 ```
 
-**Why NOT @use-gesture/react:** Motion's built-in drag is sufficient. @use-gesture adds another dependency (~12KB) for gesture detection that motion/react already handles. The project has zero need for pinch, scroll, or multi-touch gestures. Adding @use-gesture would create two competing gesture systems.
+```typescript
+// e2e/visual.spec.ts
+import { test, expect } from '@playwright/test';
 
-### TTS Voice Quality Improvements (English)
+test('hub page light mode', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/');
+  await expect(page).toHaveScreenshot('hub-light.png', {
+    maxDiffPixels: 100,  // Allow minor rendering differences
+  });
+});
 
-**What's needed:** Better English voice selection, consistent quality across browsers.
+test('hub page dark mode', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/');
+  await page.evaluate(() => document.documentElement.classList.add('dark'));
+  await expect(page).toHaveScreenshot('hub-dark.png', {
+    maxDiffPixels: 100,
+  });
+});
 
-**Already have everything:**
-- `useSpeechSynthesis.ts` -- voice selection with quality hints (enhanced, premium, Apple, Google)
-- `useInterviewTTS.ts` -- speech rate preferences, timeout fallbacks
-- Web Speech API works well for English across Chrome, Edge, Safari
+test('quiz mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('http://localhost:3000/#/test');
+  await expect(page).toHaveScreenshot('quiz-mobile.png');
+});
+```
 
-**Enhancement approach (no new library):**
-1. Add voice preference storage (user picks from available voices)
-2. Improve voice ranking algorithm in `findVoice()` to prefer neural/natural voices
-3. Add `SpeechSynthesisUtterance` SSML-like rate/pitch presets for clearer pronunciation
-4. Fall back to pre-generated audio when Web Speech API voice quality is poor
+**Visual regression matrix:**
+- 2 themes (light, dark)
+- 2 viewports (desktop 1280x720, mobile 390x844)
+- 5-8 key screens (hub, quiz, results, dashboard, interview, study guide)
+- = 20-32 screenshot baselines
 
-### Performance Profiling
+---
 
-**What's needed:** Identify render bottlenecks, large re-renders, slow components.
+## Explicitly NOT Adding
 
-**Already have everything:**
-- React DevTools Profiler (built into React 19)
-- React Compiler (already in use -- handles memoization automatically)
-- Chrome DevTools Performance tab
-- Sentry for production error/performance monitoring
+### Rive (@rive-app/react-canvas) -- Overkill for This Project
 
-**No new library needed.** The `web-vitals` addition above covers production metric collection. Development profiling uses built-in browser/React tooling.
+Rive excels at interactive, stateful character animations (Duolingo's Duo owl). This project has no custom characters or interactive mascots. Pre-made Lottie animations from LottieFiles cover all celebration/feedback needs at lower cost and complexity.
+
+### @use-gesture/react -- Redundant with motion/react
+
+Motion/react v12 handles drag, pan, hover, tap, focus, and inView gestures. The project already uses drag gestures in `SwipeableCard.tsx` and `FlashcardStack.tsx`. @use-gesture would add a second gesture system fighting for pointer events.
+
+### tsParticles -- Overkill for Confetti
+
+`react-canvas-confetti` (already installed) handles confetti effects. tsParticles is a full particle system engine with a steep learning curve and large bundle size. The project needs celebration effects, not particle simulations.
+
+### GSAP (GreenSock Animation Platform) -- Wrong Paradigm
+
+GSAP uses imperative timeline-based animation, which conflicts with React's declarative model. Motion/react already provides spring physics, layout animations, and gesture support in a React-native way. Adding GSAP would create paradigm confusion.
+
+### Storybook -- Not Justified for Visual Testing Alone
+
+The project has 92 files using motion/react animations and a mature component library, but no Storybook. Adding Storybook solely for visual regression testing (via Chromatic) would be disproportionate. Playwright's built-in screenshot comparison achieves the same goal with less infrastructure.
+
+### tailwindcss-motion Plugin -- Redundant
+
+The `tailwindcss-motion` Tailwind plugin adds spring animation utilities as Tailwind classes. motion/react already handles all spring animations with more control. Using both would create confusion about which animation system to use for a given effect.
 
 ---
 
@@ -283,142 +258,121 @@ const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
 
 | Category | Recommended | Alternative | Why Not |
 |----------|-------------|-------------|---------|
-| Burmese TTS | @andresaya/edge-tts (build-time) | Google Cloud TTS | Does not support Burmese language |
-| Burmese TTS | @andresaya/edge-tts (build-time) | Kokoro TTS (WASM) | Does not support Burmese -- only English, French, Korean, Japanese, Mandarin |
-| Burmese TTS | @andresaya/edge-tts (build-time) | edge-tts-universal (client-side) | Blocked in non-Edge browsers since Dec 2025 (user-agent requirement) |
-| Burmese TTS | @andresaya/edge-tts (build-time) | edge-tts (Python) | Requires Python in CI; @andresaya/edge-tts is pure Node.js |
-| Swipe gestures | motion/react (already installed) | @use-gesture/react | Adds competing gesture system; motion's drag is sufficient |
-| Swipe gestures | motion/react (already installed) | react-tinder-card | Unmaintained, no TypeScript types, bundles its own animation |
-| A11y testing | vitest-axe + eslint-plugin-jsx-a11y | @axe-core/react (dev overlay) | Does not support React 18+ (project uses React 19) |
-| A11y testing | vitest-axe | @chialab/vitest-axe | Fallback option if vitest-axe has issues; more actively maintained |
-| A11y linting | eslint-plugin-jsx-a11y | Manual review | Catches <20% of issues human reviewers catch; automated is baseline |
-| Bundle analysis | @next/bundle-analyzer | source-map-explorer | Not integrated with Next.js; requires manual source map extraction |
-| Bundle analysis | @next/bundle-analyzer | webpack-bundle-analyzer | @next/bundle-analyzer wraps this with Next.js integration |
-| Web vitals | web-vitals | Next.js reportWebVitals | web-vitals provides INP (replaced FID), more control over reporting |
-| Web vitals | web-vitals | Vercel Analytics | Paid feature on Pro plan; web-vitals is free and reports to Sentry |
+| Celebration animations | @lottiefiles/dotlottie-react | @rive-app/react-canvas | No custom characters needed; Lottie ecosystem has thousands of free animations |
+| Celebration animations | @lottiefiles/dotlottie-react | lottie-react (v2.4.1) | DotLottie: 80% smaller files, WASM renderer (60fps vs 17fps), actively maintained |
+| Gesture handling | motion/react (already installed) | @use-gesture/react (v10.3.1) | Adds competing gesture system; motion's drag/pan sufficient; last updated 2 years ago |
+| Particle effects | react-canvas-confetti (already installed) | tsParticles | Overkill; steep learning curve; large bundle; confetti already works |
+| Visual regression | Playwright toHaveScreenshot | Chromatic ($149+/mo) | Free, local, no Storybook needed |
+| Visual regression | Playwright toHaveScreenshot | Percy ($599+/mo) | Cost; project doesn't need AI diff analysis at this scale |
+| Haptic feedback | navigator.vibrate() (browser API) | react-native-haptics | PWA not React Native; browser API is sufficient |
+| Scroll animations | CSS scroll-driven animations | scroll-trigger libraries | Browser-native; zero bundle cost; motion/react fallback available |
+| Animation library | motion/react (already installed) | GSAP | Imperative vs declarative conflict; motion/react already mature in this codebase |
 
 ---
 
 ## Installation
 
 ```bash
-# Runtime dependencies (1 package)
-pnpm add web-vitals
+# Runtime dependency (1 package)
+pnpm add @lottiefiles/dotlottie-react
 
-# Dev dependencies (3 packages)
-pnpm add -D @andresaya/edge-tts vitest-axe eslint-plugin-jsx-a11y
+# Dev dependency (1 package)
+pnpm add -D @playwright/test
 
-# Optional: bundle analyzer (ad-hoc use)
-pnpm add -D @next/bundle-analyzer
+# Browser setup for Playwright
+npx playwright install chromium
 ```
 
-Total: 4-5 new packages (1 runtime, 3-4 dev-only).
+**Total new packages: 2** (1 runtime, 1 dev).
+Everything else is either already installed or a browser-native API.
+
+---
+
+## Bundle Impact Assessment
+
+| Addition | Type | Size Impact | Notes |
+|----------|------|-------------|-------|
+| @lottiefiles/dotlottie-react | Runtime | ~51KB min+gzip (includes WASM renderer) | Lazy-load via React.lazy -- not in critical path |
+| .lottie animation files | Static assets | ~100-200KB total (8-12 files) | Cached by service worker |
+| Playwright | Dev only | 0KB client impact | E2E testing tool, not bundled |
+| navigator.vibrate() | Browser API | 0KB | Already in browser |
+| CSS scroll-driven animations | Browser CSS | 0KB | No JavaScript required |
+
+**Total client bundle increase:** ~51KB gzipped (lazy-loaded, not blocking).
+Compare to existing motion/react which is ~40KB gzipped. This is a reasonable trade for designer-quality celebration animations.
+
+**Mitigation:** DotLottie React should be dynamically imported (`React.lazy`) so the WASM renderer only loads when a celebration animation is displayed, not on initial page load.
 
 ---
 
 ## Integration Points with Existing Stack
 
-### Pre-Generated Audio with Serwist Service Worker
+### DotLottie + Existing Confetti System
 
-The pre-generated MP3 files in `public/audio/` integrate with the existing Serwist configuration. Two approaches:
+The two complement rather than compete:
+- **react-canvas-confetti**: Continues to handle particle confetti effects (rain down from top, burst from center). Already has `Confetti.tsx` with 3 intensity levels.
+- **DotLottie**: Handles shaped/themed animations (animated checkmark, trophy reveal, badge glow, star burst). These are pre-designed vector animations, not particle effects.
 
-**Option A: Precache (recommended for <5MB total)**
-```javascript
-// next.config.mjs -- add to Serwist config
-const withSerwist = withSerwistInit({
-  swSrc: 'src/lib/pwa/sw.ts',
-  swDest: 'public/sw.js',
-  additionalPrecacheEntries: [
-    { url: '/offline.html', revision: '1' },
-    // Audio files auto-included via public/ directory precaching
-  ],
-});
+**Orchestration pattern:**
+```typescript
+// Celebration sequence: score reveals -> Lottie checkmark -> confetti burst -> haptic
+const celebrateCorrectAnswer = () => {
+  playCorrect();          // existing sound effect
+  hapticSuccess();        // new Vibration API
+  setShowCheckmark(true); // triggers DotLottie checkmark animation
+};
+
+const celebrateTestCompletion = () => {
+  playMilestone();          // existing sound effect
+  hapticMilestone();        // new Vibration API
+  setShowTrophy(true);      // triggers DotLottie trophy animation
+  setShowConfetti(true);    // triggers existing canvas confetti
+};
 ```
 
-**Option B: Runtime cache with CacheFirst (if audio grows large)**
+### DotLottie + Reduced Motion
+
+Follow the existing pattern from `Confetti.tsx`:
 ```typescript
-// sw.ts -- add runtime caching rule for audio
-runtimeCaching: [
-  ...defaultCache,
-  {
-    urlPattern: /\/audio\/.*\.mp3$/,
-    handler: 'CacheFirst',
-    options: {
-      cacheName: 'tts-audio-v1',
-      expiration: { maxEntries: 600, maxAgeSeconds: 30 * 24 * 60 * 60 },
-    },
-  },
-],
+const shouldReduceMotion = useReducedMotion();
+if (shouldReduceMotion) {
+  // Show static success icon instead of animated Lottie
+  return <CheckCircle className="w-12 h-12 text-success" />;
+}
+return <DotLottieReact src="/animations/success.lottie" autoplay />;
 ```
 
-### Audio Playback Hook (Replaces/Augments useSpeechSynthesis for Burmese)
+### Playwright + Existing Vitest Suite
 
+Playwright handles E2E and visual regression; Vitest handles unit/component tests:
+- **Vitest**: Fast, JSDOM-based, ~700+ test scenarios. Continues for logic, hooks, component rendering.
+- **Playwright**: Slow, real browser. Used for visual regression snapshots (20-32 screenshots) and critical user flows.
+- **CI strategy**: Vitest runs on every PR; Playwright visual regression runs on PRs touching `src/components/` or `src/styles/`.
+
+### Haptics + Existing Sound Effects
+
+`soundEffects.ts` has module-level functions (`playCorrect()`, `playMilestone()`, etc.) called from event handlers. Haptics follow the same pattern:
 ```typescript
-// src/hooks/useAudioTTS.ts
-export function useAudioTTS() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+// Pair in the same event handler
+const handleCorrectAnswer = () => {
+  playCorrect();     // sound (existing)
+  hapticTap();       // vibration (new)
+};
+```
 
-  const speak = useCallback((questionId: string, lang: 'en' | 'my', type: 'q' | 'a') => {
-    const src = `/audio/${lang}/${questionId}-${type}.mp3`;
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-    audioRef.current = new Audio(src);
-    audioRef.current.play();
-  }, []);
+Both respect the same user preference: if sounds are muted (`isSoundMuted()`), haptics should also be disabled. Add haptics to the existing `SOUND_MUTE_KEY` preference or create a parallel `HAPTIC_MUTE_KEY`.
 
-  const cancel = useCallback(() => {
-    audioRef.current?.pause();
-    audioRef.current = null;
-  }, []);
+### CSS Scroll Animations + Existing Token System
 
-  return { speak, cancel };
+Add scroll-animation CSS custom properties to `tokens.css`:
+```css
+:root {
+  --scroll-reveal-distance: 20px;
+  --scroll-reveal-duration: var(--duration-slow);
 }
 ```
 
-### eslint-plugin-jsx-a11y in Existing ESLint Flat Config
-
-```javascript
-// eslint.config.mjs (modified)
-import jsxA11y from 'eslint-plugin-jsx-a11y';
-
-export default [
-  js.configs.recommended,
-  { ignores: ['.next/**', 'node_modules/**', 'dist/**', 'coverage/**', 'out/**'] },
-  jsxA11y.flatConfigs.recommended, // Add a11y rules
-  {
-    files: ['**/*.{ts,tsx}'],
-    // ... existing config unchanged
-  },
-  prettier,
-];
-```
-
-### @next/bundle-analyzer Wrapping Existing Config Chain
-
-```javascript
-// next.config.mjs
-import bundleAnalyzer from '@next/bundle-analyzer';
-const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
-
-// Current: withSentryConfig(withSerwist(nextConfig), sentryOpts)
-// New:     withSentryConfig(withSerwist(withBundleAnalyzer(nextConfig)), sentryOpts)
-export default withSentryConfig(withSerwist(withBundleAnalyzer(nextConfig)), { /* ... */ });
-```
-
----
-
-## Audio File Budget Calculation
-
-| Content | Count | Avg Duration | Avg Size | Total |
-|---------|-------|-------------|----------|-------|
-| English questions | 128 | ~3s | ~4KB | ~512KB |
-| Burmese questions | 128 | ~4s | ~5KB | ~640KB |
-| English answers | 128 | ~3s | ~4KB | ~512KB |
-| Burmese answers | 128 | ~4s | ~5KB | ~640KB |
-| **Total** | **512 files** | | | **~2.3 MB** |
-
-This is 2.3% of Vercel's 100MB deploy limit. Audio files compress poorly (already compressed MP3), but their small total size makes this a non-issue.
+Use `@supports (animation-timeline: scroll())` feature query to progressively enhance. Fallback to motion/react `whileInView` (already used in components like `SubcategoryBar.tsx`).
 
 ---
 
@@ -426,53 +380,44 @@ This is 2.3% of Vercel's 100MB deploy limit. Audio files compress poorly (alread
 
 | New Package | Compatible With | Verified |
 |-------------|----------------|----------|
-| @andresaya/edge-tts@1.2.x | Node.js 18+ (build script only, not bundled) | YES -- Node.js API, dev dependency |
-| vitest-axe@0.1.0 | Vitest 4.x, jsdom, React 19 (no React dependency) | YES -- runs axe on rendered DOM |
-| eslint-plugin-jsx-a11y@6.10.2 | ESLint 9.x flat config | YES -- exports flatConfigs.recommended |
-| @next/bundle-analyzer@15.5.x | Next.js 15.5.x | YES -- same major version |
-| web-vitals@4.2.x | Any browser (standalone, no framework dependency) | YES -- 1.5KB, zero dependencies |
-
----
-
-## Free Tier Impact
-
-| Concern | Assessment |
-|---------|------------|
-| Client bundle increase | ~1.5KB gzipped (web-vitals only runtime addition) |
-| Deploy size increase | ~2.3 MB (pre-generated audio in public/) |
-| Bandwidth increase | Minimal -- audio cached by service worker after first load |
-| Build time increase | ~30-60s for audio generation script (CI only, not dev) |
-| External services | None. Edge TTS is free, no API key. All other tools are local. |
+| @lottiefiles/dotlottie-react@0.18.1 | React ^17, ^18, ^19 | YES -- peer dep explicitly lists React 19 |
+| @playwright/test@1.50.x | Node.js 18+, Chromium (bundled) | YES -- E2E tool, no React dependency |
+| navigator.vibrate() | Chrome/Edge/Firefox on Android | YES -- MDN browser compat data. Not Safari/iOS. |
+| CSS scroll-driven animations | Chrome 115+, Firefox, Safari 26+ | YES -- baseline as of early 2026 |
 
 ---
 
 ## Sources
 
 ### HIGH Confidence (Official Documentation, Verified Data)
-- [Edge TTS Voice List (GitHub Gist)](https://gist.github.com/BettyJJ/17cbaa1de96235a7f5773b8690a20462) -- Confirmed `my-MM-NilarNeural` and `my-MM-ThihaNeural` voices
-- [@andresaya/edge-tts (GitHub)](https://github.com/andresayac/edge-tts) -- Node.js/Bun package, `getVoicesByLanguage()`, `toFile()` API
-- [Google Cloud TTS Supported Languages](https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types) -- Burmese NOT listed
-- [motion.dev Drag Docs](https://motion.dev/docs/react-drag) -- drag, dragConstraints, dragElastic, onDragEnd
-- [motion.dev Gestures Docs](https://motion.dev/docs/react-gestures) -- hover, tap, pan, drag
-- [motion.dev Card Stack Tutorial](https://motion.dev/tutorials/react-card-stack) -- useMotionValue + useTransform pattern
-- [@axe-core/react npm](https://www.npmjs.com/package/@axe-core/react) -- "does not support React 18 and above"
-- [eslint-plugin-jsx-a11y npm](https://www.npmjs.com/package/eslint-plugin-jsx-a11y) -- v6.10.2, flat config support
-- [vitest-axe GitHub](https://github.com/chaance/vitest-axe) -- v0.1.0, forked from jest-axe
-- [@next/bundle-analyzer npm](https://www.npmjs.com/package/@next/bundle-analyzer) -- Official Next.js package
-- [Vercel Hobby Plan Limits](https://vercel.com/docs/limits) -- 100MB deploy, 100GB bandwidth
+- [npm: @lottiefiles/dotlottie-react](https://www.npmjs.com/package/@lottiefiles/dotlottie-react) -- v0.18.1, React 19 peer dep, published Feb 2026
+- [npm: @rive-app/react-canvas](https://www.npmjs.com/package/@rive-app/react-canvas) -- v4.27.0, React 19 peer dep, 44KB
+- [npm: @use-gesture/react](https://www.npmjs.com/package/@use-gesture/react) -- v10.3.1, last published 2 years ago
+- [npm: lottie-react](https://www.npmjs.com/package/lottie-react) -- v2.4.1, React 19 peer dep
+- [Motion gestures docs](https://motion.dev/docs/react-gestures) -- hover, tap, pan, drag, focus, inView
+- [Motion drag docs](https://motion.dev/docs/react-drag) -- drag, dragConstraints, dragElastic, onDragEnd
+- [Framer Motion pinch/zoom feature request (wontfix)](https://github.com/motiondivision/motion/issues/617)
+- [Playwright visual comparisons docs](https://playwright.dev/docs/test-snapshots) -- toHaveScreenshot(), toMatchSnapshot()
+- [MDN Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API) -- navigator.vibrate(), browser support
+- [MDN CSS scroll-driven animations](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Scroll-driven_animations) -- animation-timeline: scroll()
 
 ### MEDIUM Confidence (Multiple Sources Agree)
-- [Kokoro TTS Supported Languages](https://kokorottsai.com/) -- English, French, Korean, Japanese, Mandarin only
-- [edge-tts-universal Browser Restriction](https://github.com/travisvn/edge-tts-universal) -- Dec 2025 user-agent requirement
-- [Axe-core Testing with React (2026)](https://oneuptime.com/blog/post/2026-01-15-test-react-accessibility-axe-core/view) -- Setup patterns
-- [web-vitals Library](https://github.com/GoogleChrome/web-vitals) -- INP metric, Sentry integration patterns
+- [Duolingo LottieFiles case study](https://lottiefiles.com/case-studies/duolingo) -- Duolingo uses Lottie for micro-animations
+- [Duolingo Rive character animations](https://elisawicki.blog/p/how-exactly-is-duolingo-using-rive) -- Rive for interactive characters, Lottie for celebrations
+- [Lottie vs Rive performance comparison (Callstack)](https://www.callstack.com/blog/lottie-vs-rive-optimizing-mobile-app-animation) -- Rive 60fps / 2.6MB GPU vs Lottie 17fps / 149MB GPU (for lottie-web, not DotLottie WASM)
+- [DotLottie bundle size discussion (GitHub)](https://github.com/LottieFiles/dotlottie-web/issues/357) -- v0.8+ increased to ~51KB min+gzip
+- [Rive React optimization techniques (Pixel Point)](https://pixelpoint.io/blog/rive-react-optimizations/) -- Rive WASM 78KB, lazy loading patterns
+- [CSS scroll-driven animations browser support](https://caniuse.com/mdn-css_properties_animation-timeline_scroll) -- Chrome 115+, Safari 26
+- [Percy vs Chromatic comparison](https://medium.com/@crissyjoshua/percy-vs-chromatic-which-visual-regression-testing-tool-to-use-6cdce77238dc) -- Pricing, feature comparison
+- [Playwright visual testing guide (Scott Logic)](https://blog.scottlogic.com/2025/02/12/playwright-visual-testing.html) -- Practical implementation patterns
 
 ### LOW Confidence (Needs Validation During Implementation)
-- Audio file size estimates (~3-5KB per sentence) -- Based on typical MP3 128kbps encoding at 2-4 second durations. Actual sizes should be verified when the build script is first run.
-- `@andresaya/edge-tts` Burmese voice quality -- Microsoft's NilarNeural and ThihaNeural voices exist but pronunciation quality for USCIS civics terms in Burmese should be tested with actual content.
+- DotLottie WASM renderer performance on low-end Android devices -- benchmarks are from desktop/high-end mobile. Should be tested on actual target devices.
+- LottieFiles Simple License terms for bundling in open-source PWA -- license permits commercial use but specific terms should be reviewed for this project's license.
+- CSS scroll-driven animation support on older iOS Safari versions (pre-26) -- the fallback path (motion/react `whileInView`) handles this, but specific iOS adoption rates for Safari 26 should be monitored.
 
 ---
 
-*Stack research for: Civic Test Prep 2025 v2.1 Quality & Polish*
-*Researched: 2026-02-13*
-*Key finding: 4-5 new packages (1 runtime, 3-4 dev). Pre-generated Burmese audio via Edge TTS is the only viable free approach. motion/react already handles all swipe gesture needs -- no new gesture library required.*
+*Stack research for: Civic Test Prep 2025 - UX Polish Milestone*
+*Researched: 2026-02-19*
+*Key finding: Only 2 new packages needed (dotlottie-react + playwright). The existing stack (motion/react, react-canvas-confetti, sound effects, spring configs) is 80% of what Duolingo-level polish requires. The gap is celebration animation richness (solved by DotLottie), haptic feedback (browser API), and visual regression testing (Playwright). No new gesture library needed.*
