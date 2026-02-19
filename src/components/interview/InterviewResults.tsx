@@ -632,7 +632,7 @@ export function InterviewResults({
                     {showBurmese && <span className="font-myanmar ml-1">ပျမ်းမျှယုံကြည်မှု</span>}
                   </div>
                   <p className="mt-1 text-lg font-bold text-slate-100">{confidenceStats.avg}%</p>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-caption text-slate-500">
                     {confidenceStats.min}% - {confidenceStats.max}%
                   </p>
                 </Card>
@@ -651,7 +651,7 @@ export function InterviewResults({
                   {scoreDiff !== null && scoreDiff !== 0 && (
                     <p
                       className={clsx(
-                        'text-[10px] font-medium',
+                        'text-caption font-medium',
                         scoreDiff > 0 ? 'text-success' : 'text-destructive'
                       )}
                     >

@@ -223,7 +223,7 @@ export function SkillTreePath({ subcategoryMastery, onNodeClick }: SkillTreePath
                   <span
                     className={clsx(
                       'absolute -bottom-3.5 left-1/2 -translate-x-1/2',
-                      'rounded-full px-1.5 py-0.5 text-[10px] font-bold',
+                      'rounded-full px-1.5 py-0.5 text-caption font-bold',
                       'bg-card text-foreground border border-border/60',
                       'tabular-nums shadow-sm pointer-events-none'
                     )}
@@ -297,7 +297,7 @@ function NodeLabel({
         </p>
       )}
       {isUnlocked && medalLabel && (
-        <p className="text-[10px] font-bold mt-0.5 text-muted-foreground">
+        <p className="text-caption font-bold mt-0.5 text-muted-foreground">
           {medalLabel.en}
           {showBurmese && <span className="font-myanmar ml-1">{medalLabel.my}</span>}
         </p>

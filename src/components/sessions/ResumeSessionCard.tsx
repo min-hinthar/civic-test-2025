@@ -131,7 +131,7 @@ export function ResumeSessionCard({ session, isSelected, onSelect }: ResumeSessi
           </p>
 
           {/* Relative timestamp */}
-          <p className="mt-1 text-[11px] text-muted-foreground/70">
+          <p className="mt-1 text-body-xs text-muted-foreground/70">
             {showBurmese ? <span className="font-myanmar">{relative.my}</span> : relative.en}
           </p>
         </div>

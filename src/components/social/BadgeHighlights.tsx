@@ -192,11 +192,11 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
 
                 {/* Description (earned) or Requirement (locked) */}
                 {earned ? (
-                  <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                  <p className="text-caption text-muted-foreground mt-1.5 leading-relaxed">
                     {badge.description.en}
                   </p>
                 ) : (
-                  <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed italic">
+                  <p className="text-caption text-muted-foreground mt-1.5 leading-relaxed italic">
                     {badge.requirement.en}
                   </p>
                 )}

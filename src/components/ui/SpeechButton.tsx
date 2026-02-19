@@ -271,7 +271,7 @@ const SpeechButton = ({
       )}
       {/* Speed label */}
       {showSpeedLabel && speedLabel && (
-        <span className="text-[10px] font-medium text-muted-foreground/70 tabular-nums">
+        <span className="text-caption font-medium text-muted-foreground/70 tabular-nums">
           {speedLabel}
         </span>
       )}

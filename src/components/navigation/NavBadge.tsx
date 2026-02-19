@@ -41,7 +41,7 @@ export function NavBadge({ type, count = 0, color = 'warning', visible }: NavBad
           className={`absolute -top-1 -right-1 flex items-center justify-center rounded-full ${colorClass} ${
             type === 'dot'
               ? 'h-2.5 w-2.5'
-              : 'min-w-[18px] h-[18px] px-1 text-[10px] font-bold leading-none'
+              : 'min-w-[18px] h-[18px] px-1 text-caption font-bold leading-none'
           }`}
         >
           {type === 'count' && (count > 99 ? '99+' : count)}

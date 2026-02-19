@@ -51,7 +51,7 @@ export function StatCard({ icon: Icon, label, value, onClick, badge }: StatCardP
         <span className="font-myanmar text-xs leading-tight text-muted-foreground">{label.my}</span>
       )}
       {badge && (
-        <span className="mt-1 inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+        <span className="mt-1 inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-caption font-bold text-primary">
           {badge}
         </span>
       )}

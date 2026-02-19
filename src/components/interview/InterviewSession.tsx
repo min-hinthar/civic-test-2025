@@ -1212,7 +1212,7 @@ export function InterviewSession({
                         questionId={msg.questionId}
                         audioType="q"
                         label="မြန်မာ"
-                        className="!py-1 !px-2.5 !text-[10px] !min-h-[32px]"
+                        className="!py-1 !px-2.5 !text-caption !min-h-[32px]"
                         showSpeedLabel
                         speedLabel={effectiveSpeed === 'normal' ? undefined : effectiveSpeed}
                       />

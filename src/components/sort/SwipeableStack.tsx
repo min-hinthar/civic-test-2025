@@ -76,7 +76,7 @@ function StaticCardPreview({
         {/* Category hint tag */}
         <span
           className={clsx(
-            'inline-flex self-start px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider mb-3',
+            'inline-flex self-start px-2 py-0.5 rounded-full text-caption font-medium uppercase tracking-wider mb-3',
             'bg-muted/60 text-muted-foreground'
           )}
         >

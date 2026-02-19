@@ -156,7 +156,7 @@ export function LongPressButton({
       {/* Reduced motion: simple loading text after threshold */}
       {isHolding && shouldReduceMotion && (
         <span
-          className="pointer-events-none absolute -bottom-5 text-[10px] text-warning"
+          className="pointer-events-none absolute -bottom-5 text-caption text-warning"
           aria-hidden="true"
         >
           {Math.ceil((1 - progress) * (holdDuration / 1000))}s

@@ -74,7 +74,7 @@ export function TextAnswerInput({
       {/* iOS Safari hint */}
       {showHint && (
         <div className="flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5">
-          <span className="text-[11px] text-white/40">For voice input, try Chrome</span>
+          <span className="text-body-xs text-white/40">For voice input, try Chrome</span>
         </div>
       )}
 

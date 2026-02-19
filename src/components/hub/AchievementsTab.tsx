@@ -623,21 +623,21 @@ function BadgeCard({
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1 tabular-nums">
+          <p className="text-caption text-muted-foreground mt-1 tabular-nums">
             {progress.current}/{progress.target}
           </p>
         </div>
 
         {/* Description (earned) or requirement hint (locked) */}
         {isEarned ? (
-          <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+          <p className="text-caption text-muted-foreground mt-1.5 leading-relaxed">
             {badge.description.en}
             {showBurmese && (
               <span className="block font-myanmar mt-0.5">{badge.description.my}</span>
             )}
           </p>
         ) : (
-          <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed italic">
+          <p className="text-caption text-muted-foreground mt-1.5 leading-relaxed italic">
             {badge.requirement.en}
             {showBurmese && (
               <span className="block font-myanmar mt-0.5">{badge.requirement.my}</span>

@@ -307,7 +307,7 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
                           size={40}
                           strokeWidth={4}
                         >
-                          <span className="text-[10px] font-bold text-foreground">
+                          <span className="text-caption font-bold text-foreground">
                             {subMastery}%
                           </span>
                         </CategoryRing>

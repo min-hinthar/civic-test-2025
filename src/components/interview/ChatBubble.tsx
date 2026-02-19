@@ -103,7 +103,7 @@ export function ChatBubble({
         {/* Timestamp */}
         {timestamp && (
           <p
-            className={`mt-0.5 text-[10px] text-muted-foreground ${isExaminer ? 'text-left' : 'text-right'}`}
+            className={`mt-0.5 text-caption text-muted-foreground ${isExaminer ? 'text-left' : 'text-right'}`}
           >
             {timestamp}
           </p>
