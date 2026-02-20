@@ -52,6 +52,7 @@ export interface AboutContent {
     year: number;
     repoUrl: string;
     openSourceNotice: BilingualString;
+    developerCredit: BilingualString;
   };
 }
 
@@ -153,6 +154,24 @@ export const aboutContent: AboutContent = {
         },
       ],
     },
+
+    // 5. True Americans at Heart
+    {
+      title: {
+        en: 'True Americans at Heart',
+        my: 'နှလုံးသားစစ်စစ် အမေရိကန်များ',
+      },
+      paragraphs: [
+        {
+          en: 'Dwight Clark, Dorothy and James Guyot, and Sayar-Gyi Khin Maung Win each dedicated decades of their lives to Burma. They did not have to. Clark could have stayed on campus; the Guyots could have moved on after their first eighteen months in Rangoon; Khin Maung Win could have pursued a quieter retirement. Instead, they chose to serve. That choice — service without expectation, generosity across cultures, the belief that lifting others is the highest expression of citizenship — embodies the virtues of being a true American at heart.',
+          my: 'Dwight Clark, Dorothy နှင့် James Guyot, နှင့် ဆရာကြီး ခင်မောင်ဝင်း တို့သည် ၎င်းတို့၏ ဘဝမှ ဆယ်စုနှစ်များစွာကို မြန်မာနိုင်ငံအတွက် အနစ်နာခံ ပေးဆပ်ခဲ့ကြသည်။ သူတို့ မလုပ်လည်း ရပါသည်။ Clark သည် ကျောင်းဝင်းထဲတွင် နေနိုင်ခဲ့သည်။ Guyot တို့သည် ရန်ကုန်တွင် ပထမ တစ်နှစ်ခွဲပြီးနောက် ထွက်ခွာနိုင်ခဲ့သည်။ ခင်မောင်ဝင်းသည် ပိုတိတ်ဆိတ်သော အနားယူမှုကို ရွေးချယ်နိုင်ခဲ့သည်။ သို့သော် သူတို့သည် အမှုတော်ဆောင်ရန် ရွေးချယ်ခဲ့ကြသည်။ ထိုရွေးချယ်မှု — မျှော်လင့်ချက်မဲ့ အမှုတော်ဆောင်ခြင်း၊ ယဉ်ကျေးမှုများကို ဖြတ်ကျော်သော ရက်ရောမှု၊ အခြားသူများကို မြှင့်တင်ခြင်းသည် နိုင်ငံသားတစ်ယောက်၏ အမြင့်ဆုံးဖော်ပြမှုဖြစ်သည်ဟု ယုံကြည်ခြင်း — သည် နှလုံးသားစစ်စစ် အမေရိကန်တစ်ယောက်ဖြစ်ခြင်း၏ ဂုဏ်ရည်များကို ကိုယ်စားပြုပါသည်။',
+        },
+        {
+          en: "For me, their example is personal. I was a student of PCP's seventh cohort and a participant in the 2009 Learning Across Borders program. I saw firsthand how Clark's vision of cross-cultural exchange and the Guyots' investment in Myanmar's young people could change a life — because they changed mine. This app exists because of what they built. If it helps even one person feel less alone while studying for the citizenship test, then their legacy continues in a small but meaningful way.",
+          my: 'ကျွန်တော့်အတွက် သူတို့၏ နမူနာသည် ကိုယ်ပိုင်ခံစားချက်ဖြစ်ပါသည်။ ကျွန်တော်သည် PCP ၏ သတ္တမမျိုးဆက်ကျောင်းသားတစ်ဦးဖြစ်ပြီး ၂၀၀၉ Learning Across Borders အစီအစဉ်တွင် ပါဝင်သူတစ်ဦးဖြစ်ပါသည်။ Clark ၏ ယဉ်ကျေးမှုဖလှယ်ရေး အမြင်နှင့် Guyot တို့၏ မြန်မာလူငယ်များအပေါ် ရင်းနှီးမြှုပ်နှံမှုသည် ဘဝတစ်ခုကို မည်သို့ ပြောင်းလဲနိုင်သည်ကို ကိုယ်တိုင်ကိုယ်ကျ မြင်တွေ့ခဲ့ရပါသည် — အဘယ်ကြောင့်ဆိုသော် သူတို့သည် ကျွန်တော့်ဘဝကို ပြောင်းလဲပေးခဲ့သောကြောင့်ဖြစ်သည်။ ဤအက်ပ်သည် သူတို့ တည်ဆောက်ခဲ့သည့်အရာကြောင့် ရှိနေပါသည်။ နိုင်ငံသားစာမေးပွဲအတွက် လေ့လာနေစဉ် လူတစ်ယောက်တည်းကိုမှ အထီးကျန်မခံစားရအောင် ကူညီနိုင်လျှင်ပင် သူတို့၏ အမွေအနှစ်သည် သေးငယ်သော်လည်း အဓိပ္ပာယ်ရှိသော နည်းလမ်းဖြင့် ဆက်လက်ရှင်သန်နေမည်ဖြစ်ပါသည်။',
+        },
+      ],
+    },
   ],
 
   // ── Dedications ───────────────────────────────────────────────────────
@@ -229,6 +248,13 @@ export const aboutContent: AboutContent = {
       },
       url: 'https://viaprograms.org',
     },
+    {
+      label: {
+        en: 'Pre-Collegiate Program, Yangon',
+        my: 'Pre-Collegiate Program၊ ရန်ကုန်',
+      },
+      url: 'https://precollegiateyangon.info/',
+    },
   ],
 
   // ── Footer ────────────────────────────────────────────────────────────
@@ -239,6 +265,10 @@ export const aboutContent: AboutContent = {
     openSourceNotice: {
       en: 'This app is free and open source. Built with love for the community.',
       my: 'ဤအက်ပ်သည် အခမဲ့နှင့် open source ဖြစ်ပါသည်။ အသိုင်းအဝိုင်းအတွက် ချစ်ခြင်းမေတ္တာဖြင့် တည်ဆောက်ထားပါသည်။',
+    },
+    developerCredit: {
+      en: 'Developed by Min, PCP 7th Cohort and 2009 Learning Across Borders alumnus.',
+      my: 'Min မှ ဖန်တီးတည်ဆောက်သည်။ PCP သတ္တမမျိုးဆက်နှင့် ၂၀၀၉ Learning Across Borders ကျောင်းသားဟောင်း။',
     },
   },
 };

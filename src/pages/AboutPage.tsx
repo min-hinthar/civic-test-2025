@@ -190,6 +190,14 @@ const AboutPage = () => {
                 {aboutContent.footer.openSourceNotice.my}
               </p>
             )}
+            <p className="mt-1 text-xs text-muted-foreground/80 italic">
+              {aboutContent.footer.developerCredit.en}
+            </p>
+            {showBurmese && (
+              <p className="font-myanmar text-xs text-muted-foreground/60 italic">
+                {aboutContent.footer.developerCredit.my}
+              </p>
+            )}
             <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground/70">
               <span>
                 v{aboutContent.footer.version} &middot; {aboutContent.footer.year}
