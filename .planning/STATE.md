@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 31 (animation-interaction-polish)
-Plan: 4 of 5
-Status: In Progress
-Last activity: 2026-02-20 — Completed 31-04 (card enter animations)
+Plan: 5 of 5
+Status: Complete
+Last activity: 2026-02-20 — Completed 31-05 (adaptive stagger timing)
 
-Progress: [########--] 4/5 plans (Phase 31)
+Progress: [##########] 5/5 plans (Phase 31)
 
 ## Completed Milestones
 
@@ -73,6 +73,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **31-03:** Dark mode glass opacity bumped (0.55/0.45/0.35) for smokier car-window feel
 - **31-03:** Purple tint gradient increased from 0.05 to 0.08 in dark mode for richer glass personality
 - **31-03:** All glass tier assignments verified correct in Phase 31 audit -- no mismatches found
+- **31-05:** Item animation y:12 + scale:0.97 for subtler slide-up (was y:20 + scale:0.9)
+- **31-05:** 15+ items skip stagger entirely -- faster than any timed entrance
+- **31-05:** hardwareConcurrency <= 4 threshold for low-end device stagger skip
+- **31-05:** Custom stagger prop preserved for backward compat -- 7 consumers with explicit values unchanged
 
 ### Blockers/Concerns
 
@@ -82,11 +86,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 31-03-PLAN.md (4/5 Phase 31 plans complete)
-Resume file: .planning/phases/31-animation-interaction-polish/31-03-SUMMARY.md
-Next step: Execute 31-05-PLAN.md (only remaining plan)
+Stopped at: Completed 31-05-PLAN.md (5/5 Phase 31 plans complete)
+Resume file: .planning/phases/31-animation-interaction-polish/31-05-SUMMARY.md
+Next step: Phase 31 complete. Begin Phase 32 or next milestone phase.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (31-03 glass-morphism polish complete)*
+*Last updated: 2026-02-20 (31-05 adaptive stagger timing complete, Phase 31 done)*

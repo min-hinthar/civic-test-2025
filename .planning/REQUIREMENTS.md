@@ -29,11 +29,11 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 ### Animation & Interaction Polish
 
 - [x] **ANIM-01**: Button press feedback tiers: 3D chunky (primary), subtle scale (secondary), opacity (tertiary)
-- [ ] **ANIM-02**: StaggeredList coverage audit — all item lists use stagger with cap at 8-10 items
+- [x] **ANIM-02**: StaggeredList coverage audit — all item lists use stagger with cap at 8-10 items
 - [x] **ANIM-03**: Exit animations on all overlays (dialogs, modals, tooltips, toasts) — fade + scale(0.95)
 - [x] **ANIM-04**: Consistent card enter animation — scale(0.95→1) + fade for all card components
 - [x] **ANIM-05**: Glass-morphism tier usage audit — correct tier applied per component type across all screens
-- [ ] **ANIM-06**: Stagger timing scales with list length — short lists faster, skip stagger for 15+ items
+- [x] **ANIM-06**: Stagger timing scales with list length — short lists faster, skip stagger for 15+ items
 
 ### Celebration System
 
@@ -116,11 +116,11 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | MOBI-05 | Phase 30 | Complete |
 | MOBI-06 | Phase 30 | Complete |
 | ANIM-01 | Phase 31 | Complete |
-| ANIM-02 | Phase 31 | Pending |
+| ANIM-02 | Phase 31 | Complete |
 | ANIM-03 | Phase 31 | Complete |
 | ANIM-04 | Phase 31 | Complete |
 | ANIM-05 | Phase 31 | Complete |
-| ANIM-06 | Phase 31 | Pending |
+| ANIM-06 | Phase 31 | Complete |
 | CELB-01 | Phase 32 | Pending |
 | CELB-02 | Phase 32 | Pending |
 | CELB-03 | Phase 32 | Pending |
