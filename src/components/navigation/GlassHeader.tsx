@@ -9,6 +9,7 @@
 
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Heart } from 'lucide-react';
+import { FlagToggle } from '@/components/ui/FlagToggle';
 
 interface GlassHeaderProps {
   /** Show "Sign In" button linking to /auth (landing page) */
@@ -35,6 +36,8 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
 
         {/* Right-side action buttons */}
         <div className="flex items-center gap-2">
+          <FlagToggle compact />
+
           {/* About heart icon — independent of other action buttons */}
           {showAbout && (
             <Link
