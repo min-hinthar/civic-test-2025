@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 30 (mobile-native-feel)
-Plan: 3 of 4
-Status: In Progress
-Last activity: 2026-02-20 — Completed 30-01 (CSS mobile guards and safe area insets)
+Plan: 4 of 4
+Status: Complete
+Last activity: 2026-02-20 — Completed 30-04 (haptic integration across all components)
 
-Progress: [#####-----] 2/4 plans (Phase 30)
+Progress: [##########] 4/4 plans (Phase 30)
 
 ## Completed Milestones
 
@@ -52,6 +52,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **30-01:** Overscroll guard scoped to @media (display-mode: standalone) only, not global
 - **30-01:** User-select uses targeted interactive-element approach, not global none + whitelist
 - **30-01:** Safe area insets via inline style env() for zero-cost on non-notch devices
+- **30-04:** Haptic calls in useEffect acceptable for celebrations/feedback that are always user-action-initiated
+- **30-04:** FeedbackPanel uses hapticMedium for both correct and incorrect (same tier for all grading per user decision)
+- **30-04:** ShareCardPreview hosts hapticMedium on success (after async share/copy), not ShareButton
+- **30-04:** InterviewSession: hapticMedium on voice start, hapticLight on stop for distinct feedback
 
 ### Blockers/Concerns
 
@@ -61,11 +65,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 30-01-PLAN.md (2/4 Phase 30 plans complete)
-Resume file: .planning/phases/30-mobile-native-feel/30-01-SUMMARY.md
-Next step: Execute 30-03-PLAN.md
+Stopped at: Completed 30-04-PLAN.md (4/4 Phase 30 plans complete)
+Resume file: .planning/phases/30-mobile-native-feel/30-04-SUMMARY.md
+Next step: Phase 30 complete -- advance to next phase
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (30-01 CSS mobile guards and safe area insets complete)*
+*Last updated: 2026-02-20 (30-04 haptic integration across all components complete)*
