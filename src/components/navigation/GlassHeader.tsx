@@ -8,7 +8,7 @@
  */
 
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Heart } from 'lucide-react';
 
 interface GlassHeaderProps {
   /** Show "Sign In" button linking to /auth (landing page) */
@@ -17,9 +17,11 @@ interface GlassHeaderProps {
   showBack?: boolean;
   /** Href for the back button (defaults to '/') */
   backHref?: string;
+  /** Show heart icon linking to /about */
+  showAbout?: boolean;
 }
 
-export function GlassHeader({ showSignIn, showBack, backHref = '/' }: GlassHeaderProps) {
+export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }: GlassHeaderProps) {
   return (
     <header className="glass-medium prismatic-border glass-nav rounded-none sticky top-0 z-30 w-full">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
@@ -31,25 +33,38 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/' }: GlassHeade
           Civic Test Prep
         </Link>
 
-        {/* Action buttons */}
-        {showSignIn && (
-          <Link
-            to="/auth"
-            className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary/20"
-          >
-            Sign In
-          </Link>
-        )}
+        {/* Right-side action buttons */}
+        <div className="flex items-center gap-2">
+          {/* About heart icon — independent of other action buttons */}
+          {showAbout && (
+            <Link
+              to="/about"
+              className="flex items-center justify-center h-9 w-9 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+              aria-label="About this app"
+            >
+              <Heart className="h-4 w-4" />
+            </Link>
+          )}
 
-        {showBack && (
-          <Link
-            to={backHref}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Link>
-        )}
+          {showSignIn && (
+            <Link
+              to="/auth"
+              className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary/20"
+            >
+              Sign In
+            </Link>
+          )}
+
+          {showBack && (
+            <Link
+              to={backHref}
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Link>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -70,7 +70,7 @@ const LandingPage = () => {
 
   return (
     <div className="page-shell overflow-hidden">
-      <GlassHeader showSignIn />
+      <GlassHeader showSignIn showAbout />
 
       {/* Hero Section */}
       <header className="relative mx-auto max-w-4xl px-4 pb-14 pt-14 text-center sm:px-6 sm:pt-20 md:pb-20">
