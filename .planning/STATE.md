@@ -111,6 +111,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **33-02:** stripe-move uses !important to override inline style specificity for reduced motion
 - **33-02:** StaggeredList separates motion preference from performance skips (15+ items, low-end device)
 - **33-02:** Reduced-motion stagger uses opacity snap (duration:0) while container still orchestrates timing
+- **33-03:** Dashboard loading gates on all 5 async sources (auth, mastery, streak, SRS, practiceCount)
+- **33-03:** Dashboard empty state uses Sparkles icon for welcoming new-user experience
+- **33-03:** HistoryTab shows combined EmptyState when BOTH test and interview lists are empty
+- **33-03:** DeckManager empty state explains spaced repetition for SRS-unfamiliar audience
+- **33-03:** StudyGuide and Settings skipped for skeleton (synchronous data)
 - **33-04:** OfflineBanner uses 3-state machine (offline/reconnecting/back-online) with timer-driven transitions
 - **33-04:** Adjust-state-when-props-change pattern used for isOnline transitions and error toast tracking (React Compiler safe)
 - **33-04:** OfflineBanner placed in NavigationShell main-content div (below header, respects sidebar margin)
