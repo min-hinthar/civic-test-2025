@@ -16,6 +16,7 @@ import { useNavigation } from './NavigationProvider';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Sidebar } from './Sidebar';
 import { BottomTabBar } from './BottomTabBar';
+import { OfflineBanner } from '@/components/pwa/OfflineBanner';
 
 const SPRING = { type: 'spring' as const, stiffness: 300, damping: 24 };
 
@@ -55,6 +56,7 @@ export function NavigationShell({ children }: NavigationShellProps) {
         transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING}
         className="outline-none"
       >
+        <OfflineBanner />
         {children}
       </motion.div>
       {!isPublicRoute && <BottomTabBar />}
