@@ -53,10 +53,10 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 - [x] **STAT-01**: Skeleton screen coverage for all async content — Dashboard, Study Guide, Settings, Hub tabs
 - [x] **STAT-02**: Empty state designs for zero-data screens — Dashboard, Hub History, Hub Achievements, SRS Deck
 - [x] **STAT-03**: Inline error recovery patterns — icon + message + retry button + fallback, bilingual
-- [ ] **STAT-04**: Focus management on page transitions — focus first h1 or main content on route change
+- [x] **STAT-04**: Focus management on page transitions — focus first h1 or main content on route change
 - [x] **STAT-05**: Reduced motion CSS completeness — all CSS keyframes and transitions respect prefers-reduced-motion
 - [x] **STAT-06**: Screen reader live region announcements for confetti, badge earns, mastery milestones
-- [ ] **STAT-07**: Modal/dialog focus trap and focus return to trigger on dismiss
+- [x] **STAT-07**: Modal/dialog focus trap and focus return to trigger on dismiss
 
 ### Content & About Page
 
@@ -134,10 +134,10 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | STAT-01 | Phase 33 | Complete |
 | STAT-02 | Phase 33 | Complete |
 | STAT-03 | Phase 33 | Complete |
-| STAT-04 | Phase 33 | Pending |
+| STAT-04 | Phase 33 | Complete |
 | STAT-05 | Phase 33 | Complete |
 | STAT-06 | Phase 33 | Complete |
-| STAT-07 | Phase 33 | Pending |
+| STAT-07 | Phase 33 | Complete |
 | CONT-01 | Phase 34 | Complete |
 | CONT-02 | Phase 34 | Complete |
 | CONT-03 | Phase 34 | Complete |

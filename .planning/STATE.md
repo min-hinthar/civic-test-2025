@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 33 (states-accessibility)
-Plan: 4 of 5
-Status: In Progress
-Last activity: 2026-02-20 — Completed 33-04 (error recovery integration)
+Plan: 5 of 5
+Status: Complete
+Last activity: 2026-02-20 — Completed 33-05 (focus management, celebrations a11y, modal audit)
 
-Progress: [########--] 4/5 plans
+Progress: [##########] 5/5 plans
 
 ## Completed Milestones
 
@@ -121,6 +121,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **33-04:** OfflineBanner placed in NavigationShell main-content div (below header, respects sidebar margin)
 - **33-04:** Error recovery at component level with error/retryCount/fetchTrigger state (not hook refactor)
 - **33-04:** Toast fires only on first error occurrence to avoid notification fatigue
+- **33-05:** useFocusOnNavigation uses 150ms delay to match AnimatePresence page transition duration
+- **33-05:** Confetti announce fires in fire effect (not fireConfetti callback) so it works under reduced motion
+- **33-05:** StreakReward already has aria-live region from Phase 24 -- verified working, no changes needed
+- **33-05:** WelcomeModal and WhatsNewModal migrated from custom div overlays to Radix Dialog for focus trap
 
 ### Blockers/Concerns
 
@@ -130,11 +134,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 33-04-PLAN.md (error recovery integration)
-Resume file: .planning/phases/33-states-accessibility/33-04-SUMMARY.md
-Next step: Continue with 33-05-PLAN.md (semantic markup and ARIA audit)
+Stopped at: Completed 33-05-PLAN.md (focus management, celebrations a11y, modal audit)
+Resume file: .planning/phases/33-states-accessibility/33-05-SUMMARY.md
+Next step: Phase 33 complete. Continue with next phase.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (33-04 error recovery integration complete)*
+*Last updated: 2026-02-20 (33-05 focus management + celebration announcements + modal audit complete)*
