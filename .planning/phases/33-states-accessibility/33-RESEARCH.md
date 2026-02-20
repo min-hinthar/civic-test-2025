@@ -504,3 +504,4 @@ export function useFocusOnNavigation() {
 
 **Research date:** 2026-02-20
 **Valid until:** 2026-03-20 (stable domain, no fast-moving dependencies)
+
