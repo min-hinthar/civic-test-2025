@@ -52,6 +52,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **30-01:** Overscroll guard scoped to @media (display-mode: standalone) only, not global
 - **30-01:** User-select uses targeted interactive-element approach, not global none + whitelist
 - **30-01:** Safe area insets via inline style env() for zero-cost on non-notch devices
+- **30-03:** Motion value x initialized at 300 with imperative animate() for entrance -- avoids declarative/style conflict
+- **30-03:** startTimeRef initialized to 0 (not Date.now()) for React Compiler purity
+- **30-03:** AnimationPlaybackControlsWithThen lacks .catch() -- use .then(noop, handler) or chain .then().catch()
 - **30-04:** Haptic calls in useEffect acceptable for celebrations/feedback that are always user-action-initiated
 - **30-04:** FeedbackPanel uses hapticMedium for both correct and incorrect (same tier for all grading per user decision)
 - **30-04:** ShareCardPreview hosts hapticMedium on success (after async share/copy), not ShareButton

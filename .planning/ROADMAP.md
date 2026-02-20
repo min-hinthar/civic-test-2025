@@ -66,7 +66,7 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 **Milestone Goal:** Elevate every screen to Duolingo-level polish with consistent visual language, delightful micro-interactions, native-app mobile feel, content completeness, and an About page honoring the app's inspirational figures.
 
 - [ ] **Phase 29: Visual Foundation** - Enforce spacing grid, typography scale, border radius rules, touch targets, dark mode contrast, and unified motion tokens across all screens
-- [ ] **Phase 30: Mobile Native Feel** - PWA standalone CSS, safe area insets, haptic feedback utility, user-select guards, and swipe-to-dismiss toasts
+- [x] **Phase 30: Mobile Native Feel** - PWA standalone CSS, safe area insets, haptic feedback utility, user-select guards, and swipe-to-dismiss toasts (completed 2026-02-20)
 - [ ] **Phase 31: Animation & Interaction Polish** - Button press feedback tiers, stagger audit with length scaling, exit animations on overlays, card enter animations, and glass-morphism tier audit
 - [ ] **Phase 32: Celebration System Elevation** - Fix confetti leak, build useCelebration hook with CelebrationOverlay, achievement-scaled confetti, multi-stage choreography, DotLottie animations, sound warming, XP counter
 - [ ] **Phase 33: States & Accessibility** - Skeleton screens, empty state designs, inline error recovery, focus management on route changes, reduced motion CSS completeness, screen reader celebration announcements, modal focus traps
@@ -171,7 +171,7 @@ Note: Phase 34 (Content) depends only on Phase 29 and can potentially run in par
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 29. Visual Foundation | v3.0 | TBD | Not started | - |
-| 30. Mobile Native Feel | 3/4 | In Progress|  | - |
+| 30. Mobile Native Feel | 4/4 | Complete   | 2026-02-20 | - |
 | 31. Animation & Interaction Polish | v3.0 | TBD | Not started | - |
 | 32. Celebration System Elevation | v3.0 | TBD | Not started | - |
 | 33. States & Accessibility | v3.0 | TBD | Not started | - |
