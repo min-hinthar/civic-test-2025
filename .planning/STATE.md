@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 33 (states-accessibility)
-Plan: 2 of 5
+Plan: 4 of 5
 Status: In Progress
-Last activity: 2026-02-20 — Completed 33-02 (reduced-motion CSS/JS animation audit)
+Last activity: 2026-02-20 — Completed 33-04 (error recovery integration)
 
-Progress: [####------] 2/5 plans
+Progress: [########--] 4/5 plans
 
 ## Completed Milestones
 
@@ -111,6 +111,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **33-02:** stripe-move uses !important to override inline style specificity for reduced motion
 - **33-02:** StaggeredList separates motion preference from performance skips (15+ items, low-end device)
 - **33-02:** Reduced-motion stagger uses opacity snap (duration:0) while container still orchestrates timing
+- **33-04:** OfflineBanner uses 3-state machine (offline/reconnecting/back-online) with timer-driven transitions
+- **33-04:** Adjust-state-when-props-change pattern used for isOnline transitions and error toast tracking (React Compiler safe)
+- **33-04:** OfflineBanner placed in NavigationShell main-content div (below header, respects sidebar margin)
+- **33-04:** Error recovery at component level with error/retryCount/fetchTrigger state (not hook refactor)
+- **33-04:** Toast fires only on first error occurrence to avoid notification fatigue
 
 ### Blockers/Concerns
 
@@ -120,11 +125,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 33-01-PLAN.md (state pattern library foundation)
-Resume file: .planning/phases/33-states-accessibility/33-01-SUMMARY.md
-Next step: Continue with 33-03-PLAN.md (33-01 and 33-02 complete)
+Stopped at: Completed 33-04-PLAN.md (error recovery integration)
+Resume file: .planning/phases/33-states-accessibility/33-04-SUMMARY.md
+Next step: Continue with 33-05-PLAN.md (semantic markup and ARIA audit)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (33-01 state pattern library complete)*
+*Last updated: 2026-02-20 (33-04 error recovery integration complete)*
