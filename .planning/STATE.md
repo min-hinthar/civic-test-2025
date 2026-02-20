@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 32 (celebration-system-elevation)
-Plan: 6 of 6
+Plan: 8 of 8
 Status: Complete
-Last activity: 2026-02-20 — Completed 32-06 (test results choreography)
+Last activity: 2026-02-20 — Completed 32-08 (dotlottie dependency declaration)
 
-Progress: [##########] 6/6 plans (Phase 32 COMPLETE)
+Progress: [##########] 8/8 plans (Phase 32 COMPLETE)
 
 ## Completed Milestones
 
@@ -101,6 +101,7 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-06:** Separate runChoreography vs runPracticeChoreography for distinct timing and celebration levels
 - **32-06:** Teaser confetti at pass threshold uses celebrate sparkle level, not full burst
 - **32-06:** Card entrance uses useAnimationControls for imperative sequencing (awaitable) instead of declarative animate prop
+- **32-08:** Let pnpm resolve latest compatible dotlottie-react version (^0.18.1) rather than pinning exact
 
 ### Blockers/Concerns
 
@@ -110,11 +111,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-06-PLAN.md (Phase 32 COMPLETE - 6/6 plans)
-Resume file: .planning/phases/32-celebration-system-elevation/32-06-SUMMARY.md
-Next step: Phase 32 complete. Proceed to next phase.
+Stopped at: Completed 32-08-PLAN.md (gap closure -- dotlottie dependency declaration)
+Resume file: .planning/phases/32-celebration-system-elevation/32-08-SUMMARY.md
+Next step: Phase 32 gap closure plans complete (07+08). Proceed to next phase.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-06 test results choreography complete, Phase 32 complete)*
+*Last updated: 2026-02-20 (32-08 dotlottie dependency gap closure complete)*
