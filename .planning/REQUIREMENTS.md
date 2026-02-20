@@ -38,10 +38,10 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 ### Celebration System
 
 - [x] **CELB-01**: Fix existing Confetti.tsx setInterval leak before building new celebrations
-- [ ] **CELB-02**: `useCelebration` hook + `CelebrationOverlay` using DOM CustomEvents (not new Context)
+- [x] **CELB-02**: `useCelebration` hook + `CelebrationOverlay` using DOM CustomEvents (not new Context)
 - [x] **CELB-03**: Achievement-scaled confetti: 5-streak=sparkle, 10-streak=burst, test pass=burst, 100%=celebration
 - [ ] **CELB-04**: Multi-stage TestResultsScreen choreography: card scale-in → count-up → pass/fail reveal → confetti → sound → action buttons stagger
-- [ ] **CELB-05**: Haptic patterns fire at celebration peaks — synchronized with confetti and sound
+- [x] **CELB-05**: Haptic patterns fire at celebration peaks — synchronized with confetti and sound
 - [x] **CELB-06**: DotLottie celebration animations (checkmark, trophy, badge glow, star burst) lazy-loaded
 - [x] **CELB-07**: Sound warming — add 2nd/3rd harmonics to existing oscillator sounds for richer audio
 - [x] **CELB-08**: `playCelebrationSequence(stage)` sound function for multi-stage choreography timing
@@ -122,10 +122,10 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | ANIM-05 | Phase 31 | Complete |
 | ANIM-06 | Phase 31 | Complete |
 | CELB-01 | Phase 32 | Complete |
-| CELB-02 | Phase 32 | Pending |
+| CELB-02 | Phase 32 | Complete |
 | CELB-03 | Phase 32 | Complete |
 | CELB-04 | Phase 32 | Pending |
-| CELB-05 | Phase 32 | Pending |
+| CELB-05 | Phase 32 | Complete |
 | CELB-06 | Phase 32 | Complete |
 | CELB-07 | Phase 32 | Complete |
 | CELB-08 | Phase 32 | Complete |

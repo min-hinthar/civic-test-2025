@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 32 (celebration-system-elevation)
-Plan: 5 of 6
+Plan: 6 of 6
 Status: In Progress
-Last activity: 2026-02-20 — Completed 32-01 (confetti leak fix + themed shapes)
+Last activity: 2026-02-20 — Completed 32-05 (celebration orchestration layer)
 
-Progress: [######----] 4/6 plans (Phase 32)
+Progress: [########--] 5/6 plans (Phase 32)
 
 ## Completed Milestones
 
@@ -92,6 +92,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-01:** shapeWeights not available in canvas-confetti API -- used array duplication for shape weighting
 - **32-01:** hardwareConcurrency <= 2 threshold for low-end device particle reduction (25% count)
 - **32-01:** Separate onComplete timing per intensity: sparkle 800ms, burst 1200ms
+- **32-05:** DOM CustomEvent bus (not React Context) for zero-coupling celebration dispatch from any component
+- **32-05:** First-time elevation bumps one tier (sparkle->burst, burst->celebration) -- ultimate stays ultimate
+- **32-05:** Blocking overlay during peak (800-2500ms by level), then pointer-events:none for fade-out
+- **32-05:** 5% surprise variations (flag emoji, extra sparkle sound) for celebration freshness
+- **32-05:** Reduced motion skips all visuals but still fires sound and haptics
 
 ### Blockers/Concerns
 
@@ -101,11 +106,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-01-PLAN.md (4/6 Phase 32 plans complete)
-Resume file: .planning/phases/32-celebration-system-elevation/32-01-SUMMARY.md
-Next step: Continue with remaining Phase 32 plans (32-05, 32-06)
+Stopped at: Completed 32-05-PLAN.md (5/6 Phase 32 plans complete)
+Resume file: .planning/phases/32-celebration-system-elevation/32-05-SUMMARY.md
+Next step: Continue with remaining Phase 32 plan (32-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-01 confetti leak fix + themed shapes complete)*
+*Last updated: 2026-02-20 (32-05 celebration orchestration layer complete)*
