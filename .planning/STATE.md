@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 Phase: 32 (celebration-system-elevation)
 Plan: 4 of 6
 Status: In Progress
-Last activity: 2026-02-20 — Completed 32-04 (score animation & XP counter)
+Last activity: 2026-02-20 — Completed 32-03 (DotLottie animation wrapper)
 
-Progress: [###-------] 2/6 plans (Phase 32)
+Progress: [#####-----] 3/6 plans (Phase 32)
 
 ## Completed Milestones
 
@@ -86,6 +86,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-04:** Overshoot implemented as spring scale pop + floating +N indicator (countup.js easingFn clamps, so value overshoot not possible)
 - **32-04:** Color shift tracked via formattingFn + useRef + setInterval polling (100ms) for smooth CSS transition
 - **32-04:** XPCounter uses render-time state comparison pattern from XPPopup for React Compiler safety
+- **32-03:** DotLottie type imported from dotlottie-react re-export, not direct dotlottie-web dependency
+- **32-03:** All hooks called before reduced-motion early return to satisfy rules-of-hooks
+- **32-03:** Glow wrapper uses inline CSS hex+alpha (33 = 20% opacity) for simplicity over token variables
 
 ### Blockers/Concerns
 
@@ -95,11 +98,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-04-PLAN.md
-Resume file: .planning/phases/32-celebration-system-elevation/32-04-SUMMARY.md
-Next step: Continue with remaining Phase 32 plans (32-01, 32-03, 32-05, 32-06)
+Stopped at: Completed 32-03-PLAN.md
+Resume file: .planning/phases/32-celebration-system-elevation/32-03-SUMMARY.md
+Next step: Continue with remaining Phase 32 plans (32-01, 32-05, 32-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-04 score animation & XP counter complete)*
+*Last updated: 2026-02-20 (32-03 DotLottie animation wrapper complete)*
