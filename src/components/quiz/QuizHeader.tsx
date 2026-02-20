@@ -15,6 +15,8 @@ export interface QuizHeaderProps {
   mode: 'mock-test' | 'practice';
   onExit: () => void;
   timerSlot?: ReactNode;
+  /** Optional XP counter slot (renders below question counter) */
+  xpSlot?: ReactNode;
   showBurmese: boolean;
 }
 
@@ -29,6 +31,7 @@ export interface QuizHeaderProps {
  * - Escape key triggers exit
  * - Not sticky -- scrolls with content per user decision
  * - Bilingual question label when showBurmese is true
+ * - Optional XP counter slot below question counter
  */
 export function QuizHeader({
   questionNumber,
@@ -36,6 +39,7 @@ export function QuizHeader({
   mode: _mode,
   onExit,
   timerSlot,
+  xpSlot,
   showBurmese,
 }: QuizHeaderProps) {
   // Escape key triggers exit
@@ -86,6 +90,7 @@ export function QuizHeader({
             {questionLabel}
           </span>
         )}
+        {xpSlot && <div className="mt-0.5">{xpSlot}</div>}
       </div>
 
       {/* Timer slot (renders CircularTimer for mock test, nothing for practice without timer) */}
