@@ -30,7 +30,7 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 
 - [x] **ANIM-01**: Button press feedback tiers: 3D chunky (primary), subtle scale (secondary), opacity (tertiary)
 - [ ] **ANIM-02**: StaggeredList coverage audit — all item lists use stagger with cap at 8-10 items
-- [ ] **ANIM-03**: Exit animations on all overlays (dialogs, modals, tooltips, toasts) — fade + scale(0.95)
+- [x] **ANIM-03**: Exit animations on all overlays (dialogs, modals, tooltips, toasts) — fade + scale(0.95)
 - [ ] **ANIM-04**: Consistent card enter animation — scale(0.95→1) + fade for all card components
 - [ ] **ANIM-05**: Glass-morphism tier usage audit — correct tier applied per component type across all screens
 - [ ] **ANIM-06**: Stagger timing scales with list length — short lists faster, skip stagger for 15+ items
@@ -117,7 +117,7 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | MOBI-06 | Phase 30 | Complete |
 | ANIM-01 | Phase 31 | Complete |
 | ANIM-02 | Phase 31 | Pending |
-| ANIM-03 | Phase 31 | Pending |
+| ANIM-03 | Phase 31 | Complete |
 | ANIM-04 | Phase 31 | Pending |
 | ANIM-05 | Phase 31 | Pending |
 | ANIM-06 | Phase 31 | Pending |

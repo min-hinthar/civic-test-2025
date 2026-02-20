@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 31 (animation-interaction-polish)
-Plan: 1 of 5
+Plan: 2 of 5
 Status: In Progress
-Last activity: 2026-02-20 — Completed 31-01 (three-tier button press system)
+Last activity: 2026-02-20 — Completed 31-02 (dialog exit animations)
 
-Progress: [##--------] 1/5 plans (Phase 31)
+Progress: [####------] 2/5 plans (Phase 31)
 
 ## Completed Milestones
 
@@ -63,6 +63,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **31-01:** Token-based colors (hsl(var(--primary-*))) over hardcoded HSL values for BilingualButton consistency
 - **31-01:** BilingualButton outline/ghost both classified as tertiary tier (opacity fade) for simplified hierarchy
 - **31-01:** SPRING_PRESS_DOWN (stiffness 800, damping 30, mass 0.5) for ~50ms settle on primary tier
+- **31-02:** Task execution reordered: Task 2 (playDismiss) before Task 1 (Dialog refactor) to avoid broken intermediate typecheck
+- **31-02:** transformOrigin computed in useEffect + useState, not useMemo, to avoid ref.current access during render (React Compiler compliance)
+- **31-02:** DialogOverlayInner renamed internally but exported as DialogOverlay for backward compatibility
 
 ### Blockers/Concerns
 
@@ -72,11 +75,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 31-01-PLAN.md (1/5 Phase 31 plans complete)
-Resume file: .planning/phases/31-animation-interaction-polish/31-01-SUMMARY.md
-Next step: Execute 31-02-PLAN.md (card interaction animations)
+Stopped at: Completed 31-02-PLAN.md (2/5 Phase 31 plans complete)
+Resume file: .planning/phases/31-animation-interaction-polish/31-02-SUMMARY.md
+Next step: Execute 31-03-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (31-01 three-tier button press system complete)*
+*Last updated: 2026-02-20 (31-02 dialog exit animations complete)*
