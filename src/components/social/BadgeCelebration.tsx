@@ -26,6 +26,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
 import { getBadgeColors } from '@/lib/social/badgeColors';
 import { hapticHeavy } from '@/lib/haptics';
+import { announce } from '@/lib/a11y/announcer';
 
 // ---------------------------------------------------------------------------
 // Icon map - maps badge icon string to lucide-react component
@@ -71,6 +72,9 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
     // showing the celebration is always user-action-initiated (earning a badge
     // requires completing a quiz or reaching a milestone).
     hapticHeavy();
+
+    // Screen reader announcement with badge name (assertive priority for important event)
+    announce(`Badge earned: ${badge.name.en}!`, 'assertive');
 
     autoDismissRef.current = setTimeout(() => {
       onDismiss();

@@ -5,6 +5,7 @@ import ReactCanvasConfetti from 'react-canvas-confetti';
 import confetti from 'canvas-confetti';
 import type confettiNs from 'canvas-confetti';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { announce } from '@/lib/a11y/announcer';
 
 // Type aliases from canvas-confetti namespace
 type ConfettiInstance = confettiNs.CreateTypes;
@@ -212,6 +213,8 @@ export function Confetti({
 
   useEffect(() => {
     if (fire) {
+      // Screen reader announcement fires regardless of reduced motion setting
+      announce('Celebration!');
       fireConfetti();
     }
   }, [fire, fireConfetti]);

@@ -14,10 +14,12 @@
  * - Scrollable on small screens
  * - Semantic design tokens (no dark: overrides needed)
  * - Respects language mode (showBurmese guard)
+ * - Uses Radix Dialog for focus trap and keyboard navigation
  */
 
-import React, { useState } from 'react';
-import { X, WifiOff, RefreshCw, Smartphone } from 'lucide-react';
+import { useState } from 'react';
+import { WifiOff, RefreshCw, Smartphone } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { NotificationPrePrompt } from './NotificationPrePrompt';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -64,35 +66,24 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-card p-6 shadow-xl">
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          className="absolute right-3 top-3 p-1 text-muted-foreground hover:text-foreground"
-          aria-label="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
+    <Dialog open onOpenChange={open => !open && handleClose()}>
+      <DialogContent showCloseButton>
         {/* Welcome header */}
-        <h2 className="mb-1 text-2xl font-bold text-foreground">Welcome!</h2>
+        <DialogTitle className="text-2xl">Welcome!</DialogTitle>
         {showBurmese && (
-          <p className="font-myanmar mb-1 text-2xl font-bold text-muted-foreground">
-            ကြိုဆိုပါတယ်!
-          </p>
+          <p className="font-myanmar text-2xl font-bold text-muted-foreground">ကြိုဆိုပါတယ်!</p>
         )}
-        <p className="mb-6 text-muted-foreground">
+        <DialogDescription>
           Your app is ready. Here are some tips:
           {showBurmese && (
             <span className="block font-myanmar mt-0.5">
               အက်ပ်အသင့်ဖြစ်ပါပြီ။ အကြံပြုချက်တချို့ကြည့်ပါ:
             </span>
           )}
-        </p>
+        </DialogDescription>
 
         {/* Tips */}
-        <div className="mb-6 space-y-4">
+        <div className="mt-4 space-y-4">
           {/* Offline tip */}
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success-100">
@@ -172,7 +163,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
           !notificationHandled &&
           typeof Notification !== 'undefined' &&
           Notification.permission === 'default' && (
-            <div className="mb-6">
+            <div className="mt-4">
               <NotificationPrePrompt
                 onAccept={handleNotificationAccept}
                 onDecline={handleNotificationDecline}
@@ -183,12 +174,12 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
         {/* Get started button */}
         <button
           onClick={handleClose}
-          className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
+          className="mt-6 w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
           Get Started
           {showBurmese && <span className="font-myanmar ml-2 text-sm font-normal">စတင်ပါ</span>}
         </button>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

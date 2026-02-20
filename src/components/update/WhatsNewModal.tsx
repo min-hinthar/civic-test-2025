@@ -13,11 +13,12 @@
  * - 3 bilingual feature highlights
  * - Dismissible via close button or "Got it!" button
  * - Semantic design tokens (no dark: overrides needed)
- * - pointer-events-none wrapper + pointer-events-auto content (MEMORY.md pattern)
+ * - Uses Radix Dialog for focus trap and keyboard navigation
  */
 
 import { useState, useCallback } from 'react';
-import { X, Sparkles, BookOpen, ShieldCheck, MapPin } from 'lucide-react';
+import { Sparkles, BookOpen, ShieldCheck, MapPin } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const WHATS_NEW_KEY = 'civic-prep-whats-new-2025-seen';
@@ -115,40 +116,27 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
   const { showBurmese } = useLanguage();
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="pointer-events-auto absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-        role="presentation"
-      />
-
-      {/* Modal content */}
-      <div className="pointer-events-auto relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-xl bg-card p-6 shadow-xl">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute right-3 top-3 p-1 text-muted-foreground hover:text-foreground"
-          aria-label="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
+    <Dialog open onOpenChange={open => !open && onClose()}>
+      <DialogContent showCloseButton>
         {/* Header */}
-        <div className="mb-5 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-subtle">
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-foreground">What&apos;s New</h2>
+            <DialogTitle>What&apos;s New</DialogTitle>
             {showBurmese && (
               <p className="font-myanmar text-lg text-muted-foreground">ဘာအသစ်တွေရှိလဲ</p>
             )}
           </div>
         </div>
 
+        <DialogDescription className="sr-only">
+          New features and updates in this version
+        </DialogDescription>
+
         {/* Feature cards */}
-        <div className="mb-6 space-y-4">
+        <div className="mt-4 space-y-4">
           {features.map(feature => (
             <div key={feature.titleEn} className="flex items-start gap-3">
               <div
@@ -177,12 +165,12 @@ export function WhatsNewModal({ onClose }: WhatsNewModalProps) {
         {/* Dismiss button */}
         <button
           onClick={onClose}
-          className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
+          className="mt-6 w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
         >
           Got it!
           {showBurmese && <span className="font-myanmar ml-2 text-sm font-normal">ရပြီ!</span>}
         </button>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

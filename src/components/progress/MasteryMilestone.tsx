@@ -8,6 +8,7 @@ import { MasteryBadge } from './MasteryBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { MilestoneEvent } from '@/hooks/useMasteryMilestones';
 import type { MilestoneLevel } from './MasteryBadge';
+import { announce } from '@/lib/a11y/announcer';
 
 /**
  * Bilingual encouraging messages for each milestone level.
@@ -108,9 +109,16 @@ export function MasteryMilestone({ milestone, onDismiss }: MasteryMilestoneProps
   const level = milestone?.level ?? 'bronze';
   const safeLevel = level === 'none' ? 'bronze' : level;
 
-  // Auto-dismiss timer
+  // Auto-dismiss timer + screen reader announcement
   useEffect(() => {
     if (!milestone || milestone.level === 'none') return;
+
+    // Screen reader announcement with milestone details (assertive for important event)
+    const msg = getMessageForLevel(safeLevel, milestone.category);
+    announce(
+      `Mastery milestone: ${milestone.category} - ${milestone.newPercentage}%. ${msg.en}`,
+      'assertive'
+    );
 
     const timeout = autoDismissMs[safeLevel];
     autoDismissRef.current = setTimeout(() => {
