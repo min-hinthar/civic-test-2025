@@ -103,7 +103,12 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
   3. Tapping interactive elements (buttons, toggles, chips) does not trigger accidental text selection
   4. Toast notifications can be swiped away with a natural drag gesture
   5. Haptic feedback fires on answer check, streak rewards, badge celebrations, and 3D button press (Android vibration, graceful no-op on iOS)
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
+Plans:
+- [ ] 30-01-PLAN.md — CSS mobile guards, safe area insets, and manifest portrait lock
+- [ ] 30-02-PLAN.md — Expand haptics.ts with three-tier system and celebration pattern
+- [ ] 30-03-PLAN.md — Swipe-to-dismiss toast rewrite with motion/react drag
+- [ ] 30-04-PLAN.md — Haptics integration across all interactive components (~14 files)
 
 ### Phase 31: Animation & Interaction Polish
 **Goal**: Every interaction has appropriate, consistent feedback — buttons respond at the right tier, lists stagger smoothly, overlays exit gracefully, and glass-morphism tiers are correctly applied everywhere
