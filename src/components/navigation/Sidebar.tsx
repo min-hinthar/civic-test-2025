@@ -25,6 +25,7 @@ import { FlagToggle } from '@/components/ui/FlagToggle';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { hapticLight } from '@/lib/haptics';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -91,6 +92,7 @@ export function Sidebar() {
 
   // --- Sign out ---
   const handleSignOut = useCallback(() => {
+    hapticLight();
     logout().then(() => navigate('/'));
   }, [logout, navigate]);
 
@@ -233,7 +235,10 @@ export function Sidebar() {
       <div className="px-2 py-3">
         <button
           type="button"
-          onClick={toggleSidebar}
+          onClick={() => {
+            hapticLight();
+            toggleSidebar();
+          }}
           className="flex items-center justify-center w-full h-10 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-colors group/collapse"
           data-tooltip={!isExpanded ? 'Expand sidebar' : undefined}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
@@ -289,7 +294,10 @@ function SidebarUtilityButton({
   return (
     <button
       type="button"
-      onClick={e => onClick(e)}
+      onClick={e => {
+        hapticLight();
+        onClick(e);
+      }}
       className={`flex items-center w-full rounded-full transition-colors ${colorClass} ${
         isExpanded ? 'gap-3 py-2.5 px-3' : 'justify-center w-12 h-12 mx-auto group/navitem'
       }`}

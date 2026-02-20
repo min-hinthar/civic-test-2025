@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { timeAgo } from '@/lib/sessions/timeAgo';
 import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
+import { hapticLight } from '@/lib/haptics';
 
 interface UnfinishedBannerProps {
   sessions: SessionSnapshot[];
@@ -84,11 +85,7 @@ export function UnfinishedBanner({ sessions, onDismiss }: UnfinishedBannerProps)
   const { showBurmese } = useLanguage();
 
   const handleCardClick = (session: SessionSnapshot) => {
-    try {
-      navigator.vibrate?.(10);
-    } catch {
-      // Vibration API not available
-    }
+    hapticLight();
     navigate(getSessionRoute(session.type));
   };
 

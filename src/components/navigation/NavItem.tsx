@@ -14,6 +14,7 @@ import type { NavTab, NavBadges } from './navConfig';
 import { NavBadge } from './NavBadge';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { SPRING_SNAPPY } from '@/lib/motion-config';
+import { hapticLight } from '@/lib/haptics';
 
 interface NavItemProps {
   tab: NavTab;
@@ -63,6 +64,7 @@ export function NavItem({
   // --- Locked state ---
   const handleLockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    hapticLight();
     onLockedTap?.();
   };
 
@@ -191,7 +193,10 @@ export function NavItem({
       className={wrapperClasses}
       aria-current={isActive ? 'page' : undefined}
       data-tour={tab.dataTour}
-      onClick={onClick}
+      onClick={() => {
+        hapticLight();
+        onClick?.();
+      }}
     >
       {content}
     </Link>

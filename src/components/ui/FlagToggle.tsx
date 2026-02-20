@@ -8,6 +8,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { USFlag } from '@/components/icons/USFlag';
 import { MyanmarFlag } from '@/components/icons/MyanmarFlag';
 import { SPRING_BOUNCY } from '@/lib/motion-config';
+import { hapticLight } from '@/lib/haptics';
 
 interface FlagToggleProps {
   /** Compact mode for navbar (tighter spacing) */
@@ -48,9 +49,7 @@ export function FlagToggle({ compact = false, vertical = false, className }: Fla
       if (target === mode || isDebounced) return;
 
       // Haptic feedback (progressive enhancement, no-op on iOS)
-      if ('vibrate' in navigator) {
-        navigator.vibrate(10);
-      }
+      hapticLight();
 
       // Show transition feedback
       setIsTransitioning(true);

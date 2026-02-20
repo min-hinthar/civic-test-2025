@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { hapticMedium } from '@/lib/haptics';
 
 interface LongPressButtonProps {
   /** Callback fired after the hold duration completes */
@@ -65,10 +66,8 @@ export function LongPressButton({
         setIsHolding(false);
         rafIdRef.current = null;
 
-        // Haptic feedback on Android
-        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-          navigator.vibrate(50);
-        }
+        // Haptic feedback on hold complete
+        hapticMedium();
 
         onLongPressRef.current();
         return;

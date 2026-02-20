@@ -20,6 +20,7 @@ import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { FlagToggle } from '@/components/ui/FlagToggle';
+import { hapticLight } from '@/lib/haptics';
 
 const TOOLTIP_KEY = 'civic-test-lang-tooltip-shown';
 
@@ -53,6 +54,7 @@ export function BottomTabBar() {
   }, [showTooltip]);
 
   const handleSignOut = useCallback(() => {
+    hapticLight();
     logout().then(() => navigate('/'));
   }, [logout, navigate]);
 
@@ -116,7 +118,10 @@ export function BottomTabBar() {
         {/* Theme toggle */}
         <button
           type="button"
-          onClick={e => toggleTheme(e)}
+          onClick={e => {
+            hapticLight();
+            toggleTheme(e);
+          }}
           className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           data-tour="theme-toggle"
         >
