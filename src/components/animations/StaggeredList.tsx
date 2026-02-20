@@ -51,7 +51,7 @@ interface AdaptiveConfig {
  * - 9-14 items: capped so total animation stays under ~400ms
  * - 15+ items: skip stagger entirely (all items appear at once)
  * - Low-end devices (hardwareConcurrency <= 4): skip stagger
- * - prefers-reduced-motion: skip stagger
+ * - prefers-reduced-motion: keep stagger timing but remove per-item visual motion
  *
  * When `customStagger` is provided (backward compat), it overrides adaptive calculation.
  */
@@ -61,12 +61,12 @@ function getAdaptiveConfig(
   customStagger?: number, // ms, from prop
   customDelay?: number // ms, from prop
 ): AdaptiveConfig {
-  // Reduced motion or 15+ items: skip entirely
-  if (prefersReduced || childCount >= 15) {
+  // 15+ items: skip entirely (performance, not motion preference)
+  if (childCount >= 15) {
     return { shouldAnimate: false, stagger: 0, delay: 0 };
   }
 
-  // Low-end device detection
+  // Low-end device detection (performance, not motion preference)
   const isLowEnd =
     typeof navigator !== 'undefined' &&
     navigator.hardwareConcurrency != null &&
@@ -84,8 +84,8 @@ function getAdaptiveConfig(
     };
   }
 
-  // Adaptive timing based on count
-  const delay = (customDelay ?? 100) / 1000;
+  // Adaptive timing based on count (same for normal and reduced motion)
+  const delay = (customDelay ?? (prefersReduced ? 50 : 100)) / 1000;
 
   if (childCount <= 3) return { shouldAnimate: true, stagger: 0.06, delay }; // luxurious
   if (childCount <= 8) return { shouldAnimate: true, stagger: 0.04, delay }; // fast cascade
@@ -113,10 +113,12 @@ const itemVariants: Variants = {
   },
 };
 
-// Reduced motion variants
+// Reduced motion variants: items start hidden, snap to visible instantly.
+// Container stagger timing still applies, so items appear one-by-one
+// but with zero per-item visual motion (no slide, no fade, no scale).
 const reducedItemVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0 } },
 };
 
 interface StaggeredListProps {
