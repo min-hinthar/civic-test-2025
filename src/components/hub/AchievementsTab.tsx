@@ -16,7 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   BookOpen,
@@ -26,12 +26,12 @@ import {
   Trophy,
   Lock,
   Heart,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   type LucideIcon,
 } from 'lucide-react';
 import { Award, Star, BookCheck } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { LeaderboardTable } from '@/components/social/LeaderboardTable';
@@ -174,6 +174,7 @@ export function AchievementsTab({
   badgeCheckData,
   isLoading,
 }: AchievementsTabProps) {
+  const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const { user } = useAuth();
   const { isOptedIn, isLoading: socialLoading } = useSocial();
@@ -323,27 +324,27 @@ export function AchievementsTab({
           <FadeIn>
             {/* Empty state welcome message */}
             {!hasAnyBadges && !isLoading && (
-              <GlassCard className="mb-6">
-                <div className="flex items-center gap-3 p-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-purple/20">
-                    <Sparkles className="h-5 w-5 text-accent-purple" />
-                  </div>
-                  <div>
-                    <p
-                      className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
-                    >
-                      {showBurmese ? 'တံဆိပ်များ စတင်ရယူပါ!' : 'Start earning badges!'}
-                    </p>
-                    <p
-                      className={`text-xs text-muted-foreground mt-0.5 ${showBurmese ? 'font-myanmar' : ''}`}
-                    >
-                      {showBurmese
-                        ? 'မေးခွန်း ၁၀ ခု လေ့လာပြီး ပထမဆုံး တံဆိပ်ရယူပါ'
-                        : 'Study 10 questions to earn your first badge'}
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
+              <div className="mb-6">
+                <EmptyState
+                  icon={Trophy}
+                  iconColor="text-amber-500"
+                  title={{
+                    en: 'No badges earned yet',
+                    my: '\u1010\u1036\u1006\u102D\u1015\u103A\u1019\u103B\u102C\u1038 \u1019\u101B\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B',
+                  }}
+                  description={{
+                    en: 'Complete study sessions and reach milestones to earn badges',
+                    my: '\u1010\u1036\u1006\u102D\u1015\u103A\u1019\u103B\u102C\u1038 \u101B\u101B\u103E\u102D\u101B\u1014\u103A \u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u1019\u103B\u102C\u1038 \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u103C\u102E\u1038 \u1019\u102D\u102F\u1004\u103A\u1038\u1010\u102D\u102F\u1004\u103A\u1019\u103B\u102C\u1038\u1006\u102D\u102F\u1000\u103A\u1015\u102B',
+                  }}
+                  action={{
+                    label: {
+                      en: 'Start Studying',
+                      my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
+                    },
+                    onClick: () => navigate('/study'),
+                  }}
+                />
+              </div>
             )}
 
             {/* Badge categories */}

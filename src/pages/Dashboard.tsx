@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -17,6 +17,7 @@ import { CategoryPreviewCard } from '@/components/dashboard/CategoryPreviewCard'
 import { RecentActivityCard } from '@/components/dashboard/RecentActivityCard';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
 import { DashboardEmptyState } from '@/components/dashboard/DashboardEmptyState';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
@@ -24,6 +25,7 @@ import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 import { BadgeHighlights } from '@/components/social/BadgeHighlights';
 import { UnfinishedBanner } from '@/components/sessions/UnfinishedBanner';
 import { useSessionPersistence } from '@/lib/sessions/useSessionPersistence';
+import { useToast } from '@/components/BilingualToast';
 import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
@@ -33,15 +35,24 @@ import type { BadgeCheckData } from '@/lib/social';
 // Dashboard
 // ---------------------------------------------------------------------------
 
+const MAX_MANUAL_RETRIES = 3;
+
 const Dashboard = () => {
   const { user, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
+  const { showWarning } = useToast();
 
   // Unfinished session banners
   const { sessions } = useSessionPersistence();
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
   const visibleSessions = sessions.filter(s => !dismissedIds.has(s.id));
+
+  // Error recovery state for dashboard data
+  const [dataError, setDataError] = useState<Error | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [fetchTrigger, setFetchTrigger] = useState(0);
+  const isEscalated = retryCount >= MAX_MANUAL_RETRIES;
 
   // NBA recommendation
   const { nbaState } = useNextBestAction();
@@ -70,15 +81,20 @@ const Dashboard = () => {
           const unique = new Set(answers.map(a => a.questionId));
           setUniqueQuestionsCount(unique.size);
           setPracticeCountLoading(false);
+          setDataError(null);
         }
       })
-      .catch(() => {
-        if (!cancelled) setPracticeCountLoading(false);
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setPracticeCountLoading(false);
+          const error = err instanceof Error ? err : new Error(String(err));
+          setDataError(error);
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [fetchTrigger]);
 
   // Test history from auth user
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
@@ -118,6 +134,28 @@ const Dashboard = () => {
 
   // Badge detection and celebration
   const { newlyEarnedBadge, dismissCelebration, earnedBadges } = useBadges(badgeCheckData);
+
+  // Error recovery: retry handler for dashboard data fetch
+  const handleRetry = useCallback(() => {
+    setRetryCount(prev => prev + 1);
+    setDataError(null);
+    setPracticeCountLoading(true);
+    setFetchTrigger(prev => prev + 1);
+  }, []);
+
+  // Fire toast on first error occurrence
+  const [toastFired, setToastFired] = useState(false);
+  const [prevDataError, setPrevDataError] = useState<Error | null>(null);
+  if (dataError !== prevDataError) {
+    setPrevDataError(dataError);
+    if (dataError && !toastFired) {
+      showWarning({
+        en: 'Having trouble loading your data',
+        my: '\u101E\u1004\u103A\u1037\u1021\u1001\u103B\u1000\u103A\u1021\u101C\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u1010\u103A\u101B\u102C\u1010\u103D\u1004\u103A \u1021\u1001\u1000\u103A\u1021\u1001\u1032\u101B\u103E\u102D\u1014\u1031\u1015\u102B\u101E\u100A\u103A',
+      });
+      setToastFired(true);
+    }
+  }
 
   // Composite score sync to Supabase on mount
   useEffect(() => {
@@ -167,6 +205,18 @@ const Dashboard = () => {
       <div className="page-shell">
         <UpdateBanner showBurmese={showBurmese} className="mb-0" />
         <DashboardSkeleton />
+      </div>
+    );
+  }
+
+  // Error state: show ErrorFallback when data fetch failed
+  if (dataError) {
+    return (
+      <div className="page-shell">
+        <UpdateBanner showBurmese={showBurmese} className="mb-0" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
+          <ErrorFallback onRetry={handleRetry} retryCount={retryCount} isEscalated={isEscalated} />
+        </div>
       </div>
     );
   }

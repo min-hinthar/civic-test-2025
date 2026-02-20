@@ -18,7 +18,9 @@ import { HubTabBar } from '@/components/hub/HubTabBar';
 import { OverviewTab } from '@/components/hub/OverviewTab';
 import { HistoryTab } from '@/components/hub/HistoryTab';
 import { AchievementsTab } from '@/components/hub/AchievementsTab';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 import { BadgeCelebration } from '@/components/social/BadgeCelebration';
+import { useToast } from '@/components/BilingualToast';
 
 // ---------------------------------------------------------------------------
 // Tab configuration
@@ -30,6 +32,8 @@ const VALID_TABS = new Set(Object.keys(TAB_ORDER));
 
 /** Minimum horizontal drag distance (px) to trigger a tab switch */
 const SWIPE_THRESHOLD = 50;
+
+const MAX_MANUAL_RETRIES = 3;
 
 /** Derive the tab key from the current pathname */
 function getTabFromPath(pathname: string): string {
@@ -77,6 +81,7 @@ export default function HubPage() {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
   const { user, isLoading: isLoadingAuth } = useAuth();
+  const { showWarning } = useToast();
 
   // -------------------------------------------------------------------------
   // Shared data hooks (lifted to HubPage to avoid waterfall loads)
@@ -91,8 +96,13 @@ export default function HubPage() {
   const { currentStreak, longestStreak, isLoading: streakLoading } = useStreak();
   const { dueCount: srsDueCount, isLoading: srsLoading } = useSRSWidget();
 
-  // Unique questions count from answer history
+  // Unique questions count from answer history (with error recovery)
   const [uniqueQuestionsCount, setUniqueQuestionsCount] = useState(0);
+  const [hubDataError, setHubDataError] = useState<Error | null>(null);
+  const [hubRetryCount, setHubRetryCount] = useState(0);
+  const [hubFetchTrigger, setHubFetchTrigger] = useState(0);
+  const hubIsEscalated = hubRetryCount >= MAX_MANUAL_RETRIES;
+
   useEffect(() => {
     let cancelled = false;
     getAnswerHistory()
@@ -100,15 +110,39 @@ export default function HubPage() {
         if (!cancelled) {
           const unique = new Set(answers.map(a => a.questionId));
           setUniqueQuestionsCount(unique.size);
+          setHubDataError(null);
         }
       })
-      .catch(() => {
-        // IndexedDB not available
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          const error = err instanceof Error ? err : new Error(String(err));
+          setHubDataError(error);
+        }
       });
     return () => {
       cancelled = true;
     };
+  }, [hubFetchTrigger]);
+
+  const handleHubRetry = useCallback(() => {
+    setHubRetryCount(prev => prev + 1);
+    setHubDataError(null);
+    setHubFetchTrigger(prev => prev + 1);
   }, []);
+
+  // Fire toast on first hub data error
+  const [hubToastFired, setHubToastFired] = useState(false);
+  const [prevHubError, setPrevHubError] = useState<Error | null>(null);
+  if (hubDataError !== prevHubError) {
+    setPrevHubError(hubDataError);
+    if (hubDataError && !hubToastFired) {
+      showWarning({
+        en: 'Having trouble loading your progress data',
+        my: '\u101E\u1004\u103A\u1037\u1010\u102D\u102F\u1038\u1010\u1000\u103A\u1019\u103E\u102F\u1021\u1001\u103B\u1000\u103A\u1021\u101C\u1000\u103A\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u1010\u103A\u101B\u102C\u1010\u103D\u1004\u103A \u1021\u1001\u1000\u103A\u1021\u1001\u1032\u101B\u103E\u102D\u1014\u1031\u1015\u102B\u101E\u100A\u103A',
+      });
+      setHubToastFired(true);
+    }
+  }
 
   // Build BadgeCheckData for badge detection
   const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
@@ -299,29 +333,45 @@ export default function HubPage() {
               dragElastic={0.2}
               onDragEnd={handleDragEnd}
             >
-              {currentTab === 'overview' && (
-                <OverviewTab
-                  overallMastery={overallMastery}
-                  categoryMasteries={categoryMasteries}
-                  subCategoryMasteries={subCategoryMasteries}
-                  currentStreak={currentStreak}
-                  srsDueCount={srsDueCount}
-                  practicedCount={uniqueQuestionsCount}
-                  totalQuestions={totalQuestions}
-                  isLoading={masteryLoading || streakLoading || srsLoading}
-                />
-              )}
+              {currentTab === 'overview' &&
+                (hubDataError ? (
+                  <ErrorFallback
+                    onRetry={handleHubRetry}
+                    retryCount={hubRetryCount}
+                    isEscalated={hubIsEscalated}
+                    className="py-16"
+                  />
+                ) : (
+                  <OverviewTab
+                    overallMastery={overallMastery}
+                    categoryMasteries={categoryMasteries}
+                    subCategoryMasteries={subCategoryMasteries}
+                    currentStreak={currentStreak}
+                    srsDueCount={srsDueCount}
+                    practicedCount={uniqueQuestionsCount}
+                    totalQuestions={totalQuestions}
+                    isLoading={masteryLoading || streakLoading || srsLoading}
+                  />
+                ))}
               {currentTab === 'history' && (
                 <HistoryTab testHistory={history} isLoading={isLoadingAuth} />
               )}
-              {currentTab === 'achievements' && (
-                <AchievementsTab
-                  earnedBadges={earnedBadges}
-                  lockedBadges={lockedBadges}
-                  badgeCheckData={badgeCheckData}
-                  isLoading={isLoadingBadges}
-                />
-              )}
+              {currentTab === 'achievements' &&
+                (hubDataError ? (
+                  <ErrorFallback
+                    onRetry={handleHubRetry}
+                    retryCount={hubRetryCount}
+                    isEscalated={hubIsEscalated}
+                    className="py-16"
+                  />
+                ) : (
+                  <AchievementsTab
+                    earnedBadges={earnedBadges}
+                    lockedBadges={lockedBadges}
+                    badgeCheckData={badgeCheckData}
+                    isLoading={isLoadingBadges}
+                  />
+                ))}
             </motion.div>
           </AnimatePresence>
         </div>

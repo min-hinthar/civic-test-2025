@@ -17,19 +17,22 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronUp, ClipboardList, Mic2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, ClipboardList, Mic2 } from 'lucide-react';
 import clsx from 'clsx';
 
 import { SPRING_BOUNCY } from '@/lib/motion-config';
 import SpeechButton from '@/components/ui/SpeechButton';
 import type { TestSession, TestEndReason, InterviewSession } from '@/types';
 import { getInterviewHistory } from '@/lib/interview';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 import { BilingualHeading } from '@/components/bilingual/BilingualHeading';
 import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { StaggeredList, StaggeredItem, FadeIn } from '@/components/animations/StaggeredList';
 import { Progress } from '@/components/ui/Progress';
 import { ShareButton } from '@/components/social/ShareButton';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/components/BilingualToast';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import { GlassCard } from '@/components/hub/GlassCard';
@@ -49,6 +52,7 @@ export interface HistoryTabProps {
 // ---------------------------------------------------------------------------
 
 const PAGE_SIZE = 20;
+const MAX_MANUAL_RETRIES = 3;
 
 const reasonCopy: Record<TestEndReason, string> = {
   passThreshold: 'Ended early after 12 correct answers',
@@ -71,6 +75,7 @@ const interviewEndReasonCopy: Record<string, string> = {
 export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
   const navigate = useNavigate();
   const { showBurmese } = useLanguage();
+  const { showWarning } = useToast();
 
   // Track which entry is expanded (shared across both sections)
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
@@ -79,9 +84,13 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
   const [testPage, setTestPage] = useState(1);
   const [interviewPage, setInterviewPage] = useState(1);
 
-  // Interview sessions (loaded internally)
+  // Interview sessions (loaded internally) with error recovery
   const [interviewSessions, setInterviewSessions] = useState<InterviewSession[]>([]);
   const [interviewLoading, setInterviewLoading] = useState(true);
+  const [interviewError, setInterviewError] = useState<Error | null>(null);
+  const [interviewRetryCount, setInterviewRetryCount] = useState(0);
+  const [interviewFetchTrigger, setInterviewFetchTrigger] = useState(0);
+  const interviewIsEscalated = interviewRetryCount >= MAX_MANUAL_RETRIES;
 
   useEffect(() => {
     let cancelled = false;
@@ -90,15 +99,41 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
         if (!cancelled) {
           setInterviewSessions(sessions);
           setInterviewLoading(false);
+          setInterviewError(null);
         }
       })
-      .catch(() => {
-        if (!cancelled) setInterviewLoading(false);
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setInterviewLoading(false);
+          const error = err instanceof Error ? err : new Error(String(err));
+          setInterviewError(error);
+        }
       });
     return () => {
       cancelled = true;
     };
+  }, [interviewFetchTrigger]);
+
+  const handleInterviewRetry = useCallback(() => {
+    setInterviewRetryCount(prev => prev + 1);
+    setInterviewError(null);
+    setInterviewLoading(true);
+    setInterviewFetchTrigger(prev => prev + 1);
   }, []);
+
+  // Fire toast on first interview error
+  const [interviewToastFired, setInterviewToastFired] = useState(false);
+  const [prevInterviewError, setPrevInterviewError] = useState<Error | null>(null);
+  if (interviewError !== prevInterviewError) {
+    setPrevInterviewError(interviewError);
+    if (interviewError && !interviewToastFired) {
+      showWarning({
+        en: 'Having trouble loading interview history',
+        my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u1010\u103A\u101B\u102C\u1010\u103D\u1004\u103A \u1021\u1001\u1000\u103A\u1021\u1001\u1032\u101B\u103E\u102D\u1014\u1031\u1015\u102B\u101E\u100A\u103A',
+      });
+      setInterviewToastFired(true);
+    }
+  }
 
   // Sort test history newest first (they come from Supabase newest first already, but be safe)
   const sortedTests = useMemo(
@@ -147,6 +182,31 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
           </div>
         ))}
       </div>
+    );
+  }
+
+  // Combined empty state when user has no test or interview sessions
+  if (sortedTests.length === 0 && !interviewLoading && sortedInterviews.length === 0) {
+    return (
+      <EmptyState
+        icon={Clock}
+        iconColor="text-primary"
+        title={{
+          en: 'No study sessions yet',
+          my: '\u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F \u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1019\u103B\u102C\u1038 \u1019\u101B\u103E\u102D\u101E\u1031\u1038\u1015\u102B',
+        }}
+        description={{
+          en: 'Start your first session to see your history here',
+          my: '\u101E\u1004\u103A\u1037\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1012\u102E\u1019\u103E\u102C \u1000\u103C\u100A\u103A\u1037\u101B\u103E\u102F\u101B\u1014\u103A \u1015\u1011\u1019\u1006\u102F\u1036\u1038 \u1005\u1010\u1004\u103A\u101C\u102D\u102F\u1000\u103A\u1015\u102B',
+        }}
+        action={{
+          label: {
+            en: 'Start Studying',
+            my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
+          },
+          onClick: () => navigate('/study'),
+        }}
+      />
     );
   }
 
@@ -487,7 +547,18 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
           </div>
         </div>
 
-        {interviewLoading ? (
+        {interviewError ? (
+          <ErrorFallback
+            onRetry={handleInterviewRetry}
+            retryCount={interviewRetryCount}
+            isEscalated={interviewIsEscalated}
+            message={{
+              en: "Couldn't load your interview history. Let's try again!",
+              my: '\u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038\u1019\u103E\u1010\u103A\u1010\u1019\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1016\u1010\u103A\u1019\u101B\u1014\u102D\u102F\u1004\u103A\u1015\u102B\u104B \u1011\u1015\u103A\u1005\u1019\u103A\u1038\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B',
+            }}
+            className="py-8"
+          />
+        ) : interviewLoading ? (
           <div className="space-y-4">
             {[1, 2].map(i => (
               <div key={i} className="glass-light animate-pulse p-6">

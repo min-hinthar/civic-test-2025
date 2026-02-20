@@ -9,11 +9,13 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { ChevronLeft, Trash2, Plus, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, Trash2, Plus, BookOpen, Layers } from 'lucide-react';
 import clsx from 'clsx';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSRSDeck } from '@/hooks/useSRSDeck';
@@ -58,6 +60,7 @@ function sortOrder(record: SRSCardRecord): number {
 // ---------------------------------------------------------------------------
 
 export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
+  const navigate = useNavigate();
   const { deck, dueCount, isLoading, removeCard, bulkAddCards, getWeakQuestionIds } = useSRSDeck();
 
   const { categoryMasteries } = useCategoryMastery();
@@ -175,28 +178,37 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           >
             <ChevronLeft className="h-4 w-4" />
             <span>Back to Study Guide</span>
-            {showBurmese && <span className="font-myanmar ml-1">/ လေ့လာရန်သို့</span>}
+            {showBurmese && <span className="font-myanmar ml-1">/ \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u102D\u102F\u1037</span>}
           </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <BookOpen className="h-12 w-12 text-muted-foreground/50 mb-4" />
-          <h2 className="text-xl font-bold text-foreground mb-2">Your Review Deck is Empty</h2>
-          <p className="text-muted-foreground mb-1">
-            Add questions while studying to build your personalized review deck.
-          </p>
-          {showBurmese && (
-            <p className="text-muted-foreground font-myanmar mb-6">
-              သင်၏ကိုယ်ပိုင်ပြန်လည်သုံးသပ်ကတ်စုဆောင်းရန် လေ့လာစဉ်မေးခွန်းများထည့်ပါ။
-            </p>
-          )}
+        <EmptyState
+          icon={Layers}
+          iconColor="text-primary"
+          title={{
+            en: 'Your SRS deck is empty',
+            my: '\u101E\u1004\u103A\u1037 SRS \u1000\u1010\u103A\u1005\u102F \u1021\u101C\u103D\u1010\u103A\u1015\u102B',
+          }}
+          description={{
+            en: 'Spaced repetition helps you remember \u2014 cards come back at the right time. Add cards from study sessions!',
+            my: '\u1021\u1001\u103B\u102D\u1014\u103A\u1001\u103C\u102C\u1038\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u1031\u1038\u1001\u103C\u1004\u103A\u1038\u1000 \u1019\u103E\u1010\u103A\u1019\u102D\u101B\u1014\u103A \u1021\u1000\u1030\u100A\u102E\u1015\u1031\u1038\u1015\u102B\u1010\u101A\u103A \u2014 \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1000 \u1019\u103E\u1014\u103A\u1000\u1014\u103A\u1021\u1001\u103B\u102D\u1014\u103A\u1019\u103E\u102C \u1015\u103C\u1014\u103A\u101C\u102C\u1015\u102B\u1010\u101A\u103A\u104B \u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u1019\u103B\u102C\u1038\u1019\u103E \u1000\u1010\u103A\u1019\u103B\u102C\u1038\u1011\u100A\u103A\u1037\u1015\u102B!',
+          }}
+          action={{
+            label: {
+              en: 'Start Studying',
+              my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
+            },
+            onClick: () => navigate('/study'),
+          }}
+        />
 
-          {/* Bulk-add weak area questions CTA */}
-          <Button variant="primary" onClick={handleBulkAddWeak} loading={bulkAddLoading}>
+        {/* Additional bulk-add CTA for advanced users */}
+        <div className="flex flex-col items-center gap-3 mt-4">
+          <Button variant="secondary" onClick={handleBulkAddWeak} loading={bulkAddLoading}>
             <Plus className="h-4 w-4 mr-2" />
             Add Weak Area Questions
           </Button>
-          {bulkAddResult && <p className="mt-3 text-sm text-muted-foreground">{bulkAddResult}</p>}
+          {bulkAddResult && <p className="mt-2 text-sm text-muted-foreground">{bulkAddResult}</p>}
         </div>
       </div>
     );

@@ -44,7 +44,7 @@ function PrismaticBar({
  */
 export function OverviewSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-label="Loading Overview..." role="status">
       {/* Readiness ring placeholder */}
       <div className="flex justify-center py-4">
         <PrismaticBar circle width={180} height={180} />
@@ -101,7 +101,7 @@ export function OverviewSkeleton() {
  */
 export function HistorySkeleton() {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" aria-label="Loading History..." role="status">
       {/* Section header */}
       <PrismaticBar height="1.25rem" width="40%" />
 
@@ -132,7 +132,7 @@ export function HistorySkeleton() {
  */
 export function AchievementsSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-label="Loading Achievements..." role="status">
       {/* Badge section header */}
       <PrismaticBar height="1.25rem" width="30%" />
 
