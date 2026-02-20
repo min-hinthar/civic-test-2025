@@ -101,6 +101,7 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-06:** Separate runChoreography vs runPracticeChoreography for distinct timing and celebration levels
 - **32-06:** Teaser confetti at pass threshold uses celebrate sparkle level, not full burst
 - **32-06:** Card entrance uses useAnimationControls for imperative sequencing (awaitable) instead of declarative animate prop
+- **32-07:** Reused earned variable to avoid duplicate streak threshold calculation in handleCheck
 - **32-08:** Let pnpm resolve latest compatible dotlottie-react version (^0.18.1) rather than pinning exact
 
 ### Blockers/Concerns
@@ -111,11 +112,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-08-PLAN.md (gap closure -- dotlottie dependency declaration)
-Resume file: .planning/phases/32-celebration-system-elevation/32-08-SUMMARY.md
-Next step: Phase 32 gap closure plans complete (07+08). Proceed to next phase.
+Stopped at: Completed 32-07-PLAN.md and 32-08-PLAN.md (gap closure plans)
+Resume file: .planning/phases/32-celebration-system-elevation/32-07-SUMMARY.md
+Next step: Phase 32 fully complete (8/8 plans including gap closure). Proceed to next phase.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-08 dotlottie dependency gap closure complete)*
+*Last updated: 2026-02-20 (32-07 XPCounter wiring gap closure complete)*
