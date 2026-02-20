@@ -28,6 +28,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
 import OpEdPage from '@/pages/OpEdPage';
+import AboutPage from '@/pages/AboutPage';
 import SettingsPage from '@/pages/SettingsPage';
 import HubPage from '@/pages/HubPage';
 import PracticePage from '@/pages/PracticePage';
@@ -223,6 +224,7 @@ const AppShell = () => {
                                       element={<PasswordUpdatePage />}
                                     />
                                     <Route path="/op-ed" element={<OpEdPage />} />
+                                    <Route path="/about" element={<AboutPage />} />
 
                                     {/* New canonical routes */}
                                     <Route
