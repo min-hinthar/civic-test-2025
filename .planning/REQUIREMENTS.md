@@ -45,8 +45,8 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 - [ ] **CELB-06**: DotLottie celebration animations (checkmark, trophy, badge glow, star burst) lazy-loaded
 - [x] **CELB-07**: Sound warming — add 2nd/3rd harmonics to existing oscillator sounds for richer audio
 - [x] **CELB-08**: `playCelebrationSequence(stage)` sound function for multi-stage choreography timing
-- [ ] **CELB-09**: XP counter in quiz session header with spring pulse animation on increment
-- [ ] **CELB-10**: Score count-up with dramatic easing — slow start, accelerating middle, spring overshoot landing
+- [x] **CELB-09**: XP counter in quiz session header with spring pulse animation on increment
+- [x] **CELB-10**: Score count-up with dramatic easing — slow start, accelerating middle, spring overshoot landing
 
 ### States & Accessibility
 
@@ -129,8 +129,8 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | CELB-06 | Phase 32 | Pending |
 | CELB-07 | Phase 32 | Complete |
 | CELB-08 | Phase 32 | Complete |
-| CELB-09 | Phase 32 | Pending |
-| CELB-10 | Phase 32 | Pending |
+| CELB-09 | Phase 32 | Complete |
+| CELB-10 | Phase 32 | Complete |
 | STAT-01 | Phase 33 | Pending |
 | STAT-02 | Phase 33 | Pending |
 | STAT-03 | Phase 33 | Pending |

@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 32 (celebration-system-elevation)
-Plan: 2 of 6
+Plan: 4 of 6
 Status: In Progress
-Last activity: 2026-02-20 — Completed 32-02 (celebration sounds with harmonics)
+Last activity: 2026-02-20 — Completed 32-04 (score animation & XP counter)
 
 Progress: [###-------] 2/6 plans (Phase 32)
 
@@ -82,6 +82,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-02:** XP ding caps at E6 (1320 Hz) to prevent ear-piercing on long chains
 - **32-02:** Fail reveal uses D4->C4 descent (not buzzer) for encouraging tone
 - **32-02:** playCelebrationSequence maps card-enter to playPracticeComplete for subtle entrance
+- **32-04:** dramaticEasing uses 3-phase curve: cubic ease-in (0-30%), fast linear (30-80%), quadratic ease-out (80-100%)
+- **32-04:** Overshoot implemented as spring scale pop + floating +N indicator (countup.js easingFn clamps, so value overshoot not possible)
+- **32-04:** Color shift tracked via formattingFn + useRef + setInterval polling (100ms) for smooth CSS transition
+- **32-04:** XPCounter uses render-time state comparison pattern from XPPopup for React Compiler safety
 
 ### Blockers/Concerns
 
@@ -91,11 +95,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-02-PLAN.md
-Resume file: .planning/phases/32-celebration-system-elevation/32-02-SUMMARY.md
-Next step: Continue with 32-03-PLAN.md
+Stopped at: Completed 32-04-PLAN.md
+Resume file: .planning/phases/32-celebration-system-elevation/32-04-SUMMARY.md
+Next step: Continue with remaining Phase 32 plans (32-01, 32-03, 32-05, 32-06)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-02 celebration sounds with harmonics complete)*
+*Last updated: 2026-02-20 (32-04 score animation & XP counter complete)*
