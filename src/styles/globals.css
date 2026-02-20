@@ -388,7 +388,39 @@ html.theme-transitioning .page-shell {
     @apply rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-accent/5 to-card/40 p-5 text-left shadow-lg shadow-primary/15 transition duration-500 hover:-translate-y-1 hover:shadow-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
   }
 
+  /* Glass-morphism Tier Guide:
+   * - light: Regular cards, list items, sections, skeleton placeholders
+   * - medium: Hero cards, featured content, navigation headers
+   * - heavy: Modals, dialogs, overlays, bottom sheets, navigation chrome
+   *
+   * Phase 31 audit notes:
+   * - GlassHeader uses glass-medium (nav header = medium tier, correct)
+   * - Sidebar uses glass-heavy (nav chrome = heavy, correct)
+   * - BottomTabBar uses glass-heavy (nav chrome = heavy, correct)
+   * - Dialog uses glass-heavy (modal = heavy, correct)
+   * - OpEdPage header uses glass-medium (hero = medium, correct)
+   * - TestPage sections use glass-light (regular sections = light, correct)
+   * - PracticeSession uses glass-light (regular section = light, correct)
+   * - SkippedReviewPhase uses glass-light (regular section = light, correct)
+   * - TestResultsScreen uses glass-light (regular section = light, correct)
+   * - ReviewCard uses glass-light (card = light, correct)
+   * - HubSkeleton uses glass-light (skeleton = light, correct)
+   * - SwipeableStack uses glass-light (card = light, correct)
+   * - AnswerFeedback uses glass-light (card = light, correct)
+   * - StudyGuidePage uses glass-light (list item = light, correct)
+   * All tier assignments match the guide. No mismatches found.
+   */
+
   /* ── Three-tier glass-morphism system ── */
+  .glass-light,
+  .glass-medium,
+  .glass-heavy {
+    position: relative;
+    text-shadow: 0 1px 2px hsl(var(--color-background) / 0.3);
+    outline: 1px solid hsl(0deg 0% 100% / 0.15);
+    outline-offset: -1px;
+  }
+
   .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
     -webkit-backdrop-filter: blur(
@@ -437,10 +469,44 @@ html.theme-transitioning .page-shell {
       transform var(--duration-slow) var(--ease-out);
   }
 
-  /* Dark mode variants for all three tiers - purple tint for frosted glass personality */
+  /* Glass noise texture overlay for realistic frosted glass */
+  .glass-light::before,
+  .glass-medium::before,
+  .glass-heavy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+    mix-blend-mode: overlay;
+  }
+
+  /* Heavy tier supports optional colored tints via --glass-tint CSS property.
+   * Usage: set --glass-tint on the element or parent to activate.
+   * Example: style="--glass-tint: hsl(var(--color-primary) / 0.05)" */
+
+  /* Dark mode variants for all three tiers - purple tint for smoky car-window feel */
+  .dark .glass-light,
+  .dark .glass-medium,
+  .dark .glass-heavy {
+    text-shadow: 0 1px 3px hsl(0deg 0% 0% / 0.5);
+    outline-color: hsl(0deg 0% 100% / 0.08);
+  }
+
+  .dark .glass-light::before,
+  .dark .glass-medium::before,
+  .dark .glass-heavy::before {
+    opacity: 0.06;
+  }
+
   .dark .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.08), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 6px 16px -3px hsl(var(--color-overlay) / 0.25);
@@ -448,7 +514,7 @@ html.theme-transitioning .page-shell {
 
   .dark .glass-medium {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.08), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 10px 28px -5px hsl(var(--color-overlay) / 0.3);
@@ -456,7 +522,7 @@ html.theme-transitioning .page-shell {
 
   .dark .glass-heavy {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
-    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.05), transparent);
+    background-image: linear-gradient(135deg, hsl(var(--color-accent-purple) / 0.08), transparent);
     box-shadow:
       inset 0 0 0 1px hsl(0deg 0% 100% / 0.05),
       0 14px 44px -10px hsl(var(--color-overlay) / 0.35);
@@ -501,6 +567,15 @@ html.theme-transitioning .page-shell {
     .dark .glass-heavy,
     .dark .glass-card {
       background: hsl(var(--color-surface) / 0.9);
+    }
+  }
+
+  /* Reduced motion: remove noise texture for performance */
+  @media (prefers-reduced-motion: reduce) {
+    .glass-light::before,
+    .glass-medium::before,
+    .glass-heavy::before {
+      display: none;
     }
   }
 

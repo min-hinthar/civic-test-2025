@@ -393,13 +393,13 @@
   --color-surface-elevated-2: 222 47% 19%; /* Modals, popovers */
   --color-surface-elevated-3: 222 47% 22%; /* Dropdowns on modals */
 
-  /* ── Glass Tiers (lower opacity for dark backgrounds, increased blur for depth) ── */
+  /* ── Glass Tiers (lower opacity for dark backgrounds, increased blur for smoky depth) ── */
   --glass-light-blur: 18px; /* Slightly more than light mode's 16px */
   --glass-medium-blur: 28px; /* More than light mode's 24px */
   --glass-heavy-blur: 36px; /* More than light mode's 32px */
-  --glass-light-opacity: 0.5;
-  --glass-medium-opacity: 0.4;
-  --glass-heavy-opacity: 0.3;
+  --glass-light-opacity: 0.55; /* Bumped from 0.5 for smokier feel */
+  --glass-medium-opacity: 0.45; /* Bumped from 0.4 for smokier feel */
+  --glass-heavy-opacity: 0.35; /* Bumped from 0.3 for smokier feel */
 
   /* ── Shadows (darker for dark mode) ── */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
