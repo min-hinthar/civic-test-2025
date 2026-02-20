@@ -103,6 +103,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-06:** Card entrance uses useAnimationControls for imperative sequencing (awaitable) instead of declarative animate prop
 - **32-07:** Reused earned variable to avoid duplicate streak threshold calculation in handleCheck
 - **32-08:** Let pnpm resolve latest compatible dotlottie-react version (^0.18.1) rather than pinning exact
+- **33-01:** EmptyState uses chunky button variant for CTA to match app's encouraging tone
+- **33-01:** announce() uses two separate live regions (polite + assertive) cached at module level
+- **33-01:** useRetry uses closure-local cancelled flag (not useRef) per React Compiler conventions
+- **33-01:** ErrorFallback uses muted palette (no red/amber) per user decision for non-alarming errors
 - **33-02:** Decorative animations use animation:none, progress indicators use animation-duration:0s under reduced motion
 - **33-02:** stripe-move uses !important to override inline style specificity for reduced motion
 - **33-02:** StaggeredList separates motion preference from performance skips (15+ items, low-end device)
@@ -116,11 +120,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 33-02-PLAN.md (reduced-motion CSS/JS animation audit)
-Resume file: .planning/phases/33-states-accessibility/33-02-SUMMARY.md
-Next step: Continue with 33-03-PLAN.md
+Stopped at: Completed 33-01-PLAN.md (state pattern library foundation)
+Resume file: .planning/phases/33-states-accessibility/33-01-SUMMARY.md
+Next step: Continue with 33-03-PLAN.md (33-01 and 33-02 complete)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (33-02 reduced-motion animation audit complete)*
+*Last updated: 2026-02-20 (33-01 state pattern library complete)*
