@@ -1,5 +1,32 @@
 'use client';
 
+/**
+ * Coverage audit (Phase 31-05):
+ *
+ * StaggeredList consumers (11 usages across 10 files):
+ * - LandingPage: feature cards (4 items, stagger=100 explicit) -- fixed short list
+ * - Dashboard: hero + stat sections (5-6 items, stagger=80 explicit) -- fixed layout
+ * - StudyGuidePage: category cards (7 items, no explicit stagger) -- adaptive 40ms
+ * - WelcomeState: guided steps (~4 items, stagger=100 explicit) -- fixed short list
+ * - HistoryTab: test/interview sessions (2 dynamic lists, no explicit stagger) -- adaptive
+ * - OverviewTab: dashboard sections (3 items, stagger=80 explicit) -- fixed short list
+ * - AchievementsTab: badge grid (dynamic, stagger=60 explicit) -- per-category badges
+ * - SessionSetup: setup form sections (5 items, no explicit stagger) -- adaptive 40ms
+ * - DeckManager: deck card list (dynamic, up to 128, no explicit stagger) -- adaptive/skip 15+
+ * - LeaderboardTable: leaderboard rows (up to 25, stagger=40 explicit) -- fast cascade
+ * - BadgeGrid: badge cards (dynamic per category, stagger=60 explicit) -- grid layout
+ *
+ * FadeIn-only consumers (9 files):
+ * - TestPage, InterviewResults, TestResultsScreen, PasswordUpdatePage,
+ *   PasswordResetPage, QuestionReviewList, CategoryBreakdown, AuthPage, AboutPage
+ *
+ * Lists NOT using stagger (intentionally):
+ * - Quiz answer options: appear instantly for fast interaction
+ * - Flashcard stack: uses custom 3D flip animation, not list stagger
+ * - Settings page rows: static config, no animation needed
+ * - Navigation tabs: use indicator slide, not stagger
+ */
+
 import { ReactNode, Children } from 'react';
 import { motion, Variants } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
