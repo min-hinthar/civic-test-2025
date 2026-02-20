@@ -417,6 +417,40 @@ export function playMasteryComplete(): void {
 }
 
 // ---------------------------------------------------------------------------
+// Overlay sounds
+// ---------------------------------------------------------------------------
+
+/**
+ * Soft descending pop for overlay/dialog dismiss.
+ * 600 Hz -> 300 Hz sine sweep over 100ms. Gentle, satisfying close.
+ */
+export function playDismiss(): void {
+  if (isSoundMuted()) return;
+  try {
+    const ctx = getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.1);
+
+    gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.1);
+  } catch {
+    // Silently ignore -- sound failure must never break app flow
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Timer warning sounds
 // ---------------------------------------------------------------------------
 
