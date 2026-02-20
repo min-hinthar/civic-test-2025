@@ -21,6 +21,8 @@ interface CountUpScoreProps {
   size?: 'md' | 'lg' | 'xl';
   /** Called when count-up completes */
   onComplete?: () => void;
+  /** Called with current value during count-up animation (for tick sounds, teaser effects) */
+  onUpdate?: (currentValue: number) => void;
 }
 
 const sizeClasses = {
@@ -112,6 +114,7 @@ export function CountUpScore({
   showPercentage = false,
   size = 'lg',
   onComplete,
+  onUpdate,
 }: CountUpScoreProps) {
   const shouldReduceMotion = useReducedMotion();
   const [hasStarted, setHasStarted] = useState(false);
@@ -130,9 +133,10 @@ export function CountUpScore({
     return () => clearTimeout(timer);
   }, [delay]);
 
-  /** Formatting function that tracks current value for color shift */
+  /** Formatting function that tracks current value for color shift and fires onUpdate */
   const handleFormat = (n: number): string => {
     currentValueRef.current = n;
+    onUpdate?.(n);
     return `${Math.round(n)}${showPercentage ? '%' : ''}`;
   };
 
