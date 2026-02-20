@@ -60,8 +60,8 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 
 ### Content & About Page
 
-- [ ] **CONT-01**: All 28 USCIS 2025 questions receive validated explanation objects
-- [ ] **CONT-02**: Explanation quality audit across all 128 questions — consistent format and depth
+- [x] **CONT-01**: All 28 USCIS 2025 questions receive validated explanation objects
+- [x] **CONT-02**: Explanation quality audit across all 128 questions — consistent format and depth
 - [ ] **CONT-03**: About page with full narrative: app origin, mission statement, Volunteers in Asia history, Pre-Collegiate Program story
 - [ ] **CONT-04**: Bilingual dedication cards for Dwight D. Clark and Dorothy & James Guyot
 - [ ] **CONT-05**: About page accessible from Settings and/or navigation
@@ -138,8 +138,8 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | STAT-05 | Phase 33 | Pending |
 | STAT-06 | Phase 33 | Pending |
 | STAT-07 | Phase 33 | Pending |
-| CONT-01 | Phase 34 | Pending |
-| CONT-02 | Phase 34 | Pending |
+| CONT-01 | Phase 34 | Complete |
+| CONT-02 | Phase 34 | Complete |
 | CONT-03 | Phase 34 | Pending |
 | CONT-04 | Phase 34 | Pending |
 | CONT-05 | Phase 34 | Pending |
