@@ -52,7 +52,7 @@ let audioContext: AudioContext | null = null;
  * Lazily create / resume the shared AudioContext.
  * Returns null when AudioContext is unavailable (SSR, old browser, error).
  */
-function getContext(): AudioContext | null {
+export function getContext(): AudioContext | null {
   try {
     if (typeof window === 'undefined') return null;
     if (!audioContext) {
@@ -68,13 +68,14 @@ function getContext(): AudioContext | null {
 }
 
 // ---------------------------------------------------------------------------
-// Reusable note helper
+// Reusable note helpers
 // ---------------------------------------------------------------------------
 
-type OscillatorWaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+export type OscillatorWaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
 
 /**
  * Play a single note with an oscillator + gain envelope.
+ * Prefer `playNoteWarm` for richer, harmonics-enhanced tones.
  *
  * @param ctx   - AudioContext
  * @param freq  - Frequency in Hz
@@ -109,21 +110,56 @@ function playNote(
   osc.stop(startTime + duration);
 }
 
+/**
+ * Play a note with warm harmonics for fuller, game-like tones.
+ *
+ * Plays the fundamental frequency via `playNote`, then adds 2nd and 3rd
+ * harmonics at reduced gain to create warmth and presence.
+ *
+ * @param ctx       - AudioContext
+ * @param freq      - Fundamental frequency in Hz
+ * @param delay     - Seconds from now to start
+ * @param duration  - Seconds the note sustains
+ * @param gain      - Peak gain for fundamental (0-1)
+ * @param waveType  - Oscillator wave shape
+ * @param harmonics - Array of harmonic overtones to add
+ */
+export function playNoteWarm(
+  ctx: AudioContext,
+  freq: number,
+  delay: number,
+  duration: number,
+  gain = 0.25,
+  waveType: OscillatorWaveType = 'sine',
+  harmonics: { multiplier: number; gainRatio: number }[] = [
+    { multiplier: 2, gainRatio: 0.3 },
+    { multiplier: 3, gainRatio: 0.15 },
+  ]
+): void {
+  // Fundamental
+  playNote(ctx, freq, delay, duration, gain, waveType);
+
+  // Harmonics
+  for (const h of harmonics) {
+    playNote(ctx, freq * h.multiplier, delay, duration, gain * h.gainRatio, waveType);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Sound functions
 // ---------------------------------------------------------------------------
 
 /**
  * Ascending two-note ding for correct answers.
- * C5 (523 Hz) -> E5 (659 Hz). Bright, cheerful.
+ * C5 (523 Hz) -> E5 (659 Hz). Bright, cheerful, with warm harmonics.
  */
 export function playCorrect(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 523, 0, 0.15, 0.25); // C5
-    playNote(ctx, 659, 0.12, 0.15, 0.25); // E5
+    playNoteWarm(ctx, 523, 0, 0.15, 0.25); // C5
+    playNoteWarm(ctx, 659, 0.12, 0.15, 0.25); // E5
   } catch {
     // Silently ignore -- sound failure must never break app flow
   }
@@ -131,15 +167,15 @@ export function playCorrect(): void {
 
 /**
  * Soft descending two-note for incorrect answers.
- * E4 (330 Hz) -> C4 (262 Hz). Gentle, not punishing.
+ * E4 (330 Hz) -> C4 (262 Hz). Gentle, not punishing, with warm harmonics.
  */
 export function playIncorrect(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 330, 0, 0.2, 0.15); // E4
-    playNote(ctx, 262, 0.15, 0.3, 0.15); // C4
+    playNoteWarm(ctx, 330, 0, 0.2, 0.15); // E4
+    playNoteWarm(ctx, 262, 0.15, 0.3, 0.15); // C4
   } catch {
     // Silently ignore
   }
@@ -147,16 +183,16 @@ export function playIncorrect(): void {
 
 /**
  * Ascending arpeggio for level-ups.
- * C5 -> E5 -> G5 in quick succession. Energetic.
+ * C5 -> E5 -> G5 in quick succession. Energetic, with warm harmonics.
  */
 export function playLevelUp(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 523, 0, 0.2, 0.3); // C5
-    playNote(ctx, 659, 0.1, 0.2, 0.3); // E5
-    playNote(ctx, 784, 0.2, 0.2, 0.3); // G5
+    playNoteWarm(ctx, 523, 0, 0.2, 0.3); // C5
+    playNoteWarm(ctx, 659, 0.1, 0.2, 0.3); // E5
+    playNoteWarm(ctx, 784, 0.2, 0.2, 0.3); // G5
   } catch {
     // Silently ignore
   }
@@ -165,6 +201,7 @@ export function playLevelUp(): void {
 /**
  * Triumphant chord for milestone celebrations.
  * C5+E5+G5 simultaneous with longer sustain, followed by octave C6.
+ * With warm harmonics for richer tone.
  */
 export function playMilestone(): void {
   if (isSoundMuted()) return;
@@ -172,11 +209,11 @@ export function playMilestone(): void {
     const ctx = getContext();
     if (!ctx) return;
     // Simultaneous chord
-    playNote(ctx, 523, 0, 0.4, 0.25); // C5
-    playNote(ctx, 659, 0, 0.4, 0.25); // E5
-    playNote(ctx, 784, 0, 0.4, 0.25); // G5
+    playNoteWarm(ctx, 523, 0, 0.4, 0.25); // C5
+    playNoteWarm(ctx, 659, 0, 0.4, 0.25); // E5
+    playNoteWarm(ctx, 784, 0, 0.4, 0.25); // G5
     // Octave C6 after a brief pause
-    playNote(ctx, 1047, 0.3, 0.4, 0.25); // C6
+    playNoteWarm(ctx, 1047, 0.3, 0.4, 0.25); // C6
   } catch {
     // Silently ignore
   }
@@ -185,6 +222,7 @@ export function playMilestone(): void {
 /**
  * Quick pitch sweep for navigation/transitions.
  * Frequency ramp from 400 Hz to 800 Hz over 0.15s. Subtle.
+ * Enhanced with a parallel harmonic oscillator at 2x frequency.
  */
 export function playSwoosh(): void {
   if (isSoundMuted()) return;
@@ -192,21 +230,41 @@ export function playSwoosh(): void {
     const ctx = getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
+
+    // Fundamental sweep
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(400, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.15);
+    osc.frequency.setValueAtTime(400, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
 
-    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    gainNode.gain.setValueAtTime(0.1, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
 
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.15);
+    osc.start(now);
+    osc.stop(now + 0.15);
+
+    // Harmonic sweep at 2x frequency
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(800, now);
+    osc2.frequency.exponentialRampToValueAtTime(1600, now + 0.15);
+
+    gain2.gain.setValueAtTime(0.1 * 0.2, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.start(now);
+    osc2.stop(now + 0.15);
   } catch {
     // Silently ignore
   }
@@ -219,13 +277,17 @@ export function playSwoosh(): void {
 /**
  * Short click/tick for countdown numbers (5, 4, 3, 2, 1).
  * 800 Hz sine wave, 80ms duration, volume 0.15. Subtle but audible.
+ * Harmonics kept subtle (lower gainRatio).
  */
 export function playCountdownTick(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 800, 0, 0.08, 0.15);
+    playNoteWarm(ctx, 800, 0, 0.08, 0.15, 'sine', [
+      { multiplier: 2, gainRatio: 0.15 },
+      { multiplier: 3, gainRatio: 0.08 },
+    ]);
   } catch {
     // Silently ignore
   }
@@ -234,15 +296,21 @@ export function playCountdownTick(): void {
 /**
  * Ascending two-note "Go!" chime for countdown completion.
  * C5 (523 Hz) at t=0 for 150ms, then G5 (784 Hz) at t=0.1 for 200ms.
- * Energetic start signal.
+ * Energetic start signal with subtle harmonics.
  */
 export function playCountdownGo(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 523, 0, 0.15, 0.25); // C5
-    playNote(ctx, 784, 0.1, 0.2, 0.25); // G5
+    playNoteWarm(ctx, 523, 0, 0.15, 0.25, 'sine', [
+      { multiplier: 2, gainRatio: 0.15 },
+      { multiplier: 3, gainRatio: 0.08 },
+    ]); // C5
+    playNoteWarm(ctx, 784, 0.1, 0.2, 0.25, 'sine', [
+      { multiplier: 2, gainRatio: 0.15 },
+      { multiplier: 3, gainRatio: 0.08 },
+    ]); // G5
   } catch {
     // Silently ignore
   }
@@ -254,14 +322,14 @@ export function playCountdownGo(): void {
 
 /**
  * Short neutral tone for skipping a question.
- * 500 Hz triangle wave, 100ms. Quick, non-judgmental.
+ * 500 Hz triangle wave, 100ms. Quick, non-judgmental, with harmonics.
  */
 export function playSkip(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 500, 0, 0.1, 0.15, 'triangle');
+    playNoteWarm(ctx, 500, 0, 0.1, 0.15, 'triangle');
   } catch {
     // Silently ignore
   }
@@ -269,16 +337,16 @@ export function playSkip(): void {
 
 /**
  * Ascending 3-note arpeggio for streak milestones.
- * E5 (659 Hz) -> G5 (784 Hz) -> C6 (1047 Hz). Celebratory.
+ * E5 (659 Hz) -> G5 (784 Hz) -> C6 (1047 Hz). Celebratory, with harmonics.
  */
 export function playStreak(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 659, 0, 0.12, 0.25, 'triangle'); // E5
-    playNote(ctx, 784, 0.1, 0.12, 0.25, 'triangle'); // G5
-    playNote(ctx, 1047, 0.2, 0.15, 0.25, 'triangle'); // C6
+    playNoteWarm(ctx, 659, 0, 0.12, 0.25, 'triangle'); // E5
+    playNoteWarm(ctx, 784, 0.1, 0.12, 0.25, 'triangle'); // G5
+    playNoteWarm(ctx, 1047, 0.2, 0.15, 0.25, 'triangle'); // C6
   } catch {
     // Silently ignore
   }
@@ -287,6 +355,7 @@ export function playStreak(): void {
 /**
  * Quick frequency sweep for feedback panel reveal.
  * Sine wave 200 Hz -> 600 Hz over 120ms. Subtle "whoosh" upward.
+ * Enhanced with a parallel harmonic oscillator at 2x frequency.
  */
 export function playPanelReveal(): void {
   if (isSoundMuted()) return;
@@ -294,21 +363,41 @@ export function playPanelReveal(): void {
     const ctx = getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
+
+    // Fundamental sweep
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(200, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.12);
+    osc.frequency.setValueAtTime(200, now);
+    osc.frequency.exponentialRampToValueAtTime(600, now + 0.12);
 
-    gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    gainNode.gain.setValueAtTime(0.12, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
 
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
 
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.12);
+    osc.start(now);
+    osc.stop(now + 0.12);
+
+    // Harmonic sweep at 2x frequency
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(400, now);
+    osc2.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
+
+    gain2.gain.setValueAtTime(0.12 * 0.2, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.start(now);
+    osc2.stop(now + 0.12);
   } catch {
     // Silently ignore
   }
@@ -317,14 +406,36 @@ export function playPanelReveal(): void {
 /**
  * Short sparkly burst for progress bar completion.
  * High-frequency sine wave (2000 Hz) with quick decay. Satisfying.
+ * Enhanced with a parallel harmonic oscillator at 2x frequency.
  */
 export function playCompletionSparkle(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 2000, 0, 0.08, 0.2);
-    playNote(ctx, 2400, 0.04, 0.08, 0.15);
+
+    const now = ctx.currentTime;
+
+    // Original sparkle notes with harmonics
+    playNoteWarm(ctx, 2000, 0, 0.08, 0.2);
+    playNoteWarm(ctx, 2400, 0.04, 0.08, 0.15);
+
+    // Extra harmonic shimmer at 2x frequency for sparkle effect
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(4000, now);
+    osc.frequency.exponentialRampToValueAtTime(4800, now + 0.08);
+
+    gainNode.gain.setValueAtTime(0.2 * 0.2, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.08);
   } catch {
     // Silently ignore
   }
@@ -337,6 +448,7 @@ export function playCompletionSparkle(): void {
 /**
  * Whoosh sound for card fling gesture.
  * Frequency sweep from 800 Hz -> 300 Hz over 0.2s. Quick, kinetic.
+ * Enhanced with a parallel harmonic oscillator at 2x frequency.
  */
 export function playFling(): void {
   if (isSoundMuted()) return;
@@ -344,21 +456,41 @@ export function playFling(): void {
     const ctx = getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
+
+    // Fundamental sweep
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.2);
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 0.2);
 
-    gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    gainNode.gain.setValueAtTime(0.12, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
 
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
 
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.2);
+    osc.start(now);
+    osc.stop(now + 0.2);
+
+    // Harmonic sweep at 2x frequency
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1600, now);
+    osc2.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+
+    gain2.gain.setValueAtTime(0.12 * 0.2, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.start(now);
+    osc2.stop(now + 0.2);
   } catch {
     // Silently ignore
   }
@@ -366,15 +498,15 @@ export function playFling(): void {
 
 /**
  * Ascending two-note ding for "Know" sort.
- * C5 (523 Hz) -> E5 (659 Hz). Bright, affirming.
+ * C5 (523 Hz) -> E5 (659 Hz). Bright, affirming, with harmonics.
  */
 export function playKnow(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 523, 0, 0.2, 0.12); // C5
-    playNote(ctx, 659, 0.1, 0.2, 0.12); // E5
+    playNoteWarm(ctx, 523, 0, 0.2, 0.12); // C5
+    playNoteWarm(ctx, 659, 0.1, 0.2, 0.12); // E5
   } catch {
     // Silently ignore
   }
@@ -382,14 +514,14 @@ export function playKnow(): void {
 
 /**
  * Low single-note thud for "Don't Know" sort.
- * 200 Hz triangle wave. Soft, non-punishing.
+ * 200 Hz triangle wave. Soft, non-punishing, with harmonics.
  */
 export function playDontKnow(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 200, 0, 0.15, 0.15, 'triangle');
+    playNoteWarm(ctx, 200, 0, 0.15, 0.15, 'triangle');
   } catch {
     // Silently ignore
   }
@@ -397,7 +529,7 @@ export function playDontKnow(): void {
 
 /**
  * Triumphant five-note chime for 100% mastery completion.
- * C5+E5+G5 chord, then ascending C6 and E6. Celebratory.
+ * C5+E5+G5 chord, then ascending C6 and E6. Celebratory, with full harmonics.
  */
 export function playMasteryComplete(): void {
   if (isSoundMuted()) return;
@@ -405,12 +537,12 @@ export function playMasteryComplete(): void {
     const ctx = getContext();
     if (!ctx) return;
     // Simultaneous chord
-    playNote(ctx, 523, 0, 0.3, 0.4); // C5
-    playNote(ctx, 659, 0, 0.3, 0.4); // E5
-    playNote(ctx, 784, 0, 0.3, 0.4); // G5
+    playNoteWarm(ctx, 523, 0, 0.3, 0.4); // C5
+    playNoteWarm(ctx, 659, 0, 0.3, 0.4); // E5
+    playNoteWarm(ctx, 784, 0, 0.3, 0.4); // G5
     // Ascending resolution
-    playNote(ctx, 1047, 0.3, 0.3, 0.5); // C6
-    playNote(ctx, 1319, 0.5, 0.25, 0.5); // E6
+    playNoteWarm(ctx, 1047, 0.3, 0.3, 0.5); // C6
+    playNoteWarm(ctx, 1319, 0.5, 0.25, 0.5); // E6
   } catch {
     // Silently ignore
   }
@@ -423,6 +555,7 @@ export function playMasteryComplete(): void {
 /**
  * Soft descending pop for overlay/dialog dismiss.
  * 600 Hz -> 300 Hz sine sweep over 100ms. Gentle, satisfying close.
+ * Enhanced with a parallel harmonic oscillator at 2x frequency.
  */
 export function playDismiss(): void {
   if (isSoundMuted()) return;
@@ -430,21 +563,41 @@ export function playDismiss(): void {
     const ctx = getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
+
+    // Fundamental sweep
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.1);
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
 
-    gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    gainNode.gain.setValueAtTime(0.08, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
 
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
 
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
+    osc.start(now);
+    osc.stop(now + 0.1);
+
+    // Harmonic sweep at 2x frequency
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1200, now);
+    osc2.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+
+    gain2.gain.setValueAtTime(0.08 * 0.2, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.start(now);
+    osc2.stop(now + 0.1);
   } catch {
     // Silently ignore -- sound failure must never break app flow
   }
@@ -458,13 +611,17 @@ export function playDismiss(): void {
  * Short tick for per-question timer warning (at <= 5 seconds remaining).
  * 800 Hz sine wave, 80ms duration, volume 0.15. Distinct from countdown tick
  * by being used per-second during the warning phase.
+ * Subtle harmonics to match other enhanced sounds.
  */
 export function playTimerWarningTick(): void {
   if (isSoundMuted()) return;
   try {
     const ctx = getContext();
     if (!ctx) return;
-    playNote(ctx, 800, 0, 0.08, 0.15);
+    playNoteWarm(ctx, 800, 0, 0.08, 0.15, 'sine', [
+      { multiplier: 2, gainRatio: 0.15 },
+      { multiplier: 3, gainRatio: 0.08 },
+    ]);
   } catch {
     // Silently ignore
   }
