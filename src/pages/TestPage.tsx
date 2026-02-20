@@ -74,6 +74,7 @@ import { SkipButton } from '@/components/quiz/SkipButton';
 import { ExitConfirmDialog } from '@/components/quiz/ExitConfirmDialog';
 import { StreakReward, STREAK_DISPLAY_DURATION_MS } from '@/components/quiz/StreakReward';
 import { XPPopup } from '@/components/quiz/XPPopup';
+import { XPCounter } from '@/components/quiz/XPCounter';
 import { usePerQuestionTimer } from '@/hooks/usePerQuestionTimer';
 import { PerQuestionTimer } from '@/components/quiz/PerQuestionTimer';
 
@@ -137,6 +138,10 @@ const TestPage = () => {
   const [showXP, setShowXP] = useState(false);
   const [xpPoints, setXpPoints] = useState(10);
   const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cumulative XP state for header XPCounter
+  const [totalXp, setTotalXp] = useState(0);
+  const [prevTotalXp, setPrevTotalXp] = useState(0);
 
   // Results screen state
   const [showConfetti, setShowConfetti] = useState(false);
@@ -599,7 +604,10 @@ const TestPage = () => {
       // Trigger streak/XP micro-rewards on correct answers
       if (isCorrectAnswer) {
         const newStreak = quizState.streakCount + 1;
-        setXpPoints(newStreak >= 3 ? 15 : 10);
+        const earned = newStreak >= 3 ? 15 : 10;
+        setXpPoints(earned);
+        setPrevTotalXp(totalXp);
+        setTotalXp(prev => prev + earned);
         setShowXP(true);
         setShowStreakReward(true);
 
@@ -611,7 +619,7 @@ const TestPage = () => {
         }, STREAK_DISPLAY_DURATION_MS);
       }
     }, CHECK_DELAY_MS);
-  }, [quizState, currentQuestion, sessionId, questions, timeLeft]);
+  }, [quizState, currentQuestion, sessionId, questions, timeLeft, totalXp]);
 
   // Handle Continue from FeedbackPanel (TPUX-03)
   const handleContinue = useCallback(() => {
@@ -802,6 +810,7 @@ const TestPage = () => {
         totalQuestions={questions.length}
         mode="mock-test"
         onExit={handleExitRequest}
+        xpSlot={<XPCounter xp={totalXp} previousXp={prevTotalXp} />}
         timerSlot={
           <div className="flex items-center gap-2">
             {timerEnabled && (

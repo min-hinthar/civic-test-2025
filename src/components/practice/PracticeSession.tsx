@@ -20,6 +20,7 @@ import { SkipButton } from '@/components/quiz/SkipButton';
 import { SkippedReviewPhase } from '@/components/quiz/SkippedReviewPhase';
 import { StreakReward, STREAK_DISPLAY_DURATION_MS } from '@/components/quiz/StreakReward';
 import { XPPopup } from '@/components/quiz/XPPopup';
+import { XPCounter } from '@/components/quiz/XPCounter';
 import { quizReducer, initialQuizState } from '@/lib/quiz/quizReducer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { saveSession } from '@/lib/sessions/sessionStore';
@@ -335,6 +336,10 @@ export function PracticeSession({
   const [showXP, setShowXP] = useState(false);
   const [xpPoints, setXpPoints] = useState(10);
 
+  // Cumulative XP state for header XPCounter
+  const [totalXp, setTotalXp] = useState(0);
+  const [prevTotalXp, setPrevTotalXp] = useState(0);
+
   // Quiz state machine
   const [quizState, dispatch] = useReducer(quizReducer, null, () => {
     const state = initialQuizState({
@@ -485,7 +490,10 @@ export function PracticeSession({
       // Trigger streak/XP micro-rewards on correct answers
       if (isCorrect) {
         const newStreak = quizState.streakCount + 1;
-        setXpPoints(newStreak >= 3 ? 15 : 10);
+        const earned = newStreak >= 3 ? 15 : 10;
+        setXpPoints(earned);
+        setPrevTotalXp(totalXp);
+        setTotalXp(prev => prev + earned);
         setShowXP(true);
         setShowStreakReward(true);
 
@@ -528,6 +536,7 @@ export function PracticeSession({
     questions,
     timerEnabled,
     timeLeft,
+    totalXp,
   ]);
 
   // Continue after feedback
@@ -801,6 +810,7 @@ export function PracticeSession({
         totalQuestions={questions.length}
         mode="practice"
         onExit={handleExitRequest}
+        xpSlot={<XPCounter xp={totalXp} previousXp={prevTotalXp} />}
         timerSlot={
           timerEnabled ? (
             <div className="flex items-center gap-2">
