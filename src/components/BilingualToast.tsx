@@ -1,11 +1,14 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { motion, useMotionValue, useTransform, useAnimate } from 'motion/react';
+import type { PanInfo } from 'motion/react';
 import clsx from 'clsx';
 import { X } from 'lucide-react';
 import type { BilingualMessage } from '@/lib/errorSanitizer';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { hapticLight, hapticMedium } from '@/lib/haptics';
 
 /**
  * Toast types for different notification styles.
@@ -156,6 +159,8 @@ const typeIcons: Record<ToastType, string> = {
 
 /**
  * Container that renders all active toasts.
+ * Mobile: bottom-center above tab bar (flex-col-reverse so newest is closest to thumb).
+ * Desktop (sm+): top-right with normal flex-col.
  */
 function ToastContainer({
   toasts,
@@ -166,7 +171,8 @@ function ToastContainer({
 }) {
   return (
     <div
-      className="pointer-events-none fixed top-4 left-4 right-4 z-[9999] flex flex-col gap-3 sm:left-auto sm:max-w-sm"
+      className="pointer-events-none fixed left-4 right-4 z-[9999] flex flex-col-reverse gap-3 sm:top-4 sm:bottom-auto sm:left-auto sm:max-w-sm sm:flex-col"
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
       aria-live="polite"
     >
       {toasts.map(toast => (
@@ -176,49 +182,185 @@ function ToastContainer({
   );
 }
 
+/** Dismiss detection thresholds */
+const DISMISS_THRESHOLD = 100; // px distance
+const VELOCITY_THRESHOLD = 500; // px/s flick speed
+
 /**
- * Individual toast component with auto-dismiss and animations.
+ * Individual toast component with swipe-to-dismiss via motion/react drag.
+ *
+ * Features:
+ * - Horizontal drag with progressive opacity fade
+ * - Velocity+offset dismiss detection (fast flick OR far drag)
+ * - Spring-back on partial swipe
+ * - Auto-dismiss timer that pauses while dragging
+ * - Haptic feedback at threshold crossing and on dismiss
+ * - Desktop X button (hover-revealed)
+ * - Ghost blur trail on dismiss animation
  */
 function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: string) => void }) {
   const { showBurmese } = useLanguage();
-  const [isVisible, setIsVisible] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
 
-  // Animate in on mount
-  useEffect(() => {
-    // Small delay to trigger CSS transition
-    const showTimer = setTimeout(() => setIsVisible(true), 10);
-    return () => clearTimeout(showTimer);
+  // Motion values for drag -- start off-screen for entrance animation
+  const x = useMotionValue(300);
+  const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
+  const [scope, animate] = useAnimate<HTMLDivElement>();
+
+  // Auto-dismiss timer management
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startTimeRef = useRef(0);
+  const remainingRef = useRef(toast.duration);
+
+  // Haptic threshold tracking
+  const thresholdCrossedRef = useRef(false);
+
+  // Track whether dismiss animation has fired to prevent double-dismiss
+  const isDismissingRef = useRef(false);
+
+  // Start or resume auto-dismiss timer
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    startTimeRef.current = Date.now();
+    timerRef.current = setTimeout(() => {
+      if (isDismissingRef.current) return;
+      isDismissingRef.current = true;
+      // Animate out to the right for auto-dismiss
+      if (scope.current) {
+        animate(
+          scope.current,
+          { x: 400, opacity: 0, filter: 'blur(2px)' },
+          { type: 'spring', stiffness: 200, damping: 30 }
+        )
+          .then(() => onDismiss(toast.id))
+          .catch(() => onDismiss(toast.id));
+      } else {
+        onDismiss(toast.id);
+      }
+    }, remainingRef.current);
+  }, [animate, onDismiss, scope, toast.id]);
+
+  // Pause auto-dismiss timer
+  const pauseTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    const elapsed = Date.now() - startTimeRef.current;
+    remainingRef.current = Math.max(0, remainingRef.current - elapsed);
   }, []);
 
-  // Auto-dismiss after duration
+  // Entrance animation: spring from off-screen to center
   useEffect(() => {
-    const dismissTimer = setTimeout(() => {
-      setIsExiting(true);
-      // Wait for exit animation before removing
-      setTimeout(() => onDismiss(toast.id), 300);
-    }, toast.duration);
+    if (scope.current) {
+      animate(scope.current, { x: 0 }, { type: 'spring', stiffness: 400, damping: 30 }).then(
+        () => {},
+        () => {
+          /* unmounted during entrance */
+        }
+      );
+    }
+  }, [animate, scope]);
 
-    return () => clearTimeout(dismissTimer);
-  }, [toast.id, toast.duration, onDismiss]);
+  // Start auto-dismiss timer on mount
+  useEffect(() => {
+    startTimer();
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [startTimer]);
 
-  const handleManualDismiss = () => {
-    setIsExiting(true);
-    setTimeout(() => onDismiss(toast.id), 300);
-  };
+  // Track drag distance for haptic threshold feedback
+  useEffect(() => {
+    const unsubscribe = x.on('change', (latest: number) => {
+      if (!thresholdCrossedRef.current && Math.abs(latest) > DISMISS_THRESHOLD) {
+        thresholdCrossedRef.current = true;
+        hapticLight();
+      }
+    });
+    return () => unsubscribe();
+  }, [x]);
+
+  const handleDragStart = useCallback(() => {
+    pauseTimer();
+    thresholdCrossedRef.current = false;
+  }, [pauseTimer]);
+
+  const handleDragEnd = useCallback(
+    (_: unknown, info: PanInfo) => {
+      const { offset, velocity } = info;
+
+      const isDismissed =
+        Math.abs(offset.x) > DISMISS_THRESHOLD || Math.abs(velocity.x) > VELOCITY_THRESHOLD;
+
+      if (isDismissed && !isDismissingRef.current) {
+        isDismissingRef.current = true;
+        hapticMedium();
+        const exitX = offset.x > 0 ? 400 : -400;
+
+        if (!scope.current) {
+          onDismiss(toast.id);
+          return;
+        }
+
+        animate(
+          scope.current,
+          { x: exitX, opacity: 0, filter: 'blur(2px)' },
+          { type: 'spring', velocity: velocity.x, stiffness: 200, damping: 30 }
+        )
+          .then(() => onDismiss(toast.id))
+          .catch(() => onDismiss(toast.id));
+      } else {
+        // Spring back to center
+        if (scope.current) {
+          animate(
+            scope.current,
+            { x: 0, opacity: 1 },
+            { type: 'spring', stiffness: 500, damping: 30 }
+          ).then(
+            () => {},
+            () => {
+              /* unmounted */
+            }
+          );
+        }
+        // Resume auto-dismiss timer with remaining time
+        startTimer();
+      }
+    },
+    [animate, onDismiss, scope, startTimer, toast.id]
+  );
+
+  const handleManualDismiss = useCallback(() => {
+    if (isDismissingRef.current) return;
+    isDismissingRef.current = true;
+    hapticMedium();
+    if (scope.current) {
+      animate(
+        scope.current,
+        { x: 400, opacity: 0, filter: 'blur(2px)' },
+        { type: 'spring', stiffness: 200, damping: 30 }
+      )
+        .then(() => onDismiss(toast.id))
+        .catch(() => onDismiss(toast.id));
+    } else {
+      onDismiss(toast.id);
+    }
+  }, [animate, onDismiss, scope, toast.id]);
 
   return (
-    <div
+    <motion.div
+      ref={scope}
+      style={{ x, opacity, touchAction: 'pan-y' }}
+      drag="x"
+      dragElastic={0.3}
+      dragMomentum={false}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       role={toast.type === 'error' || toast.type === 'warning' ? 'alert' : 'status'}
       className={clsx(
-        // Base styles
-        'pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 shadow-lg',
-        // Transition styles
-        'transform transition-all duration-300 ease-out',
-        // Type-specific styles
-        typeStyles[toast.type],
-        // Animation states
-        isVisible && !isExiting ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+        'group pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 shadow-lg',
+        'cursor-grab active:cursor-grabbing',
+        typeStyles[toast.type]
       )}
     >
       {/* Icon */}
@@ -236,16 +378,16 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
         )}
       </div>
 
-      {/* Dismiss button */}
+      {/* Dismiss button -- opacity-0 by default, revealed on hover (desktop) */}
       <button
         type="button"
         onClick={handleManualDismiss}
-        className="flex-shrink-0 rounded-full p-1 opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-white focus:outline-none"
+        className="flex-shrink-0 rounded-full p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:!opacity-100 focus:opacity-100 focus:ring-2 focus:ring-white focus:outline-none"
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
