@@ -709,6 +709,31 @@ html.theme-transitioning .page-shell {
 }
 
 /* ═══════════════════════════════════════════════════
+   REDUCED MOTION
+   Disable decorative animations; preserve info state.
+   ═══════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Decorative float: stop entirely */
+  .animate-soft-bounce {
+    animation: none;
+  }
+
+  /* Badge shimmer sweeps: show static badge */
+  .badge-shimmer,
+  .badge-gold-shimmer {
+    animation: none;
+    background-size: 100% 100%;
+  }
+
+  /* Progress-bar stripes: keep visual, stop motion.
+     Inline-style specificity requires !important. */
+  [style*='stripe-move'] {
+    animation-duration: 0s !important; /* stylelint-disable-line declaration-no-important -- override inline style */
+  }
+}
+
+/* ═══════════════════════════════════════════════════
    VIEW TRANSITIONS
    Disable default cross-fade for root transitions
    ═══════════════════════════════════════════════════ */
