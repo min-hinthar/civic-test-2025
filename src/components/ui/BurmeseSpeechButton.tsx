@@ -13,6 +13,7 @@ import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react
 import { ExpandingRings, PauseIcon, SoundWaveIcon } from '@/components/ui/SpeechAnimations';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { hapticLight } from '@/lib/haptics';
 import {
   createBurmesePlayer,
   getBurmeseAudioUrl,
@@ -154,6 +155,8 @@ export function BurmeseSpeechButton({
     const now = Date.now();
     if (now - lastClickRef.current < 150) return;
     lastClickRef.current = now;
+
+    hapticLight();
 
     const player = getPlayer();
 

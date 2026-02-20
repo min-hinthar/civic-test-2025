@@ -25,6 +25,7 @@ import { Confetti } from '@/components/celebrations/Confetti';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { BadgeDefinition } from '@/lib/social/badgeDefinitions';
 import { getBadgeColors } from '@/lib/social/badgeColors';
+import { hapticHeavy } from '@/lib/haptics';
 
 // ---------------------------------------------------------------------------
 // Icon map - maps badge icon string to lucide-react component
@@ -62,9 +63,14 @@ export function BadgeCelebration({ badge, onDismiss }: BadgeCelebrationProps) {
 
   const isOpen = badge !== null;
 
-  // Auto-dismiss timer
+  // Auto-dismiss timer + celebration haptic
   useEffect(() => {
     if (!badge) return;
+
+    // Heavy haptic on badge celebration mount. Acceptable in useEffect because
+    // showing the celebration is always user-action-initiated (earning a badge
+    // requires completing a quiz or reaching a milestone).
+    hapticHeavy();
 
     autoDismissRef.current = setTimeout(() => {
       onDismiss();

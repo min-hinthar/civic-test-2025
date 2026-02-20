@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ShareCardPreview } from './ShareCardPreview';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
+import { hapticLight } from '@/lib/haptics';
 
 export interface ShareButtonProps {
   /** Data for generating the share card */
@@ -44,6 +45,7 @@ export function ShareButton({ data, variant = 'default', className }: ShareButto
   const { showBurmese } = useLanguage();
 
   const handleOpen = useCallback(() => {
+    hapticLight();
     setIsOpen(true);
   }, []);
 

@@ -7,6 +7,7 @@ import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { playStreak } from '@/lib/audio/soundEffects';
 import { strings } from '@/lib/i18n/strings';
+import { hapticHeavy } from '@/lib/haptics';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -83,11 +84,18 @@ export function StreakReward({ count, show, showBurmese }: StreakRewardProps) {
   const shouldReduceMotion = useReducedMotion();
   const hasPlayedSoundRef = useRef(false);
 
-  // Play streak sound for high milestones (>= 10)
+  // Play streak sound for high milestones (>= 10) + haptic for all milestones
+  // Haptic in useEffect is acceptable: streak reward is always user-action-initiated
+  // (consecutive correct answers trigger the milestone)
   useEffect(() => {
-    if (show && isMilestone(count) && count >= 10 && !hasPlayedSoundRef.current) {
-      hasPlayedSoundRef.current = true;
-      playStreak();
+    if (show && isMilestone(count)) {
+      if (!hasPlayedSoundRef.current) {
+        hasPlayedSoundRef.current = true;
+        hapticHeavy();
+        if (count >= 10) {
+          playStreak();
+        }
+      }
     }
     if (!show) {
       hasPlayedSoundRef.current = false;

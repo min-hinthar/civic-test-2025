@@ -6,6 +6,7 @@ import { ExpandingRings, PauseIcon, SoundWaveIcon } from '@/components/ui/Speech
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTTS } from '@/hooks/useTTS';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { hapticLight } from '@/lib/haptics';
 import {
   createAudioPlayer,
   getEnglishAudioUrl,
@@ -179,6 +180,8 @@ const SpeechButton = ({
     const now = Date.now();
     if (now - lastClickRef.current < 150) return;
     lastClickRef.current = now;
+
+    hapticLight();
 
     if (useMp3 && myUrl) {
       // MP3 mode

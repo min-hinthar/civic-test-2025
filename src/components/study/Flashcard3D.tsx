@@ -10,6 +10,7 @@ import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
+import { hapticMedium } from '@/lib/haptics';
 
 /**
  * Spring config for the flashcard flip: slight overshoot past 180 degrees.
@@ -192,6 +193,7 @@ export function Flashcard3D({
   const { showBurmese } = useLanguage();
 
   const handleFlip = useCallback(() => {
+    hapticMedium();
     const newState = !isFlipped;
     setIsFlipped(newState);
     onFlip?.(newState);

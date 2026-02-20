@@ -7,6 +7,7 @@ import { clsx } from 'clsx';
 import { SPRING_BOUNCY, SPRING_SNAPPY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { playPanelReveal } from '@/lib/audio/soundEffects';
+import { hapticMedium } from '@/lib/haptics';
 import {
   getRandomCorrectEncouragement,
   getRandomIncorrectEncouragement,
@@ -219,11 +220,14 @@ export function FeedbackPanel({
     hasPlayedSound.current = false;
   }, [show]);
 
-  // Play panel reveal sound when shown
+  // Play panel reveal sound + haptic when shown
+  // Haptic in useEffect is acceptable: panel reveal is always user-action-initiated
+  // (answering a question triggers the feedback panel)
   useEffect(() => {
     if (show && !hasPlayedSound.current) {
       hasPlayedSound.current = true;
       playPanelReveal();
+      hapticMedium();
     }
   }, [show]);
 

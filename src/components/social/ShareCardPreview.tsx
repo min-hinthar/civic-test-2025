@@ -23,6 +23,7 @@ import { useToast } from '@/components/BilingualToast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { renderShareCard, type ShareCardData } from '@/lib/social/shareCardRenderer';
 import { shareScoreCard } from '@/lib/social/shareUtils';
+import { hapticMedium } from '@/lib/haptics';
 
 export interface ShareCardPreviewProps {
   /** Card data to render, or null when closed */
@@ -91,6 +92,9 @@ export function ShareCardPreview({ data, open, onClose }: ShareCardPreviewProps)
     setIsSharing(true);
     try {
       const result = await shareScoreCard(blob);
+
+      // Haptic confirmation on successful share/copy/download
+      hapticMedium();
 
       if (result === 'shared') {
         showSuccess({

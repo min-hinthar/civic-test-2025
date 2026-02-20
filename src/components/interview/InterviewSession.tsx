@@ -53,6 +53,7 @@ import type { InterviewSnapshot } from '@/lib/sessions/sessionTypes';
 import { strings } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { hapticLight, hapticMedium } from '@/lib/haptics';
 import type { InterviewMode, InterviewResult, InterviewEndReason, Question } from '@/types';
 import type { GradeResult } from '@/lib/interview/answerGrader';
 
@@ -618,6 +619,7 @@ export function InterviewSession({
 
   // --- Manual submit (stop recording + move to transcription) ---
   const handleManualSubmit = useCallback(() => {
+    hapticLight();
     stopListening();
     stopRecording();
     setQuestionPhase('transcription');
@@ -644,11 +646,13 @@ export function InterviewSession({
   const handleToggleInputMode = useCallback(() => {
     if (inputMode === 'voice') {
       // Switch to text: cancel speech recognition and recording
+      hapticLight();
       stopListening();
       stopRecording();
       setInputMode('text');
     } else {
       // Switch to voice: start listening
+      hapticMedium();
       setInputMode('voice');
       if (canUseSpeech) {
         resetTranscript();
