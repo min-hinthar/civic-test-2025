@@ -190,6 +190,12 @@ module.exports = {
         'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
         'timer-warning': 'timer-warning 0.8s ease-in-out infinite',
       },
+      padding: {
+        'safe-top': 'env(safe-area-inset-top, 0px)',
+        'safe-bottom': 'env(safe-area-inset-bottom, 0px)',
+        'safe-left': 'env(safe-area-inset-left, 0px)',
+        'safe-right': 'env(safe-area-inset-right, 0px)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

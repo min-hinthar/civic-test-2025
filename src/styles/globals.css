@@ -39,8 +39,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: var(--app-viewport-height);
-  overscroll-behavior: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .page-shell {
@@ -109,8 +107,52 @@ a {
   color: inherit;
 }
 
+/* ═══════════════════════════════════════════════════
+   MOBILE NATIVE GUARDS
+   Eliminate web-app artifacts in PWA standalone mode.
+   ═══════════════════════════════════════════════════ */
+
+/* Disable double-tap zoom while keeping pinch-zoom and scroll */
 html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%; /* stylelint-disable-line property-no-vendor-prefix -- Safari split-view text scaling */
+  text-size-adjust: 100%;
   scroll-behavior: smooth;
+}
+
+/* Remove tap highlight flash globally (Phase 31 adds proper press animations) */
+* {
+  -webkit-tap-highlight-color: transparent; /* stylelint-disable-line property-no-vendor-prefix -- iOS/Android tap highlight */
+}
+
+/* Overscroll guard: prevent rubber-band white flash ONLY in installed PWA mode */
+@media (display-mode: standalone) {
+  html,
+  body {
+    overscroll-behavior: none;
+  }
+}
+
+/* User-select guards: prevent accidental text selection on interactive elements */
+button,
+[role='button'],
+[role='radio'],
+[role='tab'],
+[role='switch'],
+a,
+label,
+nav {
+  -webkit-user-select: none; /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+  user-select: none;
+}
+
+/* Preserve text selection on educational content */
+p,
+article,
+.font-myanmar,
+.selectable-content {
+  -webkit-user-select: text; /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+  user-select: text;
 }
 
 /* Smooth theme transition - applied temporarily when toggling light/dark */
