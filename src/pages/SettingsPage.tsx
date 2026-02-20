@@ -602,6 +602,22 @@ export default function SettingsPage() {
           showBurmese={showBurmese}
         >
           <SettingsRow
+            label="About This App"
+            labelMy="ဤအက်ပ်အကြောင်း"
+            description="Our story, mission, and dedications"
+            descriptionMy="ဇာတ်ကြောင်း၊ ရည်ရွယ်ချက်နှင့် ဂုဏ်ပြုချက်များ"
+            showBurmese={showBurmese}
+            action={
+              <button
+                type="button"
+                onClick={() => navigate('/about')}
+                className="rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px]"
+              >
+                {showBurmese ? 'ကြည့်ပါ' : 'View'}
+              </button>
+            }
+          />
+          <SettingsRow
             label="Replay Onboarding Tour"
             labelMy="မိတ်ဆက်ခရီးကို ပြန်ကြည့်ပါ"
             description="Walk through the guided introduction again"

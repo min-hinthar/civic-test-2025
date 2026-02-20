@@ -1,11 +1,12 @@
 'use client';
 
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   Brain,
   Clock,
   GraduationCap,
+  Heart,
   Mic,
   Smartphone,
   Star,
@@ -297,6 +298,39 @@ const LandingPage = () => {
                   you reconnect.
                 </p>
               </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* About Teaser */}
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <FadeIn>
+            <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/60 bg-card p-6 text-center shadow-md">
+              <Heart className="h-8 w-8 text-primary" />
+              <h3 className="text-lg font-bold text-foreground">Built with Heart</h3>
+              {showBurmese && (
+                <p className="font-myanmar text-lg text-muted-foreground">
+                  နှလုံးသားနဲ့ တည်ဆောက်ထားပါတယ်
+                </p>
+              )}
+              <p className="max-w-md text-sm text-muted-foreground">
+                This app was born from a deep love for the Burmese community and the people who have
+                dedicated their lives to education across borders.
+              </p>
+              {showBurmese && (
+                <p className="max-w-md font-myanmar text-sm text-muted-foreground">
+                  ဤအက်ပ်သည် မြန်မာအသိုင်းအဝိုင်းအပေါ် ချစ်ခင်မှုနှင့် နယ်စပ်ဖြတ်ကျော် ပညာရေးအတွက်
+                  ဘဝကို မြှုပ်နှံခဲ့သူများအပေါ် လေးစားမှုမှ မွေးဖွားလာခြင်းဖြစ်ပါသည်။
+                </p>
+              )}
+              <Link
+                to="/about"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/20 min-h-[44px]"
+              >
+                {showBurmese ? 'ကျွန်ုပ်တို့ဇာတ်ကြောင်းကို ဖတ်ပါ' : 'Read Our Story'}
+              </Link>
             </div>
           </FadeIn>
         </div>
