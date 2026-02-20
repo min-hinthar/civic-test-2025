@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 31 — Animation & Interaction Polish (v3.0 World-Class UX)
+**Current focus:** Phase 32 — Celebration System Elevation (v3.0 World-Class UX)
 
 ## Current Position
 
-Phase: 31 (animation-interaction-polish)
-Plan: 5 of 5
-Status: Complete
-Last activity: 2026-02-20 — Completed 31-05 (adaptive stagger timing)
+Phase: 32 (celebration-system-elevation)
+Plan: 2 of 6
+Status: In Progress
+Last activity: 2026-02-20 — Completed 32-02 (celebration sounds with harmonics)
 
-Progress: [##########] 5/5 plans (Phase 31)
+Progress: [###-------] 2/6 plans (Phase 32)
 
 ## Completed Milestones
 
@@ -77,6 +77,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **31-05:** 15+ items skip stagger entirely -- faster than any timed entrance
 - **31-05:** hardwareConcurrency <= 4 threshold for low-end device stagger skip
 - **31-05:** Custom stagger prop preserved for backward compat -- 7 consumers with explicit values unchanged
+- **32-02:** Default harmonics: 2nd at 0.3 gainRatio, 3rd at 0.15 gainRatio for warm game-like tones
+- **32-02:** Sweep-based sounds use parallel 2x frequency oscillator instead of playNoteWarm
+- **32-02:** XP ding caps at E6 (1320 Hz) to prevent ear-piercing on long chains
+- **32-02:** Fail reveal uses D4->C4 descent (not buzzer) for encouraging tone
+- **32-02:** playCelebrationSequence maps card-enter to playPracticeComplete for subtle entrance
 
 ### Blockers/Concerns
 
@@ -86,11 +91,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 31-05-PLAN.md (5/5 Phase 31 plans complete)
-Resume file: .planning/phases/31-animation-interaction-polish/31-05-SUMMARY.md
-Next step: Phase 31 complete. Begin Phase 32 or next milestone phase.
+Stopped at: Completed 32-02-PLAN.md
+Resume file: .planning/phases/32-celebration-system-elevation/32-02-SUMMARY.md
+Next step: Continue with 32-03-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (31-05 adaptive stagger timing complete, Phase 31 done)*
+*Last updated: 2026-02-20 (32-02 celebration sounds with harmonics complete)*
