@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 31 (animation-interaction-polish)
-Plan: 2 of 5
+Plan: 4 of 5
 Status: In Progress
-Last activity: 2026-02-20 — Completed 31-02 (dialog exit animations)
+Last activity: 2026-02-20 — Completed 31-04 (card enter animations)
 
-Progress: [####------] 2/5 plans (Phase 31)
+Progress: [########--] 4/5 plans (Phase 31)
 
 ## Completed Milestones
 
@@ -66,6 +66,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **31-02:** Task execution reordered: Task 2 (playDismiss) before Task 1 (Dialog refactor) to avoid broken intermediate typecheck
 - **31-02:** transformOrigin computed in useEffect + useState, not useMemo, to avoid ref.current access during render (React Compiler compliance)
 - **31-02:** DialogOverlayInner renamed internally but exported as DialogOverlay for backward compatibility
+- **31-04:** Card interactive branch uses explicit initial object { opacity: 0, scale: 0.95, y: 0 } transitioning to idle variant for combined enter + hover
+- **31-04:** GlassCard uses two-element approach (outer motion.div + inner glass div) to avoid backdrop-filter + transform WebKit conflict
+- **31-04:** animate prop defaults to true; consumers inside StaggeredList should pass animate={false}
 
 ### Blockers/Concerns
 
@@ -75,11 +78,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 31-02-PLAN.md (2/5 Phase 31 plans complete)
-Resume file: .planning/phases/31-animation-interaction-polish/31-02-SUMMARY.md
-Next step: Execute 31-03-PLAN.md
+Stopped at: Completed 31-04-PLAN.md (4/5 Phase 31 plans complete)
+Resume file: .planning/phases/31-animation-interaction-polish/31-04-SUMMARY.md
+Next step: Execute 31-05-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (31-02 dialog exit animations complete)*
+*Last updated: 2026-02-20 (31-04 card enter animations complete)*
