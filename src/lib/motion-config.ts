@@ -33,6 +33,14 @@ export const SPRING_GENTLE = {
   damping: 20,
 };
 
+/** Fast press-down spring for instant button press feel (~50ms settle) */
+export const SPRING_PRESS_DOWN = {
+  type: 'spring' as const,
+  stiffness: 800,
+  damping: 30,
+  mass: 0.5,
+};
+
 /**
  * Stagger timing presets for list/grid animations.
  * Values in seconds (for motion/react staggerChildren).
