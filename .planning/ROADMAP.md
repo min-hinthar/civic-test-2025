@@ -120,7 +120,13 @@ Plans:
   3. Closing any overlay (dialog, modal, tooltip, toast) plays a fade + scale(0.95) exit animation instead of an instant disappearance
   4. Card components enter with a consistent scale(0.95 to 1) + fade animation across all screens
   5. Glass-morphism tiers (light/medium/heavy) are applied correctly per component type — verified across all screens in both light and dark mode
-**Plans**: TBD
+**Plans**: 5 plans in 2 waves
+Plans:
+- [ ] 31-01-PLAN.md — Button tier system (3D chunky primary, scale secondary, opacity tertiary)
+- [ ] 31-02-PLAN.md — Dialog exit animations + dismiss audio cue
+- [ ] 31-03-PLAN.md — Glass-morphism noise texture, text-shadow, and tier audit
+- [ ] 31-04-PLAN.md — Card enter animations (scale+fade on mount)
+- [ ] 31-05-PLAN.md — StaggeredList adaptive timing + coverage audit
 
 ### Phase 32: Celebration System Elevation
 **Goal**: Achievements and milestones trigger choreographed, multi-sensory celebrations — confetti, sound, haptics, and animation work together in timed sequences that scale to the significance of what the user accomplished
