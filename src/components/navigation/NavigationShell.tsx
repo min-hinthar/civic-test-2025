@@ -14,6 +14,7 @@ import { motion } from 'motion/react';
 import { HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { useNavigation } from './NavigationProvider';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useFocusOnNavigation } from '@/hooks/useFocusOnNavigation';
 import { Sidebar } from './Sidebar';
 import { BottomTabBar } from './BottomTabBar';
 import { OfflineBanner } from '@/components/pwa/OfflineBanner';
@@ -28,6 +29,7 @@ export function NavigationShell({ children }: NavigationShellProps) {
   const location = useLocation();
   const { isExpanded, tier } = useNavigation();
   const shouldReduceMotion = useReducedMotion();
+  useFocusOnNavigation();
   const isPublicRoute = HIDDEN_ROUTES.includes(location.pathname);
 
   // On tablet/desktop, push content to make room for the sidebar.
