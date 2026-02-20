@@ -69,6 +69,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **31-04:** Card interactive branch uses explicit initial object { opacity: 0, scale: 0.95, y: 0 } transitioning to idle variant for combined enter + hover
 - **31-04:** GlassCard uses two-element approach (outer motion.div + inner glass div) to avoid backdrop-filter + transform WebKit conflict
 - **31-04:** animate prop defaults to true; consumers inside StaggeredList should pass animate={false}
+- **31-03:** Outline with negative offset for glass edge highlight avoids border/box-shadow conflicts
+- **31-03:** Dark mode glass opacity bumped (0.55/0.45/0.35) for smokier car-window feel
+- **31-03:** Purple tint gradient increased from 0.05 to 0.08 in dark mode for richer glass personality
+- **31-03:** All glass tier assignments verified correct in Phase 31 audit -- no mismatches found
 
 ### Blockers/Concerns
 
@@ -78,11 +82,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 31-04-PLAN.md (4/5 Phase 31 plans complete)
-Resume file: .planning/phases/31-animation-interaction-polish/31-04-SUMMARY.md
-Next step: Execute 31-05-PLAN.md
+Stopped at: Completed 31-03-PLAN.md (4/5 Phase 31 plans complete)
+Resume file: .planning/phases/31-animation-interaction-polish/31-03-SUMMARY.md
+Next step: Execute 31-05-PLAN.md (only remaining plan)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (31-04 card enter animations complete)*
+*Last updated: 2026-02-20 (31-03 glass-morphism polish complete)*
