@@ -64,7 +64,7 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 - [x] **CONT-02**: Explanation quality audit across all 128 questions — consistent format and depth
 - [ ] **CONT-03**: About page with full narrative: app origin, mission statement, Volunteers in Asia history, Pre-Collegiate Program story
 - [ ] **CONT-04**: Bilingual dedication cards for Dwight D. Clark and Dorothy & James Guyot
-- [ ] **CONT-05**: About page accessible from Settings and/or navigation
+- [x] **CONT-05**: About page accessible from Settings and/or navigation
 - [ ] **CONT-06**: About page renders in both English-only and bilingual modes
 
 ## Future Requirements
@@ -142,7 +142,7 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | CONT-02 | Phase 34 | Complete |
 | CONT-03 | Phase 34 | Pending |
 | CONT-04 | Phase 34 | Pending |
-| CONT-05 | Phase 34 | Pending |
+| CONT-05 | Phase 34 | Complete |
 | CONT-06 | Phase 34 | Pending |
 
 **Coverage:**

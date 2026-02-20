@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 34 (content-about-page)
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Executing
-Last activity: 2026-02-20 — Completed 34-01 (content data layer)
+Last activity: 2026-02-20 — Completed 34-03 (navigation entry points)
 
-Progress: [###░░░░░░░] 1/3 plans (Phase 34)
+Progress: [######░░░░] 2/3 plans (Phase 34)
 
 ## Completed Milestones
 
@@ -42,6 +42,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **34-01:** citation field optional per type definition (48/128 questions have it) -- not a gap
 - **34-01:** Four narrative sections ordered for emotional arc: origin, mission, VIA, PCP
 - **34-01:** Burmese text kept simple/direct per BRMSE-01 -- native speaker review may be needed
+- **34-03:** Heart icon in GlassHeader is independent of showSignIn/showBack, uses flex wrapper
+- **34-03:** About row placed first in Settings Help & Guidance for prominence
+- **34-03:** Narrative teaser uses warm emotional copy about Burmese community
 
 ### Blockers/Concerns
 
@@ -51,11 +54,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 34-01-PLAN.md
-Resume file: .planning/phases/34-content-about-page/34-01-SUMMARY.md
-Next step: Execute 34-02-PLAN.md
+Stopped at: Completed 34-03-PLAN.md
+Resume file: .planning/phases/34-content-about-page/34-03-SUMMARY.md
+Next step: Complete 34-02-PLAN.md (executing in parallel)
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (34-01 content data layer complete)*
+*Last updated: 2026-02-20 (34-03 navigation entry points complete)*
