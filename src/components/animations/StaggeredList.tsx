@@ -3,15 +3,80 @@
 import { ReactNode, Children } from 'react';
 import { motion, Variants } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { SPRING_BOUNCY, STAGGER_DEFAULT } from '@/lib/motion-config';
+import { SPRING_BOUNCY } from '@/lib/motion-config';
 import { clsx } from 'clsx';
 
-// Item variants - bouncy spring pop entrance (scale 0.9→1 + y 20→0)
+/**
+ * Adaptive stagger configuration based on child count, device capability,
+ * and reduced-motion preference.
+ */
+interface AdaptiveConfig {
+  shouldAnimate: boolean;
+  stagger: number; // seconds
+  delay: number; // seconds
+}
+
+/**
+ * Calculates adaptive stagger timing based on list length and device capability.
+ *
+ * - 1-3 items: 60ms stagger (luxurious entrance)
+ * - 4-8 items: 40ms stagger (fast cascade)
+ * - 9-14 items: capped so total animation stays under ~400ms
+ * - 15+ items: skip stagger entirely (all items appear at once)
+ * - Low-end devices (hardwareConcurrency <= 4): skip stagger
+ * - prefers-reduced-motion: skip stagger
+ *
+ * When `customStagger` is provided (backward compat), it overrides adaptive calculation.
+ */
+function getAdaptiveConfig(
+  childCount: number,
+  prefersReduced: boolean,
+  customStagger?: number, // ms, from prop
+  customDelay?: number // ms, from prop
+): AdaptiveConfig {
+  // Reduced motion or 15+ items: skip entirely
+  if (prefersReduced || childCount >= 15) {
+    return { shouldAnimate: false, stagger: 0, delay: 0 };
+  }
+
+  // Low-end device detection
+  const isLowEnd =
+    typeof navigator !== 'undefined' &&
+    navigator.hardwareConcurrency != null &&
+    navigator.hardwareConcurrency <= 4;
+  if (isLowEnd) {
+    return { shouldAnimate: false, stagger: 0, delay: 0 };
+  }
+
+  // If custom stagger provided, use it (backward compat)
+  if (customStagger !== undefined) {
+    return {
+      shouldAnimate: true,
+      stagger: customStagger / 1000,
+      delay: (customDelay ?? 50) / 1000,
+    };
+  }
+
+  // Adaptive timing based on count
+  const delay = (customDelay ?? 100) / 1000;
+
+  if (childCount <= 3) return { shouldAnimate: true, stagger: 0.06, delay }; // luxurious
+  if (childCount <= 8) return { shouldAnimate: true, stagger: 0.04, delay }; // fast cascade
+
+  // 9-14 items: cap total animation at ~400ms
+  return {
+    shouldAnimate: true,
+    stagger: Math.min(0.04, 0.4 / childCount),
+    delay: 0.03,
+  };
+}
+
+// Item variants - slide up from 12px below + fade in + subtle scale
 const itemVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 20,
-    scale: 0.9,
+    y: 12,
+    scale: 0.97,
   },
   visible: {
     opacity: 1,
@@ -22,11 +87,6 @@ const itemVariants: Variants = {
 };
 
 // Reduced motion variants
-const reducedContainerVariants: Variants = {
-  hidden: { opacity: 1 },
-  visible: { opacity: 1 },
-};
-
 const reducedItemVariants: Variants = {
   hidden: { opacity: 1, y: 0 },
   visible: { opacity: 1, y: 0 },
@@ -37,17 +97,23 @@ interface StaggeredListProps {
   className?: string;
   /** Delay before animation starts (ms) */
   delay?: number;
-  /** Time between each item animation (ms) */
+  /**
+   * Time between each item animation (ms).
+   * When omitted, adaptive timing is used based on child count.
+   * When explicitly set, overrides adaptive calculation (backward compat).
+   */
   stagger?: number;
 }
 
 /**
- * Container for staggered list item animations.
+ * Container for staggered list item animations with adaptive timing.
  *
  * Features:
- * - Items fade/slide in sequentially
- * - Configurable stagger timing
+ * - Adaptive stagger timing scales with child count
+ * - Skips stagger for 15+ items (instant appearance)
+ * - Auto-disables on low-end devices (hardwareConcurrency <= 4)
  * - Respects prefers-reduced-motion
+ * - Custom stagger prop overrides adaptive mode (backward compat)
  *
  * Usage:
  * ```tsx
@@ -60,27 +126,29 @@ interface StaggeredListProps {
  * </StaggeredList>
  * ```
  */
-export function StaggeredList({
-  children,
-  className,
-  delay = 100,
-  stagger = STAGGER_DEFAULT * 1000,
-}: StaggeredListProps) {
+export function StaggeredList({ children, className, delay, stagger }: StaggeredListProps) {
   const shouldReduceMotion = useReducedMotion();
+  const childCount = Children.count(children);
+  const config = getAdaptiveConfig(childCount, shouldReduceMotion, stagger, delay);
 
-  const customContainerVariants: Variants = {
+  if (!config.shouldAnimate) {
+    // Skip animation: render children directly
+    return <div className={className}>{children}</div>;
+  }
+
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: stagger / 1000,
-        delayChildren: delay / 1000,
+        staggerChildren: config.stagger,
+        delayChildren: config.delay,
       },
     },
   };
 
   return (
     <motion.div
-      variants={shouldReduceMotion ? reducedContainerVariants : customContainerVariants}
+      variants={containerVariants}
       initial="hidden"
       animate="visible"
       className={className}
