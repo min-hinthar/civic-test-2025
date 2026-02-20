@@ -138,7 +138,14 @@ Plans:
   3. Test results screen plays a multi-stage choreography: card scale-in, then score count-up with dramatic easing, then pass/fail reveal, then confetti, then sound, then action buttons stagger in — each stage visibly sequenced, not simultaneous
   4. DotLottie celebration animations (checkmark, trophy, badge glow, star burst) load lazily and play at 60fps without blocking the main thread
   5. XP counter in the quiz session header pulses with spring animation each time the user earns points
-**Plans**: TBD
+**Plans**: 6 plans in 3 waves
+Plans:
+- [ ] 32-01-PLAN.md — Fix confetti leak + civics-themed shapes and party popper physics
+- [ ] 32-02-PLAN.md — Sound harmonics + celebration sound sequences
+- [ ] 32-03-PLAN.md — DotLottie integration + CSP update
+- [ ] 32-04-PLAN.md — Dramatic score count-up easing + XP counter
+- [ ] 32-05-PLAN.md — useCelebration hook + CelebrationOverlay orchestration
+- [ ] 32-06-PLAN.md — TestResultsScreen multi-stage choreography
 
 ### Phase 33: States & Accessibility
 **Goal**: Every screen has polished loading, empty, and error states, and all users — including those using screen readers or reduced motion — experience the full app without information loss
