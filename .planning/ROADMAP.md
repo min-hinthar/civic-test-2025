@@ -70,7 +70,7 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 - [ ] **Phase 31: Animation & Interaction Polish** - Button press feedback tiers, stagger audit with length scaling, exit animations on overlays, card enter animations, and glass-morphism tier audit
 - [ ] **Phase 32: Celebration System Elevation** - Fix confetti leak, build useCelebration hook with CelebrationOverlay, achievement-scaled confetti, multi-stage choreography, DotLottie animations, sound warming, XP counter
 - [ ] **Phase 33: States & Accessibility** - Skeleton screens, empty state designs, inline error recovery, focus management on route changes, reduced motion CSS completeness, screen reader celebration announcements, modal focus traps
-- [ ] **Phase 34: Content & About Page** - 28 missing USCIS 2025 explanations, explanation quality audit, About page with mission narrative and bilingual dedication cards
+- [x] **Phase 34: Content & About Page** - 28 missing USCIS 2025 explanations, explanation quality audit, About page with mission narrative and bilingual dedication cards (completed 2026-02-20)
 
 ## Phase Details
 
@@ -170,7 +170,7 @@ Note: Phase 34 (Content) depends only on Phase 29 and can potentially run in par
 | 31. Animation & Interaction Polish | v3.0 | TBD | Not started | - |
 | 32. Celebration System Elevation | v3.0 | TBD | Not started | - |
 | 33. States & Accessibility | v3.0 | TBD | Not started | - |
-| 34. Content & About Page | 2/3 | In Progress|  | - |
+| 34. Content & About Page | 3/3 | Complete   | 2026-02-20 | - |
 
 **Cumulative:**
 

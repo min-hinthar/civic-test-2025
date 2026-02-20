@@ -62,10 +62,10 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 
 - [x] **CONT-01**: All 28 USCIS 2025 questions receive validated explanation objects
 - [x] **CONT-02**: Explanation quality audit across all 128 questions — consistent format and depth
-- [ ] **CONT-03**: About page with full narrative: app origin, mission statement, Volunteers in Asia history, Pre-Collegiate Program story
-- [ ] **CONT-04**: Bilingual dedication cards for Dwight D. Clark and Dorothy & James Guyot
+- [x] **CONT-03**: About page with full narrative: app origin, mission statement, Volunteers in Asia history, Pre-Collegiate Program story
+- [x] **CONT-04**: Bilingual dedication cards for Dwight D. Clark and Dorothy & James Guyot
 - [x] **CONT-05**: About page accessible from Settings and/or navigation
-- [ ] **CONT-06**: About page renders in both English-only and bilingual modes
+- [x] **CONT-06**: About page renders in both English-only and bilingual modes
 
 ## Future Requirements
 
@@ -140,10 +140,10 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | STAT-07 | Phase 33 | Pending |
 | CONT-01 | Phase 34 | Complete |
 | CONT-02 | Phase 34 | Complete |
-| CONT-03 | Phase 34 | Pending |
-| CONT-04 | Phase 34 | Pending |
+| CONT-03 | Phase 34 | Complete |
+| CONT-04 | Phase 34 | Complete |
 | CONT-05 | Phase 34 | Complete |
-| CONT-06 | Phase 34 | Pending |
+| CONT-06 | Phase 34 | Complete |
 
 **Coverage:**
 - v3.0 requirements: 39 total
