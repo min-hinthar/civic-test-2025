@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 34 — Content & About Page (v3.0 World-Class UX)
+**Current focus:** Phase 30 — Mobile Native Feel (v3.0 World-Class UX)
 
 ## Current Position
 
-Phase: 34 (content-about-page)
-Plan: 3 of 3
-Status: Complete
-Last activity: 2026-02-20 — Completed 34-02 (About page UI)
+Phase: 30 (mobile-native-feel)
+Plan: 2 of 4
+Status: In Progress
+Last activity: 2026-02-20 — Completed 30-02 (Haptic feedback system)
 
-Progress: [##########] 3/3 plans (Phase 34)
+Progress: [####------] 1/4 plans (Phase 30)
 
 ## Completed Milestones
 
@@ -48,6 +48,7 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **34-03:** Heart icon in GlassHeader is independent of showSignIn/showBack, uses flex wrapper
 - **34-03:** About row placed first in Settings Help & Guidance for prominence
 - **34-03:** Narrative teaser uses warm emotional copy about Burmese community
+- **30-02:** Reordered haptic exports to light/medium/heavy/double for logical grouping
 
 ### Blockers/Concerns
 
@@ -57,11 +58,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 34-02-PLAN.md (all Phase 34 plans complete)
-Resume file: .planning/phases/34-content-about-page/34-02-SUMMARY.md
-Next step: Phase 34 complete — ready for next phase
+Stopped at: Completed 30-02-PLAN.md
+Resume file: .planning/phases/30-mobile-native-feel/30-02-SUMMARY.md
+Next step: Execute 30-03-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (34-02 About page UI complete — Phase 34 fully done)*
+*Last updated: 2026-02-20 (30-02 Haptic feedback system complete)*

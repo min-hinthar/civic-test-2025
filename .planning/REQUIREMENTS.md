@@ -23,7 +23,7 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 - [ ] **MOBI-02**: Safe area inset handling for iPhone Dynamic Island on BottomTabBar and GlassHeader
 - [ ] **MOBI-03**: `user-select: none` on interactive elements prevents accidental text selection during taps
 - [ ] **MOBI-04**: Swipe-to-dismiss on toast notifications with motion/react drag
-- [ ] **MOBI-05**: Haptic feedback utility (`haptics.ts`) with named patterns: tap, success, error, milestone
+- [x] **MOBI-05**: Haptic feedback utility (`haptics.ts`) with named patterns: tap, success, error, milestone
 - [ ] **MOBI-06**: Haptics integrated into FeedbackPanel, StreakReward, badge celebrations, and 3D button press
 
 ### Animation & Interaction Polish
@@ -113,7 +113,7 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | MOBI-02 | Phase 30 | Pending |
 | MOBI-03 | Phase 30 | Pending |
 | MOBI-04 | Phase 30 | Pending |
-| MOBI-05 | Phase 30 | Pending |
+| MOBI-05 | Phase 30 | Complete |
 | MOBI-06 | Phase 30 | Pending |
 | ANIM-01 | Phase 31 | Pending |
 | ANIM-02 | Phase 31 | Pending |
