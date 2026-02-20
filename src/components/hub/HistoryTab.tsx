@@ -140,7 +140,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
       <div className="space-y-6 py-4">
         {/* Simple skeleton placeholders */}
         {[1, 2, 3].map(i => (
-          <div key={i} className="glass-card animate-pulse p-6">
+          <div key={i} className="glass-light animate-pulse p-6">
             <div className="h-4 w-1/3 rounded bg-muted" />
             <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
             <div className="mt-3 h-2 w-full rounded bg-muted" />
@@ -490,7 +490,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
         {interviewLoading ? (
           <div className="space-y-4">
             {[1, 2].map(i => (
-              <div key={i} className="glass-card animate-pulse p-6">
+              <div key={i} className="glass-light animate-pulse p-6">
                 <div className="h-4 w-1/3 rounded bg-muted" />
                 <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
                 <div className="mt-3 h-2 w-full rounded bg-muted" />
