@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 32 — Celebration System Elevation (v3.0 World-Class UX)
+**Current focus:** Phase 33 — States & Accessibility (v3.0 World-Class UX)
 
 ## Current Position
 
-Phase: 32 (celebration-system-elevation)
-Plan: 8 of 8
-Status: Complete
-Last activity: 2026-02-20 — Completed 32-08 (dotlottie dependency declaration)
+Phase: 33 (states-accessibility)
+Plan: 2 of 5
+Status: In Progress
+Last activity: 2026-02-20 — Completed 33-02 (reduced-motion CSS/JS animation audit)
 
-Progress: [##########] 8/8 plans (Phase 32 COMPLETE)
+Progress: [####------] 2/5 plans
 
 ## Completed Milestones
 
@@ -103,6 +103,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-06:** Card entrance uses useAnimationControls for imperative sequencing (awaitable) instead of declarative animate prop
 - **32-07:** Reused earned variable to avoid duplicate streak threshold calculation in handleCheck
 - **32-08:** Let pnpm resolve latest compatible dotlottie-react version (^0.18.1) rather than pinning exact
+- **33-02:** Decorative animations use animation:none, progress indicators use animation-duration:0s under reduced motion
+- **33-02:** stripe-move uses !important to override inline style specificity for reduced motion
+- **33-02:** StaggeredList separates motion preference from performance skips (15+ items, low-end device)
+- **33-02:** Reduced-motion stagger uses opacity snap (duration:0) while container still orchestrates timing
 
 ### Blockers/Concerns
 
@@ -112,11 +116,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-07-PLAN.md and 32-08-PLAN.md (gap closure plans)
-Resume file: .planning/phases/32-celebration-system-elevation/32-07-SUMMARY.md
-Next step: Phase 32 fully complete (8/8 plans including gap closure). Proceed to next phase.
+Stopped at: Completed 33-02-PLAN.md (reduced-motion CSS/JS animation audit)
+Resume file: .planning/phases/33-states-accessibility/33-02-SUMMARY.md
+Next step: Continue with 33-03-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-07 XPCounter wiring gap closure complete)*
+*Last updated: 2026-02-20 (33-02 reduced-motion animation audit complete)*

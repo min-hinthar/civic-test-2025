@@ -54,7 +54,7 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 - [ ] **STAT-02**: Empty state designs for zero-data screens — Dashboard, Hub History, Hub Achievements, SRS Deck
 - [ ] **STAT-03**: Inline error recovery patterns — icon + message + retry button + fallback, bilingual
 - [ ] **STAT-04**: Focus management on page transitions — focus first h1 or main content on route change
-- [ ] **STAT-05**: Reduced motion CSS completeness — all CSS keyframes and transitions respect prefers-reduced-motion
+- [x] **STAT-05**: Reduced motion CSS completeness — all CSS keyframes and transitions respect prefers-reduced-motion
 - [ ] **STAT-06**: Screen reader live region announcements for confetti, badge earns, mastery milestones
 - [ ] **STAT-07**: Modal/dialog focus trap and focus return to trigger on dismiss
 
@@ -135,7 +135,7 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 | STAT-02 | Phase 33 | Pending |
 | STAT-03 | Phase 33 | Pending |
 | STAT-04 | Phase 33 | Pending |
-| STAT-05 | Phase 33 | Pending |
+| STAT-05 | Phase 33 | Complete |
 | STAT-06 | Phase 33 | Pending |
 | STAT-07 | Phase 33 | Pending |
 | CONT-01 | Phase 34 | Complete |
