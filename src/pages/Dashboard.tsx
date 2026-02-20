@@ -15,6 +15,8 @@ import { NBAHeroCard, NBAHeroSkeleton } from '@/components/dashboard/NBAHeroCard
 import { CompactStatRow } from '@/components/dashboard/CompactStatRow';
 import { CategoryPreviewCard } from '@/components/dashboard/CategoryPreviewCard';
 import { RecentActivityCard } from '@/components/dashboard/RecentActivityCard';
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
+import { DashboardEmptyState } from '@/components/dashboard/DashboardEmptyState';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
@@ -59,6 +61,7 @@ const Dashboard = () => {
 
   // Unique questions practiced count from IndexedDB (same as HubPage pattern)
   const [uniqueQuestionsCount, setUniqueQuestionsCount] = useState(0);
+  const [practiceCountLoading, setPracticeCountLoading] = useState(true);
   useEffect(() => {
     let cancelled = false;
     getAnswerHistory()
@@ -66,10 +69,11 @@ const Dashboard = () => {
         if (!cancelled) {
           const unique = new Set(answers.map(a => a.questionId));
           setUniqueQuestionsCount(unique.size);
+          setPracticeCountLoading(false);
         }
       })
       .catch(() => {
-        // IndexedDB not available
+        if (!cancelled) setPracticeCountLoading(false);
       });
     return () => {
       cancelled = true;
@@ -145,6 +149,39 @@ const Dashboard = () => {
       // Sync failure is non-critical
     });
   }, [user?.id, user?.testHistory, badgeCheckData, currentStreak, earnedBadges]);
+
+  // Dashboard-level loading: all async data sources still loading
+  const isDashboardLoading =
+    authLoading || masteryLoading || streakLoading || srsLoading || practiceCountLoading;
+
+  // Zero-data condition: user has never completed a session and has no mastery
+  const isDashboardEmpty =
+    !isDashboardLoading &&
+    history.length === 0 &&
+    uniqueQuestionsCount === 0 &&
+    overallMastery === 0;
+
+  // Full-page skeleton while async content loads
+  if (isDashboardLoading) {
+    return (
+      <div className="page-shell">
+        <UpdateBanner showBurmese={showBurmese} className="mb-0" />
+        <DashboardSkeleton />
+      </div>
+    );
+  }
+
+  // New user welcome with quick start guide
+  if (isDashboardEmpty) {
+    return (
+      <div className="page-shell">
+        <UpdateBanner showBurmese={showBurmese} className="mb-0" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
+          <DashboardEmptyState />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-shell">
