@@ -40,6 +40,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { NavigationProvider } from '@/components/navigation/NavigationProvider';
 import { NavigationShell } from '@/components/navigation/NavigationShell';
 import { cleanExpiredSessions } from '@/lib/sessions/sessionStore';
+import { CelebrationOverlay } from '@/components/celebrations';
 
 /**
  * Hook to detect if running on client side.
@@ -310,6 +311,7 @@ const AppShell = () => {
                                 </PageTransition>
                               </NavigationShell>
                             </ErrorBoundary>
+                            <CelebrationOverlay />
                             <PWAOnboardingFlow />
                             <OnboardingTour />
                             <GreetingFlow />
