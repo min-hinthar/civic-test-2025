@@ -157,7 +157,13 @@ Plans:
   3. When content fails to load, an inline error state appears with icon, bilingual message, retry button, and fallback content — not a blank screen or unhandled error
   4. Navigating to any route moves focus to the page's first h1 or main content area so keyboard and screen reader users know where they are
   5. All CSS keyframes and transitions respect `prefers-reduced-motion: reduce` — animation-dependent information is preserved via alternative non-motion presentation
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
+Plans:
+- [ ] 33-01-PLAN.md — Reusable state components (Skeleton, EmptyState, ErrorFallback, announcer, useRetry)
+- [ ] 33-02-PLAN.md — Reduced motion CSS audit + StaggeredList fix
+- [ ] 33-03-PLAN.md — Skeleton + empty state integration across all screens
+- [ ] 33-04-PLAN.md — Error recovery + OfflineBanner integration
+- [ ] 33-05-PLAN.md — Focus management, live region announcements, modal focus trap audit
 
 ### Phase 34: Content & About Page
 **Goal**: Every USCIS 2025 question has a complete, quality explanation, and the app includes an About page that tells the story of why it exists and honors the people who inspired it
