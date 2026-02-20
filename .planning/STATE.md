@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 30 (mobile-native-feel)
-Plan: 2 of 4
+Plan: 3 of 4
 Status: In Progress
-Last activity: 2026-02-20 — Completed 30-02 (Haptic feedback system)
+Last activity: 2026-02-20 — Completed 30-01 (CSS mobile guards and safe area insets)
 
-Progress: [####------] 1/4 plans (Phase 30)
+Progress: [#####-----] 2/4 plans (Phase 30)
 
 ## Completed Milestones
 
@@ -49,6 +49,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **34-03:** About row placed first in Settings Help & Guidance for prominence
 - **34-03:** Narrative teaser uses warm emotional copy about Burmese community
 - **30-02:** Reordered haptic exports to light/medium/heavy/double for logical grouping
+- **30-01:** Overscroll guard scoped to @media (display-mode: standalone) only, not global
+- **30-01:** User-select uses targeted interactive-element approach, not global none + whitelist
+- **30-01:** Safe area insets via inline style env() for zero-cost on non-notch devices
 
 ### Blockers/Concerns
 
@@ -58,11 +61,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 30-02-PLAN.md
-Resume file: .planning/phases/30-mobile-native-feel/30-02-SUMMARY.md
+Stopped at: Completed 30-01-PLAN.md (2/4 Phase 30 plans complete)
+Resume file: .planning/phases/30-mobile-native-feel/30-01-SUMMARY.md
 Next step: Execute 30-03-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (30-02 Haptic feedback system complete)*
+*Last updated: 2026-02-20 (30-01 CSS mobile guards and safe area insets complete)*

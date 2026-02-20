@@ -171,7 +171,7 @@ Note: Phase 34 (Content) depends only on Phase 29 and can potentially run in par
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 29. Visual Foundation | v3.0 | TBD | Not started | - |
-| 30. Mobile Native Feel | 1/4 | In Progress|  | - |
+| 30. Mobile Native Feel | 2/4 | In Progress|  | - |
 | 31. Animation & Interaction Polish | v3.0 | TBD | Not started | - |
 | 32. Celebration System Elevation | v3.0 | TBD | Not started | - |
 | 33. States & Accessibility | v3.0 | TBD | Not started | - |
