@@ -7,6 +7,7 @@ import {
   Clock,
   GraduationCap,
   Heart,
+  Megaphone,
   Mic,
   Smartphone,
   Star,
@@ -325,12 +326,21 @@ const LandingPage = () => {
                   ဘဝကို မြှုပ်နှံခဲ့သူများအပေါ် လေးစားမှုမှ မွေးဖွားလာခြင်းဖြစ်ပါသည်။
                 </p>
               )}
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/20 min-h-[44px]"
-              >
-                {showBurmese ? 'ကျွန်ုပ်တို့ဇာတ်ကြောင်းကို ဖတ်ပါ' : 'Read Our Story'}
-              </Link>
+              <div className="flex flex-col items-center gap-3 sm:flex-row">
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/20 min-h-[44px]"
+                >
+                  {showBurmese ? 'ကျွန်ုပ်တို့ဇာတ်ကြောင်းကို ဖတ်ပါ' : 'Read Our Story'}
+                </Link>
+                <Link
+                  to="/op-ed"
+                  className="inline-flex items-center gap-2 rounded-xl border border-border/60 px-5 py-2.5 text-sm font-bold text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground min-h-[44px]"
+                >
+                  <Megaphone className="h-4 w-4" />
+                  {showBurmese ? 'TPS Op-Ed ဖတ်ပါ' : 'Read the TPS Op-Ed'}
+                </Link>
+              </div>
             </div>
           </FadeIn>
         </div>
