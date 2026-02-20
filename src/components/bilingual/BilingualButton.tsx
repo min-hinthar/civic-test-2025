@@ -6,29 +6,65 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import clsx from 'clsx';
 import { BilingualString } from '@/lib/i18n/strings';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { SPRING_BOUNCY, SPRING_PRESS_DOWN } from '@/lib/motion-config';
 
-// Spring physics for tactile feedback
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 400,
-  damping: 17,
-};
+// === Tier classification (matches Button.tsx) ===
+type ButtonTier = 'primary' | 'secondary' | 'tertiary';
 
-// 3D chunky shadow classes (Duolingo-style raised button)
+function getTier(variant: string): ButtonTier {
+  switch (variant) {
+    case 'primary':
+    case 'chunky':
+      return 'primary';
+    case 'secondary':
+      return 'secondary';
+    case 'outline':
+    case 'ghost':
+      return 'tertiary';
+    default:
+      return 'primary';
+  }
+}
+
+// 3D chunky shadow classes using token-based colors (matches Button.tsx)
+// Dark mode uses lighter rim-lit edges for glow effect
 const chunky3D = [
-  'shadow-[0_4px_0_hsl(224_76%_48%)]',
-  'hover:shadow-[0_4px_0_hsl(224_76%_43%)]',
-  'active:shadow-[0_1px_0_hsl(224_76%_43%)] active:translate-y-[3px]',
-  'transition-[box-shadow,transform] duration-100',
+  'shadow-[0_4px_0_hsl(var(--primary-700))]',
+  'dark:shadow-[0_4px_0_hsl(var(--primary-300)/0.6)]',
+  'hover:shadow-[0_4px_0_hsl(var(--primary-800))]',
+  'dark:hover:shadow-[0_4px_0_hsl(var(--primary-300)/0.7)]',
+  'active:shadow-[0_1px_0_hsl(var(--primary-800)),0_0_20px_hsl(var(--color-primary)/0.4)] active:translate-y-[3px] active:brightness-110',
+  'dark:active:shadow-[0_1px_0_hsl(var(--primary-300)/0.6),0_0_20px_hsl(var(--color-primary)/0.4)]',
+  'transition-[box-shadow,transform,filter] duration-100',
 ].join(' ');
 
 const variants = {
-  primary:
-    'bg-primary text-white hover:bg-primary active:bg-primary-700 shadow-lg shadow-primary-500/25',
-  secondary: 'bg-primary-subtle text-primary hover:bg-primary-200',
-  outline: 'border-2 border-primary text-primary hover:bg-primary-subtle',
-  ghost: 'text-primary hover:bg-primary-subtle',
-  chunky: `bg-primary text-white hover:bg-primary active:bg-primary-700 ${chunky3D}`,
+  // PRIMARY tier — 3D chunky press
+  primary: clsx(
+    'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    chunky3D
+  ),
+  chunky: clsx(
+    'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80',
+    chunky3D
+  ),
+
+  // SECONDARY tier — subtle scale + shadow reduction
+  secondary: clsx(
+    'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70',
+    'shadow-sm active:shadow-none',
+    'transition-[box-shadow] duration-100'
+  ),
+
+  // TERTIARY tier — opacity fade
+  outline: clsx(
+    'border-2 border-primary text-primary hover:bg-primary/10 active:bg-primary/20',
+    'transition-opacity duration-100 active:opacity-70'
+  ),
+  ghost: clsx(
+    'text-primary hover:bg-primary/10 active:bg-primary/20',
+    'transition-opacity duration-100 active:opacity-70'
+  ),
 };
 
 const sizes = {
@@ -56,13 +92,20 @@ export interface BilingualButtonProps extends MotionButtonProps {
 }
 
 /**
- * Animated pill button with bilingual label.
+ * Animated pill button with bilingual label and three-tier press feedback.
+ *
+ * Tiers (aligned with Button.tsx):
+ * - PRIMARY (primary, chunky): 3D chunky press with spring-back, lift on hover, dark mode rim-lit edges
+ * - SECONDARY (secondary): Subtle scale 0.97 with shadow reduction
+ * - TERTIARY (outline, ghost): Opacity 0.7 fade on press
  *
  * Features:
  * - English on top, Burmese below (stacked)
  * - Pill shape (fully rounded)
- * - Spring animation on press
+ * - Shared spring configs from motion-config.ts
+ * - Respects prefers-reduced-motion
  * - 44px+ minimum height for touch accessibility
+ * - Disabled buttons show muted feedback
  */
 export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProps>(
   (
@@ -82,11 +125,25 @@ export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProp
     const shouldReduceMotion = useReducedMotion();
     const { showBurmese } = useLanguage();
     const isDisabled = disabled || loading;
+    const tier = getTier(variant);
 
+    // Tier-aware motion variants (matches Button.tsx pattern)
     const motionVariants = {
       idle: { scale: 1 },
-      hover: shouldReduceMotion ? {} : { scale: 1.03 },
-      tap: shouldReduceMotion ? {} : { scale: 0.97 },
+      hover: shouldReduceMotion
+        ? {}
+        : tier === 'primary'
+          ? { scale: 1.03, y: -1 } // lift on hover
+          : tier === 'secondary'
+            ? { scale: 1.02 }
+            : {}, // tertiary: no hover animation
+      tap: shouldReduceMotion
+        ? {}
+        : tier === 'primary'
+          ? { scale: 0.95 }
+          : tier === 'secondary'
+            ? { scale: 0.97 }
+            : {}, // tertiary: opacity handled by CSS
     };
 
     return (
@@ -96,19 +153,19 @@ export const BilingualButton = forwardRef<HTMLButtonElement, BilingualButtonProp
         initial="idle"
         whileHover={isDisabled ? undefined : 'hover'}
         whileTap={isDisabled ? undefined : 'tap'}
-        transition={springTransition}
+        transition={tier === 'primary' ? SPRING_PRESS_DOWN : SPRING_BOUNCY}
         disabled={isDisabled}
         className={clsx(
           // Base
-          'inline-flex flex-col items-center justify-center',
+          'inline-flex flex-col items-center justify-center font-bold',
           // Pill shape
           'rounded-full',
-          // Focus ring
-          'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-          // Disabled
+          // Focus ring with smooth transition (matches Button.tsx)
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2',
+          'transition-[box-shadow] duration-200',
+          // Disabled — muted feedback hint
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
-          // Transition
-          'transition-colors duration-150',
+          'disabled:active:opacity-45',
           // Variant and size
           variants[variant],
           sizes[size],
