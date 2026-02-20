@@ -9,6 +9,8 @@ import { SPRING_GENTLE } from '@/lib/motion-config';
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   elevated?: boolean;
   interactive?: boolean;
+  /** Enable enter animation (scale+fade). Default: true. Set false inside StaggeredList to avoid double-animation. */
+  animate?: boolean;
   children: ReactNode;
 }
 
@@ -20,12 +22,27 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
  * - overflow-hidden to prevent child content clipping
  * - Intense gradient shadow with primary color tinting
  * - Hover lift + shadow increase (when interactive)
+ * - Scale(0.95->1) + fade enter animation on mount
  * - Equally vibrant in dark mode
  * - Respects prefers-reduced-motion
+ *
+ * When used inside StaggeredList, set `animate={false}` to avoid double-animation
+ * (StaggeredItem already handles scale + opacity + y entrance).
  */
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ elevated = true, interactive = false, className, children, ...props }, ref) => {
+  (
+    {
+      elevated = true,
+      interactive = false,
+      animate: enableAnimation = true,
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const shouldReduceMotion = useReducedMotion();
+    const shouldAnimate = enableAnimation && !shouldReduceMotion;
 
     const baseClasses = clsx(
       // Base card styles
@@ -45,8 +62,22 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       className
     );
 
-    // Non-interactive card - no motion
+    // Non-interactive card
     if (!interactive) {
+      if (shouldAnimate) {
+        return (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={SPRING_GENTLE}
+            className={baseClasses}
+            {...(props as Omit<HTMLMotionProps<'div'>, 'ref'>)}
+          >
+            {children}
+          </motion.div>
+        );
+      }
       return (
         <div ref={ref} className={baseClasses} {...props}>
           {children}
@@ -75,7 +106,8 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <motion.div
         ref={ref}
         variants={motionVariants}
-        initial="idle"
+        initial={shouldAnimate ? { opacity: 0, scale: 0.95, y: 0 } : 'idle'}
+        animate="idle"
         whileHover="hover"
         transition={SPRING_GENTLE}
         className={clsx(baseClasses, 'cursor-pointer')}
