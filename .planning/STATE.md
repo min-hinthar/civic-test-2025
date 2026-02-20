@@ -11,10 +11,10 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 Phase: 32 (celebration-system-elevation)
 Plan: 6 of 6
-Status: In Progress
-Last activity: 2026-02-20 — Completed 32-05 (celebration orchestration layer)
+Status: Complete
+Last activity: 2026-02-20 — Completed 32-06 (test results choreography)
 
-Progress: [########--] 5/6 plans (Phase 32)
+Progress: [##########] 6/6 plans (Phase 32 COMPLETE)
 
 ## Completed Milestones
 
@@ -97,6 +97,10 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **32-05:** Blocking overlay during peak (800-2500ms by level), then pointer-events:none for fade-out
 - **32-05:** 5% surprise variations (flag emoji, extra sparkle sound) for celebration freshness
 - **32-05:** Reduced motion skips all visuals but still fires sound and haptics
+- **32-06:** Promise-resolve bridge pattern for CountUpScore onComplete: countUpResolveRef stores resolve fn, onComplete calls it to advance choreography
+- **32-06:** Separate runChoreography vs runPracticeChoreography for distinct timing and celebration levels
+- **32-06:** Teaser confetti at pass threshold uses celebrate sparkle level, not full burst
+- **32-06:** Card entrance uses useAnimationControls for imperative sequencing (awaitable) instead of declarative animate prop
 
 ### Blockers/Concerns
 
@@ -106,11 +110,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 32-05-PLAN.md (5/6 Phase 32 plans complete)
-Resume file: .planning/phases/32-celebration-system-elevation/32-05-SUMMARY.md
-Next step: Continue with remaining Phase 32 plan (32-06)
+Stopped at: Completed 32-06-PLAN.md (Phase 32 COMPLETE - 6/6 plans)
+Resume file: .planning/phases/32-celebration-system-elevation/32-06-SUMMARY.md
+Next step: Phase 32 complete. Proceed to next phase.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (32-05 celebration orchestration layer complete)*
+*Last updated: 2026-02-20 (32-06 test results choreography complete, Phase 32 complete)*
