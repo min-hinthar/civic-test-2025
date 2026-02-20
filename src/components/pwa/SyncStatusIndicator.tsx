@@ -41,7 +41,8 @@ export function SyncStatusIndicator() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2"
+          className="fixed left-1/2 z-50 -translate-x-1/2"
+          style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
           role="status"
           aria-label={
             syncFailed

@@ -24,7 +24,10 @@ interface GlassHeaderProps {
 
 export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }: GlassHeaderProps) {
   return (
-    <header className="glass-medium prismatic-border glass-nav rounded-none sticky top-0 z-30 w-full">
+    <header
+      className="glass-medium prismatic-border glass-nav rounded-none sticky top-0 z-30 w-full"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link
