@@ -178,7 +178,11 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           >
             <ChevronLeft className="h-4 w-4" />
             <span>Back to Study Guide</span>
-            {showBurmese && <span className="font-myanmar ml-1">/ \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u102D\u102F\u1037</span>}
+            {showBurmese && (
+              <span className="font-myanmar ml-1">
+                / \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u102D\u102F\u1037
+              </span>
+            )}
           </button>
         </div>
 
