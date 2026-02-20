@@ -603,3 +603,4 @@ function XPCounter({ xp, previousXp }: { xp: number; previousXp: number }) {
 
 **Research date:** 2026-02-20
 **Valid until:** 2026-03-20 (stable domain, libraries mature)
+
