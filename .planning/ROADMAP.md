@@ -151,7 +151,11 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
   3. The About page tells the app's origin story, mission, and the history of Volunteers in Asia and the Pre-Collegiate Program in a compelling narrative
   4. Bilingual dedication cards for Dwight D. Clark and Dorothy & James Guyot render with dignity in both English-only and bilingual modes
   5. The About page is accessible from Settings (and optionally navigation) and renders correctly in both language modes
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
+Plans:
+- [ ] 34-01-PLAN.md — Bilingual content constants + CONT-01/CONT-02 verification
+- [ ] 34-02-PLAN.md — About page UI, DedicationCard component, route registration
+- [ ] 34-03-PLAN.md — Navigation integration (GlassHeader heart, Settings link, landing teaser)
 
 ## Progress
 
