@@ -27,15 +27,6 @@ export function isSoundMuted(): boolean {
 }
 
 /**
- * Toggle mute state. Returns the new muted value.
- */
-export function toggleMute(): boolean {
-  const next = !isSoundMuted();
-  localStorage.setItem(SOUND_MUTE_KEY, String(next));
-  return next;
-}
-
-/**
  * Explicitly set mute state.
  */
 export function setSoundMuted(muted: boolean): void {
@@ -214,57 +205,6 @@ export function playMilestone(): void {
     playNoteWarm(ctx, 784, 0, 0.4, 0.25); // G5
     // Octave C6 after a brief pause
     playNoteWarm(ctx, 1047, 0.3, 0.4, 0.25); // C6
-  } catch {
-    // Silently ignore
-  }
-}
-
-/**
- * Quick pitch sweep for navigation/transitions.
- * Frequency ramp from 400 Hz to 800 Hz over 0.15s. Subtle.
- * Enhanced with a parallel harmonic oscillator at 2x frequency.
- */
-export function playSwoosh(): void {
-  if (isSoundMuted()) return;
-  try {
-    const ctx = getContext();
-    if (!ctx) return;
-
-    const now = ctx.currentTime;
-
-    // Fundamental sweep
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(400, now);
-    osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
-
-    gainNode.gain.setValueAtTime(0.1, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.15);
-
-    // Harmonic sweep at 2x frequency
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(800, now);
-    osc2.frequency.exponentialRampToValueAtTime(1600, now + 0.15);
-
-    gain2.gain.setValueAtTime(0.1 * 0.2, now);
-    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-
-    osc2.start(now);
-    osc2.stop(now + 0.15);
   } catch {
     // Silently ignore
   }

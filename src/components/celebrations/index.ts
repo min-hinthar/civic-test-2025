@@ -1,4 +1,4 @@
 export { CelebrationOverlay } from './CelebrationOverlay';
-export { Confetti, useConfetti } from './Confetti';
-export { CountUpScore, OdometerNumber } from './CountUpScore';
+export { Confetti } from './Confetti';
+export { CountUpScore } from './CountUpScore';
 export { DotLottieAnimation } from './DotLottieAnimation';

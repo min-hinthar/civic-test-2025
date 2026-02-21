@@ -45,6 +45,4 @@ export const SPRING_PRESS_DOWN = {
  * Stagger timing presets for list/grid animations.
  * Values in seconds (for motion/react staggerChildren).
  */
-export const STAGGER_FAST = 0.04; // 40ms between items
 export const STAGGER_DEFAULT = 0.06; // 60ms between items
-export const STAGGER_SLOW = 0.1; // 100ms between items

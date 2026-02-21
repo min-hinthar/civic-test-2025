@@ -86,26 +86,3 @@ export function Skeleton({
     />
   );
 }
-
-/**
- * Skeleton card matching Card component dimensions
- */
-export function SkeletonCard({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={clsx('rounded-2xl border border-border/60 bg-card p-5', className)} {...props}>
-      <Skeleton height="1.5rem" width="60%" className="mb-4" />
-      <Skeleton lines={3} height="1rem" />
-      <div className="mt-4 flex gap-2">
-        <Skeleton height="2.5rem" width="6rem" className="rounded-full" />
-        <Skeleton height="2.5rem" width="6rem" className="rounded-full" />
-      </div>
-    </div>
-  );
-}
-
-/**
- * Skeleton for avatar/profile images
- */
-export function SkeletonAvatar({ size = 40, className }: { size?: number; className?: string }) {
-  return <Skeleton circle width={size} height={size} className={className} />;
-}

@@ -253,29 +253,3 @@ export function CountUpScore({
     </motion.div>
   );
 }
-
-/**
- * Rolling odometer-style number animation for single-digit updates.
- *
- * Usage:
- * ```tsx
- * <OdometerNumber value={currentQuestion} className="text-2xl font-bold" />
- * ```
- */
-export function OdometerNumber({ value, className }: { value: number; className?: string }) {
-  const shouldReduceMotion = useReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <span className={className}>{value}</span>;
-  }
-
-  return (
-    <CountUp
-      start={Math.max(0, value - 1)}
-      end={value}
-      duration={0.5}
-      preserveValue
-      className={className}
-    />
-  );
-}
