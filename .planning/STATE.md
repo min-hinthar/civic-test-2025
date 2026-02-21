@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 33 — States & Accessibility (v3.0 World-Class UX)
+**Current focus:** Phase 35 — Touch Target & Tech Debt (v3.0 World-Class UX)
 
 ## Current Position
 
-Phase: 33 (states-accessibility)
-Plan: 5 of 5
-Status: Complete
-Last activity: 2026-02-20 — Completed 33-05 (focus management, celebrations a11y, modal audit)
+Phase: 35 (touch-target-tech-debt)
+Plan: 1 of 2
+Status: In Progress
+Last activity: 2026-02-21 — Completed 35-01 (touch targets + orphaned export cleanup)
 
-Progress: [##########] 5/5 plans
+Progress: [#####-----] 1/2 plans
 
 ## Completed Milestones
 
@@ -125,6 +125,8 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **33-05:** Confetti announce fires in fire effect (not fireConfetti callback) so it works under reduced motion
 - **33-05:** StreakReward already has aria-live region from Phase 24 -- verified working, no changes needed
 - **33-05:** WelcomeModal and WhatsNewModal migrated from custom div overlays to Radix Dialog for focus trap
+- **35-01:** Keep h-9 w-9 visual sizing alongside min-h/min-w for touch area -- no visual change
+- **35-01:** GitHub footer link gets px-2 horizontal padding for wider touch area
 
 ### Blockers/Concerns
 
@@ -133,12 +135,12 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 
 ## Session Continuity
 
-Last session: 2026-02-20
-Stopped at: Completed 33-05-PLAN.md (focus management, celebrations a11y, modal audit)
-Resume file: .planning/phases/33-states-accessibility/33-05-SUMMARY.md
-Next step: Phase 33 complete. Continue with next phase.
+Last session: 2026-02-21
+Stopped at: Completed 35-01-PLAN.md (touch targets + orphaned export cleanup)
+Resume file: .planning/phases/35-touch-target-tech-debt/35-01-SUMMARY.md
+Next step: Continue with 35-02-PLAN.md
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-20 (33-05 focus management + celebration announcements + modal audit complete)*
+*Last updated: 2026-02-21 (35-01 touch target fixes + dead code removal complete)*
