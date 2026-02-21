@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 35 — Touch Target & Tech Debt (v3.0 World-Class UX)
+**Current focus:** Phase 36 — Mock Test Celebration Unification (v3.0 World-Class UX)
 
 ## Current Position
 
-Phase: 35 (touch-target-tech-debt)
-Plan: 2 of 2
+Phase: 36 (mock-test-celebration-unification)
+Plan: 1 of 1
 Status: Complete
-Last activity: 2026-02-21 — Completed 35-02 (dead code cleanup + ROADMAP checkbox sync)
+Last activity: 2026-02-21 — Completed 36-01 (mock test celebration unification)
 
-Progress: [##########] 2/2 plans
+Progress: [##########] 1/1 plans
 
 ## Completed Milestones
 
@@ -129,6 +129,9 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **35-01:** GitHub footer link gets px-2 horizontal padding for wider touch area
 - **35-02:** useRetry.ts deleted entirely (zero imports, ErrorFallback uses inline retry logic)
 - **35-02:** HTMLAttributes import kept in Skeleton.tsx (still used by SkeletonProps interface)
+- **36-01:** Inline finalIncorrect as finalResults.length - finalCorrect in save-session effect (only one usage site)
+- **36-01:** Hook calls for useCategoryMastery() and useStreak() kept without destructuring (rules-of-hooks compliance)
+- **36-01:** Passed skippedQuestionIds by converting quizState.skippedIndices to question IDs for richer question review
 
 ### Blockers/Concerns
 
@@ -138,11 +141,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Completed 35-02-PLAN.md (dead code cleanup + ROADMAP checkbox sync)
-Resume file: .planning/phases/35-touch-target-tech-debt/35-02-SUMMARY.md
-Next step: Phase 35 complete. Continue with Phase 36.
+Stopped at: Completed 36-01-PLAN.md (mock test celebration unification)
+Resume file: .planning/phases/36-mock-test-celebration-unification/36-01-SUMMARY.md
+Next step: Phase 36 complete. Continue with Phase 37.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-21 (35-02 dead code cleanup + ROADMAP sync complete)*
+*Last updated: 2026-02-21 (36-01 mock test celebration unification complete)*

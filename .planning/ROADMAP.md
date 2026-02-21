@@ -72,7 +72,7 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 - [x] **Phase 33: States & Accessibility** - Skeleton screens, empty state designs, inline error recovery, focus management on route changes, reduced motion CSS completeness, screen reader celebration announcements, modal focus traps (completed 2026-02-20)
 - [x] **Phase 34: Content & About Page** - 28 missing USCIS 2025 explanations, explanation quality audit, About page with mission narrative and bilingual dedication cards (completed 2026-02-20)
 - [x] **Phase 35: Touch Target Fix + Tech Debt Cleanup** - Fix 3 touch targets below 44px from Phase 34, remove orphaned celebration sound exports, update stale VISC documentation (completed 2026-02-21)
-- [ ] **Phase 36: Mock Test Celebration Unification** - Port Phase 32 choreography to Mock Test results, add haptics at pass reveal, unify celebration experience across Practice and Mock Test flows
+- [x] **Phase 36: Mock Test Celebration Unification** - Port Phase 32 choreography to Mock Test results, add haptics at pass reveal, unify celebration experience across Practice and Mock Test flows (completed 2026-02-21)
 
 ## Phase Details
 
@@ -228,7 +228,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 | 33. States & Accessibility | v3.0 | 5/5 | Complete | 2026-02-20 |
 | 34. Content & About Page | v3.0 | 3/3 | Complete | 2026-02-20 |
 | 35. Touch Target Fix + Tech Debt | 2/2 | Complete    | 2026-02-21 | - |
-| 36. Mock Test Celebration Unification | v3.0 | 0/1 | Not started | - |
+| 36. Mock Test Celebration Unification | 1/1 | Complete   | 2026-02-21 | - |
 
 **Cumulative:**
 
