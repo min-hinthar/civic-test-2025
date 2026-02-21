@@ -120,17 +120,21 @@ export function ResumeSessionCard({ session, isSelected, onSelect }: ResumeSessi
         {/* Content */}
         <div className="min-w-0 flex-1">
           {/* Session type label */}
-          <p className="text-sm font-bold text-foreground">
+          <p className={`text-sm font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}>
             {getSessionLabel(session, showBurmese)}
           </p>
 
           {/* Progress + score */}
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p
+            className={`mt-0.5 text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+          >
             {getProgressText(session, showBurmese)}
           </p>
 
           {/* Timer info */}
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p
+            className={`mt-0.5 text-xs text-muted-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+          >
             {getTimerText(session, showBurmese)}
           </p>
 

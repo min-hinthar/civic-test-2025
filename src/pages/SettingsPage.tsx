@@ -611,7 +611,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => navigate('/about')}
-                className="rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px]"
+                className={`rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px] ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese ? 'ကြည့်ပါ' : 'View'}
               </button>
