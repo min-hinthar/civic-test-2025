@@ -378,7 +378,8 @@ export function FlashcardStack({
       {/* Swipe hint for mobile (hidden during auto-play) */}
       {!autoPlayEnabled && (
         <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
-          Swipe left/right to navigate{showBurmese && ' / ဘယ်ညာပွတ်ဆွဲပါ'}
+          Swipe left/right to navigate
+          {showBurmese && <span className="font-myanmar"> / ဘယ်ညာပွတ်ဆွဲပါ</span>}
         </p>
       )}
     </div>

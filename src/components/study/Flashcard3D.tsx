@@ -366,7 +366,7 @@ export function Flashcard3D({
 
             {/* Question label */}
             <div className="text-sm font-medium text-primary mb-2">
-              Question{showBurmese && ' / မေးခွန်း'}
+              Question{showBurmese && <span className="font-myanmar"> / မေးခွန်း</span>}
             </div>
 
             {/* Question text */}
@@ -409,7 +409,7 @@ export function Flashcard3D({
                 )}
               </div>
               <span className="text-xs text-muted-foreground whitespace-nowrap">
-                Tap to flip{showBurmese && ' / လှည့်ရန်'}
+                Tap to flip{showBurmese && <span className="font-myanmar"> / လှည့်ရန်</span>}
               </span>
             </div>
           </div>
@@ -439,7 +439,7 @@ export function Flashcard3D({
             {/* Top bar: Answer label + bookmark star */}
             <div className="flex items-center justify-between mb-2 shrink-0">
               <div className="text-sm font-medium text-success">
-                Answer{showBurmese && ' / အဖြေ'}
+                Answer{showBurmese && <span className="font-myanmar"> / အဖြေ</span>}
               </div>
               {questionId && onToggleBookmark && (
                 <motion.button
@@ -601,7 +601,7 @@ export function Flashcard3D({
                 )}
               </div>
               <span className="text-xs text-muted-foreground whitespace-nowrap">
-                Tap to flip{showBurmese && ' / လှည့်ရန်'}
+                Tap to flip{showBurmese && <span className="font-myanmar"> / လှည့်ရန်</span>}
               </span>
             </div>
           </div>

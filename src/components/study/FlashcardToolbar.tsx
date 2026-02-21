@@ -78,7 +78,8 @@ export function FlashcardToolbar({
             'border border-border/60 bg-muted/50 text-sm text-foreground',
             'placeholder:text-muted-foreground/60',
             'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-            'transition-colors min-h-[44px]'
+            'transition-colors min-h-[44px]',
+            showBurmese && 'font-myanmar'
           )}
         />
         {searchQuery && (
@@ -177,7 +178,7 @@ export function FlashcardToolbar({
           aria-label="Shuffle cards"
         >
           <Shuffle className="h-4 w-4" />
-          <span>{showBurmese ? 'Shuffle / ရောမွှေ' : 'Shuffle'}</span>
+          <span>Shuffle{showBurmese && <span className="font-myanmar"> / ရောမွှေ</span>}</span>
         </motion.button>
 
         <select
@@ -187,7 +188,8 @@ export function FlashcardToolbar({
             'h-11 px-3 rounded-xl border border-border/60 bg-card text-sm font-medium',
             'text-muted-foreground',
             'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-            'transition-colors cursor-pointer'
+            'transition-colors cursor-pointer',
+            showBurmese && 'font-myanmar'
           )}
           aria-label="Sort order"
         >

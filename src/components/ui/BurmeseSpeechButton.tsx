@@ -223,7 +223,7 @@ export function BurmeseSpeechButton({
     >
       {/* Flag icon — always visible for language identification */}
       <MyanmarFlagIcon />
-      <span>{label}</span>
+      <span className="font-myanmar">{label}</span>
       {/* State icon: pause when paused, sound wave when speaking, Volume2 when idle */}
       {isMyPaused ? (
         <PauseIcon />
