@@ -3,13 +3,15 @@
 import { useState, useCallback, KeyboardEvent, MouseEvent } from 'react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
+import { Star } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useUserState } from '@/contexts/StateContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
-import type { DynamicAnswerMeta, Explanation, Question } from '@/types';
+import { getSubCategoryColors, SUB_CATEGORY_NAMES } from '@/lib/mastery';
+import type { Category, DynamicAnswerMeta, Explanation, Question } from '@/types';
 import { hapticMedium } from '@/lib/haptics';
 
 /**
@@ -18,6 +20,28 @@ import { hapticMedium } from '@/lib/haptics';
  * a visible settle at the target while stiffness 250 keeps it snappy.
  */
 const FLIP_SPRING = { type: 'spring' as const, stiffness: 250, damping: 22, mass: 0.8 };
+
+/** Mastery state label for FSRS card tracking */
+export type MasteryLevel = 'New' | 'Learning' | 'Review' | 'Mastered' | null;
+
+/** Difficulty tier for display */
+type DifficultyTier = 'Beginner' | 'Intermediate' | 'Advanced';
+
+/** Map difficulty tier to color + Burmese label */
+const DIFFICULTY_CONFIG: Record<DifficultyTier, { color: string; labelMy: string; dots: number }> =
+  {
+    Beginner: { color: 'text-success-500', labelMy: 'အစပြု', dots: 1 },
+    Intermediate: { color: 'text-warning-500', labelMy: 'အလယ်အလတ်', dots: 2 },
+    Advanced: { color: 'text-destructive', labelMy: 'အဆင့်မြင့်', dots: 3 },
+  };
+
+/** Map mastery level to color */
+const MASTERY_CONFIG: Record<string, { color: string; labelMy: string }> = {
+  New: { color: 'text-muted-foreground', labelMy: 'အသစ်' },
+  Learning: { color: 'text-warning-500', labelMy: 'လေ့လာနေဆဲ' },
+  Review: { color: 'text-blue-500', labelMy: 'ပြန်လည်သုံးသပ်' },
+  Mastered: { color: 'text-success-500', labelMy: 'ကျွမ်းကျင်ပြီး' },
+};
 
 interface Flashcard3DProps {
   /** Question ID for Burmese audio lookup */
@@ -46,6 +70,14 @@ interface Flashcard3DProps {
   showSpeedLabel?: boolean;
   /** Speed label text (e.g. '1x', '0.75x') */
   speedLabel?: string;
+  /** Difficulty tier for this question */
+  difficulty?: DifficultyTier;
+  /** FSRS mastery state label */
+  masteryState?: MasteryLevel;
+  /** Whether this card is bookmarked */
+  isBookmarked?: boolean;
+  /** Callback to toggle bookmark */
+  onToggleBookmark?: (questionId: string) => void;
   /** Additional class names */
   className?: string;
 }
@@ -185,6 +217,10 @@ export function Flashcard3D({
   onFlip,
   showSpeedLabel = false,
   speedLabel,
+  difficulty,
+  masteryState,
+  isBookmarked = false,
+  onToggleBookmark,
   className,
 }: Flashcard3DProps) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -213,6 +249,21 @@ export function Flashcard3D({
   const handleTTSClick = useCallback((e: MouseEvent) => {
     e.stopPropagation();
   }, []);
+
+  // Bookmark toggle — stops propagation to prevent card flip
+  const handleBookmarkClick = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      if (questionId && onToggleBookmark) {
+        onToggleBookmark(questionId);
+      }
+    },
+    [questionId, onToggleBookmark]
+  );
+
+  // Sub-category colors for category badge on back
+  const subCatColors = category ? getSubCategoryColors(category as Category) : null;
+  const subCatName = category ? SUB_CATEGORY_NAMES[category as Category] : null;
 
   const gradient = category ? categoryGradients[category] : 'from-primary/10 to-primary-600/10';
 
@@ -378,9 +429,99 @@ export function Flashcard3D({
           {paperTexture}
 
           <div className="relative z-10 flex-1 flex flex-col overflow-hidden p-6">
-            {/* Answer label */}
-            <div className="text-sm font-medium text-success mb-2 shrink-0">
-              Answer{showBurmese && ' / အဖြေ'}
+            {/* Top bar: Answer label + bookmark star */}
+            <div className="flex items-center justify-between mb-2 shrink-0">
+              <div className="text-sm font-medium text-success">
+                Answer{showBurmese && ' / အဖြေ'}
+              </div>
+              {questionId && onToggleBookmark && (
+                <motion.button
+                  type="button"
+                  onClick={handleBookmarkClick}
+                  whileTap={{ scale: 0.85 }}
+                  className={clsx(
+                    'h-11 w-11 flex items-center justify-center rounded-xl',
+                    'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+                  )}
+                  aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                  aria-pressed={isBookmarked}
+                >
+                  <Star
+                    className={clsx(
+                      'h-5 w-5 transition-colors',
+                      isBookmarked ? 'fill-current text-primary' : 'text-muted-foreground'
+                    )}
+                  />
+                </motion.button>
+              )}
+            </div>
+
+            {/* Metadata badges: category + difficulty + mastery */}
+            <div className="flex flex-wrap items-center gap-2 mb-3 shrink-0">
+              {/* Category badge */}
+              {subCatColors && subCatName && (
+                <span
+                  className={clsx(
+                    'inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full',
+                    subCatColors.textColor,
+                    'bg-muted/60'
+                  )}
+                >
+                  <span
+                    className={clsx('h-1.5 w-1.5 rounded-full', subCatColors.stripBg)}
+                    aria-hidden="true"
+                  />
+                  {subCatName.en}
+                </span>
+              )}
+
+              {/* Difficulty indicator */}
+              {difficulty && (
+                <span
+                  className={clsx(
+                    'inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-muted/60',
+                    DIFFICULTY_CONFIG[difficulty].color
+                  )}
+                >
+                  {/* Dots indicator */}
+                  <span className="flex gap-0.5" aria-hidden="true">
+                    {[1, 2, 3].map(dot => (
+                      <span
+                        key={dot}
+                        className={clsx(
+                          'h-1.5 w-1.5 rounded-full',
+                          dot <= DIFFICULTY_CONFIG[difficulty].dots
+                            ? 'bg-current'
+                            : 'bg-current opacity-20'
+                        )}
+                      />
+                    ))}
+                  </span>
+                  {difficulty}
+                  {showBurmese && (
+                    <span className="font-myanmar ml-0.5">
+                      {DIFFICULTY_CONFIG[difficulty].labelMy}
+                    </span>
+                  )}
+                </span>
+              )}
+
+              {/* Mastery level */}
+              {masteryState && MASTERY_CONFIG[masteryState] && (
+                <span
+                  className={clsx(
+                    'inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-muted/60',
+                    MASTERY_CONFIG[masteryState].color
+                  )}
+                >
+                  {masteryState}
+                  {showBurmese && (
+                    <span className="font-myanmar ml-0.5">
+                      {MASTERY_CONFIG[masteryState].labelMy}
+                    </span>
+                  )}
+                </span>
+              )}
             </div>
 
             {/* Scrollable content area */}

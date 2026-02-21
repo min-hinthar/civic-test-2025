@@ -4,12 +4,16 @@ import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
+import { State } from 'ts-fsrs';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAutoRead } from '@/hooks/useAutoRead';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
+import { useBookmarks } from '@/hooks/useBookmarks';
+import { useSRS } from '@/contexts/SRSContext';
 import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { Flashcard3D } from './Flashcard3D';
+import type { MasteryLevel } from './Flashcard3D';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
 
@@ -69,6 +73,48 @@ export function FlashcardStack({
   // Speed label for speech buttons
   const speedLabel = { slow: '0.75x', normal: '1x', fast: '1.25x' }[tts.rate];
   const numericRate = { slow: 0.7, normal: 0.98, fast: 1.3 }[tts.rate];
+
+  // Bookmarks
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+
+  // SRS deck for mastery state
+  const { deck } = useSRS();
+  const deckMap = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const record of deck) {
+      map.set(record.questionId, record.card.state);
+    }
+    return map;
+  }, [deck]);
+
+  /** Map FSRS State enum to display label */
+  const getMasteryLabel = useCallback(
+    (questionId: string): MasteryLevel => {
+      const state = deckMap.get(questionId);
+      if (state === undefined) return null;
+      switch (state) {
+        case State.New:
+          return 'New';
+        case State.Learning:
+        case State.Relearning:
+          return 'Learning';
+        case State.Review:
+          return 'Mastered';
+        default:
+          return null;
+      }
+    },
+    [deckMap]
+  );
+
+  /** Derive difficulty tier from question position in its category */
+  const getDifficultyTier = useCallback((q: Question): 'Beginner' | 'Intermediate' | 'Advanced' => {
+    // Use question number as difficulty proxy (lower = easier)
+    const num = parseInt(q.id.replace(/\D/g, ''), 10) || 0;
+    if (num <= 40) return 'Beginner';
+    if (num <= 80) return 'Intermediate';
+    return 'Advanced';
+  }, []);
 
   // Auto-read question text on card navigate (supports bilingual auto-read)
   const currentQuestion = questions[currentIndex];
@@ -213,6 +259,10 @@ export function FlashcardStack({
               dynamic={currentQuestion.dynamic}
               showSpeedLabel
               speedLabel={speedLabel}
+              difficulty={getDifficultyTier(currentQuestion)}
+              masteryState={getMasteryLabel(currentQuestion.id)}
+              isBookmarked={isBookmarked(currentQuestion.id)}
+              onToggleBookmark={toggleBookmark}
             />
           </motion.div>
         </AnimatePresence>
