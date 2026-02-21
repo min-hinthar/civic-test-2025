@@ -173,6 +173,33 @@ export function unlockAudioSession(): void {
 }
 
 // ---------------------------------------------------------------------------
+// Global Audio Registry — prevents overlapping audio across components
+// ---------------------------------------------------------------------------
+
+/**
+ * Set of all created AudioPlayer instances. Used by cancelAllPlayers() to
+ * stop every active player before new audio starts, preventing overlapping
+ * audio from independent player instances (e.g. SpeechButton singleton vs
+ * useAutoRead ref-based players).
+ */
+const _playerRegistry = new Set<AudioPlayer>();
+
+/**
+ * Cancel all registered audio players. Call before starting new audio
+ * to ensure only one audio source plays at a time.
+ *
+ * Also cancels browser TTS via speechSynthesis.cancel() for comprehensive
+ * audio silencing.
+ */
+export function cancelAllPlayers(): void {
+  _playerRegistry.forEach(player => player.cancel());
+  // Also cancel any active browser TTS
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Player Factory
 // ---------------------------------------------------------------------------
 
@@ -203,6 +230,9 @@ export function createAudioPlayer(): AudioPlayer {
   let playId = 0; // Monotonic counter to invalidate stale callbacks
   let activeReject: ((reason: Error) => void) | null = null;
   const listeners = new Set<StateCallback>();
+
+  // Player instance reference (forward declaration, assigned after object creation)
+  let self: AudioPlayer;
 
   function notify() {
     const snapshot = { ...state };
@@ -296,9 +326,18 @@ export function createAudioPlayer(): AudioPlayer {
     });
   }
 
-  return {
+  const player: AudioPlayer = {
     async play(url: string, rate = 1): Promise<void> {
-      // Cancel any existing playback
+      // Cancel all OTHER registered players to prevent overlapping audio
+      _playerRegistry.forEach(p => {
+        if (p !== self) p.cancel();
+      });
+      // Also cancel any active browser TTS (shared speechSynthesis API)
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+
+      // Cancel any existing playback on this player
       stopPlayback();
       cancelledFlag = false; // Reset on new play
 
@@ -371,4 +410,10 @@ export function createAudioPlayer(): AudioPlayer {
       return { ...state };
     },
   };
+
+  // Set self-reference and register in global registry
+  self = player;
+  _playerRegistry.add(player);
+
+  return player;
 }

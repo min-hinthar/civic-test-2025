@@ -173,10 +173,10 @@ export function FlashcardStack({
     }
   }, [autoPlayEnabled, autoPlay]);
 
-  // Auto-read question text on card navigate (disabled during auto-play to avoid overlap)
+  // Auto-read question text on card navigate (gated on autoRead setting, disabled during auto-play)
   useAutoRead({
     text: currentQuestion?.question_en ?? '',
-    enabled: !autoPlayEnabled,
+    enabled: tts.autoRead && !autoPlayEnabled,
     triggerKey: currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,

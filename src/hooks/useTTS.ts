@@ -15,6 +15,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { TTSContext } from '../contexts/TTSContext';
+import { cancelAllPlayers } from '../lib/audio/audioPlayer';
 import { createTTSEngine } from '../lib/ttsCore';
 import type { SpeakOptions, TTSEngine, TTSSettings, TTSState } from '../lib/ttsTypes';
 
@@ -97,6 +98,10 @@ export function useTTS(options?: UseTTSOptions): UseTTSReturn {
       if (!eng) throw new Error('TTS engine not initialized');
 
       try {
+        // Cancel all MP3 audio players before starting browser TTS
+        // This prevents overlapping audio from SpeechButton/auto-read/auto-play players
+        cancelAllPlayers();
+
         // Apply numeric rate from settings if no rate override provided
         const resolvedOverrides: SpeakOptions = {
           rate: rateToNumeric(settings.rate),

@@ -9,6 +9,7 @@ export {
   getBurmeseAudioUrl,
   getEnglishAudioUrl,
   createAudioPlayer as createBurmesePlayer,
+  cancelAllPlayers,
   type AudioType,
   type AudioPlayer as BurmesePlayer,
   type AudioPlayerState as BurmesePlayerState,
