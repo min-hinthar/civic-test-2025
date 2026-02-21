@@ -64,7 +64,7 @@ function getTerminationMessage(
  */
 export function InterviewTranscript({
   results,
-  mode: _mode,
+  mode,
   endReason,
   earlyTerminationIndex,
   showBurmese,
@@ -185,8 +185,8 @@ export function InterviewTranscript({
                 )}
               </ChatBubble>
 
-              {/* Incorrect answer: expandable correct answer section */}
-              {!isCorrect && (
+              {/* Incorrect answer: expandable correct answer section (Practice mode only) */}
+              {!isCorrect && mode === 'practice' && (
                 <div className="ml-12 mr-4">
                   <button
                     type="button"

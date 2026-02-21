@@ -978,24 +978,10 @@ export function InterviewSession({
 
       if (checkEarlyTermination(newResults, newCorrect, newIncorrect)) return;
 
-      if (currentIndex >= QUESTIONS_PER_SESSION - 1) {
-        const duration = Math.round((Date.now() - startTime) / 1000);
-        onCompleteRef.current(newResults, duration, 'complete');
-        return;
-      }
-
-      setQuestionPhase('transition');
-      transitionTimerRef.current = setTimeout(() => {
-        setCurrentIndex(prev => prev + 1);
-        setReplaysUsed(0);
-        setRecordAttempt(1);
-        resetTranscript();
-        setTypedAnswer('');
-        setPreviousTranscription('');
-        setLastGradeResult(null);
-        setUsingTTSFallback(false);
-        setQuestionPhase('chime');
-      }, TRANSITION_DELAY_MS);
+      // Trigger feedback phase so the FEEDBACK effect shows the answer
+      // (in practice mode) or brief acknowledgment (in realistic mode),
+      // then auto-advances via advanceToNext().
+      setQuestionPhase('feedback');
     },
     [
       currentQuestion,
@@ -1005,9 +991,6 @@ export function InterviewSession({
       clearRecording,
       saveSessionSnapshot,
       checkEarlyTermination,
-      currentIndex,
-      startTime,
-      resetTranscript,
     ]
   );
 

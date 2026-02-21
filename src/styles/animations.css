@@ -164,3 +164,35 @@
     animation: none;
   }
 }
+
+/* About card persistent animation -- combines subtle float + shimmer */
+.about-card-animated {
+  animation: floaty 6s ease-in-out infinite;
+  position: relative;
+}
+
+.about-card-animated::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-card-animated {
+    animation: none;
+  }
+
+  .about-card-animated::after {
+    animation: none;
+  }
+}

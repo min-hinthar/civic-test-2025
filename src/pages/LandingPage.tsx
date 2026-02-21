@@ -14,6 +14,7 @@ import {
   Trophy,
   WifiOff,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { GlassHeader } from '@/components/navigation/GlassHeader';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -22,6 +23,7 @@ import { FadeIn, StaggeredList, StaggeredItem } from '@/components/animations/St
 import { totalQuestions } from '@/constants/questions';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const features = [
   {
@@ -65,6 +67,7 @@ const LandingPage = () => {
   const { user } = useAuth();
   const { showBurmese } = useLanguage();
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   if (user) {
     return <Navigate to="/dashboard" replace />;
@@ -308,9 +311,18 @@ const LandingPage = () => {
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <FadeIn>
-            <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/60 bg-card p-6 text-center shadow-md">
-              <Heart className="h-8 w-8 text-primary" />
-              <h3 className="text-lg font-bold text-foreground">Built with Heart</h3>
+            <div className="about-card-animated flex flex-col items-center gap-4 rounded-2xl border border-primary/20 bg-card p-8 text-center shadow-lg shadow-primary/10 overflow-hidden">
+              {shouldReduceMotion ? (
+                <Heart className="h-10 w-10 text-primary" />
+              ) : (
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <Heart className="h-10 w-10 text-primary" />
+                </motion.div>
+              )}
+              <h3 className="text-xl font-bold text-foreground">Built with Heart</h3>
               {showBurmese && (
                 <p className="font-myanmar text-lg text-muted-foreground">
                   နှလုံးသားနဲ့ တည်ဆောက်ထားပါတယ်
