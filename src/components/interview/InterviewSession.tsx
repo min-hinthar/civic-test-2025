@@ -1074,9 +1074,6 @@ export function InterviewSession({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col">
-      {/* Mode badge (top-right corner) */}
-      <ModeBadge mode={mode} />
-
       {/* Landscape overlay for browsers without orientation lock */}
       {!orientationSupported && <LandscapeOverlay active={interviewActive} />}
 
@@ -1085,7 +1082,9 @@ export function InterviewSession({
         {/* Header bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
           <div className="flex items-center gap-3">
-            {/* InterviewProgress replaces old text-based progress */}
+            {/* Mode badge (inline in header) */}
+            <ModeBadge mode={mode} />
+            {/* InterviewProgress */}
             <InterviewProgress
               mode={mode}
               currentIndex={currentIndex}
