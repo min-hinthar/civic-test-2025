@@ -125,16 +125,30 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/** No-op ID for fallback toast functions */
+const NOOP_ID = 'noop';
+
+/** No-op fallback when useToast is called outside a ToastProvider */
+const TOAST_FALLBACK: ToastContextValue = {
+  showError: () => NOOP_ID,
+  showSuccess: () => NOOP_ID,
+  showInfo: () => NOOP_ID,
+  showWarning: () => NOOP_ID,
+  dismiss: () => {},
+  dismissAll: () => {},
+};
+
 /**
  * Hook to access toast functions.
- * Must be used within a ToastProvider.
+ *
+ * Returns no-op functions when called outside a ToastProvider
+ * (e.g. during error boundary fallback rendering or SSR).
+ * This prevents cascading errors when a component calls useToast
+ * but the provider tree hasn't mounted yet.
  */
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
-  }
-  return context;
+  return context ?? TOAST_FALLBACK;
 }
 
 /**
