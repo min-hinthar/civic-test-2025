@@ -26,10 +26,19 @@ The `max(0.75rem, 1em)` pattern is key — it provides a 12px floor while allowi
 
 ## Myanmar Font Audit Requires Multiple Search Passes
 
-**Context:** When auditing `.font-myanmar` usage, searching only for the class name misses Myanmar Unicode text that should have the class but doesn't.
+**Context:** When auditing `.font-myanmar` usage, searching only for the class name misses Myanmar Unicode text that should have the class but doesn't. This has recurred in EVERY phase that touches UI — Phase 9 needed 2 rounds (10 → 38 more), Phase 37 needed 3 rounds (9 → 6 → 3 more across 10 files).
 
-**Learning:** Search for both:
-1. `font-myanmar` (existing class usage)
-2. Myanmar Unicode range `[\u1000-\u109F]` (text that needs the class)
+**Learning:** A single audit pass ALWAYS misses locations. Do a comprehensive sweep from the start:
+1. Search `font-myanmar` (existing class usage — verify correctness)
+2. Search Myanmar Unicode range `[\u1000-\u109F]` across ALL `.tsx` files (not just recently changed)
+3. Check widget headers, stat labels, banners, session cards, heatmap labels, badge text, resume cards
+4. Check components that receive Myanmar text via props but render without `font-myanmar`
 
-**Apply when:** Running font audits or adding Myanmar text to new components.
+Common miss categories:
+- **Session/resume cards** (ResumeSessionCard labels)
+- **Social widgets** (BadgeHighlights, StreakHeatmap day/month labels)
+- **SRS widgets** (ReviewHeatmap day labels — need `showBurmese` prop plumbing)
+- **Landing page** CTA links with Myanmar text
+- **Settings page** button labels
+
+**Apply when:** Running font audits, adding Myanmar text to new components, or any UI polish phase.

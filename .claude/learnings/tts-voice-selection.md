@@ -99,6 +99,57 @@ Key architecture:
 
 **Apply when:** Modifying `audioPlayer.ts`, adding new AudioPlayer consumers, or debugging mobile audio issues in interview flow.
 
+## Audio Player Registry for Mutual Exclusion
+
+**Context:** Multiple independent `AudioPlayer` instances (question, answer, English, Burmese) and browser TTS could overlap, producing garbled audio. Each player had no awareness of others.
+
+**Learning:** Use a module-level `_playerRegistry` Set to track all active players. Each player's `play()` calls `cancelAllPlayers()` which iterates the registry and cancels all OTHER players + stops browser TTS before starting its own playback.
+
+```typescript
+// audioPlayer.ts
+const _playerRegistry = new Set<ReturnType<typeof createAudioPlayer>>();
+
+export function cancelAllPlayers(): void {
+  for (const player of _playerRegistry) player.cancel();
+  window.speechSynthesis?.cancel(); // Also stop browser TTS
+}
+
+export function createAudioPlayer() {
+  const player = { play, cancel, destroy, ... };
+  _playerRegistry.add(player);
+  return player;
+}
+```
+
+Key: `useTTS.speak()` must also call `cancelAllPlayers()` before starting browser TTS, creating bidirectional mutual exclusion.
+
+**Apply when:** Adding new audio sources or debugging overlapping audio playback.
+
+## Bilingual Sequential Audio in useAutoPlay
+
+**Context:** `useAutoPlay` hook only played English audio even when Myanmar language toggle was active.
+
+**Learning:** For bilingual auto-play, play English first, wait a gap (400ms), then play Burmese. Burmese failures must be non-blocking (don't prevent advancing to next card). Cleanup must cancel BOTH players.
+
+```typescript
+// Play English
+await englishPlayer.play(englishUrl, rate);
+// Gap for language transition
+await new Promise(r => setTimeout(r, 400));
+// Play Burmese (non-blocking failure)
+try { await burmesePlayer.play(burmeseUrl, rate); } catch { /* ok */ }
+```
+
+**Apply when:** Modifying `useAutoPlay` or adding bilingual audio to new features.
+
+## autoRead Gating Must Check User Preference
+
+**Context:** Sort mode and flashcard stack had `enabled: currentCard !== null` which enabled auto-read TTS regardless of user's auto-read setting, overlapping with auto-play audio.
+
+**Learning:** Always gate auto-read with the user's preference: `enabled: tts.autoRead && !autoPlayEnabled`. The `autoRead` flag from TTS context is the user's explicit choice; card existence alone is not sufficient.
+
+**Apply when:** Adding auto-read TTS to new study components.
+
 ## Mock Audio Must Support Property-Based Event Handlers
 
 **Context:** `burmeseAudio.test.ts` timed out (5s) because mock `Audio` class only implemented `addEventListener('ended', ...)` but `createAudioPlayer()` uses `el.onended = handler` property assignment.
