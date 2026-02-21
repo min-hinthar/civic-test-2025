@@ -65,7 +65,7 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 
 **Milestone Goal:** Elevate every screen to Duolingo-level polish with consistent visual language, delightful micro-interactions, native-app mobile feel, content completeness, and an About page honoring the app's inspirational figures.
 
-- [ ] **Phase 29: Visual Foundation** - Enforce spacing grid, typography scale, border radius rules, touch targets, dark mode contrast, and unified motion tokens across all screens
+- [x] **Phase 29: Visual Foundation** - Enforce spacing grid, typography scale, border radius rules, touch targets, dark mode contrast, and unified motion tokens across all screens (completed 2026-02-20)
 - [x] **Phase 30: Mobile Native Feel** - PWA standalone CSS, safe area insets, haptic feedback utility, user-select guards, and swipe-to-dismiss toasts (completed 2026-02-20)
 - [x] **Phase 31: Animation & Interaction Polish** - Button press feedback tiers, stagger audit with length scaling, exit animations on overlays, card enter animations, and glass-morphism tier audit (completed 2026-02-20)
 - [x] **Phase 32: Celebration System Elevation** - Fix confetti leak, build useCelebration hook with CelebrationOverlay, achievement-scaled confetti, multi-stage choreography, DotLottie animations, sound warming, XP counter (completed 2026-02-20)
@@ -87,13 +87,13 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
   4. All interactive elements pass a 44x44px minimum touch target audit (including icon buttons, filter chips, and close buttons)
   5. Dark mode glass panels have tuned contrast, shadow depth, and text readability — no washed-out or unreadable text on glass surfaces
 **Plans**: 7 plans in 2 waves
-  - [ ] 29-01-PLAN.md — Define semantic typography scale in Tailwind config
-  - [ ] 29-02-PLAN.md — Document spacing grid + fix border radius inconsistency
-  - [ ] 29-03-PLAN.md — Fix touch target violations (ShareButton, AddToDeckButton, Dialog)
-  - [ ] 29-04-PLAN.md — Migrate glass-panel to three-tier system + remove legacy class
-  - [ ] 29-05-PLAN.md — Unify motion tokens between CSS and JS systems
-  - [ ] 29-06-PLAN.md — Migrate text-[10px] to text-caption (18 files)
-  - [ ] 29-07-PLAN.md — Audit and add micro-interactions to interactive elements
+  - [x] 29-01-PLAN.md — Define semantic typography scale in Tailwind config
+  - [x] 29-02-PLAN.md — Document spacing grid + fix border radius inconsistency
+  - [x] 29-03-PLAN.md — Fix touch target violations (ShareButton, AddToDeckButton, Dialog)
+  - [x] 29-04-PLAN.md — Migrate glass-panel to three-tier system + remove legacy class
+  - [x] 29-05-PLAN.md — Unify motion tokens between CSS and JS systems
+  - [x] 29-06-PLAN.md — Migrate text-[10px] to text-caption (18 files)
+  - [x] 29-07-PLAN.md — Audit and add micro-interactions to interactive elements
 
 ### Phase 30: Mobile Native Feel
 **Goal**: The app feels like an installed native app on mobile — no rubber-band white flash, no accidental text selection, proper safe area handling, and tactile haptic feedback on key interactions
@@ -107,10 +107,10 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
   5. Haptic feedback fires on answer check, streak rewards, badge celebrations, and 3D button press (Android vibration, graceful no-op on iOS)
 **Plans**: 4 plans in 2 waves
 Plans:
-- [ ] 30-01-PLAN.md — CSS mobile guards, safe area insets, and manifest portrait lock
-- [ ] 30-02-PLAN.md — Expand haptics.ts with three-tier system and celebration pattern
-- [ ] 30-03-PLAN.md — Swipe-to-dismiss toast rewrite with motion/react drag
-- [ ] 30-04-PLAN.md — Haptics integration across all interactive components (~14 files)
+- [x] 30-01-PLAN.md — CSS mobile guards, safe area insets, and manifest portrait lock
+- [x] 30-02-PLAN.md — Expand haptics.ts with three-tier system and celebration pattern
+- [x] 30-03-PLAN.md — Swipe-to-dismiss toast rewrite with motion/react drag
+- [x] 30-04-PLAN.md — Haptics integration across all interactive components (~14 files)
 
 ### Phase 31: Animation & Interaction Polish
 **Goal**: Every interaction has appropriate, consistent feedback — buttons respond at the right tier, lists stagger smoothly, overlays exit gracefully, and glass-morphism tiers are correctly applied everywhere
@@ -124,11 +124,11 @@ Plans:
   5. Glass-morphism tiers (light/medium/heavy) are applied correctly per component type — verified across all screens in both light and dark mode
 **Plans**: 5 plans in 2 waves
 Plans:
-- [ ] 31-01-PLAN.md — Button tier system (3D chunky primary, scale secondary, opacity tertiary)
-- [ ] 31-02-PLAN.md — Dialog exit animations + dismiss audio cue
-- [ ] 31-03-PLAN.md — Glass-morphism noise texture, text-shadow, and tier audit
-- [ ] 31-04-PLAN.md — Card enter animations (scale+fade on mount)
-- [ ] 31-05-PLAN.md — StaggeredList adaptive timing + coverage audit
+- [x] 31-01-PLAN.md — Button tier system (3D chunky primary, scale secondary, opacity tertiary)
+- [x] 31-02-PLAN.md — Dialog exit animations + dismiss audio cue
+- [x] 31-03-PLAN.md — Glass-morphism noise texture, text-shadow, and tier audit
+- [x] 31-04-PLAN.md — Card enter animations (scale+fade on mount)
+- [x] 31-05-PLAN.md — StaggeredList adaptive timing + coverage audit
 
 ### Phase 32: Celebration System Elevation
 **Goal**: Achievements and milestones trigger choreographed, multi-sensory celebrations — confetti, sound, haptics, and animation work together in timed sequences that scale to the significance of what the user accomplished
@@ -142,14 +142,14 @@ Plans:
   5. XP counter in the quiz session header pulses with spring animation each time the user earns points
 **Plans**: 8 plans in 3 waves + 1 gap closure wave
 Plans:
-- [ ] 32-01-PLAN.md — Fix confetti leak + civics-themed shapes and party popper physics
-- [ ] 32-02-PLAN.md — Sound harmonics + celebration sound sequences
-- [ ] 32-03-PLAN.md — DotLottie integration + CSP update
-- [ ] 32-04-PLAN.md — Dramatic score count-up easing + XP counter
-- [ ] 32-05-PLAN.md — useCelebration hook + CelebrationOverlay orchestration
-- [ ] 32-06-PLAN.md — TestResultsScreen multi-stage choreography
-- [ ] 32-07-PLAN.md — Gap closure: Wire XPCounter into quiz session consumers
-- [ ] 32-08-PLAN.md — Gap closure: Add dotlottie-react to package.json
+- [x] 32-01-PLAN.md — Fix confetti leak + civics-themed shapes and party popper physics
+- [x] 32-02-PLAN.md — Sound harmonics + celebration sound sequences
+- [x] 32-03-PLAN.md — DotLottie integration + CSP update
+- [x] 32-04-PLAN.md — Dramatic score count-up easing + XP counter
+- [x] 32-05-PLAN.md — useCelebration hook + CelebrationOverlay orchestration
+- [x] 32-06-PLAN.md — TestResultsScreen multi-stage choreography
+- [x] 32-07-PLAN.md — Gap closure: Wire XPCounter into quiz session consumers
+- [x] 32-08-PLAN.md — Gap closure: Add dotlottie-react to package.json
 
 ### Phase 33: States & Accessibility
 **Goal**: Every screen has polished loading, empty, and error states, and all users — including those using screen readers or reduced motion — experience the full app without information loss
@@ -163,11 +163,11 @@ Plans:
   5. All CSS keyframes and transitions respect `prefers-reduced-motion: reduce` — animation-dependent information is preserved via alternative non-motion presentation
 **Plans**: 5 plans in 3 waves
 Plans:
-- [ ] 33-01-PLAN.md — Reusable state components (Skeleton, EmptyState, ErrorFallback, announcer, useRetry)
-- [ ] 33-02-PLAN.md — Reduced motion CSS audit + StaggeredList fix
-- [ ] 33-03-PLAN.md — Skeleton + empty state integration across all screens
-- [ ] 33-04-PLAN.md — Error recovery + OfflineBanner integration
-- [ ] 33-05-PLAN.md — Focus management, live region announcements, modal focus trap audit
+- [x] 33-01-PLAN.md — Reusable state components (Skeleton, EmptyState, ErrorFallback, announcer, useRetry)
+- [x] 33-02-PLAN.md — Reduced motion CSS audit + StaggeredList fix
+- [x] 33-03-PLAN.md — Skeleton + empty state integration across all screens
+- [x] 33-04-PLAN.md — Error recovery + OfflineBanner integration
+- [x] 33-05-PLAN.md — Focus management, live region announcements, modal focus trap audit
 
 ### Phase 34: Content & About Page
 **Goal**: Every USCIS 2025 question has a complete, quality explanation, and the app includes an About page that tells the story of why it exists and honors the people who inspired it
@@ -181,9 +181,9 @@ Plans:
   5. The About page is accessible from Settings (and optionally navigation) and renders correctly in both language modes
 **Plans**: 3 plans in 2 waves
 Plans:
-- [ ] 34-01-PLAN.md — Bilingual content constants + CONT-01/CONT-02 verification
-- [ ] 34-02-PLAN.md — About page UI, DedicationCard component, route registration
-- [ ] 34-03-PLAN.md — Navigation integration (GlassHeader heart, Settings link, landing teaser)
+- [x] 34-01-PLAN.md — Bilingual content constants + CONT-01/CONT-02 verification
+- [x] 34-02-PLAN.md — About page UI, DedicationCard component, route registration
+- [x] 34-03-PLAN.md — Navigation integration (GlassHeader heart, Settings link, landing teaser)
 
 ### Phase 35: Touch Target Fix + Tech Debt Cleanup
 **Goal**: Close cross-phase integration gaps from the milestone audit — fix touch target regressions introduced in Phase 34, remove dead code, and sync documentation
@@ -197,7 +197,7 @@ Plans:
   4. ROADMAP.md Phase 29 progress table shows correct completion status
 **Plans**: 2 plans in 1 wave
 Plans:
-- [ ] 35-01-PLAN.md — Touch target fixes + orphaned celebration sound removal
+- [x] 35-01-PLAN.md — Touch target fixes + orphaned celebration sound removal
 - [ ] 35-02-PLAN.md — Dead code cleanup (9 orphaned exports) + ROADMAP checkbox sync
 
 ### Phase 36: Mock Test Celebration Unification
