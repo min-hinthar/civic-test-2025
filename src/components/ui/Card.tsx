@@ -88,12 +88,16 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     // Interactive card with hover animation - semantic token shadows
     const motionVariants = {
       idle: {
+        opacity: 1,
+        scale: 1,
         y: 0,
         boxShadow: '0 10px 40px -10px hsl(var(--color-primary) / 0.15)',
       },
       hover: shouldReduceMotion
-        ? {}
+        ? { opacity: 1, scale: 1 }
         : {
+            opacity: 1,
+            scale: 1,
             y: -4,
             boxShadow: '0 20px 60px -15px hsl(var(--color-primary) / 0.3)',
           },

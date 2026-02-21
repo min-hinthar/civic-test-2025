@@ -255,7 +255,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 
 Plans:
 - [ ] 37-01-PLAN.md — Fix Study Guide card visibility + Interview mode answer bugs
-- [ ] 37-02-PLAN.md — About navbar link + landing page card animation
+- [x] 37-02-PLAN.md — About navbar link + landing page card animation
 - [x] 37-03-PLAN.md — Bookmark persistence store + useBookmarks hook
 - [ ] 37-04-PLAN.md — Review Deck overhaul (clickable cards, progress, filters, empty state, due badges)
 - [ ] 37-05-PLAN.md — Flashcard chip row + toolbar (replaces dropdown, adds counter, search, sort)
