@@ -210,7 +210,9 @@ Plans:
   2. `hapticHeavy()` fires at the Mock Test pass reveal moment
   3. `playCelebrationSequence()` stages are used for Mock Test result timing
   4. Mock Test fail still shows appropriate (non-celebratory) results without choreography
-Plans: TBD
+**Plans**: 1 plan in 1 wave
+Plans:
+- [ ] 36-01-PLAN.md — Replace inline resultView with shared TestResultsScreen + dead code cleanup
 
 ## Progress
 
@@ -226,7 +228,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 | 33. States & Accessibility | v3.0 | 5/5 | Complete | 2026-02-20 |
 | 34. Content & About Page | v3.0 | 3/3 | Complete | 2026-02-20 |
 | 35. Touch Target Fix + Tech Debt | 2/2 | Complete    | 2026-02-21 | - |
-| 36. Mock Test Celebration Unification | v3.0 | TBD | Not started | - |
+| 36. Mock Test Celebration Unification | v3.0 | 0/1 | Not started | - |
 
 **Cumulative:**
 
