@@ -61,7 +61,7 @@ Each task was committed atomically:
 
 1. **Task 1: Wire XPCounter into PracticeSession and TestPage quiz headers** - `1501b97` (feat)
 
-**Plan metadata:** [pending] (docs: complete plan)
+**Plan metadata:** `a28224c` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/components/practice/PracticeSession.tsx` - Added XPCounter import, totalXp/prevTotalXp state, cumulative XP tracking in handleCheck, xpSlot prop on QuizHeader
