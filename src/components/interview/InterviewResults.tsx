@@ -682,8 +682,9 @@ export function InterviewResults({
                 >
               ).map(([category, { correct, total }]) => {
                 if (total === 0) return null;
-                const color = CATEGORY_COLORS[category];
+                const color = CATEGORY_COLORS[category] ?? 'blue';
                 const colorClasses = CATEGORY_COLOR_CLASSES[color] ?? CATEGORY_COLOR_CLASSES.blue;
+                const categoryDef = USCIS_CATEGORIES[category];
                 const pct = Math.round((correct / total) * 100);
 
                 return (
@@ -701,16 +702,16 @@ export function InterviewResults({
                             colorClasses.text
                           )}
                         >
-                          {USCIS_CATEGORIES[category].name.en}
+                          {categoryDef?.name.en ?? category}
                         </span>
                       </div>
                       <span className="text-sm font-semibold text-slate-200">
                         {correct}/{total}
                       </span>
                     </div>
-                    {showBurmese && (
+                    {showBurmese && categoryDef && (
                       <p className="mb-2 font-myanmar text-xs text-slate-400">
-                        {USCIS_CATEGORIES[category].name.my}
+                        {categoryDef.name.my}
                       </p>
                     )}
                     <Progress value={pct} variant={pct >= 60 ? 'success' : 'warning'} size="sm" />
