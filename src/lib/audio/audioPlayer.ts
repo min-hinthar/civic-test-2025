@@ -79,6 +79,8 @@ export interface AudioPlayer {
   onStateChange(cb: StateCallback): () => void;
   /** Get current state snapshot. */
   getState(): AudioPlayerState;
+  /** Remove from global registry. Call on component unmount to prevent registry leaks. */
+  destroy(): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -408,6 +410,12 @@ export function createAudioPlayer(): AudioPlayer {
 
     getState(): AudioPlayerState {
       return { ...state };
+    },
+
+    destroy(): void {
+      this.cancel();
+      _playerRegistry.delete(self);
+      listeners.clear();
     },
   };
 

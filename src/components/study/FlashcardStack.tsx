@@ -141,6 +141,7 @@ export function FlashcardStack({
     questionText: currentQuestion?.question_en ?? '',
     answerText: getAnswerTextForAutoPlay(currentQuestion),
     questionId: currentQuestion?.id ?? '',
+    showBurmese,
     onFlip: setAutoPlayFlipped,
     onAdvance: () => {
       if (currentIndex < questions.length - 1) {

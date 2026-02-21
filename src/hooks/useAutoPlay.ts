@@ -4,6 +4,9 @@
  * Hands-free study mode: reads question, pauses, flips card, reads answer,
  * pauses, then advances to the next card. Loops until paused or end of deck.
  *
+ * Supports bilingual mode: when showBurmese is true, plays Burmese audio
+ * after English for both question and answer phases.
+ *
  * Uses TTS for speech and createAudioPlayer for pre-generated MP3 playback.
  * Effect cleanup uses closure-local `let cancelled = false` per CLAUDE.md
  * convention to prevent race conditions.
@@ -16,6 +19,7 @@
  *     questionText: question.question_en,
  *     answerText: answer.en,
  *     questionId: question.id,
+ *     showBurmese: true,
  *     onFlip: setFlipped,
  *     onAdvance: goToNext,
  *   });
@@ -23,7 +27,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { createAudioPlayer, getEnglishAudioUrl, type AudioPlayer } from '@/lib/audio/audioPlayer';
+import {
+  createAudioPlayer,
+  getBurmeseAudioUrl,
+  getEnglishAudioUrl,
+  type AudioPlayer,
+} from '@/lib/audio/audioPlayer';
 
 import { useTTS } from './useTTS';
 
@@ -40,6 +49,8 @@ interface UseAutoPlayOptions {
   answerText: string;
   /** Question ID for MP3 audio URLs */
   questionId: string;
+  /** Whether Burmese/Myanmar mode is active — plays Burmese audio after English */
+  showBurmese?: boolean;
   /** Callback to flip the card (true = show answer) */
   onFlip: (flipped: boolean) => void;
   /** Callback to advance to next card */
@@ -68,6 +79,7 @@ export function useAutoPlay({
   questionText,
   answerText,
   questionId,
+  showBurmese = false,
   onFlip,
   onAdvance,
   questionPause = 2000,
@@ -76,14 +88,22 @@ export function useAutoPlay({
   const [isPlaying, setIsPlaying] = useState(false);
   const { speak, cancel: cancelTTS } = useTTS({ isolated: true });
 
-  // Persistent audio player for MP3 playback (ref safe — only used in effects/handlers)
+  // Persistent audio players for MP3 playback (ref safe — only used in effects/handlers)
   const playerRef = useRef<AudioPlayer | null>(null);
+  const burmesePlayerRef = useRef<AudioPlayer | null>(null);
 
   const getPlayer = useCallback((): AudioPlayer => {
     if (!playerRef.current) {
       playerRef.current = createAudioPlayer();
     }
     return playerRef.current;
+  }, []);
+
+  const getBurmesePlayer = useCallback((): AudioPlayer => {
+    if (!burmesePlayerRef.current) {
+      burmesePlayerRef.current = createAudioPlayer();
+    }
+    return burmesePlayerRef.current;
   }, []);
 
   const play = useCallback(() => {
@@ -94,6 +114,7 @@ export function useAutoPlay({
     setIsPlaying(false);
     cancelTTS();
     playerRef.current?.cancel();
+    burmesePlayerRef.current?.cancel();
   }, [cancelTTS]);
 
   const toggle = useCallback(() => {
@@ -127,10 +148,10 @@ export function useAutoPlay({
       });
 
     /**
-     * Try MP3 first, fall back to browser TTS.
+     * Try English MP3 first, fall back to browser TTS.
      * Returns true if completed, false if cancelled/failed.
      */
-    const playAudio = async (text: string, audioUrl: string): Promise<boolean> => {
+    const playEnglishAudio = async (text: string, audioUrl: string): Promise<boolean> => {
       if (cancelled) return false;
 
       // Try MP3 first
@@ -150,6 +171,18 @@ export function useAutoPlay({
       }
     };
 
+    /**
+     * Play Burmese MP3 audio. Non-blocking: failures are silently ignored.
+     */
+    const playBurmeseAudio = async (audioUrl: string): Promise<void> => {
+      if (cancelled || !showBurmese) return;
+      try {
+        await getBurmesePlayer().play(audioUrl);
+      } catch {
+        // Burmese audio failure is non-blocking
+      }
+    };
+
     const run = async () => {
       // Step 1: Ensure card shows question side
       onFlip(false);
@@ -160,10 +193,19 @@ export function useAutoPlay({
       await wait(300);
       if (cancelled) return;
 
-      // Step 2: Read the question
+      // Step 2: Read the question (English)
       const qUrl = getEnglishAudioUrl(questionId, 'q');
-      await playAudio(questionText, qUrl);
+      await playEnglishAudio(questionText, qUrl);
       if (cancelled) return;
+
+      // Step 2b: Read the question (Burmese) — bilingual mode
+      if (showBurmese) {
+        await wait(400); // Brief gap between languages
+        if (cancelled) return;
+        const qUrlMy = getBurmeseAudioUrl(questionId, 'q');
+        await playBurmeseAudio(qUrlMy);
+        if (cancelled) return;
+      }
 
       // Step 3: Pause after question
       await wait(questionPause);
@@ -177,10 +219,19 @@ export function useAutoPlay({
       await wait(500);
       if (cancelled) return;
 
-      // Step 5: Read the answer
+      // Step 5: Read the answer (English)
       const aUrl = getEnglishAudioUrl(questionId, 'a');
-      await playAudio(answerText, aUrl);
+      await playEnglishAudio(answerText, aUrl);
       if (cancelled) return;
+
+      // Step 5b: Read the answer (Burmese) — bilingual mode
+      if (showBurmese) {
+        await wait(400); // Brief gap between languages
+        if (cancelled) return;
+        const aUrlMy = getBurmeseAudioUrl(questionId, 'a');
+        await playBurmeseAudio(aUrlMy);
+        if (cancelled) return;
+      }
 
       // Step 6: Pause after answer
       await wait(answerPause);
@@ -208,10 +259,11 @@ export function useAutoPlay({
       cancelled = true;
       cancelTTS();
       playerRef.current?.cancel();
+      burmesePlayerRef.current?.cancel();
     };
-    // Re-trigger on index change (auto-play advances trigger next cycle)
+    // Re-trigger on index change, bilingual mode change, or play state change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, isPlaying, currentIndex]);
+  }, [enabled, isPlaying, currentIndex, showBurmese]);
 
   return { isPlaying, play, pause, toggle };
 }
