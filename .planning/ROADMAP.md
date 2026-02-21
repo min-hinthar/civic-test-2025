@@ -5,7 +5,7 @@
 - :white_check_mark: **v1.0 MVP** — Phases 1-10 (shipped 2026-02-08)
 - :white_check_mark: **v2.0 Unified Learning Hub** — Phases 11-17 (shipped 2026-02-13)
 - :white_check_mark: **v2.1 Quality & Polish** — Phases 18-28 (shipped 2026-02-19)
-- :construction: **v3.0 World-Class UX** — Phases 29-36 (in progress)
+- :construction: **v3.0 World-Class UX** — Phases 29-37 (in progress)
 
 ## Phases
 
@@ -217,7 +217,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 → 36
+Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 → 36 → 37
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -237,9 +237,30 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 | v1.0 MVP | 1-10 | 72 | 55/55 | Complete | 2026-02-08 |
 | v2.0 Unified Learning Hub | 11-17 | 47 | 29/29 | Complete | 2026-02-13 |
 | v2.1 Quality & Polish | 18-28 | 82 | 65/66 | Complete | 2026-02-19 |
-| v3.0 World-Class UX | 29-36 | TBD | 39/39 | In progress | - |
+| v3.0 World-Class UX | 29-37 | TBD | 39/39 | In progress | - |
 
 **Total:** 36 phases, 210+ plans, 149/150 + 39/39 requirements
+
+### Phase 37: Bug Fixes & UX Polish
+
+**Goal:** Fix display bugs and polish UX across Study Guide, Flashcards, Review Deck, Mock Test, and Interview — plus add About link to navbar with micro-interactions
+**Depends on:** Phase 36
+**Key Issues:**
+  1. Study Guide Browse: category cards not displaying
+  2. Flip-Cards: "All Categories" dropdown organization needs better UI/UX
+  3. Review Deck: missing micro-interactions, cards should be clickable/linked
+  4. Mock Test + Interview: bug fixes (TBD during planning)
+  5. About page link: add to navbar between language toggle and theme toggle, with micro-interaction and animation
+**Plans:** 7 plans in 3 waves
+
+Plans:
+- [ ] 37-01-PLAN.md — Fix Study Guide card visibility + Interview mode answer bugs
+- [ ] 37-02-PLAN.md — About navbar link + landing page card animation
+- [ ] 37-03-PLAN.md — Bookmark persistence store + useBookmarks hook
+- [ ] 37-04-PLAN.md — Review Deck overhaul (clickable cards, progress, filters, empty state, due badges)
+- [ ] 37-05-PLAN.md — Flashcard chip row + toolbar (replaces dropdown, adds counter, search, sort)
+- [ ] 37-06-PLAN.md — Flashcard enrichment (card back detail, bookmark toggle, auto-play mode)
+- [ ] 37-07-PLAN.md — Bug investigation across 9 domains + loading/empty state audit
 
 ---
 *Roadmap created: 2026-02-05*
