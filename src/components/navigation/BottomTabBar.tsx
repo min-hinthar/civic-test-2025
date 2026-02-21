@@ -10,7 +10,7 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Sun, Moon, LogOut } from 'lucide-react';
+import { Sun, Moon, LogOut, Heart } from 'lucide-react';
 import { motion } from 'motion/react';
 import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
 import { NavItem } from './NavItem';
@@ -114,6 +114,35 @@ export function BottomTabBar() {
             </motion.div>
           )}
         </div>
+
+        {/* About link -- Heart icon */}
+        <motion.button
+          type="button"
+          onClick={() => {
+            hapticLight();
+            navigate('/about');
+          }}
+          whileTap={{ scale: 0.92 }}
+          className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
+          aria-label="About"
+          aria-current={location.pathname === '/about' ? 'page' : undefined}
+        >
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
+              <Heart
+                className={`h-6 w-6 ${location.pathname === '/about' ? 'text-primary fill-current' : 'text-muted-foreground'}`}
+                strokeWidth={2}
+              />
+            </span>
+            <span
+              className={`text-xs whitespace-nowrap transition-colors ${
+                showBurmese ? 'font-myanmar' : ''
+              } ${location.pathname === '/about' ? 'text-primary font-semibold' : 'text-muted-foreground'}`}
+            >
+              {showBurmese ? 'အကြောင်း' : 'About'}
+            </span>
+          </div>
+        </motion.button>
 
         {/* Theme toggle */}
         <button

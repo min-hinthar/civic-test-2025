@@ -14,7 +14,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sun, Moon, LogOut, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Sun, Moon, LogOut, ChevronLeft, ChevronRight, AlertTriangle, Heart } from 'lucide-react';
 
 import { NAV_TABS, HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { NavItem } from './NavItem';
@@ -204,6 +204,17 @@ export function Sidebar() {
           )}
         </div>
 
+        {/* About link -- Heart icon */}
+        <SidebarAboutButton
+          isExpanded={isExpanded}
+          isActive={location.pathname === '/about'}
+          onClick={() => {
+            hapticLight();
+            navigate('/about');
+          }}
+          spring={spring}
+        />
+
         {/* Theme toggle */}
         <SidebarUtilityButton
           icon={ThemeIcon}
@@ -316,6 +327,52 @@ function SidebarUtilityButton({
             className="text-sm whitespace-nowrap overflow-hidden"
           >
             {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// About button with active-state heart fill
+// ---------------------------------------------------------------------------
+
+interface SidebarAboutButtonProps {
+  isExpanded: boolean;
+  isActive: boolean;
+  onClick: () => void;
+  spring: Record<string, unknown>;
+}
+
+function SidebarAboutButton({ isExpanded, isActive, onClick, spring }: SidebarAboutButtonProps) {
+  const colorClass = isActive
+    ? 'text-primary bg-primary/10'
+    : 'text-muted-foreground hover:text-foreground hover:bg-primary/10';
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center w-full rounded-full transition-colors ${colorClass} ${
+        isExpanded ? 'gap-3 py-2.5 px-3' : 'justify-center w-12 h-12 mx-auto group/navitem'
+      }`}
+      data-tooltip={!isExpanded ? 'About' : undefined}
+      aria-label="About"
+      aria-current={isActive ? 'page' : undefined}
+    >
+      <Heart className={`h-6 w-6 shrink-0 ${isActive ? 'fill-current' : ''}`} strokeWidth={2} />
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.span
+            key="util-label-about"
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={spring}
+            className="text-sm whitespace-nowrap overflow-hidden"
+          >
+            About
           </motion.span>
         )}
       </AnimatePresence>
