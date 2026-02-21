@@ -372,9 +372,7 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
       <div className="min-w-0 flex-1">
         <p className="font-medium leading-snug">{toast.message.en}</p>
         {showBurmese && (
-          <p className="font-myanmar mt-1 text-sm leading-snug text-muted-foreground">
-            {toast.message.my}
-          </p>
+          <p className="font-myanmar mt-1 text-sm leading-snug text-white/80">{toast.message.my}</p>
         )}
       </div>
 
