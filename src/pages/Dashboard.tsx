@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { X, BookOpen } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -30,6 +33,7 @@ import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
 import type { BadgeCheckData } from '@/lib/social';
+import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
 // Dashboard
@@ -38,10 +42,12 @@ import type { BadgeCheckData } from '@/lib/social';
 const MAX_MANUAL_RETRIES = 3;
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
   const { showWarning } = useToast();
+  const [dueBannerDismissed, setDueBannerDismissed] = useState(false);
 
   // Unfinished session banners
   const { sessions } = useSessionPersistence();
@@ -247,6 +253,59 @@ const Dashboard = () => {
               />
             </StaggeredItem>
           )}
+
+          {/* Due Card Review Banner */}
+          <AnimatePresence>
+            {srsDueCount > 0 && !dueBannerDismissed && (
+              <StaggeredItem className="mb-6">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={SPRING_GENTLE}
+                  className="border-l-4 border-warning bg-warning/5 rounded-xl p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <BookOpen className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">
+                        You have {srsDueCount} card{srsDueCount !== 1 ? 's' : ''} due for review
+                      </p>
+                      {showBurmese && (
+                        <p className="text-sm text-muted-foreground font-myanmar mt-0.5">
+                          {
+                            '\u101E\u1004\u103A\u1037\u1010\u103D\u1004\u103A \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u101B\u1014\u103A \u1000\u1010\u103A'
+                          }{' '}
+                          {srsDueCount}{' '}
+                          {'\u1001\u102F \u101B\u103E\u102D\u1015\u102B\u101E\u100A\u103A'}
+                        </p>
+                      )}
+                      <button
+                        onClick={() => navigate('/study#deck')}
+                        className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-warning hover:text-warning/80 transition-colors"
+                      >
+                        <BookOpen className="h-3.5 w-3.5" />
+                        Review Now
+                        {showBurmese && (
+                          <span className="font-myanmar ml-1">
+                            / \u101A\u1001\u102F
+                            \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u102B
+                          </span>
+                        )}
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setDueBannerDismissed(true)}
+                      className="shrink-0 p-1 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50"
+                      aria-label="Dismiss due card banner"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              </StaggeredItem>
+            )}
+          </AnimatePresence>
 
           {/* NBA Hero Card */}
           <StaggeredItem className="mb-6">
