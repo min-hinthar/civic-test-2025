@@ -8,7 +8,7 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 37-bug-fixes-ux-polish
-**Current Plan:** 7 of 7 in Phase (plans 01-07 complete)
+**Current Plan:** 7 of 7 in Phase (plans 01-07 complete, including 37-06)
 **Status:** Phase Complete
 
 ## Accumulated Context
@@ -36,6 +36,11 @@ See: .planning/PROJECT.md
 - 37-07: Sync architecture verified clean - last-write-wins merge, exponential backoff, auto-sync on reconnect
 - 37-07: FSRS verified clean - isDue uses UTC Date comparison, gradeCard maps Easy->Good/Hard->Again correctly
 - 37-07: Toast Burmese text uses text-white/80 not text-muted-foreground on colored backgrounds
+- 37-06: Bookmark state passed via props not hooks inside Flashcard3D for decoupling
+- 37-06: Difficulty derived from question number (1-40 Beginner, 41-80 Intermediate, 81+ Advanced)
+- 37-06: FSRS State.Review mapped to Mastered label (high retention = mastered)
+- 37-06: Auto-play uses isolated TTS engine + disables auto-read to prevent audio overlap
+- 37-06: controlledFlipped prop enables external flip control for auto-play
 
 ## Performance Metrics
 
@@ -46,6 +51,7 @@ See: .planning/PROJECT.md
 | Phase 37 P01 | 8min | 2 tasks | 3 files |
 | 37-04 | 6min | 2 | 3 |
 | 37-05 | 10min | 2 | 4 |
+| 37-06 | 7min | 2 | 4 |
 | 37-07 | 5min | 3 | 1 |
 
 ## Session Log
@@ -57,4 +63,5 @@ See: .planning/PROJECT.md
 - 2026-02-21: Completed 37-04-PLAN.md (review deck overhaul + dashboard due banner)
 - 2026-02-21: Completed 37-01-PLAN.md (Card visibility fix, interview feedback/transcript fixes)
 - 2026-02-21: Completed 37-05-PLAN.md (CategoryChipRow + FlashcardToolbar replacing dropdown)
+- 2026-02-21: Completed 37-06-PLAN.md (flashcard back enrichment + auto-play study mode)
 - 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)

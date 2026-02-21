@@ -251,7 +251,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
   3. Review Deck: missing micro-interactions, cards should be clickable/linked
   4. Mock Test + Interview: bug fixes (TBD during planning)
   5. About page link: add to navbar between language toggle and theme toggle, with micro-interaction and animation
-**Plans:** 6/7 plans executed
+**Plans:** 7/7 plans complete
 
 Plans:
 - [ ] 37-01-PLAN.md — Fix Study Guide card visibility + Interview mode answer bugs
