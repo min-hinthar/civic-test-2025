@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState, useEffect, useRef, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Trophy } from 'lucide-react';
+import { TestResultsScreen } from '@/components/results/TestResultsScreen';
 import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
@@ -15,39 +15,20 @@ import { fisherYatesShuffle } from '@/lib/shuffle';
 import type { Answer, QuestionResult, TestEndReason, TestSession } from '@/types';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
-import { BilingualHeading, SectionHeading } from '@/components/bilingual/BilingualHeading';
-import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { CircularTimer } from '@/components/test/CircularTimer';
 import { PreTestScreen, type SessionOverrides } from '@/components/test/PreTestScreen';
 import type { MockTestMode } from '@/types';
-import { Confetti } from '@/components/celebrations/Confetti';
-import { CountUpScore } from '@/components/celebrations/CountUpScore';
-import { ExplanationCard } from '@/components/explanations/ExplanationCard';
-import { WeakAreaNudge } from '@/components/nudges/WeakAreaNudge';
-import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
-import { ShareButton } from '@/components/social/ShareButton';
 import { useStreak } from '@/hooks/useStreak';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import { recordAnswer } from '@/lib/mastery/masteryStore';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
-import { detectWeakAreas, getCategoryQuestionIds, USCIS_CATEGORIES } from '@/lib/mastery';
-import type { USCISCategory, CategoryMasteryEntry } from '@/lib/mastery';
 import { allQuestions } from '@/constants/questions';
 import { useUserState } from '@/contexts/StateContext';
 import { DynamicAnswerNote } from '@/components/study/Flashcard3D';
 import { strings } from '@/lib/i18n/strings';
-import { FadeIn } from '@/components/animations/StaggeredList';
 import { UpdateBanner } from '@/components/update/UpdateBanner';
-import { Filter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import {
-  playCorrect,
-  playIncorrect,
-  playLevelUp,
-  playMilestone,
-  playTimerWarningTick,
-} from '@/lib/audio/soundEffects';
+import { playCorrect, playIncorrect, playTimerWarningTick } from '@/lib/audio/soundEffects';
 import { saveSession, getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import type { MockTestSnapshot } from '@/lib/sessions/sessionTypes';
 import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
@@ -100,8 +81,8 @@ function getQuestionAtIndex(
 const TestPage = () => {
   const { saveTestSession } = useAuth();
   const navigate = useNavigate();
-  const { categoryMasteries } = useCategoryMastery();
-  const { currentStreak } = useStreak();
+  useCategoryMastery();
+  useStreak();
   const shouldReduceMotion = useReducedMotion();
   const { stateInfo } = useUserState();
   const { showBurmese } = useLanguage();
@@ -143,10 +124,6 @@ const TestPage = () => {
   const [totalXp, setTotalXp] = useState(0);
   const [prevTotalXp, setPrevTotalXp] = useState(0);
 
-  // Results screen state
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [showAllResults, setShowAllResults] = useState(false);
-
   // Session ID (stable across renders)
   const [sessionId] = useState(() => `session-mock-test-${Date.now()}`);
 
@@ -180,8 +157,6 @@ const TestPage = () => {
   // ---------------------------------------------------------------------------
   // Derived state (MUST be before early returns per rules-of-hooks)
   // ---------------------------------------------------------------------------
-
-  const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), [questions]);
 
   const currentQuestion = !isFinished
     ? getQuestionAtIndex(questions, quizState.currentIndex)
@@ -245,52 +220,6 @@ const TestPage = () => {
     [isFinished, quizState.results]
   );
   const finalCorrect = useMemo(() => finalResults.filter(r => r.isCorrect).length, [finalResults]);
-  const finalIncorrect = finalResults.length - finalCorrect;
-
-  // Share card data (only when test is complete and passed)
-  const shareCardData: ShareCardData | null = useMemo(() => {
-    if (!isFinished || finalCorrect < PASS_THRESHOLD) return null;
-
-    const catMap: Record<string, { correct: number; total: number }> = {};
-    for (const r of finalResults) {
-      if (!catMap[r.category]) catMap[r.category] = { correct: 0, total: 0 };
-      catMap[r.category].total += 1;
-      if (r.isCorrect) catMap[r.category].correct += 1;
-    }
-
-    return {
-      score: finalCorrect,
-      total: finalResults.length,
-      sessionType: 'test',
-      streak: currentStreak,
-      topBadge: null,
-      categories: Object.entries(catMap).map(([name, stats]) => ({
-        name,
-        correct: stats.correct,
-        total: stats.total,
-      })),
-      date: new Date().toISOString(),
-    };
-  }, [isFinished, finalCorrect, finalResults, currentStreak]);
-
-  const completionMessage: Record<TestEndReason, { en: string; my: string }> = {
-    passThreshold: {
-      en: 'USCIS interview stops after 12 correct answers. Great job reaching the passing threshold early!',
-      my: 'အဖြေမှန် ၁၂ ချက်ရပြီးတဲ့အတွက် ရပ်တန့်ပါတယ်။ စောစီးစွာ အောင်မြင်ခဲ့တာ ဂုဏ်ယူပါတယ်!',
-    },
-    failThreshold: {
-      en: 'Interview ended after 9 incorrect answers. Review the feedback below before retrying.',
-      my: 'အမှား ၉ ကြိမ်ဖြေဆိုပြီးနောက် ရပ်တန့်လိုက်ပါတယ်။ ထပ်ကြိုးစားရန် အောက်က ဖြေဆိုချက်များကို ပြန်လည်သုံးသပ်ပါ။',
-    },
-    time: {
-      en: 'Time expired before the full set finished.',
-      my: 'အချိန်ကုန်သွားပါတယ်။',
-    },
-    complete: {
-      en: 'You completed all 20 questions.',
-      my: 'မေးခွန်း ၂၀ လုံးဖြေဆိုပြီးပါပြီ။',
-    },
-  };
 
   // ---------------------------------------------------------------------------
   // Per-question timer (mock test: always ON, no extension)
@@ -422,7 +351,7 @@ const TestPage = () => {
       totalQuestions: finalResults.length,
       durationSeconds: TEST_DURATION_SECONDS - timeLeft,
       passed: finalCorrect >= PASS_THRESHOLD,
-      incorrectCount: finalIncorrect,
+      incorrectCount: finalResults.length - finalCorrect,
       endReason: fallbackReason,
       results: finalResults,
     };
@@ -458,7 +387,6 @@ const TestPage = () => {
     endReasonForDisplay,
     isFinished,
     finalCorrect,
-    finalIncorrect,
     finalResults,
     questions.length,
     saveTestSession,
@@ -683,16 +611,6 @@ const TestPage = () => {
     setShowExitDialog(false);
     navigate('/dashboard');
   }, [navigate]);
-
-  // Score count complete handler for results celebration
-  const handleScoreCountComplete = useCallback(() => {
-    setShowConfetti(true);
-    if (finalCorrect >= PASS_THRESHOLD) {
-      playMilestone();
-    } else {
-      playLevelUp();
-    }
-  }, [finalCorrect]);
 
   // ---------------------------------------------------------------------------
   // Keyboard navigation (TPUX-06)
@@ -1027,353 +945,22 @@ const TestPage = () => {
   // ---------------------------------------------------------------------------
 
   const resultView = (
-    <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
-      <Confetti
-        fire={showConfetti}
-        intensity={finalCorrect >= PASS_THRESHOLD ? 'celebration' : 'burst'}
-      />
-
-      <div className="glass-light p-6 shadow-2xl shadow-primary/20 transition duration-500 hover:-translate-y-1 hover:shadow-primary/30 focus-within:ring-2 focus-within:ring-primary/40">
-        {/* Results header with trophy */}
-        <div className="text-center py-8">
-          <motion.div
-            initial={shouldReduceMotion ? {} : { scale: 0, rotate: -15 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }
-            }
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-subtle"
-          >
-            <Trophy
-              className={clsx(
-                'h-8 w-8',
-                finalCorrect >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
-              )}
-            />
-          </motion.div>
-
-          <BilingualHeading
-            text={strings.test.testComplete}
-            level={1}
-            size="2xl"
-            centered
-            className="mb-6"
-          />
-          <CountUpScore
-            score={finalCorrect}
-            total={finalResults.length}
-            onComplete={handleScoreCountComplete}
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-6">
-          <div>
-            <p className="text-muted-foreground">
-              Review your answers and retake the mock test anytime.
-              {showBurmese && (
-                <span className="block font-myanmar text-muted-foreground mt-0.5">
-                  အဖြေများကို ပြန်လည်စစ်ဆေးပြီး အချိန်မရွေး ထပ်ဖြေနိုင်ပါတယ်။
-                </span>
-              )}
-            </p>
-            {endReasonForDisplay && (
-              <p className="mt-2 text-sm font-semibold text-primary">
-                {completionMessage[endReasonForDisplay].en}
-                {showBurmese && completionMessage[endReasonForDisplay].my && (
-                  <span className="block font-myanmar mt-0.5 font-normal text-muted-foreground">
-                    {completionMessage[endReasonForDisplay].my}
-                  </span>
-                )}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <BilingualButton
-              label={strings.actions.back}
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/dashboard')}
-            />
-            <BilingualButton
-              label={strings.actions.tryAgain}
-              variant="chunky"
-              size="sm"
-              icon={<Sparkles className="h-4 w-4" />}
-              onClick={() => window.location.reload()}
-            />
-            {shareCardData && <ShareButton data={shareCardData} />}
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-4">
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Duration
-              {showBurmese && (
-                <span className="font-myanmar normal-case tracking-normal"> · ကြာချိန်</span>
-              )}
-            </p>
-            <p className="text-2xl font-bold text-foreground">
-              {Math.round((TEST_DURATION_SECONDS - timeLeft) / 60)} mins
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Correct
-              {showBurmese && (
-                <span className="font-myanmar normal-case tracking-normal"> · မှန်</span>
-              )}
-            </p>
-            <p className="text-2xl font-bold text-success">{finalCorrect}</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Incorrect
-              {showBurmese && (
-                <span className="font-myanmar normal-case tracking-normal"> · မှား</span>
-              )}
-            </p>
-            <p className="text-2xl font-bold text-warning">{finalIncorrect}</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Status
-              {showBurmese && (
-                <span className="font-myanmar normal-case tracking-normal"> · အခြေအနေ</span>
-              )}
-            </p>
-            <p
-              className={clsx(
-                'text-2xl font-bold',
-                finalCorrect >= PASS_THRESHOLD ? 'text-success' : 'text-warning'
-              )}
-            >
-              {finalCorrect >= PASS_THRESHOLD ? 'Pass' : 'Review'}
-              {showBurmese && (
-                <span className="block font-myanmar text-2xl font-semibold">
-                  {finalCorrect >= PASS_THRESHOLD ? 'အောင်မြင်' : 'ပြန်လေ့လာရန်'}
-                </span>
-              )}
-            </p>
-          </div>
-        </div>
-
-        {/* Filter toggle */}
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <div className="flex rounded-lg border border-border bg-muted/30 p-0.5">
-              <button
-                onClick={() => setShowAllResults(false)}
-                className={clsx(
-                  'rounded-md px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
-                  !showAllResults
-                    ? 'bg-card text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {strings.test.incorrectOnly.en}
-                {showBurmese && (
-                  <span className="ml-1 font-myanmar">{strings.test.incorrectOnly.my}</span>
-                )}
-              </button>
-              <button
-                onClick={() => setShowAllResults(true)}
-                className={clsx(
-                  'rounded-md px-3 py-2 text-xs font-semibold transition-colors min-h-[44px]',
-                  showAllResults
-                    ? 'bg-card text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {strings.test.showAll.en}
-                {showBurmese && (
-                  <span className="ml-1 font-myanmar">{strings.test.showAll.my}</span>
-                )}
-              </button>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {strings.test.showing.en}{' '}
-            {showAllResults ? finalResults.length : finalResults.filter(r => !r.isCorrect).length}{' '}
-            {strings.test.ofQuestions.en} {finalResults.length} {strings.test.questions.en}
-          </p>
-        </div>
-
-        {/* Post-test weak area nudge */}
-        {(() => {
-          const categories = Object.keys(USCIS_CATEGORIES) as USCISCategory[];
-          const entries: CategoryMasteryEntry[] = categories.map(cat => ({
-            categoryId: cat,
-            mastery: categoryMasteries[cat] ?? 0,
-            questionCount: getCategoryQuestionIds(cat, allQuestions).length,
-          }));
-          const weak = detectWeakAreas(entries, 60).slice(0, 2);
-          if (weak.length === 0) return null;
-
-          return (
-            <FadeIn delay={400}>
-              <div className="mt-6 rounded-2xl border border-border/60 bg-muted/20 p-4">
-                <SectionHeading
-                  text={{
-                    en: 'Based on this test, consider reviewing:',
-                    my: 'ဒီစာမေးပွဲအပေါ်အခြေခံပြီး ပြန်လည်လေ့လာသင့်တာတွေ:',
-                  }}
-                  className="mb-3"
-                />
-                <div className="space-y-3">
-                  {weak.map(w => (
-                    <WeakAreaNudge
-                      key={w.categoryId}
-                      category={w.categoryId}
-                      mastery={w.mastery}
-                      isUnattempted={w.mastery === 0}
-                      onPractice={() =>
-                        navigate(`/practice?category=${encodeURIComponent(w.categoryId)}`)
-                      }
-                      onReview={() =>
-                        navigate(`/study#category-${encodeURIComponent(w.categoryId)}`)
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            </FadeIn>
-          );
-        })()}
-
-        {/* Result cards */}
-        <div className="mt-4 space-y-6">
-          {(showAllResults ? finalResults : finalResults.filter(r => !r.isCorrect)).map(result => {
-            const questionData = questionsById.get(result.questionId);
-            const explanation = questionData?.explanation;
-
-            return (
-              <div
-                key={result.questionId}
-                className="rounded-3xl border border-border bg-card/80 p-5 shadow-sm"
-              >
-                <p className="text-sm font-semibold text-foreground">{result.questionText_en}</p>
-                {showBurmese && (
-                  <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                    {result.questionText_my}
-                  </p>
-                )}
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <SpeechButton
-                    text={result.questionText_en}
-                    questionId={result.questionId}
-                    audioType="q"
-                    label="Question"
-                    ariaLabel={`Play English question audio for ${result.questionText_en}`}
-                    rate={numericRate}
-                    showSpeedLabel
-                    speedLabel={speedLabel}
-                  />
-                  {showBurmese && (
-                    <BurmeseSpeechButton
-                      questionId={result.questionId}
-                      audioType="q"
-                      label="မေးခွန်း"
-                      showSpeedLabel
-                      speedLabel={speedLabel}
-                    />
-                  )}
-                  <SpeechButton
-                    text={result.correctAnswer.text_en}
-                    questionId={result.questionId}
-                    audioType="a"
-                    label="Answer"
-                    ariaLabel={`Play English official answer for ${result.questionText_en}`}
-                    rate={numericRate}
-                    showSpeedLabel
-                    speedLabel={speedLabel}
-                  />
-                  <AddToDeckButton questionId={result.questionId} compact />
-                </div>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <div
-                    className={clsx(
-                      'rounded-2xl border p-3',
-                      result.isCorrect
-                        ? 'border-success/30 bg-success-subtle'
-                        : 'border-warning/30 bg-warning-subtle'
-                    )}
-                  >
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.yourAnswer.en}
-                      {showBurmese && (
-                        <span className="font-myanmar"> \u00B7 {strings.test.yourAnswer.my}</span>
-                      )}
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">
-                      {result.selectedAnswer.text_en}
-                    </p>
-                    {showBurmese && (
-                      <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                        {result.selectedAnswer.text_my}
-                      </p>
-                    )}
-                  </div>
-                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-3">
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      {strings.test.correctAnswer.en}
-                      {showBurmese && (
-                        <span className="font-myanmar">
-                          {' '}
-                          \u00B7 {strings.test.correctAnswer.my}
-                        </span>
-                      )}
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">
-                      {result.correctAnswer.text_en}
-                    </p>
-                    {showBurmese && (
-                      <p className="text-sm text-muted-foreground font-myanmar leading-relaxed">
-                        {result.correctAnswer.text_my}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <p
-                  className={clsx(
-                    'mt-3 text-sm font-semibold',
-                    result.isCorrect ? 'text-success' : 'text-warning'
-                  )}
-                >
-                  {result.isCorrect
-                    ? showBurmese
-                      ? `${strings.test.correct.en} \u00B7 ${strings.test.correct.my}`
-                      : strings.test.correct.en
-                    : showBurmese
-                      ? `${strings.test.reviewAnswer.en} \u00B7 ${strings.test.reviewAnswer.my}`
-                      : strings.test.reviewAnswer.en}
-                </p>
-
-                {/* Dynamic answer note for time/state-varying questions */}
-                {questionData?.dynamic && (
-                  <DynamicAnswerNote dynamic={questionData.dynamic} stateInfo={stateInfo} />
-                )}
-
-                {/* Explanation card for review */}
-                {explanation && (
-                  <div className="mt-3">
-                    <ExplanationCard
-                      explanation={explanation}
-                      isCorrect={result.isCorrect}
-                      defaultExpanded={!result.isCorrect}
-                      allQuestions={questions}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    <TestResultsScreen
+      results={finalResults}
+      questions={questions}
+      mode="mock-test"
+      endReason={endReasonForDisplay}
+      timeTaken={TEST_DURATION_SECONDS - timeLeft}
+      showBurmese={showBurmese}
+      skippedQuestionIds={quizState.skippedIndices
+        .map(i => questions[i]?.id)
+        .filter((id): id is string => !!id)}
+      onRetry={() => window.location.reload()}
+      onReviewWrongOnly={() => {
+        /* scroll handled by TestResultsScreen */
+      }}
+      onHome={() => navigate('/dashboard')}
+    />
   );
 
   // ---------------------------------------------------------------------------
