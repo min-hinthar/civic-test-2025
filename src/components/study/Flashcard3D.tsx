@@ -78,6 +78,8 @@ interface Flashcard3DProps {
   isBookmarked?: boolean;
   /** Callback to toggle bookmark */
   onToggleBookmark?: (questionId: string) => void;
+  /** Controlled flip state — when provided, parent controls flip */
+  controlledFlipped?: boolean;
   /** Additional class names */
   className?: string;
 }
@@ -221,9 +223,12 @@ export function Flashcard3D({
   masteryState,
   isBookmarked = false,
   onToggleBookmark,
+  controlledFlipped,
   className,
 }: Flashcard3DProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [internalFlipped, setInternalFlipped] = useState(false);
+  const isFlipControlled = controlledFlipped !== undefined;
+  const isFlipped = isFlipControlled ? controlledFlipped : internalFlipped;
   const shouldReduceMotion = useReducedMotion();
   const { stateInfo } = useUserState();
   const { showBurmese } = useLanguage();
@@ -231,9 +236,11 @@ export function Flashcard3D({
   const handleFlip = useCallback(() => {
     hapticMedium();
     const newState = !isFlipped;
-    setIsFlipped(newState);
+    if (!isFlipControlled) {
+      setInternalFlipped(newState);
+    }
     onFlip?.(newState);
-  }, [isFlipped, onFlip]);
+  }, [isFlipped, isFlipControlled, onFlip]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

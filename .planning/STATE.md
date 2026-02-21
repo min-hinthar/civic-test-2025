@@ -8,8 +8,8 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 37-bug-fixes-ux-polish
-**Current Plan:** 6 of 7 in Phase (plans 01-05 complete)
-**Status:** In Progress
+**Current Plan:** 7 of 7 in Phase (plans 01-07 complete)
+**Status:** Phase Complete
 
 ## Accumulated Context
 
@@ -32,6 +32,10 @@ See: .planning/PROJECT.md
 - 37-05: Short category labels in chips (Democracy, Government, etc.) to prevent overflow
 - 37-05: useMemo-based stable setter for FlashcardStack controlled mode to satisfy React Compiler
 - 37-05: shuffleKey counter triggers Fisher-Yates re-shuffle via useMemo dependency
+- 37-07: TTS engine verified clean - all 6 browser quirk workarounds properly implemented
+- 37-07: Sync architecture verified clean - last-write-wins merge, exponential backoff, auto-sync on reconnect
+- 37-07: FSRS verified clean - isDue uses UTC Date comparison, gradeCard maps Easy->Good/Hard->Again correctly
+- 37-07: Toast Burmese text uses text-white/80 not text-muted-foreground on colored backgrounds
 
 ## Performance Metrics
 
@@ -42,6 +46,7 @@ See: .planning/PROJECT.md
 | Phase 37 P01 | 8min | 2 tasks | 3 files |
 | 37-04 | 6min | 2 | 3 |
 | 37-05 | 10min | 2 | 4 |
+| 37-07 | 5min | 3 | 1 |
 
 ## Session Log
 
@@ -52,3 +57,4 @@ See: .planning/PROJECT.md
 - 2026-02-21: Completed 37-04-PLAN.md (review deck overhaul + dashboard due banner)
 - 2026-02-21: Completed 37-01-PLAN.md (Card visibility fix, interview feedback/transcript fixes)
 - 2026-02-21: Completed 37-05-PLAN.md (CategoryChipRow + FlashcardToolbar replacing dropdown)
+- 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)

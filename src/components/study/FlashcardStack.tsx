@@ -14,6 +14,8 @@ import { useSRS } from '@/contexts/SRSContext';
 import { getBurmeseAudioUrl, getEnglishAudioUrl } from '@/lib/audio/burmeseAudio';
 import { Flashcard3D } from './Flashcard3D';
 import type { MasteryLevel } from './Flashcard3D';
+import { AutoPlayControls } from './AutoPlayControls';
+import { useAutoPlay } from '@/hooks/useAutoPlay';
 import { getUSCISCategory, CATEGORY_COLORS, getSubCategoryColors } from '@/lib/mastery';
 import type { Question } from '@/types';
 
@@ -116,11 +118,65 @@ export function FlashcardStack({
     return 'Advanced';
   }, []);
 
-  // Auto-read question text on card navigate (supports bilingual auto-read)
+  // Auto-play state
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
+  const [autoPlayFlipped, setAutoPlayFlipped] = useState(false);
+
   const currentQuestion = questions[currentIndex];
+
+  // Get answer text (needed for auto-play TTS)
+  const getAnswerTextForAutoPlay = useCallback((q: Question | undefined): string => {
+    if (!q) return '';
+    if (q.studyAnswers && q.studyAnswers.length > 0) {
+      return q.studyAnswers.map(a => a.text_en).join(', ');
+    }
+    const correct = q.answers.find(a => a.correct);
+    return correct?.text_en ?? '';
+  }, []);
+
+  const autoPlay = useAutoPlay({
+    enabled: autoPlayEnabled,
+    currentIndex,
+    totalCards: questions.length,
+    questionText: currentQuestion?.question_en ?? '',
+    answerText: getAnswerTextForAutoPlay(currentQuestion),
+    questionId: currentQuestion?.id ?? '',
+    onFlip: setAutoPlayFlipped,
+    onAdvance: () => {
+      if (currentIndex < questions.length - 1) {
+        setDirection(1);
+        const newIndex = currentIndex + 1;
+        setCurrentIndex(newIndex);
+        if (!isControlled) onIndexChange?.(newIndex);
+      }
+    },
+  });
+
+  // Stop auto-play when user toggles it off
+  const handleAutoPlayToggle = useCallback(() => {
+    if (autoPlay.isPlaying) {
+      autoPlay.pause();
+      setAutoPlayEnabled(false);
+      setAutoPlayFlipped(false);
+    } else {
+      setAutoPlayEnabled(true);
+      autoPlay.play();
+    }
+  }, [autoPlay]);
+
+  // Stop auto-play on manual navigation
+  const stopAutoPlay = useCallback(() => {
+    if (autoPlayEnabled) {
+      autoPlay.pause();
+      setAutoPlayEnabled(false);
+      setAutoPlayFlipped(false);
+    }
+  }, [autoPlayEnabled, autoPlay]);
+
+  // Auto-read question text on card navigate (disabled during auto-play to avoid overlap)
   useAutoRead({
     text: currentQuestion?.question_en ?? '',
-    enabled: true,
+    enabled: !autoPlayEnabled,
     triggerKey: currentIndex,
     lang: 'en-US',
     autoReadLang: tts.autoReadLang,
@@ -132,22 +188,24 @@ export function FlashcardStack({
   });
 
   const goToNext = useCallback(() => {
+    stopAutoPlay();
     if (currentIndex < questions.length - 1) {
       setDirection(1);
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       if (!isControlled) onIndexChange?.(newIndex);
     }
-  }, [currentIndex, questions.length, onIndexChange, isControlled, setCurrentIndex]);
+  }, [currentIndex, questions.length, onIndexChange, isControlled, setCurrentIndex, stopAutoPlay]);
 
   const goToPrev = useCallback(() => {
+    stopAutoPlay();
     if (currentIndex > 0) {
       setDirection(-1);
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       if (!isControlled) onIndexChange?.(newIndex);
     }
-  }, [currentIndex, onIndexChange, isControlled, setCurrentIndex]);
+  }, [currentIndex, onIndexChange, isControlled, setCurrentIndex, stopAutoPlay]);
 
   const handleDragEnd = useCallback(
     (_: unknown, info: PanInfo) => {
@@ -233,7 +291,7 @@ export function FlashcardStack({
               stiffness: 300,
               damping: 30,
             }}
-            drag={shouldReduceMotion ? false : 'x'}
+            drag={shouldReduceMotion || autoPlayEnabled ? false : 'x'}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
@@ -263,6 +321,7 @@ export function FlashcardStack({
               masteryState={getMasteryLabel(currentQuestion.id)}
               isBookmarked={isBookmarked(currentQuestion.id)}
               onToggleBookmark={toggleBookmark}
+              controlledFlipped={autoPlayEnabled ? autoPlayFlipped : undefined}
             />
           </motion.div>
         </AnimatePresence>
@@ -309,10 +368,19 @@ export function FlashcardStack({
         </button>
       </div>
 
-      {/* Swipe hint for mobile */}
-      <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
-        Swipe left/right to navigate{showBurmese && ' / ဘယ်ညာပွတ်ဆွဲပါ'}
-      </p>
+      {/* Auto-play controls */}
+      <AutoPlayControls
+        isPlaying={autoPlay.isPlaying}
+        onToggle={handleAutoPlayToggle}
+        disabled={questions.length === 0}
+      />
+
+      {/* Swipe hint for mobile (hidden during auto-play) */}
+      {!autoPlayEnabled && (
+        <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
+          Swipe left/right to navigate{showBurmese && ' / ဘယ်ညာပွတ်ဆွဲပါ'}
+        </p>
+      )}
     </div>
   );
 }
