@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
@@ -18,8 +18,12 @@ interface FlashcardStackProps {
   questions: Question[];
   /** Starting index */
   startIndex?: number;
+  /** Controlled index — when provided, parent controls navigation state */
+  controlledIndex?: number;
   /** Called when index changes */
   onIndexChange?: (index: number) => void;
+  /** Hide built-in progress indicator (when toolbar provides it externally) */
+  hideProgress?: boolean;
   /** Additional class names */
   className?: string;
 }
@@ -45,10 +49,18 @@ const SWIPE_VELOCITY = 500;
 export function FlashcardStack({
   questions,
   startIndex = 0,
+  controlledIndex,
   onIndexChange,
+  hideProgress = false,
   className,
 }: FlashcardStackProps) {
-  const [currentIndex, setCurrentIndex] = useState(startIndex);
+  const isControlled = controlledIndex !== undefined;
+  const [internalIndex, setInternalIndex] = useState(startIndex);
+  const currentIndex = isControlled ? controlledIndex : internalIndex;
+  const setCurrentIndex = useMemo(
+    () => (isControlled ? (idx: number) => onIndexChange?.(idx) : setInternalIndex),
+    [isControlled, onIndexChange]
+  );
   const [direction, setDirection] = useState(0);
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
@@ -78,18 +90,18 @@ export function FlashcardStack({
       setDirection(1);
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
-      onIndexChange?.(newIndex);
+      if (!isControlled) onIndexChange?.(newIndex);
     }
-  }, [currentIndex, questions.length, onIndexChange]);
+  }, [currentIndex, questions.length, onIndexChange, isControlled, setCurrentIndex]);
 
   const goToPrev = useCallback(() => {
     if (currentIndex > 0) {
       setDirection(-1);
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
-      onIndexChange?.(newIndex);
+      if (!isControlled) onIndexChange?.(newIndex);
     }
-  }, [currentIndex, onIndexChange]);
+  }, [currentIndex, onIndexChange, isControlled, setCurrentIndex]);
 
   const handleDragEnd = useCallback(
     (_: unknown, info: PanInfo) => {
@@ -146,17 +158,19 @@ export function FlashcardStack({
 
   return (
     <div className={clsx('relative', className)}>
-      {/* Progress indicator */}
-      <div className="text-center mb-4 text-sm text-muted-foreground">
-        <span className="font-semibold text-foreground">{currentIndex + 1}</span>
-        <span className="mx-1">/</span>
-        <span>{questions.length}</span>
-        {showBurmese && (
-          <span className="ml-2 font-myanmar">
-            ({currentIndex + 1} မှ {questions.length})
-          </span>
-        )}
-      </div>
+      {/* Progress indicator (hidden when toolbar provides it externally) */}
+      {!hideProgress && (
+        <div className="text-center mb-4 text-sm text-muted-foreground">
+          <span className="font-semibold text-foreground">{currentIndex + 1}</span>
+          <span className="mx-1">/</span>
+          <span>{questions.length}</span>
+          {showBurmese && (
+            <span className="ml-2 font-myanmar">
+              ({currentIndex + 1} မှ {questions.length})
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Card container with swipe - explicit dimensions prevent layout shift during 3D flip */}
       <div className="relative" style={{ minHeight: '400px' }}>

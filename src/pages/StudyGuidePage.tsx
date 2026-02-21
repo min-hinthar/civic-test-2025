@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, KeyboardEvent } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronLeft, Search, BookOpen, ArrowLeftRight, Layers, GraduationCap } from 'lucide-react';
+import { ChevronLeft, BookOpen, ArrowLeftRight, Layers, GraduationCap } from 'lucide-react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import { allQuestions } from '@/constants/questions';
@@ -15,6 +15,9 @@ import { BilingualButton } from '@/components/bilingual/BilingualButton';
 import { Card } from '@/components/ui/Card';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
 import { FlashcardStack } from '@/components/study/FlashcardStack';
+import { CategoryChipRow } from '@/components/study/CategoryChipRow';
+import { FlashcardToolbar } from '@/components/study/FlashcardToolbar';
+import type { SortMode } from '@/components/study/FlashcardToolbar';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
 import { CategoryHeaderBadge, QuestionAccuracyDot } from '@/components/nudges/StudyGuideHighlight';
 import { AddToDeckButton } from '@/components/srs/AddToDeckButton';
@@ -40,11 +43,24 @@ const CATEGORY_COLORS_MAP: Record<string, string> = {
   'Civics: Symbols and Holidays': 'from-slate-500 to-stone-500',
 };
 
+/** Fisher-Yates shuffle (immutable — returns new array) */
+function shuffleArray<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 const StudyGuidePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState<SortMode>('default');
+  const [shuffleKey, setShuffleKey] = useState(0); // increment to re-shuffle
+  const [cardIndex, setCardIndex] = useState(0);
 
   const questionCategories = useMemo<string[]>(
     () => Array.from(new Set(allQuestions.map(question => question.category))),
@@ -146,9 +162,11 @@ const StudyGuidePage = () => {
     navigate('/study');
   };
 
-  // Legacy category filter change (for select dropdown in flip-card grid)
+  // Category filter change (for chip row in flip-card grid)
   const handleCategoryChange = (value: string) => {
     setCategory(value);
+    setSearchQuery('');
+    setCardIndex(0);
     const nextParams = new URLSearchParams(searchParams);
     if (value === 'all') {
       nextParams.delete('category');
@@ -170,7 +188,49 @@ const StudyGuidePage = () => {
     );
   }, [category, searchQuery]);
 
-  const categories = useMemo(() => ['all', ...questionCategories], [questionCategories]);
+  // Sorted + optionally shuffled questions for the toolbar-controlled stack
+  const sortedQuestions = useMemo(() => {
+    let result = [...legacyFilteredQuestions];
+
+    // Apply sort
+    if (sortMode === 'alphabetical') {
+      result.sort((a, b) => a.question_en.localeCompare(b.question_en));
+    } else if (sortMode === 'difficulty') {
+      // Sort by question number (proxy for difficulty — higher numbers tend to be harder)
+      result.sort((a, b) => {
+        const numA = parseInt(a.id.replace(/\D/g, ''), 10) || 0;
+        const numB = parseInt(b.id.replace(/\D/g, ''), 10) || 0;
+        return numA - numB;
+      });
+    }
+    // 'default' keeps category order (original)
+
+    // Apply shuffle (shuffleKey changes trigger re-shuffle)
+    if (shuffleKey > 0) {
+      result = shuffleArray(result);
+    }
+
+    return result;
+  }, [legacyFilteredQuestions, sortMode, shuffleKey]);
+
+  // Handlers for toolbar
+  const handleToolbarShuffle = useCallback(() => {
+    setShuffleKey(k => k + 1);
+    setCardIndex(0);
+  }, []);
+
+  const handleToolbarSortChange = useCallback((mode: SortMode) => {
+    setSortMode(mode);
+    setCardIndex(0);
+  }, []);
+
+  const handleToolbarPrev = useCallback(() => {
+    setCardIndex(i => Math.max(0, i - 1));
+  }, []);
+
+  const handleToolbarNext = useCallback(() => {
+    setCardIndex(i => Math.min(i + 1, sortedQuestions.length - 1));
+  }, [sortedQuestions.length]);
 
   // Determine active tab from hash
   const activeTab = useMemo(() => {
@@ -631,56 +691,47 @@ const StudyGuidePage = () => {
         {/* Divider */}
         <hr className="border-border/50 mb-8" />
 
-        {/* Flip-card grid section with search and category filter */}
+        {/* Flip-card section with chip row, toolbar, and flashcard stack */}
         <div className="rounded-2xl border border-border/60 bg-card/50 p-6 shadow-[0_4px_0_0_rgba(0,0,0,0.04)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.15)]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
-              {showBurmese && (
-                <p className="text-2xl text-muted-foreground font-myanmar mt-0.5">
-                  အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကဒ်များ
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              {/* Rounded search input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search questions..."
-                  className={clsx(
-                    'w-full sm:w-56 pl-9 pr-4 py-2.5 rounded-xl',
-                    'border border-border/60 bg-background text-sm text-foreground',
-                    'placeholder:text-muted-foreground/60',
-                    'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-                    'transition-colors min-h-[48px]'
-                  )}
-                />
-              </div>
-              {/* Category select */}
-              <select
-                className={clsx(
-                  'rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm font-medium',
-                  'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
-                  'transition-colors min-h-[48px]'
-                )}
-                value={category}
-                onChange={event => handleCategoryChange(event.target.value)}
-              >
-                {categories.map(option => (
-                  <option key={option} value={option}>
-                    {option === 'all' ? 'All Categories' : option}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-extrabold text-foreground">Flip Cards</h2>
+            {showBurmese && (
+              <p className="text-2xl text-muted-foreground font-myanmar mt-0.5">
+                အင်္ဂလိပ်/မြန်မာ နှစ်ဘက်လှည့်ကဒ်များ
+              </p>
+            )}
+          </div>
+
+          {/* Category chip row */}
+          <div className="mb-4 -mx-6">
+            <CategoryChipRow
+              categories={questionCategories as Category[]}
+              activeId={category === 'all' ? null : category}
+              onSelect={id => handleCategoryChange(id ?? 'all')}
+              showBurmese={showBurmese}
+              totalCount={allQuestions.length}
+              questionsPerCategory={questionsPerCategory}
+            />
+          </div>
+
+          {/* Toolbar: search, counter, progress, shuffle, sort */}
+          <div className="mb-6">
+            <FlashcardToolbar
+              currentIndex={cardIndex}
+              totalCards={sortedQuestions.length}
+              onPrev={handleToolbarPrev}
+              onNext={handleToolbarNext}
+              onShuffle={handleToolbarShuffle}
+              sortMode={sortMode}
+              onSortChange={handleToolbarSortChange}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              showBurmese={showBurmese}
+            />
           </div>
 
           {/* Empty state */}
-          {legacyFilteredQuestions.length === 0 && (
+          {sortedQuestions.length === 0 && (
             <div className="text-center py-12">
               <p className="text-lg font-bold text-muted-foreground">No questions found</p>
               {showBurmese && (
@@ -691,184 +742,15 @@ const StudyGuidePage = () => {
             </div>
           )}
 
-          <div id="cards" className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {legacyFilteredQuestions.map(question => {
-              const isLocked = Boolean(flippedCards[question.id]);
-              const isFlipped = isLocked;
-              const englishAnswersText = question.studyAnswers
-                .map(answer => answer.text_en)
-                .join('. ');
-              const qColors = getSubCategoryColors(question.category);
-
-              const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  toggleCard(question.id);
-                }
-              };
-
-              return (
-                <div key={question.id} className="flip-card" data-flipped={isFlipped}>
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className="flip-card-button interactive-tile"
-                    onClick={() => toggleCard(question.id)}
-                    onKeyDown={handleCardKeyDown}
-                    aria-pressed={isLocked}
-                    aria-label={`Reveal answer for ${question.question_en}`}
-                  >
-                    <div
-                      className={clsx(
-                        'flip-card-inner rounded-2xl border border-border/60 bg-card text-foreground',
-                        'shadow-[0_6px_0_0_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.12)]',
-                        'dark:shadow-[0_6px_0_0_rgba(0,0,0,0.25),0_8px_24px_rgba(0,0,0,0.3)]',
-                        'min-h-[30rem]'
-                      )}
-                    >
-                      <div className="flip-card-face flip-card-front flex h-full flex-col rounded-2xl">
-                        {/* Category color header strip */}
-                        <div className={clsx('h-[5px] w-full shrink-0', qColors.stripBg)} />
-                        <div className="flex-1 flex flex-col justify-between p-6">
-                          <div className="flex items-center justify-between gap-2">
-                            <p
-                              className={clsx(
-                                'text-xs font-semibold uppercase tracking-[0.2em] rounded-2xl bg-gradient-to-l px-4 py-3 shadow-inner opacity-80 flex-1',
-                                CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
-                              )}
-                            >
-                              {question.category}
-                            </p>
-                            <AddToDeckButton questionId={question.id} compact stopPropagation />
-                            <QuestionAccuracyDot questionId={question.id} />
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex flex-wrap gap-2">
-                              <SpeechButton
-                                text={question.question_en}
-                                questionId={question.id}
-                                audioType="q"
-                                label="Question"
-                                ariaLabel={`Play English question audio for ${question.question_en}`}
-                                stopPropagation
-                                showSpeedLabel
-                                speedLabel={speedLabel}
-                              />
-                              {showBurmese && (
-                                <BurmeseSpeechButton
-                                  questionId={question.id}
-                                  audioType="q"
-                                  label="မေးခွန်း"
-                                  stopPropagation
-                                  showSpeedLabel
-                                  speedLabel={speedLabel}
-                                />
-                              )}
-                            </div>
-                            <p className="mt-4 text-xl font-semibold text-foreground">
-                              {question.question_en}
-                            </p>
-                            {showBurmese && (
-                              <p className="text-xl text-muted-foreground font-myanmar leading-relaxed">
-                                {question.question_my}
-                              </p>
-                            )}
-                          </div>
-                          <p className="text-sm font-semibold text-primary">
-                            {showBurmese ? 'Tap to flip · ' : 'Tap to flip'}
-                            {showBurmese && <span className="font-myanmar">နှိပ်ပါ</span>}
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        className={clsx(
-                          'flip-card-face flip-card-back flex h-full flex-col rounded-2xl text-white',
-                          'bg-gradient-to-br',
-                          CATEGORY_COLORS_MAP[question.category] ?? 'from-primary to-primary'
-                        )}
-                      >
-                        {/* Category color strip on back */}
-                        <div
-                          className={clsx('h-[5px] w-full shrink-0 opacity-50', qColors.stripBg)}
-                        />
-                        <div className="flex-1 flex flex-col p-6 overflow-hidden">
-                          <div className="flex flex-wrap items-center justify-between gap-2 text-white/90 shrink-0">
-                            <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-                              {showBurmese ? (
-                                <>
-                                  Answer - <span className="font-myanmar">အဖြေ</span>
-                                </>
-                              ) : (
-                                'Answer'
-                              )}
-                            </p>
-                            <div className="flex gap-2">
-                              <SpeechButton
-                                text={englishAnswersText}
-                                questionId={question.id}
-                                audioType="a"
-                                label="Answers"
-                                ariaLabel={`Play English answers for ${question.question_en}`}
-                                stopPropagation
-                                showSpeedLabel
-                                speedLabel={speedLabel}
-                              />
-                              {showBurmese && (
-                                <BurmeseSpeechButton
-                                  questionId={question.id}
-                                  audioType="a"
-                                  label="အဖြေ"
-                                  stopPropagation
-                                  showSpeedLabel
-                                  speedLabel={speedLabel}
-                                />
-                              )}
-                            </div>
-                          </div>
-                          {/* Scrollable area for answers + explanation */}
-                          <div className="mt-4 flex-1 overflow-y-auto overscroll-contain pr-1 min-h-0">
-                            <ul className="space-y-3">
-                              {question.studyAnswers.map(answer => (
-                                <li
-                                  key={answer.text_en}
-                                  className="rounded-2xl bg-black/20 px-4 py-3 shadow-inner"
-                                >
-                                  <p className="text-base font-semibold tracking-wide">
-                                    {answer.text_en}
-                                  </p>
-                                  {showBurmese && (
-                                    <p className="pt-1 text-base font-myanmar leading-relaxed">
-                                      {answer.text_my}
-                                    </p>
-                                  )}
-                                </li>
-                              ))}
-                            </ul>
-                            {question.explanation && (
-                              <div
-                                className="mt-3"
-                                role="region"
-                                aria-label="Explanation"
-                                onClick={e => e.stopPropagation()}
-                                onKeyDown={e => e.stopPropagation()}
-                                onPointerDown={e => e.stopPropagation()}
-                              >
-                                <ExplanationCard
-                                  explanation={question.explanation}
-                                  allQuestions={allQuestions}
-                                  className="text-sm"
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {/* Flashcard stack with controlled index */}
+          {sortedQuestions.length > 0 && (
+            <FlashcardStack
+              questions={sortedQuestions}
+              controlledIndex={cardIndex}
+              onIndexChange={setCardIndex}
+              hideProgress
+            />
+          )}
         </div>
       </div>
     </div>
