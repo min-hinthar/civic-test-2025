@@ -8,7 +8,7 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 37-bug-fixes-ux-polish
-**Current Plan:** 6 of 7 in Phase
+**Current Plan:** 5 of 7 in Phase (plans 01-04 complete)
 **Status:** In Progress
 
 ## Accumulated Context
@@ -26,6 +26,9 @@ See: .planning/PROJECT.md
 - [Phase 37]: Card idle/hover variants must explicitly set opacity:1 and scale:1 when initial includes opacity:0/scale:0.95
 - [Phase 37]: handleSelfGrade triggers feedback phase to reuse FEEDBACK effect for answer display
 - [Phase 37]: InterviewTranscript gates answer reveal on mode === 'practice' to hide answers in realistic mode
+- 37-04: Navigate to category flashcard view (#cards-{category}) not specific question since hash routing already supports it
+- 37-04: Normalized FSRS difficulty (1-10) to 0-1 for 5-dot visual indicator
+- 37-04: Session-scoped banner dismiss resets on reload as designed
 
 ## Performance Metrics
 
@@ -34,6 +37,7 @@ See: .planning/PROJECT.md
 | 37-03 | 5min | 1 | 3 |
 | 37-02 | 5min | 2 | 5 |
 | Phase 37 P01 | 8min | 2 tasks | 3 files |
+| 37-04 | 6min | 2 | 3 |
 
 ## Session Log
 
@@ -41,4 +45,5 @@ See: .planning/PROJECT.md
 - 2026-02-21: Phase 37 added to roadmap
 - 2026-02-21: Completed 37-03-PLAN.md (bookmark persistence layer)
 - 2026-02-21: Completed 37-02-PLAN.md (About navbar link + landing page card animation)
+- 2026-02-21: Completed 37-04-PLAN.md (review deck overhaul + dashboard due banner)
 - 2026-02-21: Completed 37-01-PLAN.md (Card visibility fix, interview feedback/transcript fixes)
