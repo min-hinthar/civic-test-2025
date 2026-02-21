@@ -51,7 +51,7 @@ const PasswordUpdatePage = () => {
         en: 'Password updated! Your new password is active.',
         my: 'လျှို့ဝှက်စာအသစ် သုံးလို့ရပါပြီ!',
       });
-      navigate('/dashboard', { replace: true });
+      navigate('/home', { replace: true });
     } catch (error) {
       console.error(error);
     } finally {

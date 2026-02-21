@@ -41,7 +41,7 @@ const AuthPage = () => {
         setMode('login');
         return;
       }
-      const redirectTo = (location.state as { from?: string })?.from ?? '/dashboard';
+      const redirectTo = (location.state as { from?: string })?.from ?? '/home';
       navigate(redirectTo, { replace: true });
     } catch (error) {
       console.error(error);
@@ -50,7 +50,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true });
+      navigate('/home', { replace: true });
     }
   }, [navigate, user]);
 

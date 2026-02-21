@@ -609,7 +609,7 @@ const TestPage = () => {
 
   const handleConfirmExit = useCallback(() => {
     setShowExitDialog(false);
-    navigate('/dashboard');
+    navigate('/home');
   }, [navigate]);
 
   // ---------------------------------------------------------------------------
@@ -959,7 +959,7 @@ const TestPage = () => {
       onReviewWrongOnly={() => {
         /* scroll handled by TestResultsScreen */
       }}
-      onHome={() => navigate('/dashboard')}
+      onHome={() => navigate('/home')}
     />
   );
 

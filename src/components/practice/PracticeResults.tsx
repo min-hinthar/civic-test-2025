@@ -45,7 +45,7 @@ export function PracticeResults({
   const questionsForReview = questions ?? allQuestions;
 
   const handleHome = useCallback(() => {
-    navigate('/dashboard');
+    navigate('/home');
   }, [navigate]);
 
   return (
