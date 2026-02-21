@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { Step, CallBackProps } from 'react-joyride';
 import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
@@ -184,58 +184,60 @@ function getNavPlacement(): 'right' | 'top' {
   return window.innerWidth >= 768 ? 'right' : 'top';
 }
 
+/** Shared config for nav-targeted steps (fixed-position nav bars) */
+const navStepBase = { disableBeacon: true, isFixed: true } as const;
+
 /**
- * 7-step tour (0-6) -- targets nav items instead of dashboard widgets.
- * Each step uses disableBeacon: true for immediate display.
- *
- * Steps 0-1: body-centered (welcome + state picker)
- * Steps 2-5: nav item highlights (study, test, interview, hub)
- * Step 6: body-centered celebration
+ * Build tour steps dynamically so placement is computed when the tour starts,
+ * not at module import time. This ensures correct mobile/desktop placement.
  */
-const tourSteps: Step[] = [
-  {
-    target: 'body',
-    content: <StepWelcome />,
-    placement: 'center',
-    disableBeacon: true,
-  },
-  {
-    target: 'body',
-    content: <StateSelectContent />,
-    placement: 'center' as const,
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="nav-study"]',
-    content: <StepStudy />,
-    placement: getNavPlacement(),
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="nav-test"]',
-    content: <StepTest />,
-    placement: getNavPlacement(),
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="nav-interview"]',
-    content: <StepInterview />,
-    placement: getNavPlacement(),
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="nav-hub"]',
-    content: <StepHub />,
-    placement: getNavPlacement(),
-    disableBeacon: true,
-  },
-  {
-    target: 'body',
-    content: <StepFinish />,
-    placement: 'center',
-    disableBeacon: true,
-  },
-];
+function buildTourSteps(): Step[] {
+  const navPlacement = getNavPlacement();
+  return [
+    {
+      target: 'body',
+      content: <StepWelcome />,
+      placement: 'center',
+      disableBeacon: true,
+    },
+    {
+      target: 'body',
+      content: <StateSelectContent />,
+      placement: 'center' as const,
+      disableBeacon: true,
+    },
+    {
+      target: '[data-tour="nav-study"]',
+      content: <StepStudy />,
+      placement: navPlacement,
+      ...navStepBase,
+    },
+    {
+      target: '[data-tour="nav-test"]',
+      content: <StepTest />,
+      placement: navPlacement,
+      ...navStepBase,
+    },
+    {
+      target: '[data-tour="nav-interview"]',
+      content: <StepInterview />,
+      placement: navPlacement,
+      ...navStepBase,
+    },
+    {
+      target: '[data-tour="nav-hub"]',
+      content: <StepHub />,
+      placement: navPlacement,
+      ...navStepBase,
+    },
+    {
+      target: 'body',
+      content: <StepFinish />,
+      placement: 'center',
+      disableBeacon: true,
+    },
+  ];
+}
 
 interface OnboardingTourProps {
   /** Force run even if completed before (e.g. from Settings replay) */
@@ -272,7 +274,8 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
-  const steps = tourSteps;
+  // Build steps dynamically when tour starts so placement is current
+  const steps = useMemo(() => (run ? buildTourSteps() : []), [run]);
 
   // Start the tour when on home and onboarding not yet complete.
   // Checks localStorage directly to handle replay from Settings (stale hook state).
@@ -297,9 +300,18 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
     (data: CallBackProps) => {
       const { status, action, index, type } = data;
 
-      // Handle step changes
+      // Handle step changes — scroll nav target into view before advancing
       if (type === EVENTS.STEP_AFTER) {
-        setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
+        const nextIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+        const nextStep = steps[nextIndex];
+        if (nextStep && typeof nextStep.target === 'string' && nextStep.target !== 'body') {
+          const el = document.querySelector(nextStep.target);
+          const scrollParent = el?.closest('.overflow-x-auto');
+          if (el && scrollParent) {
+            el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+          }
+        }
+        setStepIndex(nextIndex);
       }
 
       // Handle completion
@@ -314,7 +326,7 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
         setRun(false);
       }
     },
-    [complete, skip]
+    [complete, skip, steps]
   );
 
   // Only render on home page
@@ -334,7 +346,6 @@ export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
         showProgress
         callback={handleCallback}
         disableScrolling={false}
-        disableScrollParentFix
         spotlightClicks
         tooltipComponent={TourTooltip}
         locale={{
