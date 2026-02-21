@@ -208,7 +208,7 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
         {/* Footer */}
         <button
           type="button"
-          className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+          className={`mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors ${showBurmese ? 'font-myanmar' : ''}`}
           onClick={goToBadges}
         >
           {hasEarnedBadges

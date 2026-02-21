@@ -257,7 +257,13 @@ function HeatmapGrid({
         {Array.from({ length: numWeeks }, (_, colIdx) => {
           const monthLabel = monthLabels.find(m => m.col === colIdx);
           return (
-            <div key={colIdx} className="text-xs text-muted-foreground truncate leading-none">
+            <div
+              key={colIdx}
+              className={clsx(
+                'text-xs text-muted-foreground truncate leading-none',
+                showBurmese && 'font-myanmar'
+              )}
+            >
               {monthLabel ? (showBurmese ? monthLabel.labelMy : monthLabel.label) : ''}
             </div>
           );
@@ -277,7 +283,10 @@ function HeatmapGrid({
           const cells = [
             <div
               key={`label-${rowIdx}`}
-              className="text-xs text-muted-foreground flex items-center leading-none pr-1"
+              className={clsx(
+                'text-xs text-muted-foreground flex items-center leading-none pr-1',
+                showBurmese && 'font-myanmar'
+              )}
             >
               {dayLabels[rowIdx]}
             </div>,

@@ -135,12 +135,22 @@ export function ReviewHeatmap({ deck, className }: ReviewHeatmapProps) {
     <div className={clsx('space-y-1', className)}>
       {/* Desktop heatmap (60 days) */}
       <div className="hidden sm:block">
-        <HeatmapGrid grid={desktopGrid} reviewCounts={reviewCounts} dayLabels={dayLabels} />
+        <HeatmapGrid
+          grid={desktopGrid}
+          reviewCounts={reviewCounts}
+          dayLabels={dayLabels}
+          showBurmese={showBurmese}
+        />
       </div>
 
       {/* Mobile heatmap (30 days) */}
       <div className="block sm:hidden">
-        <HeatmapGrid grid={mobileGrid} reviewCounts={reviewCounts} dayLabels={dayLabels} />
+        <HeatmapGrid
+          grid={mobileGrid}
+          reviewCounts={reviewCounts}
+          dayLabels={dayLabels}
+          showBurmese={showBurmese}
+        />
       </div>
 
       {/* Legend */}
@@ -164,10 +174,12 @@ function HeatmapGrid({
   grid,
   reviewCounts,
   dayLabels,
+  showBurmese,
 }: {
   grid: { dates: Date[]; monthLabels: { label: string; col: number }[] };
   reviewCounts: Map<string, number>;
   dayLabels: string[];
+  showBurmese: boolean;
 }) {
   const { dates, monthLabels } = grid;
 
@@ -208,7 +220,10 @@ function HeatmapGrid({
           const cells = [
             <div
               key={`label-${rowIdx}`}
-              className="text-xs text-muted-foreground flex items-center leading-none pr-1"
+              className={clsx(
+                'text-xs text-muted-foreground flex items-center leading-none pr-1',
+                showBurmese && 'font-myanmar'
+              )}
             >
               {dayLabels[rowIdx]}
             </div>,
