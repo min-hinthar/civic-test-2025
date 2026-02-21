@@ -195,7 +195,10 @@ Plans:
   2. `playXPDing` and `playErrorSoft` orphaned exports are removed from celebrationSounds.ts
   3. VISC-01 through VISC-07 checkboxes in REQUIREMENTS.md are updated from `[ ]` to `[x]`
   4. ROADMAP.md Phase 29 progress table shows correct completion status
-Plans: TBD
+**Plans**: 2 plans in 1 wave
+Plans:
+- [ ] 35-01-PLAN.md — Touch target fixes + orphaned celebration sound removal
+- [ ] 35-02-PLAN.md — Dead code cleanup (9 orphaned exports) + ROADMAP checkbox sync
 
 ### Phase 36: Mock Test Celebration Unification
 **Goal**: Unify the Mock Test results experience with Phase 32's choreographed celebration system so both Practice and Mock Test flows deliver the same multi-sensory celebration
@@ -222,7 +225,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 | 32. Celebration System Elevation | v3.0 | 8/8 | Complete | 2026-02-20 |
 | 33. States & Accessibility | v3.0 | 5/5 | Complete | 2026-02-20 |
 | 34. Content & About Page | v3.0 | 3/3 | Complete | 2026-02-20 |
-| 35. Touch Target Fix + Tech Debt | v3.0 | TBD | Not started | - |
+| 35. Touch Target Fix + Tech Debt | v3.0 | 0/2 | Not started | - |
 | 36. Mock Test Celebration Unification | v3.0 | TBD | Not started | - |
 
 **Cumulative:**
