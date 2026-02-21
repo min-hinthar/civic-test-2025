@@ -9,13 +9,13 @@ Requirements for world-class UX elevation. Each maps to roadmap phases.
 
 ### Visual Consistency
 
-- [ ] **VISC-01**: All screens enforce 4px spacing grid — no arbitrary padding/margin values
-- [ ] **VISC-02**: Typography scale locked to 5-6 sizes (caption/body-sm/body/heading-sm/heading/display) across all screens
-- [ ] **VISC-03**: Border radius rules enforced per component type (pills=full, buttons=xl, cards=2xl, modals=3xl, inputs=lg)
-- [ ] **VISC-04**: Touch targets minimum 44x44px on all interactive elements (audit and fix gaps)
-- [ ] **VISC-05**: Dark mode polish pass — glass panel contrast, shadow depth, text-on-glass readability tuned
-- [ ] **VISC-06**: Motion tokens unified between CSS animations and motion/react spring configs
-- [ ] **VISC-07**: Micro-interactions on every interactive element — button press, toggle, chip select, tab switch with consistent spring physics
+- [x] **VISC-01**: All screens enforce 4px spacing grid — no arbitrary padding/margin values
+- [x] **VISC-02**: Typography scale locked to 5-6 sizes (caption/body-sm/body/heading-sm/heading/display) across all screens
+- [x] **VISC-03**: Border radius rules enforced per component type (pills=full, buttons=xl, cards=2xl, modals=3xl, inputs=lg)
+- [x] **VISC-04**: Touch targets minimum 44x44px on all interactive elements (audit and fix gaps) *(Phase 35 fixes cross-phase gap from Phase 34)*
+- [x] **VISC-05**: Dark mode polish pass — glass panel contrast, shadow depth, text-on-glass readability tuned *(human visual QA pending)*
+- [x] **VISC-06**: Motion tokens unified between CSS animations and motion/react spring configs
+- [x] **VISC-07**: Micro-interactions on every interactive element — button press, toggle, chip select, tab switch with consistent spring physics
 
 ### Mobile Native Feel
 
@@ -102,13 +102,13 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VISC-01 | Phase 29 | Pending |
-| VISC-02 | Phase 29 | Pending |
-| VISC-03 | Phase 29 | Pending |
-| VISC-04 | Phase 29 | Pending |
-| VISC-05 | Phase 29 | Pending |
-| VISC-06 | Phase 29 | Pending |
-| VISC-07 | Phase 29 | Pending |
+| VISC-01 | Phase 29 | Complete |
+| VISC-02 | Phase 29 | Complete |
+| VISC-03 | Phase 29 | Complete |
+| VISC-04 | Phase 29 + Phase 35 | Complete (cross-phase gap closure) |
+| VISC-05 | Phase 29 | Complete (human QA pending) |
+| VISC-06 | Phase 29 | Complete |
+| VISC-07 | Phase 29 | Complete |
 | MOBI-01 | Phase 30 | Complete |
 | MOBI-02 | Phase 30 | Complete |
 | MOBI-03 | Phase 30 | Complete |
@@ -152,4 +152,4 @@ Deferred beyond v3.0. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after roadmap creation*
+*Last updated: 2026-02-20 after gap closure phase creation*

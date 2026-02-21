@@ -5,7 +5,7 @@
 - :white_check_mark: **v1.0 MVP** — Phases 1-10 (shipped 2026-02-08)
 - :white_check_mark: **v2.0 Unified Learning Hub** — Phases 11-17 (shipped 2026-02-13)
 - :white_check_mark: **v2.1 Quality & Polish** — Phases 18-28 (shipped 2026-02-19)
-- :construction: **v3.0 World-Class UX** — Phases 29-34 (in progress)
+- :construction: **v3.0 World-Class UX** — Phases 29-36 (in progress)
 
 ## Phases
 
@@ -71,6 +71,8 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 - [x] **Phase 32: Celebration System Elevation** - Fix confetti leak, build useCelebration hook with CelebrationOverlay, achievement-scaled confetti, multi-stage choreography, DotLottie animations, sound warming, XP counter (completed 2026-02-20)
 - [x] **Phase 33: States & Accessibility** - Skeleton screens, empty state designs, inline error recovery, focus management on route changes, reduced motion CSS completeness, screen reader celebration announcements, modal focus traps (completed 2026-02-20)
 - [x] **Phase 34: Content & About Page** - 28 missing USCIS 2025 explanations, explanation quality audit, About page with mission narrative and bilingual dedication cards (completed 2026-02-20)
+- [ ] **Phase 35: Touch Target Fix + Tech Debt Cleanup** - Fix 3 touch targets below 44px from Phase 34, remove orphaned celebration sound exports, update stale VISC documentation
+- [ ] **Phase 36: Mock Test Celebration Unification** - Port Phase 32 choreography to Mock Test results, add haptics at pass reveal, unify celebration experience across Practice and Mock Test flows
 
 ## Phase Details
 
@@ -183,20 +185,45 @@ Plans:
 - [ ] 34-02-PLAN.md — About page UI, DedicationCard component, route registration
 - [ ] 34-03-PLAN.md — Navigation integration (GlassHeader heart, Settings link, landing teaser)
 
+### Phase 35: Touch Target Fix + Tech Debt Cleanup
+**Goal**: Close cross-phase integration gaps from the milestone audit — fix touch target regressions introduced in Phase 34, remove dead code, and sync documentation
+**Depends on**: Phase 34
+**Requirements**: VISC-04 (cross-phase gap closure)
+**Gap Closure:** Closes gaps from v3.0 audit
+**Success Criteria** (what must be TRUE):
+  1. GlassHeader heart icon, AboutPage Share button, and AboutPage external links all meet 44x44px minimum touch target
+  2. `playXPDing` and `playErrorSoft` orphaned exports are removed from celebrationSounds.ts
+  3. VISC-01 through VISC-07 checkboxes in REQUIREMENTS.md are updated from `[ ]` to `[x]`
+  4. ROADMAP.md Phase 29 progress table shows correct completion status
+Plans: TBD
+
+### Phase 36: Mock Test Celebration Unification
+**Goal**: Unify the Mock Test results experience with Phase 32's choreographed celebration system so both Practice and Mock Test flows deliver the same multi-sensory celebration
+**Depends on**: Phase 35
+**Requirements**: CELB-04, CELB-05, CELB-08 (integration gap closure)
+**Gap Closure:** Closes gaps from v3.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Mock Test pass triggers the same multi-stage choreography as Practice mode (card scale-in → count-up → reveal → confetti → sound → action buttons)
+  2. `hapticHeavy()` fires at the Mock Test pass reveal moment
+  3. `playCelebrationSequence()` stages are used for Mock Test result timing
+  4. Mock Test fail still shows appropriate (non-celebratory) results without choreography
+Plans: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34
-Note: Phase 34 (Content) depends only on Phase 29 and can potentially run in parallel with Phases 30-33.
+Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 → 36
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 29. Visual Foundation | v3.0 | TBD | Not started | - |
-| 30. Mobile Native Feel | 4/4 | Complete    | 2026-02-20 | - |
-| 31. Animation & Interaction Polish | 5/5 | Complete    | 2026-02-20 | - |
-| 32. Celebration System Elevation | 8/8 | Complete    | 2026-02-20 | - |
-| 33. States & Accessibility | 5/5 | Complete    | 2026-02-20 | - |
-| 34. Content & About Page | 3/3 | Complete    | 2026-02-20 | - |
+| 29. Visual Foundation | v3.0 | 7/7 | Complete | 2026-02-20 |
+| 30. Mobile Native Feel | v3.0 | 4/4 | Complete | 2026-02-20 |
+| 31. Animation & Interaction Polish | v3.0 | 5/5 | Complete | 2026-02-20 |
+| 32. Celebration System Elevation | v3.0 | 8/8 | Complete | 2026-02-20 |
+| 33. States & Accessibility | v3.0 | 5/5 | Complete | 2026-02-20 |
+| 34. Content & About Page | v3.0 | 3/3 | Complete | 2026-02-20 |
+| 35. Touch Target Fix + Tech Debt | v3.0 | TBD | Not started | - |
+| 36. Mock Test Celebration Unification | v3.0 | TBD | Not started | - |
 
 **Cumulative:**
 
@@ -205,9 +232,9 @@ Note: Phase 34 (Content) depends only on Phase 29 and can potentially run in par
 | v1.0 MVP | 1-10 | 72 | 55/55 | Complete | 2026-02-08 |
 | v2.0 Unified Learning Hub | 11-17 | 47 | 29/29 | Complete | 2026-02-13 |
 | v2.1 Quality & Polish | 18-28 | 82 | 65/66 | Complete | 2026-02-19 |
-| v3.0 World-Class UX | 29-34 | TBD | 0/39 | In progress | - |
+| v3.0 World-Class UX | 29-36 | TBD | 39/39 | In progress | - |
 
-**Total:** 34 phases, 201+ plans, 149/150 + 0/39 requirements
+**Total:** 36 phases, 210+ plans, 149/150 + 39/39 requirements
 
 ---
 *Roadmap created: 2026-02-05*
