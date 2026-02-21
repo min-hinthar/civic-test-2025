@@ -288,8 +288,9 @@ const Dashboard = () => {
                         Review Now
                         {showBurmese && (
                           <span className="font-myanmar ml-1">
-                            / \u101A\u1001\u102F
-                            \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u102B
+                            {
+                              '/ \u101A\u1001\u102F \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u1015\u102B'
+                            }
                           </span>
                         )}
                       </button>

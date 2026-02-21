@@ -251,7 +251,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
             <span>Back to Study Guide</span>
             {showBurmese && (
               <span className="font-myanmar ml-1">
-                / \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u102D\u102F\u1037
+                {'/ \u101C\u1031\u1037\u101C\u102C\u101B\u1014\u103A\u101E\u102D\u102F\u1037'}
               </span>
             )}
           </button>
@@ -311,8 +311,9 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           <span>Back to Study Guide</span>
           {showBurmese && (
             <span className="font-myanmar ml-1">
-              /
-              \u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u101E\u102D\u102F\u1037
+              {
+                '/ \u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u101E\u102D\u102F\u1037'
+              }
             </span>
           )}
         </button>
@@ -322,7 +323,9 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
       <h2 className="text-2xl font-bold text-foreground mb-1">Review Deck</h2>
       {showBurmese && (
         <p className="text-base text-muted-foreground font-myanmar mb-4">
-          \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1000\u1010\u103A\u1019\u103B\u102C\u1038
+          {
+            '\u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1000\u1010\u103A\u1019\u103B\u102C\u1038'
+          }
         </p>
       )}
 
@@ -411,8 +414,9 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
           <h3 className="text-lg font-bold text-success mb-1">All caught up!</h3>
           {showBurmese && (
             <p className="text-base text-success/80 font-myanmar mb-2">
-              \u1021\u102C\u1038\u101C\u102F\u1036\u1038
-              \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u102B\u1015\u103C\u102E!
+              {
+                '\u1021\u102C\u1038\u101C\u102F\u1036\u1038 \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u102B\u1015\u103C\u102E!'
+              }
             </p>
           )}
           {nextDueText && (
@@ -420,8 +424,11 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
               Next review in {nextDueText.text.en}
               {showBurmese && (
                 <span className="font-myanmar ml-1">
-                  / {nextDueText.text.my}\u1019\u103E\u102C
-                  \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A
+                  {'/ '}
+                  {nextDueText.text.my}
+                  {
+                    '\u1019\u103E\u102C \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A'
+                  }
                 </span>
               )}
             </p>

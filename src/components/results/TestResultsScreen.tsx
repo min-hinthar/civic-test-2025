@@ -796,7 +796,7 @@ export function TestResultsScreen({
                     Duration
                     {showBurmese && (
                       <span className="font-myanmar normal-case tracking-normal ml-1">
-                        \u1000\u103C\u102C\u1001\u103B\u102D\u1014\u103A
+                        {'\u1000\u103C\u102C\u1001\u103B\u102D\u1014\u103A'}
                       </span>
                     )}
                   </p>
@@ -815,7 +815,7 @@ export function TestResultsScreen({
                       {improvement > 0 ? `+${improvement}` : improvement} vs last
                       {showBurmese && (
                         <span className="font-myanmar ml-1">
-                          \u101A\u1001\u1004\u103A\u1014\u103E\u1004\u1037\u103A
+                          {'\u101A\u1001\u1004\u103A\u1014\u103E\u1004\u1037\u103A'}
                         </span>
                       )}
                     </p>
@@ -842,7 +842,7 @@ export function TestResultsScreen({
                   Status
                   {showBurmese && (
                     <span className="font-myanmar normal-case tracking-normal ml-1">
-                      \u1021\u1001\u103C\u1031\u1021\u1014\u1031
+                      {'\u1021\u1001\u103C\u1031\u1021\u1014\u1031'}
                     </span>
                   )}
                 </p>
