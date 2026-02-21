@@ -134,7 +134,7 @@ const AboutPage = () => {
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-primary transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               {copied ? (
                 <>
@@ -162,7 +162,7 @@ const AboutPage = () => {
                   href={link.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 rounded-xl border border-border/40 bg-card/50 px-4 py-3 text-sm text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  className="flex items-center gap-2 rounded-xl border border-border/40 bg-card/50 px-4 py-3 min-h-[44px] text-sm text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 >
                   <ExternalLink className="h-4 w-4 shrink-0 text-primary/70" aria-hidden="true" />
                   <span className="flex-1">
@@ -206,7 +206,7 @@ const AboutPage = () => {
                 href={aboutContent.footer.repoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 text-muted-foreground/70 transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1 min-h-[44px] px-2 text-muted-foreground/70 transition-colors hover:text-foreground"
               >
                 <Github className="h-3.5 w-3.5" aria-hidden="true" />
                 GitHub

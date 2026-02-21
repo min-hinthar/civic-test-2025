@@ -45,7 +45,7 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
           {showAbout && (
             <Link
               to="/about"
-              className="flex items-center justify-center h-9 w-9 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+              className="flex items-center justify-center h-9 w-9 min-h-[44px] min-w-[44px] rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
               aria-label="About this app"
             >
               <Heart className="h-4 w-4" />
