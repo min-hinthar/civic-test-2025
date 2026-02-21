@@ -1,32 +1,41 @@
 'use client';
 
 /**
- * DeckManager - SRS deck management view.
+ * DeckManager - SRS deck management view (overhauled).
  *
- * Displays all cards in the user's review deck with status labels (New/Due/Done),
- * supports removing cards, bulk-adding weak area questions, and launching review.
+ * Displays all cards in the user's review deck with:
+ * - Progress bar showing reviewed/total count
+ * - Category dropdown filter
+ * - Clickable ReviewDeckCard components with spring animations
+ * - Enhanced celebration empty state when all cards reviewed
+ * - Bulk-add for weak area questions and review launch
+ *
  * Integrated as a sub-view within StudyGuidePage via #deck hash route.
  */
 
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Trash2, Plus, BookOpen, Layers } from 'lucide-react';
+import { ChevronLeft, Plus, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import * as Progress from '@radix-ui/react-progress';
 import clsx from 'clsx';
 
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { ReviewDeckCard } from '@/components/srs/ReviewDeckCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSRSDeck } from '@/hooks/useSRSDeck';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { allQuestions } from '@/constants/questions';
-import { getCardStatusLabel, getIntervalStrengthColor, isDue } from '@/lib/srs';
+import { isDue, getNextReviewText } from '@/lib/srs';
 import type { SRSCardRecord } from '@/lib/srs';
 import type { Question } from '@/types';
 import type { CategoryMasteryEntry } from '@/lib/mastery';
 import { USCIS_CATEGORIES, getCategoryQuestionIds } from '@/lib/mastery';
 import type { USCISCategory } from '@/lib/mastery';
+import { SPRING_BOUNCY, SPRING_GENTLE } from '@/lib/motion-config';
 import { State } from 'ts-fsrs';
 
 // ---------------------------------------------------------------------------
@@ -65,9 +74,11 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
 
   const { categoryMasteries } = useCategoryMastery();
   const { showBurmese } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const [bulkAddLoading, setBulkAddLoading] = useState(false);
   const [bulkAddResult, setBulkAddResult] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
 
   // -------------------------------------------------------------------------
   // Derived stats
@@ -94,10 +105,70 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
   }, [deck, dueCount]);
 
   // -------------------------------------------------------------------------
-  // Sorted deck
+  // Progress calculation
   // -------------------------------------------------------------------------
 
-  const sortedDeck = useMemo(() => [...deck].sort((a, b) => sortOrder(a) - sortOrder(b)), [deck]);
+  const progressPercent = stats.total > 0 ? Math.round((stats.reviewed / stats.total) * 100) : 0;
+
+  // -------------------------------------------------------------------------
+  // Unique categories from deck
+  // -------------------------------------------------------------------------
+
+  const deckCategories = useMemo(() => {
+    const cats = new Set<string>();
+    for (const record of deck) {
+      const question = questionsById.get(record.questionId);
+      if (question) {
+        cats.add(question.category);
+      }
+    }
+    return Array.from(cats).sort();
+  }, [deck]);
+
+  // -------------------------------------------------------------------------
+  // Sorted & filtered deck
+  // -------------------------------------------------------------------------
+
+  const sortedDeck = useMemo(() => {
+    const sorted = [...deck].sort((a, b) => sortOrder(a) - sortOrder(b));
+
+    if (categoryFilter === 'all') return sorted;
+
+    return sorted.filter(record => {
+      const question = questionsById.get(record.questionId);
+      return question?.category === categoryFilter;
+    });
+  }, [deck, categoryFilter]);
+
+  // -------------------------------------------------------------------------
+  // All-reviewed empty state data (earliest next due)
+  // -------------------------------------------------------------------------
+
+  const nextDueText = useMemo(() => {
+    if (dueCount > 0 || deck.length === 0) return null;
+
+    let earliest: SRSCardRecord | null = null;
+    for (const record of deck) {
+      if (!earliest || record.card.due < earliest.card.due) {
+        earliest = record;
+      }
+    }
+
+    if (!earliest) return null;
+
+    // Calculate hours until next review
+    const hoursUntil = Math.max(
+      1,
+      Math.ceil((earliest.card.due.getTime() - Date.now()) / (1000 * 60 * 60))
+    );
+
+    const reviewText = getNextReviewText(earliest.card);
+
+    return {
+      hours: hoursUntil,
+      text: reviewText,
+    };
+  }, [deck, dueCount]);
 
   // -------------------------------------------------------------------------
   // Bulk-add weak area questions
@@ -164,7 +235,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
   }
 
   // -------------------------------------------------------------------------
-  // Empty state
+  // Empty state (no cards at all)
   // -------------------------------------------------------------------------
 
   if (deck.length === 0) {
@@ -219,6 +290,12 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
   }
 
   // -------------------------------------------------------------------------
+  // All-reviewed celebration state
+  // -------------------------------------------------------------------------
+
+  const allReviewed = deck.length > 0 && dueCount === 0;
+
+  // -------------------------------------------------------------------------
   // Main deck view
   // -------------------------------------------------------------------------
 
@@ -232,50 +309,49 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
         >
           <ChevronLeft className="h-4 w-4" />
           <span>Back to Study Guide</span>
-          {showBurmese && <span className="font-myanmar ml-1">/ လေ့လာမှုလမ်းညွှန်သို့</span>}
+          {showBurmese && (
+            <span className="font-myanmar ml-1">
+              /
+              \u101C\u1031\u1037\u101C\u102C\u1019\u103E\u102F\u101C\u1019\u103A\u1038\u100A\u103D\u103E\u1014\u103A\u101E\u102D\u102F\u1037
+            </span>
+          )}
         </button>
       </div>
 
       {/* Title */}
       <h2 className="text-2xl font-bold text-foreground mb-1">Review Deck</h2>
       {showBurmese && (
-        <p className="text-base text-muted-foreground font-myanmar mb-4">ပြန်လည်သုံးသပ်ကတ်များ</p>
+        <p className="text-base text-muted-foreground font-myanmar mb-4">
+          \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101E\u102F\u1036\u1038\u101E\u1015\u103A\u1000\u1010\u103A\u1019\u103B\u102C\u1038
+        </p>
       )}
 
-      {/* Stats bar */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
-        <StatCard
-          label="Total"
-          labelMy="စုစုပေါင်း"
-          value={stats.total}
-          color="text-foreground"
-          showBurmese={showBurmese}
-        />
-        <StatCard
-          label="Due"
-          labelMy="ပြန်လည်ရန်"
-          value={stats.due}
-          color="text-warning"
-          showBurmese={showBurmese}
-        />
-        <StatCard
-          label="New"
-          labelMy="အသစ်"
-          value={stats.new}
-          color="text-primary"
-          showBurmese={showBurmese}
-        />
-        <StatCard
-          label="Done"
-          labelMy="ပြီးဆုံး"
-          value={stats.reviewed}
-          color="text-success"
-          showBurmese={showBurmese}
-        />
-      </div>
+      {/* Progress bar */}
+      <motion.div
+        className="mb-6"
+        initial={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={SPRING_GENTLE}
+      >
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-foreground">
+            {stats.reviewed}/{stats.total} reviewed
+          </span>
+          <span className="text-sm text-muted-foreground">{progressPercent}%</span>
+        </div>
+        <Progress.Root
+          className="relative h-3 overflow-hidden rounded-full bg-muted"
+          value={progressPercent}
+        >
+          <Progress.Indicator
+            className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </Progress.Root>
+      </motion.div>
 
       {/* Action buttons */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-4">
         <Button variant="primary" onClick={onStartReview} disabled={dueCount === 0}>
           <BookOpen className="h-4 w-4 mr-2" />
           Start Review ({dueCount} due)
@@ -289,115 +365,93 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
       {/* Bulk-add feedback */}
       {bulkAddResult && <p className="mb-4 text-sm text-muted-foreground">{bulkAddResult}</p>}
 
-      {/* Card list */}
-      <StaggeredList className="space-y-3">
-        {sortedDeck.map(record => (
-          <StaggeredItem key={record.questionId}>
-            <DeckCardItem
-              record={record}
-              question={questionsById.get(record.questionId)}
-              onRemove={handleRemove}
-              showBurmese={showBurmese}
-            />
-          </StaggeredItem>
-        ))}
-      </StaggeredList>
-    </div>
-  );
-}
+      {/* Category filter dropdown */}
+      {deckCategories.length > 1 && (
+        <div className="mb-4">
+          <select
+            className={clsx(
+              'rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm font-medium',
+              'focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary',
+              'transition-colors min-h-[44px] w-full sm:w-auto'
+            )}
+            value={categoryFilter}
+            onChange={e => setCategoryFilter(e.target.value)}
+            aria-label="Filter by category"
+          >
+            <option value="all">All Categories ({deck.length})</option>
+            {deckCategories.map(cat => {
+              const count = deck.filter(
+                r => questionsById.get(r.questionId)?.category === cat
+              ).length;
+              return (
+                <option key={cat} value={cat}>
+                  {cat} ({count})
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      )}
 
-// ---------------------------------------------------------------------------
-// StatCard sub-component
-// ---------------------------------------------------------------------------
-
-interface StatCardProps {
-  label: string;
-  labelMy: string;
-  value: number;
-  color: string;
-  showBurmese: boolean;
-}
-
-function StatCard({ label, labelMy, value, color, showBurmese }: StatCardProps) {
-  return (
-    <Card className="p-3 text-center">
-      <p className={clsx('text-2xl font-bold', color)}>{value}</p>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      {showBurmese && <p className="text-xs text-muted-foreground font-myanmar">{labelMy}</p>}
-    </Card>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// DeckCardItem sub-component
-// ---------------------------------------------------------------------------
-
-interface DeckCardItemProps {
-  record: SRSCardRecord;
-  question: Question | undefined;
-  onRemove: (questionId: string) => void;
-  showBurmese: boolean;
-}
-
-function DeckCardItem({ record, question, onRemove, showBurmese }: DeckCardItemProps) {
-  const status = getCardStatusLabel(record.card);
-  const strengthColor = getIntervalStrengthColor(record.card);
-
-  // Next review date for reviewed cards
-  const nextReviewDate = record.lastReviewedAt
-    ? new Date(record.card.due).toLocaleDateString()
-    : null;
-
-  return (
-    <Card className="p-4">
-      <div className="flex items-start gap-3">
-        {/* Interval strength indicator */}
-        <div
-          className={clsx('mt-1.5 h-3 w-3 rounded-full flex-shrink-0', strengthColor)}
-          title={`Interval: ${record.card.scheduled_days} days`}
-        />
-
-        {/* Question text */}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground leading-snug">
-            {question?.question_en ?? `Question ${record.questionId}`}
-          </p>
-          {showBurmese && question?.question_my && (
-            <p className="text-sm text-muted-foreground font-myanmar mt-0.5 leading-relaxed">
-              {question.question_my}
+      {/* All-reviewed celebration state */}
+      {allReviewed && (
+        <motion.div
+          className="mb-6 rounded-2xl border border-success/30 bg-success/5 p-6 text-center"
+          initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={SPRING_BOUNCY}
+        >
+          <motion.div
+            initial={shouldReduceMotion ? undefined : { scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ ...SPRING_BOUNCY, delay: 0.1 }}
+          >
+            <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-3" />
+          </motion.div>
+          <h3 className="text-lg font-bold text-success mb-1">All caught up!</h3>
+          {showBurmese && (
+            <p className="text-base text-success/80 font-myanmar mb-2">
+              \u1021\u102C\u1038\u101C\u102F\u1036\u1038
+              \u1015\u103C\u102E\u1038\u1006\u102F\u1036\u1038\u1015\u102B\u1015\u103C\u102E!
             </p>
           )}
-
-          {/* Status + next review */}
-          <div className="flex flex-wrap items-center gap-2 mt-1.5">
-            <span
-              className={clsx(
-                'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full',
-                status.color,
-                status.label === 'New' && 'bg-primary/10',
-                status.label === 'Due' && 'bg-warning/10',
-                status.label === 'Done' && 'bg-success/10'
+          {nextDueText && (
+            <p className="text-sm text-muted-foreground">
+              Next review in {nextDueText.text.en}
+              {showBurmese && (
+                <span className="font-myanmar ml-1">
+                  / {nextDueText.text.my}\u1019\u103E\u102C
+                  \u1015\u103C\u1014\u103A\u101C\u100A\u103A\u101B\u1014\u103A
+                </span>
               )}
-            >
-              {status.label}
-              {showBurmese && <span className="font-myanmar ml-1">{status.labelMy}</span>}
-            </span>
-            {nextReviewDate && (
-              <span className="text-xs text-muted-foreground">Next: {nextReviewDate}</span>
-            )}
-          </div>
-        </div>
+            </p>
+          )}
+        </motion.div>
+      )}
 
-        {/* Remove button */}
-        <button
-          onClick={() => onRemove(record.questionId)}
-          className="flex-shrink-0 p-2 text-muted-foreground hover:text-destructive transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-destructive/10"
-          aria-label={`Remove ${question?.question_en ?? record.questionId} from deck`}
-          title="Remove from deck"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
-      </div>
-    </Card>
+      {/* Card list */}
+      <StaggeredList className="space-y-3">
+        {sortedDeck.map(record => {
+          const question = questionsById.get(record.questionId);
+          // Normalize FSRS difficulty (typically 1-10) to 0-1 range
+          const normalizedDifficulty = Math.min(1, Math.max(0, (record.card.difficulty - 1) / 9));
+
+          return (
+            <StaggeredItem key={record.questionId}>
+              <ReviewDeckCard
+                questionId={record.questionId}
+                questionText={question?.question_en ?? `Question ${record.questionId}`}
+                questionTextMy={question?.question_my}
+                category={question?.category ?? 'Unknown'}
+                isDue={isDue(record.card)}
+                difficulty={normalizedDifficulty}
+                showBurmese={showBurmese}
+                onRemove={handleRemove}
+              />
+            </StaggeredItem>
+          );
+        })}
+      </StaggeredList>
+    </div>
   );
 }
