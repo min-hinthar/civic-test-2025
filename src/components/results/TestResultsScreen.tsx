@@ -265,9 +265,9 @@ export function TestResultsScreen({
           playCelebrationSequence('pass-reveal');
         }
         await badgeControls.start({
-          scale: [0, 1.15, 1],
-          opacity: [0, 1, 1],
-          transition: { type: 'spring', stiffness: 400, damping: 15, duration: 0.3 },
+          scale: 1,
+          opacity: 1,
+          transition: { type: 'spring', stiffness: 400, damping: 15 },
         });
         if (signal.aborted) return;
 
@@ -345,9 +345,9 @@ export function TestResultsScreen({
         setStage('pass-fail');
         hapticLight();
         await badgeControls.start({
-          scale: [0, 1.15, 1],
-          opacity: [0, 1, 1],
-          transition: { type: 'spring', stiffness: 400, damping: 15, duration: 0.3 },
+          scale: 1,
+          opacity: 1,
+          transition: { type: 'spring', stiffness: 400, damping: 15 },
         });
         if (signal.aborted) return;
 
