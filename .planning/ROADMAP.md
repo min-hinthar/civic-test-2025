@@ -71,7 +71,7 @@ See `.planning/milestones/v2.1-ROADMAP.md` for full archive.
 - [x] **Phase 32: Celebration System Elevation** - Fix confetti leak, build useCelebration hook with CelebrationOverlay, achievement-scaled confetti, multi-stage choreography, DotLottie animations, sound warming, XP counter (completed 2026-02-20)
 - [x] **Phase 33: States & Accessibility** - Skeleton screens, empty state designs, inline error recovery, focus management on route changes, reduced motion CSS completeness, screen reader celebration announcements, modal focus traps (completed 2026-02-20)
 - [x] **Phase 34: Content & About Page** - 28 missing USCIS 2025 explanations, explanation quality audit, About page with mission narrative and bilingual dedication cards (completed 2026-02-20)
-- [ ] **Phase 35: Touch Target Fix + Tech Debt Cleanup** - Fix 3 touch targets below 44px from Phase 34, remove orphaned celebration sound exports, update stale VISC documentation
+- [x] **Phase 35: Touch Target Fix + Tech Debt Cleanup** - Fix 3 touch targets below 44px from Phase 34, remove orphaned celebration sound exports, update stale VISC documentation (completed 2026-02-21)
 - [ ] **Phase 36: Mock Test Celebration Unification** - Port Phase 32 choreography to Mock Test results, add haptics at pass reveal, unify celebration experience across Practice and Mock Test flows
 
 ## Phase Details
@@ -198,7 +198,7 @@ Plans:
 **Plans**: 2 plans in 1 wave
 Plans:
 - [x] 35-01-PLAN.md — Touch target fixes + orphaned celebration sound removal
-- [ ] 35-02-PLAN.md — Dead code cleanup (9 orphaned exports) + ROADMAP checkbox sync
+- [x] 35-02-PLAN.md — Dead code cleanup (9 orphaned exports) + ROADMAP checkbox sync
 
 ### Phase 36: Mock Test Celebration Unification
 **Goal**: Unify the Mock Test results experience with Phase 32's choreographed celebration system so both Practice and Mock Test flows deliver the same multi-sensory celebration
@@ -225,7 +225,7 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 | 32. Celebration System Elevation | v3.0 | 8/8 | Complete | 2026-02-20 |
 | 33. States & Accessibility | v3.0 | 5/5 | Complete | 2026-02-20 |
 | 34. Content & About Page | v3.0 | 3/3 | Complete | 2026-02-20 |
-| 35. Touch Target Fix + Tech Debt | 1/2 | In Progress|  | - |
+| 35. Touch Target Fix + Tech Debt | 2/2 | Complete   | 2026-02-21 | - |
 | 36. Mock Test Celebration Unification | v3.0 | TBD | Not started | - |
 
 **Cumulative:**

@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 35 (touch-target-tech-debt)
-Plan: 1 of 2
-Status: In Progress
-Last activity: 2026-02-21 — Completed 35-01 (touch targets + orphaned export cleanup)
+Plan: 2 of 2
+Status: Complete
+Last activity: 2026-02-21 — Completed 35-02 (dead code cleanup + ROADMAP checkbox sync)
 
-Progress: [#####-----] 1/2 plans
+Progress: [##########] 2/2 plans
 
 ## Completed Milestones
 
@@ -127,6 +127,8 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 - **33-05:** WelcomeModal and WhatsNewModal migrated from custom div overlays to Radix Dialog for focus trap
 - **35-01:** Keep h-9 w-9 visual sizing alongside min-h/min-w for touch area -- no visual change
 - **35-01:** GitHub footer link gets px-2 horizontal padding for wider touch area
+- **35-02:** useRetry.ts deleted entirely (zero imports, ErrorFallback uses inline retry logic)
+- **35-02:** HTMLAttributes import kept in Skeleton.tsx (still used by SkeletonProps interface)
 
 ### Blockers/Concerns
 
@@ -136,11 +138,11 @@ All prior decisions archived in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Completed 35-01-PLAN.md (touch targets + orphaned export cleanup)
-Resume file: .planning/phases/35-touch-target-tech-debt/35-01-SUMMARY.md
-Next step: Continue with 35-02-PLAN.md
+Stopped at: Completed 35-02-PLAN.md (dead code cleanup + ROADMAP checkbox sync)
+Resume file: .planning/phases/35-touch-target-tech-debt/35-02-SUMMARY.md
+Next step: Phase 35 complete. Continue with Phase 36.
 
 ---
 
 *State initialized: 2026-02-05*
-*Last updated: 2026-02-21 (35-01 touch target fixes + dead code removal complete)*
+*Last updated: 2026-02-21 (35-02 dead code cleanup + ROADMAP sync complete)*
