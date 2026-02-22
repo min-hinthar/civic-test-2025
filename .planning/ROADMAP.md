@@ -262,6 +262,19 @@ Plans:
 - [ ] 37-06-PLAN.md — Flashcard enrichment (card back detail, bookmark toggle, auto-play mode)
 - [ ] 37-07-PLAN.md — Bug investigation across 9 domains + loading/empty state audit
 
+### Phase 38: Security Analysis, Fixes & Codebase Refactoring
+
+**Goal:** Harden the codebase through comprehensive security audit, standardized error handling with retry utilities, dark mode fixes, dead code removal, and Sentry optimization — improving code health without new features
+**Depends on:** Phase 37
+**Plans:** 5 plans in 2 waves
+
+Plans:
+- [ ] 38-01-PLAN.md — Security fixes (Sentry config, bn.js override) + comprehensive security checklist artifact
+- [ ] 38-02-PLAN.md — withRetry/safeAsync utility (TDD) — foundation for error handling standardization
+- [ ] 38-03-PLAN.md — Dark mode variant fixes (5 components) + dead code removal (orphaned exports/files)
+- [ ] 38-04-PLAN.md — Error handling integration: withRetry in sync modules, Sentry fingerprinting, throw-vs-fallback formalization
+- [ ] 38-05-PLAN.md — ErrorBoundary test fix, CLAUDE.md accuracy audit, Sentry stale issue categorization
+
 ---
 *Roadmap created: 2026-02-05*
 *v3.0 roadmap added: 2026-02-19*
