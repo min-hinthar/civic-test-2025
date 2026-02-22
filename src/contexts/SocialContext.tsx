@@ -17,6 +17,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { captureError } from '@/lib/sentry';
 import type { SocialProfile } from '@/lib/social/socialProfileSync';
 import {
   getSocialProfile,
@@ -136,7 +137,7 @@ export function SocialProvider({ children }: SocialProviderProps) {
           }
         }
       } catch (error) {
-        console.error('[SocialContext] Failed to initialize social data:', error);
+        captureError(error, { operation: 'SocialContext.init' });
       } finally {
         if (!cancelled) {
           setIsLoading(false);
@@ -235,7 +236,7 @@ export function SocialProvider({ children }: SocialProviderProps) {
         setSocialProfile(profile);
       }
     } catch (error) {
-      console.error('[SocialContext] Failed to refresh profile:', error);
+      captureError(error, { operation: 'SocialContext.refreshProfile' });
     }
   }, [user?.id]);
 
@@ -294,7 +295,10 @@ export function SocialProvider({ children }: SocialProviderProps) {
 // ---------------------------------------------------------------------------
 
 /**
- * Hook to access social context.
+ * Hook to access social context. Throws if used outside SocialProvider
+ * because callers depend on social identity state (opt-in, display name, profile).
+ *
+ * Convention: THROWS (caller needs success)
  *
  * @throws Error if used outside SocialProvider
  * @returns SocialContextValue

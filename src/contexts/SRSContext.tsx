@@ -31,6 +31,8 @@ import {
   mergeSRSDecks,
   queueSRSSync,
 } from '@/lib/srs';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 // ---------------------------------------------------------------------------
@@ -100,11 +102,14 @@ export function SRSProvider({ children }: SRSProviderProps) {
 
     async function init() {
       try {
-        const cards = await loadDeck();
+        const cards = await withRetry(() => loadDeck(), {
+          maxAttempts: 3,
+          baseDelayMs: 500,
+        });
         if (cancelled) return;
         setDeck(cards);
       } catch (error) {
-        console.error('[SRSContext] Failed to load deck:', error);
+        captureError(error, { operation: 'SRSContext.loadDeck' });
       } finally {
         if (!cancelled) {
           setIsLoading(false);
@@ -126,7 +131,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
       const cards = await loadDeck();
       setDeck(cards);
     } catch (error) {
-      console.error('[SRSContext] Failed to refresh deck:', error);
+      captureError(error, { operation: 'SRSContext.refreshDeck' });
     }
   }, [loadDeck]);
 
@@ -181,7 +186,7 @@ export function SRSProvider({ children }: SRSProviderProps) {
         // 6. Update in-memory state
         setDeck(merged);
       } catch (error) {
-        console.error('[SRSContext] Sync failed:', error);
+        captureError(error, { operation: 'SRSContext.syncWithRemote' });
         // Sync failure is non-fatal; local deck remains functional
       }
     }
@@ -354,7 +359,10 @@ export function SRSProvider({ children }: SRSProviderProps) {
 // ---------------------------------------------------------------------------
 
 /**
- * Hook to access SRS context.
+ * Hook to access SRS context. Throws if used outside SRSProvider
+ * because callers depend on deck operations (add/remove/grade) succeeding.
+ *
+ * Convention: THROWS (caller needs success)
  *
  * @throws Error if used outside SRSProvider
  * @returns SRSContextValue

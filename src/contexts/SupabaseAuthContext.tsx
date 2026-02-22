@@ -11,6 +11,7 @@ import {
 } from 'react';
 import type { PostgrestError, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
+import { captureError } from '@/lib/sentry';
 import { createSaveSessionGuard } from '@/lib/saveSession';
 import { queueTestResult } from '@/lib/pwa/offlineDb';
 import type {
@@ -358,7 +359,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
 
           // Non-network errors still propagate
-          console.error('Failed to save mock test session', error);
+          captureError(error, { operation: 'AuthContext.saveTestSession' });
           throw error;
         } finally {
           setIsSavingSession(false);
@@ -403,6 +404,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+/**
+ * Hook to access auth context. Throws if used outside AuthProvider
+ * because callers depend on auth state (user, login, session saving).
+ *
+ * Convention: THROWS (caller needs success)
+ *
+ * @throws Error if used outside AuthProvider
+ * @returns AuthContextValue
+ */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) {

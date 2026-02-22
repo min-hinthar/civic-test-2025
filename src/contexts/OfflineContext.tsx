@@ -19,6 +19,8 @@ import { cacheQuestions, getCachedQuestions, hasQuestionsCache } from '@/lib/pwa
 import { syncAllPendingResults, getPendingSyncCount, type SyncResult } from '@/lib/pwa/syncQueue';
 import { allQuestions } from '@/constants/questions';
 import { useToast } from '@/components/BilingualToast';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 import type { Question } from '@/types';
 
 /**
@@ -90,21 +92,26 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
   useEffect(() => {
     async function initQuestions() {
       try {
-        const hasCached = await hasQuestionsCache();
-        if (hasCached) {
-          // Load from cache for instant display
-          const cached = await getCachedQuestions();
-          if (cached && cached.length > 0) {
-            setQuestions(cached);
-            setIsCached(true);
-          }
-        } else {
-          // First visit - cache questions for future offline use
-          await cacheQuestions(allQuestions);
-          setIsCached(true);
-        }
+        await withRetry(
+          async () => {
+            const hasCached = await hasQuestionsCache();
+            if (hasCached) {
+              // Load from cache for instant display
+              const cached = await getCachedQuestions();
+              if (cached && cached.length > 0) {
+                setQuestions(cached);
+                setIsCached(true);
+              }
+            } else {
+              // First visit - cache questions for future offline use
+              await cacheQuestions(allQuestions);
+              setIsCached(true);
+            }
+          },
+          { maxAttempts: 3, baseDelayMs: 500 }
+        );
       } catch (error) {
-        console.error('[OfflineContext] Failed to initialize questions:', error);
+        captureError(error, { operation: 'OfflineContext.initQuestions' });
         // Fallback to in-memory questions (already set as default)
       }
       setIsQuestionsLoaded(true);
@@ -119,7 +126,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
       setQuestions(allQuestions);
       setIsCached(true);
     } catch (error) {
-      console.error('[OfflineContext] Failed to refresh cache:', error);
+      captureError(error, { operation: 'OfflineContext.refreshCache' });
     }
   }, []);
 
@@ -128,7 +135,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
       const count = await getPendingSyncCount();
       setPendingSyncCount(count);
     } catch (error) {
-      console.error('[OfflineContext] Failed to refresh pending count:', error);
+      captureError(error, { operation: 'OfflineContext.refreshPendingCount' });
     }
   }, []);
 
@@ -155,7 +162,7 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
         });
       }
     } catch (error) {
-      console.error('[OfflineContext] Sync failed:', error);
+      captureError(error, { operation: 'OfflineContext.triggerSync' });
       setSyncFailed(true);
     } finally {
       setIsSyncing(false);
@@ -199,7 +206,10 @@ export function OfflineProvider({ children }: OfflineProviderProps) {
 }
 
 /**
- * Hook to access offline context.
+ * Hook to access offline context. Throws if used outside OfflineProvider
+ * because callers depend on offline state (online status, questions, sync triggers).
+ *
+ * Convention: THROWS (caller needs success)
  *
  * @throws Error if used outside OfflineProvider
  * @returns OfflineContextValue
