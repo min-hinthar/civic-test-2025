@@ -86,6 +86,9 @@
       "sharp",
       "unrs-resolver"
     ],
+    "overrides": {
+      "bn.js": ">=5.2.3"
+    },
     "auditConfig": {
       "ignoreCves": [
         "CVE-2026-26996",
