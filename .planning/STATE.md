@@ -2,93 +2,25 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md
+See: .planning/PROJECT.md (updated 2026-02-22)
+
+**Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
+**Current focus:** Planning next milestone
 
 ## Position
 
-**Milestone:** v3.0 World-Class UX
-**Current phase:** 38-security-analysis-fixes-and-codebase-refactoring-based-on-learnings-and-error-history
-**Current Plan:** Not started
-**Status:** Milestone complete
+**Milestone:** v3.0 World-Class UX — COMPLETE (2026-02-22)
+**Current phase:** None (milestone archived)
+**Status:** Between milestones — ready for `/gsd:new-milestone`
 
 ## Accumulated Context
 
-### Roadmap Evolution
-- Phase 37 added: Bug Fixes & UX Polish (Study Guide, Flashcards, Review Deck, Mock Test, Interview fixes + About navbar link)
-- Phase 38 added: Security analysis, fixes, and codebase refactoring based on learnings and error history
-
 ### Decisions
-- 38-03: AudioPlayerState export kept -- used by SpeechButton.tsx and burmeseAudio.ts
-- 38-03: nativeBridge.ts deleted -- zero imports across entire src/ directory
-- 38-03: Flashcard3D gradient opacity: /10 -> dark:/15 for subtle visibility increase on dark cards
-- 38-01: Sentry DSN moved to NEXT_PUBLIC_SENTRY_DSN env var (public key) for per-environment config and rotation
-- 38-01: Production tracesSampleRate set to 0.2 (80% quota reduction), 1.0 in development
-- 38-01: bn.js override >=5.2.3 chosen over replacing web-push (simpler fix for moderate DoS CVE)
-- 38-01: Security checklist: 104 items, 93 pass, 5 fixed, 5 acceptable risk, 1 deferred (fingerprinting)
-- 38-02: Used captureError from sentry.ts rather than Sentry.captureException directly for PII sanitization pipeline
-- 38-02: isRetryableError checks error.status for HTTP codes (401/400) for Supabase error compatibility
-- 38-02: Result tuple pattern [T, null] | [null, Error] for safe async operations
-- 37-03: Local-only persistence (no Supabase sync) for bookmark simplicity
-- 37-03: Dedicated IndexedDB store matching srsStore pattern
-- 37-03: Simple hook pattern (no Context provider) since bookmark state is component-local
-- 37-02: Heart icon placed between language toggle and theme toggle in both nav surfaces
-- 37-02: Used fill-current class for filled heart active state instead of separate filled icon
-- 37-02: CSS-based float+shimmer for About card instead of JS-only animation for performance
-- [Phase 37]: Card idle/hover variants must explicitly set opacity:1 and scale:1 when initial includes opacity:0/scale:0.95
-- [Phase 37]: handleSelfGrade triggers feedback phase to reuse FEEDBACK effect for answer display
-- [Phase 37]: InterviewTranscript gates answer reveal on mode === 'practice' to hide answers in realistic mode
-- 37-04: Navigate to category flashcard view (#cards-{category}) not specific question since hash routing already supports it
-- 37-04: Normalized FSRS difficulty (1-10) to 0-1 for 5-dot visual indicator
-- 37-04: Session-scoped banner dismiss resets on reload as designed
-- 37-05: Short category labels in chips (Democracy, Government, etc.) to prevent overflow
-- 37-05: useMemo-based stable setter for FlashcardStack controlled mode to satisfy React Compiler
-- 37-05: shuffleKey counter triggers Fisher-Yates re-shuffle via useMemo dependency
-- 37-07: TTS engine verified clean - all 6 browser quirk workarounds properly implemented
-- 37-07: Sync architecture verified clean - last-write-wins merge, exponential backoff, auto-sync on reconnect
-- 37-07: FSRS verified clean - isDue uses UTC Date comparison, gradeCard maps Easy->Good/Hard->Again correctly
-- 37-07: Toast Burmese text uses text-white/80 not text-muted-foreground on colored backgrounds
-- 37-06: Bookmark state passed via props not hooks inside Flashcard3D for decoupling
-- 37-06: Difficulty derived from question number (1-40 Beginner, 41-80 Intermediate, 81+ Advanced)
-- 37-06: FSRS State.Review mapped to Mastered label (high retention = mastered)
-- 37-06: Auto-play uses isolated TTS engine + disables auto-read to prevent audio overlap
-- 37-06: controlledFlipped prop enables external flip control for auto-play
-- 38-04: All 4 context hooks use THROWS convention (caller needs success) -- no fallback hooks in this codebase
-- 38-04: IndexedDB withRetry uses 500ms base delay (local ops recover faster than network 1000ms)
-- 38-04: SupabaseAuthContext Pattern D (network-error-then-queue) preserved -- only replaced console.error
-- 38-04: captureError used (not captureException directly) to maintain PII sanitization pipeline
-- [Phase 38]: 38-05: ErrorBoundary tests pass without code changes -- localStorage mock issue self-resolved
-- [Phase 38]: 38-05: CLAUDE.md changes verified accurate (already applied by Plan 04 executor)
+(Cleared at milestone boundary — full log in PROJECT.md Key Decisions table)
 
-## Performance Metrics
-
-| Phase-Plan | Duration | Tasks | Files |
-|-----------|----------|-------|-------|
-| 37-03 | 5min | 1 | 3 |
-| 37-02 | 5min | 2 | 5 |
-| Phase 37 P01 | 8min | 2 tasks | 3 files |
-| 37-04 | 6min | 2 | 3 |
-| 37-05 | 10min | 2 | 4 |
-| 37-06 | 7min | 2 | 4 |
-| 37-07 | 5min | 3 | 1 |
-| 38-01 | 16min | 2 | 7 |
-| 38-02 | 12min | 2 (TDD) | 5 |
-| 38-03 | 19min | 2 | 7 |
-| 38-04 | 13min | 2 | 9 |
-| Phase 38 P05 | 7min | 1 tasks | 1 files |
+### Open Blockers
+(None)
 
 ## Session Log
 
-- 2026-02-21: STATE.md regenerated by /gsd:health --repair
-- 2026-02-21: Phase 37 added to roadmap
-- 2026-02-21: Completed 37-03-PLAN.md (bookmark persistence layer)
-- 2026-02-21: Completed 37-02-PLAN.md (About navbar link + landing page card animation)
-- 2026-02-21: Completed 37-04-PLAN.md (review deck overhaul + dashboard due banner)
-- 2026-02-21: Completed 37-01-PLAN.md (Card visibility fix, interview feedback/transcript fixes)
-- 2026-02-21: Completed 37-05-PLAN.md (CategoryChipRow + FlashcardToolbar replacing dropdown)
-- 2026-02-21: Completed 37-06-PLAN.md (flashcard back enrichment + auto-play study mode)
-- 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)
-- 2026-02-22: Completed 38-01-PLAN.md (Sentry hardening, bn.js CVE fix, security checklist)
-- 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
-- 2026-02-22: Completed 38-03-PLAN.md (dark mode fixes for 5 components + dead code removal)
-- 2026-02-22: Completed 38-04-PLAN.md (Sentry fingerprinting, withRetry in sync modules, throw-vs-fallback in contexts)
-- 2026-02-22: Completed 38-05-PLAN.md (ErrorBoundary test verification, CLAUDE.md audit, Sentry categorization)
+- 2026-02-22: v3.0 milestone completed and archived

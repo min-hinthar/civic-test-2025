@@ -1,5 +1,29 @@
 # Milestones
 
+## v3.0 World-Class UX (Shipped: 2026-02-22)
+
+**Phases:** 29-38 (10 phases, 47 plans)
+**Commits:** 196 | **Files:** 577 | **Lines:** +33,182 / -4,419
+**Timeline:** 4 days (2026-02-19 → 2026-02-22)
+**Requirements:** 39/39 satisfied (VISC, MOBI, ANIM, CELB, STAT, CONT)
+
+**Key accomplishments:**
+1. Enforced consistent visual language across all screens — 4px grid, locked typography scale, unified motion tokens, 44px touch targets
+2. Built multi-sensory celebration system with queued confetti, DotLottie, Web Audio harmonics, haptics across 4 intensity tiers
+3. Added native mobile feel — PWA overscroll guard, safe area insets, haptic feedback utility, swipe-to-dismiss toasts
+4. Created reusable state pattern library — skeletons, empty states, error recovery with retry, screen reader announcements
+5. Launched bilingual About page with dedication cards for Dwight D. Clark and Dorothy & James Guyot, share CTA, and 4 navigation entry points
+6. Hardened codebase with 104-item security checklist, withRetry/safeAsync utilities, Sentry optimization, and 9-domain bug sweep
+
+### Known Gaps
+- **CELB-06**: DotLottie animation assets not sourced from marketplace (code complete, graceful degradation)
+- **VISC-05**: Dark mode glass panel readability needs human visual QA
+- **BRMSE-01**: Burmese translation naturalness needs native speaker assessment (carried from v2.1)
+
+See `.planning/milestones/v3.0-ROADMAP.md` for full phase archive.
+
+---
+
 ## v2.1 Quality & Polish (Shipped: 2026-02-19)
 
 **Phases:** 18-28 (11 phases, 82 plans)

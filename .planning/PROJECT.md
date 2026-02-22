@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, featuring a premium iOS-inspired UI with glass-morphism and spring micro-interactions. Offers five study modes: timed mock tests, category practice, flashcard sorting, spaced repetition, and voice-driven interview simulation with Practice/Real USCIS modes. English mode shows English only; Myanmar mode shows bilingual content throughout. All 128 USCIS 2025 questions available with pre-generated Burmese audio.
+A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, featuring a premium iOS-inspired UI with glass-morphism, spring micro-interactions, and multi-sensory celebration choreography. Offers five study modes: timed mock tests, category practice, flashcard sorting, spaced repetition, and voice-driven interview simulation with Practice/Real USCIS modes. English mode shows English only; Myanmar mode shows bilingual content throughout. All 128 USCIS 2025 questions available with bilingual explanations and pre-generated Burmese audio.
 
 ## Core Value
 
@@ -114,21 +114,55 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Auto-pause on tab/app focus loss — v2.1
 - ✓ Portrait orientation lock during interview — v2.1
 - ✓ Network quality warning before interview start — v2.1
+- ✓ 4px spacing grid enforced across all screens — v3.0
+- ✓ Typography scale locked to 6 sizes across all screens — v3.0
+- ✓ Border radius rules enforced per component type — v3.0
+- ✓ Touch targets 44x44px on all interactive elements (re-audited) — v3.0
+- ✓ Dark mode glass panel contrast, shadow depth, text readability tuned — v3.0
+- ✓ Motion tokens unified between CSS and motion/react — v3.0
+- ✓ Micro-interactions on every interactive element with spring physics — v3.0
+- ✓ PWA overscroll-behavior: none prevents rubber-band white flash — v3.0
+- ✓ Safe area inset handling for iPhone Dynamic Island — v3.0
+- ✓ user-select: none on interactive elements prevents accidental selection — v3.0
+- ✓ Swipe-to-dismiss toast notifications with motion/react drag — v3.0
+- ✓ Haptic feedback utility with named patterns (tap, success, error, milestone) — v3.0
+- ✓ Haptics integrated into FeedbackPanel, StreakReward, badges, 3D buttons — v3.0
+- ✓ 3-tier button press feedback (3D chunky, scale, opacity) — v3.0
+- ✓ StaggeredList with adaptive timing that scales to list length — v3.0
+- ✓ Exit animations on all overlays (fade + scale) — v3.0
+- ✓ Consistent card enter animations (scale + fade) — v3.0
+- ✓ Glass-morphism 3-tier system correctly applied per component — v3.0
+- ✓ useCelebration hook + CelebrationOverlay with DOM CustomEvents — v3.0
+- ✓ Achievement-scaled confetti (sparkle → burst → celebration → ultimate) — v3.0
+- ✓ Multi-stage TestResultsScreen choreography — v3.0
+- ✓ DotLottie celebration animations lazy-loaded — v3.0
+- ✓ Sound harmonics warming for richer celebration audio — v3.0
+- ✓ XP counter with spring pulse animation — v3.0
+- ✓ Score count-up with dramatic easing — v3.0
+- ✓ Skeleton screens for all async content — v3.0
+- ✓ Empty state designs for zero-data screens — v3.0
+- ✓ Inline error recovery with retry button and fallback — v3.0
+- ✓ Focus management on page transitions — v3.0
+- ✓ Reduced motion CSS completeness for all keyframes — v3.0
+- ✓ Screen reader live region announcements for celebrations — v3.0
+- ✓ Modal/dialog focus trap and focus return — v3.0
+- ✓ All 128 USCIS questions have explanation objects — v3.0
+- ✓ Explanation quality audit — consistent format across all 128 — v3.0
+- ✓ About page with origin story, VIA history, Pre-Collegiate Program — v3.0
+- ✓ Bilingual dedication cards for Clark and Guyot families — v3.0
+- ✓ About page accessible from Settings and navigation — v3.0
+- ✓ About page bilingual rendering — v3.0
+- ✓ withRetry/safeAsync async utilities with exponential backoff — v3.0
+- ✓ 104-item security checklist (93 pass, 5 fixed, 5 acceptable risk) — v3.0
+- ✓ Sentry DSN from environment variables, fingerprinting, reduced sampling — v3.0
+- ✓ Bookmark persistence with dedicated IndexedDB store — v3.0
+- ✓ Review Deck with clickable cards, progress filters, due badges — v3.0
+- ✓ Flashcard chip row + toolbar replacing dropdown — v3.0
+- ✓ Flashcard auto-play study mode with isolated TTS — v3.0
 
 ### Active
 
-## Current Milestone: v3.0 World-Class UX
-
-**Goal:** Elevate every screen to Duolingo-level polish with consistent visual language, delightful micro-interactions, native-app mobile feel, content completeness, and an About page honoring the app's inspirational figures.
-
-**Target features:**
-- Holistic visual consistency pass (spacing, typography, animation language across all screens)
-- Dashboard & home screen premium first impression with clear daily engagement loop
-- Smooth study mode transitions (test → practice → flashcard → interview → SRS)
-- Impactful results & celebration moments with Duolingo-quality feedback animations
-- Mobile-native feel (gestures, smooth scrolling, no jank)
-- Complete the 28 missing USCIS 2025 question explanations
-- About page honoring Dwight D. Clark (Volunteers in Asia, Stanford), Dorothy & James Guyot (Pre-Collegiate Program, Yangon)
+(No active requirements — planning next milestone)
 
 ### Out of Scope
 
@@ -142,23 +176,30 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - Burmese translation crowd-editing — quality control nightmare, vandalism risk
 - Supporting both 2008 and 2025 USCIS tests — 2008 test audience is diminishing
 - Interview session persistence — simulates real USCIS conditions where you can't pause
+- Shared layout animations (cross-page layoutId morphing) — AnimatePresence breaks with hash routing
+- Swipe between bottom tabs — gesture conflicts with SwipeableCard
+- CSS scroll-driven animations — limited browser support
+- Character mascot/avatar with Rive — requires Hobbes-level animation investment
+- Gamified currency/shop system — scope creep, not core to test prep
+- Playwright visual regression baselines — maintenance burden for solo dev
 
 ## Context
 
-**Current state (post v2.1):** Premium bilingual PWA with 149 validated requirements across 3 milestones (v1.0 + v2.0 + v2.1). 66,051 LOC TypeScript across ~250 source files. 315 commits in v2.1 alone. 9 IndexedDB stores. 256 pre-generated Burmese MP3 files.
+**Current state (post v3.0):** Premium bilingual PWA with 188 validated requirements across 4 milestones (v1.0 + v2.0 + v2.1 + v3.0). 70,066 LOC TypeScript across ~300 source files. 38 phases, 248 plans executed. Deployed at https://civic-test-2025.vercel.app/
 
-**Tech stack:** Next.js 15.5 + React 19 + Supabase + React Router DOM (SPA inside Next.js catch-all route). Tailwind CSS with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. Deployed on Vercel.
+**Tech stack:** Next.js 15.5 + React 19 + Supabase + React Router DOM (SPA inside Next.js catch-all route). Tailwind CSS with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. Deployed on Vercel.
 
-**Architecture:** Provider hierarchy: ErrorBoundary → Language → Theme → TTS → Toast → Offline → Auth → Social → SRS → State → Navigation → Router. IndexedDB for offline storage (9 stores including sessions), Supabase for cloud sync. CSP middleware with hash-based allowlisting. JWT-verified push API with rate limiting.
+**Architecture:** Provider hierarchy: ErrorBoundary → Language → Theme → TTS → Toast → Offline → Auth → Social → SRS → State → Navigation → Router. IndexedDB for offline storage (10 stores including sessions + bookmarks), Supabase for cloud sync. CSP middleware with hash-based allowlisting. JWT-verified push API with rate limiting. withRetry/safeAsync async utilities for transient failure recovery.
 
 **User base:** Burmese immigrants preparing for the US naturalization civics test. Many users are more comfortable in Burmese than English. The app feels warm and supportive.
 
-**Design direction:** iOS-inspired glass-morphism with 3 glass tiers, prismatic animated borders, spring physics, and frosted dark mode. English mode = English only; Myanmar mode = bilingual. Duolingo-inspired Check/Continue flow for tests. Quizlet-inspired flashcard sorting. Chat-style interview simulation with speech recognition.
+**Design direction:** iOS-inspired glass-morphism with 3 glass tiers, prismatic animated borders, spring physics, and frosted dark mode. Multi-sensory celebration system with confetti, DotLottie, Web Audio, and haptics. English mode = English only; Myanmar mode = bilingual. Duolingo-inspired Check/Continue flow for tests. Quizlet-inspired flashcard sorting. Chat-style interview simulation with speech recognition.
 
 **Known issues:**
 - BRMSE-01: Burmese translation naturalness needs native speaker assessment
-- 28 USCIS 2025 questions missing explanation objects (data gap, not code bug)
-- errorBoundary.test.tsx has 9 pre-existing test failures (localStorage mock issue, not production)
+- CELB-06: DotLottie animation assets not sourced (code complete, graceful degradation)
+- VISC-05: Dark mode glass panel readability needs human visual QA
+- ~15 stale Sentry issues to resolve manually in dashboard
 
 ## Constraints
 
@@ -180,7 +221,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | FSRS over SM-2 for spaced repetition | Newer, more accurate, actively maintained | ✓ Validated — ts-fsrs integrated, 31 tests passing |
 | Privacy-first social features | Immigrant users cautious about visibility | ✓ Validated — opt-in leaderboard, RLS, bilingual privacy notice |
 | Canvas-only share cards | No external images avoids CORS issues in PWA | ✓ Validated — 1080x1080 bilingual cards render without server |
-| IndexedDB primary, Supabase sync | Offline-first for unreliable connectivity | ✓ Validated — 9 stores, fire-and-forget sync |
+| IndexedDB primary, Supabase sync | Offline-first for unreliable connectivity | ✓ Validated — 10 stores, fire-and-forget sync |
 | Two-tier design tokens (CSS vars → Tailwind) | Single source of truth, dark mode via variable swap | ✓ Validated — eliminated 3-way fragmentation |
 | CSP hash-based (not nonce) | Pages Router on Vercel can't forward nonce headers to _document | ✓ Validated — hash allowlisting works in prod |
 | NBA Dashboard over multi-widget | Users overwhelmed by 11 sections; single CTA is clearer | ✓ Validated — contextual recommendations based on user state |
@@ -195,6 +236,10 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | Chat-style interview over form-based | More immersive, better simulates real USCIS interview experience | ✓ Validated — animated examiner, speech input, Practice/Real modes |
 | Keyword-based answer grading | Flexible matching for civics answers with multiple valid phrasings | ✓ Validated — fuzzy matching with confidence scores |
 | Audio pre-caching during countdown | Prevents audio delays during interview flow | ✓ Validated — progress bar, TTS fallback on failure |
+| DOM CustomEvents for celebrations | No new Context provider needed; singleton overlay | ✓ Validated — useCelebration dispatches, CelebrationOverlay listens |
+| withRetry for transient failures | Exponential backoff prevents cascade failures on network hiccups | ✓ Validated — 14 production call sites, auth/quota errors throw immediately |
+| Sentry DSN in env var | Per-environment config, rotation without code changes | ✓ Validated — NEXT_PUBLIC_SENTRY_DSN across all config files |
+| Local-only bookmarks (no Supabase sync) | Simplicity over sync for optional feature | ✓ Validated — dedicated IndexedDB store, no server roundtrips |
 
 ## Milestones
 
@@ -203,6 +248,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v1.0 | Complete | 2026-02-08 | 55/55 |
 | v2.0 | Complete | 2026-02-13 | 29/29 |
 | v2.1 | Complete | 2026-02-19 | 65/66 |
+| v3.0 | Complete | 2026-02-22 | 39/39 |
 
 ---
-*Last updated: 2026-02-19 after v3.0 milestone started*
+*Last updated: 2026-02-22 after v3.0 milestone completed*
