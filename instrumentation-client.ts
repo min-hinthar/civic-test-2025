@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/nextjs';
 import { beforeSendHandler } from './src/lib/sentry';
 
 Sentry.init({
-  dsn: 'https://c957cad31df16711843d5241cb2d6515@o4507212955254784.ingest.us.sentry.io/4510406083346432',
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // Add optional integrations for additional features
   integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
