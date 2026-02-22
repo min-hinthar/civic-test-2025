@@ -18,7 +18,6 @@ import { useFocusOnNavigation } from '@/hooks/useFocusOnNavigation';
 import { Sidebar } from './Sidebar';
 import { BottomTabBar } from './BottomTabBar';
 import { OfflineBanner } from '@/components/pwa/OfflineBanner';
-import { TipJarWidget } from '@/components/TipJarWidget';
 
 const SPRING = { type: 'spring' as const, stiffness: 300, damping: 24 };
 
@@ -63,16 +62,6 @@ export function NavigationShell({ children }: NavigationShellProps) {
         {children}
       </motion.div>
       {!isPublicRoute && <BottomTabBar />}
-      {!isPublicRoute && (
-        <TipJarWidget
-          mode="floating"
-          username="minsanity"
-          position="bottom-right"
-          xMargin={18}
-          yMargin={18}
-          message="Support this project 💖"
-        />
-      )}
     </>
   );
 }

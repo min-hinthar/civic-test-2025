@@ -14,7 +14,16 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sun, Moon, LogOut, ChevronLeft, ChevronRight, AlertTriangle, Heart } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+  AlertTriangle,
+  Heart,
+  Gift,
+} from 'lucide-react';
 
 import { NAV_TABS, HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { NavItem } from './NavItem';
@@ -212,6 +221,19 @@ export function Sidebar() {
             hapticLight();
             navigate('/about');
           }}
+          spring={spring}
+        />
+
+        {/* Support / Tip Jar */}
+        <SidebarUtilityButton
+          icon={Gift}
+          label="Support"
+          isExpanded={isExpanded}
+          onClick={() => {
+            hapticLight();
+            window.open('https://tiptopjar.com/minsanity', '_blank', 'noopener');
+          }}
+          tooltip="Support this project"
           spring={spring}
         />
 

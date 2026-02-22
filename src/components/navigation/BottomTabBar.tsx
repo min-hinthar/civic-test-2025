@@ -10,7 +10,7 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Sun, Moon, LogOut, Heart } from 'lucide-react';
+import { Sun, Moon, LogOut, Heart, Gift } from 'lucide-react';
 import { motion } from 'motion/react';
 import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
 import { NavItem } from './NavItem';
@@ -143,6 +143,30 @@ export function BottomTabBar() {
             </span>
           </div>
         </motion.button>
+
+        {/* Support / Tip Jar */}
+        <button
+          type="button"
+          onClick={() => {
+            hapticLight();
+            window.open('https://tiptopjar.com/minsanity', '_blank', 'noopener');
+          }}
+          className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
+          aria-label="Support this project"
+        >
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
+              <Gift className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
+            </span>
+            <span
+              className={`text-xs whitespace-nowrap transition-colors ${
+                showBurmese ? 'font-myanmar' : ''
+              } text-muted-foreground`}
+            >
+              {showBurmese ? '\u1015\u1036\u1037\u1015\u102D\u102F\u1038\u1015\u102B' : 'Support'}
+            </span>
+          </div>
+        </button>
 
         {/* Theme toggle */}
         <button
