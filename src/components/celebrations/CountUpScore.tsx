@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CountUp from 'react-countup';
 import { motion, useAnimationControls } from 'motion/react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -133,15 +133,28 @@ export function CountUpScore({
     return () => clearTimeout(timer);
   }, [delay]);
 
+  // ---------------------------------------------------------------------------
+  // CRITICAL: react-countup v6 includes `formattingFn` in an internal effect
+  // dependency array. If formattingFn identity changes between renders, the
+  // library restarts the animation from 0. We MUST keep a stable reference.
+  // Use refs for values that change but shouldn't invalidate the callback.
+  // ---------------------------------------------------------------------------
+  const onUpdateRef = useRef(onUpdate);
+  const showPercentageRef = useRef(showPercentage);
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+    showPercentageRef.current = showPercentage;
+  }, [onUpdate, showPercentage]);
+
   /** Formatting function that tracks current value for color shift and fires onUpdate */
-  const handleFormat = (n: number): string => {
+  const handleFormat = useCallback((n: number): string => {
     currentValueRef.current = n;
-    onUpdate?.(n);
-    return `${Math.round(n)}${showPercentage ? '%' : ''}`;
-  };
+    onUpdateRef.current?.(n);
+    return `${Math.round(n)}${showPercentageRef.current ? '%' : ''}`;
+  }, []);
 
   /** Trigger spring overshoot and color finalization when count-up finishes */
-  const handleCountEnd = () => {
+  const handleCountEnd = useCallback(() => {
     // Set final color
     setColorClass(isPassing ? 'text-success' : 'text-warning');
 
@@ -158,7 +171,7 @@ export function CountUpScore({
     }
 
     onComplete?.();
-  };
+  }, [isPassing, shouldReduceMotion, controls, onComplete]);
 
   // Update color class periodically during count-up via an interval
   useEffect(() => {
