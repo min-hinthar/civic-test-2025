@@ -12,6 +12,7 @@ import {
   playUltimateFanfare,
 } from '@/lib/audio/celebrationSounds';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { announce } from '@/lib/a11y/announcer';
 
 // ---------------------------------------------------------------------------
 // Level configuration
@@ -193,6 +194,11 @@ export function CelebrationOverlay() {
     if (effectiveLevel === 'ultimate') {
       // Double haptic for ultimate: second burst 200ms later
       setTimeout(() => hapticHeavy(), 200);
+    }
+
+    // --- Screen reader announcement (fires regardless of motion preference) ---
+    if (shouldReduceMotion) {
+      announce('Celebration!');
     }
 
     // --- Sound ---

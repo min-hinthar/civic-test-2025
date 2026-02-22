@@ -5,7 +5,7 @@
 - :white_check_mark: **v1.0 MVP** — Phases 1-10 (shipped 2026-02-08)
 - :white_check_mark: **v2.0 Unified Learning Hub** — Phases 11-17 (shipped 2026-02-13)
 - :white_check_mark: **v2.1 Quality & Polish** — Phases 18-28 (shipped 2026-02-19)
-- :construction: **v3.0 World-Class UX** — Phases 29-37 (in progress)
+- :construction: **v3.0 World-Class UX** — Phases 29-38 (in progress)
 
 ## Phases
 
@@ -212,7 +212,7 @@ Plans:
   4. Mock Test fail still shows appropriate (non-celebratory) results without choreography
 **Plans**: 1 plan in 1 wave
 Plans:
-- [ ] 36-01-PLAN.md — Replace inline resultView with shared TestResultsScreen + dead code cleanup
+- [x] 36-01-PLAN.md — Replace inline resultView with shared TestResultsScreen + dead code cleanup
 
 ## Progress
 
@@ -254,13 +254,13 @@ Phases execute in numeric order: 29 → 30 → 31 → 32 → 33 → 34 → 35 �
 **Plans:** 7/7 plans complete
 
 Plans:
-- [ ] 37-01-PLAN.md — Fix Study Guide card visibility + Interview mode answer bugs
+- [x] 37-01-PLAN.md — Fix Study Guide card visibility + Interview mode answer bugs
 - [x] 37-02-PLAN.md — About navbar link + landing page card animation
 - [x] 37-03-PLAN.md — Bookmark persistence store + useBookmarks hook
-- [ ] 37-04-PLAN.md — Review Deck overhaul (clickable cards, progress, filters, empty state, due badges)
-- [ ] 37-05-PLAN.md — Flashcard chip row + toolbar (replaces dropdown, adds counter, search, sort)
-- [ ] 37-06-PLAN.md — Flashcard enrichment (card back detail, bookmark toggle, auto-play mode)
-- [ ] 37-07-PLAN.md — Bug investigation across 9 domains + loading/empty state audit
+- [x] 37-04-PLAN.md — Review Deck overhaul (clickable cards, progress, filters, empty state, due badges)
+- [x] 37-05-PLAN.md — Flashcard chip row + toolbar (replaces dropdown, adds counter, search, sort)
+- [x] 37-06-PLAN.md — Flashcard enrichment (card back detail, bookmark toggle, auto-play mode)
+- [x] 37-07-PLAN.md — Bug investigation across 9 domains + loading/empty state audit
 
 ### Phase 38: Security Analysis, Fixes & Codebase Refactoring
 
@@ -269,11 +269,11 @@ Plans:
 **Plans:** 5/5 plans complete
 
 Plans:
-- [ ] 38-01-PLAN.md — Security fixes (Sentry config, bn.js override) + comprehensive security checklist artifact
-- [ ] 38-02-PLAN.md — withRetry/safeAsync utility (TDD) — foundation for error handling standardization
-- [ ] 38-03-PLAN.md — Dark mode variant fixes (5 components) + dead code removal (orphaned exports/files)
-- [ ] 38-04-PLAN.md — Error handling integration: withRetry in sync modules, Sentry fingerprinting, throw-vs-fallback formalization
-- [ ] 38-05-PLAN.md — ErrorBoundary test fix, CLAUDE.md accuracy audit, Sentry stale issue categorization
+- [x] 38-01-PLAN.md — Security fixes (Sentry config, bn.js override) + comprehensive security checklist artifact
+- [x] 38-02-PLAN.md — withRetry/safeAsync utility (TDD) — foundation for error handling standardization
+- [x] 38-03-PLAN.md — Dark mode variant fixes (5 components) + dead code removal (orphaned exports/files)
+- [x] 38-04-PLAN.md — Error handling integration: withRetry in sync modules, Sentry fingerprinting, throw-vs-fallback formalization
+- [x] 38-05-PLAN.md — ErrorBoundary test fix, CLAUDE.md accuracy audit, Sentry stale issue categorization
 
 ---
 *Roadmap created: 2026-02-05*
