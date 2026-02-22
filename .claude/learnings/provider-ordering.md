@@ -33,3 +33,28 @@ if (!engine) throw new Error('TTS engine not initialized');
 **Why it's subtle:** The greeting effect depended on `handleGreeting` → `safeSpeakLocal` → `speak`. When `speak` silently returned, the promise chain resolved, `result === 'completed'` evaluated false (result was `undefined`... wait, actually `await undefined` resolves to `undefined`, and `try { await speak(...); return 'completed' }` returns `'completed'`). So the flow advanced as if speech had completed.
 
 **Apply when:** Any hook that wraps an async-initialized singleton (TTS engine, WebSocket, IndexedDB connection) and exposes async methods.
+
+## Throw vs No-Op Fallback — Context Matters
+
+**Context:** The "throw when not ready" pattern above is correct for TTS (callers NEED the operation to succeed). But `useToast` had the same pattern (throwing when called outside ToastProvider) and it caused 25 Sentry errors — because toast is fire-and-forget, and components rendering during error boundaries or partial provider mount don't need toast to succeed.
+
+**Learning:** Choose based on caller expectations:
+
+| Pattern | When to use | Example |
+|---------|-------------|---------|
+| **Throw** | Caller awaits result, needs success signal, has retry logic | `speak()` — TTS engine, DB writes |
+| **No-op fallback** | Fire-and-forget, caller doesn't check result, failure is silent UX degradation | `toast()` — notifications, analytics |
+
+```typescript
+// THROW: caller needs to know it failed (TTS)
+if (!engine) throw new Error('TTS engine not initialized');
+
+// NO-OP: caller doesn't care if it worked (Toast)
+const TOAST_FALLBACK = { toast: () => {}, dismiss: () => {} };
+export function useToast() {
+  const ctx = useContext(ToastContext);
+  return ctx ?? TOAST_FALLBACK; // graceful degradation
+}
+```
+
+**Apply when:** Deciding error handling strategy for context hooks that may be called outside their provider tree (error boundaries, partial mount, SSR).

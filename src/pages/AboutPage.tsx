@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { aboutContent } from '@/constants/about/aboutContent';
 import { DedicationCard } from '@/components/about/DedicationCard';
 import { FadeIn } from '@/components/animations/StaggeredList';
+import { TipJarWidget } from '@/components/TipJarWidget';
 
 const APP_URL = 'https://civic-test-2025.vercel.app';
 const SHARE_TITLE = 'Civic Test Prep - Free Bilingual U.S. Citizenship Test Prep';
@@ -177,6 +178,19 @@ const AboutPage = () => {
               ))}
             </div>
           </section>
+        </FadeIn>
+
+        {/* Tip Jar */}
+        <FadeIn delay={750}>
+          <div className="flex justify-center">
+            <TipJarWidget
+              mode="button"
+              username="minsanity"
+              buttonText="Support this project 💖"
+              buttonColor="white"
+              buttonSize="md"
+            />
+          </div>
         </FadeIn>
 
         {/* Footer */}

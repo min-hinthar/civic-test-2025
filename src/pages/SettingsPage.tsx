@@ -38,6 +38,7 @@ import { useUserState } from '@/contexts/StateContext';
 import { isSoundMuted, setSoundMuted, playCorrect } from '@/lib/audio/soundEffects';
 import { useTTSSettings } from '@/hooks/useTTSSettings';
 import { VoicePicker } from '@/components/settings/VoicePicker';
+import { TipJarWidget } from '@/components/TipJarWidget';
 import type { AutoReadLang } from '@/lib/ttsTypes';
 
 const SRS_REMINDER_TIME_KEY = 'civic-prep-srs-reminder-time';
@@ -681,6 +682,17 @@ export default function SettingsPage() {
             </p>
           )}
         </SettingsSection>
+
+        {/* Tip Jar */}
+        <div className="mb-5 flex justify-center">
+          <TipJarWidget
+            mode="button"
+            username="minsanity"
+            buttonText="Support this project 💖"
+            buttonColor="white"
+            buttonSize="md"
+          />
+        </div>
       </main>
     </div>
   );

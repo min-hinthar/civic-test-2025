@@ -24,6 +24,7 @@ import { totalQuestions } from '@/constants/questions';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { TipJarWidget } from '@/components/TipJarWidget';
 
 const features = [
   {
@@ -354,6 +355,15 @@ const LandingPage = () => {
                 </Link>
               </div>
             </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Tip Jar */}
+      <section className="bg-card/50 py-12 sm:py-16">
+        <div className="mx-auto max-w-md px-4 sm:px-6">
+          <FadeIn>
+            <TipJarWidget mode="inline" username="minsanity" />
           </FadeIn>
         </div>
       </section>
