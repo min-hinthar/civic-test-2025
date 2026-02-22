@@ -8,7 +8,7 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 38-security-analysis-fixes-and-codebase-refactoring-based-on-learnings-and-error-history
-**Current Plan:** 02 complete, 03 next
+**Current Plan:** 01 and 02 complete, 03 next
 **Status:** In progress
 
 ## Accumulated Context
@@ -18,6 +18,10 @@ See: .planning/PROJECT.md
 - Phase 38 added: Security analysis, fixes, and codebase refactoring based on learnings and error history
 
 ### Decisions
+- 38-01: Sentry DSN moved to NEXT_PUBLIC_SENTRY_DSN env var (public key) for per-environment config and rotation
+- 38-01: Production tracesSampleRate set to 0.2 (80% quota reduction), 1.0 in development
+- 38-01: bn.js override >=5.2.3 chosen over replacing web-push (simpler fix for moderate DoS CVE)
+- 38-01: Security checklist: 104 items, 93 pass, 5 fixed, 5 acceptable risk, 1 deferred (fingerprinting)
 - 38-02: Used captureError from sentry.ts rather than Sentry.captureException directly for PII sanitization pipeline
 - 38-02: isRetryableError checks error.status for HTTP codes (401/400) for Supabase error compatibility
 - 38-02: Result tuple pattern [T, null] | [null, Error] for safe async operations
@@ -57,6 +61,7 @@ See: .planning/PROJECT.md
 | 37-05 | 10min | 2 | 4 |
 | 37-06 | 7min | 2 | 4 |
 | 37-07 | 5min | 3 | 1 |
+| 38-01 | 16min | 2 | 7 |
 | 38-02 | 12min | 2 (TDD) | 5 |
 
 ## Session Log
@@ -70,4 +75,5 @@ See: .planning/PROJECT.md
 - 2026-02-21: Completed 37-05-PLAN.md (CategoryChipRow + FlashcardToolbar replacing dropdown)
 - 2026-02-21: Completed 37-06-PLAN.md (flashcard back enrichment + auto-play study mode)
 - 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)
+- 2026-02-22: Completed 38-01-PLAN.md (Sentry hardening, bn.js CVE fix, security checklist)
 - 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
