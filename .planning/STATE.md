@@ -7,9 +7,9 @@ See: .planning/PROJECT.md
 ## Position
 
 **Milestone:** v3.0 World-Class UX
-**Current phase:** 37-bug-fixes-ux-polish
-**Current Plan:** Not started
-**Status:** Milestone complete
+**Current phase:** 38-security-analysis-fixes-and-codebase-refactoring-based-on-learnings-and-error-history
+**Current Plan:** 02 complete, 03 next
+**Status:** In progress
 
 ## Accumulated Context
 
@@ -18,6 +18,9 @@ See: .planning/PROJECT.md
 - Phase 38 added: Security analysis, fixes, and codebase refactoring based on learnings and error history
 
 ### Decisions
+- 38-02: Used captureError from sentry.ts rather than Sentry.captureException directly for PII sanitization pipeline
+- 38-02: isRetryableError checks error.status for HTTP codes (401/400) for Supabase error compatibility
+- 38-02: Result tuple pattern [T, null] | [null, Error] for safe async operations
 - 37-03: Local-only persistence (no Supabase sync) for bookmark simplicity
 - 37-03: Dedicated IndexedDB store matching srsStore pattern
 - 37-03: Simple hook pattern (no Context provider) since bookmark state is component-local
@@ -54,6 +57,7 @@ See: .planning/PROJECT.md
 | 37-05 | 10min | 2 | 4 |
 | 37-06 | 7min | 2 | 4 |
 | 37-07 | 5min | 3 | 1 |
+| 38-02 | 12min | 2 (TDD) | 5 |
 
 ## Session Log
 
@@ -66,3 +70,4 @@ See: .planning/PROJECT.md
 - 2026-02-21: Completed 37-05-PLAN.md (CategoryChipRow + FlashcardToolbar replacing dropdown)
 - 2026-02-21: Completed 37-06-PLAN.md (flashcard back enrichment + auto-play study mode)
 - 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)
+- 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
