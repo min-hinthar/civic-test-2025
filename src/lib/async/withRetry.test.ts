@@ -38,12 +38,16 @@ describe('withRetry', () => {
     const error = new TypeError('Failed to fetch');
     const fn = vi.fn().mockRejectedValue(error);
 
-    const promise = withRetry(fn, { maxAttempts: 3, baseDelayMs: 100 });
-    // Advance timers for both retry delays (100ms + 200ms)
-    await vi.advanceTimersByTimeAsync(100);
-    await vi.advanceTimersByTimeAsync(200);
+    let caughtError: unknown;
+    const promise = withRetry(fn, { maxAttempts: 3, baseDelayMs: 100 }).catch(e => {
+      caughtError = e;
+    });
 
-    await expect(promise).rejects.toThrow('Failed to fetch');
+    // Advance timers for all retry delays (100ms + 200ms = 300ms total)
+    await vi.advanceTimersByTimeAsync(300);
+    await promise;
+
+    expect(caughtError).toBe(error);
     expect(fn).toHaveBeenCalledTimes(3);
   });
 
@@ -141,24 +145,30 @@ describe('withRetry', () => {
 
   it('uses exponential backoff: delays double each attempt', async () => {
     const fn = vi.fn().mockRejectedValue(new TypeError('Failed to fetch'));
-    const onRetry = vi.fn();
 
-    const promise = withRetry(fn, { maxAttempts: 4, baseDelayMs: 1000, onRetry });
+    // Spy on setTimeout to verify delay values
+    const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
 
-    // First retry after 1000ms
-    await vi.advanceTimersByTimeAsync(1000);
-    expect(onRetry).toHaveBeenCalledTimes(1);
+    let caughtError: unknown;
+    const promise = withRetry(fn, { maxAttempts: 4, baseDelayMs: 1000 }).catch(e => {
+      caughtError = e;
+    });
 
-    // Second retry after 2000ms
-    await vi.advanceTimersByTimeAsync(2000);
-    expect(onRetry).toHaveBeenCalledTimes(2);
+    // Advance past all delays: 1000 + 2000 + 4000 = 7000ms total
+    await vi.advanceTimersByTimeAsync(7000);
+    await promise;
 
-    // Third retry after 4000ms
-    await vi.advanceTimersByTimeAsync(4000);
-    expect(onRetry).toHaveBeenCalledTimes(3);
-
-    await expect(promise).rejects.toThrow('Failed to fetch');
+    expect(caughtError).toBeInstanceOf(TypeError);
     expect(fn).toHaveBeenCalledTimes(4);
+
+    // Extract the delay values passed to setTimeout by withRetry
+    const retryDelays = setTimeoutSpy.mock.calls
+      .map(call => call[1])
+      .filter((delay): delay is number => typeof delay === 'number' && delay >= 1000);
+
+    expect(retryDelays).toEqual([1000, 2000, 4000]);
+
+    setTimeoutSpy.mockRestore();
   });
 });
 
