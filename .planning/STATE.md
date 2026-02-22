@@ -52,6 +52,10 @@ See: .planning/PROJECT.md
 - 37-06: FSRS State.Review mapped to Mastered label (high retention = mastered)
 - 37-06: Auto-play uses isolated TTS engine + disables auto-read to prevent audio overlap
 - 37-06: controlledFlipped prop enables external flip control for auto-play
+- 38-04: All 4 context hooks use THROWS convention (caller needs success) -- no fallback hooks in this codebase
+- 38-04: IndexedDB withRetry uses 500ms base delay (local ops recover faster than network 1000ms)
+- 38-04: SupabaseAuthContext Pattern D (network-error-then-queue) preserved -- only replaced console.error
+- 38-04: captureError used (not captureException directly) to maintain PII sanitization pipeline
 - [Phase 38]: 38-05: ErrorBoundary tests pass without code changes -- localStorage mock issue self-resolved
 - [Phase 38]: 38-05: CLAUDE.md changes verified accurate (already applied by Plan 04 executor)
 
@@ -69,6 +73,7 @@ See: .planning/PROJECT.md
 | 38-01 | 16min | 2 | 7 |
 | 38-02 | 12min | 2 (TDD) | 5 |
 | 38-03 | 19min | 2 | 7 |
+| 38-04 | 13min | 2 | 9 |
 | Phase 38 P05 | 7min | 1 tasks | 1 files |
 
 ## Session Log
@@ -85,4 +90,5 @@ See: .planning/PROJECT.md
 - 2026-02-22: Completed 38-01-PLAN.md (Sentry hardening, bn.js CVE fix, security checklist)
 - 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
 - 2026-02-22: Completed 38-03-PLAN.md (dark mode fixes for 5 components + dead code removal)
+- 2026-02-22: Completed 38-04-PLAN.md (Sentry fingerprinting, withRetry in sync modules, throw-vs-fallback in contexts)
 - 2026-02-22: Completed 38-05-PLAN.md (ErrorBoundary test verification, CLAUDE.md audit, Sentry categorization)
