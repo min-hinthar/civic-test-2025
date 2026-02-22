@@ -59,13 +59,13 @@ const ICON_BG_MAP: Record<NBAStateType, string> = {
 
 const ICON_COLOR_MAP: Record<NBAStateType, string> = {
   'new-user': 'text-primary',
-  'returning-user': 'text-amber-500',
-  'streak-at-risk': 'text-orange-500',
-  'srs-due': 'text-blue-500',
-  'weak-category': 'text-amber-500',
-  'no-recent-test': 'text-emerald-500',
-  'test-ready': 'text-emerald-600',
-  celebration: 'text-amber-500',
+  'returning-user': 'text-amber-500 dark:text-amber-400',
+  'streak-at-risk': 'text-orange-500 dark:text-orange-400',
+  'srs-due': 'text-blue-500 dark:text-blue-400',
+  'weak-category': 'text-amber-500 dark:text-amber-400',
+  'no-recent-test': 'text-emerald-500 dark:text-emerald-400',
+  'test-ready': 'text-emerald-600 dark:text-emerald-400',
+  celebration: 'text-amber-500 dark:text-amber-400',
 };
 
 // ---------------------------------------------------------------------------

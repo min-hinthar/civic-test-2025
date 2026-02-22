@@ -40,7 +40,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const MEDAL_COLORS: Record<number, string> = {
   1: 'text-warning', // Gold
   2: 'text-muted-foreground', // Silver
-  3: 'text-amber-700', // Bronze
+  3: 'text-amber-700 dark:text-amber-400', // Bronze
 };
 
 const MEDAL_BG: Record<number, string> = {

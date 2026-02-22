@@ -92,15 +92,22 @@ const CATEGORY_STRIP_COLORS: Record<string, string> = {
 };
 
 // Category to gradient mapping (vibrant gradients at low opacity for front face)
+// Dark mode uses higher opacity (15%) for better visibility on dark card backgrounds
 const categoryGradients: Record<string, string> = {
-  'Principles of American Democracy': 'from-rose-500/10 to-pink-500/10',
-  'System of Government': 'from-blue-500/10 to-cyan-500/10',
-  'Rights and Responsibilities': 'from-emerald-500/10 to-lime-500/10',
-  'American History: Colonial Period and Independence': 'from-amber-500/10 to-orange-500/10',
-  'American History: 1800s': 'from-fuchsia-500/10 to-purple-500/10',
+  'Principles of American Democracy':
+    'from-rose-500/10 to-pink-500/10 dark:from-rose-500/15 dark:to-pink-500/15',
+  'System of Government':
+    'from-blue-500/10 to-cyan-500/10 dark:from-blue-500/15 dark:to-cyan-500/15',
+  'Rights and Responsibilities':
+    'from-emerald-500/10 to-lime-500/10 dark:from-emerald-500/15 dark:to-lime-500/15',
+  'American History: Colonial Period and Independence':
+    'from-amber-500/10 to-orange-500/10 dark:from-amber-500/15 dark:to-orange-500/15',
+  'American History: 1800s':
+    'from-fuchsia-500/10 to-purple-500/10 dark:from-fuchsia-500/15 dark:to-purple-500/15',
   'Recent American History and Other Important Historical Information':
-    'from-sky-500/10 to-indigo-500/10',
-  'Civics: Symbols and Holidays': 'from-slate-500/10 to-stone-500/10',
+    'from-sky-500/10 to-indigo-500/10 dark:from-sky-500/15 dark:to-indigo-500/15',
+  'Civics: Symbols and Holidays':
+    'from-slate-500/10 to-stone-500/10 dark:from-slate-500/15 dark:to-stone-500/15',
 };
 
 /**

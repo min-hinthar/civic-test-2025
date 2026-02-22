@@ -30,7 +30,7 @@ export function TTSFallbackBadge({ visible, compact = false }: TTSFallbackBadgeP
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
           transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.2 }}
           title="Using voice synthesis (audio unavailable)"
-          className={`inline-flex items-center gap-1 rounded-full bg-amber-500/20 text-amber-400 ${
+          className={`inline-flex items-center gap-1 rounded-full bg-amber-500/20 text-amber-400 dark:bg-amber-500/30 dark:text-amber-300 ${
             compact ? 'p-1' : 'px-2 py-0.5 text-xs'
           }`}
         >

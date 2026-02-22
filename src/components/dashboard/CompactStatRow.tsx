@@ -185,7 +185,7 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
       <Icon
         className={clsx(
           'h-5 w-5',
-          def.id === 'streak' && value > 0 ? 'text-orange-500' : 'text-primary'
+          def.id === 'streak' && value > 0 ? 'text-orange-500 dark:text-orange-400' : 'text-primary'
         )}
       />
     </motion.div>
@@ -193,7 +193,7 @@ function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps
     <Icon
       className={clsx(
         'h-5 w-5',
-        def.id === 'streak' && value > 0 ? 'text-orange-500' : 'text-primary'
+        def.id === 'streak' && value > 0 ? 'text-orange-500 dark:text-orange-400' : 'text-primary'
       )}
     />
   );
