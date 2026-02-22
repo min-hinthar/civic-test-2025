@@ -49,6 +49,12 @@ No Redux/Zustand — eight React Context providers handle all state:
 - **StateContext** — User's US state selection (for personalized civics answers)
 - **SocialContext** — Leaderboard, badges, streaks
 
+### Async Utilities
+Shared error handling utilities in `src/lib/async/`:
+- **`withRetry(fn, options)`** — Retries async operations with exponential backoff. Only retries network/transient errors; auth (401), validation (400), and quota errors throw immediately.
+- **`safeAsync(fn, context?)`** — Fire-and-forget wrapper that catches errors, reports to Sentry via `captureError`, and returns `[result, null] | [null, Error]` tuples.
+- **`isRetryableError(error)`** — Classifies errors as retryable (network, timeout, offline) or non-retryable (auth, quota, validation).
+
 ### Data: Civics Questions
 128 questions across 7 categories in `src/constants/questions/`. Each has English + Burmese text, optional explanations, and category metadata. 28 USCIS 2025 additions in `uscis-2025-additions.ts` are missing explanation objects (known data gap).
 
@@ -81,12 +87,20 @@ No Redux/Zustand — eight React Context providers handle all state:
 - `useMemo<Type>(() => ...)` generic syntax breaks the compiler — use `const x: Type = useMemo()`
 - Use `useState(() => initialValue)` lazy init instead of `useRef(initialValue)` for render purity
 
+### Error Handling
+- **Critical operations** (useTTS, useAuth, useSRS) throw when used outside their provider — callers need success to continue
+- **Convenience operations** (useToast) return no-op fallback — fire-and-forget, should never crash the app
+- **Async operations** use `withRetry` from `src/lib/async/` for transient failure recovery with exponential backoff
+- **Background sync** uses `safeAsync` for fire-and-forget error reporting to Sentry without crashing
+
 ### Commits
 Convention: `{type}({scope}): {message}` — types: `feat`, `fix`, `docs`, `test`, `refactor`
 
 ### Security
 - CSP uses **hash-based allowlisting** (not nonce) — Pages Router on Vercel can't forward nonce headers
 - `errorSanitizer.ts` scrubs PII before sending to Sentry
+- Sentry DSN sourced from `NEXT_PUBLIC_SENTRY_DSN` env var (public key, not secret) for per-environment config and rotation
+- Security audit checklist at `.planning/security/security-checklist.md` — 104 items, 93 pass, 5 fixed, 5 acceptable risk
 - Never commit `.env` values — see `.env.example` for required variables
 
 ## Testing

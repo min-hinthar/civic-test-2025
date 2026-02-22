@@ -10,6 +10,8 @@
 
 import { createStore, get, set, del, keys } from 'idb-keyval';
 import { supabase } from '@/lib/supabaseClient';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 import type { SRSCardRecord, SupabaseSRSRow } from './srsTypes';
 import { cardToRow, rowToCard } from './srsTypes';
 
@@ -68,29 +70,34 @@ export async function syncPendingSRSReviews(
     }
 
     try {
-      if (pending.action === 'upsert') {
-        const row = cardToRow(userId, pending.questionId, pending.record);
-        const { error } = await supabase
-          .from('srs_cards')
-          .upsert(row, { onConflict: 'user_id,question_id' });
+      await withRetry(
+        async () => {
+          if (pending.action === 'upsert') {
+            const row = cardToRow(userId, pending.questionId, pending.record);
+            const { error } = await supabase
+              .from('srs_cards')
+              .upsert(row, { onConflict: 'user_id,question_id' });
 
-        if (error) throw error;
-      } else if (pending.action === 'delete') {
-        const { error } = await supabase
-          .from('srs_cards')
-          .delete()
-          .eq('user_id', userId)
-          .eq('question_id', pending.questionId);
+            if (error) throw error;
+          } else if (pending.action === 'delete') {
+            const { error } = await supabase
+              .from('srs_cards')
+              .delete()
+              .eq('user_id', userId)
+              .eq('question_id', pending.questionId);
 
-        if (error) throw error;
-      }
+            if (error) throw error;
+          }
+        },
+        { maxAttempts: 3, baseDelayMs: 1000 }
+      );
 
       // Success -- remove from queue
       await del(key, srsSyncDb);
       synced++;
     } catch (error) {
       // Leave in queue for next sync attempt
-      console.error(`[srsSync] Failed to sync ${String(key)}:`, error);
+      captureError(error, { operation: 'srsSync.syncPending', key: String(key) });
       failed++;
     }
   }
@@ -111,14 +118,16 @@ export async function pushSRSCards(userId: string, cards: SRSCardRecord[]): Prom
 
   const rows = cards.map(record => cardToRow(userId, record.questionId, record));
 
-  const { error } = await supabase
-    .from('srs_cards')
-    .upsert(rows, { onConflict: 'user_id,question_id' });
+  await withRetry(
+    async () => {
+      const { error } = await supabase
+        .from('srs_cards')
+        .upsert(rows, { onConflict: 'user_id,question_id' });
 
-  if (error) {
-    console.error('[srsSync] pushSRSCards failed:', error);
-    throw error;
-  }
+      if (error) throw error;
+    },
+    { maxAttempts: 3, baseDelayMs: 1000 }
+  );
 }
 
 /**
@@ -126,12 +135,18 @@ export async function pushSRSCards(userId: string, cards: SRSCardRecord[]): Prom
  * Returns the remote deck converted to local SRSCardRecord format.
  */
 export async function pullSRSCards(userId: string): Promise<SRSCardRecord[]> {
-  const { data, error } = await supabase.from('srs_cards').select('*').eq('user_id', userId);
+  const data = await withRetry(
+    async () => {
+      const { data: result, error } = await supabase
+        .from('srs_cards')
+        .select('*')
+        .eq('user_id', userId);
 
-  if (error) {
-    console.error('[srsSync] pullSRSCards failed:', error);
-    throw error;
-  }
+      if (error) throw error;
+      return result;
+    },
+    { maxAttempts: 3, baseDelayMs: 1000 }
+  );
 
   if (!data || data.length === 0) return [];
 

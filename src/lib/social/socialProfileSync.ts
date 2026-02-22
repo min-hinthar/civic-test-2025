@@ -11,6 +11,8 @@
  */
 
 import { supabase } from '@/lib/supabaseClient';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -57,16 +59,19 @@ interface SocialProfileRow {
  */
 export async function getSocialProfile(userId: string): Promise<SocialProfile | null> {
   try {
-    const { data, error } = await supabase
-      .from('social_profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
+    const data = await withRetry(
+      async () => {
+        const { data: result, error } = await supabase
+          .from('social_profiles')
+          .select('*')
+          .eq('user_id', userId)
+          .maybeSingle();
 
-    if (error) {
-      console.error('[socialProfileSync] Failed to get social profile:', error.message);
-      return null;
-    }
+        if (error) throw error;
+        return result;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
 
     if (!data) return null;
 
@@ -85,7 +90,7 @@ export async function getSocialProfile(userId: string): Promise<SocialProfile | 
       updatedAt: row.updated_at,
     };
   } catch (err) {
-    console.error('[socialProfileSync] Unexpected error getting social profile:', err);
+    captureError(err, { operation: 'socialProfileSync.getSocialProfile', userId });
     return null;
   }
 }
@@ -109,18 +114,21 @@ export async function upsertSocialProfile(
   }
 
   try {
-    const { error } = await supabase.from('social_profiles').upsert({
-      user_id: userId,
-      display_name: data.displayName,
-      social_opt_in: data.socialOptIn,
-      updated_at: new Date().toISOString(),
-    });
+    await withRetry(
+      async () => {
+        const { error } = await supabase.from('social_profiles').upsert({
+          user_id: userId,
+          display_name: data.displayName,
+          social_opt_in: data.socialOptIn,
+          updated_at: new Date().toISOString(),
+        });
 
-    if (error) {
-      console.error('[socialProfileSync] Failed to upsert social profile:', error.message);
-    }
+        if (error) throw error;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
   } catch (err) {
-    console.error('[socialProfileSync] Unexpected error upserting social profile:', err);
+    captureError(err, { operation: 'socialProfileSync.upsertSocialProfile', userId });
   }
 }
 
@@ -141,22 +149,25 @@ export async function updateCompositeScore(
   }
 
   try {
-    const { error } = await supabase
-      .from('social_profiles')
-      .update({
-        composite_score: score,
-        current_streak: streak,
-        top_badge: topBadge,
-        weekly_score_updated_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
+    await withRetry(
+      async () => {
+        const { error } = await supabase
+          .from('social_profiles')
+          .update({
+            composite_score: score,
+            current_streak: streak,
+            top_badge: topBadge,
+            weekly_score_updated_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId);
 
-    if (error) {
-      console.error('[socialProfileSync] Failed to update composite score:', error.message);
-    }
+        if (error) throw error;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
   } catch (err) {
-    console.error('[socialProfileSync] Unexpected error updating composite score:', err);
+    captureError(err, { operation: 'socialProfileSync.updateCompositeScore', userId });
   }
 }
 
@@ -173,18 +184,21 @@ export async function toggleSocialOptIn(userId: string, optIn: boolean): Promise
   }
 
   try {
-    const { error } = await supabase
-      .from('social_profiles')
-      .update({
-        social_opt_in: optIn,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
+    await withRetry(
+      async () => {
+        const { error } = await supabase
+          .from('social_profiles')
+          .update({
+            social_opt_in: optIn,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId);
 
-    if (error) {
-      console.error('[socialProfileSync] Failed to toggle social opt-in:', error.message);
-    }
+        if (error) throw error;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
   } catch (err) {
-    console.error('[socialProfileSync] Unexpected error toggling social opt-in:', err);
+    captureError(err, { operation: 'socialProfileSync.toggleSocialOptIn', userId });
   }
 }

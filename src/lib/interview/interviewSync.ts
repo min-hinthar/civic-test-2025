@@ -38,6 +38,8 @@
  */
 
 import { supabase } from '@/lib/supabaseClient';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 import type { InterviewSession } from '@/types';
 import type { InterviewSessionRow } from '@/types/supabase';
 
@@ -58,22 +60,25 @@ export async function syncInterviewSession(
   }
 
   try {
-    const { error } = await supabase.from('interview_sessions').insert({
-      user_id: userId,
-      completed_at: session.date,
-      mode: session.mode,
-      score: session.score,
-      total_questions: session.totalQuestions,
-      duration_seconds: session.durationSeconds,
-      passed: session.passed,
-      end_reason: session.endReason,
-    });
+    await withRetry(
+      async () => {
+        const { error } = await supabase.from('interview_sessions').insert({
+          user_id: userId,
+          completed_at: session.date,
+          mode: session.mode,
+          score: session.score,
+          total_questions: session.totalQuestions,
+          duration_seconds: session.durationSeconds,
+          passed: session.passed,
+          end_reason: session.endReason,
+        });
 
-    if (error) {
-      console.error('[interviewSync] Failed to sync interview session:', error.message);
-    }
+        if (error) throw error;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
   } catch (err) {
-    console.error('[interviewSync] Unexpected error syncing interview session:', err);
+    captureError(err, { operation: 'interviewSync.syncInterviewSession' });
   }
 }
 
@@ -92,17 +97,20 @@ export async function loadInterviewHistoryFromSupabase(
   userId: string
 ): Promise<InterviewSession[]> {
   try {
-    const { data, error } = await supabase
-      .from('interview_sessions')
-      .select('*')
-      .eq('user_id', userId)
-      .order('completed_at', { ascending: false })
-      .limit(20);
+    const data = await withRetry(
+      async () => {
+        const { data: result, error } = await supabase
+          .from('interview_sessions')
+          .select('*')
+          .eq('user_id', userId)
+          .order('completed_at', { ascending: false })
+          .limit(20);
 
-    if (error) {
-      console.error('[interviewSync] Failed to load interview history:', error.message);
-      return [];
-    }
+        if (error) throw error;
+        return result;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
 
     if (!data) return [];
 
@@ -118,7 +126,7 @@ export async function loadInterviewHistoryFromSupabase(
       results: [], // Individual results not synced (IndexedDB only)
     }));
   } catch (err) {
-    console.error('[interviewSync] Unexpected error loading interview history:', err);
+    captureError(err, { operation: 'interviewSync.loadInterviewHistory', userId });
     return [];
   }
 }

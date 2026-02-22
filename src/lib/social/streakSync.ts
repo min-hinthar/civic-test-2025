@@ -17,6 +17,8 @@
  */
 
 import { supabase } from '@/lib/supabaseClient';
+import { withRetry } from '@/lib/async';
+import { captureError } from '@/lib/sentry';
 import type { StreakData } from './streakStore';
 
 // ---------------------------------------------------------------------------
@@ -51,20 +53,23 @@ export async function syncStreakToSupabase(userId: string, streakData: StreakDat
   }
 
   try {
-    const { error } = await supabase.from('streak_data').upsert({
-      user_id: userId,
-      activity_dates: streakData.activityDates,
-      freezes_available: streakData.freezesAvailable,
-      freezes_used: streakData.freezesUsed,
-      longest_streak: streakData.longestStreak,
-      updated_at: new Date().toISOString(),
-    });
+    await withRetry(
+      async () => {
+        const { error } = await supabase.from('streak_data').upsert({
+          user_id: userId,
+          activity_dates: streakData.activityDates,
+          freezes_available: streakData.freezesAvailable,
+          freezes_used: streakData.freezesUsed,
+          longest_streak: streakData.longestStreak,
+          updated_at: new Date().toISOString(),
+        });
 
-    if (error) {
-      console.error('[streakSync] Failed to sync streak data:', error.message);
-    }
+        if (error) throw error;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
   } catch (err) {
-    console.error('[streakSync] Unexpected error syncing streak data:', err);
+    captureError(err, { operation: 'streakSync.syncStreakToSupabase', userId });
   }
 }
 
@@ -80,16 +85,19 @@ export async function syncStreakToSupabase(userId: string, streakData: StreakDat
  */
 export async function loadStreakFromSupabase(userId: string): Promise<StreakData | null> {
   try {
-    const { data, error } = await supabase
-      .from('streak_data')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
+    const data = await withRetry(
+      async () => {
+        const { data: result, error } = await supabase
+          .from('streak_data')
+          .select('*')
+          .eq('user_id', userId)
+          .maybeSingle();
 
-    if (error) {
-      console.error('[streakSync] Failed to load streak data:', error.message);
-      return null;
-    }
+        if (error) throw error;
+        return result;
+      },
+      { maxAttempts: 3, baseDelayMs: 1000 }
+    );
 
     if (!data) return null;
 
@@ -107,7 +115,7 @@ export async function loadStreakFromSupabase(userId: string): Promise<StreakData
       },
     };
   } catch (err) {
-    console.error('[streakSync] Unexpected error loading streak data:', err);
+    captureError(err, { operation: 'streakSync.loadStreakFromSupabase', userId });
     return null;
   }
 }

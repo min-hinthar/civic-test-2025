@@ -97,6 +97,18 @@ export function beforeSendHandler(event: SentryEvent, _hint: SentryEventHint): S
     return event;
   }
 
+  // -------------------------------------------------------------------------
+  // Error fingerprinting: group high-volume error categories under single issues
+  // -------------------------------------------------------------------------
+  const errorValue = event.exception?.values?.[0]?.value ?? '';
+  if (/network|fetch|ECONNREFUSED|ERR_INTERNET_DISCONNECTED/i.test(errorValue)) {
+    event.fingerprint = ['network-error'];
+  } else if (/IndexedDB|QuotaExceeded|IDBDatabase/i.test(errorValue)) {
+    event.fingerprint = ['indexeddb-error'];
+  } else if (/SpeechSynthesis|speechSynthesis|utterance/i.test(errorValue)) {
+    event.fingerprint = ['tts-error'];
+  }
+
   // Strip PII from exception messages
   if (event.exception?.values) {
     event.exception.values = event.exception.values.map(exception => ({
