@@ -304,8 +304,9 @@ const TestPage = () => {
     return () => clearInterval(timer);
   }, [isPracticeMode, isFinished, showPreTest, showCountdown, quizState.phase]);
 
-  // Navigation lock -- throttle history API to stay under browser's 100/10s limit
-  // Only active in Real Exam mode — Practice mode allows free navigation
+  // Navigation lock — prevents accidental back-navigation during Real Exam.
+  // Uses replaceState (not pushState) in the handler to avoid growing the history
+  // stack and to stay under Safari's 100-call rate limit.
   useEffect(() => {
     if (isPracticeMode) return;
     if (isFinished || showPreTest || showCountdown) return;
@@ -315,11 +316,8 @@ const TestPage = () => {
     };
     let lastWarningTime = 0;
     const handlePopState = () => {
-      try {
-        window.history.pushState(null, '', window.location.href);
-      } catch {
-        // SecurityError: browser rate limit exceeded
-      }
+      // Re-push guard entry; replaceState avoids growing the stack
+      window.history.pushState({ navLock: true }, '', window.location.href);
       const now = Date.now();
       if (now - lastWarningTime > 3000) {
         lastWarningTime = now;
@@ -331,7 +329,7 @@ const TestPage = () => {
     };
     window.addEventListener('beforeunload', beforeUnload);
     window.addEventListener('popstate', handlePopState);
-    window.history.pushState(null, '', window.location.href);
+    window.history.pushState({ navLock: true }, '', window.location.href);
     return () => {
       window.removeEventListener('beforeunload', beforeUnload);
       window.removeEventListener('popstate', handlePopState);

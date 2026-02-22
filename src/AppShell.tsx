@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import Head from 'next/head';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { installHistoryGuard } from '@/lib/historyGuard';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { OfflineProvider } from '@/contexts/OfflineContext';
@@ -176,6 +177,10 @@ function GreetingFlow() {
 
   return null;
 }
+
+// Install history guard before Router mounts — catches Safari SecurityError from rate-limited
+// replaceState/pushState calls so they don't crash React Router's internal navigation.
+installHistoryGuard();
 
 const AppShell = () => {
   const isClient = useIsClient();
