@@ -15,6 +15,7 @@ See: .planning/PROJECT.md
 
 ### Roadmap Evolution
 - Phase 37 added: Bug Fixes & UX Polish (Study Guide, Flashcards, Review Deck, Mock Test, Interview fixes + About navbar link)
+- Phase 38 added: Security analysis, fixes, and codebase refactoring based on learnings and error history
 
 ### Decisions
 - 37-03: Local-only persistence (no Supabase sync) for bookmark simplicity
