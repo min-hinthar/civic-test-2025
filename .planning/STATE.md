@@ -8,8 +8,8 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 38-security-analysis-fixes-and-codebase-refactoring-based-on-learnings-and-error-history
-**Current Plan:** 01, 02, and 03 complete
-**Status:** In progress
+**Current Plan:** 5 of 5 complete
+**Status:** Phase complete
 
 ## Accumulated Context
 
@@ -52,6 +52,8 @@ See: .planning/PROJECT.md
 - 37-06: FSRS State.Review mapped to Mastered label (high retention = mastered)
 - 37-06: Auto-play uses isolated TTS engine + disables auto-read to prevent audio overlap
 - 37-06: controlledFlipped prop enables external flip control for auto-play
+- [Phase 38]: 38-05: ErrorBoundary tests pass without code changes -- localStorage mock issue self-resolved
+- [Phase 38]: 38-05: CLAUDE.md changes verified accurate (already applied by Plan 04 executor)
 
 ## Performance Metrics
 
@@ -67,6 +69,7 @@ See: .planning/PROJECT.md
 | 38-01 | 16min | 2 | 7 |
 | 38-02 | 12min | 2 (TDD) | 5 |
 | 38-03 | 19min | 2 | 7 |
+| Phase 38 P05 | 7min | 1 tasks | 1 files |
 
 ## Session Log
 
@@ -82,3 +85,4 @@ See: .planning/PROJECT.md
 - 2026-02-22: Completed 38-01-PLAN.md (Sentry hardening, bn.js CVE fix, security checklist)
 - 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
 - 2026-02-22: Completed 38-03-PLAN.md (dark mode fixes for 5 components + dead code removal)
+- 2026-02-22: Completed 38-05-PLAN.md (ErrorBoundary test verification, CLAUDE.md audit, Sentry categorization)

@@ -266,7 +266,7 @@ Plans:
 
 **Goal:** Harden the codebase through comprehensive security audit, standardized error handling with retry utilities, dark mode fixes, dead code removal, and Sentry optimization — improving code health without new features
 **Depends on:** Phase 37
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 - [ ] 38-01-PLAN.md — Security fixes (Sentry config, bn.js override) + comprehensive security checklist artifact
