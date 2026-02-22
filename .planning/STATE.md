@@ -8,7 +8,7 @@ See: .planning/PROJECT.md
 
 **Milestone:** v3.0 World-Class UX
 **Current phase:** 38-security-analysis-fixes-and-codebase-refactoring-based-on-learnings-and-error-history
-**Current Plan:** 01 and 02 complete, 03 next
+**Current Plan:** 01, 02, and 03 complete
 **Status:** In progress
 
 ## Accumulated Context
@@ -18,6 +18,9 @@ See: .planning/PROJECT.md
 - Phase 38 added: Security analysis, fixes, and codebase refactoring based on learnings and error history
 
 ### Decisions
+- 38-03: AudioPlayerState export kept -- used by SpeechButton.tsx and burmeseAudio.ts
+- 38-03: nativeBridge.ts deleted -- zero imports across entire src/ directory
+- 38-03: Flashcard3D gradient opacity: /10 -> dark:/15 for subtle visibility increase on dark cards
 - 38-01: Sentry DSN moved to NEXT_PUBLIC_SENTRY_DSN env var (public key) for per-environment config and rotation
 - 38-01: Production tracesSampleRate set to 0.2 (80% quota reduction), 1.0 in development
 - 38-01: bn.js override >=5.2.3 chosen over replacing web-push (simpler fix for moderate DoS CVE)
@@ -63,6 +66,7 @@ See: .planning/PROJECT.md
 | 37-07 | 5min | 3 | 1 |
 | 38-01 | 16min | 2 | 7 |
 | 38-02 | 12min | 2 (TDD) | 5 |
+| 38-03 | 19min | 2 | 7 |
 
 ## Session Log
 
@@ -77,3 +81,4 @@ See: .planning/PROJECT.md
 - 2026-02-21: Completed 37-07-PLAN.md (9-domain bug investigation, toast contrast fix, loading/empty state audit)
 - 2026-02-22: Completed 38-01-PLAN.md (Sentry hardening, bn.js CVE fix, security checklist)
 - 2026-02-22: Completed 38-02-PLAN.md (TDD withRetry + safeAsync async utilities)
+- 2026-02-22: Completed 38-03-PLAN.md (dark mode fixes for 5 components + dead code removal)
