@@ -62,7 +62,7 @@ export function getContext(): AudioContext | null {
 // Reusable note helpers
 // ---------------------------------------------------------------------------
 
-export type OscillatorWaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
+type OscillatorWaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
 
 /**
  * Play a single note with an oscillator + gain envelope.
