@@ -17,10 +17,16 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["node", "react", "react-dom"]
+    "types": ["node", "react", "react-dom"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
+    "app",
     "pages",
     "src",
     "src/types",
@@ -29,7 +35,9 @@
     "instrumentation.ts",
     "instrumentation-client.ts",
     "sentry.server.config.ts",
-    "sentry.edge.config.ts"
+    "sentry.edge.config.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
