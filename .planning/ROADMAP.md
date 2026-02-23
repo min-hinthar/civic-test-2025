@@ -76,7 +76,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 
 **v4.0 Next-Gen Architecture**
 
-- [ ] **Phase 39: Next.js 16 Upgrade and Tooling** - Upgrade to Next.js 16, configure webpack fallback, reconfigure Sentry and service worker tooling
+- [x] **Phase 39: Next.js 16 Upgrade and Tooling** - Upgrade to Next.js 16, configure webpack fallback, reconfigure Sentry and service worker tooling
 - [ ] **Phase 40: App Router Foundation** - Create root layout, extract ClientProviders, set up route group directories and auth guard
 - [ ] **Phase 41: Route Migration** - Migrate all 15+ routes from react-router-dom to App Router file-based routing in one pass
 - [ ] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router
@@ -99,10 +99,10 @@ See `.planning/MILESTONES.md` for completed milestone details.
   4. The app loads in the browser and all existing features work identically to v3.0
 **Plans**: 4 plans
 Plans:
-- [ ] 39-01-PLAN.md -- Pre-upgrade safety tag and non-Next dependency upgrades
-- [ ] 39-02-PLAN.md -- Next.js 16 upgrade, scripts, middleware-to-proxy rename
-- [ ] 39-03-PLAN.md -- Sentry App Router integration and noise filters
-- [ ] 39-04-PLAN.md -- Full verification suite and manual smoke test
+- [x] 39-01-PLAN.md -- Pre-upgrade safety tag and non-Next dependency upgrades
+- [x] 39-02-PLAN.md -- Next.js 16 upgrade, scripts, middleware-to-proxy rename
+- [x] 39-03-PLAN.md -- Sentry App Router integration and noise filters
+- [x] 39-04-PLAN.md -- Full verification suite and manual smoke test
 
 ### Phase 40: App Router Foundation
 **Goal**: The App Router shell exists with providers and auth guard, ready to receive migrated routes
@@ -205,7 +205,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 39. Next.js 16 Upgrade and Tooling | 3/4 | In Progress|  |
+| 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete | 2026-02-23 |
 | 40. App Router Foundation | 0/? | Not started | - |
 | 41. Route Migration | 0/? | Not started | - |
 | 42. CSP Nonce Migration and PWA Update | 0/? | Not started | - |
@@ -223,7 +223,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | v2.0 Unified Learning Hub | 11-17 | 47 | 29/29 | Complete | 2026-02-13 |
 | v2.1 Quality & Polish | 18-28 | 82 | 65/66 | Complete | 2026-02-19 |
 | v3.0 World-Class UX | 29-38 | 47 | 39/39 | Complete | 2026-02-22 |
-| v4.0 Next-Gen Architecture | 39-47 | TBD | 0/38 | In progress | - |
+| v4.0 Next-Gen Architecture | 39-47 | TBD | 3/38 | In progress | - |
 
 **Total:** 38 phases + 9 new = 47 phases, 248+ plans, 188/189 + 38 requirements across 5 milestones
 
