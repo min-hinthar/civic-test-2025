@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 39 of 47 (Next.js 16 Upgrade and Tooling)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-02-23 -- Roadmap created for v4.0 (9 phases, 38 requirements)
+Plan: 1 of 4 in current phase
+Status: Executing
+Last activity: 2026-02-23 -- Completed 39-01 (non-Next.js dependency upgrades)
 
-Progress: [..........] 0%
+Progress: [#.........] 3%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 0
-- Total execution time: N/A (new milestone)
+- v4.0 plans completed: 1
+- Total execution time: 12min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 39 | 1/4 | 12min | 12min |
 
 **Recent Trend:**
-- New milestone, no data yet
+- 39-01: 12min (dependency upgrade, 1 task)
 
 *Updated after each plan completion*
 
@@ -45,6 +45,8 @@ Recent decisions affecting current work:
 - v4.0: Migrate all routes in one phase (mixed Pages/App Router causes hard navigations destroying state)
 - v4.0: Accept enter-only page transitions (App Router does not support AnimatePresence exit animations)
 - v4.0: English-only mnemonics initially (Burmese mnemonics need native speaker - BRMSE-01)
+- 39-01: Keep tailwindcss at v3 (v4 requires architectural rewrite), eslint at v9, @types/node at v22
+- 39-01: Upgrade TypeScript 5.8->5.9, all other non-Next deps to latest
 
 ### Pending Todos
 
@@ -59,5 +61,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Roadmap created for v4.0 milestone (9 phases, 38 requirements mapped)
+Stopped at: Completed 39-01-PLAN.md
 Resume file: None

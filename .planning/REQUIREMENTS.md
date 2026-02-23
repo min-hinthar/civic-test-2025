@@ -9,7 +9,7 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 
 ### Migration
 
-- [ ] **MIGR-01**: App builds and runs on Next.js 16 with Turbopack/webpack compatibility
+- [x] **MIGR-01**: App builds and runs on Next.js 16 with Turbopack/webpack compatibility
 - [ ] **MIGR-02**: `middleware.ts` renamed to `proxy.ts` with updated export
 - [ ] **MIGR-03**: Sentry reconfigured for App Router (`instrumentation.ts`, `global-error.tsx`)
 - [ ] **MIGR-04**: App Router root layout with Server Component shell and ClientProviders wrapper
@@ -98,7 +98,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MIGR-01 | Phase 39 | Pending |
+| MIGR-01 | Phase 39 | Complete |
 | MIGR-02 | Phase 39 | Pending |
 | MIGR-03 | Phase 39 | Pending |
 | MIGR-04 | Phase 40 | Pending |
