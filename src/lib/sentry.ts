@@ -56,6 +56,27 @@ export function beforeSendHandler(event: ErrorEvent, _hint: EventHint): ErrorEve
   // Error fingerprinting: group high-volume error categories under single issues
   // -------------------------------------------------------------------------
   const errorValue = event.exception?.values?.[0]?.value ?? '';
+
+  // --- Next.js 16 noise filters ---
+
+  // Hydration mismatch noise — group under single issue
+  if (/hydration|Minified React error #(418|419|422|423|425)/i.test(errorValue)) {
+    event.fingerprint = ['hydration-mismatch'];
+  }
+
+  // Chunk load failures (common with Turbopack cache invalidation)
+  if (
+    /ChunkLoadError|Loading chunk|Failed to fetch dynamically imported module/i.test(errorValue)
+  ) {
+    event.fingerprint = ['chunk-load-failure'];
+  }
+
+  // Cancel errors from navigation during async operations — drop entirely
+  if (/AbortError|The operation was aborted|signal is aborted/i.test(errorValue)) {
+    return null;
+  }
+
+  // --- App-specific fingerprinting ---
   if (/network|fetch|ECONNREFUSED|ERR_INTERNET_DISCONNECTED/i.test(errorValue)) {
     event.fingerprint = ['network-error'];
   } else if (/IndexedDB|QuotaExceeded|IDBDatabase/i.test(errorValue)) {
