@@ -423,10 +423,10 @@ html.theme-transitioning .page-shell {
 
   .glass-light {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
-    -webkit-backdrop-filter: blur(
-      var(--glass-light-blur)
-    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+    /* stylelint-disable property-no-vendor-prefix, declaration-empty-line-before -- Safari requires -webkit- prefix for backdrop-filter */
+    -webkit-backdrop-filter: blur(var(--glass-light-blur));
     backdrop-filter: blur(var(--glass-light-blur));
+    /* stylelint-enable property-no-vendor-prefix, declaration-empty-line-before */
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
     box-shadow:
@@ -439,10 +439,10 @@ html.theme-transitioning .page-shell {
 
   .glass-medium {
     background: hsl(var(--color-surface) / var(--glass-medium-opacity));
-    -webkit-backdrop-filter: blur(
-      var(--glass-medium-blur)
-    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+    /* stylelint-disable property-no-vendor-prefix, declaration-empty-line-before -- Safari requires -webkit- prefix for backdrop-filter */
+    -webkit-backdrop-filter: blur(var(--glass-medium-blur));
     backdrop-filter: blur(var(--glass-medium-blur));
+    /* stylelint-enable property-no-vendor-prefix, declaration-empty-line-before */
     border: 1px solid hsl(var(--color-border) / 0.35);
     border-radius: var(--radius-2xl);
     box-shadow:
@@ -455,10 +455,10 @@ html.theme-transitioning .page-shell {
 
   .glass-heavy {
     background: hsl(var(--color-surface) / var(--glass-heavy-opacity));
-    -webkit-backdrop-filter: blur(
-      var(--glass-heavy-blur)
-    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+    /* stylelint-disable property-no-vendor-prefix, declaration-empty-line-before -- Safari requires -webkit- prefix for backdrop-filter */
+    -webkit-backdrop-filter: blur(var(--glass-heavy-blur));
     backdrop-filter: blur(var(--glass-heavy-blur));
+    /* stylelint-enable property-no-vendor-prefix, declaration-empty-line-before */
     border: 1px solid hsl(var(--color-border) / 0.4);
     border-radius: var(--radius-2xl);
     box-shadow:
@@ -531,10 +531,10 @@ html.theme-transitioning .page-shell {
   /* Backward compatibility alias: .glass-card -> .glass-light equivalent */
   .glass-card {
     background: hsl(var(--color-surface) / var(--glass-light-opacity));
-    -webkit-backdrop-filter: blur(
-      var(--glass-light-blur)
-    ); /* stylelint-disable-line property-no-vendor-prefix -- Safari */
+    /* stylelint-disable property-no-vendor-prefix, declaration-empty-line-before -- Safari requires -webkit- prefix for backdrop-filter */
+    -webkit-backdrop-filter: blur(var(--glass-light-blur));
     backdrop-filter: blur(var(--glass-light-blur));
+    /* stylelint-enable property-no-vendor-prefix, declaration-empty-line-before */
     border: 1px solid hsl(var(--color-border) / 0.3);
     border-radius: var(--radius-2xl);
     padding: 1.25rem;
