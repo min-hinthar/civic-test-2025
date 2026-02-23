@@ -1,440 +1,612 @@
-# Domain Pitfalls: UX Polish & Animation Refactor
+# Domain Pitfalls: Next.js 16 App Router Migration, Readiness Scoring & Content Enrichment
 
-**Domain:** Adding celebration animations, gesture systems, screen transitions, and visual consistency to an existing 66K LOC React 19 PWA with motion/react, glass-morphism, 3D CSS transforms, and bilingual content.
-**Researched:** 2026-02-19
-**Confidence:** HIGH (based on codebase analysis + verified external sources + project-specific known issues from 3 prior milestones)
+**Domain:** Migrating a mature 70K LOC SPA from Next.js 15 Pages Router + react-router-dom to Next.js 16 App Router with file-based routing, adding intelligent study features (readiness scoring, study plans), content enrichment, and performance optimization.
+**Researched:** 2026-02-23
+**Confidence:** HIGH (based on official Next.js 16 docs, Sentry/Serwist official guides, codebase analysis of 300+ source files, and verified community reports)
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, major regressions, or user-facing breakage.
+Mistakes that cause rewrites, broken builds, data loss, or extended downtime.
 
 ---
 
-### Pitfall 1: GPU Layer Explosion from will-change and backdrop-filter Stacking
+### Pitfall 1: Turbopack Default Breaks Build Due to Webpack Plugin Chain
 
-**What goes wrong:** Adding `will-change: transform` to many animated elements while the app already uses `backdrop-filter` on every glass card creates an explosion of GPU composite layers. Each layer consumes VRAM. On mobile devices with 1-2GB RAM, this causes the browser to evict layers constantly, producing worse jank than no hardware acceleration at all. Concrete example: 10 glass cards with prismatic borders + `will-change` on list items = ~40+ composite layers on a single screen.
+**What goes wrong:** Next.js 16 makes Turbopack the default bundler. The current `next.config.mjs` chains three webpack plugins: `@serwist/next` (PWA), `@sentry/nextjs` (error tracking), and `@next/bundle-analyzer`. Turbopack does NOT support webpack plugins. Running `next build` without the `--webpack` flag will fail immediately with a build error about unsupported webpack configuration.
 
-**Why it happens:** Developers add `will-change` as a "performance fix" without realizing the app already promotes dozens of layers through `backdrop-filter` (each `glass-light`, `glass-medium`, `glass-heavy` element creates its own composite layer). The prismatic-border `::before` pseudo-elements with `animation: prismatic-rotate 4s linear infinite` also create layers. This compounds multiplicatively.
+**Why it happens:** Next.js 16 silently switches the default bundler. Developers upgrade the Next.js version, run `npm run build`, and get an opaque error about webpack config being found. The `withSentryConfig(analyzer(withSerwist(nextConfig)))` chain in `next.config.mjs` is entirely webpack-plugin-based.
 
-**Consequences:** App crashes on low-end Android devices. Memory usage spikes 50-200MB per screen. Scrolling becomes a slideshow. Battery drain accelerates dramatically.
+**Consequences:**
+- Build fails in CI/CD, blocking all deployments
+- Sentry source map upload stops working
+- PWA service worker generation breaks
+- Bundle analyzer unavailable
 
 **Prevention:**
-- Audit composite layer count using Chrome DevTools > Layers panel before and after animation changes. Set a budget: max 20 composite layers per visible screen.
-- Never add `will-change` in CSS stylesheets permanently. Only toggle it on via JS immediately before animation starts, remove it after animation completes.
-- Reduce `backdrop-filter` usage on scroll-heavy lists. Use `glass-light` only on hero/header elements, not list items. Use opaque backgrounds for repeated items.
-- Consider pausing prismatic-border animation on off-screen elements using IntersectionObserver.
+1. Add `--webpack` flag to the build script immediately when upgrading: `"build": "next build --webpack"`
+2. Track Serwist Turbopack compatibility (currently a known blocker -- Serwist relies on webpack for SW generation)
+3. Sentry SDK v10.26+ auto-detects Turbopack and adjusts, but verify source map upload still works
+4. Plan Turbopack migration as a separate future task after all three plugins have Turbopack equivalents
+5. Keep the `--webpack` flag until Serwist officially supports Turbopack
 
-**Detection:** Chrome DevTools > Performance tab > enable "Advanced rendering" > check "Composited layers". If layer count exceeds 30 on any screen, investigate.
+**Detection:** Build fails with "A webpack configuration was found" error. Test build immediately after upgrading Next.js.
 
-**Confidence:** HIGH -- corroborated by Smashing Magazine GPU animation guide, MDN will-change docs, and the existing codebase already having 6+ glass tiers with backdrop-filter.
+**Phase:** Must address in the very first phase (Next.js 16 upgrade), before any routing migration.
+
+**Confidence:** HIGH -- verified from official Next.js 16 upgrade docs and Serwist GitHub issues.
+
+**Sources:**
+- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16)
+- [Sentry Turbopack Support Blog](https://blog.sentry.io/turbopack-support-next-js-sdk/)
 
 ---
 
-### Pitfall 2: Confetti setInterval Leak on Navigation
+### Pitfall 2: middleware.ts Renamed to proxy.ts in Next.js 16
 
-**What goes wrong:** The existing `Confetti` component's "celebration" intensity uses `setInterval` with a 3-second duration. If the user navigates away mid-celebration (via hash routing or browser back), the interval continues firing after unmount. The `refAnimationInstance.current` may become null (canvas removed from DOM), but the interval keeps calling it. This causes either silent errors or DOMExceptions.
+**What goes wrong:** Next.js 16 deprecates the `middleware` filename and renames it to `proxy`. The existing `middleware.ts` that handles CSP header injection may stop working or produce deprecation warnings. The named export `middleware` is also deprecated -- it should be renamed to `proxy`. Configuration flags like `skipMiddlewareUrlNormalize` become `skipProxyUrlNormalize`.
 
-**Why it happens:** The `useEffect` that triggers `fireConfetti()` does not return a cleanup function that clears the interval. The interval is created inside `fireConfetti()` which is a callback, not tracked by the effect lifecycle. React's cleanup only runs for effects, not for intervals started inside callbacks invoked by effects.
+**Why it happens:** Next.js 16 redefines the network boundary concept. The `middleware` function was running at the edge, but `proxy` runs on Node.js runtime. If the CSP middleware relied on any edge-specific APIs, it will break.
 
-**Consequences:** Memory leak (interval holds reference to component closure). Console errors on navigation. On repeated celebrations without navigation (e.g., rapid badge earning), multiple intervals stack up creating a particle storm.
+**Consequences:**
+- CSP headers stop being applied to responses
+- Security regression: pages served without Content-Security-Policy
+- Google One Tap OAuth may break (depends on CSP script-src)
+- Inline theme script in `_document.tsx` blocked without CSP hash
 
 **Prevention:**
-- Store interval ID in a ref and clear it in the `useEffect` cleanup: `return () => { if (intervalRef.current) clearInterval(intervalRef.current); }`
-- Use `AbortController` or a `cancelled` flag pattern for the celebration loop instead of raw setInterval.
-- Add a safety cleanup in the Confetti component's unmount effect that resets the canvas confetti instance.
-- Test navigation during active celebrations as part of QA.
+1. Rename `middleware.ts` to `proxy.ts` as part of the upgrade
+2. Rename the export from `middleware` to `proxy`
+3. The `proxy` runtime is `nodejs` (not edge) -- verify CSP generation still works
+4. Test CSP headers in production preview before deploying
+5. The existing `config.matcher` pattern should transfer directly
 
-**Detection:** Navigate away during a "celebration" intensity confetti burst. Check browser console for errors. Use Chrome DevTools > Memory > Heap snapshot to verify no detached DOM trees from old confetti canvases.
+**Detection:** Check response headers in browser DevTools after upgrade. CSP header missing = broken.
 
-**Confidence:** HIGH -- verified by reading the existing `Confetti.tsx` source code. The interval at line 90 has no cleanup path, and the `useEffect` at line 123 has no cleanup return. This is a known pattern from the canvas-confetti GitHub issue #184.
+**Phase:** Must address in the Next.js 16 upgrade phase, alongside the Turbopack fix.
+
+**Confidence:** HIGH -- directly from official Next.js 16 upgrade documentation.
 
 ---
 
-### Pitfall 3: AnimatePresence + React 19 Strict Mode Double-Mount Breaking Exit Animations
+### Pitfall 3: Navigating Between Pages Router and App Router Causes Hard Navigation
 
-**What goes wrong:** React 19 Strict Mode double-invokes effects during development, which causes motion/react's `AnimatePresence` to lose track of which children are exiting. Exit animations either don't play at all, or components fail to unmount (they stay in DOM as invisible zombies consuming memory and event listeners).
+**What goes wrong:** During incremental migration, routes served by the `pages/` directory and routes served by the `app/` directory are treated as separate applications. Navigation between them triggers a full page reload (hard navigation), not a smooth client-side transition. Users see a white flash, all React state is lost, all Context providers re-initialize, and `localStorage`/`IndexedDB` connections may briefly disconnect.
 
-**Why it happens:** motion/react tracks component presence internally. When React 19 Strict Mode mounts-unmounts-remounts a component, the library's internal tracking gets confused about whether a component is entering or exiting. This is documented in motion/react issue #2668.
+**Why it happens:** The Pages Router and App Router have incompatible router internals. `next/link` prefetching does not work across router boundaries. The `BrowserRouter` from react-router-dom only exists in Pages Router context and has no awareness of App Router routes.
 
-**Consequences:** Exiting pages don't animate out. Stale components remain in the DOM. State from previous routes bleeds through. The `PageTransition` component (already using `AnimatePresence mode="wait"`) is the most affected since it wraps all route changes.
+**Consequences:**
+- Users see jarring full-page reloads during the migration period
+- Auth state (Supabase session) flashes as loading
+- SRS deck re-initializes from IndexedDB on every cross-router navigation
+- TTS engine resets (Chrome 15s workaround timers lost)
+- Navigation lock state lost (user could leave mid-test)
+- Celebration overlay and toast state lost
+- The 12-provider hierarchy (`ErrorBoundary -> LanguageProvider -> ... -> NavigationShell`) completely remounts
 
 **Prevention:**
-- Ensure motion/react is at v12.33+ (project currently has `^12.33.0`, verify it resolves to latest).
-- If exit animations break in dev, do NOT disable Strict Mode as a workaround -- instead verify behavior in production build (`npm run build && npm run start`).
-- For new `AnimatePresence` usage, always use unique `key` props that are stable identifiers (not array indices). The existing `PageTransition` correctly uses `location.pathname` as key.
-- Avoid wrapping `AnimatePresence` children in React Fragments -- the library needs direct keyed children.
+1. Do NOT incrementally migrate individual routes. Migrate ALL routes in a single phase by moving the entire SPA into a single App Router layout with `'use client'` wrapper
+2. The current architecture is a catch-all `pages/[[...slug]].tsx` that delegates to `AppShell.tsx` which uses `BrowserRouter`. Replace this with `app/[[...slug]]/page.tsx` that delegates to the same `AppShell.tsx` first, THEN gradually decompose individual routes
+3. During the transition, keep all routes under one router boundary -- never split between pages/ and app/ simultaneously
+4. Test navigation between all 15+ routes after migration to verify no hard navigations
 
-**Detection:** In development mode, navigate between routes rapidly. If the previous page content flashes or lingers, this is the bug. Test in production build to confirm it's a dev-only issue.
+**Detection:** Watch browser DevTools Network tab -- full document requests instead of JSON/RSC payloads indicate hard navigation.
 
-**Confidence:** HIGH -- confirmed by GitHub issue #2668 and the existing codebase already using React 19.2 with Strict Mode.
+**Phase:** This dictates the entire migration strategy. Must be planned in the routing migration phase.
+
+**Confidence:** HIGH -- confirmed by official Next.js documentation: "When navigating between routes served by the different Next.js routers, there will be a hard navigation."
+
+**Sources:**
+- [Next.js App Router Migration Guide](https://nextjs.org/docs/app/guides/migrating/app-router-migration)
+- [Vercel: Optimizing Hard Navigations](https://vercel.com/guides/optimizing-hard-navigations)
 
 ---
 
-### Pitfall 4: Motion inline transform Overriding CSS Positioning (Already Hit, Will Recur)
+### Pitfall 4: CSP Strategy Must Change from Hash-Based to Nonce-Based
 
-**What goes wrong:** motion/react's `motion.div` applies inline `transform` styles that override CSS `transform` rules. This breaks CSS centering (`translateX(-50%)`), tooltip positioning, absolute positioning that relies on CSS transforms, and any element combining motion animation with CSS-based layout transforms.
+**What goes wrong:** The current CSP uses hash-based allowlisting (`sha256-...`) because Pages Router on Vercel cannot forward nonce headers from middleware to `_document.tsx`. App Router eliminates `_document.tsx` entirely -- the root `layout.tsx` is a Server Component that CAN read the `x-nonce` header via `headers()`. This means the hash-based workaround is no longer needed, but switching to nonce-based CSP requires careful coordination.
 
-**Why it happens:** When motion/react animates `x`, `y`, `scale`, or `rotate`, it sets an inline `style.transform` that completely replaces (not merges with) any CSS transform. A `motion.div` with `animate={{ scale: 1.05 }}` on an element that uses `transform: translateX(-50%)` for centering loses the centering.
+**Why it happens:** The inline theme script in `_document.tsx` (which prevents FOUC by applying dark/light class before hydration) has a hardcoded SHA-256 hash in middleware. In App Router, this script moves to `app/layout.tsx`. If the script changes even by one character (whitespace, formatting), the hash breaks and the script is blocked by CSP.
 
-**Consequences:** Elements jump to wrong positions. Centered modals/tooltips snap to the left edge. Flip cards break their 3D positioning. This was already encountered in the project (documented in MEMORY.md).
+**Consequences:**
+- Theme FOUC (Flash of Unstyled Content) if inline script blocked
+- White flash on every page load in dark mode
+- Google accounts script blocked if CSP not updated
+- Sentry reporting endpoint blocked if CSP connect-src not updated
+- `wasm-unsafe-eval` needed for some dependencies may break
 
 **Prevention:**
-- Never combine motion animation props (`animate`, `whileHover`, `whileTap`) with CSS `transform` for layout positioning on the same element.
-- Use flexbox/grid for centering instead of `transform: translate(-50%, -50%)`.
-- For elements needing both motion animation AND CSS transforms, use a wrapper pattern: outer div handles CSS positioning, inner `motion.div` handles animation.
-- The existing `Flashcard3D.tsx` already uses this pattern correctly (perspective container wraps motion inner).
-- Audit all `motion.div` elements that also have Tailwind `translate-*`, `-translate-*`, `scale-*` classes.
+1. Phase the CSP migration carefully: first move to App Router with the SAME hash-based CSP
+2. Then switch to nonce-based CSP in a separate step using the App Router's `headers()` API
+3. With nonces, generate in proxy.ts (formerly middleware), pass via `x-nonce` header, read in `layout.tsx`
+4. Add `'strict-dynamic'` to script-src so scripts loaded by nonced scripts are automatically trusted
+5. Test ALL functionality after CSP changes: Google OAuth, Sentry, TTS, service worker, push notifications
 
-**Detection:** Search codebase for `motion.` elements that also have `translate`, `rotate`, or `scale` in their `className` or `style` props. Each is a potential conflict point.
+**Detection:** Browser console shows CSP violation errors. Check "Issues" tab in Chrome DevTools.
 
-**Confidence:** HIGH -- this is a documented project pitfall from prior milestones and is an inherent design characteristic of motion/react.
+**Phase:** CSP migration should be its own dedicated sub-phase AFTER routing migration is stable.
+
+**Confidence:** HIGH -- verified from official Next.js CSP documentation and project's known CSP constraint documented in CLAUDE.md.
+
+**Sources:**
+- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy)
+- [GitHub Issue: CSP nonces only work with App Router](https://github.com/vercel/next.js/issues/61694)
 
 ---
 
-### Pitfall 5: Gesture Drag Conflicts with Native Scroll on Mobile
+### Pitfall 5: 12-Provider Hierarchy Must Become a Client Component Wrapper
 
-**What goes wrong:** Adding drag gestures (swipe-to-dismiss, drag-to-reorder, horizontal carousels) conflicts with the browser's native scroll behavior. Users try to scroll vertically and accidentally trigger horizontal drag animations, or try to drag cards and the page scrolls instead.
+**What goes wrong:** The current `AppShell.tsx` nests 12 React Context providers that all require client-side state (`useState`, `useEffect`, `useContext`). In App Router, `layout.tsx` is a Server Component by default. You CANNOT use `createContext`, `useState`, or any hooks in a Server Component. Attempting to nest providers directly in `layout.tsx` causes a build error.
 
-**Why it happens:** Touch events on mobile don't distinguish between scroll intent and drag intent until a threshold is crossed. The browser's passive scroll listener fights with motion/react's drag handler. Without explicit `touch-action` CSS, the browser tries to handle both simultaneously.
+**Why it happens:** Developers try to copy the provider tree from `_app.tsx`/`AppShell.tsx` directly into `app/layout.tsx` without adding `'use client'`. Or they add `'use client'` to `layout.tsx` itself, which defeats the entire purpose of Server Components.
 
-**Consequences:** Frustrating UX where scrolling feels "sticky" or "fighting". Users accidentally swipe cards when trying to scroll. On iOS Safari, the rubber-band overscroll effect interferes with drag gestures near the top/bottom of the page.
+**Consequences:**
+- Build fails if providers used in Server Component
+- If `layout.tsx` is marked `'use client'`, the entire app becomes a Client Component tree (no SSR benefits, no Server Component optimization, larger bundle)
+- Provider ordering bugs if hierarchy is rearranged during migration
 
 **Prevention:**
-- Always set `touch-action: pan-y` on horizontally draggable elements and `touch-action: pan-x` on vertically draggable elements. The existing `SwipeableCard` correctly uses `touch-none` (via Tailwind class) since it needs full drag control.
-- For new draggable components, use motion's `drag` constraint props (`dragConstraints`, `dragElastic`, `dragDirectionLock`) to disambiguate direction.
-- Set `overscroll-behavior: contain` on scrollable containers that contain draggable children to prevent pull-to-refresh interference.
-- Test on actual iOS Safari (not just Chrome DevTools mobile emulation) -- Safari has unique gesture recognition behavior.
+1. Create a separate `app/providers.tsx` with `'use client'` directive that wraps all 12 providers
+2. Import `Providers` into `app/layout.tsx` (which stays as Server Component) and wrap `{children}`
+3. Preserve the exact nesting order: `ErrorBoundary -> LanguageProvider -> ThemeProvider -> TTSProvider -> ToastProvider -> OfflineProvider -> AuthProvider -> SocialProvider -> SRSProvider -> StateProvider -> NavigationProvider -> NavigationShell`
+4. The constraint "OfflineProvider must be inside ToastProvider" must be maintained
+5. Keep `layout.tsx` as a Server Component -- only the providers wrapper is a Client Component
 
-**Detection:** Test every draggable element on a real phone (or BrowserStack). Try scrolling through a list that contains draggable items. If the page scrolls instead of the element dragging (or vice versa), the `touch-action` is wrong.
+**Detection:** Build error about hooks in Server Component, or massive bundle size increase if layout becomes client component.
 
-**Confidence:** HIGH -- motion/react docs explicitly state: "For pan gestures to work correctly with touch input, the element needs touch scrolling to be disabled on either x/y or both axis with the touch-action CSS rule." The existing SwipeableCard already handles this correctly; the risk is in NEW gesture components not following the same pattern.
+**Phase:** Must address in the routing migration phase.
+
+**Confidence:** HIGH -- this is a universally documented pattern. Vercel's own blog confirms the providers-as-children pattern.
+
+**Sources:**
+- [Vercel Blog: Common Mistakes](https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them)
+- [Next.js: Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components)
 
 ---
 
-### Pitfall 6: backdrop-filter Inside preserve-3d Flattens 3D (Already Hit, Will Recur)
+### Pitfall 6: react-router-dom Hook Replacement Touches Every Route Component
 
-**What goes wrong:** Adding glass-morphism effects (`backdrop-filter: blur()`) to elements that are children of a `transform-style: preserve-3d` container silently collapses the 3D context. Flip cards become flat crossfades. Depth effects vanish.
+**What goes wrong:** The codebase uses `useNavigate`, `useLocation`, `useParams`, `Navigate`, `Routes`, `Route`, `BrowserRouter`, and `useSearchParams` from react-router-dom across 15+ page components, `ProtectedRoute`, `NavigationProvider`, `NavigationShell`, `PageTransition`, and `RedirectWithLoading`. Each must be replaced with Next.js equivalents (`useRouter` from `next/navigation`, `usePathname`, `useSearchParams`, `redirect`, `Link`, file-based routes).
 
-**Why it happens:** The CSS spec states that certain properties (including `backdrop-filter`, `opacity < 1`, `overflow: hidden`, `isolation: isolate`) force the browser to flatten the 3D rendering context. Safari is strictest about this, Chrome somewhat more forgiving but inconsistent.
+**Why it happens:** The migration surface is large because react-router-dom is deeply integrated. The ProtectedRoute component uses `useLocation` for redirect state. The NavigationShell uses `useLocation` for active tab highlighting. `PageTransition` wraps `Routes` for animation. The `historyGuard.ts` patches `pushState`/`replaceState` for Safari compatibility.
 
-**Consequences:** 3D card flips stop working on mobile Safari. Cards appear to crossfade instead of rotating. The visual quality regression is subtle enough to miss in desktop Chrome testing but obvious on iOS.
+**Consequences:**
+- If any component still imports from `react-router-dom` after migration, it crashes (no `BrowserRouter` context)
+- `useRouter` from `next/navigation` has a different API than both `react-router-dom` and `next/router` (no `pathname`, no `query`, separate `usePathname`/`useSearchParams` hooks)
+- Navigation state passing (e.g., `Navigate to="/auth" state={{ from: location.pathname }}`) works differently in Next.js
+- `location.hash` reading (used for hash-based sub-routing in HubPage) needs a custom solution
 
 **Prevention:**
-- The existing `Flashcard3D.tsx` deliberately avoids `glass-light`/`prismatic-border` on card faces (documented in code comments at line 221-223). This pattern MUST be maintained.
-- Create an ESLint rule or code review checklist: "No `backdrop-filter`, `glass-*`, `prismatic-border`, `isolation: isolate`, or `overflow: hidden` on children of `preserve-3d` containers."
-- When adding new celebration overlays or effects to cards, verify they don't inject backdrop-filter into the 3D context.
-- Test all 3D components on Safari (desktop and iOS) after any CSS changes.
+1. Create an inventory of every file importing from `react-router-dom` before starting: `grep -r "from 'react-router-dom'" src/`
+2. Create adapter hooks (`useAppRouter`, `useAppPathname`) that wrap Next.js navigation hooks -- allows gradual migration
+3. Replace `<Navigate to="/auth" state={{ from: pathname }} replace />` with `redirect('/auth')` in Server Components or `router.replace('/auth')` in Client Components
+4. For navigation state passing, use URL search params instead of React Router's `location.state`
+5. The `historyGuard.ts` Safari workaround may no longer be needed (verify) since App Router manages history differently
 
-**Detection:** Open the app on iOS Safari. Navigate to any 3D flip card. If the flip looks like a crossfade instead of a 3D rotation, a child has broken the 3D context.
+**Detection:** Runtime errors about missing Router context. TypeScript errors about missing imports.
 
-**Confidence:** HIGH -- documented project pitfall from prior milestones, verified in both the MEMORY.md and the Flashcard3D.tsx code comments.
+**Phase:** Core routing migration phase. This is the largest single task.
+
+**Confidence:** HIGH -- confirmed by examining `AppShell.tsx` which shows all 15+ routes and the routing integration points.
+
+---
+
+### Pitfall 7: Page Transition Animations Break With App Router
+
+**What goes wrong:** The current `PageTransition` component wraps react-router-dom's `Routes` component with `AnimatePresence` from `motion/react` for enter/exit animations on route changes. In App Router, page components unmount and remount during navigation before AnimatePresence can run exit animations. Exit animations simply do not work with the standard App Router approach.
+
+**Why it happens:** The App Router's component lifecycle differs from react-router-dom. Next.js App Router immediately unmounts the old page component on navigation, giving AnimatePresence no opportunity to animate it out. This is a known, unresolved architectural limitation documented in Next.js GitHub issue #49279.
+
+**Consequences:**
+- Exit animations disappear (pages just vanish instead of fading/sliding out)
+- Enter animations may flicker or double-play
+- The "FrozenRouter" workaround (using Next.js internals `LayoutRouterContext`) is fragile and breaks on version updates
+- Users experience a regression from the polished transitions they currently have
+
+**Prevention:**
+1. Accept that exit animations are an unsolved problem in App Router as of 2026
+2. Use `template.tsx` instead of `layout.tsx` for enter-only animations (template re-renders on every navigation)
+3. Consider React 19.2's new `ViewTransition` API (available in Next.js 16) as the replacement for AnimatePresence page transitions
+4. For critical animations (celebration overlays, modal exits), keep them within the same page rather than across route transitions
+5. Do NOT use the FrozenRouter hack -- it depends on unstable Next.js internals
+
+**Detection:** Compare before/after by recording page transitions. Exit animations missing = expected limitation.
+
+**Phase:** Address during routing migration. May need to accept partial regression and iterate.
+
+**Confidence:** HIGH -- confirmed by Next.js GitHub discussion #42658 (2000+ comments, still open) and multiple community reports.
+
+**Sources:**
+- [Next.js Discussion #42658: Animate route transitions in app directory](https://github.com/vercel/next.js/discussions/42658)
+- [Next.js Issue #49279: Framer Motion shared layout animations](https://github.com/vercel/next.js/issues/49279)
 
 ---
 
 ## Moderate Pitfalls
 
-Issues that cause noticeable quality regressions or require targeted fixes.
+Issues that cause bugs, delays, or significant rework but are recoverable.
 
 ---
 
-### Pitfall 7: Staggered Animation on Long Lists Causing Initial Render Delay
+### Pitfall 8: next/head Removed -- Metadata API Differences
 
-**What goes wrong:** Applying `StaggeredList` with spring animations to lists of 20+ items means the last item doesn't appear until 20 * 60ms = 1.2 seconds after navigation. Users see a mostly-empty screen during this time. For the 128-question study guide, the delay would be 7.68 seconds.
+**What goes wrong:** The current `AppShell.tsx` uses `import Head from 'next/head'` to set page title and meta description. In App Router, `next/head` is replaced by the `Metadata` export API or `generateMetadata` function. But these only work in Server Components -- not in Client Components.
 
-**Why it happens:** Each item waits for the previous item's stagger delay before beginning its animation. Spring physics add overshoot time. The animation looks great for 5-8 items but becomes absurdly slow for long lists.
+**Why it happens:** Since the entire app is currently a Client Component tree (loaded via `dynamic(() => import('../src/AppShell'), { ssr: false })`), there is no Server Component to export metadata from. Developers try to use `next/head` inside a `'use client'` component and it either silently fails or produces hydration warnings.
 
 **Prevention:**
-- Cap stagger to first 8-10 items. Items beyond the cap should render immediately at full opacity.
-- Use a "viewport stagger" pattern: only stagger items as they enter the viewport via IntersectionObserver, not all at once.
-- For long lists (>15 items), skip stagger entirely and use a single fade-in for the container.
-- The existing `StaggeredList` has a `stagger` prop -- provide a computed value that decreases with list length: `stagger={Math.max(20, 60 - items.length * 2)}`.
+1. Export `metadata` from `app/layout.tsx` (Server Component) for static metadata
+2. For per-page dynamic titles, use `generateMetadata` in each `page.tsx` Server Component wrapper
+3. For client-side dynamic title changes (e.g., "Test - Question 5/20"), use `document.title` directly or a lightweight `<title>` element approach
+4. Remove all `import Head from 'next/head'` during migration
 
-**Detection:** Navigate to any screen with 15+ list items. If the last item takes more than 800ms to appear, the stagger is too aggressive.
+**Detection:** Page title shows "undefined" or default Next.js title. Meta tags missing from view-source.
 
-**Confidence:** HIGH -- basic math on the existing stagger config (STAGGER_DEFAULT = 60ms).
+**Phase:** Routing migration phase.
+
+**Confidence:** HIGH -- standard App Router migration step documented officially.
 
 ---
 
-### Pitfall 8: Spring Animation Overshoot Causing Layout Shifts (CLS)
+### Pitfall 9: Sentry App Router Requires instrumentation-client.ts and global-error.tsx
 
-**What goes wrong:** Spring animations with low damping (like `SPRING_BOUNCY` with damping: 15) cause elements to overshoot their target position. A card animating from `scale: 0.9` to `scale: 1` temporarily reaches `scale: 1.06` during overshoot. If this element isn't `position: absolute` or using `transform`, the overshoot pushes surrounding content, causing Cumulative Layout Shift (CLS) that hurts Core Web Vitals.
+**What goes wrong:** The current Sentry setup uses `sentry.server.config.ts`, `sentry.edge.config.ts`, and `instrumentation.ts`. App Router additionally requires `instrumentation-client.ts` for client-side initialization and `app/global-error.tsx` for catching errors in the App Router boundary. Without `global-error.tsx`, App Router errors may not be captured by Sentry.
 
-**Why it happens:** Spring physics inherently overshoot when damping ratio < 1 (underdamped). The `SPRING_BOUNCY` config has mass 0.8 and damping 15, which creates visible overshoot. This is intentional for the "playful" feel but problematic when the animated element is in document flow.
-
-**Consequences:** Content below an animating element "jumps" during the overshoot phase. Text reflows. Buttons shift position, causing mis-taps on mobile. CLS score degrades.
+**Why it happens:** Pages Router captures client errors through the `ErrorBoundary` in `_app.tsx`. App Router has a different error boundary architecture -- `global-error.tsx` replaces the root error boundary, and `error.tsx` files in route segments handle granular errors. The existing `ErrorBoundary` component still works for Client Component errors but misses Server Component errors.
 
 **Prevention:**
-- Only use spring scale/size animations on elements that are `position: absolute/fixed` or use `transform` (which doesn't affect layout).
-- For elements in document flow, use `SPRING_SNAPPY` (damping: 25) or `SPRING_GENTLE` (damping: 20) which have less overshoot.
-- For list items, animate `opacity` and `transform` only -- never `height`, `width`, `margin`, or `padding` with springs.
-- Reserve `SPRING_BOUNCY` for isolated hero elements (badges, celebration icons) that are positioned absolutely.
+1. Create `app/global-error.tsx` that wraps errors with `Sentry.captureException()`
+2. Create `instrumentation-client.ts` (rename/move current client Sentry init)
+3. Keep existing `instrumentation.ts` and `sentry.server.config.ts` -- they transfer directly
+4. Add `error.tsx` files in route segments for granular error handling
+5. Verify `withSentryConfig` in `next.config.mjs` still works with `--webpack` flag
+6. Test that source maps upload correctly after migration
 
-**Detection:** Run Lighthouse on key pages. If CLS > 0.1, investigate which animations contribute by disabling them one at a time.
+**Detection:** Sentry dashboard stops receiving client-side errors. Check "Events" count after deployment.
 
-**Confidence:** HIGH -- the spring configs are defined in the codebase at `motion-config.ts`, and the physics are deterministic.
+**Phase:** Infrastructure/tooling phase, immediately after Next.js 16 upgrade.
+
+**Confidence:** HIGH -- verified from official Sentry Next.js manual setup documentation.
+
+**Sources:**
+- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/)
 
 ---
 
-### Pitfall 9: Reduced Motion Users Getting Broken UX Instead of Simplified UX
+### Pitfall 10: Service Worker Path Changes for App Router
 
-**What goes wrong:** When a developer checks `shouldReduceMotion` and returns `null` or an empty fragment for a celebration, the user misses the entire interaction. They earned a badge but see nothing. They completed a streak but get no feedback. The reduced-motion experience becomes a degraded experience rather than an alternative experience.
+**What goes wrong:** The current Serwist configuration uses `swSrc: 'src/lib/pwa/sw.ts'` and `swDest: 'public/sw.js'`. For App Router, the recommended source is `app/sw.ts`. The manifest should move from `public/manifest.json` to `app/manifest.json` (or stay in public -- both work, but app/ enables dynamic manifests). More critically, App Router's different routing means the service worker's navigation handler must be updated to cache App Router's RSC payloads, not just HTML pages.
 
-**Why it happens:** Treating `prefers-reduced-motion` as "disable everything" rather than "provide alternative feedback." The existing `Confetti` component correctly returns null for reduced-motion, but the `BadgeCelebration` dialog should still appear (just without the confetti/spring-scale entrance).
-
-**Consequences:** ~5% of users (35% of adults 40+ report vestibular issues, and this is a bilingual civics app likely used by older adults) miss critical feedback. They don't know they earned badges, hit streaks, or completed milestones.
+**Why it happens:** The service worker was configured to pre-cache Pages Router assets (HTML pages, `_next/static` chunks). App Router uses a different asset structure (RSC payloads, flight data). The offline fallback page (`/offline.html`) must also be compatible with App Router's rendering.
 
 **Prevention:**
-- For celebrations: keep the informational content (dialog, text, badge icon) but remove the motion (no confetti, no spring bounce, no scale animation). Use simple fade-in with `duration: 0.15`.
-- For transitions: use instant cut instead of slide/scale.
-- For ongoing animations (shimmer, pulse, flame): use static states with distinct visual styling (e.g., a solid glow instead of animated shimmer).
-- Audit every `shouldReduceMotion` check: if the reduced-motion path returns `null`, ask "Does the user still get the information they need?"
-- The existing code mostly handles this well (StreakReward, XPPopup, PageTransition all have reduced-motion variants). Maintain this pattern in new code.
+1. Keep `swSrc` in its current location initially -- Serwist does not strictly require `app/sw.ts`
+2. Update `additionalPrecacheEntries` if the offline page structure changes
+3. Test offline behavior thoroughly after migration -- navigate to each route while offline
+4. The SW registration mechanism may need to change from Pages Router's automatic registration to a manual `useEffect`-based registration in a Client Component
+5. Verify `@serwist/next` works with the `--webpack` build flag
 
-**Detection:** Enable "Reduce motion" in OS accessibility settings. Walk through the entire app flow. If any screen feels like information is missing compared to the full-motion version, fix it.
+**Detection:** Service worker fails to register. PWA install prompt stops appearing. Offline pages show generic browser error.
 
-**Confidence:** HIGH -- verified by code review of existing reduced-motion handling and web.dev accessibility guidelines.
+**Phase:** PWA/service worker phase, after routing migration is stable.
+
+**Confidence:** MEDIUM -- Serwist App Router docs are less detailed than Pages Router docs. Verified that file paths differ.
+
+**Sources:**
+- [Serwist Next.js Getting Started](https://serwist.pages.dev/docs/next/getting-started)
 
 ---
 
-### Pitfall 10: React Compiler ESLint Rules Blocking Animation Patterns
+### Pitfall 11: ProtectedRoute Pattern Must Change to Middleware/Server-Side Auth
 
-**What goes wrong:** The React Compiler's ESLint rules (`set-state-in-effect`, `refs`) reject common animation patterns. Using `useRef` to track animation state (is animating, previous value) triggers `refs` rule violations when read during render. Using `setState` in animation callbacks that run inside effects triggers `set-state-in-effect` violations.
+**What goes wrong:** The current `ProtectedRoute` component uses react-router-dom's `useLocation` and `Navigate` to redirect unauthenticated users to `/auth`. In App Router, the recommended pattern is middleware-based auth checking (redirect before the page renders) or Server Component auth checking. Simply wrapping each page in a Client Component `ProtectedRoute` still works but misses the security and performance benefits of server-side auth.
 
-**Why it happens:** The React Compiler assumes patterns that read refs during render or set state in effects are bugs. For most React code, they are. But animation code legitimately needs to:
-- Read a ref to check "is this animation currently running" during render (to conditionally render)
-- Set state in animation completion callbacks (which may be called from within effects)
-- Track previous values for animation direction calculation
-
-**Consequences:** Lint errors block commits (pre-commit hook runs lint-staged). Developers either suppress the rule (unsafe) or restructure code in ways that break animation timing.
+**Why it happens:** Client-side auth guards show a loading spinner, then redirect. The user briefly sees the protected page skeleton before being redirected. Server-side auth in middleware/layout never sends the protected HTML to unauthorized users.
 
 **Prevention:**
-- Use the "adjust state when props change" pattern (setState during render, not in effect) for tracking previous values. The existing `PageTransition.tsx` demonstrates this at lines 69-72 with `prevPath` tracking.
-- For animation-complete callbacks, ensure the setState is inside an event handler or promise chain (`.then(() => setState(...))`), not directly in the effect body. The `SwipeableCard` does this correctly.
-- Use `useState(() => initialValue)` lazy init instead of `useRef(initialValue)` for render-time values.
-- For genuinely needed ref reads during render (rare), use the escape hatch of extracting to a custom hook with an eslint-disable comment, documented with rationale.
+1. For the initial migration, keep `ProtectedRoute` as a Client Component wrapper (functional parity)
+2. As a follow-up optimization, add auth checking in the `proxy.ts` (middleware) to redirect before rendering
+3. Use Supabase's `@supabase/ssr` package for server-side session validation if needed
+4. The current approach (client-side redirect) is not a security risk for this app since all data access is protected by Supabase RLS anyway
 
-**Detection:** Run `npm run lint` after every animation component change. If `set-state-in-effect` or `refs` errors appear, restructure using the patterns above rather than suppressing.
+**Detection:** Protected pages flash loading spinner before redirect. Compare with middleware approach showing instant redirect.
 
-**Confidence:** HIGH -- documented in project MEMORY.md and verified against React official docs for the eslint rules.
+**Phase:** Can be deferred to optimization phase. Current pattern works in App Router.
+
+**Confidence:** HIGH -- well-documented pattern difference between client and server auth.
+
+**Sources:**
+- [Next.js Authentication Guide](https://nextjs.org/docs/app/guides/authentication)
 
 ---
 
-### Pitfall 11: Prismatic Border Animation Running on Every Element Even Off-Screen
+### Pitfall 12: Readiness Score Giving False Confidence
 
-**What goes wrong:** The `prismatic-rotate` CSS animation runs continuously at 4-second intervals on every element with `prismatic-border` class, even when the element is scrolled off-screen. On a page with 20+ glass cards (each with prismatic border), this means 20+ perpetual CSS animations ticking in the background.
+**What goes wrong:** A readiness score that combines accuracy, SRS progress, and category coverage can make users feel ready when they are not. The USCIS civics test requires answering 6/10 questions correctly from a random selection of all 128 questions. A user who has 90% accuracy on easy categories but has never studied hard categories could get a high readiness score and fail the actual test.
 
-**Why it happens:** CSS animations don't pause when elements leave the viewport by default. The `glass-light`, `glass-medium`, and `glass-heavy` classes all apply `prismatic-border`, and these are used extensively throughout the app (nav, cards, containers, modals).
+**Why it happens:** Simple weighted averages over-represent categories the user has studied most. Category completion percentage (80% of questions seen) does not indicate mastery of those questions. SRS review count does not mean the user can recall under pressure. Accuracy on practice mode (unlimited time, see correct answer) does not correlate with accuracy in the actual 10-question oral interview format.
 
-**Consequences:** Constant GPU work repainting gradient rotations. Battery drain on mobile. Frame budget consumed by off-screen animations, leaving less time for on-screen interactive animations.
+**Consequences:**
+- Users study less than needed because the app says they are "85% ready"
+- Users fail the actual USCIS test and blame the app
+- Breaks the core value proposition: "confidently prepare for and pass the test"
 
 **Prevention:**
-- Use `content-visibility: auto` on list items and off-screen sections to let the browser skip rendering entirely.
-- Apply `animation-play-state: paused` via IntersectionObserver for off-screen prismatic borders.
-- Consider limiting prismatic borders to interactive/hero elements only. For list items, use a static border or no border.
-- The reduced-motion media query already pauses the animation (`animation: none; --prismatic-angle: 45deg;`), which is correct.
-- Consider using `@media (prefers-reduced-data: reduce)` to also disable the animation for data-saver users.
+1. Weight the readiness score by USCIS question selection probability (all 128 questions are equally likely)
+2. Penalize categories with zero or low coverage heavily -- an unstudied category is a 0%, not "unknown"
+3. Use FSRS retrievability (R) as the memory strength signal, not just review count
+4. Distinguish between "seen" and "mastered" -- a question answered correctly once 3 weeks ago has low retrievability
+5. Factor in mock test performance (closest proxy to real test) more heavily than practice/flashcard performance
+6. Show a breakdown: "Ready in 5/7 categories, weak in: American Government, Geography" rather than a single number
+7. Never show 100% readiness -- always leave room for "keep reviewing"
 
-**Detection:** Open Chrome DevTools > Performance > Record while scrolling a long list of glass cards. If "Animation Frame Fired" events show continuous activity for off-screen elements, this is the issue.
+**Detection:** Compare readiness score predictions with actual mock test results. Large discrepancies = bad algorithm.
 
-**Confidence:** MEDIUM -- based on code review of `prismatic-border.css` and the widespread use of `glass-*` + `prismatic-border` class combination. Actual performance impact depends on how many elements use the class simultaneously.
+**Phase:** Readiness scoring feature phase.
+
+**Confidence:** MEDIUM -- based on test prep app design principles and FSRS algorithm understanding. No single authoritative source.
 
 ---
 
-### Pitfall 12: Myanmar Font Loading Causes Layout Shift on Bilingual Text
+### Pitfall 13: Study Plan Rigidity Leading to User Abandonment
 
-**What goes wrong:** Noto Sans Myanmar loads asynchronously from Google Fonts. Until it loads, the browser renders Myanmar text in a fallback font with different metrics (line height, character width). When the Myanmar font arrives, text reflashes (FOUT) and elements shift position.
+**What goes wrong:** A study plan that generates a fixed schedule ("Study 15 questions per day for 8 days") breaks when the user misses a day. The plan shows "behind schedule" which creates anxiety (the opposite of the app's "anxiety-reducing" design goal). Users who fall behind stop using the app entirely.
 
-**Why it happens:** The app loads the font via `@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap')` in `globals.css`. The `display=swap` strategy shows fallback text immediately, then swaps when the real font loads. Myanmar script in a Latin fallback font has dramatically different metrics.
+**Why it happens:** Date-based scheduling assumes perfect adherence. Real users study irregularly -- some days 5 minutes, some days 45 minutes, some days nothing. Fixed schedules also ignore that FSRS already handles spacing -- the SRS deck already tells the user what to review.
 
-**Consequences:** Cards resize when font loads. Flashcard content jumps. CLS score degrades. On slow connections, users see a flash of incorrectly-rendered Myanmar text.
+**Consequences:**
+- Users feel guilt/anxiety when behind schedule
+- Contradicts the app's warm, supportive tone
+- Creates a parallel scheduling system that conflicts with FSRS-based SRS reviews
+- If the test date is too soon, the plan may show "impossible" which is demoralizing
 
 **Prevention:**
-- Use `@fontsource/noto-sans-myanmar` (already in dependencies!) instead of Google Fonts CDN. Self-hosting eliminates the network dependency and allows font to be included in the service worker cache.
-- Verify that the `@fontsource` import is actually used (check if the CDN import in globals.css is the actual source or if fontsource is also loaded).
-- Add `font-display: optional` for Myanmar font to prevent FOUT entirely on slow connections (accept invisible text briefly instead of shifting text).
-- Set explicit `min-height` on containers that will contain Myanmar text to absorb the layout shift.
-- Preload the Myanmar font: `<link rel="preload" href="/fonts/noto-sans-myanmar-*.woff2" as="font" type="font/woff2" crossorigin>`.
+1. Make the study plan adaptive, not fixed -- recalculate daily based on current state
+2. Frame it positively: "Today's focus: 10 new questions + 5 reviews" not "You're 3 days behind"
+3. Never show "you can't make it" -- instead show "Focus on high-priority categories"
+4. The study plan should complement FSRS, not replace it: "FSRS says review these 8 cards" + "Plan suggests learning 5 new questions from American Government"
+5. Allow the plan to exist without a test date -- some users study without a scheduled interview
+6. Celebrate partial completion: "Great, you reviewed 8 of your 12 due cards today!"
 
-**Detection:** Throttle network to "Slow 3G" in DevTools. Navigate to a bilingual page. Watch for text jumping when the Myanmar font loads.
+**Detection:** User engagement drops after implementing study plans. Users disable the feature.
 
-**Confidence:** MEDIUM -- the `@fontsource/noto-sans-myanmar` dependency exists in package.json but globals.css still imports from Google Fonts CDN, suggesting possible dual-loading or the fontsource import may not be in use. Needs verification.
+**Phase:** Study plan feature phase.
+
+**Confidence:** MEDIUM -- based on education app design patterns and user psychology research.
 
 ---
 
-### Pitfall 13: Service Worker Caching Stale Animation CSS/JS
+### Pitfall 14: Mnemonics and Memory Aids That Confuse Instead of Help
 
-**What goes wrong:** After deploying animation changes, users on the PWA continue seeing old animations because the service worker serves cached CSS/JS. The `@serwist/next` service worker uses precaching, which should handle versioned assets, but runtime-cached resources (Google Fonts CSS, external libraries loaded via CDN) can become stale.
+**What goes wrong:** Auto-generated or hastily written mnemonics for civics questions can be culturally inappropriate, linguistically confusing for Burmese speakers, or factually misleading. A mnemonic like "BIG = Bill of Rights, Independence, George" means nothing to a Burmese speaker who does not share English-language cultural references.
 
-**Why it happens:** Service workers have their own lifecycle separate from deployments. Even with proper precaching, the service worker only updates when the browser detects a byte-level change in the service worker file itself. If animation changes are in CSS custom properties or Tailwind utility classes (which get compiled into the same CSS chunk), the cache key may not change.
+**Why it happens:** Mnemonics that work for native English speakers rely on English wordplay, cultural references, and alphabetic patterns. Burmese is a tonal language with a completely different script and phonetic system. A mnemonic must work in BOTH languages or be language-specific.
 
-**Consequences:** Users see a mismatch between new component markup and old CSS (broken layouts, missing animations, wrong spring values). Users must force-refresh or clear site data.
+**Consequences:**
+- Burmese users learn incorrect associations
+- Mnemonics add confusion rather than clarity
+- Content bloat without educational value
+- Users lose trust in the app's content quality
 
 **Prevention:**
-- Ensure `@serwist/next` is configured with `reloadOnOnline: true` and proper cache versioning.
-- Use `skipWaiting()` and `clientsClaim()` in the service worker to activate immediately.
-- For major visual changes, bump the service worker version and implement an "Update available" banner prompting refresh.
-- Test animation changes in an incognito window (no service worker) AND a regular window (with service worker) to verify both paths work.
+1. Create mnemonics for ENGLISH mode only initially -- Burmese mnemonics require native speaker input (known constraint BRMSE-01)
+2. Focus mnemonics on commonly confused questions (e.g., "Who was the first President?" vs "Who is the Father of Our Country?" -- both George Washington)
+3. Use visual/structural mnemonics rather than wordplay: "13 stripes = 13 colonies" not clever acronyms
+4. Flag all mnemonics as "memory aid" not "fact" -- clearly separate from the authoritative answer
+5. Allow users to hide mnemonics if they find them distracting
+6. Prioritize explanations with historical context over clever mnemonics -- more universally useful
 
-**Detection:** Deploy a visual change. Open the PWA on a device that last loaded it before the change. If the old visuals persist, the cache is stale.
+**Detection:** User feedback. A/B test with and without mnemonics if possible.
 
-**Confidence:** MEDIUM -- the project uses `@serwist/next` which handles precaching well, but any deviation from the standard Next.js build output (custom CSS imports, external fonts) could bypass the precaching manifest.
+**Phase:** Content enrichment phase.
+
+**Confidence:** MEDIUM -- based on bilingual education content design principles.
+
+---
+
+### Pitfall 15: Bundle Size Regression During Migration
+
+**What goes wrong:** Moving from a single-catch-all SPA to App Router file-based routing can initially INCREASE bundle size rather than decrease it. Each route's `page.tsx` becomes a separate Server Component file, but if each one imports a `'use client'` wrapper that pulls in the entire provider tree + all page components, the client bundle may grow because Next.js creates duplicate client chunks per route.
+
+**Why it happens:** In the current SPA, webpack tree-shakes effectively because everything is one bundle entry point. In App Router, each route is a separate entry point. If the client component boundary is too high (e.g., the entire `Providers` wrapper), each route's client chunk includes the full provider initialization code. If motion/react, recharts, ts-fsrs, and other large libraries are imported in shared providers, they appear in every route's chunk.
+
+**Consequences:**
+- First Load JS increases instead of decreasing
+- Slower Time to Interactive on mobile
+- Service worker pre-cache list grows (more individual chunks to cache)
+- Defeats the stated goal of "bundle optimization"
+
+**Prevention:**
+1. Use `@next/bundle-analyzer` to compare before/after bundle sizes at each migration step
+2. Move large libraries to dynamic imports: `const Recharts = dynamic(() => import('recharts'))` for the Hub/Charts page only
+3. Split the provider tree: auth-only providers in a thin wrapper, feature providers (SRS, Social, TTS) loaded on-demand
+4. Use `next/dynamic` with `{ ssr: false }` for heavy client-only components (DotLottie, Confetti, Recharts)
+5. Set a bundle size budget and check it in CI
+6. Use `experimental.optimizePackageImports` (already configured for lucide-react) for more packages
+
+**Detection:** Run `ANALYZE=true npm run build` before and after migration. Compare chunk sizes.
+
+**Phase:** Performance optimization phase, but monitor throughout migration.
+
+**Confidence:** HIGH -- bundle size regression during App Router migration is widely reported.
 
 ---
 
 ## Minor Pitfalls
 
-Issues that cause subtle quality issues or developer friction.
+Issues that cause friction, developer confusion, or minor bugs.
 
 ---
 
-### Pitfall 14: WAAPI 2-Keyframe Limitation Breaking Multi-Step Animations
+### Pitfall 16: useRouter Import Confusion (Three Different useRouters)
 
-**What goes wrong:** The Web Animations API (used internally by motion/react for hardware acceleration) only supports 2-keyframe arrays in some contexts. Attempting to define multi-step animations like `scale: [0.85, 1.08, 1]` directly throws an error.
-
-**Why it happens:** WAAPI's `element.animate()` has constraints on composite keyframe arrays that differ from CSS `@keyframes`. motion/react falls back to JS-driven animation when WAAPI can't handle the keyframes, but developers may assume all array-syntax keyframes work identically.
-
-**Prevention:** Use spring physics for bounce effects instead of explicit multi-step keyframes. `SPRING_BOUNCY` naturally overshoots to ~1.08 before settling at 1.0, achieving the same effect with better performance.
-
-**Confidence:** HIGH -- documented in project MEMORY.md as a known issue.
-
----
-
-### Pitfall 15: AnimatePresence mode="wait" Blocking Rapid Navigation
-
-**What goes wrong:** `AnimatePresence mode="wait"` prevents the new page from entering until the old page's exit animation completes. If exit animations take 150ms+ (the current exit transition in PageTransition is 150ms tween), rapid tab switching feels sluggish because users must wait for each exit before seeing the next page.
-
-**Why it happens:** `mode="wait"` is synchronous: exit must complete before enter starts. This is correct for preventing two pages from overlapping but creates a perceived delay on fast navigation.
+**What goes wrong:** During migration, three different `useRouter` hooks exist: `react-router-dom`'s `useNavigate`/`useLocation`, `next/router`'s `useRouter` (Pages Router), and `next/navigation`'s `useRouter` (App Router). Importing the wrong one causes silent failures or runtime errors.
 
 **Prevention:**
-- Keep exit animation duration under 100ms for page transitions.
-- Consider `mode="popLayout"` for tab-style navigation where overlap is acceptable.
-- For the bottom tab bar, consider skipping exit animations entirely and using only enter animations.
-- The current 150ms exit tween is borderline -- test by rapidly switching between all 5 main tabs.
+1. Use ESLint `no-restricted-imports` to ban `react-router-dom` and `next/router` imports after migration
+2. Create a migration checklist of every file using router hooks
+3. Use `next/compat/router` during the transition period if components must work in both routers
+4. TypeScript will catch most wrong imports, but the API differences between `router.push('/path')` (Next.js) and `navigate('/path')` (react-router-dom) may not type-error
 
-**Confidence:** MEDIUM -- based on reading `PageTransition.tsx` exit transition config. Subjective feel depends on user testing.
-
----
-
-### Pitfall 16: z-index Wars Between Celebrations, Modals, Navigation, and Toast
-
-**What goes wrong:** Multiple overlay systems compete for visual stacking: Confetti (z-100), navigation (glass-heavy with z-index), Radix Dialog (portal-based), toast notifications, and new celebration effects. Adding more celebration animations without a z-index system causes overlays to appear behind navigation or confetti to appear behind modals.
-
-**Why it happens:** Each component defines its own z-index independently. The Confetti component uses `zIndex: 100`, Radix Dialog uses a portal (which puts it at the end of the DOM, naturally on top), and navigation uses Tailwind z-utilities.
-
-**Prevention:**
-- Define a z-index scale in design tokens: `--z-base: 0`, `--z-sticky: 10`, `--z-nav: 20`, `--z-modal: 30`, `--z-toast: 40`, `--z-celebration: 50`, `--z-confetti: 60`.
-- Audit all z-index values across the codebase before adding new celebration layers.
-- Celebrations should be ABOVE modals but BELOW system-critical UI (toast errors, offline indicators).
-
-**Confidence:** MEDIUM -- the current z-index usage is manageable but will become a problem as more overlay animations are added.
+**Phase:** Routing migration phase.
 
 ---
 
-### Pitfall 17: Spring Physics Inconsistency Across Components
+### Pitfall 17: _document.tsx Theme Script Must Move to layout.tsx
 
-**What goes wrong:** Different developers (or different AI sessions) create animation components with ad-hoc spring configs instead of using the centralized `motion-config.ts` presets. The result is an inconsistent feel: one card bounces heavily while a similar card nearby has a stiff transition.
-
-**Why it happens:** It's faster to write `transition={{ type: 'spring', stiffness: 300, damping: 20 }}` inline than to import from `motion-config.ts`. The existing codebase already has some inline spring configs (e.g., `BadgeCelebration` uses stiffness: 400, damping: 17 instead of `SPRING_BOUNCY` which is stiffness: 400, damping: 15).
+**What goes wrong:** The current `_document.tsx` includes a blocking inline `<script>` that reads `localStorage` for the theme preference and applies it before React hydrates, preventing FOUC. This script uses `dangerouslySetInnerHTML`. In App Router, `_document.tsx` does not exist -- its contents move to `app/layout.tsx`.
 
 **Prevention:**
-- Expand `motion-config.ts` with additional presets for specific use cases: `SPRING_CELEBRATION` (high bounce for badges), `SPRING_FLIP` (the existing Flashcard3D config), `SPRING_DRAG_SNAPBACK` (the SwipeableCard snap-back config).
-- Add an ESLint rule or code review guideline: "Spring config objects must be imported from motion-config.ts, not defined inline."
-- Document which spring preset to use for each interaction type.
+1. Move the theme script to `app/layout.tsx` using `<script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />`
+2. This works in Server Components because it is a static HTML element, not a React hook
+3. Update the CSP hash if ANY whitespace or formatting in the script changes
+4. The viewport meta tag, PWA manifest link, apple-touch-icon, and theme-color meta also move to layout.tsx (or use the Metadata API)
+5. Font imports (`@fontsource/noto-sans-myanmar`) move to layout.tsx's CSS import
 
-**Confidence:** MEDIUM -- based on code review showing 3-4 different inline spring configs across components.
+**Phase:** Routing migration phase, specifically the layout.tsx creation step.
 
 ---
 
-### Pitfall 18: Fixed-Position Confetti Canvas Blocking Touch Events on iOS
+### Pitfall 18: Async Request APIs in Next.js 16
 
-**What goes wrong:** The Confetti component renders a `position: fixed; width: 100%; height: 100%` canvas covering the entire viewport. Although it has `pointer-events: none`, some iOS Safari versions inconsistently respect this on canvas elements, especially during active touch sequences.
-
-**Why it happens:** iOS Safari has a history of quirks with `pointer-events: none` on large overlay elements, particularly when touch events are already in progress (mid-drag, mid-scroll).
+**What goes wrong:** Next.js 16 removes synchronous access to `cookies()`, `headers()`, `params`, and `searchParams`. All must be `await`ed. Code that reads `searchParams.get('tab')` synchronously will fail.
 
 **Prevention:**
-- Add explicit touch event handlers that call `preventDefault()` and `stopPropagation()` on the confetti wrapper to prevent iOS from capturing touch sequences.
-- Alternatively, only render the confetti canvas during the celebration window (mount it on fire=true, unmount after animation completes) rather than keeping it in the DOM permanently.
-- Test confetti during active card dragging to verify no interaction conflict.
+1. All Server Components that read params or searchParams must be `async` functions
+2. Use `const { slug } = await props.params` pattern
+3. This primarily affects new App Router code, not migrated Client Components (which use `useSearchParams` hook instead)
+4. Run `npx next typegen` to generate type helpers for `PageProps`, `LayoutProps`
 
-**Confidence:** LOW -- this is a known iOS Safari quirk but may not manifest in the current implementation. Test on actual iOS devices to verify.
+**Phase:** Routing migration phase, when creating new page.tsx files.
+
+**Confidence:** HIGH -- breaking change in Next.js 16, documented in upgrade guide.
 
 ---
 
-### Pitfall 19: Bundle Size Creep from Animation Dependencies
+### Pitfall 19: OneDrive Webpack Cache Corruption During Migration
 
-**What goes wrong:** motion/react already contributes ~34kb minified+gzipped to the bundle. Adding more animation libraries (lottie, rive, gsap, react-spring alongside motion) for specialized effects bloats the bundle past the performance budget for a PWA that must work on slow connections.
-
-**Why it happens:** Each celebration type seems to want a different tool. Confetti uses `canvas-confetti` (4.5kb). Particle effects might suggest `tsparticles` (50kb+). Lottie animations suggest `lottie-web` (65kb+). These add up fast.
+**What goes wrong:** The project runs on OneDrive-synced directory. During the migration, frequent build changes cause webpack cache corruption: OneDrive locks `.next/cache/webpack/*.pack` files during sync, causing EPERM errors and cascading build failures.
 
 **Prevention:**
-- Stick with motion/react + canvas-confetti for all animation needs. Both are already in the dependency tree.
-- Use CSS `@keyframes` for simple looping animations (shimmer, pulse, breathing) instead of motion/react components -- the codebase already does this well in `animations.css`.
-- If Lottie/Rive is absolutely needed, use dynamic `import()` and only load the runtime when the celebration triggers, not at app startup.
-- Use `LazyMotion` with `domAnimation` features (4.6kb initial) instead of the full `motion` component (34kb) for pages that only need basic animations.
-- Monitor bundle size with the existing `@next/bundle-analyzer` dev dependency after every phase.
+1. Run `rm -rf .next` before major build steps during migration
+2. Consider adding `.next/` to OneDrive's selective sync exclusion
+3. Next.js 16 separates dev and build output directories (`.next/dev` vs `.next/`) which may reduce conflicts
+4. Use `experimental.turbopackFileSystemCacheForDev: true` to get persistent dev caching with Turbopack (but only if using Turbopack for dev)
 
-**Confidence:** HIGH -- bundle sizes verified via Bundlephobia. The project already has `@next/bundle-analyzer` in devDependencies for monitoring.
+**Detection:** EPERM errors, missing `.nft.json` files, build-manifest.json errors.
+
+**Phase:** Ongoing throughout migration.
+
+**Confidence:** HIGH -- documented in project memory from prior milestones.
 
 ---
 
-### Pitfall 20: Haptic Feedback and Sound Effects Not Synchronized with Animations
+### Pitfall 20: FSRS Retrievability Misused as Binary Readiness
 
-**What goes wrong:** Adding haptic feedback (vibration API) or sound effects (like the existing `playStreak()`) to celebrations without proper timing makes them feel disconnected. The sound plays at the start of the animation, but the visual climax (confetti burst, badge appear) happens 300ms later due to spring ramp-up.
-
-**Why it happens:** Sound and haptics trigger immediately on the JS call, while spring animations take time to reach their peak. The gap between trigger and visual peak creates a disconnect.
+**What goes wrong:** FSRS provides a retrievability value R (probability of recall, 0-1) for each card. Developers may treat R > 0.9 as "mastered" and R < 0.9 as "not mastered". But R decays over time -- a card with R = 0.95 today might be R = 0.70 next week. A readiness score computed today may not reflect readiness on the actual test date.
 
 **Prevention:**
-- Trigger sound/haptics at the animation's peak, not at the start. Use motion/react's `onAnimationComplete` or a timed delay matching the spring's time-to-peak.
-- For `SPRING_BOUNCY` (stiffness: 400, damping: 15, mass: 0.8), the overshoot peak occurs at approximately 120-150ms. Schedule haptics to fire at that offset.
-- Use `requestAnimationFrame` for sound triggers to ensure they fire on a frame boundary.
-- The existing `StreakReward` plays sound in a `useEffect` on mount -- this is close enough for a simple case but will feel off for elaborate multi-stage celebrations.
+1. When computing readiness, project each card's R forward to the test date, not today
+2. Use FSRS's stability (S) value to determine if the card will likely still be remembered on test day
+3. For cards never reviewed, assume R = 0 (not "unknown")
+4. The ts-fsrs library provides `forgetting_curve(elapsed_days, stability)` to project future R values
+5. Recalculate readiness daily as R values change
 
-**Confidence:** LOW -- this is a polish concern that becomes noticeable only when the app reaches high-fidelity celebration sequences. Not a current issue but will matter as celebrations become more elaborate.
+**Detection:** Readiness score shows 90% but mock test scores show 60%.
+
+**Phase:** Readiness scoring feature phase.
+
+**Confidence:** MEDIUM -- based on FSRS algorithm documentation. The ts-fsrs API needs verification.
+
+**Sources:**
+- [FSRS Algorithm Explanation](https://expertium.github.io/Algorithm.html)
+- [FSRS GitHub Wiki](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm)
+
+---
+
+### Pitfall 21: Dynamic Import Circular Dependencies After Route Decomposition
+
+**What goes wrong:** When decomposing the monolithic `AppShell.tsx` into individual `app/[route]/page.tsx` files, circular dependencies can emerge. For example, `NavigationShell` imports route configs that import page components that import NavigationShell's types. Webpack resolves these gracefully in most cases, but dynamic imports + circular deps = runtime `undefined` imports.
+
+**Prevention:**
+1. Keep route configuration (nav items, route paths) in a separate constants file with zero component imports
+2. Use TypeScript `import type` for type-only imports to break circular chains
+3. Run `npx madge --circular src/` to detect circular dependencies before and after migration
+4. Page components should never import navigation components -- navigation wraps pages via layout, not the other way around
+
+**Phase:** Routing migration phase.
+
+---
+
+### Pitfall 22: React Compiler May Conflict with Existing Manual Memoization
+
+**What goes wrong:** Next.js 16 stabilizes the React Compiler option. The project already follows strict React Compiler ESLint rules and uses manual `useMemo`/`useCallback` extensively. Enabling `reactCompiler: true` may cause double-memoization or conflict with the existing `eslint-plugin-react-hooks` compiler rules.
+
+**Prevention:**
+1. Do NOT enable `reactCompiler: true` during the migration -- it adds complexity
+2. If enabling later, remove manual `useMemo`/`useCallback` where the compiler handles memoization automatically
+3. The existing React Compiler ESLint rules (set-state-in-effect, refs, preserve-manual-memoization) remain relevant regardless
+4. Test thoroughly -- the compiler may change re-render behavior that existing code depends on
+
+**Phase:** Optimization phase, if pursued at all. Not required for v4.0.
 
 ---
 
 ## Phase-Specific Warnings
 
-| Phase Topic | Likely Pitfall | Mitigation |
-|---|---|---|
-| Celebration animations (confetti, badges, streaks) | setInterval leak (#2), confetti canvas blocking touch (#18), z-index wars (#16) | Add cleanup to Confetti component first, define z-index scale in tokens |
-| Screen transitions (page transitions, route animations) | AnimatePresence + Strict Mode (#3), mode="wait" blocking fast nav (#15), transform override (#4) | Test in production build, keep exit durations under 100ms |
-| Gesture systems (swipe, drag, pull-to-refresh) | Touch/scroll conflict (#5), React Compiler lint blocking patterns (#10) | Always set touch-action CSS, use "adjust state when props change" pattern |
-| Glass-morphism / visual consistency | GPU layer explosion (#1), backdrop-filter + preserve-3d (#6), prismatic animation battery drain (#11) | Audit layer count, restrict glass to hero elements, pause off-screen animations |
-| Staggered list animations | Long list delay (#7), spring overshoot CLS (#8) | Cap stagger at 8-10 items, use transform-only animations |
-| Reduced motion / accessibility | Broken UX instead of simplified UX (#9) | Audit every shouldReduceMotion check for information parity |
-| Bilingual content + animations | Myanmar font layout shift (#12), text reflow during animation | Self-host font via @fontsource, set container min-heights |
-| Bundle size / PWA performance | Animation library bloat (#19), service worker stale cache (#13) | Monitor with bundle-analyzer, test both SW and non-SW paths |
-| Animation consistency | Spring inconsistency (#17), sound/haptic timing (#20) | Expand motion-config.ts presets, time sound to animation peak |
+| Phase Topic | Likely Pitfall | Severity | Mitigation |
+|-------------|---------------|----------|------------|
+| Next.js 16 upgrade | Turbopack default breaks build (Pitfall 1) | CRITICAL | Add `--webpack` flag immediately |
+| Next.js 16 upgrade | middleware.ts renamed to proxy.ts (Pitfall 2) | CRITICAL | Rename file + export + config flags |
+| Next.js 16 upgrade | Async Request APIs (Pitfall 18) | MODERATE | Only affects new Server Component code |
+| Routing migration | Hard navigation between routers (Pitfall 3) | CRITICAL | Migrate all routes at once, not incrementally |
+| Routing migration | Provider hierarchy in Server Component (Pitfall 5) | CRITICAL | Separate providers.tsx client component |
+| Routing migration | react-router-dom replacement scope (Pitfall 6) | CRITICAL | Inventory all imports first, use adapter hooks |
+| Routing migration | Page transitions break (Pitfall 7) | MODERATE | Accept regression, use ViewTransition API |
+| Routing migration | next/head removal (Pitfall 8) | MODERATE | Use Metadata API in Server Components |
+| Routing migration | _document.tsx theme script (Pitfall 17) | MODERATE | Move to layout.tsx, update CSP hash |
+| CSP migration | Hash-to-nonce transition (Pitfall 4) | CRITICAL | Phase separately after routing is stable |
+| Sentry migration | Missing instrumentation-client.ts (Pitfall 9) | MODERATE | Create file + global-error.tsx |
+| PWA migration | Service worker path changes (Pitfall 10) | MODERATE | Keep swSrc location, test offline |
+| Auth migration | ProtectedRoute pattern change (Pitfall 11) | LOW | Keep client-side guards initially |
+| Readiness scoring | False confidence from bad algorithm (Pitfall 12) | CRITICAL | Weight by coverage gaps + project R to test date |
+| Readiness scoring | FSRS retrievability misuse (Pitfall 20) | MODERATE | Use forgetting_curve to project future R |
+| Study plans | Rigid scheduling causes abandonment (Pitfall 13) | MODERATE | Adaptive daily recalculation |
+| Content enrichment | Culturally inappropriate mnemonics (Pitfall 14) | MODERATE | English-only mnemonics first |
+| Performance | Bundle size regression (Pitfall 15) | MODERATE | Monitor with bundle analyzer at each step |
+| Build system | OneDrive cache corruption (Pitfall 19) | LOW | rm -rf .next before major builds |
+| Optimization | React Compiler conflicts (Pitfall 22) | LOW | Defer to future milestone |
+
+---
+
+## Recommended Migration Order (Based on Pitfall Dependencies)
+
+The pitfall analysis reveals a clear ordering constraint:
+
+1. **Next.js 16 upgrade** (Pitfalls 1, 2, 18) -- Must happen first. Fix build tooling before changing architecture.
+2. **Sentry reconfiguration** (Pitfall 9) -- Immediately after upgrade so errors are captured during migration.
+3. **Routing migration** (Pitfalls 3, 5, 6, 7, 8, 17, 21) -- The big phase. All routes at once, not incremental.
+4. **CSP migration** (Pitfall 4) -- Only after routing is stable. Separate phase to isolate security changes.
+5. **PWA/service worker** (Pitfall 10) -- After routing works, test offline behavior.
+6. **Readiness scoring & study plans** (Pitfalls 12, 13, 20) -- Independent of migration, can parallel later phases.
+7. **Content enrichment** (Pitfall 14) -- Fully independent, can happen any time.
+8. **Performance optimization** (Pitfalls 15, 22) -- After migration complete, optimize with data.
 
 ---
 
 ## Sources
 
-### Verified with official documentation (HIGH confidence)
-- [Motion performance docs](https://motion.dev/docs/performance) -- GPU-composited properties, WAAPI usage
-- [Motion bundle size reduction](https://motion.dev/docs/react-reduce-bundle-size) -- LazyMotion, m component, sizes
-- [Motion gesture docs](https://motion.dev/docs/react-gestures) -- touch-action requirements for drag
-- [MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change) -- layer creation warnings
-- [MDN backface-visibility](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backface-visibility) -- 3D context flattening
-- [React eslint-plugin-react-hooks set-state-in-effect](https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect) -- Compiler lint rules
-- [web.dev animation performance](https://web.dev/articles/animations-overview) -- composited vs layout-triggering properties
-- [web.dev prefers-reduced-motion](https://web.dev/articles/prefers-reduced-motion) -- accessibility guidance
-- [web.dev CLS optimization](https://web.dev/articles/optimize-cls) -- layout shift from animations
-
-### Community sources and issue trackers (MEDIUM confidence)
-- [motion/react issue #2668: React 19 incompatibility](https://github.com/framer/motion/issues/2668) -- Strict Mode double-mount bug
-- [motion/react issue #2172: layoutId + AnimatePresence unmount](https://github.com/motiondivision/motion/issues/2172) -- Exit animation failures
-- [motion/react issue #625: AnimatePresence memory leak](https://github.com/motiondivision/motion/issues/625) -- Container leave/reenter mid-animation
-- [canvas-confetti issue #184: DOMException on navigation](https://github.com/catdad/canvas-confetti/issues/184) -- Cleanup on unmount
-- [mdn/browser-compat-data issue #25914: backdrop-filter Safari prefix](https://github.com/mdn/browser-compat-data/issues/25914) -- Still needs -webkit-prefix
-- [Smashing Magazine: CSS GPU Animation](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/) -- Layer explosion, memory budgets
-- [Josh W. Comeau: prefers-reduced-motion in React](https://www.joshwcomeau.com/react/prefers-reduced-motion/) -- Accessible animation patterns
-- [Framer Motion vs Motion One comparison](https://reactlibraries.com/blog/framer-motion-vs-motion-one-mobile-animation-performance-in-2025) -- Bundle size and WAAPI considerations
-- [Bundlephobia: framer-motion](https://bundlephobia.com/package/framer-motion) -- Verified bundle sizes
-
-### Project-specific verified findings (HIGH confidence)
-- Codebase analysis: `Confetti.tsx`, `PageTransition.tsx`, `SwipeableCard.tsx`, `Flashcard3D.tsx`, `motion-config.ts`, `globals.css`, `prismatic-border.css`, `animations.css`
-- Project MEMORY.md documented pitfalls from v1.0, v2.0, v2.1 milestones
+- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) -- HIGH confidence
+- [Next.js App Router Migration Guide](https://nextjs.org/docs/app/guides/migrating/app-router-migration) -- HIGH confidence
+- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy) -- HIGH confidence
+- [Vercel Blog: Common Mistakes with App Router](https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them) -- HIGH confidence
+- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) -- HIGH confidence
+- [Sentry Turbopack Support](https://blog.sentry.io/turbopack-support-next-js-sdk/) -- HIGH confidence
+- [Serwist Next.js Docs](https://serwist.pages.dev/docs/next/getting-started) -- MEDIUM confidence
+- [Next.js Discussion #42658: Route Transition Animations](https://github.com/vercel/next.js/discussions/42658) -- HIGH confidence
+- [Next.js Issue #49279: Framer Motion Shared Layout](https://github.com/vercel/next.js/issues/49279) -- HIGH confidence
+- [FSRS Algorithm Explanation](https://expertium.github.io/Algorithm.html) -- MEDIUM confidence
+- [Next.js GitHub Issue #61694: CSP Nonces](https://github.com/vercel/next.js/issues/61694) -- HIGH confidence
+- [Migrating to Next.js 16 Production Guide](https://www.amillionmonkeys.co.uk/blog/migrating-to-nextjs-16-production-guide) -- MEDIUM confidence
+- [Next.js SPA Guide](https://nextjs.org/docs/app/guides/single-page-applications) -- HIGH confidence

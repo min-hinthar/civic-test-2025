@@ -1,739 +1,958 @@
-# Architecture Research: UX Elevation -- Celebration, Gesture, Transition & Consistency Systems
+# Architecture Research: Next.js 16 App Router Migration, Readiness Scoring, Content Enrichment
 
-**Domain:** Bilingual Civics Test Prep PWA -- Duolingo-level UX polish integration
-**Researched:** 2026-02-19
-**Confidence:** HIGH (based on direct codebase analysis of existing animation system, component inventory, provider hierarchy, and motion/react v12.33.0 API surface)
+**Domain:** Bilingual Civics Test Prep PWA -- v4.0 Next-Gen Architecture
+**Researched:** 2026-02-23
+**Confidence:** HIGH (Next.js 16 official docs, Sentry/Serwist official docs, codebase analysis of 300+ source files)
 
 ---
 
 ## Executive Summary
 
-The UX elevation milestone introduces five architectural capabilities: celebration animations, gesture systems, screen transition choreography, visual consistency enforcement, and an About page. The critical insight from codebase analysis is that **the existing architecture already has strong foundations for all five** -- the work is primarily about extracting shared abstractions and filling gaps, not building new infrastructure from scratch.
+The v4.0 milestone has four pillars: (1) Next.js 16 App Router migration replacing react-router-dom, (2) test readiness scoring synthesizing existing progress data, (3) content enrichment with mnemonics and deeper explanations, and (4) performance optimization. The migration is the highest-risk, highest-reward change -- it replaces the entire routing and navigation layer while preserving the offline-first PWA behavior, 12-deep provider hierarchy, and 70K+ LOC of client-side logic.
 
-The codebase already has:
-- **Confetti** (`react-canvas-confetti`) with 3 intensity levels and a `useConfetti` hook
-- **Spring presets** (`SPRING_BOUNCY/SNAPPY/GENTLE`) in `motion-config.ts`
-- **Page transitions** (`PageTransition.tsx`) with direction-aware slide + scale
-- **Gesture handling** (`SwipeableCard.tsx`) with full drag + fling physics
-- **Sound effects** (14 functions in `soundEffects.ts`) via Web Audio API
-- **Reduced motion** (`useReducedMotion`) respected consistently across all animations
+**Critical architectural insight:** This app is fundamentally a client-side SPA that happens to be served by Next.js. The current architecture uses Next.js purely as a shell (`pages/[[...slug]].tsx` -> dynamically imported `AppShell.tsx` with SSR disabled). The migration to App Router does NOT mean converting to server-rendered pages. Instead, it means replacing react-router-dom hash routes with Next.js file-based routes while keeping every page as a Client Component. The App Router's SPA guide explicitly supports this pattern.
 
-What's missing: a **unified celebration orchestrator** that coordinates confetti + sound + haptics + visual feedback as a single API, a **gesture abstraction layer** for reusable swipe/pull-to-refresh patterns beyond the sort mode, **richer transition choreography** with shared element animations and per-route transition variants, a **visual consistency audit** system, and the **About page** itself.
+**What changes:**
+- `pages/` directory -> `app/` directory with file-based routes
+- react-router-dom (`BrowserRouter`, `Routes`, `Route`, `Navigate`, `useNavigate`, `useLocation`) -> Next.js navigation (`next/link`, `useRouter`, `usePathname`, `useSearchParams` from `next/navigation`)
+- `pages/_document.tsx` + `pages/_app.tsx` -> `app/layout.tsx` (root layout)
+- `middleware.ts` -> `proxy.ts` (Next.js 16 rename)
+- CSP hash-based -> CSP nonce-based (App Router supports nonce forwarding that Pages Router could not)
+- `next/head` in components -> `metadata` exports in layouts/pages
 
-**Key architectural principle: Extend, don't replace.** Every new capability must compose with the existing provider hierarchy, design token system, and motion/react patterns already in use.
+**What stays the same:**
+- All 12 context providers (same hierarchy, same logic, same hooks)
+- IndexedDB stores (10 stores, unchanged)
+- Supabase auth + sync (unchanged)
+- Service worker (@serwist/next, relocate sw.ts source)
+- Sentry integration (update config file pattern)
+- All components, hooks, utilities (unchanged internal logic)
+- motion/react animations, Tailwind CSS, design tokens (unchanged)
 
----
-
-## Current Architecture Inventory
-
-### Animation System (As-Built)
-
-```
-src/lib/motion-config.ts          -- Spring presets (BOUNCY, SNAPPY, GENTLE) + stagger timing
-src/hooks/useReducedMotion.ts      -- Wraps motion/react's useReducedMotion
-src/styles/animations.css          -- CSS keyframes (shimmer, pulse-glow, fade-in-up, breathe, flame)
-src/components/animations/
-  PageTransition.tsx               -- Direction-aware slide+scale with AnimatePresence
-  StaggeredList.tsx                -- StaggeredList, StaggeredItem, StaggeredGrid, FadeIn
-src/components/celebrations/
-  Confetti.tsx                     -- 3 intensity levels (sparkle, burst, celebration) + useConfetti hook
-  CountUpScore.tsx                 -- Animated score counter + OdometerNumber
-```
-
-### Gesture System (As-Built)
-
-```
-src/components/sort/SwipeableCard.tsx  -- Full Tinder-style drag with:
-  - useMotionValue + useTransform for drag position
-  - useAnimate for imperative fling/snap-back
-  - Velocity-based commit thresholds
-  - Green/amber overlay zones
-  - Safety timeouts for animation hangs
-  - Reduced motion: button-initiated linear slides
-```
-
-### Sound Effects System (As-Built)
-
-```
-src/lib/audio/soundEffects.ts  -- 14 sound functions:
-  playCorrect, playIncorrect, playLevelUp, playMilestone,
-  playSwoosh, playCountdownTick, playCountdownGo,
-  playSkip, playStreak, playPanelReveal, playCompletionSparkle,
-  playFling, playKnow, playDontKnow, playMasteryComplete,
-  playTimerWarningTick
-  + mute/unmute management via localStorage
-```
-
-### Existing Celebration Surfaces
-
-| Surface | Components | Celebration Type |
-|---------|-----------|-----------------|
-| Test results | `TestResultsScreen` | CountUpScore + Confetti (celebration/burst) + playMilestone/playLevelUp |
-| Mastery milestone | `MasteryMilestone` | Dialog + Confetti (sparkle/burst/celebration) + MasteryBadge |
-| Streak reward | `StreakReward` | Floating badge + playStreak (>=10) |
-| XP popup | `XPPopup` | Float-up "+X XP" text |
-| Correct answer | `FeedbackPanel` | Green flash + playCorrect |
-
-### Provider Hierarchy (AppShell.tsx)
-
-```
-ErrorBoundary
-  LanguageProvider
-    ThemeProvider
-      TTSProvider
-        ToastProvider
-          OfflineProvider
-            AuthProvider
-              SocialProvider
-                SRSProvider
-                  StateProvider
-                    BrowserRouter
-                      NavigationProvider
-                        NavigationShell
-                          PageTransition  <-- animation boundary
-                            Routes (14 routes)
-                        PWAOnboardingFlow
-                        OnboardingTour
-                        GreetingFlow
-                        SyncStatusIndicator
-```
-
-### Design Token Architecture
-
-```
-tokens.css (CSS custom properties)
-  :root   -- primitives (blue, purple, green, amber, red, slate, etc.)
-  :root   -- semantic tokens (surface, text, primary, success, warning, etc.)
-  :root   -- non-color tokens (spacing, radius, shadows, motion, glass, typography)
-  .dark   -- dark theme overrides (semantic tokens only)
-  @media (prefers-contrast: more) -- high contrast adjustments
-
-globals.css
-  glass-light / glass-medium / glass-heavy  -- 3-tier glass-morphism
-  glass-card / glass-panel / glass-nav      -- composable glass utilities
-  chunky-shadow-*                           -- Duolingo-style 3D button shadows
-  prismatic-border.css                      -- Animated rainbow border (conic-gradient)
-```
+**What's new (not migration):**
+- Readiness score engine (pure function consuming existing data)
+- Test date countdown (new UI component + localStorage persistence)
+- Smart weak-area drill (new mode using existing mastery data)
+- Mnemonics/memory aids (new content data per question)
+- Deeper explanations with historical context (content enrichment)
+- Study tips per category (new content data)
+- Bundle optimization (dynamic imports, code splitting)
 
 ---
 
-## Recommended Architecture: New Capabilities
+## Part 1: Next.js 16 App Router Migration Architecture
 
-### 1. Celebration Orchestrator
-
-**Problem:** Celebrations are currently assembled ad-hoc in each component (TestResultsScreen manually fires confetti + sound, MasteryMilestone manually fires confetti + dialog, etc.). There's no single API for "celebrate at intensity X with coordinated audio + visual + haptic feedback."
-
-**Solution: `useCelebration` hook + `CelebrationOverlay` component**
+### 1.1 Current Architecture (Before)
 
 ```
-src/lib/celebrations/
-  celebrationOrchestrator.ts   -- Core orchestration logic
-  haptics.ts                   -- Navigator.vibrate() wrapper with patterns
-  types.ts                     -- CelebrationEvent, CelebrationLevel types
+pages/
+  _app.tsx           -- CSS imports only, passes Component/pageProps through
+  _document.tsx      -- <Html>, <Head> with theme script, viewport, PWA meta
+  _error.tsx         -- Error page
+  [[...slug]].tsx    -- Catch-all: dynamically imports AppShell with ssr:false
+  op-ed.tsx          -- Static page (SSR)
 
-src/hooks/useCelebration.ts    -- Hook: celebrate(level, options?)
-src/components/celebrations/
-  CelebrationOverlay.tsx       -- Portal-mounted overlay (confetti canvas + effects)
-  StarBurst.tsx                -- SVG/canvas star burst effect (lighter than confetti)
-  SuccessCheckmark.tsx         -- Animated checkmark with draw-on effect
+middleware.ts        -- CSP headers with hash-based script allowlisting
+
+src/AppShell.tsx     -- THE app: BrowserRouter -> 12 providers -> NavigationShell -> Routes
+  - Defines all routes via react-router-dom <Route> elements
+  - All pages are Client Components
+  - Hash routing (#/home, #/test, etc.)
+
+src/pages/           -- "Pages" that are actually SPA route components
+  Dashboard.tsx      -- /home
+  TestPage.tsx       -- /test
+  StudyGuidePage.tsx -- /study
+  PracticePage.tsx   -- /practice
+  InterviewPage.tsx  -- /interview
+  HubPage.tsx        -- /hub/*
+  SettingsPage.tsx   -- /settings
+  AuthPage.tsx       -- /auth
+  LandingPage.tsx    -- /
+  ...8 more
 ```
 
-**Architecture:**
+**Key characteristics:**
+- Next.js is just a static shell; ALL routing is client-side
+- react-router-dom v7 with BrowserRouter (hash routing)
+- `useNavigate()`, `useLocation()`, `Navigate` component throughout
+- ProtectedRoute wraps routes requiring auth
+- NavigationShell provides sidebar/bottom nav chrome
+- PageTransition wraps route content for enter/exit animations
+- CelebrationOverlay, PWAOnboardingFlow, OnboardingTour, GreetingFlow sit outside routes
 
-```typescript
-// celebrationOrchestrator.ts
-export type CelebrationLevel = 'micro' | 'small' | 'medium' | 'large' | 'epic';
+### 1.2 Target Architecture (After)
 
-export interface CelebrationConfig {
-  level: CelebrationLevel;
-  sound?: keyof typeof soundMap;     // Maps to soundEffects.ts functions
-  confetti?: 'sparkle' | 'burst' | 'celebration' | false;
-  haptic?: 'light' | 'medium' | 'heavy' | false;
-  visual?: 'checkmark' | 'starburst' | 'glow' | false;
+```
+app/
+  layout.tsx         -- Root layout: <html>, <body>, global CSS, fonts, PWA meta
+                        Metadata export replaces next/head
+                        Wraps children in ClientProviders component
+  page.tsx           -- Landing page (/ route)
+  global-error.tsx   -- Sentry error boundary (App Router convention)
+  not-found.tsx      -- 404 page
+  manifest.json      -- PWA manifest (moved from public/)
+  sw.ts              -- Service worker source (Serwist App Router convention)
+
+  (auth)/
+    auth/page.tsx           -- /auth
+    auth/forgot/page.tsx    -- /auth/forgot
+    auth/update-password/page.tsx -- /auth/update-password
+
+  (public)/
+    op-ed/page.tsx          -- /op-ed
+    about/page.tsx          -- /about
+
+  (protected)/
+    layout.tsx              -- ProtectedLayout: auth guard wrapper
+    home/page.tsx           -- /home (Dashboard)
+    test/page.tsx           -- /test
+    study/page.tsx          -- /study
+    practice/page.tsx       -- /practice
+    interview/page.tsx      -- /interview
+    hub/
+      layout.tsx            -- Hub layout (shared tab bar)
+      page.tsx              -- /hub (redirects to /hub/overview)
+      overview/page.tsx     -- /hub/overview
+      categories/page.tsx   -- /hub/categories
+      history/page.tsx      -- /hub/history
+      achievements/page.tsx -- /hub/achievements
+    settings/page.tsx       -- /settings
+
+proxy.ts             -- CSP with nonce-based allowlisting (renamed from middleware.ts)
+instrumentation.ts   -- Sentry server/edge registration
+instrumentation-client.ts -- Sentry client init
+```
+
+### 1.3 Route Group Strategy
+
+Three route groups organize the `app/` directory without affecting URL paths:
+
+| Group | Purpose | Layout Behavior |
+|-------|---------|-----------------|
+| `(public)` | No auth required, no navigation shell | Minimal layout |
+| `(auth)` | Auth pages (login, reset) | No navigation shell |
+| `(protected)` | All authenticated routes | Auth guard + NavigationShell |
+
+The `(protected)/layout.tsx` replaces the current `ProtectedRoute` component by wrapping all protected children in an auth check. This is a Client Component layout:
+
+```tsx
+// app/(protected)/layout.tsx
+'use client';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { redirect } from 'next/navigation';
+import { NavigationShell } from '@/components/navigation/NavigationShell';
+
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (!user) redirect('/auth');
+
+  return <NavigationShell>{children}</NavigationShell>;
+}
+```
+
+### 1.4 Provider Tree Migration
+
+The 12-provider hierarchy moves from `AppShell.tsx` into a dedicated `ClientProviders` component imported by the root layout:
+
+```tsx
+// app/layout.tsx (Server Component)
+import { ClientProviders } from '@/components/ClientProviders';
+import '@fontsource/noto-sans-myanmar/400.css';
+import '@fontsource/noto-sans-myanmar/500.css';
+import '@fontsource/noto-sans-myanmar/700.css';
+import '@/styles/globals.css';
+
+export const metadata = {
+  title: 'Civic Test Prep - Master Your U.S. Citizenship Test',
+  description: 'Bilingual English-Burmese civic test preparation...',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ClientProviders>{children}</ClientProviders>
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx
+// src/components/ClientProviders.tsx
+'use client';
+
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { TTSProvider } from '@/contexts/TTSContext';
+import { ToastProvider } from '@/components/BilingualToast';
+import { OfflineProvider } from '@/contexts/OfflineContext';
+import { AuthProvider } from '@/contexts/SupabaseAuthContext';
+import { SocialProvider } from '@/contexts/SocialContext';
+import { SRSProvider } from '@/contexts/SRSContext';
+import { StateProvider } from '@/contexts/StateContext';
+import { NavigationProvider } from '@/components/navigation/NavigationProvider';
+import { CelebrationOverlay } from '@/components/celebrations';
+// ... other global overlays
+
+export function ClientProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <ErrorBoundary>
+      <LanguageProvider>
+        <ThemeProvider>
+          <TTSProvider>
+            <ToastProvider>
+              <OfflineProvider>
+                <AuthProvider>
+                  <SocialProvider>
+                    <SRSProvider>
+                      <StateProvider>
+                        <NavigationProvider>
+                          {children}
+                          <CelebrationOverlay />
+                          <PWAOnboardingFlow />
+                          <OnboardingTour />
+                          <SyncStatusIndicator />
+                        </NavigationProvider>
+                      </StateProvider>
+                    </SRSProvider>
+                  </SocialProvider>
+                </AuthProvider>
+              </OfflineProvider>
+            </ToastProvider>
+          </TTSProvider>
+        </ThemeProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
+  );
+}
+```
+
+**Key change:** `<Router>` (BrowserRouter from react-router-dom) is REMOVED. The Next.js App Router handles routing natively. The `NavigationProvider` no longer needs to be inside a `<Router>` -- it switches from `useLocation()` (react-router) to `usePathname()` (next/navigation).
+
+**Provider ordering preserved:** The nesting order constraint (OfflineProvider inside ToastProvider, TTSProvider wrapping TTS consumers, etc.) is maintained exactly.
+
+**GreetingFlow:** Moves to `(protected)/layout.tsx` since it depends on `useAuth()` and only shows for authenticated users.
+
+### 1.5 Navigation Hook Migration Map
+
+Every component using react-router-dom hooks needs updating:
+
+| react-router-dom | next/navigation | Files Affected |
+|------------------|-----------------|----------------|
+| `useNavigate()` | `useRouter().push()` | Dashboard, TestPage, PracticePage, InterviewPage, StudyGuidePage, HubPage, NBAHeroCard, many more |
+| `useLocation()` | `usePathname()` + `useSearchParams()` | ProtectedRoute, NavigationShell, PageTransition, HubPage |
+| `useParams()` | `useParams()` (from next/navigation) | None currently (no dynamic params in use) |
+| `<Navigate to="..." replace />` | `redirect()` or `<Link>` | AppShell redirects, ProtectedRoute |
+| `<Link to="...">` | `<Link href="...">` (next/link) | Any react-router Link usage |
+
+**Estimated scope:** ~40-60 files need `useNavigate` -> `useRouter` changes. Each is mechanical: `navigate('/path')` -> `router.push('/path')`.
+
+**Hash routing elimination:** Current routes use `#/home`, `#/test`, etc. The App Router uses real paths `/home`, `/test`. Since the app already uses path-based routes within react-router (not actual hash fragments for state), the URLs simply lose the `#` prefix. This is transparent to users and improves SEO.
+
+### 1.6 PageTransition and AnimatePresence
+
+The current `PageTransition.tsx` uses react-router-dom's `useLocation()` as the `key` for `AnimatePresence`. In App Router:
+
+```tsx
+// Updated PageTransition.tsx
+'use client';
+import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'motion/react';
+
+export function PageTransition({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+```
+
+**Caveat:** App Router layouts persist across navigations (they don't unmount). The `PageTransition` wrapper should live in the `(protected)/layout.tsx` wrapping `{children}`, or within individual page components if per-page transitions are needed. AnimatePresence with App Router requires the `template.tsx` convention for per-page animation boundaries.
+
+**Recommendation:** Use `app/(protected)/template.tsx` instead of `layout.tsx` for the page transition wrapper. The `template.tsx` file creates a new instance for each navigation, which is exactly what AnimatePresence needs.
+
+### 1.7 CSP Migration: Hash-Based to Nonce-Based
+
+**Current (Pages Router limitation):**
+- `middleware.ts` sets CSP with `sha256` hash for the inline theme script
+- Hash approach required because Pages Router cannot forward nonce from middleware to `_document.tsx`
+
+**After (App Router advantage):**
+- `proxy.ts` (renamed from middleware.ts per Next.js 16) generates per-request nonce
+- Nonce set in `x-nonce` header, read by `app/layout.tsx` via `headers()` API
+- Next.js automatically applies nonce to framework scripts
+- Theme script moves from inline `_document.tsx` to a `<Script>` component with nonce
+
+```tsx
+// proxy.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const isDev = process.env.NODE_ENV === 'development';
+
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://accounts.google.com https://tiptopjar.com${isDev ? " 'unsafe-eval'" : ''};
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com;
+    img-src 'self' blob: data:;
+    font-src 'self' https://fonts.gstatic.com;
+    connect-src 'self' https://*.supabase.co https://*.ingest.us.sentry.io https://accounts.google.com https://tiptopjar.com${isDev ? ' ws://localhost:3000' : ''};
+    media-src 'self' blob:;
+    worker-src 'self' blob:;
+    frame-src https://accounts.google.com https://tiptopjar.com;
+    frame-ancestors 'none';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+  `.replace(/\s{2,}/g, ' ').trim();
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set('Content-Security-Policy', cspHeader);
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.headers.set('Content-Security-Policy', cspHeader);
+  return response;
 }
 
-// Preset configurations -- one place to tune all celebrations
-const PRESETS: Record<CelebrationLevel, CelebrationConfig> = {
-  micro:  { level: 'micro',  sound: 'correct',      confetti: false,         haptic: 'light',  visual: 'checkmark' },
-  small:  { level: 'small',  sound: 'levelUp',      confetti: 'sparkle',     haptic: 'light',  visual: 'starburst' },
-  medium: { level: 'medium', sound: 'milestone',     confetti: 'burst',       haptic: 'medium', visual: 'starburst' },
-  large:  { level: 'large',  sound: 'milestone',     confetti: 'celebration', haptic: 'medium', visual: 'glow' },
-  epic:   { level: 'epic',   sound: 'masteryComplete', confetti: 'celebration', haptic: 'heavy', visual: 'glow' },
+export const config = {
+  matcher: [
+    {
+      source: '/((?!api|_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js|offline.html|audio).*)',
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
+  ],
 };
 ```
 
-```typescript
-// useCelebration.ts (hook)
-export function useCelebration() {
-  const shouldReduceMotion = useReducedMotion();
+**Theme script handling:** The inline theme script in `_document.tsx` that prevents FOUC must be preserved. In App Router, use a `<Script>` component with `strategy="beforeInteractive"` and the nonce prop in `app/layout.tsx`.
 
-  const celebrate = useCallback((level: CelebrationLevel, overrides?: Partial<CelebrationConfig>) => {
-    const config = { ...PRESETS[level], ...overrides };
+**Important:** Nonce-based CSP requires dynamic rendering. Since this app is already fully client-rendered (no static generation in use), this is not a regression. The pages were never statically generated anyway.
 
-    // Sound (always plays unless muted)
-    if (config.sound) playSoundByKey(config.sound);
+### 1.8 Sentry Integration Migration
 
-    // Haptics (only on supported devices)
-    if (config.haptic && !shouldReduceMotion) triggerHaptic(config.haptic);
+**Current (Pages Router):**
+- `@sentry/nextjs` wraps next.config.mjs via `withSentryConfig`
+- `pages/_error.tsx` for error handling
+- Client-side ErrorBoundary component
 
-    // Visual effects dispatched via custom event to CelebrationOverlay
-    if (!shouldReduceMotion) {
-      window.dispatchEvent(new CustomEvent('celebration', { detail: config }));
-    }
-  }, [shouldReduceMotion]);
+**After (App Router):**
+- `withSentryConfig` remains in next.config (unchanged)
+- NEW: `instrumentation.ts` in project root for server/edge Sentry init
+- NEW: `instrumentation-client.ts` for client-side Sentry init
+- NEW: `app/global-error.tsx` replaces `pages/_error.tsx`
+- Existing `ErrorBoundary` component remains for component-level error catching
 
-  return { celebrate };
+```tsx
+// instrumentation.ts
+import * as Sentry from '@sentry/nextjs';
+
+export async function register() {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    await import('./sentry.server.config');
+  }
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    await import('./sentry.edge.config');
+  }
+}
+
+export const onRequestError = Sentry.captureRequestError;
+```
+
+```tsx
+// app/global-error.tsx
+'use client';
+import * as Sentry from '@sentry/nextjs';
+import { useEffect } from 'react';
+
+export default function GlobalError({ error, reset }: { error: Error; reset: () => void }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
+  return (
+    <html>
+      <body>
+        <h2>Something went wrong</h2>
+        <button onClick={() => reset()}>Try again</button>
+      </body>
+    </html>
+  );
 }
 ```
 
-**Integration point:** `CelebrationOverlay` mounts once in `AppShell.tsx`, after `NavigationProvider`, listening for `celebration` CustomEvents. No new React Context needed -- uses DOM events for zero-coupling.
+### 1.9 Service Worker Migration (@serwist/next)
 
-**Why not a Context:** Celebrations are fire-and-forget. They don't need to share state across components. DOM CustomEvent avoids adding another provider to the already-deep hierarchy.
+**Current:**
+- `swSrc: 'src/lib/pwa/sw.ts'`
+- `swDest: 'public/sw.js'`
+- Disabled in development
 
-### 2. Gesture Abstraction Layer
+**After (App Router convention):**
+- `swSrc: 'app/sw.ts'` (App Router location)
+- `swDest: 'public/sw.js'` (unchanged)
+- Service worker code itself is unchanged (Serwist caching strategies, push handlers, etc.)
+- Offline fallback page may need updating from `offline.html` to an App Router page
 
-**Problem:** `SwipeableCard` has excellent gesture code, but it's tightly coupled to the sort-mode use case. Horizontal swipe patterns could be reused for dismissing cards, navigating between flashcards, or pull-to-refresh.
+**Turbopack consideration:** Next.js 16 makes Turbopack the default bundler. The current config uses `@sentry/nextjs` with `withSentryConfig` which adds webpack configuration. The build must use `--webpack` flag OR verify that `@sentry/nextjs` v10.26+ supports Turbopack. Since Sentry's `withSentryConfig` likely still uses webpack internals, plan to use `next build --webpack` initially and migrate to Turbopack later.
 
-**Solution: Extract reusable gesture primitives from motion/react's existing API**
-
-```
-src/hooks/gestures/
-  useSwipeDismiss.ts    -- Horizontal swipe-to-dismiss with threshold + velocity
-  useSwipeNavigation.ts -- Left/right swipe for prev/next navigation
-  useLongPress.ts       -- Long press detection with haptic feedback
-  usePullAction.ts      -- Vertical pull gesture (pull-to-refresh pattern)
-  gestureConfig.ts      -- Shared thresholds and spring configs
-```
-
-**Key design decisions:**
-
-1. **Use motion/react's built-in drag, not @use-gesture.** The project already depends on motion/react v12.33.0 which provides `drag`, `useMotionValue`, `useTransform`, and `useAnimate`. Adding `@use-gesture` would create a second gesture system. motion/react's drag API is sufficient for all planned gestures.
-
-2. **Gesture hooks return motion props, not rendered elements.** This composability pattern lets any component become swipeable:
-
-```typescript
-// useSwipeDismiss.ts
-export function useSwipeDismiss(onDismiss: () => void, options?: SwipeDismissOptions) {
-  const x = useMotionValue(0);
-  const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
-  const [scope, animate] = useAnimate();
-
-  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
-    const { offset, velocity } = info;
-    const threshold = options?.threshold ?? 100;
-    const velocityThreshold = options?.velocityThreshold ?? 500;
-
-    if (Math.abs(velocity.x) > velocityThreshold || Math.abs(offset.x) > threshold) {
-      const exitX = offset.x > 0 ? window.innerWidth : -window.innerWidth;
-      animate(scope.current, { x: exitX, opacity: 0 }, { type: 'spring', velocity: velocity.x })
-        .then(onDismiss);
-    } else {
-      animate(scope.current, { x: 0, opacity: 1 }, { type: 'spring', stiffness: 500, damping: 30 });
-    }
-  }, [onDismiss, options, scope, animate]);
-
-  return {
-    ref: scope,
-    style: { x, opacity },
-    drag: 'x' as const,
-    dragElastic: 0.6,
-    onDragEnd: handleDragEnd,
-  };
-}
-
-// Usage in any component:
-function DismissableCard({ onDismiss, children }) {
-  const gestureProps = useSwipeDismiss(onDismiss);
-  return <motion.div {...gestureProps}>{children}</motion.div>;
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --webpack",
+    "start": "next start"
+  }
 }
 ```
 
-3. **Gesture config centralized alongside motion-config.ts:**
+### 1.10 _document.tsx Migration
 
-```typescript
-// gestureConfig.ts
-export const SWIPE_THRESHOLDS = {
-  distance: 100,       // px minimum drag distance to commit
-  velocity: 500,       // px/s minimum velocity for flick commit
-  combined: {          // Lower thresholds when both distance and velocity present
-    distance: 0.15,    // fraction of card width
-    velocity: 300,
+The current `_document.tsx` handles:
+1. Inline theme script (FOUC prevention)
+2. Viewport meta tag
+3. PWA manifest link
+4. Theme color meta
+5. Apple PWA meta tags
+
+All of these move to `app/layout.tsx`:
+
+```tsx
+// app/layout.tsx
+import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
+import Script from 'next/script';
+import { ClientProviders } from '@/components/ClientProviders';
+
+// Fonts
+import '@fontsource/noto-sans-myanmar/400.css';
+import '@fontsource/noto-sans-myanmar/500.css';
+import '@fontsource/noto-sans-myanmar/700.css';
+import '@/styles/globals.css';
+
+export const metadata: Metadata = {
+  title: 'Civic Test Prep - Master Your U.S. Citizenship Test',
+  description: 'Bilingual English-Burmese civic test preparation app...',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'US Civics',
   },
 };
 
-export const SNAP_BACK_SPRING = { type: 'spring' as const, stiffness: 500, damping: 30 };
-export const FLING_SPRING = { type: 'spring' as const, stiffness: 200, damping: 30 };
-```
-
-**Refactoring opportunity:** `SwipeableCard` can be refactored to use `useSwipeDismiss` internally, validating the abstraction against the existing production-quality implementation.
-
-### 3. Screen Transition Choreography
-
-**Problem:** Current `PageTransition` provides direction-aware slide+scale based on tab order, which works well for tab navigation. But specific transitions (e.g., quiz -> results, study guide -> flashcard detail, dashboard -> practice) could benefit from route-specific transition variants and shared element animations.
-
-**Solution: Enhanced transition system with route-specific variants + layoutId for shared elements**
-
-```
-src/components/animations/
-  PageTransition.tsx            -- MODIFY: add route-specific variant lookup
-  TransitionConfig.ts           -- Route-to-variant mapping
-  SharedElementWrapper.tsx      -- layoutId wrapper for card-to-page morph transitions
-```
-
-**Architecture:**
-
-```typescript
-// TransitionConfig.ts
-export type TransitionVariant = 'slide' | 'fade' | 'zoom' | 'slideUp' | 'none';
-
-// Route pairs that get custom transitions instead of default slide
-const ROUTE_TRANSITIONS: Record<string, TransitionVariant> = {
-  // Quiz flow: slide up for immersive entry, fade for results reveal
-  '/test': 'slideUp',
-  '/interview': 'slideUp',
-  '/practice': 'slideUp',
-
-  // Auth and landing: fade (no directional context)
-  '/': 'fade',
-  '/auth': 'fade',
-
-  // Default: 'slide' (existing behavior via getSlideDirection)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#002868',
 };
 
-export function getTransitionVariant(pathname: string): TransitionVariant {
-  // Exact match first, then prefix match
-  return ROUTE_TRANSITIONS[pathname]
-    ?? Object.entries(ROUTE_TRANSITIONS).find(([k]) => pathname.startsWith(k + '/'))?.[1]
-    ?? 'slide';
+const THEME_SCRIPT = `
+(function() {
+  try {
+    var stored = localStorage.getItem('civic-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = stored || (prefersDark ? 'dark' : 'light');
+    document.documentElement.classList.add(theme);
+    document.documentElement.style.setProperty('color-scheme', theme);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = theme === 'dark' ? '#1a1f36' : '#002868';
+  } catch(e) {}
+})();
+`;
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }}
+        />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
+      <body>
+        <ClientProviders>{children}</ClientProviders>
+      </body>
+    </html>
+  );
 }
 ```
 
-**Shared Element Animations (layoutId):**
+### 1.11 Navigation Lock Migration
 
-The project already uses `motion/react` which supports `layoutId`. For transitions like "category card on dashboard morphs into category detail header," wrap both elements with the same `layoutId`:
+The current navigation lock prevents users from leaving test/interview sessions. It works via:
+1. `NavigationProvider.setLock(true, message)` sets lock state
+2. `NavigationShell` checks lock before allowing tab switches
+3. `window.history` manipulation with `popstate` listener
+4. Safari history guard (`src/lib/historyGuard.ts`)
 
-```typescript
-// On Dashboard: category card
-<motion.div layoutId={`category-${cat.id}`}>
-  <CategoryCard category={cat} />
-</motion.div>
+In App Router, the navigation lock pattern changes:
+- `router.push()` from `next/navigation` replaces `navigate()` from react-router
+- The `beforePopState` callback is NOT available in App Router
+- Use `window.addEventListener('popstate', handler)` directly (already done)
+- The history guard (`installHistoryGuard`) still works since it patches `window.history` directly
+- `onbeforeunload` for preventing tab close during tests remains unchanged
 
-// On StudyGuidePage: category header
-<motion.div layoutId={`category-${cat.id}`}>
-  <CategoryHeader category={cat} />
-</motion.div>
-```
-
-**Constraint:** `layoutId` shared animations require both elements to be in the same `LayoutGroup`. Since `PageTransition` uses `AnimatePresence mode="wait"`, the old page unmounts before the new page mounts, which breaks cross-page `layoutId`. The solution is to use `mode="popLayout"` or render a persistent `layoutId` element outside the transition boundary.
-
-**Recommended approach for this project:** Keep `mode="wait"` (it's working well and avoids overlapping pages) and use `layoutId` only for **within-page** transitions (e.g., list item expands into detail panel on the same page). Cross-page shared element animations add significant complexity for marginal UX benefit in this app's navigation model.
-
-**Per-route transition variants are the higher-value change:** immersive modes (test, interview, practice) sliding up from bottom creates a clear "entering focused mode" feeling, while results pages fading in creates a "reveal" moment.
-
-### 4. Visual Consistency Enforcement
-
-**Problem:** With ~100 component files and growing, visual inconsistencies can creep in: inconsistent spacing, mixed use of tokens vs. hardcoded values, inconsistent border-radius, missing dark mode adaptation, accessibility gaps.
-
-**Solution: Multi-layered consistency enforcement**
-
-```
-src/components/ui/                -- Shared primitive component library
-  tokens.ts                        -- NEW: TypeScript token exports for use in JS
-scripts/
-  audit-visual-consistency.ts      -- NEW: Static analysis script
-.storybook/                        -- OPTIONAL: Component catalog (defer if overhead too high)
-```
-
-**Layer 1: TypeScript Design Tokens**
-
-Export tokens from CSS to TypeScript for type-safe usage in JS contexts (e.g., Recharts colors, motion animation targets, canvas rendering):
-
-```typescript
-// src/components/ui/tokens.ts
-export const colors = {
-  primary: 'hsl(var(--color-primary))',
-  success: 'hsl(var(--color-success))',
-  warning: 'hsl(var(--color-warning))',
-  // ... etc
-} as const;
-
-export const springs = {
-  bouncy: { type: 'spring', stiffness: 400, damping: 15, mass: 0.8 },
-  snappy: { type: 'spring', stiffness: 500, damping: 25 },
-  gentle: { type: 'spring', stiffness: 200, damping: 20 },
-} as const;
-
-export const spacing = { 1: '0.25rem', 2: '0.5rem', /* ... */ } as const;
-```
-
-**Layer 2: Composable UI Primitives**
-
-The existing `Button`, `GlassCard`, `Dialog`, `Progress` components form a solid foundation. What's needed is filling gaps:
-
-| Existing Primitive | Status | Gap |
-|---|---|---|
-| `Button` | Complete | -- |
-| `GlassCard` | Complete | -- |
-| `Dialog` | Complete | -- |
-| `Progress` | Complete | -- |
-| `Card` | Complete | -- |
-| `Skeleton` | Complete | -- |
-| `SpeechButton` | Complete | -- |
-| **Toggle/Switch** | Inline in SettingsPage | Extract to shared component |
-| **Badge** | Scattered implementations | Unify into shared `Badge` component |
-| **Chip/Tag** | No shared component | Create `Chip` for category labels, filter pills |
-| **Divider** | Inline `border-b` | Consider `Divider` for consistency |
-| **Avatar** | `InterviewerAvatar` only | Create generic `Avatar` |
-| **Tooltip** | CSS-only `[data-tooltip]` | Consider upgrading for accessibility |
-
-**Layer 3: Static Analysis Script (Audit)**
-
-A Node.js script that scans source files for visual consistency issues:
-
-```typescript
-// scripts/audit-visual-consistency.ts
-// Checks for:
-// 1. Hardcoded hex colors (stylelint already catches in CSS, but not in TSX className strings)
-// 2. Inconsistent border-radius (raw 'rounded-lg' vs 'rounded-xl' vs 'rounded-2xl')
-// 3. Missing dark: variants on bg-/text- classes that use non-token colors
-// 4. Hardcoded pixel values that should use spacing tokens
-// 5. Missing min-h-[44px] on interactive elements (touch target audit)
-// 6. Missing aria-label on icon-only buttons
-// 7. Missing font-myanmar on Burmese text containers
-```
-
-This is cheaper than Storybook + Chromatic for a team of this size. Run it as a CI check or pre-commit hook.
-
-**Layer 4: Visual Regression (Defer)**
-
-Storybook + Chromatic is the gold standard for visual regression testing, but the overhead is significant for a solo/small team project. Recommendation: **Defer Storybook** and rely on the static analysis script + manual visual review for this milestone. Add Storybook only if the component library grows beyond ~30 shared primitives.
-
-### 5. About Page
-
-**Problem:** No About page exists. Users need version info, credits, legal links, and the mission statement.
-
-**Solution: Standalone route at `/about`, linked from Settings page**
-
-```
-src/pages/AboutPage.tsx            -- New page component
-src/components/about/
-  VersionInfo.tsx                   -- Build version, last updated
-  TeamCredits.tsx                   -- Credits and attributions
-  LegalLinks.tsx                    -- Privacy policy, terms, open source licenses
-```
-
-**Routing integration:**
-
-```typescript
-// In AppShell.tsx Routes:
-<Route path="/about" element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
-
-// In navConfig.ts HIDDEN_ROUTES (About is linked from Settings, not in nav tabs):
-export const HIDDEN_ROUTES = ['/', '/auth', '/auth/forgot', '/auth/update-password', '/op-ed', '/about'];
-```
-
-**Settings page integration:** Add an "About" row in the Help & Guidance section of SettingsPage that navigates to `/about`.
-
-**Design:** Glass-morphism card layout matching Settings page aesthetic. Animated flag pair (reuse `AmericanFlag` + `MyanmarFlag` components from WelcomeScreen). Bilingual throughout.
+**No architectural change needed** for navigation locks -- the current implementation already works at the `window.history` level, not the router level.
 
 ---
 
-## Component Boundaries
+## Part 2: Readiness Score and Smart Drill Architecture
 
-| Component / Module | Responsibility | Communicates With |
-|---|---|---|
-| `CelebrationOverlay` | Renders celebration effects (confetti, starburst) | Listens to DOM `celebration` events |
-| `useCelebration` hook | Fire-and-forget celebration API | Dispatches DOM events, calls soundEffects |
-| `celebrationOrchestrator` | Preset configs, coordinates audio + visual + haptic | soundEffects.ts, haptics.ts |
-| `haptics.ts` | Navigator.vibrate() wrapper | Browser Vibration API |
-| `useSwipeDismiss` hook | Reusable horizontal swipe gesture | motion/react's drag API |
-| `useSwipeNavigation` hook | Left/right swipe for prev/next | motion/react's drag API |
-| `useLongPress` hook | Long press with haptic | Browser touch events + haptics.ts |
-| `TransitionConfig` | Route-to-transition-variant mapping | navConfig.ts |
-| Enhanced `PageTransition` | Route-aware transition variants | TransitionConfig, motion/react |
-| `SharedElementWrapper` | layoutId convenience wrapper | motion/react's layoutId |
-| UI primitives (Toggle, Badge, Chip) | Shared visual atoms | Design tokens |
-| `audit-visual-consistency.ts` | Static analysis for visual issues | Source file scanning |
-| `AboutPage` | Version, credits, legal | SettingsPage (navigation) |
+### 2.1 Data Sources Already Available
 
----
+The readiness scoring system consumes data that ALREADY EXISTS in the codebase:
 
-## Data Flow
+| Data Source | Location | Access Pattern |
+|-------------|----------|----------------|
+| Category mastery (7 categories) | IndexedDB `civic-prep-mastery` | `getAnswerHistory()` -> `calculateCategoryMastery()` |
+| Sub-category mastery | Same as above | `useCategoryMastery()` hook |
+| Overall mastery % | Derived from above | `calculateOverallMastery()` |
+| SRS deck (due cards, intervals) | IndexedDB `srs-store` | `useSRS()` context |
+| Test history (scores, dates) | Supabase `user.testHistory` | `useAuth()` context |
+| Interview history | IndexedDB `interview-history` | `getInterviewHistory()` |
+| Study streak | IndexedDB `streak-store` | `useStreak()` hook |
+| Unique questions practiced | IndexedDB (derived from mastery) | `getAnswerHistory()` |
+| Bookmarks | IndexedDB `civic-prep-bookmarks` | Dedicated store |
 
-### Celebration Flow
+The existing `useNextBestAction` hook already aggregates 6 of these sources. The readiness score is a natural extension.
 
-```
-User action (correct answer, milestone reached, etc.)
-  -> Component calls celebrate('medium')
-  -> useCelebration dispatches:
-       1. Sound: playMilestone() via soundEffects.ts
-       2. Haptic: navigator.vibrate([50, 30, 100]) via haptics.ts
-       3. DOM CustomEvent('celebration', { confetti: 'burst', visual: 'starburst' })
-  -> CelebrationOverlay (mounted in AppShell) receives event
-  -> Renders confetti canvas + starburst SVG animation
-  -> Auto-cleans after animation duration
-```
+### 2.2 Readiness Score Engine
 
-### Gesture Flow
-
-```
-User touches card and drags horizontally
-  -> motion.div drag='x' tracks position via useMotionValue
-  -> useTransform derives opacity/rotation from x position
-  -> On drag end, useSwipeDismiss checks velocity + distance thresholds
-  -> If committed: useAnimate flings element off-screen, calls onDismiss
-  -> If not committed: useAnimate spring-snaps back to center
-  -> Reduced motion: drag disabled, button actions trigger linear slide
-```
-
-### Transition Flow
-
-```
-User navigates to new route (e.g., /home -> /test)
-  -> React Router updates location
-  -> PageTransition reads new pathname
-  -> getTransitionVariant('/test') returns 'slideUp'
-  -> AnimatePresence unmounts old page with exit variant
-  -> New page mounts with 'slideUp' initial -> animate variant
-  -> If slide (default): getSlideDirection determines left/right based on tab order
-```
-
----
-
-## Patterns to Follow
-
-### Pattern 1: Fire-and-Forget Event Bus (for Celebrations)
-
-**What:** Use DOM CustomEvents to decouple celebration triggers from visual rendering. No React Context needed.
-
-**When:** When effects are one-directional (fire -> display) with no return value needed.
-
-**Why:** Avoids adding another provider to the 10-deep provider hierarchy. Any component can trigger celebrations without prop drilling. The overlay component handles all cleanup.
+**Architecture:** Pure function, no side effects, testable in isolation.
 
 ```typescript
-// Trigger (any component)
-window.dispatchEvent(new CustomEvent('celebration', {
-  detail: { level: 'medium', confetti: 'burst', sound: 'milestone' }
-}));
+// src/lib/readiness/readinessEngine.ts
 
-// Listen (CelebrationOverlay, mounted once)
-useEffect(() => {
-  const handler = (e: CustomEvent) => startCelebration(e.detail);
-  window.addEventListener('celebration', handler);
-  return () => window.removeEventListener('celebration', handler);
-}, []);
+export interface ReadinessInput {
+  // Category mastery (0-100 per category)
+  categoryMasteries: Record<string, number>;
+  // Overall mastery (0-100)
+  overallMastery: number;
+  // SRS metrics
+  srsDeckSize: number;
+  srsDueCount: number;
+  // Test performance
+  testHistory: Array<{ date: string; score: number; totalQuestions: number }>;
+  // Interview performance
+  interviewHistory: Array<{ date: string; passed: boolean }>;
+  // Coverage
+  uniqueQuestionsPracticed: number;
+  totalQuestions: number;
+  // Activity
+  currentStreak: number;
+  // Optional: target test date
+  targetDate?: string;
+}
+
+export interface ReadinessScore {
+  /** Overall readiness 0-100 */
+  overall: number;
+  /** Per-dimension breakdown */
+  dimensions: {
+    knowledge: number;      // Based on mastery + coverage
+    retention: number;      // Based on SRS health
+    testPerformance: number; // Based on mock test scores
+    interviewReady: number;  // Based on interview pass rate
+    consistency: number;     // Based on streak + recency
+  };
+  /** Human-readable assessment */
+  level: 'not-started' | 'beginning' | 'developing' | 'proficient' | 'test-ready';
+  /** Weakest dimension (drives recommendation) */
+  weakestDimension: keyof ReadinessScore['dimensions'];
+  /** If targetDate set: daily study target */
+  dailyTarget?: {
+    questionsPerDay: number;
+    reviewsPerDay: number;
+    estimatedMinutes: number;
+  };
+}
+
+export function calculateReadiness(input: ReadinessInput): ReadinessScore {
+  // Pure computation -- weights TBD during implementation
+  // Knowledge: 35% weight (mastery + coverage)
+  // Retention: 20% weight (SRS due ratio, deck health)
+  // Test performance: 25% weight (recent mock test accuracy)
+  // Interview: 10% weight (interview pass rate)
+  // Consistency: 10% weight (streak, recency of activity)
+}
 ```
 
-### Pattern 2: Gesture Hook Returns Motion Props
-
-**What:** Gesture hooks return an object spread directly onto `motion.div` elements.
-
-**When:** Any reusable gesture pattern (swipe dismiss, swipe navigate, long press).
-
-**Why:** Maximum composability -- the hook doesn't render anything, so the consuming component controls layout and styling completely.
+### 2.3 Readiness Score Hook
 
 ```typescript
-const gestureProps = useSwipeDismiss(onDismiss);
-return <motion.div {...gestureProps} className="my-card">{children}</motion.div>;
+// src/hooks/useReadinessScore.ts
+// Composition hook that aggregates existing hooks + readiness engine
+
+export function useReadinessScore(): {
+  score: ReadinessScore | null;
+  isLoading: boolean;
+} {
+  // Reuses: useStreak, useSRSWidget, useCategoryMastery, useAuth
+  // Plus: getInterviewHistory, getAnswerHistory (IndexedDB async)
+  // Pattern: same as useNextBestAction -- waits for all sources, derives via useMemo
+}
 ```
 
-### Pattern 3: Consistent Reduced Motion Handling
+### 2.4 Test Date Countdown
 
-**What:** Every animation component/hook checks `useReducedMotion()` and provides a graceful fallback.
-
-**When:** Always. Every animation in this codebase.
-
-**Pattern already established:**
-- Confetti: Returns `null` when reduced motion
-- PageTransition: Uses instant variants
-- StaggeredList: Uses no-animation variants
-- SwipeableCard: Disables drag, uses linear slide
-- CountUpScore: Shows final value immediately
-
-**New components must follow this pattern.** The `useCelebration` hook should skip visual effects and haptics when reduced motion is active, but still play sounds (as audio is not covered by `prefers-reduced-motion`).
-
-### Pattern 4: Spring Presets from motion-config.ts
-
-**What:** All motion/react spring configurations use the shared presets from `motion-config.ts`.
-
-**When:** Any new animation using spring physics.
-
-**Extension needed:** Add celebration-specific presets:
+New component + localStorage persistence:
 
 ```typescript
-// motion-config.ts additions
-export const SPRING_CELEBRATION = {
-  type: 'spring' as const,
-  stiffness: 300,
-  damping: 12,
-  mass: 0.6,
-}; // Very bouncy, exuberant
+// src/lib/readiness/testDateStore.ts
+// Simple localStorage get/set for target test date
 
-export const SPRING_DISMISS = {
-  type: 'spring' as const,
-  stiffness: 200,
-  damping: 30,
-}; // Quick settle, no overshoot -- for swipe-away
+// src/components/readiness/TestDateCountdown.tsx
+// Displays days remaining, daily study target from readiness engine
+// Settings page integration for date picker
+```
+
+### 2.5 Smart Weak-Area Drill
+
+Uses existing mastery data to generate focused practice sessions:
+
+```typescript
+// src/lib/readiness/weakAreaDrill.ts
+
+export interface DrillSession {
+  questions: Question[];
+  focusCategory: string;
+  reason: string; // "Your American Government mastery is 42% -- focus here"
+}
+
+export function generateWeakAreaDrill(
+  categoryMasteries: Record<string, number>,
+  allQuestions: Question[],
+  sessionSize: number = 10
+): DrillSession {
+  // 1. Find weakest category
+  // 2. Within that category, find least-practiced questions
+  // 3. Mix in some review questions from other weak areas
+  // 4. Return ordered drill session
+}
+```
+
+**Integration point:** The existing `PracticePage.tsx` gains a new "Smart Drill" mode option alongside the current category selection. The drill mode calls `generateWeakAreaDrill()` instead of random/category selection.
+
+---
+
+## Part 3: Content Enrichment Architecture
+
+### 3.1 Current Question Data Structure
+
+```typescript
+// src/types/index.ts (current)
+export interface Question {
+  id: string;
+  question: string;
+  questionBurmese: string;
+  answers: string[];
+  answersBurmese: string[];
+  category: string;
+  subCategory: string;
+  explanation?: {
+    text: string;
+    textBurmese: string;
+  };
+}
+```
+
+### 3.2 Enriched Question Data Structure
+
+```typescript
+// Extended (backward compatible -- all new fields optional)
+export interface Question {
+  // ... existing fields unchanged ...
+
+  /** Memory aid / mnemonic for this question */
+  mnemonic?: {
+    text: string;
+    textBurmese: string;
+    type: 'acronym' | 'association' | 'story' | 'visual' | 'rhyme';
+  };
+
+  /** Historical context beyond the basic explanation */
+  historicalContext?: {
+    text: string;
+    textBurmese: string;
+  };
+
+  /** Difficulty tier (1-3, derived from community data) */
+  difficulty?: 1 | 2 | 3;
+
+  /** Related question IDs for cross-referencing */
+  relatedQuestions?: string[];
+}
+
+// Per-category study tips (new file)
+// src/constants/studyTips.ts
+export interface CategoryStudyTip {
+  category: string;
+  tips: Array<{
+    text: string;
+    textBurmese: string;
+  }>;
+  commonMistakes: Array<{
+    text: string;
+    textBurmese: string;
+  }>;
+}
+```
+
+**Data location:** Enrichment data lives alongside existing question files in `src/constants/questions/`. New fields are added to existing objects -- no new files needed per question. Category-level study tips go in a new `src/constants/studyTips.ts`.
+
+**Bundle impact:** Minimal. The enrichment adds ~200 bytes per question (128 questions = ~25KB uncompressed, ~5KB gzipped). This is well within budget for a PWA that already caches all question data.
+
+### 3.3 Content Display Integration
+
+New UI surfaces for enriched content:
+
+| Feature | Location | Component |
+|---------|----------|-----------|
+| Mnemonic badge | ExplanationCard, StudyGuidePage | `MnemonicBadge` (new) |
+| Historical context | ExplanationCard expand section | `HistoricalContext` (new) |
+| Study tips | StudyGuidePage category header | `CategoryTips` (new) |
+| Related questions | ExplanationCard footer | `RelatedQuestions` (exists, extend) |
+| Difficulty indicator | Question cards, Study Guide | `DifficultyBadge` (new) |
+
+All new components are leaf components -- no provider changes, no new contexts.
+
+---
+
+## Part 4: Performance Optimization Architecture
+
+### 4.1 Bundle Optimization with App Router
+
+The App Router automatically code-splits per route. Moving from a single catch-all `[[...slug]].tsx` (which bundles ALL pages into one chunk) to individual `page.tsx` files means each page only loads its own code.
+
+**Current bundle problem:** Because `AppShell.tsx` imports ALL page components directly, the initial bundle includes every page even if the user only visits the dashboard.
+
+**After migration:** Each `app/(protected)/test/page.tsx` only loads `TestPage` code. Navigation prefetches other pages in the background.
+
+**Estimated improvement:** The app currently ships ~300KB+ of JS to the client on first load. With per-route code splitting, the initial load drops to ~150KB (framework + providers + current page). Other pages load on navigation or prefetch.
+
+### 4.2 Dynamic Imports for Heavy Components
+
+Components that are only used on specific pages should use `next/dynamic`:
+
+| Component | Current Import | Dynamic? | Reason |
+|-----------|----------------|----------|--------|
+| Recharts (charts) | Direct in HubPage | YES | ~80KB, only used on /hub |
+| DotLottie | Direct in celebrations | YES | ~40KB, only on celebrations |
+| react-canvas-confetti | Direct in celebrations | YES | ~20KB, only on celebrations |
+| react-joyride | Direct in onboarding | Already dynamic | Only first visit |
+| react-countdown-circle-timer | Direct in TestPage | YES | ~10KB, only during tests |
+
+### 4.3 Service Worker Caching Enhancements
+
+The existing service worker already handles:
+- Precaching of static assets
+- CacheFirst for audio files (90-day expiry)
+- Offline fallback page
+
+Post-migration, add route-specific caching:
+- Runtime caching for API responses (Supabase sync)
+- Background sync for offline queue (already exists)
+- Navigation preload (already enabled)
+
+---
+
+## Part 5: Component Boundaries and Data Flow
+
+### 5.1 New vs Modified Components
+
+**New components (created from scratch):**
+
+| Component | Purpose | Dependencies |
+|-----------|---------|-------------|
+| `ClientProviders` | Wraps all context providers (extracted from AppShell) | All existing providers |
+| `ReadinessRing` (exists, extend) | Visual readiness score display | readinessEngine |
+| `TestDateCountdown` | Days-to-test countdown with daily targets | readinessEngine, localStorage |
+| `SmartDrillSetup` | UI for starting weak-area drill | weakAreaDrill, useCategoryMastery |
+| `MnemonicBadge` | Displays memory aid for a question | Question data |
+| `HistoricalContext` | Expandable historical context section | Question data |
+| `CategoryTips` | Study tips for a category header | studyTips data |
+| `DifficultyBadge` | Visual difficulty indicator (1-3 stars) | Question data |
+| `app/global-error.tsx` | App Router error boundary | Sentry |
+| `app/(protected)/template.tsx` | Page transition wrapper | motion/react |
+
+**Modified components (existing, updated):**
+
+| Component | Change |
+|-----------|--------|
+| `NavigationProvider` | `useLocation()` -> `usePathname()` |
+| `NavigationShell` | `useLocation()` -> `usePathname()` |
+| `PageTransition` | `useLocation()` -> `usePathname()`, move to template.tsx |
+| `ProtectedRoute` | Becomes `(protected)/layout.tsx` |
+| `Dashboard` | `useNavigate()` -> `useRouter()` |
+| `TestPage` | `useNavigate()` -> `useRouter()` |
+| `PracticePage` | `useNavigate()` -> `useRouter()`, add Smart Drill mode |
+| `InterviewPage` | `useNavigate()` -> `useRouter()` |
+| `StudyGuidePage` | `useNavigate()` -> `useRouter()`, add study tips |
+| `HubPage` | `useNavigate()` -> `useRouter()`, sub-routes become file-based |
+| `ExplanationCard` | Add mnemonic + historical context sections |
+| `NBAHeroCard` | `useNavigate()` -> `useRouter()` |
+| All 40+ files using `useNavigate` | Mechanical migration |
+
+**Deleted components/files:**
+
+| File | Reason |
+|------|--------|
+| `pages/[[...slug]].tsx` | Replaced by `app/` directory |
+| `pages/_app.tsx` | Replaced by `app/layout.tsx` |
+| `pages/_document.tsx` | Replaced by `app/layout.tsx` |
+| `pages/_error.tsx` | Replaced by `app/global-error.tsx` |
+| `pages/op-ed.tsx` | Replaced by `app/(public)/op-ed/page.tsx` |
+| `src/AppShell.tsx` | Decomposed into `ClientProviders` + route groups |
+| `middleware.ts` | Renamed to `proxy.ts` |
+
+### 5.2 Data Flow Diagram
+
+```
+                      app/layout.tsx (Server Component)
+                           |
+                           | reads nonce from headers()
+                           | exports metadata
+                           |
+                    ClientProviders (Client Component)
+                    /          |          \
+              ErrorBoundary  Language  Theme  TTS  Toast  Offline  Auth  Social  SRS  State  Navigation
+                                                                    |
+                                                              Route Groups
+                                                           /        |         \
+                                                     (public)  (auth)  (protected)
+                                                                        |
+                                                                  ProtectedLayout
+                                                                  (auth guard)
+                                                                  NavigationShell
+                                                                  template.tsx (PageTransition)
+                                                                        |
+                                                                   Page Components
+                                                                   /     |     \
+                                                                home   test   study ...
+                                                                 |
+                                                           Dashboard
+                                                           /    |    \
+                                                   useNBA  useSRS  useMastery
+                                                      |
+                                                  useReadinessScore (NEW)
+                                                      |
+                                                  readinessEngine (NEW pure fn)
 ```
 
 ---
 
-## Anti-Patterns to Avoid
+## Part 6: Migration Strategy and Build Order
 
-### Anti-Pattern 1: New React Context for Celebrations
+### Phase Ordering Rationale
 
-**What:** Creating a `CelebrationProvider` / `CelebrationContext`.
+The migration must be sequenced carefully because:
+1. App Router migration touches EVERY page -- it's the foundation
+2. Feature additions (readiness, content) must target the NEW routing structure
+3. Performance optimization comes last (measure after migration)
 
-**Why bad:** The provider hierarchy is already 10 levels deep. Celebrations are stateless fire-and-forget events, not shared state. Adding a context creates unnecessary re-renders and deepens the provider tree.
+### Recommended Build Order
 
-**Instead:** Use DOM CustomEvents (Pattern 1). The `CelebrationOverlay` component is the only consumer.
+**Phase 1: App Router Foundation**
+1. Create `app/layout.tsx` (root layout with metadata, fonts, CSP nonce)
+2. Create `ClientProviders.tsx` (extract provider tree from AppShell)
+3. Create `proxy.ts` (rename middleware.ts, add nonce generation)
+4. Create route group directories `(public)`, `(auth)`, `(protected)`
+5. Create `(protected)/layout.tsx` (auth guard)
+6. Verify: app boots with empty pages, providers work, CSP nonce flows
 
-### Anti-Pattern 2: @use-gesture Alongside motion/react
+**Phase 2: Route Migration (Page by Page)**
+1. Migrate landing page (/) -- simplest, no auth
+2. Migrate auth pages (/auth, /auth/forgot, /auth/update-password)
+3. Migrate public pages (/op-ed, /about)
+4. Migrate dashboard (/home) -- first protected route
+5. Migrate test page (/test)
+6. Migrate study guide (/study)
+7. Migrate practice (/practice)
+8. Migrate interview (/interview)
+9. Migrate hub (/hub/*) with nested layout
+10. Migrate settings (/settings)
+11. Set up redirects for old routes
+12. Delete `pages/` directory, `AppShell.tsx`, react-router-dom dependency
 
-**What:** Adding `@use-gesture/react` as a dependency for gesture handling.
+**Phase 3: Sentry + Service Worker Update**
+1. Create `instrumentation.ts`, `instrumentation-client.ts`
+2. Create `app/global-error.tsx`
+3. Move service worker source to `app/sw.ts`
+4. Verify error tracking, offline functionality, push notifications
 
-**Why bad:** motion/react v12 already provides `drag`, `useMotionValue`, `useTransform`, `PanInfo`, and `useAnimate` -- everything needed for swipe, fling, and pull gestures. Adding `@use-gesture` creates two competing gesture systems, increases bundle size (~8KB gzipped), and means developers need to know two APIs.
+**Phase 4: Readiness Score + Smart Drill**
+1. Build `readinessEngine.ts` (pure function + tests)
+2. Build `useReadinessScore` hook
+3. Build ReadinessRing dashboard component
+4. Build TestDateCountdown component
+5. Build `weakAreaDrill.ts` (pure function + tests)
+6. Integrate SmartDrillSetup into PracticePage
 
-**Instead:** Build gesture hooks using motion/react's native drag API. The existing `SwipeableCard` proves this works well.
+**Phase 5: Content Enrichment**
+1. Add mnemonic data to question files
+2. Add historical context data
+3. Add difficulty ratings
+4. Add study tips per category
+5. Build UI components (MnemonicBadge, HistoricalContext, CategoryTips, DifficultyBadge)
+6. Integrate into ExplanationCard and StudyGuidePage
 
-### Anti-Pattern 3: layoutId for Cross-Page Transitions
-
-**What:** Using `layoutId` to animate shared elements between different routes (e.g., category card on dashboard morphs into category header on study page).
-
-**Why bad:** `AnimatePresence mode="wait"` unmounts the old page before mounting the new one, breaking the `layoutId` connection. Workarounds (mode="popLayout", persistent elements outside transition boundary) add significant complexity and risk regressions in the existing transition system.
-
-**Instead:** Use `layoutId` for within-page transitions only (expanding cards, tab underlines, list item -> detail on same page). For cross-page transitions, the route-specific variants (slideUp, fade, zoom) provide sufficient visual distinction.
-
-### Anti-Pattern 4: Storybook for Visual Audit
-
-**What:** Setting up Storybook + Chromatic for visual regression testing.
-
-**Why bad for this project right now:** Significant setup overhead (config, story files for ~100 components, CI integration). Overkill for a solo/small team project at this stage. The ROI is best when multiple developers are making changes to shared components.
-
-**Instead:** Use the static analysis script for automated checks, plus manual visual review. Revisit Storybook if the project grows a larger contributor team.
-
-### Anti-Pattern 5: Lottie for Celebration Animations
-
-**What:** Adding Lottie (lottie-web, lottie-react) for celebration effects.
-
-**Why bad:** Lottie adds ~60KB gzipped to the bundle. The existing `react-canvas-confetti` + motion/react spring animations can achieve all needed celebration effects. Lottie is best when you need designer-authored After Effects animations, which isn't the case here.
-
-**Instead:** Compose celebrations from canvas-confetti + SVG animations driven by motion/react + CSS keyframes.
-
----
-
-## Scalability Considerations
-
-| Concern | Current (~12 routes) | At 20+ routes | At 50+ components |
-|---------|---------------------|---------------|-------------------|
-| Provider depth | 10 levels -- functional | Same (no new providers) | Same |
-| Animation bundle | motion/react + canvas-confetti (~45KB) | Same | Same |
-| Transition configs | 14 route entries | O(n) lookup, negligible | N/A |
-| Gesture hooks | 3-4 hooks, ~2KB total | Same | Same |
-| Visual audit | Script scans ~250 files in <5s | Still fast | May need caching |
-| Celebration presets | 5 levels | May add custom levels | Same |
-
----
-
-## File Impact Map
-
-### New Files
-
-| File | Purpose | Dependencies |
-|---|---|---|
-| `src/lib/celebrations/celebrationOrchestrator.ts` | Preset configs, orchestration logic | soundEffects.ts |
-| `src/lib/celebrations/haptics.ts` | Navigator.vibrate() wrapper | None (browser API) |
-| `src/lib/celebrations/types.ts` | TypeScript types for celebration system | None |
-| `src/hooks/useCelebration.ts` | Hook: `celebrate(level)` | celebrationOrchestrator, useReducedMotion |
-| `src/components/celebrations/CelebrationOverlay.tsx` | Portal-mounted overlay | Confetti.tsx, motion/react |
-| `src/components/celebrations/StarBurst.tsx` | SVG star burst animation | motion/react |
-| `src/components/celebrations/SuccessCheckmark.tsx` | Animated checkmark | motion/react |
-| `src/hooks/gestures/useSwipeDismiss.ts` | Horizontal swipe-to-dismiss | motion/react |
-| `src/hooks/gestures/useSwipeNavigation.ts` | Left/right swipe navigation | motion/react |
-| `src/hooks/gestures/useLongPress.ts` | Long press detection | haptics.ts |
-| `src/hooks/gestures/gestureConfig.ts` | Shared thresholds | motion-config.ts |
-| `src/components/animations/TransitionConfig.ts` | Route-to-variant mapping | navConfig.ts |
-| `src/components/ui/Toggle.tsx` | Shared toggle switch | motion/react, tokens |
-| `src/components/ui/Badge.tsx` | Unified badge component | tokens |
-| `src/components/ui/Chip.tsx` | Filter pills, category labels | tokens |
-| `src/components/ui/tokens.ts` | TypeScript token exports | tokens.css |
-| `src/pages/AboutPage.tsx` | About page | AmericanFlag, MyanmarFlag |
-| `scripts/audit-visual-consistency.ts` | Static analysis | Node.js fs |
-
-### Modified Files
-
-| File | Change | Risk |
-|---|---|---|
-| `src/AppShell.tsx` | Add `CelebrationOverlay` after `NavigationProvider`, add `/about` route | LOW -- additive |
-| `src/components/animations/PageTransition.tsx` | Add route-specific variant lookup | MEDIUM -- core transition |
-| `src/lib/motion-config.ts` | Add SPRING_CELEBRATION, SPRING_DISMISS presets | LOW -- additive |
-| `src/components/navigation/navConfig.ts` | Add '/about' to HIDDEN_ROUTES | LOW -- additive |
-| `src/pages/SettingsPage.tsx` | Add "About" link in Help section | LOW -- additive |
-| `src/components/results/TestResultsScreen.tsx` | Migrate to `useCelebration` hook | MEDIUM -- replace manual wiring |
-| `src/components/progress/MasteryMilestone.tsx` | Migrate to `useCelebration` hook | MEDIUM -- replace manual wiring |
-| `src/components/sort/SwipeableCard.tsx` | Extract gesture logic to `useSwipeDismiss` | MEDIUM -- refactor |
-| `src/styles/animations.css` | Add keyframes for starburst, checkmark draw-on | LOW -- additive |
+**Phase 6: Performance + Polish**
+1. Audit bundle sizes post-migration
+2. Add dynamic imports for heavy components
+3. Fix known gaps (DotLottie assets, dark mode QA)
+4. Test offline functionality end-to-end
+5. Verify all 188 existing requirements still pass
 
 ---
 
-## Suggested Build Order
+## Part 7: Scalability Considerations
 
-Build order is driven by dependency chains:
-
-```
-Phase 1: Foundation (no dependencies)
-  1a. motion-config.ts additions (SPRING_CELEBRATION, SPRING_DISMISS)
-  1b. haptics.ts (browser API, no deps)
-  1c. celebration types + orchestrator
-  1d. gestureConfig.ts
-  1e. UI primitive extraction (Toggle, Badge, Chip from existing code)
-  1f. TypeScript token exports (tokens.ts)
-
-Phase 2: Core Hooks (depends on Phase 1)
-  2a. useCelebration hook
-  2b. useSwipeDismiss hook
-  2c. useSwipeNavigation hook
-  2d. useLongPress hook
-
-Phase 3: Visual Components (depends on Phase 1-2)
-  3a. CelebrationOverlay (mount in AppShell)
-  3b. StarBurst animation
-  3c. SuccessCheckmark animation
-  3d. Enhanced PageTransition with route variants
-
-Phase 4: Integration (depends on Phase 1-3)
-  4a. Migrate TestResultsScreen to useCelebration
-  4b. Migrate MasteryMilestone to useCelebration
-  4c. Refactor SwipeableCard to use useSwipeDismiss
-  4d. Add celebration points throughout quiz/practice flows
-
-Phase 5: New Content (depends on Phase 1)
-  5a. AboutPage + routing
-  5b. Settings page "About" link
-
-Phase 6: Quality (depends on all above)
-  6a. Visual consistency audit script
-  6b. Run audit, fix findings
-  6c. Cross-browser testing of new animations
-```
-
-**Phase ordering rationale:**
-- Foundation first because everything depends on shared configs and types
-- Hooks before visual components because overlays need the hook API
-- Integration after components because we need working celebration/gesture systems
-- About page is independent and can be built in parallel with Phases 2-4
-- Quality audit last because it should scan the final state of all changes
+| Concern | Current (v3.0) | After v4.0 |
+|---------|----------------|------------|
+| Routing | Single bundle, all pages loaded | Per-route code splitting, lazy loading |
+| CSP | Hash-based (static, per-deploy) | Nonce-based (per-request, more secure) |
+| Error handling | Client ErrorBoundary only | Client + Server + Global error boundaries |
+| Bundle size | ~300KB+ initial JS | ~150KB initial + lazy routes |
+| Navigation | Hash-based URLs | Clean URLs, better SEO/sharing |
+| Page transitions | react-router AnimatePresence | Next.js template.tsx + AnimatePresence |
+| Metadata | `next/head` in components | Static metadata exports (better crawling) |
 
 ---
 
 ## Sources
 
-- Direct codebase analysis of all files listed in the Component Boundaries table
-- [Motion/React Layout Animations](https://motion.dev/docs/react-layout-animations) -- layoutId, LayoutGroup, FLIP transforms
-- [Motion/React Gestures](https://motion.dev/docs/react-gestures) -- drag, hover, tap, pan APIs
-- [Motion/React LayoutGroup](https://motion.dev/docs/react-layout-group) -- namespace scoping for layoutId
-- [canvas-confetti](https://github.com/catdad/canvas-confetti) -- underlying library for react-canvas-confetti
-- [Duolingo micro-interactions analysis](https://medium.com/@Bundu/little-touches-big-impact-the-micro-interactions-on-duolingo-d8377876f682)
-- [Duolingo iOS 60fps animations](https://60fps.design/apps/duolingo)
-- [Chromatic visual regression testing](https://www.chromatic.com/storybook) -- evaluated and deferred
-- [Navigator.vibrate() Web API](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/vibrate) -- haptic feedback
+- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) -- Official, updated 2026-02-20 (HIGH confidence)
+- [Next.js SPA Guide](https://nextjs.org/docs/app/guides/single-page-applications) -- Official, updated 2026-02-20 (HIGH confidence)
+- [Next.js Pages to App Router Migration](https://nextjs.org/docs/app/guides/migrating/app-router-migration) -- Official, updated 2026-02-20 (HIGH confidence)
+- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy) -- Official, updated 2026-02-20 (HIGH confidence)
+- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) -- Official (HIGH confidence)
+- [@serwist/next Getting Started](https://serwist.pages.dev/docs/next/getting-started) -- Official (HIGH confidence)
+- [Serwist + Next.js 16 PWA Icons](https://aurorascharff.no/posts/dynamically-generating-pwa-app-icons-nextjs-16-serwist/) -- Third-party, 2025 (MEDIUM confidence)
+- Codebase analysis of `src/AppShell.tsx`, `pages/`, `middleware.ts`, all context providers (HIGH confidence)

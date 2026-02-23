@@ -1,221 +1,221 @@
 # Project Research Summary
 
-**Project:** Civic Test Prep 2025 — Duolingo-Level UX Polish (v3.0)
-**Domain:** Bilingual PWA UX elevation — celebration systems, animation consistency, mobile native feel
-**Researched:** 2026-02-19
-**Confidence:** HIGH
+**Project:** Civic Test Prep 2025 v4.0 — Next-Gen Architecture
+**Domain:** Bilingual PWA migration + intelligent study features + content enrichment
+**Researched:** 2026-02-23
+**Confidence:** HIGH (migration) / HIGH (features) / HIGH (architecture) / HIGH (pitfalls)
 
 ## Executive Summary
 
-This milestone is an elevation, not a rebuild. The app already has 66K LOC, spring physics configs, 14 sound effects, 3D card flips, Tinder-style swipe gestures, and a mature 3-tier glass-morphism design system. The research conclusion is unambiguous: the gap between "good" and "Duolingo-level" in this codebase is not missing libraries or missing features — it is missing polish, consistency, and celebration choreography. Only 2 new packages are justified (`@lottiefiles/dotlottie-react` for designer-quality celebration animations, `@playwright/test` for visual regression coverage). Everything else needed already exists in the stack.
+The v4.0 milestone is fundamentally a migration with features on top. The project is a mature, 70K LOC offline-first PWA that currently runs on Next.js 15 Pages Router with react-router-dom handling all client-side routing inside a single catch-all `pages/[[...slug]].tsx` shell. The migration target is Next.js 16 App Router with file-based routing, eliminating react-router-dom entirely. This migration is the highest-risk work in v4.0 — it touches every page component (~40-60 files) and replaces the entire routing and navigation layer — but it delivers clean URLs, nonce-based CSP, automatic per-route code splitting, and a proper foundation for future server-side features. Critically, this migration does NOT mean converting to server-rendered pages: every page component stays `'use client'` because the app requires IndexedDB, SpeechSynthesis, and other browser-only APIs.
 
-The recommended approach is to work through the codebase in dependency order: establish visual consistency first (spacing grid, typography scale, motion token unification), then layer on mobile native feel (PWA-specific CSS quick wins), then refine interactions and animations (stagger audits, exit animations, button press tiers), then elevate celebrations into a coordinated system (haptics + confetti + sound choreography via a unified `useCelebration` hook), then complete loading/empty/error states, and finally add the About page and validate content quality. The architectural principle is "extend, don't replace" — every new capability must compose with the existing provider hierarchy, design token system, and motion/react patterns.
+On top of the migration, v4.0 adds intelligent study features using infrastructure that already exists in the codebase. The readiness scoring system (`computeReadiness`), category mastery calculations (`calculateCategoryMastery`), weak area detection (`detectWeakAreas`), and FSRS spaced repetition state are all already implemented — they are just not surfaced to users. The highest-value work is promoting internal logic to first-class UI: a visible readiness ring, a dedicated weak-area drill entry point, and a test date countdown with daily targets. No new state management, no new ML libraries, no new API costs — these features are pure TypeScript utility modules consuming existing data.
 
-The top risks are well-understood from 3 prior milestones of codebase history. GPU layer explosion from stacking `will-change` on top of existing `backdrop-filter` glass cards is the most dangerous — it crashes low-end Android devices. A confetti `setInterval` leak in the existing `Confetti.tsx` needs to be fixed before any new celebration work is built on top of it. The React Compiler ESLint rules will block naive animation patterns; the project-established workarounds (avoid setState in effects, use derived state for animation tracking) must be followed consistently.
-
----
+The critical risks are: (1) Turbopack default in Next.js 16 breaks the webpack plugin chain immediately on upgrade — use `next build --webpack` from day one; (2) mixing Pages Router and App Router routes during incremental migration causes hard navigations that lose all React state and re-initialize the 12-deep provider hierarchy — migrate all routes in one phase, not incrementally; (3) the readiness score algorithm must penalize unstudied categories heavily or it will give false confidence to users who may fail their USCIS interview; (4) content enrichment (mnemonics) must be English-first since Burmese mnemonics require native speaker input and language-specific mnemonic devices that do not transfer across scripts.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack is already 80% of the way to Duolingo-level polish. `motion/react` (v12.33.0, used in 92 files), `react-canvas-confetti`, 14 Web Audio API sound effects, `Tailwind CSS` with a mature token system, and established spring presets (`SPRING_BOUNCY/SNAPPY/GENTLE`) cover the vast majority of animation needs.
+The stack changes for v4.0 are minimal on the dependencies side but significant on the configuration side. The core upgrade is Next.js 15.5.12 to Next.js ^16.1.6, which forces three related changes: `@serwist/next` must be replaced by `@serwist/turbopack` (or a webpack flag used as fallback), `@next/bundle-analyzer` is removed in favor of the built-in `next build --analyze`, and `middleware.ts` must be renamed to `proxy.ts` with the export renamed from `middleware` to `proxy`. The only new runtime dependency is `date-fns@^4.1.0` for test date countdown arithmetic. React, TypeScript, and all other dependencies are unchanged.
 
 **Core technologies:**
-- `motion/react` (existing): Spring physics, drag gestures, layout transitions, page transitions — already the primary animation engine across 92 files
-- `react-canvas-confetti` (existing): Confetti at 3 intensity levels, already wrapped in `Confetti.tsx`
-- Web Audio API (existing): 14 synthesized sounds via `soundEffects.ts`; needs harmonic warming to move from functional to polished
-- `@lottiefiles/dotlottie-react` (NEW, ~51KB lazy-loaded): Designer-quality celebration animations (checkmarks, trophies, badge glows, star bursts) that canvas-confetti cannot produce; DotLottie format is 80% smaller than raw Lottie JSON, WASM renderer at 60fps, React 19 compatible
-- `navigator.vibrate()` (browser API, zero bundle): Haptic feedback on Android; graceful no-op on iOS; pairs with existing sound effects
-- CSS scroll-driven animations (browser CSS, zero bundle): Scroll-linked progress bars and reveals; Chrome 115+, Safari 26+; motion/react `whileInView` as fallback
-- `@playwright/test` (NEW, dev only): Visual regression screenshot testing; replaces need for $149+/mo Chromatic; 20-32 screenshot baselines covering themes x viewports x screens
+- `next@^16.1.6`: App Router with file-based routing, Turbopack default, built-in bundle analyzer — official upgrade path from current 15.5.12
+- `@serwist/turbopack@^9.5.5`: Turbopack-compatible PWA service worker — replaces `@serwist/next`; same service worker API, different build integration; use `--webpack` flag as fallback if Serwist Turbopack is unstable
+- `@sentry/nextjs@^10.39.0+`: Auto-detects Turbopack, requires new `instrumentation.ts` and `app/global-error.tsx` for App Router
+- `date-fns@^4.1.0`: Tree-shakeable date arithmetic for test date countdown (~6KB gzipped for needed functions only)
+- `react-router-dom`: REMOVED — replaced by Next.js file-based routing and `next/navigation` hooks
 
-**Explicitly rejected:** `@use-gesture/react` (redundant with motion/react v12 drag API), `tsParticles` (overkill over canvas-confetti), GSAP (imperative vs declarative conflict), Storybook (overhead unjustified at this team size), `lottie-react` v2.4.1 (abandoned, 17fps vs DotLottie's WASM renderer).
+**What stays unchanged:** `@supabase/supabase-js`, `motion/react`, `ts-fsrs`, `idb-keyval`, `tailwindcss`, all `@radix-ui/*`, `recharts`, `lucide-react`, `react-canvas-confetti`, `@lottiefiles/dotlottie-react`. The service worker logic, IndexedDB stores, Supabase auth, and all context providers retain the same logic — only their housing changes.
 
 ### Expected Features
 
-Research distinguishes sharply between table stakes (polish that must exist for the app to feel finished) and differentiators (polish that creates delight).
+The feature research revealed that the existing codebase has substantial study intelligence that is invisible to users. The v4.0 feature work is primarily about surfacing existing logic rather than building new intelligence from scratch.
 
 **Must have (table stakes):**
-- Spacing audit and 4px grid enforcement — inconsistent spacing is the #1 tell of an unpolished app
-- Typography scale lockdown (5-6 sizes max) — current codebase likely uses the full Tailwind scale
-- Consistent border radius rules — same component type should have the same radius across all screens
-- Touch targets minimum 44x44px everywhere — WCAG 2.5.8 requirement; gaps likely in icon buttons and filter chips
-- Skeleton screen coverage for all async content — every loading state must have a matching skeleton structure
-- Empty state designs for zero-data screens — new users see empty dashboards, empty history, empty achievements
-- Dark mode polish pass — glass panels need dark-specific contrast tuning; some components may have light-mode hardcoding
+- **Test readiness score as a visible UI element** — the `computeReadiness` function already exists internally; users need an answer to "Am I ready?" with a radial ring (color-coded: red/amber/green/gold) and per-dimension breakdown (accuracy, coverage, consistency, test performance)
+- **Dedicated weak-area drill mode** — `getWeakQuestions()` and `detectWeakAreas()` already exist; users need an explicit "Drill Weak Areas" entry point, not just the implicit 70/30 selection in practice mode
+- **Test date countdown with daily targets** — users with a scheduled USCIS interview date need a countdown and a simple "Today: review X SRS cards + study Y new questions" card on the dashboard
 
 **Should have (differentiators):**
-- Multi-stage celebration choreography — sequence score count-up to pass/fail reveal to confetti to sound to action buttons instead of simultaneous dump
-- Achievement-scaled confetti intensity — map celebration weight to achievement significance
-- Haptic feedback (`haptics.ts` utility) — tactile confirmation on Android for correct answers and milestones
-- Warmer sound design via harmonics — add 2nd/3rd overtones to existing oscillator sounds
-- XP counter in quiz session header with spring pulse on increment
-- `overscroll-behavior: none` in PWA standalone mode — prevents rubber-band white flash
-- Safe area inset handling — iPhone Dynamic Island support for BottomTabBar and GlassHeader
-- Swipe-to-dismiss toasts — standard mobile gesture expectation
-- Stagger coverage audit for all lists — inconsistent stagger (some lists stagger, some don't) is worse than none
-- About page with mission statement and honoree tributes
+- **Mnemonics expanded to all 128 questions** — currently 17/128 have mnemonics; this is the single most effective memorization tool for arbitrary factual recall; the data structure already supports `mnemonic_en`/`mnemonic_my` fields
+- **Category study tips** — 7 authored introduction objects (one per USCIS category) with study strategy, common pitfalls, and estimated study time; shown as dismissible cards at the top of category practice
+- **"See Also" related questions** — all 128 questions already have `relatedQuestionIds` populated; rendering these as clickable chips is a UI-only change
 
 **Defer to later milestone:**
-- Shared layout animations (cross-page layoutId) — fragile with AnimatePresence mode="wait" and hash routing
-- Swipe between bottom tabs — gesture conflicts with SwipeableCard in Study/Sort modes
-- Character mascot/avatar — requires Hobbes-level animation investment to not feel gimmicky
-- AI-powered adaptive features — SRS (ts-fsrs) already IS the adaptive engine; offline-first
-- Gamified currency/shop — XP + badges are sufficient reward system
+- AI-generated study plans (API cost, offline incompatibility, risk of hallucinated advice for a consequential real-world test)
+- Calendar-based scheduling UI (over-engineering for a 128-question single-subject test)
+- Predictive pass probability (misleading without validated psychometric models)
+- Video content (storage, bandwidth, production cost)
+- User-generated mnemonics (moderation burden, quality risk for a bilingual audience)
+
+**Content enrichment (high effort, high value, can parallel feature phases):**
+- Fun facts: 25/128 populated, target 128/128
+- Common mistakes: 28/128 populated, target 128/128
+- Citations: 48/128 populated, target 128/128
 
 ### Architecture Approach
 
-The architecture introduces five capabilities, all built as extensions to existing infrastructure rather than new systems. A `useCelebration` hook plus `CelebrationOverlay` provides a unified fire-and-forget API that replaces ad-hoc celebration wiring in TestResultsScreen and MasteryMilestone. DOM CustomEvents (not a new React Context) decouple celebration triggers from the overlay, avoiding deepening the already 10-level provider hierarchy. Gesture primitives are extracted from SwipeableCard into reusable hooks (`useSwipeDismiss`, `useSwipeNavigation`) that return motion props for composability. PageTransition gains route-specific variants (slideUp for immersive modes, fade for auth/results reveals). Visual consistency is enforced via a static analysis audit script rather than Storybook overhead. AboutPage is a standalone route linked from Settings.
+The App Router migration preserves the fundamental architecture: a client-side SPA where Next.js serves a shell, all pages are Client Components, IndexedDB is the primary data store, and Supabase provides auth and cloud sync. The structural changes are: the 12-provider hierarchy moves from `AppShell.tsx` into a `ClientProviders.tsx` file (marked `'use client'`) imported by `app/layout.tsx` (which stays as a Server Component); BrowserRouter from react-router-dom is removed; routing is handled by the `app/` directory structure and `next/navigation` hooks. The existing provider nesting order constraints (OfflineProvider inside ToastProvider, TTSProvider wrapping TTS consumers) are preserved exactly.
 
-**Major components to create:**
-1. `src/lib/celebrations/celebrationOrchestrator.ts` + `haptics.ts` — core orchestration with 5 preset levels (micro/small/medium/large/epic)
-2. `src/hooks/useCelebration.ts` — hook API: `celebrate(level, overrides?)`
-3. `src/components/celebrations/CelebrationOverlay.tsx` — portal-mounted, listens to DOM CustomEvents
-4. `src/hooks/gestures/useSwipeDismiss.ts` + `useSwipeNavigation.ts` — reusable gesture abstractions
-5. `src/components/animations/TransitionConfig.ts` — route-to-variant mapping for enhanced PageTransition
-6. `src/pages/AboutPage.tsx` + route registration + Settings link
-7. `scripts/audit-visual-consistency.ts` — static analysis for spacing, radius, touch targets, aria-labels
-
-**Key constraint:** CelebrationOverlay mounts once in AppShell after NavigationProvider. No new provider added. `layoutId` restricted to within-page transitions only — cross-page shared elements break with `AnimatePresence mode="wait"`.
+**Major components:**
+1. `app/layout.tsx` (Server Component) — root layout; reads nonce from headers; exports metadata, viewport, PWA config; imports fonts and global CSS; wraps children in `ClientProviders`
+2. `src/components/ClientProviders.tsx` ('use client') — the 12-provider hierarchy (ErrorBoundary -> Language -> Theme -> TTS -> Toast -> Offline -> Auth -> Social -> SRS -> State -> Navigation); preserves existing nesting order constraints
+3. `app/(protected)/layout.tsx` ('use client') — auth guard; replaces `ProtectedRoute` component; wraps protected routes in NavigationShell; uses `useAuth` + `redirect` pattern
+4. `app/(protected)/template.tsx` — page transition wrapper using `usePathname()` as AnimatePresence key; replaces react-router location-keyed transitions; delivers enter-only animations (exit animations are an unresolved App Router limitation)
+5. `proxy.ts` — renamed from `middleware.ts`; generates per-request nonce; enables CSP to switch from hash-based to nonce-based (App Router advantage over Pages Router)
+6. `src/lib/readiness/readinessEngine.ts` — pure function; calculates 0-100 readiness score from existing FSRS data, mastery, test history, and streak; projects FSRS retrievability to test date rather than using today's R value
+7. `src/lib/readiness/weakAreaDrill.ts` — pure function; generates focused drill sessions from category mastery data
 
 ### Critical Pitfalls
 
-1. **GPU layer explosion from will-change + backdrop-filter stacking** — The app has `backdrop-filter` on every glass card (each creates a GPU composite layer). Adding `will-change: transform` on animated elements compounds this multiplicatively. On low-end Android the browser evicts layers causing jank worse than no acceleration. Prevention: audit Chrome DevTools Layers panel before and after changes; budget max 20 composite layers per screen; never add `will-change` permanently in CSS.
+1. **Turbopack default breaks webpack plugin chain** — Add `"build": "next build --webpack"` to package.json scripts immediately when upgrading to Next.js 16. The `@serwist/next` + `@sentry/nextjs` + `@next/bundle-analyzer` wrapper chain is entirely webpack-based; Turbopack does not support webpack plugins. Build fails in CI/CD on day one without this flag. Plan Turbopack migration as a separate future task after all three plugins have stable Turbopack equivalents.
 
-2. **Confetti setInterval leak on navigation** — Existing `Confetti.tsx` celebration intensity creates a `setInterval` in a callback but never clears it in `useEffect` cleanup. Navigating mid-celebration leaves the interval running, causing memory leaks and console errors. Fix this before building any new celebration work on top. Add `intervalRef.current` plus cleanup return.
+2. **Mixed Pages Router and App Router causes hard navigations** — Do NOT incrementally migrate routes. When Pages Router routes and App Router routes coexist, navigation between them causes full page reloads, losing all React state including the 12 context providers, TTS engine state, auth session, navigation locks, and SRS deck state. Migrate all 15 routes in a single phase by keeping everything under one router boundary at all times.
 
-3. **AnimatePresence + React 19 Strict Mode double-mount** — React 19 Strict Mode's double-invoke breaks motion/react's internal presence tracking. Exit animations don't play or components become DOM zombies. Mitigation: always test transitions in production build (not just dev); use stable `key` props (pathname, not index); stay on motion/react v12.33+.
+3. **Provider hierarchy must be a Client Component wrapper** — `app/layout.tsx` is a Server Component. All 12 context providers use `useState`/`useEffect`/`createContext` and cannot run in a Server Component. Create a `ClientProviders.tsx` with `'use client'` directive that wraps all providers; import it into `layout.tsx`. Do NOT mark `layout.tsx` itself as `'use client'` — that defeats Server Component benefits and grows the bundle unnecessarily.
 
-4. **backdrop-filter inside preserve-3d flattens 3D context** — Applying glass-morphism to children of 3D flip card containers collapses the 3D rendering context on Safari. The existing `Flashcard3D.tsx` already avoids this (documented in code comments). Any new celebration overlay or effect added to cards must not inject backdrop-filter into the 3D context.
+4. **Readiness score gives false confidence** — A weighted average over accuracy and coverage can score a user "85% ready" when they have never studied key categories. Any unstudied category is a real risk since the USCIS test draws randomly from all 128 questions. The algorithm must: penalize zero-coverage categories (cap readiness at 60% if any category is unstudied), use FSRS retrievability projected to the test date not today's R value, and weight mock test performance more heavily than practice/flashcard performance.
 
-5. **Staggered animation on long lists causes render delay** — StaggeredList with 128 questions at 60ms stagger equals a 7.68 second delay for the last item. Cap stagger to first 8-10 items; skip stagger entirely for lists longer than 15 items; reduce stagger timing proportionally to list length.
-
----
+5. **CSP migration is its own phase** — The move from hash-based to nonce-based CSP is an App Router advantage, but it must be a separate sub-phase after routing is stable. Simultaneously migrating routing and CSP doubles the debugging surface. Hash-based CSP still works in App Router; keep it initially, then migrate to nonces in a dedicated step with targeted testing of Google OAuth, Sentry, TTS, service worker, and push notifications.
 
 ## Implications for Roadmap
 
-Based on the combined research, 6 phases in dependency order:
+Based on combined research, the pitfall ordering constraints dictate the phase structure. The routing migration is the critical path; all other work depends on completing it without breaking the app's core offline-first functionality.
 
-### Phase 1: Visual Foundation
-**Rationale:** Visual consistency is the prerequisite for all subsequent work. Celebration choreography, skeleton states, and the About page all inherit from the design foundation. Auditing spacing and typography first means subsequent phases don't introduce new inconsistencies.
-**Delivers:** Consistent 4px spacing grid, 5-6 size typography scale, unified border radius rules, motion token alignment (CSS + JS), touch targets at 44x44px minimum across all interactive elements.
-**Addresses:** Spacing audit, typography lockdown, border radius rules, touch target audit, motion token unification (FEATURES.md Phase 1)
-**Avoids:** Visual inconsistency accumulation that would require revisiting finished screens; establishes clean foundation before adding new animation layers.
-**Research flag:** Standard patterns — no deeper research needed. Tailwind, CSS auditing, and motion token conventions are well-understood.
+### Phase 1: Next.js 16 Upgrade and Tooling
 
-### Phase 2: Mobile Native Feel
-**Rationale:** These are almost entirely CSS-only or very small JS additions with the highest impact-to-effort ratio. `overscroll-behavior: none` is one line; safe area insets are four lines. Delivering this early gives the app an immediate "feels installed" improvement on every screen without touching component logic.
-**Delivers:** `overscroll-behavior: none` in standalone mode, iPhone safe area insets on nav bars, `user-select: none` on interactive elements, swipe-to-dismiss toasts, keyboard-aware bottom positioning for virtual keyboard.
-**Uses:** `navigator.vibrate()` (Vibration API), CSS env() for safe areas, motion/react drag for toast dismiss.
-**Avoids:** Gesture conflicts (Pitfall 5) — applying `touch-action` correctly on each new swipeable element.
-**Research flag:** Standard patterns — no deeper research needed.
+**Rationale:** Build tooling must be resolved before touching any routing or features. Turbopack compatibility is a build-time dependency that blocks all subsequent phases if unresolved. Sentry must be reconfigured immediately so errors are captured during the migration itself.
+**Delivers:** Working Next.js 16 build with webpack flag; updated Sentry configuration (`instrumentation.ts`, `global-error.tsx`); `middleware.ts` renamed to `proxy.ts` with export renamed; build scripts updated (`lint: eslint .`, `analyze: next build --analyze`); Vercel Node.js 20+ runtime verified; `@serwist/next` replaced by `@serwist/turbopack` (or webpack fallback confirmed); `date-fns` added.
+**Avoids:** Pitfall 1 (Turbopack build failure), Pitfall 2 (middleware rename), Pitfall 9 (Sentry App Router requirements), Pitfall 18 (async request APIs in new Server Component code).
+**Research flag:** SKIP — official Next.js 16 upgrade guide and Sentry docs provide exact steps. No novel research needed.
 
-### Phase 3: Interaction and Animation Polish
-**Rationale:** After the visual foundation is set, animation refinement can be systematic rather than ad-hoc. The button press tier system and stagger audit benefit from the consistent spacing established in Phase 1.
-**Delivers:** Consistent button press feedback tiers (3D chunky / subtle scale / opacity-only), stagger coverage for all lists, exit animations for all overlays, glass-morphism tier usage enforcement, dark mode polish pass.
-**Implements:** Stagger cap (8-10 items max) from Pitfall 7; spring-only on transform properties, not layout properties (Pitfall 8).
-**Avoids:** Spring overshoot causing layout shifts (Pitfall 8); inconsistent stagger making the app feel uneven.
-**Research flag:** Standard patterns — motion/react docs and existing codebase patterns provide clear guidance.
+### Phase 2: App Router Foundation (Layout and Providers)
 
-### Phase 4: Celebration System Elevation
-**Rationale:** The celebration system is the app's emotional peak. It builds on Phase 3's animation patterns and requires `haptics.ts`, `CelebrationOverlay`, and `useCelebration` hook to be built as a coherent architecture before migrating existing celebration surfaces.
-**Delivers:** `haptics.ts` vibration utility, `useCelebration` hook + `CelebrationOverlay` (DOM event bus pattern), achievement-scaled confetti intensity, multi-stage TestResultsScreen choreography, `playCelebrationSequence()` sound function, harmonic-warmed oscillator sounds, XP counter in quiz header, DotLottie checkmark/trophy/badge animations.
-**Uses:** `@lottiefiles/dotlottie-react` (lazy-loaded), Vibration API, existing `soundEffects.ts`, existing `Confetti.tsx` (after fixing setInterval leak from Pitfall 2).
-**Avoids:** Confetti setInterval leak (Pitfall 2) — fix first before building on top; z-index wars (Pitfall 16) — define z-index scale in tokens before adding new overlay layers; sound/haptic timing offset from animation peak (Pitfall 20).
-**Research flag:** Needs attention during planning. DotLottie WASM performance on low-end Android is unverified in benchmarks. LottieFiles animation license terms need review for open-source PWA. The multi-stage choreography sequencing requires careful implementation to avoid React Compiler ESLint violations (Pitfall 10).
+**Rationale:** The provider hierarchy and root layout must exist before any routes can be migrated. This phase creates the structural shell that all page components will live inside. No user-facing changes.
+**Delivers:** `app/layout.tsx` (Server Component with metadata, fonts, theme script, hash-based CSP initially); `ClientProviders.tsx` (12-provider hierarchy extracted from `AppShell.tsx`); route group directories `app/(public)/`, `app/(auth)/`, `app/(protected)/` with shell layout files; `app/(protected)/layout.tsx` auth guard.
+**Avoids:** Pitfall 5 (provider hierarchy in Server Component), Pitfall 3 (mixed router hard navigations — foundation only, no routes moved yet).
+**Research flag:** SKIP — well-documented App Router pattern. Official Next.js SPA guide covers this exactly.
 
-### Phase 5: Loading, Empty, and Accessibility States
-**Rationale:** These states are best audited together since they address the same screens and the same users (new users, screen reader users, reduced motion users). Doing this after animation polish means the final skeleton designs match the polished states they transition into.
-**Delivers:** Skeleton screen coverage for all async screens, empty state designs (Dashboard/History/Achievements/SRS Deck), inline error recovery patterns, screen reader live region announcements for celebrations, reduced motion CSS completeness (CSS keyframes + transitions coverage), focus management on page transitions.
-**Avoids:** Reduced motion users getting broken UX (Pitfall 9) — the reduced-motion path must preserve information, not just disable animation; Myanmar font layout shift (Pitfall 12) — verify @fontsource is the active import.
-**Research flag:** Standard patterns — NN/g skeleton research, WCAG focus management, and existing reduced motion patterns in codebase provide clear guidance.
+### Phase 3: Route Migration (All 15 Routes, One Phase)
 
-### Phase 6: Content Completeness and About Page
-**Rationale:** Content and About page are independent of code polish and can be built last without blocking other phases. The About page can be built in parallel with Phases 2-5 if capacity allows.
-**Delivers:** USCIS 2025 explanation validation (all 28 entries with complete fields), explanation quality audit across all 128 questions, About page with mission statement + bilingual dedication cards for honorees, Settings and LandingPage navigation integration.
-**Addresses:** Mission-driven About page with dignified dedication cards; content consistency across the question bank.
-**Research flag:** Standard patterns for the About page. The USCIS 2025 explanation validation is a data task requiring subject matter judgment, not a technical research task.
+**Rationale:** The hard navigation pitfall (Pitfall 3) requires migrating all routes at once. This is the largest single phase — approximately 40-60 files need react-router-dom hook replacements. The Next.js codemod handles mechanical changes; the remaining work is `useNavigate` -> `useRouter`, `useLocation` -> `usePathname`, `Navigate` -> `redirect`, and converting `pages/` files to `app/` directory structure.
+**Delivers:** All 15+ SPA routes as `app/` page files; `react-router-dom` removed from package.json; `AppShell.tsx` deleted; `ProtectedRoute` converted to `(protected)/layout.tsx`; `PageTransition` updated to `usePathname()` + `template.tsx` pattern (enter-only animations accepted); `HubPage` sub-routes converted to `app/(protected)/hub/*/page.tsx` nested structure; API routes migrated to `app/api/push/*/route.ts` Route Handlers; clean URLs (no more `#` prefix).
+**Avoids:** Pitfall 3 (mixed router hard navigations — all routes migrated at once), Pitfall 6 (router hook replacement scope — inventory all imports first), Pitfall 7 (page transitions — accept enter-only via template.tsx), Pitfall 8 (next/head removal — use metadata exports), Pitfall 16 (useRouter import confusion), Pitfall 17 (theme script moves to layout.tsx), Pitfall 21 (circular dependencies — keep route config in constants).
+**Research flag:** SKIP — mechanical migration. The codemod `pnpm dlx @next/codemod@canary upgrade latest` automates most changes; remaining work follows documented patterns.
+
+### Phase 4: CSP Nonce Migration and PWA Update
+
+**Rationale:** CSP migration is isolated here after routing is stable. Simultaneous CSP and routing changes would double the debugging surface. Service worker path updates are grouped with CSP because both affect the app's security and caching infrastructure.
+**Delivers:** `proxy.ts` updated with per-request nonce generation; `app/layout.tsx` reads nonce via `headers()` and passes to theme script via `<Script strategy="beforeInteractive" nonce={nonce}>`; CSP switches from hash-based to nonce-based with `'strict-dynamic'`; service worker source moved to `app/sw.ts`; offline fallback verified on all routes; push notification API routes verified as Route Handlers.
+**Avoids:** Pitfall 4 (CSP strategy change — isolated phase), Pitfall 10 (service worker path changes).
+**Research flag:** SKIP — official Next.js CSP guide documents the nonce pattern exactly. Serwist App Router docs cover service worker placement.
+
+### Phase 5: Test Readiness Score and Drill Mode
+
+**Rationale:** With the migration complete and the app stable, the highest-impact feature work begins. Readiness scoring is the foundation that study plan recommendations depend on. Pure TypeScript computation using existing FSRS and mastery data — no new libraries, no UI framework changes.
+**Delivers:** `src/lib/readiness/readinessEngine.ts` (pure function, unit tested); `useReadinessScore` hook aggregating existing `useStreak`, `useSRS`, `useCategoryMastery`, `useAuth`, and `getInterviewHistory`; ReadinessRing component on Dashboard and Progress Hub Overview tab; per-dimension breakdown display (knowledge, retention, test performance, consistency); readiness formula penalizing zero-coverage categories and projecting FSRS R to test date; dedicated "Drill Weak Areas" entry point on Dashboard and Progress Hub; category-level drill buttons; drill session pre/post mastery delta display.
+**Addresses:** Test Readiness Score (table stakes, Priority 1) and Smart Weak-Area Drill (table stakes, Priority 2) from FEATURES.md.
+**Avoids:** Pitfall 12 (false confidence — penalize zero-coverage categories, project R to test date), Pitfall 20 (FSRS retrievability misuse — use `forgetting_curve(elapsed_days, stability)` to project future R).
+**Research flag:** NEEDS RESEARCH — the exact `ts-fsrs@5.2.3` API for projecting retrievability to a future date (`forgetting_curve` function signature) needs verification before implementation. Recommend a targeted research task at the start of this phase.
+
+### Phase 6: Test Date Countdown and Study Plan
+
+**Rationale:** Depends on readiness score (Phase 5) being visible, since the "take a mock test" recommendation is driven by readiness data. Simple arithmetic using `date-fns`, not complex scheduling logic.
+**Delivers:** Test date input in Settings (date picker, stored in localStorage); countdown display on Dashboard and Progress Hub; "Today's Plan" card on Dashboard (daily new questions + SRS review count + mock test recommendation when readiness score suggests it); adaptive recalculation on each Dashboard visit; positive framing that never shows "behind schedule" messaging; graceful no-op when no test date is set.
+**Addresses:** Test Date Countdown with Daily Targets (table stakes, Priority 3) from FEATURES.md.
+**Avoids:** Pitfall 13 (rigid scheduling causing abandonment — recalculate daily, frame positively, celebrate partial completion).
+**Research flag:** SKIP — simple date arithmetic with `date-fns`. Adaptive framing is a design decision, not a research question.
+
+### Phase 7: Content Enrichment (Mnemonics, Tips, Depth)
+
+**Rationale:** Fully independent of the migration and can be parallelized with Phases 5-6 if resources allow. Highest content authoring effort, but code changes are small. English mnemonics first; Burmese mnemonics deferred given the BRMSE-01 known constraint.
+**Delivers:** Mnemonics authored for all 128 questions (currently 17/128 have them); visual mnemonic treatment in FeedbackPanel and flashcards (lightbulb icon, distinct styling block with accent border); 7 category introduction objects with study strategy and common pitfalls (shown as dismissible cards, dismissal stored in localStorage); "Tricky Questions" difficulty badges; "See Also" related question chips (data exists for all 128, UI missing); expanded fun facts (25->128), common mistakes (28->128), citations (48->128).
+**Addresses:** Mnemonics (differentiator, Priority 4), Study Tips (differentiator, Priority 5), Content Depth (Priority 6) from FEATURES.md.
+**Avoids:** Pitfall 14 (culturally inappropriate mnemonics — English-only initially, prefer visual/structural devices over English wordplay or letter-based acronyms).
+**Research flag:** SKIP for code work. Content authoring is a content task, not a technical research question. Flag BRMSE-01 for native speaker review before adding any Burmese mnemonics.
+
+### Phase 8: Performance Optimization and Bundle Audit
+
+**Rationale:** Performance optimization is data-driven and requires the completed app. Bundle analysis before migration is premature since App Router's automatic per-route code splitting is the biggest structural improvement and is only measurable after all routes exist.
+**Delivers:** Dynamic imports for heavy components (recharts on Hub pages, DotLottie/confetti on celebrations, InterviewPage speech recognition); `optimizePackageImports` extended to cover `date-fns` and `recharts` in next.config.ts; bundle size before/after comparison documented; service worker precache list verified correct for App Router assets; Web Vitals regression check against v3.0 baseline.
+**Addresses:** Bundle optimization goals from STACK.md. Estimated improvement from ~300KB initial JS to ~150KB with per-route splitting.
+**Avoids:** Pitfall 15 (bundle size regression — monitor with `next build --analyze` at each step), Pitfall 19 (OneDrive webpack cache corruption — `rm -rf .next` before each major build step).
+**Research flag:** SKIP — standard Next.js bundle optimization patterns. Official bundle optimization guide covers `dynamic()`, `optimizePackageImports`, and the built-in analyzer.
 
 ### Phase Ordering Rationale
 
-- Visual Foundation before Animation Polish because spacing and typography create the canvas that animations should enhance, not fight against.
-- Mobile Native Feel is Phase 2 because it is mostly CSS quick wins that benefit from the Phase 1 token foundation and deliver a fast, visible win.
-- Animation Polish before Celebration Elevation because celebration choreography is the most sophisticated animation work and should build on consistent underlying patterns.
-- Celebration Elevation before States because CelebrationOverlay, once mounted in AppShell, automatically covers all states where celebrations could trigger (including test results, which also show loading states).
-- States and Accessibility together as Phase 5 because they share screens, share the reduced motion concern, and share the "does the user get the information they need" question.
-- Content and About last because they are independent and can be parallelized or shifted without blocking anything.
+- Phases 1-4 form a strict dependency chain: tooling must work before routes migrate; routes must be stable before CSP changes; CSP must be isolated from routing to keep the debugging surface tractable.
+- Phases 5-6 have a soft dependency (study plan uses readiness score) and can begin only after Phase 3 completes since features must target the new App Router route structure.
+- Phase 7 is fully independent and can be parallelized with Phases 5-6 if separate authoring and development tracks are available.
+- Phase 8 is intentionally last: the App Router's automatic code splitting (the biggest bundle win) is only measurable after all routes exist, and optimization is only meaningful on a complete app.
+- This ordering aligns exactly with the pitfall analysis's recommended sequence: upgrade -> foundation -> routes -> CSP/PWA -> features -> content -> performance.
 
 ### Research Flags
 
-Phases needing deeper research during planning:
-- **Phase 4 (Celebration):** DotLottie performance on low-end Android unverified; LottieFiles license terms for open-source PWA needs review; multi-stage choreography implementation needs careful React Compiler ESLint compliance design.
+Phases likely needing deeper research during planning:
+- **Phase 5 (Readiness Scoring):** The `ts-fsrs@5.2.3` API for projecting retrievability to a future date needs verification. Specifically: the `forgetting_curve(elapsed_days, stability)` function signature and whether the library exposes it for external use. Recommend a targeted research task (not a full research-phase) at the start of Phase 5 planning.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Visual Foundation):** CSS audit patterns, Tailwind token enforcement — well-documented.
-- **Phase 2 (Mobile Native Feel):** PWA CSS properties, safe area insets — well-documented.
-- **Phase 3 (Animation Polish):** motion/react patterns, stagger configurations — fully established in codebase.
-- **Phase 5 (States):** Skeleton screens, empty states, WCAG focus — well-documented patterns.
-- **Phase 6 (Content and About):** Standard page construction; USCIS content is a data review task.
-
----
+- **Phase 1 (Next.js 16 Upgrade):** Official upgrade guide is comprehensive and step-by-step.
+- **Phase 2 (App Router Foundation):** Official Next.js SPA guide covers the exact pattern for this app.
+- **Phase 3 (Route Migration):** Mechanical — the Next.js codemod handles most changes; remaining changes follow `useNavigate` -> `useRouter` patterns.
+- **Phase 4 (CSP/PWA):** Official Next.js CSP guide covers nonce pattern precisely; Serwist docs cover service worker.
+- **Phase 6 (Study Plan):** Simple date arithmetic; design decisions are not research questions.
+- **Phase 7 (Content Enrichment):** Content authoring task, not a technical research question.
+- **Phase 8 (Performance):** Standard optimization patterns with official documentation.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Official npm data, React 19 compatibility verified, bundle sizes from Bundlephobia, existing stack validated across 3 milestones. DotLottie low-end Android performance is LOW confidence and needs device testing. |
-| Features | HIGH | Duolingo UX research from official blog + Mobbin flows; UX principles from NN/g, Apple HIG, WCAG. Anti-features are well-argued with clear rationale. Note: FEATURES.md initially said no Lottie; STACK.md recommends DotLottie — follow STACK.md as the more thorough analysis. |
-| Architecture | HIGH | Based on direct codebase analysis of existing files. DOM CustomEvent pattern for celebrations is well-established. Gesture hook abstraction pattern is proven by existing SwipeableCard implementation. |
-| Pitfalls | HIGH | 6 critical pitfalls verified with official docs, GitHub issues, and direct codebase analysis. 8 moderate pitfalls with codebase evidence. 3 low-confidence minor pitfalls noted explicitly with confidence levels. |
+| Stack | HIGH | Next.js 16 official docs, Serwist/Sentry official docs, verified package versions. The webpack fallback strategy is confirmed. Only uncertainty is Serwist Turbopack stability at `@serwist/turbopack@9.5.5` — mitigated by keeping `--webpack` fallback. |
+| Features | HIGH | Existing codebase analyzed thoroughly; new features are mostly UI promotion of already-implemented logic. Feature priorities reasoned against competitor research (Achievable, Brainscape, UWorld, 300Hours). Content enrichment scope (128 questions) is definite and finite. |
+| Architecture | HIGH | Official Next.js 16 and App Router migration guides are comprehensive. Codebase analysis of 300+ source files informs the exact migration surface. Provider hierarchy ordering constraints documented in CLAUDE.md and preserved in architecture recommendations. |
+| Pitfalls | HIGH | Critical pitfalls confirmed from official docs (Turbopack, middleware rename, mixed router hard navigation, provider server component constraint). Exit animation limitation confirmed from Next.js GitHub discussions with 2000+ comments. FSRS retrievability projection pitfall is MEDIUM confidence — based on algorithm understanding, needs API verification. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **DotLottie low-end Android performance:** Benchmarks are from desktop/high-end mobile. During Phase 4 planning, plan a performance testing gate on actual low-end Android before committing to DotLottie as the celebration animation renderer.
-- **LottieFiles Simple License:** Permits commercial use but specific terms for open-source PWA should be reviewed during Phase 4 planning before sourcing animations.
-- **CSS scroll-driven animation iOS adoption:** Safari 26 support is new (early 2026). Monitor iOS 19 adoption rates; motion/react `whileInView` fallback is the safe path.
-- **Myanmar font loading source:** `globals.css` appears to still import from Google Fonts CDN despite `@fontsource/noto-sans-myanmar` being in dependencies. Verify and consolidate during Phase 5 (or earlier as a quick fix).
-- **USCIS 2025 explanations:** 28 entries were reviewed in a Claude initial pass (2026-02-18) but marked "pending 3-AI consensus." Phase 6 should treat these as needing a fresh quality pass.
-
----
+- **FSRS retrievability projection API:** The `ts-fsrs@5.2.3` `forgetting_curve` function signature needs verification before the readiness engine is implemented. Mitigate by allocating a targeted research task before Phase 5.
+- **Serwist Turbopack stability:** `@serwist/turbopack@9.5.5` is actively maintained but less battle-tested than `@serwist/next`. Mitigate by keeping `--webpack` fallback build script throughout Phases 1-7; attempt full Turbopack only in Phase 8 if all plugins are confirmed stable.
+- **Exit animation regression:** App Router does not support AnimatePresence exit animations on route transitions (confirmed GitHub issue, unresolved as of 2026). The `template.tsx` workaround delivers enter-only animations. This is an accepted regression for v4.0; revisit with React 19.2 ViewTransition API in a future milestone.
+- **Burmese mnemonic quality (BRMSE-01):** English mnemonics in Phase 7 are tractable. Burmese mnemonics require native speaker review since wordplay and letter-based mnemonics do not transfer across scripts. Plan native speaker review as a separate content QA task before any Burmese mnemonics are authored.
+- **Readiness algorithm calibration:** Formula weights (accuracy, coverage, consistency, test performance) are reasoned but not empirically validated. Post-launch, compare readiness score predictions against mock test results to tune weights. Never display 100% readiness.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Direct codebase analysis of `Confetti.tsx`, `PageTransition.tsx`, `SwipeableCard.tsx`, `Flashcard3D.tsx`, `motion-config.ts`, `globals.css`, `prismatic-border.css`, `animations.css`, `AppShell.tsx`, `soundEffects.ts`
-- [npm: @lottiefiles/dotlottie-react](https://www.npmjs.com/package/@lottiefiles/dotlottie-react) — React 19 peer dep, WASM renderer, bundle size
-- [Motion gestures docs](https://motion.dev/docs/react-gestures) — drag, pan, touch-action requirements
-- [Playwright visual comparisons docs](https://playwright.dev/docs/test-snapshots) — toHaveScreenshot API
-- [MDN Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API) — browser support matrix
-- [MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change) — layer creation warnings
-- [web.dev CLS optimization](https://web.dev/articles/optimize-cls) — spring overshoot and layout shift
-- [web.dev prefers-reduced-motion](https://web.dev/articles/prefers-reduced-motion) — accessible animation patterns
-- Project MEMORY.md — documented pitfalls from v1.0, v2.0, v2.1 milestones
-- [Duolingo streak milestone blog](https://blog.duolingo.com/streak-milestone-design-animation/) — official celebration design rationale
-- [Duolingo Mobbin flow](https://mobbin.com/explore/flows/43d3b0b8-cb53-443e-918f-aaa7d445196e) — Android lesson flow reference
+- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) — migration steps, breaking changes, async APIs
+- [Next.js 16.1 Release Blog](https://nextjs.org/blog/next-16-1) — built-in bundle analyzer
+- [Next.js App Router Migration Guide](https://nextjs.org/docs/app/guides/migrating/app-router-migration) — Pages to App Router pattern
+- [Next.js SPA Guide](https://nextjs.org/docs/app/guides/single-page-applications) — SPA pattern in App Router (exact use case for this app)
+- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy) — nonce-based CSP in App Router
+- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) — `instrumentation.ts`, `global-error.tsx` requirements
+- [Sentry Turbopack Support Blog](https://blog.sentry.io/turbopack-support-next-js-sdk/) — Sentry Turbopack compatibility confirmation
+- [Serwist Next.js Docs](https://serwist.pages.dev/docs/next/getting-started) — service worker migration path
+- [@serwist/turbopack npm](https://www.npmjs.com/package/@serwist/turbopack) — v9.5.5, Turbopack-native PWA integration
+- [FSRS Algorithm Wiki](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm) — retrievability, stability, forgetting curve
+- [Next.js Discussion #42658](https://github.com/vercel/next.js/discussions/42658) — exit animation limitation in App Router (confirmed unresolved)
+- [Next.js Issue #61694](https://github.com/vercel/next.js/issues/61694) — CSP nonces in App Router
+- [USCIS Naturalization Test Performance Data](https://www.uscis.gov/citizenship-resource-center/naturalization-related-data-and-statistics/naturalization-test-performance) — official test format and question selection
+- Codebase analysis of 300+ source files — provider hierarchy constraints, existing mastery algorithms, question data structures, IndexedDB stores
 
 ### Secondary (MEDIUM confidence)
-- [Duolingo micro-interactions analysis](https://medium.com/@Bundu/little-touches-big-impact-the-micro-interactions-on-duolingo-d8377876f682) — stagger, haptics, celebration patterns
-- [Duolingo Rive usage](https://elisawicki.blog/p/how-exactly-is-duolingo-using-rive) — why Rive for characters, Lottie for celebrations
-- [Lottie vs Rive comparison (Callstack)](https://www.callstack.com/blog/lottie-vs-rive-optimizing-mobile-app-animation) — performance benchmarks
-- [8pt grid system (Prototypr)](https://blog.prototypr.io/the-8pt-grid-consistent-spacing-in-ui-design-with-sketch-577e4f0fd520) — spacing system rationale
-- [Skeleton screens (NN/g)](https://www.nngroup.com/articles/skeleton-screens/) — perceived performance research
-- [Making PWAs feel native (gfor.rest)](https://www.gfor.rest/blog/making-pwas-feel-native) — overscroll, safe areas, user-select
-- [motion/react issue #2668](https://github.com/framer/motion/issues/2668) — React 19 Strict Mode AnimatePresence bug
-- [canvas-confetti issue #184](https://github.com/catdad/canvas-confetti/issues/184) — DOMException on navigation, cleanup pattern
-- [Smashing Magazine GPU animation](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/) — layer explosion, memory budgets
-- [Josh W. Comeau: prefers-reduced-motion](https://www.joshwcomeau.com/react/prefers-reduced-motion/) — accessible animation patterns
+- [Achievable Test Readiness Score Discussion](https://talk.achievable.me/t/how-does-test-readiness-score-work/2522) — readiness scoring UX patterns
+- [Brainscape CBR Whitepaper](https://edcuration.com/resource/product/3/Brainscape%20whitepaper.pdf) — confidence-based repetition and weak area drilling patterns
+- [300Hours CFA Study Planner](https://300hours.com/cfa-study-planner/) — study plan UX patterns
+- [FSRS Algorithm Explanation](https://expertium.github.io/Algorithm.html) — retrievability projection mechanics
+- [Serwist + Next.js 16 PWA](https://aurorascharff.no/posts/dynamically-generating-pwa-app-icons-nextjs-16-serwist/) — App Router service worker setup reference
+- [Vercel Blog: Common App Router Mistakes](https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them) — provider pattern, client component boundaries
 
 ### Tertiary (LOW confidence, needs validation)
-- DotLottie WASM performance on low-end Android — no authoritative benchmarks found; needs device testing
-- LottieFiles Simple License open-source PWA terms — legal interpretation needed
-- CSS scroll-driven animations iOS 19 adoption rate — Safari 26 support new, real-world adoption unknown
+- [date-fns vs dayjs comparison](https://www.dhiwise.com/post/date-fns-vs-dayjs-the-battle-of-javascript-date-libraries) — library selection rationale (date-fns chosen for tree-shakeability; recommendation accepted)
 
 ---
-*Research completed: 2026-02-19*
+*Research completed: 2026-02-23*
 *Ready for roadmap: yes*
-*Recommended phases: 6*
-*Critical path: Phase 1 (Visual Foundation) -> Phase 3 (Animation Polish) -> Phase 4 (Celebration Elevation)*
-*Parallel opportunity: Phase 6 (Content and About) can run alongside Phases 2-5*
+*Recommended phases: 8*
+*Critical path: Phase 1 (Tooling) -> Phase 2 (Foundation) -> Phase 3 (Route Migration) -> Phase 4 (CSP/PWA) -> Phase 5 (Readiness Score)*
+*Parallel opportunity: Phase 7 (Content Enrichment) can run alongside Phases 5-6*
