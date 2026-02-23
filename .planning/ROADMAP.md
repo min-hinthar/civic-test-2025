@@ -97,7 +97,12 @@ See `.planning/MILESTONES.md` for completed milestone details.
   2. `middleware.ts` is renamed to `proxy.ts` with updated export and CSP headers still apply
   3. Sentry captures errors in both dev and production via `instrumentation.ts` and `global-error.tsx`
   4. The app loads in the browser and all existing features work identically to v3.0
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 39-01-PLAN.md -- Pre-upgrade safety tag and non-Next dependency upgrades
+- [ ] 39-02-PLAN.md -- Next.js 16 upgrade, scripts, middleware-to-proxy rename
+- [ ] 39-03-PLAN.md -- Sentry App Router integration and noise filters
+- [ ] 39-04-PLAN.md -- Full verification suite and manual smoke test
 
 ### Phase 40: App Router Foundation
 **Goal**: The App Router shell exists with providers and auth guard, ready to receive migrated routes
@@ -200,7 +205,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 39. Next.js 16 Upgrade and Tooling | 0/? | Not started | - |
+| 39. Next.js 16 Upgrade and Tooling | 0/4 | Planned | - |
 | 40. App Router Foundation | 0/? | Not started | - |
 | 41. Route Migration | 0/? | Not started | - |
 | 42. CSP Nonce Migration and PWA Update | 0/? | Not started | - |
