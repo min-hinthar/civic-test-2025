@@ -10,27 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 39 of 47 (Next.js 16 Upgrade and Tooling)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: Executing
-Last activity: 2026-02-23 -- Completed 39-01 (non-Next.js dependency upgrades)
+Last activity: 2026-02-23 -- Completed 39-02 (Next.js 16 upgrade, middleware-to-proxy rename)
 
-Progress: [#.........] 3%
+Progress: [##........] 5%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 1
-- Total execution time: 12min
+- v4.0 plans completed: 2
+- Total execution time: 32min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 39 | 1/4 | 12min | 12min |
+| 39 | 2/4 | 32min | 16min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
+- 39-02: 20min (Next.js 16 upgrade, 2 tasks)
 
 *Updated after each plan completion*
 
@@ -47,6 +48,9 @@ Recent decisions affecting current work:
 - v4.0: English-only mnemonics initially (Burmese mnemonics need native speaker - BRMSE-01)
 - 39-01: Keep tailwindcss at v3 (v4 requires architectural rewrite), eslint at v9, @types/node at v22
 - 39-01: Upgrade TypeScript 5.8->5.9, all other non-Next deps to latest
+- 39-02: Use @next/codemod for middleware-to-proxy rename
+- 39-02: Replace custom Sentry inline types with ErrorEvent/EventHint from @sentry/nextjs
+- 39-02: ESLint flat config must ignore generated files when using eslint . instead of next lint
 
 ### Pending Todos
 
@@ -61,5 +65,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 39-01-PLAN.md
+Stopped at: Completed 39-02-PLAN.md
 Resume file: None
