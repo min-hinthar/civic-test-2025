@@ -10,28 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 39 of 47 (Next.js 16 Upgrade and Tooling)
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: Executing
-Last activity: 2026-02-23 -- Completed 39-02 (Next.js 16 upgrade, middleware-to-proxy rename)
+Last activity: 2026-02-23 -- Completed 39-03 (Sentry App Router reconfiguration)
 
-Progress: [##........] 5%
+Progress: [###.......] 7%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 2
-- Total execution time: 32min
+- v4.0 plans completed: 3
+- Total execution time: 50min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 39 | 2/4 | 32min | 16min |
+| 39 | 3/4 | 50min | 17min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
 - 39-02: 20min (Next.js 16 upgrade, 2 tasks)
+- 39-03: 18min (Sentry App Router reconfiguration, 2 tasks)
 
 *Updated after each plan completion*
 
@@ -51,6 +52,9 @@ Recent decisions affecting current work:
 - 39-02: Use @next/codemod for middleware-to-proxy rename
 - 39-02: Replace custom Sentry inline types with ErrorEvent/EventHint from @sentry/nextjs
 - 39-02: ESLint flat config must ignore generated files when using eslint . instead of next lint
+- 39-03: App Router layout.tsx required even for minimal app/ directory usage
+- 39-03: AbortError events dropped entirely from Sentry (pure navigation noise)
+- 39-03: App Router and Pages Router coexist via Next.js dual-routing
 
 ### Pending Todos
 
@@ -65,5 +69,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 39-02-PLAN.md
+Stopped at: Completed 39-03-PLAN.md
 Resume file: None

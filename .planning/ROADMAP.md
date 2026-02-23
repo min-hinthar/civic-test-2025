@@ -205,7 +205,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 39. Next.js 16 Upgrade and Tooling | 2/4 | In Progress|  |
+| 39. Next.js 16 Upgrade and Tooling | 3/4 | In Progress|  |
 | 40. App Router Foundation | 0/? | Not started | - |
 | 41. Route Migration | 0/? | Not started | - |
 | 42. CSP Nonce Migration and PWA Update | 0/? | Not started | - |
