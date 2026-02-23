@@ -162,7 +162,20 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ### Active
 
-(No active requirements — planning next milestone)
+## Current Milestone: v4.0 Next-Gen Architecture
+
+**Goal:** Migrate to Next.js 16 App Router with file-based routing, add intelligent study guidance features, enrich learning content, and optimize performance.
+
+**Target features:**
+- Next.js 16 upgrade with full App Router migration (replace react-router-dom)
+- Test readiness score synthesizing all progress data
+- Test date countdown with daily study targets
+- Smart weak-area drill mode
+- Mnemonics/memory aids for hard questions
+- Deeper explanations with historical context
+- Study tips per category
+- Bundle optimization and code splitting
+- Known gap fixes (DotLottie, dark mode QA)
 
 ### Out of Scope
 
@@ -251,4 +264,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v3.0 | Complete | 2026-02-22 | 39/39 |
 
 ---
-*Last updated: 2026-02-22 after v3.0 milestone completed*
+*Last updated: 2026-02-23 after v4.0 milestone started*
