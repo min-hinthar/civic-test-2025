@@ -10,7 +10,27 @@ import prettier from 'eslint-config-prettier';
 export default [
   js.configs.recommended,
   {
-    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'coverage/**', 'out/**'],
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'dist/**',
+      'coverage/**',
+      'out/**',
+      'public/sw.js',
+      '.planning/**',
+    ],
+  },
+  {
+    // Config files (JS/MJS) at project root and scripts directory
+    files: ['*.config.{js,mjs}', '*.config.{ts,mts}', 'scripts/**/*.{js,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      'no-console': 'off',
+    },
   },
   {
     files: ['**/*.{ts,tsx}'],

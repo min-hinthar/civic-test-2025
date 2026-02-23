@@ -8,52 +8,7 @@
  */
 
 import * as Sentry from '@sentry/nextjs';
-
-// Use inline type definitions to avoid @sentry/types dependency
-// These types match the Sentry SDK's Event and EventHint interfaces
-interface SentryStackFrame {
-  context_line?: string;
-  pre_context?: string[];
-  post_context?: string[];
-  [key: string]: unknown;
-}
-
-interface SentryException {
-  value?: string;
-  stacktrace?: {
-    frames?: SentryStackFrame[];
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
-}
-
-interface SentryBreadcrumb {
-  message?: string;
-  data?: Record<string, unknown>;
-  [key: string]: unknown;
-}
-
-interface SentryEvent {
-  exception?: {
-    values?: SentryException[];
-  };
-  breadcrumbs?: SentryBreadcrumb[];
-  user?: {
-    id?: string;
-    email?: string;
-    username?: string;
-    ip_address?: string;
-    [key: string]: unknown;
-  };
-  extra?: Record<string, unknown>;
-  tags?: Record<string, unknown>;
-  [key: string]: unknown;
-}
-
-interface SentryEventHint {
-  originalException?: unknown;
-  [key: string]: unknown;
-}
+import type { ErrorEvent, EventHint } from '@sentry/nextjs';
 
 /**
  * Hash a user ID using djb2 algorithm.
@@ -91,7 +46,7 @@ function stripPII(text: string | undefined): string | undefined {
  * beforeSend handler that strips PII from Sentry events.
  * Use this in your Sentry.init() configuration.
  */
-export function beforeSendHandler(event: SentryEvent, _hint: SentryEventHint): SentryEvent | null {
+export function beforeSendHandler(event: ErrorEvent, _hint: EventHint): ErrorEvent | null {
   // Skip PII stripping in development for easier debugging
   if (process.env.NODE_ENV === 'development') {
     return event;
@@ -149,7 +104,7 @@ export function beforeSendHandler(event: SentryEvent, _hint: SentryEventHint): S
   // Hash user ID if present
   if (event.user?.id) {
     event.user = {
-      id: hashUserId(event.user.id),
+      id: hashUserId(String(event.user.id)),
       // Explicitly remove other PII fields
       email: undefined,
       username: undefined,

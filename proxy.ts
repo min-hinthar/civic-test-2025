@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 // Hash is stable because the theme script content is hardcoded.
 const THEME_SCRIPT_HASH = "'sha256-NKQrmMd/nbWq2Iv4I0YgtUOgn8XHk35ntdeRQ/aIx5A='";
 
-export function middleware() {
+export function proxy() {
   const isDev = process.env.NODE_ENV === 'development';
 
   // In dev mode, webpack uses eval() for source maps and Next.js injects

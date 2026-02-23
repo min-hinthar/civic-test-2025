@@ -11,7 +11,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "baseUrl": ".",
     "paths": {
@@ -19,6 +19,17 @@
     },
     "types": ["node", "react", "react-dom"]
   },
-  "include": ["next-env.d.ts", "pages", "src", "src/types", "src/types/**/*.d.ts"],
+  "include": [
+    "next-env.d.ts",
+    "pages",
+    "src",
+    "src/types",
+    "src/types/**/*.d.ts",
+    "proxy.ts",
+    "instrumentation.ts",
+    "instrumentation-client.ts",
+    "sentry.server.config.ts",
+    "sentry.edge.config.ts"
+  ],
   "exclude": ["node_modules"]
 }
