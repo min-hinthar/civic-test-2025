@@ -98,50 +98,50 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MIGR-01 | — | Pending |
-| MIGR-02 | — | Pending |
-| MIGR-03 | — | Pending |
-| MIGR-04 | — | Pending |
-| MIGR-05 | — | Pending |
-| MIGR-06 | — | Pending |
-| MIGR-07 | — | Pending |
-| MIGR-08 | — | Pending |
-| MIGR-09 | — | Pending |
-| MIGR-10 | — | Pending |
-| MIGR-11 | — | Pending |
-| MIGR-12 | — | Pending |
-| RDNS-01 | — | Pending |
-| RDNS-02 | — | Pending |
-| RDNS-03 | — | Pending |
-| RDNS-04 | — | Pending |
-| RDNS-05 | — | Pending |
-| RDNS-06 | — | Pending |
-| RDNS-07 | — | Pending |
-| RDNS-08 | — | Pending |
-| RDNS-09 | — | Pending |
-| RDNS-10 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| CONT-05 | — | Pending |
-| CONT-06 | — | Pending |
-| CONT-07 | — | Pending |
-| CONT-08 | — | Pending |
-| SYNC-01 | — | Pending |
-| SYNC-02 | — | Pending |
-| SYNC-03 | — | Pending |
-| SYNC-04 | — | Pending |
-| PERF-01 | — | Pending |
-| PERF-02 | — | Pending |
-| PERF-03 | — | Pending |
-| PERF-04 | — | Pending |
+| MIGR-01 | Phase 39 | Pending |
+| MIGR-02 | Phase 39 | Pending |
+| MIGR-03 | Phase 39 | Pending |
+| MIGR-04 | Phase 40 | Pending |
+| MIGR-05 | Phase 41 | Pending |
+| MIGR-06 | Phase 41 | Pending |
+| MIGR-07 | Phase 40 | Pending |
+| MIGR-08 | Phase 41 | Pending |
+| MIGR-09 | Phase 42 | Pending |
+| MIGR-10 | Phase 42 | Pending |
+| MIGR-11 | Phase 41 | Pending |
+| MIGR-12 | Phase 41 | Pending |
+| RDNS-01 | Phase 43 | Pending |
+| RDNS-02 | Phase 43 | Pending |
+| RDNS-03 | Phase 43 | Pending |
+| RDNS-04 | Phase 43 | Pending |
+| RDNS-05 | Phase 43 | Pending |
+| RDNS-06 | Phase 43 | Pending |
+| RDNS-07 | Phase 44 | Pending |
+| RDNS-08 | Phase 44 | Pending |
+| RDNS-09 | Phase 44 | Pending |
+| RDNS-10 | Phase 44 | Pending |
+| CONT-01 | Phase 45 | Pending |
+| CONT-02 | Phase 45 | Pending |
+| CONT-03 | Phase 45 | Pending |
+| CONT-04 | Phase 45 | Pending |
+| CONT-05 | Phase 45 | Pending |
+| CONT-06 | Phase 45 | Pending |
+| CONT-07 | Phase 45 | Pending |
+| CONT-08 | Phase 45 | Pending |
+| SYNC-01 | Phase 46 | Pending |
+| SYNC-02 | Phase 46 | Pending |
+| SYNC-03 | Phase 46 | Pending |
+| SYNC-04 | Phase 46 | Pending |
+| PERF-01 | Phase 47 | Pending |
+| PERF-02 | Phase 47 | Pending |
+| PERF-03 | Phase 47 | Pending |
+| PERF-04 | Phase 47 | Pending |
 
 **Coverage:**
 - v4.0 requirements: 38 total
-- Mapped to phases: 0
-- Unmapped: 38
+- Mapped to phases: 38
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-23*
-*Last updated: 2026-02-23 after initial definition*
+*Last updated: 2026-02-23 after roadmap creation*
