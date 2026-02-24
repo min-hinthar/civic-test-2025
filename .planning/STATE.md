@@ -5,35 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 39 - Next.js 16 Upgrade and Tooling (COMPLETE)
+**Current focus:** Phase 40 - App Router Foundation
 
 ## Current Position
 
-Phase: 39 of 47 (Next.js 16 Upgrade and Tooling)
-Plan: 4 of 4 in current phase (PHASE COMPLETE)
-Status: Phase 39 complete -- ready for Phase 40
-Last activity: 2026-02-23 -- Completed 39-04 (Full verification suite and smoke test)
+Phase: 40 of 47 (App Router Foundation)
+Plan: 1 of 3 in current phase
+Status: Executing Phase 40
+Last activity: 2026-02-24 -- Completed 40-01 (Shared foundations: theme script + ClientProviders)
 
-Progress: [##........] 9%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 4
-- Total execution time: 58min
+- v4.0 plans completed: 5
+- Total execution time: 62min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 39 | 4/4 | 58min | 15min |
+| 40 | 1/3 | 4min | 4min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
 - 39-02: 20min (Next.js 16 upgrade, 2 tasks)
 - 39-03: 18min (Sentry App Router reconfiguration, 2 tasks)
 - 39-04: 8min (full verification suite and smoke test, 2 tasks)
+- 40-01: 4min (shared foundations: theme script + ClientProviders, 2 tasks)
 
 *Updated after each plan completion*
 
@@ -57,6 +59,8 @@ Recent decisions affecting current work:
 - 39-03: AbortError events dropped entirely from Sentry (pure navigation noise)
 - 39-03: App Router and Pages Router coexist via Next.js dual-routing
 - 39-04: Stylelint 17.3 requires block-level disable/enable for multi-line vendor-prefix properties
+- [Phase 40]: THEME_SCRIPT extracted as byte-for-byte identical string to preserve CSP hash
+- [Phase 40]: ClientProviders uses optional routerWrapper prop for framework agnosticism
 
 ### Pending Todos
 
@@ -70,6 +74,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T07:19:46.151Z
-Stopped at: Phase 40 context updated
-Resume file: .planning/phases/40-app-router-foundation/40-CONTEXT.md
+Last session: 2026-02-24T08:45:20.340Z
+Stopped at: Completed 40-01-PLAN.md
+Resume file: None
