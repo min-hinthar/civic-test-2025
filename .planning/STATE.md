@@ -14,7 +14,7 @@ Plan: 4 of 5 in current phase
 Status: Executing Phase 41
 Last activity: 2026-02-24 -- Completed 41-04 (Component migration: 20 files from react-router-dom to next/navigation)
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -44,6 +44,7 @@ Progress: [████████░░] 83%
 
 *Updated after each plan completion*
 | Phase 41 P04 | 7min | 2 tasks | 20 files |
+| Phase 41 P03 | 17min | 2 tasks | 19 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,10 @@ Recent decisions affecting current work:
 - [Phase 41]: usePathname null coalesced to /home (Next.js types return string|null)
 - [Phase 41]: Badge deep-linking uses search params (?focusBadge=id) instead of location.state for cross-page data
 - [Phase 41]: InterviewResults navigate('/') corrected to canonical /home to avoid redirect chain
+- [Phase 41]: Unified useNavigationGuard hook replaces separate TestPage/InterviewPage guard implementations
+- [Phase 41]: HIDDEN_ROUTES removed from NavigationShell/Sidebar/BottomTabBar (only render in protected layout)
+- [Phase 41]: AuthPage searchParams-only returnTo (location.state fallback removed)
+- [Phase 41]: StudyGuidePage hash tracking via useState+hashchange (usePathname excludes hash)
 
 ### Pending Todos
 
@@ -92,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T14:12:00.226Z
-Stopped at: Completed 41-04-PLAN.md
+Last session: 2026-02-24T14:24:07.265Z
+Stopped at: Completed 41-03-PLAN.md
 Resume file: None
