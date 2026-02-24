@@ -1,17 +1,49 @@
-/**
- * Minimal App Router root layout.
- *
- * The main application is still served via the Pages Router (pages/[[...slug]].tsx).
- * This layout exists only to satisfy Next.js App Router requirements for:
- * - app/global-error.tsx (error boundary)
- * - app/dev-sentry-test/page.tsx (dev-only Sentry test page)
- *
- * It does NOT replace or interfere with the Pages Router shell.
- */
+import type { Metadata, Viewport } from 'next';
+import { ClientProviders } from '@/components/ClientProviders';
+import { THEME_SCRIPT } from '@/lib/themeScript';
+
+// Self-hosted Myanmar font (PWA offline support) — match _app.tsx import order
+import '@fontsource/noto-sans-myanmar/400.css';
+import '@fontsource/noto-sans-myanmar/500.css';
+import '@fontsource/noto-sans-myanmar/700.css';
+
+import '../src/styles/globals.css';
+
+export const metadata: Metadata = {
+  title: 'Civic Test Prep - Master Your U.S. Citizenship Test',
+  description:
+    'Bilingual English-Burmese civic test preparation app with timed practice tests, interactive study guides, and comprehensive score tracking.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'US Civics',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#002868' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1f36' },
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
+      <body>
+        <ClientProviders>{children}</ClientProviders>
+      </body>
     </html>
   );
 }
