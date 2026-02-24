@@ -81,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T09:10:09Z
-Stopped at: Completed 40-03-PLAN.md (Phase 40 complete)
-Resume file: None
+Last session: 2026-02-24T11:18:40.046Z
+Stopped at: Phase 41 context gathered
+Resume file: .planning/phases/41-route-migration/41-CONTEXT.md
