@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { BookOpen, Shield, Timer, Volume2 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -411,7 +411,7 @@ export function PreTestScreen({
       <div className="w-full max-w-md mx-auto">
         <div className="border-t border-border/40 pt-6">
           <Link
-            to="/practice"
+            href="/practice"
             className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary-400 hover:bg-primary-subtle/30"
           >
             <BookOpen className="h-5 w-5 shrink-0 text-primary" />

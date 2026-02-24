@@ -26,7 +26,7 @@
  */
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Trophy, RotateCcw, Home, ListFilter, PlayCircle } from 'lucide-react';
 import { motion, useAnimationControls, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
@@ -152,7 +152,7 @@ export function TestResultsScreen({
   onReviewWrongOnly,
   onHome,
 }: TestResultsScreenProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const { categoryMasteries } = useCategoryMastery();
   const { currentStreak } = useStreak();
@@ -916,10 +916,10 @@ export function TestResultsScreen({
                         mastery={w.mastery}
                         isUnattempted={w.mastery === 0}
                         onPractice={() =>
-                          navigate(`/practice?category=${encodeURIComponent(w.categoryId)}`)
+                          router.push(`/practice?category=${encodeURIComponent(w.categoryId)}`)
                         }
                         onReview={() =>
-                          navigate(`/study#category-${encodeURIComponent(w.categoryId)}`)
+                          router.push(`/study#category-${encodeURIComponent(w.categoryId)}`)
                         }
                       />
                     ))}

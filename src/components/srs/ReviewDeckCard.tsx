@@ -8,7 +8,7 @@
  * Spring physics for tap feedback via SPRING_BOUNCY.
  */
 
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { ChevronRight, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
@@ -75,13 +75,13 @@ export function ReviewDeckCard({
   showBurmese,
   onRemove,
 }: ReviewDeckCardProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const subColors = getSubCategoryColors(category as Category);
 
   const handleClick = () => {
     // Navigate to the flashcard view filtered to this question's category
-    navigate(`/study#cards-${encodeURIComponent(category)}`);
+    router.push(`/study#cards-${encodeURIComponent(category)}`);
   };
 
   const handleRemoveClick = (e: React.MouseEvent) => {

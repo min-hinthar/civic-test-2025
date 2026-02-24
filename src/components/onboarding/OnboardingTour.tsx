@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type { Step, CallBackProps } from 'react-joyride';
 import { STATUS, EVENTS, ACTIONS } from 'react-joyride';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useUserState } from '@/contexts/StateContext';
@@ -268,9 +268,9 @@ interface OnboardingTourProps {
 export function OnboardingTour({ forceRun = false }: OnboardingTourProps) {
   const { complete, skip } = useOnboarding();
   const shouldReduceMotion = useReducedMotion();
-  const location = useLocation();
+  const pathname = usePathname() ?? '/home';
 
-  const isOnHome = location.pathname === '/home';
+  const isOnHome = pathname === '/home';
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 

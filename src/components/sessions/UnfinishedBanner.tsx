@@ -14,7 +14,7 @@
 
 import { AnimatePresence, motion } from 'motion/react';
 import { BookOpen, ClipboardCheck, Clock, Layers, Mic, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { timeAgo } from '@/lib/sessions/timeAgo';
@@ -81,12 +81,12 @@ function getSessionRoute(type: SessionSnapshot['type']): string {
 }
 
 export function UnfinishedBanner({ sessions, onDismiss }: UnfinishedBannerProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
 
   const handleCardClick = (session: SessionSnapshot) => {
     hapticLight();
-    navigate(getSessionRoute(session.type));
+    router.push(getSessionRoute(session.type));
   };
 
   return (

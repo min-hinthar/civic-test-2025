@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { TestResultsScreen } from '@/components/results/TestResultsScreen';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { allQuestions } from '@/constants/questions';
@@ -39,14 +39,14 @@ export function PracticeResults({
   onDone,
 }: PracticeResultsProps) {
   const { showBurmese } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Use provided questions or fall back to full question pool for explanation lookup
   const questionsForReview = questions ?? allQuestions;
 
   const handleHome = useCallback(() => {
-    navigate('/home');
-  }, [navigate]);
+    router.push('/home');
+  }, [router]);
 
   return (
     <TestResultsScreen

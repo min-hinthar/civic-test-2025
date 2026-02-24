@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { Flame, Target, Star, BookCheck, Award, Lock, Trophy } from 'lucide-react';
 import clsx from 'clsx';
@@ -51,7 +51,7 @@ interface BadgeHighlightsProps {
 // ---------------------------------------------------------------------------
 
 export function BadgeHighlights({ className }: BadgeHighlightsProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const [earnedRecords, setEarnedRecords] = useState<EarnedBadge[]>([]);
@@ -77,14 +77,14 @@ export function BadgeHighlights({ className }: BadgeHighlightsProps) {
   const earnedIds = useMemo(() => new Set(earnedRecords.map(r => r.badgeId)), [earnedRecords]);
 
   const goToBadges = useCallback(() => {
-    navigate('/hub/achievements');
-  }, [navigate]);
+    router.push('/hub/achievements');
+  }, [router]);
 
   const goToBadge = useCallback(
     (badgeId: string) => {
-      navigate('/hub/achievements', { state: { focusBadge: badgeId } });
+      router.push(`/hub/achievements?focusBadge=${encodeURIComponent(badgeId)}`);
     },
-    [navigate]
+    [router]
   );
 
   const hasEarnedBadges = earnedRecords.length > 0;

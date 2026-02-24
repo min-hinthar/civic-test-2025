@@ -14,7 +14,7 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, Plus, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import * as Progress from '@radix-ui/react-progress';
@@ -69,7 +69,7 @@ function sortOrder(record: SRSCardRecord): number {
 // ---------------------------------------------------------------------------
 
 export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { deck, dueCount, isLoading, removeCard, bulkAddCards, getWeakQuestionIds } = useSRSDeck();
 
   const { categoryMasteries } = useCategoryMastery();
@@ -273,7 +273,7 @@ export function DeckManager({ onStartReview, onBack }: DeckManagerProps) {
               en: 'Start Studying',
               my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
             },
-            onClick: () => navigate('/study'),
+            onClick: () => router.push('/study'),
           }}
         />
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import {
   ResponsiveContainer,
@@ -164,7 +164,7 @@ export function InterviewResults({
   onSwitchMode,
   speedOverride,
 }: InterviewResultsProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const { settings: ttsSettings } = useTTS();
@@ -884,7 +884,7 @@ export function InterviewResults({
             />
             <motion.button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={() => router.push('/home')}
               whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
               className={clsx(
                 'mt-2 flex items-center gap-2 rounded-xl px-6 py-3',

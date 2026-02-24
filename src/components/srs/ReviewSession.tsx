@@ -9,7 +9,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -70,7 +70,7 @@ export interface ReviewSessionProps {
  * - Weak category nudge in summary links to /practice
  */
 export function ReviewSession({ onExit }: ReviewSessionProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
 
@@ -161,9 +161,9 @@ export function ReviewSession({ onExit }: ReviewSessionProps) {
 
   const handlePracticeWeak = useCallback(
     (category: string) => {
-      navigate(`/practice?category=${encodeURIComponent(category)}`);
+      router.push(`/practice?category=${encodeURIComponent(category)}`);
     },
-    [navigate]
+    [router]
   );
 
   // -------------------------------------------------------------------------

@@ -11,7 +11,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, BookOpen, Flame, CheckCircle2, Plus } from 'lucide-react';
 import clsx from 'clsx';
@@ -37,7 +37,7 @@ interface SRSWidgetProps {
 // ---------------------------------------------------------------------------
 
 export function SRSWidget({ className }: SRSWidgetProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -60,8 +60,8 @@ export function SRSWidget({ className }: SRSWidgetProps) {
   }, []);
 
   const navigateToStudy = useCallback(() => {
-    navigate({ pathname: '/study', hash: '#deck' });
-  }, [navigate]);
+    router.push('/study#deck');
+  }, [router]);
 
   // Loading state
   if (isLoading) {
