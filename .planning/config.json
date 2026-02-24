@@ -16,9 +16,13 @@
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "auto_advance": true,
+    "auto_advance": false,
     "code_review": true,
-    "build_verification": true
+    "build_verification": true,
+    "nyquist_validation": true
+  },
+  "git": {
+    "branching_strategy": "none"
   },
   "build": {
     "commands": [
