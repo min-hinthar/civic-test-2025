@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 40 - App Router Foundation
+**Current focus:** Phase 41 - Route Migration
 
 ## Current Position
 
-Phase: 40 of 47 (App Router Foundation)
-Plan: 3 of 3 in current phase
-Status: Phase 40 Complete
-Last activity: 2026-02-24 -- Completed 40-03 (Auth guard layout & returnTo pattern)
+Phase: 41 of 47 (Route Migration)
+Plan: 2 of 5 in current phase
+Status: Executing Phase 41
+Last activity: 2026-02-24 -- Completed 41-02 (Push notification route migration)
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 7
-- Total execution time: 81min
+- v4.0 plans completed: 8
+- Total execution time: 91min
 
 **By Phase:**
 
@@ -29,6 +29,7 @@ Progress: [██████████] 100%
 |-------|-------|-------|----------|
 | 39 | 4/4 | 58min | 15min |
 | 40 | 3/3 | 23min | 8min |
+| 41 | 1/5 | 10min | 10min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
@@ -38,6 +39,7 @@ Progress: [██████████] 100%
 - 40-01: 4min (shared foundations: theme script + ClientProviders, 2 tasks)
 - 40-02: 7min (root layout & AppShell refactor, 2 tasks)
 - 40-03: 12min (auth guard layout & returnTo pattern, 2 tasks)
+- 41-02: 10min (push notification route migration, 2 tasks)
 
 *Updated after each plan completion*
 
@@ -68,6 +70,8 @@ Recent decisions affecting current work:
 - [Phase 40]: ClientProviders in app/layout.tsx has no routerWrapper (App Router doesn't use react-router-dom)
 - [Phase 40]: URL param returnTo replaces react-router state for redirect-after-login (cross-router compatible)
 - [Phase 40]: All returnTo values validated: must start with / and not // (open redirect prevention)
+- [Phase 41]: Remove old pages/api files immediately when App Router route exists (Next.js build fails on conflicts)
+- [Phase 41]: Route Handlers use request.headers.get('x-forwarded-for') only (no socket.remoteAddress)
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T11:18:40.046Z
-Stopped at: Phase 41 context gathered
-Resume file: .planning/phases/41-route-migration/41-CONTEXT.md
+Last session: 2026-02-24T13:54:59Z
+Stopped at: Completed 41-02-PLAN.md
+Resume file: .planning/phases/41-route-migration/41-02-SUMMARY.md

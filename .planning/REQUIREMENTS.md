@@ -19,7 +19,7 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 - [ ] **MIGR-08**: Page transitions work with App Router using `template.tsx` pattern
 - [ ] **MIGR-09**: CSP upgraded from hash-based to nonce-based using proxy nonce injection
 - [ ] **MIGR-10**: Service worker updated for App Router asset paths
-- [ ] **MIGR-11**: All API routes migrated to Route Handlers (`app/api/*/route.ts`)
+- [x] **MIGR-11**: All API routes migrated to Route Handlers (`app/api/*/route.ts`)
 - [ ] **MIGR-12**: Clean URLs work without hash prefix (no more `#/dashboard`)
 
 ### Readiness
@@ -108,7 +108,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-08 | Phase 41 | Pending |
 | MIGR-09 | Phase 42 | Pending |
 | MIGR-10 | Phase 42 | Pending |
-| MIGR-11 | Phase 41 | Pending |
+| MIGR-11 | Phase 41 | Complete |
 | MIGR-12 | Phase 41 | Pending |
 | RDNS-01 | Phase 43 | Pending |
 | RDNS-02 | Phase 43 | Pending |
