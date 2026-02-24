@@ -18,7 +18,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   if (!user) {
     // Validate returnTo is a safe relative path (open redirect prevention)
     const safeReturnTo =
-      pathname.startsWith('/') && !pathname.startsWith('//') ? pathname : undefined;
+      pathname && pathname.startsWith('/') && !pathname.startsWith('//') ? pathname : undefined;
     const authUrl = safeReturnTo ? `/auth?returnTo=${encodeURIComponent(safeReturnTo)}` : '/auth';
     redirect(authUrl);
   }
