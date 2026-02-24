@@ -15,7 +15,7 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 - [x] **MIGR-04**: App Router root layout with Server Component shell and ClientProviders wrapper
 - [ ] **MIGR-05**: All 15+ routes migrated from react-router-dom to Next.js file-based routing
 - [ ] **MIGR-06**: `react-router-dom` removed from package.json
-- [ ] **MIGR-07**: Auth guard implemented via `(protected)/layout.tsx` route group
+- [x] **MIGR-07**: Auth guard implemented via `(protected)/layout.tsx` route group
 - [ ] **MIGR-08**: Page transitions work with App Router using `template.tsx` pattern
 - [ ] **MIGR-09**: CSP upgraded from hash-based to nonce-based using proxy nonce injection
 - [ ] **MIGR-10**: Service worker updated for App Router asset paths
@@ -104,7 +104,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-04 | Phase 40 | Complete |
 | MIGR-05 | Phase 41 | Pending |
 | MIGR-06 | Phase 41 | Pending |
-| MIGR-07 | Phase 40 | Pending |
+| MIGR-07 | Phase 40 | Complete |
 | MIGR-08 | Phase 41 | Pending |
 | MIGR-09 | Phase 42 | Pending |
 | MIGR-10 | Phase 42 | Pending |

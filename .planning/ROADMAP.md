@@ -77,7 +77,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 **v4.0 Next-Gen Architecture**
 
 - [x] **Phase 39: Next.js 16 Upgrade and Tooling** - Upgrade to Next.js 16, configure webpack fallback, reconfigure Sentry and service worker tooling
-- [ ] **Phase 40: App Router Foundation** - Create root layout, extract ClientProviders, set up route group directories and auth guard
+- [x] **Phase 40: App Router Foundation** - Create root layout, extract ClientProviders, set up route group directories and auth guard (completed 2026-02-24)
 - [ ] **Phase 41: Route Migration** - Migrate all 15+ routes from react-router-dom to App Router file-based routing in one pass
 - [ ] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router
 - [ ] **Phase 43: Test Readiness Score and Drill Mode** - Surface readiness scoring and weak-area drilling as first-class Dashboard features
@@ -210,7 +210,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete    | 2026-02-23 |
-| 40. App Router Foundation | 2/3 | In Progress|  |
+| 40. App Router Foundation | 3/3 | Complete   | 2026-02-24 |
 | 41. Route Migration | 0/? | Not started | - |
 | 42. CSP Nonce Migration and PWA Update | 0/? | Not started | - |
 | 43. Test Readiness Score and Drill Mode | 0/? | Not started | - |
