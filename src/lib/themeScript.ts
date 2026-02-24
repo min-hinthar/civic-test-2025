@@ -1,6 +1,6 @@
-// IMPORTANT: If you change this script, you must update the SHA-256 hash
-// in proxy.ts (THEME_SCRIPT_HASH). The browser console will show the
-// new hash in the CSP violation error message.
+// IMPORTANT: If you change these scripts, you must update the SHA-256 hashes
+// in proxy.ts (THEME_SCRIPT_HASH, HASH_REDIRECT_SCRIPT_HASH). The browser
+// console will show the new hash in the CSP violation error message.
 export const THEME_SCRIPT = `
 (function() {
   try {
@@ -14,3 +14,9 @@ export const THEME_SCRIPT = `
   } catch(e) {}
 })();
 `;
+
+/**
+ * Hash redirect script: converts legacy hash-based URLs (#/path) to clean URLs (/path).
+ * Guards against Supabase auth callback hashes (#access_token=...) which must not be redirected.
+ */
+export const HASH_REDIRECT_SCRIPT = `(function(){var h=window.location.hash;if(h&&h.indexOf('#/')===0&&h.indexOf('#access_token=')!==0){window.location.replace(h.substring(1)+window.location.search);}})();`;

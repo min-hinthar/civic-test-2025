@@ -2,6 +2,7 @@
 
 import { redirect, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { NavigationShell } from '@/components/navigation/NavigationShell';
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
@@ -23,5 +24,5 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     redirect(authUrl);
   }
 
-  return <>{children}</>;
+  return <NavigationShell>{children}</NavigationShell>;
 }

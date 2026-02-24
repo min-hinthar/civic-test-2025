@@ -1,6 +1,7 @@
 'use client';
 
-import { type ComponentType, type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
+import { installHistoryGuard } from '@/lib/historyGuard';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { OfflineProvider } from '@/contexts/OfflineContext';
@@ -12,32 +13,34 @@ import { TTSProvider } from '@/contexts/TTSContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/BilingualToast';
 import { NavigationProvider } from '@/components/navigation/NavigationProvider';
+import { useViewportHeight } from '@/lib/useViewportHeight';
+import { cleanExpiredSessions } from '@/lib/sessions/sessionStore';
+
+// Install history guard before component mounts -- catches Safari SecurityError
+// from rate-limited replaceState/pushState calls so they don't crash navigation.
+installHistoryGuard();
 
 /**
- * Shared provider tree for both Pages Router (AppShell) and App Router (layout.tsx).
+ * Shared client-side provider tree for App Router layout.tsx.
  *
- * Nesting order matches AppShell.tsx exactly:
+ * Nesting order:
  *   ErrorBoundary > LanguageProvider > ThemeProvider > TTSProvider > ToastProvider
  *   > OfflineProvider > AuthProvider > SocialProvider > SRSProvider > StateProvider
- *   > [RouterWrapper] > NavigationProvider > {children}
- *
- * The optional `routerWrapper` prop inserts a router component (e.g. BrowserRouter)
- * between StateProvider and NavigationProvider, matching the position of <Router>
- * in AppShell.tsx.
+ *   > NavigationProvider > {children}
  */
 interface ClientProvidersProps {
   children: ReactNode;
-  routerWrapper?: ComponentType<{ children: ReactNode }>;
 }
 
-export function ClientProviders({ children, routerWrapper: RouterWrapper }: ClientProvidersProps) {
-  const innerContent = <NavigationProvider>{children}</NavigationProvider>;
+export function ClientProviders({ children }: ClientProvidersProps) {
+  useViewportHeight();
 
-  const wrappedContent = RouterWrapper ? (
-    <RouterWrapper>{innerContent}</RouterWrapper>
-  ) : (
-    innerContent
-  );
+  // Clean expired session snapshots from IndexedDB on app startup
+  useEffect(() => {
+    cleanExpiredSessions().catch(() => {
+      // IndexedDB not available
+    });
+  }, []);
 
   return (
     <ErrorBoundary>
@@ -49,7 +52,9 @@ export function ClientProviders({ children, routerWrapper: RouterWrapper }: Clie
                 <AuthProvider>
                   <SocialProvider>
                     <SRSProvider>
-                      <StateProvider>{wrappedContent}</StateProvider>
+                      <StateProvider>
+                        <NavigationProvider>{children}</NavigationProvider>
+                      </StateProvider>
                     </SRSProvider>
                   </SocialProvider>
                 </AuthProvider>
