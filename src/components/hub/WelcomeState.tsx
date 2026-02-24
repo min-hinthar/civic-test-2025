@@ -2,7 +2,7 @@
 
 import { BookOpen, ClipboardCheck, GraduationCap } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -75,7 +75,7 @@ const GUIDED_STEPS: GuidedStep[] = [
  * - Stagger animation for entrance
  */
 export function WelcomeState() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
 
@@ -117,7 +117,7 @@ export function WelcomeState() {
               <button
                 type="button"
                 className="flex w-full items-center gap-4 p-4 text-left min-h-[44px]"
-                onClick={() => navigate(step.path)}
+                onClick={() => router.push(step.path)}
               >
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/15">
                   <step.icon className="h-5 w-5 text-primary" />

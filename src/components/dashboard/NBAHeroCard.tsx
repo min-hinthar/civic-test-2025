@@ -11,7 +11,7 @@
  * NBAHeroSkeleton is exported as a loading placeholder.
  */
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'motion/react';
 import clsx from 'clsx';
 import {
@@ -189,7 +189,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
                 transition={SPRING_BOUNCY}
               >
                 <Link
-                  to={nbaState.cta.to}
+                  href={nbaState.cta.to}
                   className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-bold text-white transition-colors hover:bg-primary/90"
                 >
                   <span>{nbaState.cta.label.en}</span>
@@ -204,7 +204,7 @@ export function NBAHeroCard({ nbaState }: NBAHeroCardProps) {
                 transition={SPRING_SNAPPY}
               >
                 <Link
-                  to={nbaState.skip.to}
+                  href={nbaState.skip.to}
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {nbaState.skip.label.en}

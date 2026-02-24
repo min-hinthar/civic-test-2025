@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { Clock, CheckCircle, XCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -63,7 +63,7 @@ function ActivitySkeleton() {
  */
 export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCardProps) {
   const { showBurmese } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
 
   // Show last 3 sessions (already sorted newest first)
@@ -74,7 +74,7 @@ export function RecentActivityCard({ testHistory, isLoading }: RecentActivityCar
   }
 
   const handleClick = () => {
-    navigate('/hub/history');
+    router.push('/hub/history');
   };
 
   return (

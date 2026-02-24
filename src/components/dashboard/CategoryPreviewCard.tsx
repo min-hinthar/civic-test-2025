@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { BarChart3 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SubcategoryBar } from '@/components/hub/SubcategoryBar';
@@ -75,7 +75,7 @@ export function CategoryPreviewCard({
   isLoading,
 }: CategoryPreviewCardProps) {
   const { showBurmese } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const hasData = useMemo(() => {
     const values = Object.values(categoryMasteries);
@@ -145,7 +145,7 @@ export function CategoryPreviewCard({
                           percentage={subMastery}
                           label={subName ?? { en: subCategory, my: subCategory }}
                           onClick={() =>
-                            navigate(`/study?category=${encodeURIComponent(subCategory)}#cards`)
+                            router.push(`/study?category=${encodeURIComponent(subCategory)}#cards`)
                           }
                         />
                       );
@@ -162,7 +162,7 @@ export function CategoryPreviewCard({
           <motion.button
             type="button"
             className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-            onClick={() => navigate('/hub/categories')}
+            onClick={() => router.push('/hub/categories')}
             whileTap={{ opacity: 0.7 }}
             transition={SPRING_SNAPPY}
           >

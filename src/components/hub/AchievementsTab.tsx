@@ -16,7 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import {
   BookOpen,
@@ -174,18 +174,17 @@ export function AchievementsTab({
   badgeCheckData,
   isLoading,
 }: AchievementsTabProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { showBurmese } = useLanguage();
   const { user } = useAuth();
   const { isOptedIn, isLoading: socialLoading } = useSocial();
-  const location = useLocation();
 
-  // Scroll-to-badge when navigated from dashboard with focusBadge state
-  // Derive focus target from navigation state (useMemo avoids setState-in-effect)
+  // Scroll-to-badge when navigated from dashboard with focusBadge search param
+  // Derive focus target from search params (useMemo avoids setState-in-effect)
   const focusBadgeFromNav = useMemo(() => {
-    const state = location.state as { focusBadge?: string } | null;
-    return state?.focusBadge ?? null;
-  }, [location.state]);
+    return searchParams?.get('focusBadge') ?? null;
+  }, [searchParams]);
 
   const [focusDismissed, setFocusDismissed] = useState(false);
 
@@ -341,7 +340,7 @@ export function AchievementsTab({
                       en: 'Start Studying',
                       my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
                     },
-                    onClick: () => navigate('/study'),
+                    onClick: () => router.push('/study'),
                   }}
                 />
               </div>

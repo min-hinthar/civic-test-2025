@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { TrendingUp, Flame, BookOpen, CheckCircle, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -79,7 +79,7 @@ export function OverviewTab({
   totalQuestions,
   isLoading,
 }: OverviewTabProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const categoriesSectionRef = useRef<HTMLElement>(null);
 
@@ -140,7 +140,7 @@ export function OverviewTab({
               my: '\u1006\u1000\u103A\u1010\u102D\u102F\u1000\u103A\u101B\u1000\u103A',
             }}
             value={currentStreak}
-            onClick={() => navigate('/hub/achievements')}
+            onClick={() => router.push('/hub/achievements')}
           />
           <StatCard
             icon={BookOpen}
@@ -150,7 +150,7 @@ export function OverviewTab({
             }}
             value={srsDueCount}
             badge={srsDueCount > 0 ? 'Review Now' : undefined}
-            onClick={() => navigate('/study#review')}
+            onClick={() => router.push('/study#review')}
           />
           <StatCard
             icon={CheckCircle}
@@ -159,7 +159,7 @@ export function OverviewTab({
               my: '\u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u103C\u102E\u1038',
             }}
             value={`${practicedCount}/${totalQuestions}`}
-            onClick={() => navigate('/study')}
+            onClick={() => router.push('/study')}
           />
         </div>
       </StaggeredItem>
@@ -229,7 +229,9 @@ export function OverviewTab({
                             percentage={subMastery}
                             label={subName ?? { en: subCategory, my: subCategory }}
                             onClick={() =>
-                              navigate(`/study?category=${encodeURIComponent(subCategory)}#cards`)
+                              router.push(
+                                `/study?category=${encodeURIComponent(subCategory)}#cards`
+                              )
                             }
                           />
                         );

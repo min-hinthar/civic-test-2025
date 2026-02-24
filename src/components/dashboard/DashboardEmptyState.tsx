@@ -1,7 +1,7 @@
 'use client';
 
 import { Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 import { EmptyState } from '@/components/ui/EmptyState';
 
@@ -17,7 +17,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
  * that navigates to the Study Guide.
  */
 export function DashboardEmptyState() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <EmptyState
@@ -36,7 +36,7 @@ export function DashboardEmptyState() {
           en: 'Start Studying',
           my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
         },
-        onClick: () => navigate('/study'),
+        onClick: () => router.push('/study'),
       }}
     />
   );

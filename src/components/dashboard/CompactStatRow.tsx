@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import CountUp from 'react-countup';
 import { motion } from 'motion/react';
 import { Flame, TrendingUp, BookOpen, CheckCircle, type LucideIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -148,13 +148,13 @@ interface StatItemProps {
 }
 
 function StatItem({ def, props, shouldReduceMotion, showBurmese }: StatItemProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const Icon = def.icon;
   const value = def.getValue(props);
   const colorClass = def.getColorClass ? def.getColorClass(value) : 'text-text-primary';
 
   const handleClick = () => {
-    navigate(def.route);
+    router.push(def.route);
   };
 
   // Determine what to render for the number

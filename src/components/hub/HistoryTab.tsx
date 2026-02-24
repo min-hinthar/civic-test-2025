@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, ChevronUp, Clock, ClipboardList, Mic2 } from 'lucide-react';
 import clsx from 'clsx';
@@ -73,7 +73,7 @@ const interviewEndReasonCopy: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const { showWarning } = useToast();
 
@@ -204,7 +204,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
             en: 'Start Studying',
             my: '\u1005\u1010\u1004\u103A\u101C\u1031\u1037\u101C\u102C\u1015\u102B',
           },
-          onClick: () => navigate('/study'),
+          onClick: () => router.push('/study'),
         }}
       />
     );
@@ -522,7 +522,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
               <BilingualButton
                 label={strings.actions.startTest}
                 variant="chunky"
-                onClick={() => navigate('/test')}
+                onClick={() => router.push('/test')}
               />
             </GlassCard>
           </FadeIn>
@@ -789,7 +789,7 @@ export function HistoryTab({ testHistory, isLoading }: HistoryTabProps) {
               <BilingualButton
                 label={strings.interview.startInterview}
                 variant="chunky"
-                onClick={() => navigate('/interview')}
+                onClick={() => router.push('/interview')}
               />
             </GlassCard>
           </FadeIn>
