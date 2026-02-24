@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 41 of 47 (Route Migration)
-Plan: 3 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: Executing Phase 41
-Last activity: 2026-02-24 -- Completed 41-01 (Route scaffolding: page wrappers, template, error/loading/not-found, hub catch-all, config redirects)
+Last activity: 2026-02-24 -- Completed 41-04 (Component migration: 20 files from react-router-dom to next/navigation)
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Progress: [███████░░░] 67%
 - 41-02: 10min (push notification route migration, 2 tasks)
 
 *Updated after each plan completion*
+| Phase 41 P04 | 7min | 2 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 41]: SPRING_GENTLE for enter-only page transitions (smooth without exit counterpart)
 - [Phase 41]: HubPageClient receives initialTab but defers forwarding to HubPage until Plan 03/04
 - [Phase 41]: usePathname null coalesced to /home (Next.js types return string|null)
+- [Phase 41]: Badge deep-linking uses search params (?focusBadge=id) instead of location.state for cross-page data
+- [Phase 41]: InterviewResults navigate('/') corrected to canonical /home to avoid redirect chain
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T13:57:46Z
-Stopped at: Completed 41-01-PLAN.md
-Resume file: .planning/phases/41-route-migration/41-01-SUMMARY.md
+Last session: 2026-02-24T14:12:00.226Z
+Stopped at: Completed 41-04-PLAN.md
+Resume file: None
