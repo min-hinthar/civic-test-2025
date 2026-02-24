@@ -9,10 +9,10 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { Sun, Moon, LogOut, Heart, Gift } from 'lucide-react';
 import { motion } from 'motion/react';
-import { NAV_TABS, HIDDEN_ROUTES } from './navConfig';
+import { NAV_TABS } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
 import { useScrollSnapCenter } from '@/lib/useScrollSnapCenter';
@@ -30,13 +30,13 @@ const TOOLTIP_KEY = 'civic-test-lang-tooltip-shown';
  * Hides on scroll down, shows on scroll up.
  */
 export function BottomTabBar() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname() ?? '/home';
+  const router = useRouter();
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
   const { showBurmese } = useLanguage();
   const { isLocked, navVisible, badges } = useNavigation();
-  const scrollRef = useScrollSnapCenter(location.pathname);
+  const scrollRef = useScrollSnapCenter(pathname);
 
   // --- First-time tooltip (shared key with Sidebar) ---
   const [showTooltip, setShowTooltip] = useState(() => {
@@ -55,18 +55,13 @@ export function BottomTabBar() {
 
   const handleSignOut = useCallback(() => {
     hapticLight();
-    logout().then(() => navigate('/'));
-  }, [logout, navigate]);
+    logout().then(() => router.push('/'));
+  }, [logout, router]);
 
   const handleLockedTap = useCallback(() => {
     // NavItem handles the shake animation; we could show a toast here
     // but the lock message is available from NavigationProvider if needed.
   }, []);
-
-  // Hide on public/auth routes
-  if (HIDDEN_ROUTES.includes(location.pathname)) {
-    return null;
-  }
 
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
@@ -79,9 +74,9 @@ export function BottomTabBar() {
       <div ref={scrollRef} className="flex items-center overflow-x-auto scrollbar-hide px-1">
         {NAV_TABS.map(tab => {
           const isActive =
-            location.pathname === tab.href ||
-            (tab.href === '/study' && location.pathname.startsWith('/study')) ||
-            (tab.href === '/hub' && location.pathname.startsWith('/hub'));
+            pathname === tab.href ||
+            (tab.href === '/study' && pathname.startsWith('/study')) ||
+            (tab.href === '/hub' && pathname.startsWith('/hub'));
 
           return (
             <NavItem
@@ -120,24 +115,24 @@ export function BottomTabBar() {
           type="button"
           onClick={() => {
             hapticLight();
-            navigate('/about');
+            router.push('/about');
           }}
           whileTap={{ scale: 0.92 }}
           className="flex shrink-0 flex-col items-center justify-center py-1 px-1.5 min-w-[60px] min-h-[56px] tap-highlight-none"
           aria-label="About"
-          aria-current={location.pathname === '/about' ? 'page' : undefined}
+          aria-current={pathname === '/about' ? 'page' : undefined}
         >
           <div className="flex flex-col items-center gap-0.5">
             <span className="flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/10">
               <Heart
-                className={`h-6 w-6 ${location.pathname === '/about' ? 'text-primary fill-current' : 'text-muted-foreground'}`}
+                className={`h-6 w-6 ${pathname === '/about' ? 'text-primary fill-current' : 'text-muted-foreground'}`}
                 strokeWidth={2}
               />
             </span>
             <span
               className={`text-xs whitespace-nowrap transition-colors ${
                 showBurmese ? 'font-myanmar' : ''
-              } ${location.pathname === '/about' ? 'text-primary font-semibold' : 'text-muted-foreground'}`}
+              } ${pathname === '/about' ? 'text-primary font-semibold' : 'text-muted-foreground'}`}
             >
               {showBurmese ? 'အကြောင်း' : 'About'}
             </span>

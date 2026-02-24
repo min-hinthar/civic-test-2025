@@ -7,7 +7,7 @@
  * No nav items -- just logo branding with an optional action button.
  */
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowLeft, Heart } from 'lucide-react';
 import { FlagToggle } from '@/components/ui/FlagToggle';
 
@@ -31,7 +31,7 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link
-          to="/"
+          href="/"
           className="font-extrabold text-foreground text-sm hover:opacity-80 transition-opacity"
         >
           Civic Test Prep
@@ -44,7 +44,7 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
           {/* About heart icon — independent of other action buttons */}
           {showAbout && (
             <Link
-              to="/about"
+              href="/about"
               className="flex items-center justify-center h-9 w-9 min-h-[44px] min-w-[44px] rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
               aria-label="About this app"
             >
@@ -54,7 +54,7 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
 
           {showSignIn && (
             <Link
-              to="/auth"
+              href="/auth"
               className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary/20"
             >
               Sign In
@@ -63,7 +63,7 @@ export function GlassHeader({ showSignIn, showBack, backHref = '/', showAbout }:
 
           {showBack && (
             <Link
-              to={backHref}
+              href={backHref}
               className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />

@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sun,
@@ -25,7 +25,7 @@ import {
   Gift,
 } from 'lucide-react';
 
-import { NAV_TABS, HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
+import { NAV_TABS, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { NavItem } from './NavItem';
 import { useNavigation } from './NavigationProvider';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -48,8 +48,8 @@ const TOOLTIP_KEY = 'civic-test-lang-tooltip-shown';
 // ---------------------------------------------------------------------------
 
 export function Sidebar() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname() ?? '/home';
+  const router = useRouter();
   const {
     isExpanded,
     setExpanded,
@@ -102,13 +102,8 @@ export function Sidebar() {
   // --- Sign out ---
   const handleSignOut = useCallback(() => {
     hapticLight();
-    logout().then(() => navigate('/'));
-  }, [logout, navigate]);
-
-  // --- Hide on public/auth routes ---
-  if (HIDDEN_ROUTES.includes(location.pathname)) {
-    return null;
-  }
+    logout().then(() => router.push('/'));
+  }, [logout, router]);
 
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
@@ -165,9 +160,9 @@ export function Sidebar() {
       <nav className="flex flex-col gap-1 px-2 py-3" aria-label="Main">
         {NAV_TABS.map(tab => {
           const isActive =
-            location.pathname === tab.href ||
-            (tab.href === '/study' && location.pathname.startsWith('/study')) ||
-            (tab.href === '/hub' && location.pathname.startsWith('/hub'));
+            pathname === tab.href ||
+            (tab.href === '/study' && pathname.startsWith('/study')) ||
+            (tab.href === '/hub' && pathname.startsWith('/hub'));
 
           return (
             <motion.div
@@ -216,10 +211,10 @@ export function Sidebar() {
         {/* About link -- Heart icon */}
         <SidebarAboutButton
           isExpanded={isExpanded}
-          isActive={location.pathname === '/about'}
+          isActive={pathname === '/about'}
           onClick={() => {
             hapticLight();
-            navigate('/about');
+            router.push('/about');
           }}
           spring={spring}
         />

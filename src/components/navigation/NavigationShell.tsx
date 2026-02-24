@@ -9,9 +9,9 @@
  */
 
 import type { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { motion } from 'motion/react';
-import { HIDDEN_ROUTES, SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
+import { SIDEBAR_EXPANDED_W, SIDEBAR_COLLAPSED_W } from './navConfig';
 import { useNavigation } from './NavigationProvider';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useFocusOnNavigation } from '@/hooks/useFocusOnNavigation';
@@ -26,20 +26,18 @@ interface NavigationShellProps {
 }
 
 export function NavigationShell({ children }: NavigationShellProps) {
-  const location = useLocation();
+  // usePathname kept for potential future per-route layout logic
+  usePathname();
   const { isExpanded, tier } = useNavigation();
   const shouldReduceMotion = useReducedMotion();
   useFocusOnNavigation();
-  const isPublicRoute = HIDDEN_ROUTES.includes(location.pathname);
 
+  // NavigationShell only renders inside (protected)/layout.tsx,
+  // so all routes it sees are protected routes that should show nav.
   // On tablet/desktop, push content to make room for the sidebar.
   // Mobile uses BottomTabBar, no margin needed.
   const marginLeft =
-    !isPublicRoute && tier !== 'mobile'
-      ? isExpanded
-        ? SIDEBAR_EXPANDED_W
-        : SIDEBAR_COLLAPSED_W
-      : 0;
+    tier !== 'mobile' ? (isExpanded ? SIDEBAR_EXPANDED_W : SIDEBAR_COLLAPSED_W) : 0;
 
   return (
     <>
@@ -50,7 +48,7 @@ export function NavigationShell({ children }: NavigationShellProps) {
       >
         Skip to content
       </a>
-      {!isPublicRoute && <Sidebar />}
+      <Sidebar />
       <motion.div
         id="main-content"
         tabIndex={-1}
@@ -61,7 +59,7 @@ export function NavigationShell({ children }: NavigationShellProps) {
         <OfflineBanner />
         {children}
       </motion.div>
-      {!isPublicRoute && <BottomTabBar />}
+      <BottomTabBar />
     </>
   );
 }

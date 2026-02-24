@@ -8,7 +8,7 @@
  * Handles active state, badges, lock behavior, tap animation, and tooltips.
  */
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion } from 'motion/react';
 import type { NavTab, NavBadges } from './navConfig';
 import { NavBadge } from './NavBadge';
@@ -189,7 +189,7 @@ export function NavItem({
 
   return (
     <Link
-      to={tab.href}
+      href={tab.href}
       className={wrapperClasses}
       aria-current={isActive ? 'page' : undefined}
       data-tour={tab.dataTour}
