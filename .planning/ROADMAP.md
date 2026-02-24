@@ -115,9 +115,9 @@ Plans:
   4. The app still loads via the existing Pages Router catch-all (no routes moved yet)
 **Plans**: 3 plans
 Plans:
-- [ ] 40-01-PLAN.md -- Theme script extraction and ClientProviders creation
-- [ ] 40-02-PLAN.md -- App Router layout and AppShell refactor
-- [ ] 40-03-PLAN.md -- Auth guard layout and returnTo migration
+- [x] 40-01-PLAN.md -- Theme script extraction and ClientProviders creation
+- [x] 40-02-PLAN.md -- App Router layout and AppShell refactor
+- [x] 40-03-PLAN.md -- Auth guard layout and returnTo migration
 
 ### Phase 41: Route Migration
 **Goal**: All routes use Next.js file-based routing with clean URLs and react-router-dom is removed
@@ -129,7 +129,13 @@ Plans:
   3. Page transitions animate on route changes using the `template.tsx` pattern
   4. API routes respond correctly as App Router Route Handlers (`app/api/*/route.ts`)
   5. Navigation between all routes preserves provider state (no full page reloads)
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 41-01-PLAN.md -- Route scaffolding: page.tsx wrappers, template.tsx, error/loading/not-found, hub catch-all, config redirects
+- [ ] 41-02-PLAN.md -- API route migration: 4 push notification Route Handlers
+- [ ] 41-03-PLAN.md -- Navigation + page migration: nav components, hooks, useNavigationGuard, all page files
+- [ ] 41-04-PLAN.md -- Component migration: dashboard, hub, SRS, social, onboarding, test/interview/practice components
+- [ ] 41-05-PLAN.md -- Cleanup: wire layouts, delete Pages Router, remove react-router-dom, full verification
 
 ### Phase 42: CSP Nonce Migration and PWA Update
 **Goal**: CSP uses nonce-based allowlisting and the service worker caches App Router assets correctly
@@ -211,7 +217,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 |-------|----------------|--------|-----------|
 | 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete    | 2026-02-23 |
 | 40. App Router Foundation | 3/3 | Complete    | 2026-02-24 |
-| 41. Route Migration | 0/? | Not started | - |
+| 41. Route Migration | 0/5 | Not started | - |
 | 42. CSP Nonce Migration and PWA Update | 0/? | Not started | - |
 | 43. Test Readiness Score and Drill Mode | 0/? | Not started | - |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
