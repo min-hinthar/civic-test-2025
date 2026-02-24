@@ -89,7 +89,7 @@ Each task was committed atomically:
 1. **Task 1: Migrate dashboard and hub components** - `9c57229` (feat)
 2. **Task 2: Migrate SRS, interview, practice, test, session, social, and onboarding components** - `a667ffa` (feat)
 
-**Plan metadata:** TBD (docs: complete plan)
+**Plan metadata:** `b798e99` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/components/dashboard/CategoryPreviewCard.tsx` - useNavigate -> useRouter
