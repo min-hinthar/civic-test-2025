@@ -1,28 +1,12 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-
-// IMPORTANT: If you change this script, you must update the SHA-256 hash
-// in middleware.ts (THEME_SCRIPT_HASH). The browser console will show the
-// new hash in the CSP violation error message.
-const THEME_SCRIPT = `
-(function() {
-  try {
-    var stored = localStorage.getItem('civic-theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored || (prefersDark ? 'dark' : 'light');
-    document.documentElement.classList.add(theme);
-    document.documentElement.style.setProperty('color-scheme', theme);
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = theme === 'dark' ? '#1a1f36' : '#002868';
-  } catch(e) {}
-})();
-`;
+import { THEME_SCRIPT } from '@/lib/themeScript';
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
         {/* Blocking theme script - prevents FOUC by applying theme before React hydrates */}
-        {/* CSP allowlisted via hash in middleware.ts (not nonce — Pages Router limitation) */}
+        {/* CSP allowlisted via hash in proxy.ts (not nonce — Pages Router limitation) */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
 
         {/* Viewport: initial-scale=1 prevents iOS auto-zoom; viewport-fit=cover
