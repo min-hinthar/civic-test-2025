@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 41 of 47 (Route Migration)
-Plan: 4 of 5 in current phase
-Status: Executing Phase 41
-Last activity: 2026-02-24 -- Completed 41-04 (Component migration: 20 files from react-router-dom to next/navigation)
+Plan: 5 of 5 in current phase
+Status: Phase 41 COMPLETE
+Last activity: 2026-02-24 -- Completed 41-05 (Final cleanup: removed react-router-dom, deleted Pages Router, wired layouts)
 
-Progress: [█████████░] 92%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -45,6 +45,7 @@ Progress: [█████████░] 92%
 *Updated after each plan completion*
 | Phase 41 P04 | 7min | 2 tasks | 20 files |
 | Phase 41 P03 | 17min | 2 tasks | 19 files |
+| Phase 41 P05 | 28min | 2 tasks | 36 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - [Phase 41]: HIDDEN_ROUTES removed from NavigationShell/Sidebar/BottomTabBar (only render in protected layout)
 - [Phase 41]: AuthPage searchParams-only returnTo (location.state fallback removed)
 - [Phase 41]: StudyGuidePage hash tracking via useState+hashchange (usePathname excludes hash)
+- [Phase 41]: src/pages renamed to src/views because Next.js detects src/pages as Pages Router directory conflicting with app/
+- [Phase 41]: GlobalOverlays client component for ssr:false dynamic overlay imports (not allowed in Server Components)
+- [Phase 41]: Suspense boundaries required for pages using useSearchParams (App Router static generation)
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T14:24:07.265Z
-Stopped at: Completed 41-03-PLAN.md
+Last session: 2026-02-24T14:58:57.406Z
+Stopped at: Completed 41-05-PLAN.md
 Resume file: None
