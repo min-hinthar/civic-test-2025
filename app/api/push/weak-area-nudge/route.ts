@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { type NextRequest, NextResponse } from 'next/server';
 import webPush from 'web-push';
 import { createClient } from '@supabase/supabase-js';
 
@@ -47,22 +47,18 @@ const WEAK_AREA_MESSAGES = [
   },
 ];
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function POST(request: NextRequest) {
   try {
     // Verify admin authorization (simple API key check for cron jobs)
-    const authHeader = req.headers.authorization;
+    const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { userId, weakCategory, daysSinceStudied } = req.body;
+    const { userId, weakCategory, daysSinceStudied } = await request.json();
 
     if (!userId || !weakCategory) {
-      return res.status(400).json({ error: 'userId and weakCategory are required' });
+      return NextResponse.json({ error: 'userId and weakCategory are required' }, { status: 400 });
     }
 
     const days = daysSinceStudied ?? '?';
@@ -76,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) throw error;
 
     if (!subscriptions || subscriptions.length === 0) {
-      return res.status(200).json({ sent: 0, message: 'No push subscription for user' });
+      return NextResponse.json({ sent: 0, message: 'No push subscription for user' });
     }
 
     // Pick a random message and fill in placeholders
@@ -113,9 +109,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    return res.status(200).json({ sent, failed });
+    return NextResponse.json({ sent, failed });
   } catch (error) {
     console.error('Weak area nudge push error:', error);
-    return res.status(500).json({ error: 'Failed to send weak area nudge notification' });
+    return NextResponse.json(
+      { error: 'Failed to send weak area nudge notification' },
+      { status: 500 }
+    );
   }
 }

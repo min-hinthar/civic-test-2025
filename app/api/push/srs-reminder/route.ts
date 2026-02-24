@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { type NextRequest, NextResponse } from 'next/server';
 import webPush from 'web-push';
 import { createClient } from '@supabase/supabase-js';
 
@@ -31,16 +31,12 @@ if (
  *
  * Returns: { notified: number, errors: number }
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function POST(request: NextRequest) {
   try {
     // Verify API key authorization (for cron job callers)
-    const apiKey = req.headers['x-api-key'];
+    const apiKey = request.headers.get('x-api-key');
     if (!apiKey || apiKey !== process.env.SRS_CRON_API_KEY) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const now = new Date().toISOString();
@@ -54,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (dueError) throw dueError;
 
     if (!dueCards || dueCards.length === 0) {
-      return res.status(200).json({ notified: 0, errors: 0 });
+      return NextResponse.json({ notified: 0, errors: 0 });
     }
 
     // Group due counts by user
@@ -111,9 +107,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    return res.status(200).json({ notified, errors });
+    return NextResponse.json({ notified, errors });
   } catch (error) {
     console.error('SRS reminder push error:', error);
-    return res.status(500).json({ error: 'Failed to send SRS reminder notifications' });
+    return NextResponse.json(
+      { error: 'Failed to send SRS reminder notifications' },
+      { status: 500 }
+    );
   }
 }
