@@ -1,13 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { ClientProviders } from '@/components/ClientProviders';
+import { GlobalOverlays } from '@/components/GlobalOverlays';
 import { THEME_SCRIPT, HASH_REDIRECT_SCRIPT } from '@/lib/themeScript';
-import { CelebrationOverlay } from '@/components/celebrations';
-import { PWAOnboardingFlow } from '@/components/pwa/PWAOnboardingFlow';
-import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
-import { GreetingFlow } from '@/components/onboarding/GreetingFlow';
-import { SyncStatusIndicator } from '@/components/pwa/SyncStatusIndicator';
 
-// Self-hosted Myanmar font (PWA offline support) — match _app.tsx import order
+// Self-hosted Myanmar font (PWA offline support)
 import '@fontsource/noto-sans-myanmar/400.css';
 import '@fontsource/noto-sans-myanmar/500.css';
 import '@fontsource/noto-sans-myanmar/700.css';
@@ -50,11 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ClientProviders>
           {children}
-          <CelebrationOverlay />
-          <PWAOnboardingFlow />
-          <OnboardingTour />
-          <GreetingFlow />
-          <SyncStatusIndicator />
+          <GlobalOverlays />
         </ClientProviders>
       </body>
     </html>

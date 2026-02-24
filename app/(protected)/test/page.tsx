@@ -1,6 +1,6 @@
 'use client';
 
-import TestPage from '@/pages/TestPage';
+import TestPage from '@/views/TestPage';
 
 export default function Test() {
   return <TestPage />;

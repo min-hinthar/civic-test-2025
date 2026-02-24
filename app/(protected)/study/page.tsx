@@ -1,7 +1,12 @@
 'use client';
 
-import StudyGuidePage from '@/pages/StudyGuidePage';
+import { Suspense } from 'react';
+import StudyGuidePage from '@/views/StudyGuidePage';
 
 export default function Study() {
-  return <StudyGuidePage />;
+  return (
+    <Suspense>
+      <StudyGuidePage />
+    </Suspense>
+  );
 }

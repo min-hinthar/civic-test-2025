@@ -1,7 +1,12 @@
 'use client';
 
-import AuthPage from '@/pages/AuthPage';
+import { Suspense } from 'react';
+import AuthPage from '@/views/AuthPage';
 
 export default function Auth() {
-  return <AuthPage />;
+  return (
+    <Suspense>
+      <AuthPage />
+    </Suspense>
+  );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import PracticePage from '@/pages/PracticePage';
+import PracticePage from '@/views/PracticePage';
 
 export default function Practice() {
   return <PracticePage />;

@@ -1,6 +1,6 @@
 'use client';
 
-import PasswordUpdatePage from '@/pages/PasswordUpdatePage';
+import PasswordUpdatePage from '@/views/PasswordUpdatePage';
 
 export default function UpdatePassword() {
   return <PasswordUpdatePage />;

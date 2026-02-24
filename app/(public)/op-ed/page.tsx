@@ -1,6 +1,6 @@
 'use client';
 
-import OpEdPage from '@/pages/OpEdPage';
+import OpEdPage from '@/views/OpEdPage';
 
 export default function OpEd() {
   return <OpEdPage />;
