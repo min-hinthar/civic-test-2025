@@ -1,11 +1,12 @@
 'use client';
 
 import { useCallback, useMemo, useState, useEffect, useRef, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { TestResultsScreen } from '@/components/results/TestResultsScreen';
 import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
+import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { useAutoRead } from '@/hooks/useAutoRead';
@@ -80,7 +81,7 @@ function getQuestionAtIndex(
 
 const TestPage = () => {
   const { saveTestSession } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   useCategoryMastery();
   useStreak();
   const shouldReduceMotion = useReducedMotion();
@@ -304,37 +305,20 @@ const TestPage = () => {
     return () => clearInterval(timer);
   }, [isPracticeMode, isFinished, showPreTest, showCountdown, quizState.phase]);
 
-  // Navigation lock — prevents accidental back-navigation during Real Exam.
-  // Uses replaceState (not pushState) in the handler to avoid growing the history
-  // stack and to stay under Safari's 100-call rate limit.
-  useEffect(() => {
-    if (isPracticeMode) return;
-    if (isFinished || showPreTest || showCountdown) return;
-    const beforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = '';
-    };
-    let lastWarningTime = 0;
-    const handlePopState = () => {
-      // Re-push guard entry; replaceState avoids growing the stack
-      window.history.pushState({ navLock: true }, '', window.location.href);
-      const now = Date.now();
-      if (now - lastWarningTime > 3000) {
-        lastWarningTime = now;
-        showWarning({
-          en: 'Please finish the mock test first!',
-          my: 'စမ်းသပ်စာမေးပွဲကို အရင်ပြီးအောင်ဖြေပါ!',
-        });
-      }
-    };
-    window.addEventListener('beforeunload', beforeUnload);
-    window.addEventListener('popstate', handlePopState);
-    window.history.pushState({ navLock: true }, '', window.location.href);
-    return () => {
-      window.removeEventListener('beforeunload', beforeUnload);
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [isPracticeMode, isFinished, showPreTest, showCountdown, showWarning]);
+  // Navigation guard — prevents accidental back-navigation during Real Exam
+  // using the unified useNavigationGuard hook.
+  const handleBackDuringTest = useCallback(() => {
+    showWarning({
+      en: 'Please finish the mock test first!',
+      my: 'စမ်းသပ်စာမေးပွဲကို အရင်ပြီးအောင်ဖြေပါ!',
+    });
+  }, [showWarning]);
+
+  useNavigationGuard({
+    active: !isPracticeMode && !isFinished && !showPreTest && !showCountdown,
+    onBackAttempt: handleBackDuringTest,
+    markerKey: 'navLock',
+  });
 
   // Save session on finish (batch SRS recording)
   useEffect(() => {
@@ -607,8 +591,8 @@ const TestPage = () => {
 
   const handleConfirmExit = useCallback(() => {
     setShowExitDialog(false);
-    navigate('/home');
-  }, [navigate]);
+    router.push('/home');
+  }, [router]);
 
   // ---------------------------------------------------------------------------
   // Keyboard navigation (TPUX-06)
@@ -957,7 +941,7 @@ const TestPage = () => {
       onReviewWrongOnly={() => {
         /* scroll handled by TestResultsScreen */
       }}
-      onHome={() => navigate('/home')}
+      onHome={() => router.push('/home')}
     />
   );
 

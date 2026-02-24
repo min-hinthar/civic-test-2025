@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, KeyboardEvent } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, BookOpen, ArrowLeftRight, Layers, GraduationCap } from 'lucide-react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
@@ -54,9 +54,9 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 const StudyGuidePage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const pathname = usePathname() ?? '/study';
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('default');
   const [shuffleKey, setShuffleKey] = useState(0); // increment to re-shuffle
@@ -89,8 +89,40 @@ const StudyGuidePage = () => {
     });
   }, []);
 
-  // Parse hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review, #sort, #sort-{category}
-  const hash = location.hash;
+  // Track hash for view state: #cards, #cards-{category}, #category-{name}, #deck, #review, #sort, #sort-{category}
+  // App Router usePathname doesn't include hash, so we track it via state + hashchange listener
+  const [hash, setHash] = useState(() =>
+    typeof window !== 'undefined' ? window.location.hash : ''
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setHash(window.location.hash);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Navigate within /study using hash-based view state.
+  // Sets window.location.hash directly to ensure hashchange fires.
+  const navigateStudy = useCallback(
+    (hashOrPath: string) => {
+      if (hashOrPath === '/study' || hashOrPath === '') {
+        // Clear hash = back to categories overview
+        if (window.location.hash) {
+          window.history.pushState(null, '', pathname);
+          setHash('');
+        }
+      } else if (hashOrPath.startsWith('/study')) {
+        const hashPart = hashOrPath.includes('#') ? hashOrPath.slice(hashOrPath.indexOf('#')) : '';
+        window.history.pushState(null, '', hashOrPath);
+        setHash(hashPart);
+      } else {
+        router.push(hashOrPath);
+      }
+    },
+    [pathname, router]
+  );
   const isDeckView = hash === '#deck';
   const isReviewView = hash === '#review';
   const isSortView = hash === '#sort' || hash.startsWith('#sort-');
@@ -118,8 +150,8 @@ const StudyGuidePage = () => {
 
   // Legacy support: category from search params for the flip-card grid view
   const getValidCategory = useCallback(
-    (params: URLSearchParams) => {
-      const param = params.get('category');
+    (params: URLSearchParams | null) => {
+      const param = params?.get('category') ?? null;
       if (param && questionCategories.includes(param)) {
         return param;
       }
@@ -148,18 +180,18 @@ const StudyGuidePage = () => {
 
   // Handle category selection via hash
   const handleCategorySelect = (cat: string) => {
-    navigate(`/study#category-${encodeURIComponent(cat)}`);
+    navigateStudy(`/study#category-${encodeURIComponent(cat)}`);
   };
 
   // Handle switching to cards view
   const handleShowCards = (cat?: string) => {
     const categoryParam = cat ? `-${encodeURIComponent(cat)}` : '';
-    navigate(`/study#cards${categoryParam}`);
+    navigateStudy(`/study#cards${categoryParam}`);
   };
 
   // Handle back to categories overview
   const handleBackToCategories = () => {
-    navigate('/study');
+    navigateStudy('/study');
   };
 
   // Category filter change (for chip row in flip-card grid)
@@ -167,13 +199,14 @@ const StudyGuidePage = () => {
     setCategory(value);
     setSearchQuery('');
     setCardIndex(0);
-    const nextParams = new URLSearchParams(searchParams);
+    const nextParams = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === 'all') {
       nextParams.delete('category');
     } else {
       nextParams.set('category', value);
     }
-    setSearchParams(nextParams, { replace: true });
+    const qs = nextParams.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname);
   };
 
   const legacyFilteredQuestions = useMemo(() => {
@@ -295,7 +328,7 @@ const StudyGuidePage = () => {
           },
         ]}
         activeTab={activeTab}
-        onTabChange={tabId => navigate(tabId ? `/study${tabId}` : '/study')}
+        onTabChange={tabId => navigateStudy(tabId ? `/study${tabId}` : '/study')}
         ariaLabel="Study guide tabs"
         showBurmese={showBurmese}
       />
@@ -309,7 +342,7 @@ const StudyGuidePage = () => {
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
-          <SortModeContainer categoryFilter={sortCategory} onExit={() => navigate('/study')} />
+          <SortModeContainer categoryFilter={sortCategory} onExit={() => navigateStudy('/study')} />
         </div>
       </div>
     );
@@ -322,7 +355,7 @@ const StudyGuidePage = () => {
         <div className="mx-auto max-w-6xl px-4 py-8">
           {pageHeader}
           {tabBar}
-          <ReviewSession onExit={() => navigate('/study#deck')} />
+          <ReviewSession onExit={() => navigateStudy('/study#deck')} />
         </div>
       </div>
     );
@@ -336,7 +369,7 @@ const StudyGuidePage = () => {
           {pageHeader}
           {tabBar}
           <DeckManager
-            onStartReview={() => navigate('/study#review')}
+            onStartReview={() => navigateStudy('/study#review')}
             onBack={handleBackToCategories}
           />
         </div>
@@ -432,7 +465,7 @@ const StudyGuidePage = () => {
             <BilingualButton
               label={{ en: 'Sort Cards', my: 'ကဒ်တွဲ ခွဲခြားပါ' }}
               variant="secondary"
-              onClick={() => navigate(`/study#sort-${encodeURIComponent(selectedCategory)}`)}
+              onClick={() => navigateStudy(`/study#sort-${encodeURIComponent(selectedCategory)}`)}
             />
           </div>
 
@@ -678,7 +711,7 @@ const StudyGuidePage = () => {
             <BilingualButton
               label={{ en: 'Review Deck', my: 'ကဒ်တွဲ ပြန်လည်သုံးသပ်' }}
               variant="outline"
-              onClick={() => navigate('/study#deck')}
+              onClick={() => navigateStudy('/study#deck')}
             />
             {dueCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-warning text-white text-xs font-bold shadow-sm">

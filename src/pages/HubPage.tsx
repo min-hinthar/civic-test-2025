@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -76,9 +76,14 @@ const tabTransition = SPRING_SNAPPY;
  * Tab content is conditionally rendered (NOT using <Outlet>) to ensure
  * AnimatePresence key changes trigger proper enter/exit animations.
  */
-export default function HubPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
+interface HubPageProps {
+  /** Initial tab from the catch-all route (e.g. 'overview', 'history', 'achievements') */
+  initialTab?: string;
+}
+
+export default function HubPage({ initialTab }: HubPageProps) {
+  const pathname = usePathname() ?? '/hub';
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const { user, isLoading: isLoadingAuth } = useAuth();
   const { showWarning } = useToast();
@@ -197,14 +202,16 @@ export default function HubPage() {
   // Tab navigation
   // -------------------------------------------------------------------------
 
-  const currentTab = getTabFromPath(location.pathname);
+  // Use initialTab from catch-all route, or derive from pathname
+  const currentTab =
+    initialTab && VALID_TABS.has(initialTab) ? initialTab : getTabFromPath(pathname);
 
   // Redirect bare /hub or invalid tab paths to /hub/overview
   useEffect(() => {
     if (!currentTab) {
-      navigate('/hub/overview', { replace: true });
+      router.replace('/hub/overview');
     }
-  }, [currentTab, navigate]);
+  }, [currentTab, router]);
 
   // Track previous tab index and compute slide direction
   // using the "adjust state when props change" pattern (React Compiler safe)
@@ -232,10 +239,10 @@ export default function HubPage() {
           next.set(currentTab, window.scrollY);
           return next;
         });
-        navigate(`/hub/${tabId}`);
+        router.push(`/hub/${tabId}`);
       }
     },
-    [currentTab, navigate]
+    [currentTab, router]
   );
 
   // Restore scroll position for the active tab after render

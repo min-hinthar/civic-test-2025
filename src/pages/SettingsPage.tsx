@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Bell,
@@ -188,7 +188,7 @@ function SettingsRow({
 }
 
 export default function SettingsPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showBurmese } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
   const { user, logout } = useAuth();
@@ -228,7 +228,7 @@ export default function SettingsPage() {
       <header className="sticky top-0 z-20 border-b border-border/60 bg-card/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => router.back()}
             className="flex h-12 w-12 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted/40 transition-colors"
             aria-label="Go back"
           >
@@ -611,7 +611,7 @@ export default function SettingsPage() {
             action={
               <button
                 type="button"
-                onClick={() => navigate('/about')}
+                onClick={() => router.push('/about')}
                 className={`rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px] ${showBurmese ? 'font-myanmar' : ''}`}
               >
                 {showBurmese ? 'ကြည့်ပါ' : 'View'}
@@ -629,7 +629,7 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => {
                   localStorage.removeItem('civic-test-onboarding-complete');
-                  navigate('/home');
+                  router.push('/home');
                 }}
                 className="rounded-xl bg-primary-subtle px-4 py-2 text-sm font-bold text-primary hover:bg-primary-subtle transition-colors min-h-[44px]"
               >
@@ -660,7 +660,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => {
                     logout();
-                    navigate('/');
+                    router.push('/');
                   }}
                   className="flex items-center gap-2 rounded-xl bg-destructive/10 px-4 py-2 text-sm font-bold text-destructive hover:bg-destructive/20 transition-colors min-h-[44px]"
                 >

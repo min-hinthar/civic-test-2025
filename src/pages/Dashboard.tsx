@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { X, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -42,7 +42,7 @@ import { SPRING_GENTLE } from '@/lib/motion-config';
 const MAX_MANUAL_RETRIES = 3;
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
@@ -281,7 +281,7 @@ const Dashboard = () => {
                         </p>
                       )}
                       <button
-                        onClick={() => navigate('/study#deck')}
+                        onClick={() => router.push('/study#deck')}
                         className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-warning hover:text-warning/80 transition-colors"
                       >
                         <BookOpen className="h-3.5 w-3.5" />

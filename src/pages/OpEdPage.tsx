@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ArrowLeft, ArrowRight, BookOpen, Megaphone, Shield, Share2, Users } from 'lucide-react';
 import { GlassHeader } from '@/components/navigation/GlassHeader';
 
@@ -10,14 +10,15 @@ const opEdShareText =
   'Read and share our op-ed on why the TPS story for Burma matters for families, safety, and democracy.';
 
 const OpEdPage = () => {
-  const location = useLocation();
+  // Track hash for scroll-to-section behavior
+  const [hash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
 
   useEffect(() => {
-    if (location.hash) {
-      const target = document.getElementById(location.hash.replace('#', ''));
+    if (hash) {
+      const target = document.getElementById(hash.replace('#', ''));
       target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [location.hash]);
+  }, [hash]);
 
   return (
     <div className="page-shell">
@@ -28,7 +29,7 @@ const OpEdPage = () => {
           <div className="pointer-events-none absolute -bottom-20 right-10 h-64 w-64 rounded-full bg-accent/20 blur-[120px]" />
           <div className="relative space-y-4">
             <Link
-              to="/"
+              href="/"
               className="inline-flex items-center text-sm text-white/70 hover:text-white"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to landing page
@@ -54,7 +55,7 @@ const OpEdPage = () => {
             </div>
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
-                to="https://civic-test-2025.vercel.app/op-ed"
+                href="https://civic-test-2025.vercel.app/op-ed"
                 className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-foreground shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
               >
                 Read the Op-Ed

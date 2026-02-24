@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -94,7 +94,7 @@ const PasswordResetPage = () => {
             </form>
             <p className="mt-5 text-center text-sm text-muted-foreground">
               Remember your password?{' '}
-              <Link className="font-semibold text-primary" to="/auth">
+              <Link className="font-semibold text-primary" href="/auth">
                 Sign in
               </Link>
               {showBurmese && (

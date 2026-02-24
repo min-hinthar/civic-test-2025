@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -13,7 +14,7 @@ const PasswordUpdatePage = () => {
   const { user, isLoading, updatePassword, authError } = useAuth();
   const { showSuccess, showWarning, showError } = useToast();
   const { showBurmese } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [passwords, setPasswords] = useState({ password: '', confirm: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -51,7 +52,7 @@ const PasswordUpdatePage = () => {
         en: 'Password updated! Your new password is active.',
         my: 'လျှို့ဝှက်စာအသစ် သုံးလို့ရပါပြီ!',
       });
-      navigate('/home', { replace: true });
+      router.replace('/home');
     } catch (error) {
       console.error(error);
     } finally {
@@ -144,7 +145,7 @@ const PasswordUpdatePage = () => {
             </form>
             <p className="mt-5 text-center text-sm text-muted-foreground">
               No recovery session?{' '}
-              <Link className="font-semibold text-primary" to="/auth/forgot">
+              <Link className="font-semibold text-primary" href="/auth/forgot">
                 Request a new reset email
               </Link>
               {showBurmese && <span className="font-myanmar text-sm"> · လင့်ခ်အသစ် တောင်းပါ</span>}

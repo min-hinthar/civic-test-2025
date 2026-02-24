@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -18,8 +19,8 @@ const AuthPage = () => {
   const { showBurmese } = useLanguage();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -41,18 +42,14 @@ const AuthPage = () => {
         setMode('login');
         return;
       }
-      // Read returnTo from URL search params (works with both App Router redirect and Pages Router Navigate)
-      const searchParams = new URLSearchParams(location.search);
-      const rawReturnTo = searchParams.get('returnTo');
+      // Read returnTo from URL search params (searchParams-only, no location.state fallback)
+      const rawReturnTo = searchParams?.get('returnTo') ?? null;
       // Validate: must be relative path starting with / and not // (open redirect prevention)
-      const stateFallback = (location.state as { from?: string })?.from;
       const redirectTo =
         rawReturnTo && rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//')
           ? rawReturnTo
-          : stateFallback && stateFallback.startsWith('/') && !stateFallback.startsWith('//')
-            ? stateFallback
-            : '/home';
-      navigate(redirectTo, { replace: true });
+          : '/home';
+      router.replace(redirectTo);
     } catch (error) {
       console.error(error);
     }
@@ -60,9 +57,9 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/home', { replace: true });
+      router.replace('/home');
     }
-  }, [navigate, user]);
+  }, [router, user]);
 
   return (
     <div className="page-shell">
@@ -240,7 +237,7 @@ const AuthPage = () => {
             </form>
 
             <p className="mt-5 text-center text-sm text-muted-foreground">
-              <Link className="font-semibold text-primary" to="/">
+              <Link className="font-semibold text-primary" href="/">
                 Back to home
               </Link>
               {showBurmese && <span className="font-myanmar text-sm"> · ပင်မစာမျက်နှာသို့</span>}

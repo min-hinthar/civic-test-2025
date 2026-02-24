@@ -1,6 +1,7 @@
 'use client';
 
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   BookOpen,
   Brain,
@@ -67,11 +68,12 @@ const stats = [
 const LandingPage = () => {
   const { user } = useAuth();
   const { showBurmese } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
 
   if (user) {
-    return <Navigate to="/home" replace />;
+    router.replace('/home');
+    return null;
   }
 
   return (
@@ -120,7 +122,7 @@ const LandingPage = () => {
           <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Button
               size="lg"
-              onClick={() => navigate('/auth')}
+              onClick={() => router.push('/auth')}
               className="w-full text-lg sm:w-auto sm:px-10"
             >
               Get Started Free
@@ -128,7 +130,7 @@ const LandingPage = () => {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => navigate('/study')}
+              onClick={() => router.push('/study')}
               className="w-full sm:w-auto"
             >
               Browse Questions
@@ -341,13 +343,13 @@ const LandingPage = () => {
               )}
               <div className="flex flex-col items-center gap-3 sm:flex-row">
                 <Link
-                  to="/about"
+                  href="/about"
                   className={`inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/20 min-h-[44px] ${showBurmese ? 'font-myanmar' : ''}`}
                 >
                   {showBurmese ? 'ကျွန်ုပ်တို့ဇာတ်ကြောင်းကို ဖတ်ပါ' : 'Read Our Story'}
                 </Link>
                 <Link
-                  to="/op-ed"
+                  href="/op-ed"
                   className={`inline-flex items-center gap-2 rounded-xl border border-border/60 px-5 py-2.5 text-sm font-bold text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground min-h-[44px] ${showBurmese ? 'font-myanmar' : ''}`}
                 >
                   <Megaphone className="h-4 w-4" />
@@ -390,7 +392,7 @@ const LandingPage = () => {
             <div className="mt-6">
               <Button
                 size="lg"
-                onClick={() => navigate('/auth')}
+                onClick={() => router.push('/auth')}
                 className="w-full text-lg sm:w-auto sm:px-10"
               >
                 <Star className="mr-2 h-5 w-5" />
