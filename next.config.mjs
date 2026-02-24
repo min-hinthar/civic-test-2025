@@ -31,6 +31,14 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      { source: '/dashboard', destination: '/home', permanent: true },
+      { source: '/progress', destination: '/hub/overview', permanent: true },
+      { source: '/history', destination: '/hub/history', permanent: true },
+      { source: '/social', destination: '/hub/achievements', permanent: true },
+    ];
+  },
 };
 
 export default withSentryConfig(analyzer(withSerwist(nextConfig)), {
