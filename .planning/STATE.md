@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 41 of 47 (Route Migration)
-Plan: 2 of 5 in current phase
+Plan: 3 of 5 in current phase
 Status: Executing Phase 41
-Last activity: 2026-02-24 -- Completed 41-02 (Push notification route migration)
+Last activity: 2026-02-24 -- Completed 41-01 (Route scaffolding: page wrappers, template, error/loading/not-found, hub catch-all, config redirects)
 
 Progress: [███████░░░] 67%
 
@@ -20,8 +20,8 @@ Progress: [███████░░░] 67%
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 8
-- Total execution time: 91min
+- v4.0 plans completed: 9
+- Total execution time: 123min
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: [███████░░░] 67%
 |-------|-------|-------|----------|
 | 39 | 4/4 | 58min | 15min |
 | 40 | 3/3 | 23min | 8min |
-| 41 | 1/5 | 10min | 10min |
+| 41 | 2/5 | 42min | 21min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
@@ -39,6 +39,7 @@ Progress: [███████░░░] 67%
 - 40-01: 4min (shared foundations: theme script + ClientProviders, 2 tasks)
 - 40-02: 7min (root layout & AppShell refactor, 2 tasks)
 - 40-03: 12min (auth guard layout & returnTo pattern, 2 tasks)
+- 41-01: 32min (route scaffolding: page wrappers, template, hub catch-all, redirects, 2 tasks)
 - 41-02: 10min (push notification route migration, 2 tasks)
 
 *Updated after each plan completion*
@@ -72,6 +73,9 @@ Recent decisions affecting current work:
 - [Phase 40]: All returnTo values validated: must start with / and not // (open redirect prevention)
 - [Phase 41]: Remove old pages/api files immediately when App Router route exists (Next.js build fails on conflicts)
 - [Phase 41]: Route Handlers use request.headers.get('x-forwarded-for') only (no socket.remoteAddress)
+- [Phase 41]: SPRING_GENTLE for enter-only page transitions (smooth without exit counterpart)
+- [Phase 41]: HubPageClient receives initialTab but defers forwarding to HubPage until Plan 03/04
+- [Phase 41]: usePathname null coalesced to /home (Next.js types return string|null)
 
 ### Pending Todos
 
@@ -85,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T13:54:59Z
-Stopped at: Completed 41-02-PLAN.md
-Resume file: .planning/phases/41-route-migration/41-02-SUMMARY.md
+Last session: 2026-02-24T13:57:46Z
+Stopped at: Completed 41-01-PLAN.md
+Resume file: .planning/phases/41-route-migration/41-01-SUMMARY.md
