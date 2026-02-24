@@ -41,7 +41,17 @@ const AuthPage = () => {
         setMode('login');
         return;
       }
-      const redirectTo = (location.state as { from?: string })?.from ?? '/home';
+      // Read returnTo from URL search params (works with both App Router redirect and Pages Router Navigate)
+      const searchParams = new URLSearchParams(location.search);
+      const rawReturnTo = searchParams.get('returnTo');
+      // Validate: must be relative path starting with / and not // (open redirect prevention)
+      const stateFallback = (location.state as { from?: string })?.from;
+      const redirectTo =
+        rawReturnTo && rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//')
+          ? rawReturnTo
+          : stateFallback && stateFallback.startsWith('/') && !stateFallback.startsWith('//')
+            ? stateFallback
+            : '/home';
       navigate(redirectTo, { replace: true });
     } catch (error) {
       console.error(error);

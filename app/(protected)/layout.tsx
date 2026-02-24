@@ -1,11 +1,11 @@
 'use client';
 
-import { Navigate, useLocation } from 'react-router-dom';
+import { redirect, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
 
   if (isLoading) {
     return (
@@ -16,16 +16,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) {
-    // Use URL param for returnTo (unified pattern with App Router ProtectedLayout)
+    // Validate returnTo is a safe relative path (open redirect prevention)
     const safeReturnTo =
-      location.pathname.startsWith('/') && !location.pathname.startsWith('//')
-        ? location.pathname
-        : undefined;
+      pathname.startsWith('/') && !pathname.startsWith('//') ? pathname : undefined;
     const authUrl = safeReturnTo ? `/auth?returnTo=${encodeURIComponent(safeReturnTo)}` : '/auth';
-    return <Navigate to={authUrl} replace />;
+    redirect(authUrl);
   }
 
   return <>{children}</>;
-};
-
-export default ProtectedRoute;
+}
