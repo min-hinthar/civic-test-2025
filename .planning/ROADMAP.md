@@ -113,7 +113,11 @@ Plans:
   2. `ClientProviders.tsx` wraps all 12 context providers in correct nesting order as a `'use client'` component
   3. Protected route group `(protected)/layout.tsx` redirects unauthenticated users to auth page
   4. The app still loads via the existing Pages Router catch-all (no routes moved yet)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 40-01-PLAN.md -- Theme script extraction and ClientProviders creation
+- [ ] 40-02-PLAN.md -- App Router layout and AppShell refactor
+- [ ] 40-03-PLAN.md -- Auth guard layout and returnTo migration
 
 ### Phase 41: Route Migration
 **Goal**: All routes use Next.js file-based routing with clean URLs and react-router-dom is removed
