@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 40 of 47 (App Router Foundation)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: Executing Phase 40
-Last activity: 2026-02-24 -- Completed 40-01 (Shared foundations: theme script + ClientProviders)
+Last activity: 2026-02-24 -- Completed 40-02 (Root layout & AppShell refactor)
 
-Progress: [███████░░░] 71%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 248 (across v1.0-v3.0)
-- v4.0 plans completed: 5
-- Total execution time: 62min
+- v4.0 plans completed: 6
+- Total execution time: 69min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 39 | 4/4 | 58min | 15min |
-| 40 | 1/3 | 4min | 4min |
+| 40 | 2/3 | 11min | 6min |
 
 **Recent Trend:**
 - 39-01: 12min (dependency upgrade, 1 task)
@@ -36,6 +36,7 @@ Progress: [███████░░░] 71%
 - 39-03: 18min (Sentry App Router reconfiguration, 2 tasks)
 - 39-04: 8min (full verification suite and smoke test, 2 tasks)
 - 40-01: 4min (shared foundations: theme script + ClientProviders, 2 tasks)
+- 40-02: 7min (root layout & AppShell refactor, 2 tasks)
 
 *Updated after each plan completion*
 
@@ -61,6 +62,9 @@ Recent decisions affecting current work:
 - 39-04: Stylelint 17.3 requires block-level disable/enable for multi-line vendor-prefix properties
 - [Phase 40]: THEME_SCRIPT extracted as byte-for-byte identical string to preserve CSP hash
 - [Phase 40]: ClientProviders uses optional routerWrapper prop for framework agnosticism
+- [Phase 40]: App Router layout uses metadata/viewport exports (not manual meta tags)
+- [Phase 40]: Dual theme-color array with prefers-color-scheme media queries
+- [Phase 40]: ClientProviders in app/layout.tsx has no routerWrapper (App Router doesn't use react-router-dom)
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T08:45:20.340Z
-Stopped at: Completed 40-01-PLAN.md
+Last session: 2026-02-24T08:54:13Z
+Stopped at: Completed 40-02-PLAN.md
 Resume file: None
