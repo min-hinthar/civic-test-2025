@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNextBestAction } from '@/hooks/useNextBestAction';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
+import { useReadinessScore } from '@/hooks/useReadinessScore';
 import { useStreak } from '@/hooks/useStreak';
 import { useSRSWidget } from '@/hooks/useSRSWidget';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
@@ -26,6 +27,7 @@ import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { MasteryMilestone } from '@/components/progress/MasteryMilestone';
 import { BadgeCelebration } from '@/components/social/BadgeCelebration';
 import { BadgeHighlights } from '@/components/social/BadgeHighlights';
+import { ReadinessHeroCard } from '@/components/readiness/ReadinessHeroCard';
 import { UnfinishedBanner } from '@/components/sessions/UnfinishedBanner';
 import { useSessionPersistence } from '@/lib/sessions/useSessionPersistence';
 import { useToast } from '@/components/BilingualToast';
@@ -62,6 +64,13 @@ const Dashboard = () => {
 
   // NBA recommendation
   const { nbaState } = useNextBestAction();
+
+  // Readiness score for hero card
+  const {
+    readiness,
+    isLoading: readinessLoading,
+    subCategoryMasteries: readinessSubMasteries,
+  } = useReadinessScore();
 
   // Category mastery for stat row + preview + badge checks
   const {
@@ -196,7 +205,12 @@ const Dashboard = () => {
 
   // Dashboard-level loading: all async data sources still loading
   const isDashboardLoading =
-    authLoading || masteryLoading || streakLoading || srsLoading || practiceCountLoading;
+    authLoading ||
+    masteryLoading ||
+    streakLoading ||
+    srsLoading ||
+    practiceCountLoading ||
+    readinessLoading;
 
   // Zero-data condition: user has never completed a session and has no mastery
   const isDashboardEmpty =
@@ -244,6 +258,17 @@ const Dashboard = () => {
       <UpdateBanner showBurmese={showBurmese} className="mb-0" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
         <StaggeredList delay={80} stagger={80}>
+          {/* Readiness Hero Card */}
+          <StaggeredItem className="mb-6">
+            <ReadinessHeroCard
+              readiness={readiness}
+              subCategoryMasteries={readinessSubMasteries ?? subCategoryMasteries}
+              categoryMasteries={categoryMasteries}
+              isLoading={readinessLoading}
+              showBurmese={showBurmese}
+            />
+          </StaggeredItem>
+
           {/* Unfinished Session Banners */}
           {visibleSessions.length > 0 && (
             <StaggeredItem className="mb-6">
