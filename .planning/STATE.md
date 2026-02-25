@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 42 - CSP Nonce Migration and PWA Update
+**Current focus:** Phase 43 - Test Readiness Score and Drill Mode
 
 ## Current Position
 
-Phase: 42 of 47 (CSP Nonce Migration and PWA Update)
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-02-25 -- Completed 42-02 (SW verification, proxy unit tests, full build verification)
+Phase: 43 of 47 (Test Readiness Score and Drill Mode)
+Plan: 1 of 4 in current phase
+Status: In Progress
+Last activity: 2026-02-25 -- Completed 43-01 (readiness engine + drill selection, TDD)
 
 Progress: [██████████] 100%
 
@@ -48,6 +48,7 @@ Progress: [██████████] 100%
 | Phase 41 P05 | 28min | 2 tasks | 36 files |
 | Phase 42 P01 | 4min | 2 tasks | 7 files |
 | Phase 42 P02 | 6min | 2 tasks | 1 files |
+| Phase 43 P01 | 7min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,10 @@ Recent decisions affecting current work:
 - [Phase 42]: Auth page.tsx converted to async Server Component for nonce forwarding to GoogleOneTapSignIn
 - [Phase 42]: await headers() forces dynamic rendering -- acceptable for client-rendered SPA
 - [Phase 42]: SW caching needs no code changes -- defaultCache from @serwist/next/worker v9.5.6 already covers App Router RSC patterns
+- [Phase 43]: Export FSRS singleton as fsrsInstance (not duplicate instance) for retrievability projection
+- [Phase 43]: Accuracy dimension weighted by sub-category question count (matches calculateOverallMastery pattern)
+- [Phase 43]: 60% cap uses 3 main USCIS categories (not 7 sub-categories) for zero-coverage check
+- [Phase 43]: drillSelection is synchronous -- caller pre-loads answer history for purity/testability
 
 ### Pending Todos
 
@@ -103,12 +108,12 @@ None yet.
 
 ### Blockers/Concerns
 
-- FSRS retrievability projection API needs verification before Phase 43 (readiness engine)
+- FSRS retrievability projection API verified in Phase 43 P01 -- get_retrievability(card, now, false) returns 0-1 number
 - Serwist Turbopack stability uncertain -- keep `--webpack` fallback through Phase 47
 - Exit animation regression accepted for v4.0 (revisit with ViewTransition API later)
 
 ## Session Continuity
 
-Last session: 2026-02-25T09:49:13.317Z
-Stopped at: Completed 42-02-PLAN.md
+Last session: 2026-02-25T13:09:00Z
+Stopped at: Completed 43-01-PLAN.md
 Resume file: None

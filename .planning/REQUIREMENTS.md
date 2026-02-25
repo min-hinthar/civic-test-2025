@@ -24,11 +24,11 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 
 ### Readiness
 
-- [ ] **RDNS-01**: User can see a test readiness score (0-100%) on Dashboard
-- [ ] **RDNS-02**: Readiness score shows per-dimension breakdown (accuracy, coverage, consistency)
-- [ ] **RDNS-03**: Readiness formula penalizes zero-coverage categories and projects FSRS retrievability
-- [ ] **RDNS-04**: User can start a dedicated weak-area drill from Dashboard
-- [ ] **RDNS-05**: Category-level drill buttons appear on categories below mastery threshold
+- [x] **RDNS-01**: User can see a test readiness score (0-100%) on Dashboard
+- [x] **RDNS-02**: Readiness score shows per-dimension breakdown (accuracy, coverage, consistency)
+- [x] **RDNS-03**: Readiness formula penalizes zero-coverage categories and projects FSRS retrievability
+- [x] **RDNS-04**: User can start a dedicated weak-area drill from Dashboard
+- [x] **RDNS-05**: Category-level drill buttons appear on categories below mastery threshold
 - [ ] **RDNS-06**: Drill session shows pre/post mastery improvement delta
 - [ ] **RDNS-07**: User can set test date in Settings
 - [ ] **RDNS-08**: Countdown display shows days remaining on Dashboard and Progress Hub
@@ -110,11 +110,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-10 | Phase 42 | Complete |
 | MIGR-11 | Phase 41 | Complete |
 | MIGR-12 | Phase 41 | Complete |
-| RDNS-01 | Phase 43 | Pending |
-| RDNS-02 | Phase 43 | Pending |
-| RDNS-03 | Phase 43 | Pending |
-| RDNS-04 | Phase 43 | Pending |
-| RDNS-05 | Phase 43 | Pending |
+| RDNS-01 | Phase 43 | Complete |
+| RDNS-02 | Phase 43 | Complete |
+| RDNS-03 | Phase 43 | Complete |
+| RDNS-04 | Phase 43 | Complete |
+| RDNS-05 | Phase 43 | Complete |
 | RDNS-06 | Phase 43 | Pending |
 | RDNS-07 | Phase 44 | Pending |
 | RDNS-08 | Phase 44 | Pending |
