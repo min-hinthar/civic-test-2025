@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 41 - Route Migration
+**Current focus:** Phase 42 - CSP Nonce Migration and PWA Update
 
 ## Current Position
 
-Phase: 41 of 47 (Route Migration)
-Plan: 5 of 5 in current phase
-Status: Phase 41 COMPLETE
-Last activity: 2026-02-24 -- Completed 41-05 (Final cleanup: removed react-router-dom, deleted Pages Router, wired layouts)
+Phase: 42 of 47 (CSP Nonce Migration and PWA Update)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-25 -- Completed 42-01 (CSP nonce migration: nonce-based CSP with strict-dynamic, security headers consolidated)
 
-Progress: [██████████] 100%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Progress: [██████████] 100%
 | Phase 41 P04 | 7min | 2 tasks | 20 files |
 | Phase 41 P03 | 17min | 2 tasks | 19 files |
 | Phase 41 P05 | 28min | 2 tasks | 36 files |
+| Phase 42 P01 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,11 @@ Recent decisions affecting current work:
 - [Phase 41]: src/pages renamed to src/views because Next.js detects src/pages as Pages Router directory conflicting with app/
 - [Phase 41]: GlobalOverlays client component for ssr:false dynamic overlay imports (not allowed in Server Components)
 - [Phase 41]: Suspense boundaries required for pages using useSearchParams (App Router static generation)
+- [Phase 42]: Nonce-based CSP with strict-dynamic replaces hash-based allowlisting
+- [Phase 42]: Security headers consolidated in proxy.ts (removed from next.config.mjs headers())
+- [Phase 42]: HASH_REDIRECT_SCRIPT removed as dead code after App Router migration
+- [Phase 42]: Auth page.tsx converted to async Server Component for nonce forwarding to GoogleOneTapSignIn
+- [Phase 42]: await headers() forces dynamic rendering -- acceptable for client-rendered SPA
 
 ### Pending Todos
 
@@ -101,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25T00:39:09.985Z
-Stopped at: Phase 42 context gathered
-Resume file: .planning/phases/42-csp-nonce-migration-and-pwa-update/42-CONTEXT.md
+Last session: 2026-02-25T09:39:15Z
+Stopped at: Completed 42-01-PLAN.md
+Resume file: .planning/phases/42-csp-nonce-migration-and-pwa-update/42-01-SUMMARY.md

@@ -221,7 +221,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete    | 2026-02-23 |
 | 40. App Router Foundation | 3/3 | Complete    | 2026-02-24 |
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
-| 42. CSP Nonce Migration and PWA Update | 0/2 | Not started | - |
+| 42. CSP Nonce Migration and PWA Update | 1/2 | In Progress|  |
 | 43. Test Readiness Score and Drill Mode | 0/? | Not started | - |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
