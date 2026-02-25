@@ -3,6 +3,7 @@ phase: 43-test-readiness-score-and-drill-mode
 plan: 02
 subsystem: ui
 tags: [readiness, dashboard, radial-ring, expand-collapse, category-drill, motion]
+requirements-completed: [RDNS-01, RDNS-02, RDNS-04, RDNS-05]
 
 # Dependency graph
 requires:

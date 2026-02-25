@@ -3,6 +3,7 @@ phase: 41-route-migration
 plan: 03
 subsystem: routing
 tags: [nextjs, app-router, next-navigation, next-link, useRouter, usePathname, useSearchParams]
+requirements-completed: [MIGR-05]
 
 # Dependency graph
 requires:

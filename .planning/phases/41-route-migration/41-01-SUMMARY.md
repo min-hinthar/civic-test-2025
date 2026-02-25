@@ -3,6 +3,7 @@ phase: 41-route-migration
 plan: 01
 subsystem: routing
 tags: [nextjs, app-router, file-routing, page-transitions, motion, redirects]
+requirements-completed: [MIGR-05, MIGR-12]
 
 # Dependency graph
 requires:

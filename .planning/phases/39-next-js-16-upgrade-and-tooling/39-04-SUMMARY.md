@@ -3,6 +3,7 @@ phase: 39-next-js-16-upgrade-and-tooling
 plan: 04
 subsystem: infra
 tags: [next.js, verification, smoke-test, bundle-size, ci]
+requirements-completed: [MIGR-01, MIGR-02, MIGR-03]
 
 # Dependency graph
 requires:

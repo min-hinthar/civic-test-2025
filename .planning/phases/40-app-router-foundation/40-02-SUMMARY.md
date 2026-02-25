@@ -3,6 +3,7 @@ phase: 40-app-router-foundation
 plan: 02
 subsystem: ui
 tags: [app-router, layout, metadata, viewport, provider-tree, server-component]
+requirements-completed: [MIGR-04]
 
 # Dependency graph
 requires:

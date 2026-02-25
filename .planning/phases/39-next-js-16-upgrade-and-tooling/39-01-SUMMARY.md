@@ -3,6 +3,7 @@ phase: 39-next-js-16-upgrade-and-tooling
 plan: 01
 subsystem: infra
 tags: [dependencies, pnpm, sentry, serwist, supabase, react-router, typescript, lucide, motion]
+requirements-completed: [MIGR-01]
 
 # Dependency graph
 requires:

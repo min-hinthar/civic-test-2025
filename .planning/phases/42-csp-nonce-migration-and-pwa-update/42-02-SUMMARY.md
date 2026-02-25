@@ -3,6 +3,7 @@ phase: 42-csp-nonce-migration-and-pwa-update
 plan: 02
 subsystem: testing
 tags: [vitest, csp, nonce, service-worker, serwist, pwa, proxy]
+requirements-completed: [MIGR-10]
 
 # Dependency graph
 requires:

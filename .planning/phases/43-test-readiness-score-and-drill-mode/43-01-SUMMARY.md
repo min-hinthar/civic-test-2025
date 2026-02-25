@@ -3,6 +3,7 @@ phase: 43-test-readiness-score-and-drill-mode
 plan: 01
 subsystem: testing
 tags: [readiness, fsrs, tdd, vitest, scoring-engine, drill-selection]
+requirements-completed: [RDNS-01, RDNS-02, RDNS-03]
 
 # Dependency graph
 requires:

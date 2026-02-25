@@ -3,6 +3,7 @@ phase: 39-next-js-16-upgrade-and-tooling
 plan: 03
 subsystem: infra
 tags: [sentry, next.js, app-router, error-boundary, noise-filters]
+requirements-completed: [MIGR-03]
 
 # Dependency graph
 requires:

@@ -3,6 +3,7 @@ phase: 40-app-router-foundation
 plan: 03
 subsystem: auth
 tags: [app-router, auth-guard, route-group, protected-routes, open-redirect-prevention, returnTo]
+requirements-completed: [MIGR-07]
 
 # Dependency graph
 requires:

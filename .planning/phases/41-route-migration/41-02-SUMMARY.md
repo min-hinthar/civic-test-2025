@@ -3,6 +3,7 @@ phase: 41-route-migration
 plan: 02
 subsystem: api
 tags: [push-notifications, web-push, route-handlers, app-router, supabase]
+requirements-completed: [MIGR-11]
 
 # Dependency graph
 requires:

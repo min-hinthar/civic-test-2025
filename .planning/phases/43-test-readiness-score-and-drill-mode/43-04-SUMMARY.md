@@ -3,6 +3,7 @@ phase: 43-test-readiness-score-and-drill-mode
 plan: 04
 subsystem: ui
 tags: [drill-mode, entry-points, progress-hub, results-screen, navigation, localization]
+requirements-completed: [RDNS-04, RDNS-05]
 
 # Dependency graph
 requires:

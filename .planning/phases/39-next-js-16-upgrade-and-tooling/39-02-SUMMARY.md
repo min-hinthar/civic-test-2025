@@ -3,6 +3,7 @@ phase: 39-next-js-16-upgrade-and-tooling
 plan: 02
 subsystem: infra
 tags: [next.js, turbopack, webpack, proxy, middleware, eslint, sentry, typescript]
+requirements-completed: [MIGR-01, MIGR-02]
 
 # Dependency graph
 requires:

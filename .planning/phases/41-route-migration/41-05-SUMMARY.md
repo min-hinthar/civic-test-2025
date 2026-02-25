@@ -3,6 +3,7 @@ phase: 41-route-migration
 plan: 05
 subsystem: routing
 tags: [nextjs, app-router, layout, react-router-dom-removal, hash-redirect, csp, dynamic-import]
+requirements-completed: [MIGR-05, MIGR-06]
 
 # Dependency graph
 requires:

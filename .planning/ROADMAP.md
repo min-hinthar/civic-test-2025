@@ -81,6 +81,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 41: Route Migration** - Migrate all 15+ routes from react-router-dom to App Router file-based routing in one pass (completed 2026-02-24)
 - [x] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router (completed 2026-02-25)
 - [x] **Phase 43: Test Readiness Score and Drill Mode** - Surface readiness scoring and weak-area drilling as first-class Dashboard features (completed 2026-02-25)
+- [ ] **Phase 43.5: Integration Wiring and Tech Debt** - Close integration gaps and tech debt from phases 39-43 audit (gap closure)
 - [ ] **Phase 44: Test Date Countdown and Study Plan** - Add test date setting with countdown display and adaptive daily study targets
 - [ ] **Phase 45: Content Enrichment** - Author mnemonics, fun facts, common mistakes, citations, study tips, and related question links for all 128 questions
 - [ ] **Phase 46: Cross-Device Sync** - Sync answer history, bookmarks, settings, and streak data to Supabase for multi-device continuity
@@ -110,7 +111,7 @@ Plans:
 **Requirements**: MIGR-04, MIGR-07
 **Success Criteria** (what must be TRUE):
   1. `app/layout.tsx` serves as Server Component root with metadata, fonts, global CSS, and theme script
-  2. `ClientProviders.tsx` wraps all 12 context providers in correct nesting order as a `'use client'` component
+  2. `ClientProviders.tsx` wraps all 10 context providers in correct nesting order as a `'use client'` component
   3. Protected route group `(protected)/layout.tsx` redirects unauthenticated users to auth page
   4. The app still loads via the existing Pages Router catch-all (no routes moved yet)
 **Plans**: 3 plans
@@ -163,10 +164,22 @@ Plans:
   5. After completing a drill session, user sees a pre/post mastery improvement delta
 **Plans**: 4 plans
 Plans:
-- [ ] 43-01-PLAN.md -- Readiness engine and drill selection (TDD: pure functions with unit tests)
-- [ ] 43-02-PLAN.md -- Dashboard readiness hero card with expandable dimension breakdown
-- [ ] 43-03-PLAN.md -- Drill mode page: route, config, session wrapper, and results with mastery delta
-- [ ] 43-04-PLAN.md -- Drill entry points: Progress Hub CTA and end-of-practice suggestion
+- [x] 43-01-PLAN.md -- Readiness engine and drill selection (TDD: pure functions with unit tests)
+- [x] 43-02-PLAN.md -- Dashboard readiness hero card with expandable dimension breakdown
+- [x] 43-03-PLAN.md -- Drill mode page: route, config, session wrapper, and results with mastery delta
+- [x] 43-04-PLAN.md -- Drill entry points: Progress Hub CTA and end-of-practice suggestion
+
+### Phase 43.5: Integration Wiring and Tech Debt
+**Goal**: All cross-phase integration gaps are closed and tech debt from the v4.0 audit is resolved
+**Depends on**: Phase 43
+**Requirements**: Adjacent to RDNS-04, RDNS-05, MIGR-12 (quality improvement, not new coverage)
+**Gap Closure**: Closes 2 integration gaps + 2 flow gaps + 4 tech debt items from v4.0 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. PracticePage reads `?category=X` search param and pre-selects the matching category
+  2. GoogleOneTapSignIn fallback redirect targets `/home` directly (no redirect hop through `/dashboard`)
+  3. ROADMAP Phase 40 description corrected from "12 providers" to "10 providers"
+  4. Phase SUMMARY frontmatters include `requirements-completed` field
+**Plans**: TBD
 
 ### Phase 44: Test Date Countdown and Study Plan
 **Goal**: Users with a scheduled USCIS interview see a countdown and know exactly what to study today
@@ -216,8 +229,8 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases 39 -> 40 -> 41 -> 42 -> 43 -> 44 -> 45 -> 46 -> 47
-Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43. Phase 47 is last.
+Phases 39 -> 40 -> 41 -> 42 -> 43 -> 43.5 -> 44 -> 45 -> 46 -> 47
+Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps. Phase 44 depends on Phase 43. Phase 47 is last.
 
 **v4.0 Progress:**
 
@@ -228,6 +241,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
 | 42. CSP Nonce Migration and PWA Update | 2/2 | Complete    | 2026-02-25 |
 | 43. Test Readiness Score and Drill Mode | 4/4 | Complete    | 2026-02-25 |
+| 43.5. Integration Wiring and Tech Debt | 0/? | Not started | - |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
 | 46. Cross-Device Sync | 0/? | Not started | - |
@@ -241,9 +255,9 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | v2.0 Unified Learning Hub | 11-17 | 47 | 29/29 | Complete | 2026-02-13 |
 | v2.1 Quality & Polish | 18-28 | 82 | 65/66 | Complete | 2026-02-19 |
 | v3.0 World-Class UX | 29-38 | 47 | 39/39 | Complete | 2026-02-22 |
-| v4.0 Next-Gen Architecture | 39-47 | TBD | 3/38 | In progress | - |
+| v4.0 Next-Gen Architecture | 39-47 (+43.5) | 18 + TBD | 18/38 | In progress | - |
 
-**Total:** 38 phases + 9 new = 47 phases, 248+ plans, 188/189 + 38 requirements across 5 milestones
+**Total:** 38 phases + 10 new = 48 phases, 266+ plans, 188/189 + 38 requirements across 5 milestones
 
 ---
 *Roadmap created: 2026-02-05*

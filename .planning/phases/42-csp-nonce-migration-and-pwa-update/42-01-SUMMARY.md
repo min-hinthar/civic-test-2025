@@ -3,6 +3,7 @@ phase: 42-csp-nonce-migration-and-pwa-update
 plan: 01
 subsystem: infra
 tags: [csp, nonce, strict-dynamic, security-headers, next.js]
+requirements-completed: [MIGR-09]
 
 # Dependency graph
 requires:

@@ -3,6 +3,7 @@ phase: 40-app-router-foundation
 plan: 01
 subsystem: ui
 tags: [react, context-providers, theme, csp, app-router-migration]
+requirements-completed: [MIGR-04]
 
 # Dependency graph
 requires:

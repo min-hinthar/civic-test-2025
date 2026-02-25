@@ -3,6 +3,7 @@ phase: 41-route-migration
 plan: 04
 subsystem: ui
 tags: [next-navigation, react-router-dom, useRouter, useSearchParams, next-link, route-migration]
+requirements-completed: [MIGR-08]
 
 # Dependency graph
 requires:

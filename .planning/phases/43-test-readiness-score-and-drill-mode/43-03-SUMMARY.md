@@ -3,6 +3,7 @@ phase: 43-test-readiness-score-and-drill-mode
 plan: 03
 subsystem: ui
 tags: [drill-mode, readiness-ring, celebration, animation, practice-session, burmese-localization]
+requirements-completed: [RDNS-04, RDNS-05, RDNS-06]
 
 # Dependency graph
 requires:
