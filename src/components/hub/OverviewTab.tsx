@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { TrendingUp, Flame, BookOpen, CheckCircle, ChevronDown } from 'lucide-react';
+import { TrendingUp, Flame, BookOpen, CheckCircle, ChevronDown, Target } from 'lucide-react';
 import clsx from 'clsx';
 
 import { ReadinessRing } from '@/components/hub/ReadinessRing';
@@ -163,6 +163,49 @@ export function OverviewTab({
           />
         </div>
       </StaggeredItem>
+
+      {/* Drill Weak Areas CTA */}
+      {Object.values(categoryMasteries).some(m => m < 70) && (
+        <StaggeredItem>
+          <GlassCard tier="medium" className="rounded-2xl p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex min-w-0 flex-1 items-center gap-3">
+                <Target className="h-5 w-5 flex-shrink-0 text-orange-500" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-text-primary">Drill Weak Areas</p>
+                  {showBurmese && (
+                    <p className="font-myanmar text-sm text-text-primary">
+                      {
+                        '\u1021\u102C\u1038\u1014\u100A\u103A\u1038\u101E\u1031\u102C\u1014\u1031\u101B\u102C\u1019\u103B\u102C\u1038 \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                      }
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">Focus on your weakest questions</p>
+                  {showBurmese && (
+                    <p className="font-myanmar text-xs text-muted-foreground">
+                      {
+                        '\u101E\u1004\u1037\u103A\u1021\u102C\u1038\u1021\u1014\u100A\u103A\u1038\u1006\u102F\u1036\u1038\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1021\u102C\u101B\u102F\u1036\u1005\u102D\u102F\u1000\u103A\u1015\u102B'
+                      }
+                    </p>
+                  )}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => router.push('/drill')}
+                className="flex-shrink-0 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white min-h-[44px] hover:bg-orange-600 transition-colors"
+              >
+                Start
+                {showBurmese && (
+                  <span className="font-myanmar block text-xs">
+                    {'\u1005\u1010\u1004\u103A\u1015\u102B'}
+                  </span>
+                )}
+              </button>
+            </div>
+          </GlassCard>
+        </StaggeredItem>
+      )}
 
       {/* Category Mastery section */}
       <StaggeredItem>
