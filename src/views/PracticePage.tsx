@@ -1,12 +1,19 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
 import { PracticeConfig, type PracticeConfigType } from '@/components/practice/PracticeConfig';
 import { PracticeSession } from '@/components/practice/PracticeSession';
 import { PracticeResults } from '@/components/practice/PracticeResults';
 import { selectPracticeQuestions, getWeakQuestions } from '@/lib/practice/questionSelection';
-import { getCategoryQuestionIds, CATEGORY_COLORS, USCIS_CATEGORIES } from '@/lib/mastery';
+import {
+  getCategoryQuestionIds,
+  CATEGORY_COLORS,
+  USCIS_CATEGORIES,
+  USCIS_CATEGORY_NAMES,
+  SUB_CATEGORY_NAMES,
+} from '@/lib/mastery';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import { allQuestions } from '@/constants/questions';
@@ -36,6 +43,16 @@ const categoryColorToTailwind: Record<string, string> = {
  */
 const PracticePage = () => {
   const { setLock } = useNavigation();
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
+  const initialCategory: USCISCategory | Category | null = useMemo(() => {
+    if (!categoryParam) return null;
+    if (categoryParam in USCIS_CATEGORY_NAMES) return categoryParam as USCISCategory;
+    if (categoryParam in SUB_CATEGORY_NAMES) return categoryParam as Category;
+    return null;
+  }, [categoryParam]);
+
   const [phase, setPhase] = useState<PracticePhase>('config');
   const [practiceQuestions, setPracticeQuestions] = useState<Question[]>([]);
   const [practiceResults, setPracticeResults] = useState<QuestionResult[]>([]);
@@ -249,7 +266,9 @@ const PracticePage = () => {
         <SessionCountdown onComplete={handleCountdownComplete} subtitle={countdownSubtitle} />
       )}
 
-      {phase === 'config' && <PracticeConfig onStart={handleStart} />}
+      {phase === 'config' && (
+        <PracticeConfig onStart={handleStart} initialCategory={initialCategory} />
+      )}
       {phase === 'session' && practiceQuestions.length > 0 && (
         <PracticeSession
           questions={practiceQuestions}

@@ -51,6 +51,7 @@ const SPEED_OPTIONS: { value: 'slow' | 'normal' | 'fast'; en: string; my: string
 
 interface PracticeConfigProps {
   onStart: (config: PracticeConfigType) => void;
+  initialCategory?: USCISCategory | Category | null;
 }
 
 type CountOption = 5 | 10 | 'full';
@@ -85,7 +86,7 @@ const categoryBgMap: Record<string, string> = {
  * - Mastered category handling with redirection suggestion
  * - Staggered animation for category card entrance
  */
-export function PracticeConfig({ onStart }: PracticeConfigProps) {
+export function PracticeConfig({ onStart, initialCategory }: PracticeConfigProps) {
   const shouldReduceMotion = useReducedMotion();
   const { showBurmese } = useLanguage();
   const { categoryMasteries, subCategoryMasteries, isLoading } = useCategoryMastery();
@@ -94,8 +95,17 @@ export function PracticeConfig({ onStart }: PracticeConfigProps) {
 
   const [selectedCategory, setSelectedCategory] = useState<
     USCISCategory | Category | 'weak' | null
-  >(null);
-  const [expandedCategory, setExpandedCategory] = useState<USCISCategory | null>(null);
+  >(initialCategory ?? null);
+  const [expandedCategory, setExpandedCategory] = useState<USCISCategory | null>(() => {
+    if (!initialCategory) return null;
+    if (initialCategory in USCIS_CATEGORY_NAMES) return initialCategory as USCISCategory;
+    for (const [main, def] of Object.entries(USCIS_CATEGORIES)) {
+      if (def.subCategories.includes(initialCategory as Category)) {
+        return main as USCISCategory;
+      }
+    }
+    return null;
+  });
   const [countOption, setCountOption] = useState<CountOption>(10);
   const [timerEnabled, setTimerEnabled] = useState(false);
 
