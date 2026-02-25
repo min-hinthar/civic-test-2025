@@ -211,18 +211,24 @@ describe('calculateReadiness', () => {
   });
 
   it('computes accuracy as weighted average of per-category mastery', () => {
-    // Only set one sub-category with 80% mastery, rest 0
+    // Two sub-categories with different mastery and question counts
+    // Principles of American Democracy: 12 questions, 100% mastery
+    // System of Government: 35 questions, 50% mastery
+    // Weighted average: (100*12 + 50*35) / (12+35) = 2950/47 = ~62.77 -> 63
     const result = calculateReadiness(
       makeInput({
         categoryMasteries: {
-          'Principles of American Democracy': 80,
+          'Principles of American Democracy': 100,
+          'System of Government': 50,
         },
       })
     );
 
-    // Accuracy should be > 0 but < 80 (weighted by question count)
-    expect(result.dimensions.accuracy.value).toBeGreaterThan(0);
-    expect(result.dimensions.accuracy.value).toBeLessThan(80);
+    // Weighted average should be between 50 and 100 (closer to 50 due to higher weight of System of Gov)
+    expect(result.dimensions.accuracy.value).toBeGreaterThan(50);
+    expect(result.dimensions.accuracy.value).toBeLessThan(100);
+    // Exact value: round(2950/47) = 63
+    expect(result.dimensions.accuracy.value).toBe(63);
   });
 });
 

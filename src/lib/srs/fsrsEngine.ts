@@ -20,6 +20,9 @@ const f = fsrs({
   maximum_interval: 365, // cap at 1 year for civics test prep context
 });
 
+/** Exported FSRS singleton for use by readiness engine (retrievability projection) */
+export { f as fsrsInstance };
+
 // ---------------------------------------------------------------------------
 // Card creation
 // ---------------------------------------------------------------------------
