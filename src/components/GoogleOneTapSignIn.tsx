@@ -8,7 +8,11 @@ import { supabase } from '@/lib/supabaseClient';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-const GoogleOneTapSignIn = () => {
+interface GoogleOneTapSignInProps {
+  nonce?: string;
+}
+
+const GoogleOneTapSignIn = ({ nonce }: GoogleOneTapSignInProps) => {
   const { user, loginWithGoogleIdToken } = useAuth();
   const { showError } = useToast();
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -128,6 +132,7 @@ const GoogleOneTapSignIn = () => {
         src="https://accounts.google.com/gsi/client"
         async
         defer
+        nonce={nonce}
         onLoad={() => setScriptLoaded(true)}
       />
       <div className="relative isolate">

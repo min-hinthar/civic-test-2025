@@ -13,7 +13,11 @@ import { FadeIn } from '@/components/animations/StaggeredList';
 import { AmericanFlag } from '@/components/decorative/AmericanFlag';
 import { MyanmarFlag } from '@/components/decorative/MyanmarFlag';
 
-const AuthPage = () => {
+interface AuthPageProps {
+  nonce?: string;
+}
+
+const AuthPage = ({ nonce }: AuthPageProps) => {
   const { login, register, authError, user, sendPasswordReset } = useAuth();
   const { showSuccess, showInfo } = useToast();
   const { showBurmese } = useLanguage();
@@ -113,7 +117,7 @@ const AuthPage = () => {
             {/* Google sign-in */}
             {mode !== 'forgot' && (
               <div className="mb-5">
-                <GoogleOneTapSignIn />
+                <GoogleOneTapSignIn nonce={nonce} />
                 <div className="my-4 flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
                   <span className="h-px flex-1 bg-border" />
                   <span>

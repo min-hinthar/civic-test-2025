@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
 import { ClientProviders } from '@/components/ClientProviders';
 import { GlobalOverlays } from '@/components/GlobalOverlays';
-import { THEME_SCRIPT, HASH_REDIRECT_SCRIPT } from '@/lib/themeScript';
+import { THEME_SCRIPT } from '@/lib/themeScript';
 
 // Self-hosted Myanmar font (PWA offline support)
 import '@fontsource/noto-sans-myanmar/400.css';
@@ -35,12 +36,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-        <script dangerouslySetInnerHTML={{ __html: HASH_REDIRECT_SCRIPT }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body>
