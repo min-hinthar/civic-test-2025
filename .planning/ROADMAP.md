@@ -148,8 +148,8 @@ Plans:
   4. PWA install prompt and offline fallback page work on all routes
 **Plans**: 2 plans
 Plans:
-- [ ] 42-01-PLAN.md -- CSP nonce migration: proxy.ts rewrite with nonce + strict-dynamic, layout async nonce, GoogleOneTap nonce plumbing, security header consolidation
-- [ ] 42-02-PLAN.md -- SW verification, proxy unit tests, and full build verification
+- [x] 42-01-PLAN.md -- CSP nonce migration: proxy.ts rewrite with nonce + strict-dynamic, layout async nonce, GoogleOneTap nonce plumbing, security header consolidation
+- [x] 42-02-PLAN.md -- SW verification, proxy unit tests, and full build verification
 
 ### Phase 43: Test Readiness Score and Drill Mode
 **Goal**: Users can see how ready they are for the USCIS test and drill their weakest areas
@@ -221,7 +221,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete    | 2026-02-23 |
 | 40. App Router Foundation | 3/3 | Complete    | 2026-02-24 |
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
-| 42. CSP Nonce Migration and PWA Update | 2/2 | Complete   | 2026-02-25 |
+| 42. CSP Nonce Migration and PWA Update | 2/2 | Complete    | 2026-02-25 |
 | 43. Test Readiness Score and Drill Mode | 0/? | Not started | - |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
