@@ -79,7 +79,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 39: Next.js 16 Upgrade and Tooling** - Upgrade to Next.js 16, configure webpack fallback, reconfigure Sentry and service worker tooling
 - [x] **Phase 40: App Router Foundation** - Create root layout, extract ClientProviders, set up route group directories and auth guard (completed 2026-02-24)
 - [x] **Phase 41: Route Migration** - Migrate all 15+ routes from react-router-dom to App Router file-based routing in one pass (completed 2026-02-24)
-- [ ] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router
+- [x] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router (completed 2026-02-25)
 - [ ] **Phase 43: Test Readiness Score and Drill Mode** - Surface readiness scoring and weak-area drilling as first-class Dashboard features
 - [ ] **Phase 44: Test Date Countdown and Study Plan** - Add test date setting with countdown display and adaptive daily study targets
 - [ ] **Phase 45: Content Enrichment** - Author mnemonics, fun facts, common mistakes, citations, study tips, and related question links for all 128 questions
@@ -221,7 +221,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 44 depends on Phase 43
 | 39. Next.js 16 Upgrade and Tooling | 4/4 | Complete    | 2026-02-23 |
 | 40. App Router Foundation | 3/3 | Complete    | 2026-02-24 |
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
-| 42. CSP Nonce Migration and PWA Update | 1/2 | In Progress|  |
+| 42. CSP Nonce Migration and PWA Update | 2/2 | Complete   | 2026-02-25 |
 | 43. Test Readiness Score and Drill Mode | 0/? | Not started | - |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
