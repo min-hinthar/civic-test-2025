@@ -28,14 +28,13 @@ Migrate CSP from hash-based to nonce-based allowlisting with strict-dynamic, and
 - Nonce transport: middleware sets nonce on REQUEST headers only — layout reads from request headers — never exposed in response headers
 
 ### Middleware entry point setup
-- Rename proxy.ts to src/middleware.ts — adjust to Next.js named export pattern (`export function middleware(request)` + `export const config`)
-- Consolidate ALL security headers into middleware (CSP + X-Frame-Options + Referrer-Policy + etc.) — remove from next.config.mjs headers()
+- Keep proxy.ts at project root with `export function proxy()` — Next.js 16 uses proxy.ts as its middleware convention (CORRECTED from original "rename to middleware.ts" based on research)
+- Consolidate ALL security headers into proxy.ts (CSP + X-Frame-Options + Referrer-Policy + etc.) — remove from next.config.mjs headers()
 - Hardcoded exclusion matcher: skip `_next/static`, `_next/image`, `favicon.ico`, `sw.js`, static assets
-- No CORS in middleware — that stays in API route handlers
+- No CORS in proxy — that stays in API route handlers
 - CSP violation reporting via `report-to` directive pointing to Sentry CSP endpoint
 - Performance: no concern, crypto.randomUUID is sub-microsecond per request
 - Edge Runtime compatibility: investigate during implementation, flag Node-specific code and adapt
-- Delete proxy.ts after migration — clean break, no re-exports
 
 ### Service worker rebuild strategy
 - Gitignore public/sw.js — Serwist builds it automatically during `next build`, no manual commits
