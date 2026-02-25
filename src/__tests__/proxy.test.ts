@@ -100,24 +100,24 @@ describe('proxy()', () => {
     it('contains unsafe-eval in development mode', () => {
       // proxy.ts reads process.env.NODE_ENV at call time
       const origEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
+      (process.env as Record<string, string | undefined>).NODE_ENV = 'development';
 
       proxy();
       const csp = mockResponseHeaders.get('Content-Security-Policy') ?? '';
       expect(csp).toContain("'unsafe-eval'");
 
-      process.env.NODE_ENV = origEnv;
+      (process.env as Record<string, string | undefined>).NODE_ENV = origEnv;
     });
 
     it('does NOT contain unsafe-eval in production mode', () => {
       const origEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      (process.env as Record<string, string | undefined>).NODE_ENV = 'production';
 
       proxy();
       const csp = mockResponseHeaders.get('Content-Security-Policy') ?? '';
       expect(csp).not.toContain("'unsafe-eval'");
 
-      process.env.NODE_ENV = origEnv;
+      (process.env as Record<string, string | undefined>).NODE_ENV = origEnv;
     });
   });
 
