@@ -296,6 +296,7 @@ const DrillPage = () => {
           questions={practiceQuestions}
           totalQuestionCount={totalQuestionCount}
           preDrillMastery={preDrillMastery}
+          postDrillMastery={overallMastery}
           preDrillReadiness={preDrillReadiness}
           postDrillReadiness={postDrillReadiness}
           mode={drillMode}
