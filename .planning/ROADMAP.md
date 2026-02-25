@@ -81,7 +81,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 41: Route Migration** - Migrate all 15+ routes from react-router-dom to App Router file-based routing in one pass (completed 2026-02-24)
 - [x] **Phase 42: CSP Nonce Migration and PWA Update** - Switch from hash-based to nonce-based CSP and update service worker for App Router (completed 2026-02-25)
 - [x] **Phase 43: Test Readiness Score and Drill Mode** - Surface readiness scoring and weak-area drilling as first-class Dashboard features (completed 2026-02-25)
-- [ ] **Phase 43.5: Integration Wiring and Tech Debt** - Close integration gaps and tech debt from phases 39-43 audit (gap closure)
+- [x] **Phase 43.5: Integration Wiring and Tech Debt** - Close integration gaps and tech debt from phases 39-43 audit (gap closure) (completed 2026-02-25)
 - [ ] **Phase 44: Test Date Countdown and Study Plan** - Add test date setting with countdown display and adaptive daily study targets
 - [ ] **Phase 45: Content Enrichment** - Author mnemonics, fun facts, common mistakes, citations, study tips, and related question links for all 128 questions
 - [ ] **Phase 46: Cross-Device Sync** - Sync answer history, bookmarks, settings, and streak data to Supabase for multi-device continuity
@@ -241,7 +241,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
 | 42. CSP Nonce Migration and PWA Update | 2/2 | Complete    | 2026-02-25 |
 | 43. Test Readiness Score and Drill Mode | 4/4 | Complete    | 2026-02-25 |
-| 43.5. Integration Wiring and Tech Debt | 0/? | Not started | - |
+| 43.5. Integration Wiring and Tech Debt | 2/2 | Complete   | 2026-02-25 |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
 | 46. Cross-Device Sync | 0/? | Not started | - |
