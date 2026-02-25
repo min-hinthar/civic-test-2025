@@ -101,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24T14:58:57.406Z
-Stopped at: Completed 41-05-PLAN.md
-Resume file: None
+Last session: 2026-02-25T00:39:09.985Z
+Stopped at: Phase 42 context gathered
+Resume file: .planning/phases/42-csp-nonce-migration-and-pwa-update/42-CONTEXT.md
