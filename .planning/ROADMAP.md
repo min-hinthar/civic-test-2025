@@ -241,7 +241,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 41. Route Migration | 5/5 | Complete    | 2026-02-24 |
 | 42. CSP Nonce Migration and PWA Update | 2/2 | Complete    | 2026-02-25 |
 | 43. Test Readiness Score and Drill Mode | 4/4 | Complete    | 2026-02-25 |
-| 43.5. Integration Wiring and Tech Debt | 2/2 | Complete   | 2026-02-25 |
+| 43.5. Integration Wiring and Tech Debt | 2/2 | Complete    | 2026-02-25 |
 | 44. Test Date Countdown and Study Plan | 0/? | Not started | - |
 | 45. Content Enrichment | 0/? | Not started | - |
 | 46. Cross-Device Sync | 0/? | Not started | - |
