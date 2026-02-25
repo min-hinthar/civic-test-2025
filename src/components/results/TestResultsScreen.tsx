@@ -27,7 +27,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trophy, RotateCcw, Home, ListFilter, PlayCircle } from 'lucide-react';
+import { Trophy, RotateCcw, Home, ListFilter, PlayCircle, Target } from 'lucide-react';
 import { motion, useAnimationControls, AnimatePresence } from 'motion/react';
 import { clsx } from 'clsx';
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
@@ -908,6 +908,49 @@ export function TestResultsScreen({
                     }}
                     className="mb-3"
                   />
+                  {/* Drill CTA (practice mode only) */}
+                  {mode === 'practice' && (
+                    <div className="mb-3 flex items-center gap-3 rounded-xl border border-orange-500/20 bg-orange-500/5 p-3 dark:bg-orange-500/10">
+                      <Target className="h-5 w-5 flex-shrink-0 text-orange-500" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-foreground">
+                          Drill your weak areas
+                        </p>
+                        {showBurmese && (
+                          <p className="font-myanmar text-sm text-foreground">
+                            {
+                              '\u1021\u102C\u1038\u1014\u100A\u103A\u1038\u101E\u1031\u102C\u1014\u1031\u101B\u102C\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                            }
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                          Focus on the questions you missed
+                        </p>
+                        {showBurmese && (
+                          <p className="font-myanmar text-xs text-muted-foreground">
+                            {
+                              '\u101E\u1004\u103A\u101C\u103D\u1032\u1001\u1032\u1037\u101E\u1031\u102C\u1019\u1031\u1038\u1001\u103D\u1014\u103A\u1038\u1019\u103B\u102C\u1038\u1000\u102D\u102F \u1021\u102C\u101B\u102F\u1036\u1005\u102D\u102F\u1000\u103A\u1015\u102B'
+                            }
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => router.push('/drill')}
+                        className="flex-shrink-0 rounded-xl bg-orange-500 px-3 py-2 text-xs font-semibold text-white min-h-[44px] hover:bg-orange-600 transition-colors"
+                      >
+                        Drill Now
+                        {showBurmese && (
+                          <span className="font-myanmar block text-xs">
+                            {
+                              '\u101A\u1001\u102F \u101C\u1031\u1037\u1000\u103B\u1004\u103A\u1037\u1015\u102B'
+                            }
+                          </span>
+                        )}
+                      </button>
+                    </div>
+                  )}
+
                   <div className="space-y-3">
                     {weak.map(w => (
                       <WeakAreaNudge
