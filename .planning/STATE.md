@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 43 of 47 (Test Readiness Score and Drill Mode)
-Plan: 1 of 4 in current phase
-Status: In Progress
-Last activity: 2026-02-25 -- Completed 43-01 (readiness engine + drill selection, TDD)
+Plan: 4 of 4 in current phase
+Status: Complete
+Last activity: 2026-02-25 -- Completed 43-04 (drill entry points in Progress Hub + results screen)
 
 Progress: [██████████] 100%
 
@@ -49,6 +49,7 @@ Progress: [██████████] 100%
 | Phase 42 P01 | 4min | 2 tasks | 7 files |
 | Phase 42 P02 | 6min | 2 tasks | 1 files |
 | Phase 43 P01 | 7min | 2 tasks | 7 files |
+| Phase 43 P04 | 9min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,9 @@ Recent decisions affecting current work:
 - [Phase 43]: Accuracy dimension weighted by sub-category question count (matches calculateOverallMastery pattern)
 - [Phase 43]: 60% cap uses 3 main USCIS categories (not 7 sub-categories) for zero-coverage check
 - [Phase 43]: drillSelection is synchronous -- caller pre-loads answer history for purity/testability
+- [Phase 43]: Drill CTA visibility uses categoryMasteries.some(m < 70) -- derives from existing prop
+- [Phase 43]: End-of-practice drill suggestion gated by mode === 'practice' (mock tests excluded)
+- [Phase 43]: Both drill CTAs navigate to /drill (weak-all mode) via router.push
 
 ### Pending Todos
 
@@ -114,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25T13:09:00Z
-Stopped at: Completed 43-01-PLAN.md
+Last session: 2026-02-25T13:22:06Z
+Stopped at: Completed 43-04-PLAN.md
 Resume file: None
