@@ -10,6 +10,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
 import { ExplanationCard } from '@/components/explanations/ExplanationCard';
+import { TrickyBadge } from '@/components/quiz/TrickyBadge';
 import { getSubCategoryColors, SUB_CATEGORY_NAMES } from '@/lib/mastery';
 import type { Category, DynamicAnswerMeta, Explanation, Question } from '@/types';
 import { hapticMedium } from '@/lib/haptics';
@@ -74,6 +75,8 @@ interface Flashcard3DProps {
   difficulty?: DifficultyTier;
   /** FSRS mastery state label */
   masteryState?: MasteryLevel;
+  /** Whether this question is commonly tricky */
+  tricky?: boolean;
   /** Whether this card is bookmarked */
   isBookmarked?: boolean;
   /** Callback to toggle bookmark */
@@ -228,6 +231,7 @@ export function Flashcard3D({
   speedLabel,
   difficulty,
   masteryState,
+  tricky,
   isBookmarked = false,
   onToggleBookmark,
   controlledFlipped,
@@ -536,6 +540,9 @@ export function Flashcard3D({
                   )}
                 </span>
               )}
+
+              {/* Tricky question badge */}
+              {tricky && <TrickyBadge showBurmese={showBurmese} />}
             </div>
 
             {/* Scrollable content area */}

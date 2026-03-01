@@ -373,6 +373,7 @@ export function SkippedReviewPhase({
             explanation={currentQuestion.explanation}
             questionId={currentQuestion.id}
             streakCount={quizState.streakCount}
+            tricky={currentQuestion.tricky}
             mode="practice"
             onContinue={handleContinue}
             showBurmese={showBurmese}

@@ -313,6 +313,7 @@ export function SwipeableCard({
             subCategoryStripBg={getSubCategoryColors(question.category).stripBg}
             explanation={question.explanation}
             dynamic={question.dynamic}
+            tricky={question.tricky}
             showSpeedLabel
             speedLabel={speedLabel}
           />

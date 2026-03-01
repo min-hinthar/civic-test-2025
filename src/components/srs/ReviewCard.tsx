@@ -201,6 +201,7 @@ export function ReviewCard({
           category={question.category}
           explanation={question.explanation}
           allQuestions={allQuestions}
+          tricky={question.tricky}
           onFlip={handleFlip}
         />
       </motion.div>

@@ -320,6 +320,7 @@ export function FlashcardStack({
               speedLabel={speedLabel}
               difficulty={getDifficultyTier(currentQuestion)}
               masteryState={getMasteryLabel(currentQuestion.id)}
+              tricky={currentQuestion.tricky}
               isBookmarked={isBookmarked(currentQuestion.id)}
               onToggleBookmark={toggleBookmark}
               controlledFlipped={autoPlayEnabled ? autoPlayFlipped : undefined}

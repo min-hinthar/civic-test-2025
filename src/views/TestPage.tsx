@@ -905,6 +905,7 @@ const TestPage = () => {
           userAnswerMy={quizState.selectedAnswer?.text_my}
           questionId={currentQuestion?.id}
           streakCount={quizState.streakCount}
+          tricky={currentQuestion?.tricky}
           mode="mock-test"
           onContinue={handleContinue}
           showBurmese={showBurmese}

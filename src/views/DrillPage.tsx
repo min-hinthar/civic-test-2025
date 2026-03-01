@@ -22,6 +22,8 @@ import { getAllSRSCards } from '@/lib/srs/srsStore';
 import { fisherYatesShuffle } from '@/lib/shuffle';
 import { allQuestions, totalQuestions } from '@/constants/questions';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { StudyTipCard } from '@/components/drill/StudyTipCard';
+import { getStudyTip } from '@/constants/studyTips';
 import type { Question, QuestionResult, Category } from '@/types';
 
 type DrillPhase = 'config' | 'session' | 'results';
@@ -267,13 +269,29 @@ const DrillPage = () => {
   return (
     <div className="page-shell">
       {phase === 'config' && (
-        <DrillConfig
-          onStart={handleStart}
-          mode={drillMode}
-          categoryName={categoryName}
-          categoryKey={categoryParam ?? undefined}
-          showBurmese={showBurmese}
-        />
+        <>
+          {categoryParam &&
+            (() => {
+              const tip = getStudyTip(categoryParam as Category);
+              return tip ? (
+                <div className="mx-auto max-w-5xl px-4 pt-2">
+                  <StudyTipCard
+                    category={tip.category}
+                    tipEn={tip.tipEn}
+                    tipMy={tip.tipMy}
+                    className="mb-4"
+                  />
+                </div>
+              ) : null;
+            })()}
+          <DrillConfig
+            onStart={handleStart}
+            mode={drillMode}
+            categoryName={categoryName}
+            categoryKey={categoryParam ?? undefined}
+            showBurmese={showBurmese}
+          />
+        </>
       )}
 
       {phase === 'session' && practiceQuestions.length > 0 && (

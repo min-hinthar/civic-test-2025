@@ -14,6 +14,7 @@ import {
   strings,
 } from '@/lib/i18n/strings';
 import SpeechButton from '@/components/ui/SpeechButton';
+import { TrickyBadge } from '@/components/quiz/TrickyBadge';
 import type { Explanation } from '@/types';
 import type { QuizMode } from '@/lib/quiz/quizTypes';
 
@@ -32,6 +33,8 @@ interface FeedbackPanelProps {
   /** Question ID for pre-generated audio lookup */
   questionId?: string;
   streakCount: number;
+  /** Whether this question is commonly tricky */
+  tricky?: boolean;
   mode: QuizMode;
   onContinue: () => void;
   showBurmese: boolean;
@@ -202,6 +205,7 @@ export function FeedbackPanel({
   explanation,
   questionId,
   streakCount,
+  tricky,
   mode,
   onContinue,
   showBurmese,
@@ -312,13 +316,14 @@ export function FeedbackPanel({
                     )}
                   </p>
 
-                  {/* Streak badge */}
-                  <div className="mt-1">
+                  {/* Streak badge + Tricky badge */}
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
                     <StreakBadge
                       count={streakCount}
                       shouldReduceMotion={shouldReduceMotion}
                       showBurmese={showBurmese}
                     />
+                    {tricky && <TrickyBadge showBurmese={showBurmese} />}
                   </div>
                 </div>
               </div>
