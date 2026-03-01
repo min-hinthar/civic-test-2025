@@ -55,10 +55,10 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 
 ### Performance
 
-- [ ] **PERF-01**: Heavy components (recharts, DotLottie, confetti) use dynamic imports
-- [ ] **PERF-02**: `optimizePackageImports` configured for date-fns and recharts
-- [ ] **PERF-03**: Bundle size documented with before/after comparison
-- [ ] **PERF-04**: Web Vitals verified against v3.0 baseline (no regressions)
+- [x] **PERF-01**: Heavy components (recharts, DotLottie, confetti) use dynamic imports
+- [x] **PERF-02**: `optimizePackageImports` configured for date-fns and recharts
+- [x] **PERF-03**: Bundle size documented with before/after comparison
+- [x] **PERF-04**: Web Vitals verified against v3.0 baseline (no regressions)
 
 ## Future Requirements
 
@@ -132,10 +132,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SYNC-02 | Phase 46 | Pending |
 | SYNC-03 | Phase 46 | Pending |
 | SYNC-04 | Phase 46 | Pending |
-| PERF-01 | Phase 47 | Pending |
-| PERF-02 | Phase 47 | Pending |
-| PERF-03 | Phase 47 | Pending |
-| PERF-04 | Phase 47 | Pending |
+| PERF-01 | Phase 47 | Complete |
+| PERF-02 | Phase 47 | Partial (recharts only; date-fns not used) |
+| PERF-03 | Phase 47 | Complete |
+| PERF-04 | Phase 47 | Complete |
 
 **Coverage:**
 - v4.0 requirements: 38 total

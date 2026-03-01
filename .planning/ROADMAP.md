@@ -85,7 +85,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 44: Test Date Countdown and Study Plan** - Add test date setting with countdown display and adaptive daily study targets (completed 2026-03-01)
 - [x] **Phase 45: Content Enrichment** - Author mnemonics, fun facts, common mistakes, citations, study tips, and related question links for all 128 questions (completed 2026-03-01)
 - [ ] **Phase 46: Cross-Device Sync** - Sync answer history, bookmarks, settings, and streak data to Supabase for multi-device continuity
-- [ ] **Phase 47: Performance Optimization** - Dynamic imports, optimizePackageImports, bundle audit, and Web Vitals regression check
+- [x] **Phase 47: Performance Optimization** - Dynamic imports, optimizePackageImports, bundle audit, and Web Vitals regression check (completed 2026-03-01)
 
 ## Phase Details
 
@@ -252,7 +252,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 44. Test Date Countdown and Study Plan | 2/2 | Complete    | 2026-03-01 |
 | 45. Content Enrichment | 3/3 | Complete    | 2026-03-01 |
 | 46. Cross-Device Sync | 0/? | Not started | - |
-| 47. Performance Optimization | 0/? | Not started | - |
+| 47. Performance Optimization | 0/? | Complete    | 2026-03-01 |
 
 **Cumulative:**
 
