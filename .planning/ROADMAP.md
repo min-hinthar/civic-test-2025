@@ -205,7 +205,11 @@ Plans:
   3. Each of the 7 categories shows a dismissible study tip card at the top of category practice
   4. Hard questions display a "Tricky Question" difficulty badge
   5. Related question chips appear in study/review contexts and navigate to the linked question
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [x] 45-01-PLAN.md -- Enrichment data: mnemonics, fun facts, common mistakes, citations, tricky flags for all 128 questions
+- [ ] 45-02-PLAN.md -- Study tip cards and mnemonic UI components
+- [ ] 45-03-PLAN.md -- Related question chips and difficulty badges
 
 ### Phase 46: Cross-Device Sync
 **Goal**: Users can switch devices and find their progress, bookmarks, settings, and streaks intact
@@ -246,7 +250,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 43. Test Readiness Score and Drill Mode | 4/4 | Complete    | 2026-02-25 |
 | 43.5. Integration Wiring and Tech Debt | 2/2 | Complete    | 2026-02-25 |
 | 44. Test Date Countdown and Study Plan | 2/2 | Complete    | 2026-03-01 |
-| 45. Content Enrichment | 0/? | Not started | - |
+| 45. Content Enrichment | 1/3 | In progress | - |
 | 46. Cross-Device Sync | 0/? | Not started | - |
 | 47. Performance Optimization | 0/? | Not started | - |
 
