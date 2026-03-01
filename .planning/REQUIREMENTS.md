@@ -44,7 +44,7 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 - [x] **CONT-05**: Mnemonics display with distinct visual treatment (lightbulb icon, accent border)
 - [x] **CONT-06**: 7 category study tips shown as dismissible cards in category practice
 - [x] **CONT-07**: "Tricky Questions" difficulty badges on hard questions
-- [ ] **CONT-08**: "See Also" related question chips rendered in study/review contexts
+- [x] **CONT-08**: "See Also" related question chips rendered in study/review contexts
 
 ### Cross-Device Sync
 
@@ -127,7 +127,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-05 | Phase 45 | Complete |
 | CONT-06 | Phase 45 | Complete |
 | CONT-07 | Phase 45 | Complete |
-| CONT-08 | Phase 45 | Pending |
+| CONT-08 | Phase 45 | Complete |
 | SYNC-01 | Phase 46 | Pending |
 | SYNC-02 | Phase 46 | Pending |
 | SYNC-03 | Phase 46 | Pending |
