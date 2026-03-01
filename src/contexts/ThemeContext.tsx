@@ -1,7 +1,18 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { flushSync } from 'react-dom';
+
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
 
 type Theme = 'light' | 'dark';
 
@@ -14,6 +25,11 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
   const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
@@ -42,6 +58,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     root.classList.add(theme);
     root.style.setProperty('color-scheme', theme);
     window.localStorage.setItem('civic-theme', theme);
+
+    // Fire-and-forget sync to Supabase
+    if (userRef.current?.id) {
+      const settings = gatherCurrentSettings();
+      syncSettingsToSupabase(userRef.current.id, settings);
+    }
 
     // Update PWA theme-color meta tag for browser chrome
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');

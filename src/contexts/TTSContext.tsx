@@ -1,6 +1,17 @@
 'use client';
 
-import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
 
 import { createTTSEngine, loadVoices } from '../lib/ttsCore';
 import type { TTSEngine, TTSSettings, TTSState } from '../lib/ttsTypes';
@@ -86,6 +97,12 @@ function loadInitialSettings(): TTSSettings {
 // ---------------------------------------------------------------------------
 
 export function TTSProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   const [settings, setSettings] = useState<TTSSettings>(loadInitialSettings);
   const [engine, setEngine] = useState<TTSEngine | null>(null);
   const [state, setState] = useState<TTSState>({
@@ -155,6 +172,13 @@ export function TTSProvider({ children }: { children: ReactNode }) {
             preferredVoiceName: next.preferredVoiceName,
           });
         }
+
+        // Fire-and-forget sync to Supabase
+        if (userRef.current?.id) {
+          const gathered = gatherCurrentSettings();
+          syncSettingsToSupabase(userRef.current.id, gathered);
+        }
+
         return next;
       });
     },

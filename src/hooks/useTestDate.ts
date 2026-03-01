@@ -11,7 +11,10 @@
  * with useState lazy initializer for SSR safety.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -52,6 +55,12 @@ export interface UseTestDateReturn {
  * ```
  */
 export function useTestDate(): UseTestDateReturn {
+  const { user } = useAuth();
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   // SSR-safe lazy initializer -- only reads localStorage in browser
   const [testDate, setTestDateState] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -74,6 +83,12 @@ export function useTestDate(): UseTestDateReturn {
     } else {
       localStorage.removeItem(TEST_DATE_KEY);
     }
+
+    // Fire-and-forget sync to Supabase
+    if (userRef.current?.id) {
+      const settings = gatherCurrentSettings();
+      syncSettingsToSupabase(userRef.current.id, settings);
+    }
   }, []);
 
   // Update post-test action state
@@ -84,6 +99,12 @@ export function useTestDate(): UseTestDateReturn {
       // Clear test date on pass
       localStorage.removeItem(TEST_DATE_KEY);
       setTestDateState(null);
+
+      // Fire-and-forget sync to Supabase (testDate is now null)
+      if (userRef.current?.id) {
+        const settings = gatherCurrentSettings();
+        syncSettingsToSupabase(userRef.current.id, settings);
+      }
     }
   }, []);
 

@@ -83,6 +83,46 @@ export function mapSettingsToRow(userId: string, settings: UserSettings): Record
 }
 
 // ---------------------------------------------------------------------------
+// Gather current settings from localStorage
+// ---------------------------------------------------------------------------
+
+/**
+ * Read all current settings from their respective localStorage keys.
+ *
+ * Centralizes localStorage key knowledge so each context/hook doesn't
+ * need to know about other settings' storage format.
+ * Pure localStorage reader -- no side effects beyond reading.
+ */
+export function gatherCurrentSettings(): UserSettings {
+  const theme = (localStorage.getItem('civic-theme') as UserSettings['theme']) ?? 'light';
+  const languageMode =
+    (localStorage.getItem('civic-test-language-mode') as UserSettings['languageMode']) ??
+    'bilingual';
+
+  let ttsRate: UserSettings['ttsRate'] = 'normal';
+  let ttsPitch: UserSettings['ttsPitch'] = 1.02;
+  let ttsAutoRead: UserSettings['ttsAutoRead'] = true;
+  let ttsAutoReadLang: UserSettings['ttsAutoReadLang'] = 'both';
+
+  try {
+    const raw = localStorage.getItem('civic-prep-tts-settings');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      ttsRate = parsed.rate ?? 'normal';
+      ttsPitch = parsed.pitch ?? 1.02;
+      ttsAutoRead = parsed.autoRead ?? true;
+      ttsAutoReadLang = parsed.autoReadLang ?? 'both';
+    }
+  } catch {
+    // Corrupted TTS settings -- use defaults
+  }
+
+  const testDate = localStorage.getItem('civic-prep-test-date');
+
+  return { theme, languageMode, ttsRate, ttsPitch, ttsAutoRead, ttsAutoReadLang, testDate };
+}
+
+// ---------------------------------------------------------------------------
 // Sync to Supabase
 // ---------------------------------------------------------------------------
 

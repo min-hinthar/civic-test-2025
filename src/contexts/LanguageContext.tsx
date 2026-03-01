@@ -1,6 +1,17 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react';
+
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
 
 export type LanguageMode = 'bilingual' | 'english-only';
 
@@ -37,6 +48,12 @@ function langAttrForMode(mode: LanguageMode): string {
  * - Analytics stubs for future integration
  */
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   const [mode, setModeState] = useState<LanguageMode>(() => {
     if (typeof window === 'undefined') return 'bilingual';
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -49,7 +66,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setModeState(newMode);
     localStorage.setItem(STORAGE_KEY, newMode);
     document.documentElement.lang = langAttrForMode(newMode);
-    // Analytics event: language mode changed (handled by downstream listeners)
+
+    // Fire-and-forget sync to Supabase
+    if (userRef.current?.id) {
+      const settings = gatherCurrentSettings();
+      syncSettingsToSupabase(userRef.current.id, settings);
+    }
   }, []);
 
   const toggleMode = useCallback(() => {
