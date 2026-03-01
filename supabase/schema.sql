@@ -316,6 +316,50 @@ create policy "Users can manage own push subscription" on public.push_subscripti
   with check (auth.uid() = user_id);
 
 -- ============================================================
+-- User Settings for Cross-Device Sync (Phase 46)
+-- ============================================================
+
+create table if not exists public.user_settings (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  theme text not null default 'light' check (theme in ('light', 'dark')),
+  language_mode text not null default 'bilingual' check (language_mode in ('bilingual', 'english-only')),
+  tts_rate text not null default 'normal' check (tts_rate in ('slow', 'normal', 'fast')),
+  tts_pitch numeric not null default 1.02,
+  tts_auto_read boolean not null default true,
+  tts_auto_read_lang text not null default 'both' check (tts_auto_read_lang in ('english', 'burmese', 'both')),
+  test_date text,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_settings enable row level security;
+
+drop policy if exists "Users can manage own settings" on public.user_settings;
+create policy "Users can manage own settings" on public.user_settings
+  for all using (auth.uid() = user_id);
+drop policy if exists "Users can insert own settings" on public.user_settings;
+create policy "Users can insert own settings" on public.user_settings
+  for insert with check (auth.uid() = user_id);
+
+-- ============================================================
+-- User Bookmarks for Cross-Device Sync (Phase 46)
+-- ============================================================
+
+create table if not exists public.user_bookmarks (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  question_ids text[] not null default '{}',
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_bookmarks enable row level security;
+
+drop policy if exists "Users can manage own bookmarks" on public.user_bookmarks;
+create policy "Users can manage own bookmarks" on public.user_bookmarks
+  for all using (auth.uid() = user_id);
+drop policy if exists "Users can insert own bookmarks" on public.user_bookmarks;
+create policy "Users can insert own bookmarks" on public.user_bookmarks
+  for insert with check (auth.uid() = user_id);
+
+-- ============================================================
 -- Leaderboard Functions (Phase 7)
 -- ============================================================
 
