@@ -67,6 +67,8 @@ export interface Question {
   explanation?: Explanation; // Optional for gradual rollout safety
   /** Marks questions whose answers change over time or vary by location */
   dynamic?: DynamicAnswerMeta;
+  /** Whether this question is commonly tricky for test-takers */
+  tricky?: boolean;
 }
 
 export interface QuestionResult {

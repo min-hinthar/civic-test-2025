@@ -137,6 +137,43 @@ describe('Question Bank Validation', () => {
     });
   });
 
+  describe('Content Enrichment Completeness', () => {
+    it('all questions have mnemonic_en', () => {
+      for (const q of allQuestions) {
+        expect(q.explanation?.mnemonic_en, `${q.id} missing mnemonic_en`).toBeTruthy();
+      }
+    });
+
+    it('all questions have funFact_en and funFact_my', () => {
+      for (const q of allQuestions) {
+        expect(q.explanation?.funFact_en, `${q.id} missing funFact_en`).toBeTruthy();
+        expect(q.explanation?.funFact_my, `${q.id} missing funFact_my`).toBeTruthy();
+      }
+    });
+
+    it('all questions have commonMistake_en and commonMistake_my', () => {
+      for (const q of allQuestions) {
+        expect(q.explanation?.commonMistake_en, `${q.id} missing commonMistake_en`).toBeTruthy();
+        expect(q.explanation?.commonMistake_my, `${q.id} missing commonMistake_my`).toBeTruthy();
+      }
+    });
+
+    it('all questions have citation', () => {
+      for (const q of allQuestions) {
+        expect(q.explanation?.citation, `${q.id} missing citation`).toBeTruthy();
+      }
+    });
+
+    it('tricky questions are valid and within expected range', () => {
+      const trickyQuestions = allQuestions.filter(q => q.tricky);
+      expect(trickyQuestions.length).toBeGreaterThanOrEqual(10);
+      expect(trickyQuestions.length).toBeLessThanOrEqual(25);
+      for (const q of trickyQuestions) {
+        expect(q.id, `tricky question ${q.id} not in allQuestions`).toBeTruthy();
+      }
+    });
+  });
+
   describe('Category Distribution', () => {
     it('has correct category counts', () => {
       const counts = new Map<string, number>();
