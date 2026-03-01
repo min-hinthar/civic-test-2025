@@ -190,7 +190,10 @@ Plans:
   2. Dashboard and Progress Hub show a countdown with days remaining until the test date
   3. Dashboard shows a "Today's Plan" card with specific SRS review count, new question target, and mock test recommendation
   4. Daily targets recalculate when the user studies ahead or misses a day (no "behind schedule" shaming)
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 44-01-PLAN.md -- Study plan engine (TDD) + useTestDate hook + useStudyPlan composition hook
+- [ ] 44-02-PLAN.md -- Countdown card, study plan card, post-test prompt, Dashboard/Settings/Hub wiring, NBA integration
 
 ### Phase 45: Content Enrichment
 **Goal**: Every question has mnemonics, fun facts, common mistakes, citations, study tips, and related question links to deepen learning
