@@ -3,15 +3,7 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from 'recharts';
+import dynamic from 'next/dynamic';
 import {
   CheckCircle2,
   XCircle,
@@ -26,7 +18,15 @@ import {
 import { clsx } from 'clsx';
 import { ExaminerCharacter } from '@/components/interview/ExaminerCharacter';
 import { InterviewTranscript } from '@/components/interview/InterviewTranscript';
-import { Confetti } from '@/components/celebrations/Confetti';
+const ScoreTrendChart = dynamic(() => import('./ScoreTrendChart').then(m => m.ScoreTrendChart), {
+  ssr: false,
+  loading: () => null,
+});
+
+const Confetti = dynamic(() => import('@/components/celebrations/Confetti').then(m => m.Confetti), {
+  ssr: false,
+  loading: () => null,
+});
 import { CountUpScore } from '@/components/celebrations/CountUpScore';
 import { Card } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
@@ -51,8 +51,6 @@ import type { USCISCategory } from '@/lib/mastery/categoryMapping';
 import { strings } from '@/lib/i18n/strings';
 import type { ShareCardData } from '@/lib/social/shareCardRenderer';
 import type { InterviewMode, InterviewResult, InterviewEndReason, InterviewSession } from '@/types';
-import { getTokenColor } from '@/lib/tokens';
-import { useThemeContext } from '@/contexts/ThemeContext';
 
 /** Map of end reasons to bilingual display text */
 const END_REASON_TEXT: Record<InterviewEndReason, { en: string; my: string }> = {
@@ -185,9 +183,6 @@ export function InterviewResults({
   const { currentStreak } = useStreak();
   const { addCard, isInDeck } = useSRS();
   const { showSuccess } = useToast();
-
-  // Subscribe to theme changes so getTokenColor() re-resolves on toggle
-  useThemeContext();
 
   const [showConfetti, setShowConfetti] = useState(false);
   const [trendData, setTrendData] = useState<Array<{ date: string; score: number }>>([]);
@@ -733,43 +728,7 @@ export function InterviewResults({
             />
             {trendData.length >= 2 ? (
               <Card className="bg-slate-800/50 border-slate-700/50 p-4" elevated={false}>
-                <div className="h-48 w-full">
-                  <ResponsiveContainer>
-                    <LineChart data={trendData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke={getTokenColor('--color-border', 0.3)}
-                        opacity={0.3}
-                      />
-                      <XAxis
-                        dataKey="date"
-                        stroke={getTokenColor('--color-text-secondary')}
-                        fontSize={11}
-                      />
-                      <YAxis
-                        domain={[0, 20]}
-                        stroke={getTokenColor('--color-text-secondary')}
-                        fontSize={11}
-                        tickFormatter={(value: number) => `${value}`}
-                      />
-                      <Tooltip
-                        formatter={value => [`${Number(value)} / 20`, 'Score']}
-                        contentStyle={{
-                          backgroundColor: getTokenColor('--color-surface'),
-                          borderRadius: '1rem',
-                          border: `1px solid ${getTokenColor('--color-border')}`,
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke={getTokenColor('--color-chart-blue')}
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
+                <ScoreTrendChart data={trendData} />
               </Card>
             ) : (
               <Card className="bg-slate-800/50 border-slate-700/50 p-4" elevated={false}>

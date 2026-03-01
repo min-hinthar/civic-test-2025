@@ -15,7 +15,7 @@ const withSerwist = withSerwistInit({
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react', 'recharts'],
   },
   async redirects() {
     return [
