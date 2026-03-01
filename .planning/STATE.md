@@ -3,6 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
+last_updated: "2026-03-01T23:50:49.014Z"
+progress:
+  total_phases: 10
+  completed_phases: 9
+  total_plans: 30
+  completed_plans: 28
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
 last_updated: "2026-03-01T22:37:26.584Z"
 progress:
   total_phases: 9
@@ -35,12 +48,12 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 
 ## Current Position
 
-Phase: 45 of 47 (Content Enrichment)
-Plan: 3 of 3 in current phase (COMPLETE)
-Status: Phase 45 Complete
-Last activity: 2026-03-01 -- Completed 45-03 (UI integration: StudyTipCard, TrickyBadge wiring, CONT-08 verification)
+Phase: 46 of 47 (Cross-Device Sync)
+Plan: 1 of 3 in current phase
+Status: In Progress
+Last activity: 2026-03-01 -- Completed 46-01 (Settings/bookmark sync data layer + enhanced streak merge)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 96%
 
 ## Performance Metrics
 
@@ -83,6 +96,7 @@ Progress: [██████████] 100%
 | Phase 45 P01 | 142min | 2 tasks | 9 files |
 | Phase 45 P02 | 3min | 2 tasks | 6 files |
 | Phase 45 P03 | 6min | 2 tasks | 9 files |
+| Phase 46 P01 | 8min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -157,6 +171,10 @@ Recent decisions affecting current work:
 - [Phase 45]: StudyTipCard only shown in category drill mode (when categoryParam present)
 - [Phase 45]: TrickyBadge placed after mastery badge in Flashcard3D for consistent badge ordering
 - [Phase 45]: TrickyBadge in FeedbackPanel uses flex-wrap layout alongside streak badge
+- [Phase 46]: Separate user_settings and user_bookmarks tables (not extending profiles) to avoid trigger conflicts
+- [Phase 46]: Individual columns for settings (not JSONB) matching project pattern for type safety
+- [Phase 46]: Freeze recalculation removes freezes on dates with activity after merge, returns freed to pool capped at 3
+- [Phase 46]: Longest streak recomputed from merged dates via calculateStreak (not max of both)
 
 ### Pending Todos
 
@@ -170,6 +188,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-01T14:35:33Z
-Stopped at: Completed 45-03-PLAN.md (Phase 45 complete)
+Last session: 2026-03-01T23:49:00Z
+Stopped at: Completed 46-01-PLAN.md
 Resume file: None

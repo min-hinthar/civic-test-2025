@@ -49,9 +49,9 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 ### Cross-Device Sync
 
 - [ ] **SYNC-01**: Answer history (mastery data) syncs to Supabase for cross-device continuity
-- [ ] **SYNC-02**: Bookmarks sync to Supabase across devices
-- [ ] **SYNC-03**: User settings (theme, language, voice, test date) sync to Supabase
-- [ ] **SYNC-04**: Study streak data syncs to Supabase for accurate cross-device tracking
+- [x] **SYNC-02**: Bookmarks sync to Supabase across devices
+- [x] **SYNC-03**: User settings (theme, language, voice, test date) sync to Supabase
+- [x] **SYNC-04**: Study streak data syncs to Supabase for accurate cross-device tracking
 
 ### Performance
 
@@ -129,9 +129,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-07 | Phase 45 | Complete |
 | CONT-08 | Phase 45 | Complete |
 | SYNC-01 | Phase 46 | Pending |
-| SYNC-02 | Phase 46 | Pending |
-| SYNC-03 | Phase 46 | Pending |
-| SYNC-04 | Phase 46 | Pending |
+| SYNC-02 | Phase 46 | Complete |
+| SYNC-03 | Phase 46 | Complete |
+| SYNC-04 | Phase 46 | Complete |
 | PERF-01 | Phase 47 | Complete |
 | PERF-02 | Phase 47 | Partial (recharts only; date-fns not used) |
 | PERF-03 | Phase 47 | Complete |
