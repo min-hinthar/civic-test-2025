@@ -11,14 +11,15 @@
  *
  * Merge strategy for multi-device usage:
  * - activityDates: union (deduplicated)
- * - freezesUsed: union (deduplicated)
- * - freezesAvailable: max of both
- * - longestStreak: max of both
+ * - freezesUsed: union (deduplicated), then recalculate (remove freezes on activity dates)
+ * - freezesAvailable: max of both + freed freezes (capped at 3)
+ * - longestStreak: recomputed from merged dates via calculateStreak
  */
 
 import { supabase } from '@/lib/supabaseClient';
 import { withRetry } from '@/lib/async';
 import { captureError } from '@/lib/sentry';
+import { calculateStreak } from './streakTracker';
 import type { StreakData } from './streakStore';
 
 // ---------------------------------------------------------------------------
@@ -129,9 +130,11 @@ export async function loadStreakFromSupabase(userId: string): Promise<StreakData
  *
  * Strategy:
  * - activityDates: union of both (deduplicated, sorted)
- * - freezesUsed: union of both (deduplicated, sorted)
- * - freezesAvailable: max of both
- * - longestStreak: max of both
+ * - freezesUsed: union of both, then recalculate — remove freezes on dates
+ *   that now have activity after merge (the other device was active on that day)
+ * - freezesAvailable: max of both + freed freeze count (capped at 3)
+ * - longestStreak: recomputed from full merged date set via calculateStreak
+ *   (more accurate than max of both — combined dates may reveal longer run)
  * - dailyActivityCounts: kept from local (current device state)
  * - lastSyncedAt: current time
  */
@@ -142,13 +145,29 @@ export function mergeStreakData(local: StreakData, remote: StreakData): StreakDa
   ).sort();
 
   // Union freezes used (deduplicate and sort)
-  const freezesUsed = Array.from(new Set([...local.freezesUsed, ...remote.freezesUsed])).sort();
+  const allFreezesUsed = Array.from(new Set([...local.freezesUsed, ...remote.freezesUsed])).sort();
+
+  // Recalculate: remove freezes for dates that now have activity after merge.
+  // If the other device was active on a "missed" day, the freeze is unnecessary.
+  const activitySet = new Set(activityDates);
+  const validFreezes = allFreezesUsed.filter(date => !activitySet.has(date));
+
+  // Return freed freezes to available pool (capped at 3)
+  const freedCount = allFreezesUsed.length - validFreezes.length;
+  const freezesAvailable = Math.min(
+    Math.max(local.freezesAvailable, remote.freezesAvailable) + freedCount,
+    3
+  );
+
+  // Recompute longest streak from full merged date set
+  // (more accurate than max of both — combined dates may reveal longer run)
+  const { longest } = calculateStreak(activityDates, validFreezes);
 
   return {
     activityDates,
-    freezesAvailable: Math.max(local.freezesAvailable, remote.freezesAvailable),
-    freezesUsed,
-    longestStreak: Math.max(local.longestStreak, remote.longestStreak),
+    freezesAvailable,
+    freezesUsed: validFreezes,
+    longestStreak: longest,
     lastSyncedAt: new Date().toISOString(),
     // Keep local daily activity counts (current device state)
     dailyActivityCounts: local.dailyActivityCounts,
