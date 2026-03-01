@@ -30,10 +30,10 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 - [x] **RDNS-04**: User can start a dedicated weak-area drill from Dashboard
 - [x] **RDNS-05**: Category-level drill buttons appear on categories below mastery threshold
 - [x] **RDNS-06**: Drill session shows pre/post mastery improvement delta
-- [ ] **RDNS-07**: User can set test date in Settings
+- [x] **RDNS-07**: User can set test date in Settings
 - [ ] **RDNS-08**: Countdown display shows days remaining on Dashboard and Progress Hub
-- [ ] **RDNS-09**: Daily study targets card on Dashboard (SRS review + new questions + mock test recommendation)
-- [ ] **RDNS-10**: Daily targets adapt dynamically when user misses or studies ahead
+- [x] **RDNS-09**: Daily study targets card on Dashboard (SRS review + new questions + mock test recommendation)
+- [x] **RDNS-10**: Daily targets adapt dynamically when user misses or studies ahead
 
 ### Content
 
@@ -116,10 +116,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RDNS-04 | Phase 43 | Complete |
 | RDNS-05 | Phase 43 | Complete |
 | RDNS-06 | Phase 43 | Complete |
-| RDNS-07 | Phase 44 | Pending |
+| RDNS-07 | Phase 44 | Complete |
 | RDNS-08 | Phase 44 | Pending |
-| RDNS-09 | Phase 44 | Pending |
-| RDNS-10 | Phase 44 | Pending |
+| RDNS-09 | Phase 44 | Complete |
+| RDNS-10 | Phase 44 | Complete |
 | CONT-01 | Phase 45 | Pending |
 | CONT-02 | Phase 45 | Pending |
 | CONT-03 | Phase 45 | Pending |

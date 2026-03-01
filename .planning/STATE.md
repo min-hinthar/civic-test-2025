@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-02-25T23:31:05.084Z"
+last_updated: "2026-03-01T11:05:01Z"
 progress:
   total_phases: 6
   completed_phases: 6
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 43 - Test Readiness Score and Drill Mode
+**Current focus:** Phase 44 - Test Date Countdown and Study Plan
 
 ## Current Position
 
-Phase: 43 of 47 (Test Readiness Score and Drill Mode)
-Plan: 4 of 4 in current phase
+Phase: 44 of 47 (Test Date Countdown and Study Plan)
+Plan: 1 of 2 in current phase
 Status: In Progress
-Last activity: 2026-02-25 -- Completed 43-03 (drill mode page with config, session, results)
+Last activity: 2026-03-01 -- Completed 44-01 (study plan engine TDD + hooks)
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Progress: [██████████] 100%
 | Phase 43 P04 | 9min | 2 tasks | 2 files |
 | Phase 43 P02 | 28min | 2 tasks | 5 files |
 | Phase 43 P03 | 34min | 2 tasks | 5 files |
+| Phase 44 P01 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,10 @@ Recent decisions affecting current work:
 - [Phase 43]: Single animPhase counter for staggered DrillResults animation avoids React Compiler setState-in-effect
 - [Phase 43]: Inline computeReadinessScore() for drill pre/post comparison (avoids useReadinessScore hook instance sharing)
 - [Phase 43]: PracticeSession reused with timerEnabled=false and no session persistence for drill mode
+- [Phase 44]: Drill recommendation count fixed at 10 (DRILL_MAX) per weakest category
+- [Phase 44]: Pace status uses approximate totalDays = max(daysRemaining+14, 30) since start date not stored
+- [Phase 44]: No-date mode newQuestionTarget uses clamp(unpracticedCount, 3, 10) for default daily pacing
+- [Phase 44]: Weak categories derived from 3 main USCIS categories (not 7 sub-categories) matching readiness engine
 
 ### Pending Todos
 
@@ -138,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25T13:47:58Z
-Stopped at: Completed 43-03-PLAN.md
+Last session: 2026-03-01T11:05:01Z
+Stopped at: Completed 44-01-PLAN.md
 Resume file: None
