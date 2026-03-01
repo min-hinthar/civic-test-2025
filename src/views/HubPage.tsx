@@ -7,6 +7,7 @@ import { SPRING_SNAPPY } from '@/lib/motion-config';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useStreak } from '@/hooks/useStreak';
+import { useTestDate } from '@/hooks/useTestDate';
 import { useBadges } from '@/hooks/useBadges';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useSRSWidget } from '@/hooks/useSRSWidget';
@@ -87,6 +88,7 @@ export default function HubPage({ initialTab }: HubPageProps) {
   const { showBurmese } = useLanguage();
   const { user, isLoading: isLoadingAuth } = useAuth();
   const { showWarning } = useToast();
+  const { testDate } = useTestDate();
 
   // -------------------------------------------------------------------------
   // Shared data hooks (lifted to HubPage to avoid waterfall loads)
@@ -311,14 +313,47 @@ export default function HubPage({ initialTab }: HubPageProps) {
       <div className="mx-auto max-w-6xl px-4 pt-6 pb-8">
         {/* Page header */}
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-text-primary">
-            {user?.name ? `${user.name.split(' ')[0]}'s Progress` : strings.hub.pageTitle.en}
-          </h1>
-          {showBurmese && (
-            <p className="font-myanmar mt-0.5 text-2xl text-text-secondary">
-              {user?.name ? `${user.name.split(' ')[0]} ၏ တိုးတက်မှု` : strings.hub.pageTitle.my}
-            </p>
-          )}
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-bold text-text-primary">
+                {user?.name ? `${user.name.split(' ')[0]}'s Progress` : strings.hub.pageTitle.en}
+              </h1>
+              {showBurmese && (
+                <p className="font-myanmar mt-0.5 text-2xl text-text-secondary">
+                  {user?.name
+                    ? `${user.name.split(' ')[0]} ၏ တိုးတက်မှု`
+                    : strings.hub.pageTitle.my}
+                </p>
+              )}
+            </div>
+            {testDate &&
+              (() => {
+                const testDateObj = new Date(testDate + 'T00:00:00Z');
+                const todayObj = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00Z');
+                const daysLeft = Math.max(
+                  0,
+                  Math.round((testDateObj.getTime() - todayObj.getTime()) / (24 * 60 * 60 * 1000))
+                );
+                if (daysLeft <= 0) return null;
+                const urgencyColor =
+                  daysLeft <= 7
+                    ? 'text-red-600 dark:text-red-400 bg-red-500/10'
+                    : daysLeft <= 21
+                      ? 'text-amber-600 dark:text-amber-400 bg-amber-500/10'
+                      : 'text-green-600 dark:text-green-400 bg-green-500/10';
+                return (
+                  <div
+                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${urgencyColor}`}
+                  >
+                    <span className="tabular-nums">{daysLeft}</span>
+                    <span>days until test</span>
+                    {showBurmese && (
+                      <span className="font-myanmar ml-0.5">{'\u101B\u1000\u103A'}</span>
+                    )}
+                  </div>
+                );
+              })()}
+          </div>
         </div>
 
         {/* Tab bar */}

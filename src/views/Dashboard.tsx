@@ -15,10 +15,14 @@ import { useSRSWidget } from '@/hooks/useSRSWidget';
 import { useMasteryMilestones } from '@/hooks/useMasteryMilestones';
 import { useBadges } from '@/hooks/useBadges';
 import { useOnboarding } from '@/hooks/useOnboarding';
+import { useStudyPlan } from '@/hooks/useStudyPlan';
 import { NBAHeroCard, NBAHeroSkeleton } from '@/components/dashboard/NBAHeroCard';
 import { CompactStatRow } from '@/components/dashboard/CompactStatRow';
 import { CategoryPreviewCard } from '@/components/dashboard/CategoryPreviewCard';
 import { RecentActivityCard } from '@/components/dashboard/RecentActivityCard';
+import { TestDateCountdownCard } from '@/components/dashboard/TestDateCountdownCard';
+import { StudyPlanCard } from '@/components/dashboard/StudyPlanCard';
+import { PostTestPrompt } from '@/components/dashboard/PostTestPrompt';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
 import { DashboardEmptyState } from '@/components/dashboard/DashboardEmptyState';
 import { ErrorFallback } from '@/components/ui/ErrorFallback';
@@ -64,6 +68,16 @@ const Dashboard = () => {
 
   // NBA recommendation
   const { nbaState } = useNextBestAction();
+
+  // Study plan and test date
+  const {
+    dailyPlan,
+    testDate,
+    setTestDate,
+    postTestAction,
+    setPostTestAction,
+    isLoading: studyPlanLoading,
+  } = useStudyPlan();
 
   // Readiness score for hero card
   const {
@@ -210,7 +224,8 @@ const Dashboard = () => {
     streakLoading ||
     srsLoading ||
     practiceCountLoading ||
-    readinessLoading;
+    readinessLoading ||
+    studyPlanLoading;
 
   // Zero-data condition: user has never completed a session and has no mastery
   const isDashboardEmpty =
@@ -268,6 +283,25 @@ const Dashboard = () => {
               showBurmese={showBurmese}
             />
           </StaggeredItem>
+
+          {/* Test Date Countdown Card */}
+          <StaggeredItem className="mb-6">
+            <TestDateCountdownCard
+              testDate={testDate}
+              daysRemaining={dailyPlan?.daysRemaining ?? null}
+              paceStatus={dailyPlan?.paceStatus ?? null}
+              readinessScore={readiness?.score ?? 0}
+              onSetDate={setTestDate}
+              showBurmese={showBurmese}
+            />
+          </StaggeredItem>
+
+          {/* Today's Plan Card */}
+          {dailyPlan && (
+            <StaggeredItem className="mb-6">
+              <StudyPlanCard dailyPlan={dailyPlan} showBurmese={showBurmese} />
+            </StaggeredItem>
+          )}
 
           {/* Unfinished Session Banners */}
           {visibleSessions.length > 0 && (
@@ -365,6 +399,23 @@ const Dashboard = () => {
             <RecentActivityCard testHistory={history} isLoading={authLoading} />
           </StaggeredItem>
         </StaggeredList>
+
+        {/* Post-test prompt modal */}
+        <PostTestPrompt
+          isOpen={
+            dailyPlan?.daysRemaining !== null &&
+            dailyPlan?.daysRemaining !== undefined &&
+            dailyPlan.daysRemaining <= 0 &&
+            postTestAction === 'pending'
+          }
+          onPass={() => setPostTestAction('passed')}
+          onReschedule={() => {
+            setPostTestAction('rescheduled');
+            setTestDate(null);
+          }}
+          onDismiss={() => setPostTestAction('rescheduled')}
+          showBurmese={showBurmese}
+        />
 
         {/* Milestone celebration modal -- suppressed during onboarding */}
         <MasteryMilestone

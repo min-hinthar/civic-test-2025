@@ -22,6 +22,7 @@ import { useStreak } from '@/hooks/useStreak';
 import { useSRSWidget } from '@/hooks/useSRSWidget';
 import { useCategoryMastery } from '@/hooks/useCategoryMastery';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useTestDate } from '@/hooks/useTestDate';
 import { getInterviewHistory } from '@/lib/interview/interviewStore';
 import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
@@ -72,6 +73,8 @@ export function useNextBestAction(): UseNextBestActionReturn {
   const { categoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
 
   const { user, isLoading: authLoading } = useAuth();
+
+  const { testDate } = useTestDate();
 
   // -------------------------------------------------------------------------
   // 2. Interview history from IndexedDB
@@ -163,6 +166,7 @@ export function useNextBestAction(): UseNextBestActionReturn {
       interviewHistory,
       uniqueQuestionsPracticed: uniqueQuestionsCount,
       totalQuestions,
+      testDate,
     });
   }, [
     isLoading,
@@ -174,6 +178,7 @@ export function useNextBestAction(): UseNextBestActionReturn {
     user?.testHistory,
     interviewHistory,
     uniqueQuestionsCount,
+    testDate,
   ]);
 
   return { nbaState, isLoading };

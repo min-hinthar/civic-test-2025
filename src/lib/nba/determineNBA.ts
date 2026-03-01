@@ -215,13 +215,23 @@ export function determineNextBestAction(input: NBAInput, now: Date = new Date())
   const readinessScore = computeReadiness(input);
   const passedTest = hasPassedMockTest(input.testHistory);
 
+  // -----------------------------------------------------------------------
+  // Test-date awareness: when test is within 7 days, prevent celebration
+  // states and instead suggest actionable next steps.
+  // -----------------------------------------------------------------------
+  const testDateDaysRemaining = input.testDate
+    ? Math.max(0, -daysBetween(input.testDate, now))
+    : null;
+  const isTestImminent =
+    testDateDaysRemaining !== null && testDateDaysRemaining > 0 && testDateDaysRemaining <= 7;
+
   const isCelebration =
     input.currentStreak > 0 &&
     input.srsDueCount === 0 &&
     input.overallMastery >= 60 &&
     daysSinceLastTest < 7;
 
-  if (isCelebration) {
+  if (isCelebration && !isTestImminent) {
     const suggestInterview = readinessScore >= 80 && passedTest;
     const content = getNBAContent('celebration', {
       currentStreak: input.currentStreak,
@@ -235,6 +245,36 @@ export function determineNextBestAction(input: NBAInput, now: Date = new Date())
       mastery: input.overallMastery,
       suggestInterview,
     };
+  }
+
+  // When test is imminent and we'd celebrate, suggest actionable advice instead
+  if (isCelebration && isTestImminent) {
+    // Try weak category first
+    const weakCat = findWeakestCategory(input.categoryMasteries, 70);
+    if (weakCat) {
+      const categoryDef = USCIS_CATEGORIES[weakCat.name];
+      const contentWeak = getNBAContent('weak-category', {
+        categoryName: categoryDef.name,
+        mastery: weakCat.mastery,
+      });
+      return {
+        ...contentWeak,
+        type: 'weak-category',
+        categoryName: categoryDef.name,
+        mastery: weakCat.mastery,
+      };
+    }
+    // Suggest a mock test if none recently
+    if (daysSinceLastTest >= 2) {
+      const contentTest = getNBAContent('no-recent-test', {
+        daysSinceTest: daysSinceLastTest,
+      });
+      return {
+        ...contentTest,
+        type: 'no-recent-test',
+        daysSinceTest: daysSinceLastTest,
+      };
+    }
   }
 
   // -----------------------------------------------------------------------
@@ -256,7 +296,36 @@ export function determineNextBestAction(input: NBAInput, now: Date = new Date())
 
   // -----------------------------------------------------------------------
   // 9. Default celebration: nothing urgent, things are going OK
+  //    (also overridden by test-date awareness when test is imminent)
   // -----------------------------------------------------------------------
+  if (isTestImminent) {
+    // When test imminent: push for practice instead of celebrating
+    const weakCat = findWeakestCategory(input.categoryMasteries, 70);
+    if (weakCat) {
+      const categoryDef = USCIS_CATEGORIES[weakCat.name];
+      const contentWeak = getNBAContent('weak-category', {
+        categoryName: categoryDef.name,
+        mastery: weakCat.mastery,
+      });
+      return {
+        ...contentWeak,
+        type: 'weak-category',
+        categoryName: categoryDef.name,
+        mastery: weakCat.mastery,
+      };
+    }
+    if (daysSinceLastTest >= 2) {
+      const contentTest = getNBAContent('no-recent-test', {
+        daysSinceTest: daysSinceLastTest,
+      });
+      return {
+        ...contentTest,
+        type: 'no-recent-test',
+        daysSinceTest: daysSinceLastTest,
+      };
+    }
+  }
+
   const suggestInterview = readinessScore >= 80 && passedTest;
   const content = getNBAContent('celebration', {
     currentStreak: input.currentStreak,

@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Bell,
+  Calendar,
   Clock,
   Globe,
   LogOut,
@@ -32,6 +33,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useTestDate } from '@/hooks/useTestDate';
 import { FlagToggle } from '@/components/ui/FlagToggle';
 import { SocialSettings } from '@/components/social/SocialSettings';
 import { useUserState } from '@/contexts/StateContext';
@@ -199,6 +201,7 @@ export default function SettingsPage() {
   });
   const { settings: ttsSettings, updateSettings: updateTTSSettings } = useTTSSettings();
   const speechRate = ttsSettings.rate;
+  const { testDate, setTestDate } = useTestDate();
   const { selectedState, setSelectedState, allStates } = useUserState();
   const [soundMuted, setSoundMutedState] = React.useState(() => isSoundMuted());
 
@@ -371,6 +374,37 @@ export default function SettingsPage() {
                   </option>
                 ))}
               </select>
+            }
+            isLast
+          />
+        </SettingsSection>
+
+        {/* ======= Test Preparation Section ======= */}
+        <SettingsSection
+          icon={<Calendar className="h-5 w-5" />}
+          titleEn="Test Preparation"
+          titleMy={
+            '\u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u1015\u103C\u1004\u103A\u1006\u1004\u103A\u1001\u103C\u1004\u103A\u1038'
+          }
+          showBurmese={showBurmese}
+        >
+          <SettingsRow
+            label="USCIS Test Date"
+            labelMy={'USCIS \u1005\u102C\u1019\u1031\u1038\u1015\u103D\u1032 \u101B\u1000\u103A'}
+            description="Set your scheduled citizenship interview date"
+            descriptionMy={
+              '\u101E\u1004\u103A\u1037\u104F \u1014\u102D\u102F\u1004\u103A\u1004\u1036\u101E\u102C\u1038\u1016\u103C\u1005\u103A\u1001\u103D\u1004\u103A\u1037 \u1021\u1004\u103A\u1010\u102C\u1017\u103B\u1030\u1038 \u101B\u1000\u103A\u1000\u102D\u102F \u101E\u1010\u103A\u1019\u103E\u1010\u103A\u1015\u102B'
+            }
+            showBurmese={showBurmese}
+            action={
+              <input
+                type="date"
+                value={testDate ?? ''}
+                onChange={e => setTestDate(e.target.value || null)}
+                min={new Date().toISOString().slice(0, 10)}
+                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px] min-w-[140px]"
+                aria-label="USCIS test date"
+              />
             }
             isLast
           />

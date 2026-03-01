@@ -130,4 +130,6 @@ export interface NBAInput {
   uniqueQuestionsPracticed: number;
   /** Total number of questions available in the bank */
   totalQuestions: number;
+  /** Optional test date in YYYY-MM-DD format for test-date-aware priority */
+  testDate?: string | null;
 }
