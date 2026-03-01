@@ -220,7 +220,11 @@ Plans:
   2. Bookmarks created on one device appear on another device after sync
   3. User settings (theme, language, voice preference, test date) sync across devices
   4. Study streak count is consistent across devices (no double-counting or lost days)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 46-01-PLAN.md -- Supabase schema (user_settings + user_bookmarks), settingsSync, bookmarkSync, enhanced streakSync merge (TDD)
+- [ ] 46-02-PLAN.md -- Context push wiring: settings sync in ThemeContext/LanguageContext/TTSContext/useTestDate, bookmark sync in useBookmarks
+- [ ] 46-03-PLAN.md -- Visibility sync hook, login hydration for settings/bookmark pull, SocialContext visibility trigger
 
 ### Phase 47: Performance Optimization
 **Goal**: Bundle size is measurably reduced and Web Vitals show no regression from v3.0
@@ -251,7 +255,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 43.5. Integration Wiring and Tech Debt | 2/2 | Complete    | 2026-02-25 |
 | 44. Test Date Countdown and Study Plan | 2/2 | Complete    | 2026-03-01 |
 | 45. Content Enrichment | 3/3 | Complete    | 2026-03-01 |
-| 46. Cross-Device Sync | 0/? | Not started | - |
+| 46. Cross-Device Sync | 0/3 | Not started | - |
 | 47. Performance Optimization | 0/? | Complete    | 2026-03-01 |
 
 **Cumulative:**
