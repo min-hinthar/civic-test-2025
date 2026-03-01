@@ -327,6 +327,12 @@ export const strings = {
       en: '30 seconds per question',
       my: 'မေးခွန်းတစ်ခုလျှင် ၃၀ စက္ကန့်',
     },
+    trickyQuestion: { en: 'Tricky Question', my: 'ခက်ခဲသောမေးခွန်း' },
+  },
+
+  // Drill mode
+  drill: {
+    studyTip: { en: 'Study Tip', my: 'လေ့လာရေးအကြံပြု' },
   },
 
   // App meta

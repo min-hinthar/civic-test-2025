@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, X } from 'lucide-react';
+import { Check, Lightbulb, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { SPRING_BOUNCY, SPRING_SNAPPY } from '@/lib/motion-config';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -148,17 +148,24 @@ function ExplanationSection({
 
       {/* Memory tip */}
       {explanation.mnemonic_en && (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {explStrings.memoryTip.en}
-            {showBurmese && <span className="ml-1 font-myanmar">{explStrings.memoryTip.my}</span>}
-          </p>
-          <p className="mt-1 text-sm text-foreground">{explanation.mnemonic_en}</p>
-          {showBurmese && explanation.mnemonic_my && (
-            <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
-              {explanation.mnemonic_my}
-            </p>
-          )}
+        <div className="rounded-xl border-l-4 border-amber-500 bg-amber-500/10 dark:bg-amber-500/15 p-3">
+          <div className="flex items-start gap-2">
+            <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <div className="flex-1">
+              <p className="text-xs font-semibold text-foreground">
+                {explStrings.memoryTip.en}
+                {showBurmese && (
+                  <span className="ml-1 font-myanmar">{explStrings.memoryTip.my}</span>
+                )}
+              </p>
+              <p className="mt-1 text-sm text-foreground">{explanation.mnemonic_en}</p>
+              {showBurmese && explanation.mnemonic_my && (
+                <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+                  {explanation.mnemonic_my}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

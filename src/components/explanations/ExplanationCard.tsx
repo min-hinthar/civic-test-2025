@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Lightbulb, ChevronDown, AlertTriangle, Brain, BookOpen, Sparkles } from 'lucide-react';
+import { Lightbulb, ChevronDown, AlertTriangle, BookOpen, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -167,9 +167,9 @@ export function ExplanationCard({
 
               {/* Mnemonic / Memory tip */}
               {hasMnemonic && (
-                <div className="rounded-xl border border-primary-500/30 bg-primary-subtle p-3">
+                <div className="rounded-xl border-l-4 border-amber-500 bg-amber-500/10 dark:bg-amber-500/15 p-3">
                   <div className="flex items-start gap-2">
-                    <Brain className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
                     <div className="flex-1">
                       <p className="text-xs font-semibold text-foreground">
                         {strings.explanations.memoryTip.en}
