@@ -41,8 +41,8 @@ Requirements for v4.0 Next-Gen Architecture. Each maps to roadmap phases.
 - [x] **CONT-02**: All 128 questions have fun fact fields populated (English + Burmese)
 - [x] **CONT-03**: All 128 questions have common mistake fields populated (English + Burmese)
 - [x] **CONT-04**: All 128 questions have citation fields populated
-- [ ] **CONT-05**: Mnemonics display with distinct visual treatment (lightbulb icon, accent border)
-- [ ] **CONT-06**: 7 category study tips shown as dismissible cards in category practice
+- [x] **CONT-05**: Mnemonics display with distinct visual treatment (lightbulb icon, accent border)
+- [x] **CONT-06**: 7 category study tips shown as dismissible cards in category practice
 - [x] **CONT-07**: "Tricky Questions" difficulty badges on hard questions
 - [ ] **CONT-08**: "See Also" related question chips rendered in study/review contexts
 
@@ -124,8 +124,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-02 | Phase 45 | Complete |
 | CONT-03 | Phase 45 | Complete |
 | CONT-04 | Phase 45 | Complete |
-| CONT-05 | Phase 45 | Pending |
-| CONT-06 | Phase 45 | Pending |
+| CONT-05 | Phase 45 | Complete |
+| CONT-06 | Phase 45 | Complete |
 | CONT-07 | Phase 45 | Complete |
 | CONT-08 | Phase 45 | Pending |
 | SYNC-01 | Phase 46 | Pending |
