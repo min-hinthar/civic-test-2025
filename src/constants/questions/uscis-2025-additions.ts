@@ -43,6 +43,17 @@ export const uscis2025Additions: Question[] = [
         'လူထုအာဏာ (popular sovereignty) ဆိုသည်မှာ အစိုးရ၏အာဏာသည် ဘုရင် သို့မဟုတ် စစ်တပ်ထံမှ မဟုတ်ဘဲ ပြည်သူလူထုထံမှ ဆင်းသက်လာခြင်းဖြစ်သည်။ ဤအခြေခံမူသည် အမေရိကန်ဒီမိုကရေစီ၏ အုတ်မြစ်ဖြစ်ပြီး ဖွဲ့စည်းပုံ၏ "We the People" ဟူသော စကားလုံးများတွင် ထင်ဟပ်သည်။',
       citation: 'Preamble to the Constitution',
       relatedQuestionIds: ['GOV-P03', 'GOV-P15'],
+
+      mnemonic_en:
+        'Popular sovereignty = people are the SOURCE of government power. "We the People."',
+      funFact_en:
+        'The concept of popular sovereignty influenced the Constitution\'s opening words "We the People."',
+      funFact_my:
+        'လူထုအာဏာ သဘောတရားသည် ဖွဲ့စည်းပုံ၏ "We the People" ဖွင့်စကားကို လွှမ်းမိုးခဲ့သည်။',
+      commonMistake_en:
+        'Popular sovereignty means power comes from THE PEOPLE, not from a king, court, or military.',
+      commonMistake_my:
+        'လူထုအာဏာဆိုသည်မှာ အာဏာသည် ဘုရင်/တရားရုံး/စစ်တပ် မဟုတ်ဘဲ ပြည်သူလူထုထံမှ ဆင်းသက်ခြင်း ဖြစ်သည်။',
     },
   },
   {
@@ -73,6 +84,16 @@ export const uscis2025Additions: Question[] = [
         'အခွင့်အရေးဥပဒေကြမ်း (Bill of Rights) ကို ၁၇၉၁ ခုနှစ်တွင် ဖက်ဒရယ်အစိုးရက အခြေခံလွတ်လပ်ခွင့်များကို မဖယ်ရှားနိုင်စေရန် ထည့်သွင်းခဲ့သည်။ ပြည်နယ်များစွာက အာဏာကြီးမားသော ဗဟိုအစိုးရ အာဏာရှင်ဆန်လာမည်ကို စိုးရိမ်၍ ဤကာကွယ်မှုများမပါဘဲ ဖွဲ့စည်းပုံကို အတည်မပြုရန် ငြင်းဆိုခဲ့သည်။',
       citation: 'Amendments I-X (Bill of Rights)',
       relatedQuestionIds: ['GOV-P05', 'GOV-P06'],
+
+      mnemonic_en: 'Bill of Rights = PROTECTS basic rights and freedoms from government overreach.',
+      funFact_en:
+        'Several states refused to ratify the Constitution until the Bill of Rights was promised.',
+      funFact_my:
+        'ပြည်နယ်အချို့က အခွင့်အရေးဥပဒေကြမ်း ကတိပေးမှသာ ဖွဲ့စည်းပုံကို အတည်ပြုရန် သဘောတူခဲ့သည်။',
+      commonMistake_en:
+        'The Bill of Rights LIMITS government power — it does not create new states or collect taxes.',
+      commonMistake_my:
+        'အခွင့်အရေးဥပဒေကြမ်းသည် အစိုးရအာဏာကို ကန့်သတ်ပြီး ပြည်နယ်သစ်ဖန်တီးခြင်း/အခွန်ကောက်ခြင်း မဟုတ်ပါ။',
     },
   },
   {
@@ -115,6 +136,16 @@ export const uscis2025Additions: Question[] = [
         'ပြည်သူ၏သဘောတူညီမှု (consent of the governed) ဆိုသည်မှာ တရားဝင်အစိုးရအာဏာသည် အုပ်ချုပ်ခံပြည်သူများ၏ သဘောတူညီချက်မှသာ ရရှိကြောင်း ဖြစ်သည်။ နိုင်ငံသားများက မဲပေးခြင်းနှင့် ဒီမိုကရေစီလုပ်ငန်းစဉ်တွင် ပါဝင်ခြင်းဖြင့် ဤသဘောတူညီမှုကို ဖော်ပြကြသည်။',
       citation: 'Declaration of Independence',
       relatedQuestionIds: ['GOV-P13', 'GOV-P03'],
+
+      mnemonic_en: 'Consent of the governed = people give government power through VOTING.',
+      funFact_en:
+        'John Locke\'s philosophy of "consent of the governed" directly influenced Jefferson\'s Declaration of Independence.',
+      funFact_my:
+        'John Locke ၏ "အုပ်ချုပ်ခံရသူများ၏ သဘောတူညီမှု" ဒဿနသည် ဂျက်ဖာဆင်၏ ကြေညာစာတမ်းကို တိုက်ရိုက်လွှမ်းမိုးခဲ့သည်။',
+      commonMistake_en:
+        'Consent of the governed is about PEOPLE giving power to government, not government giving rights to people.',
+      commonMistake_my:
+        'အုပ်ချုပ်ခံများ၏ သဘောတူညီမှုသည် ပြည်သူက အစိုးရကို အာဏာပေးခြင်း ဖြစ်ပြီး အစိုးရက ပြည်သူကို အခွင့်အရေးပေးခြင်း မဟုတ်ပါ။',
     },
   },
   {
@@ -157,6 +188,17 @@ export const uscis2025Additions: Question[] = [
         'ဖွဲ့စည်းပုံကို နည်းလမ်းနှစ်ခုဖြင့် ပြင်ဆင်နိုင်သည် — ကွန်ဂရက်က အဆိုတင်သွင်း၍ (လွှတ်တော်နှစ်ရပ်၏ သုံးပုံနှစ်ပုံမဲ) ပြည်နယ်သုံးပုံသုံးခုက အတည်ပြုခြင်း၊ သို့မဟုတ် ပြည်နယ်များက ဖွဲ့စည်းပုံညီလာခံ ခေါ်ယူခြင်း ဖြစ်သည်။ အလွန်မြင့်မားသော သတ်မှတ်ချက်သည် ကျယ်ပြန့်သော သဘောတူညီမှုရှိမှသာ ပြောင်းလဲနိုင်စေသည်။',
       citation: 'Article V',
       relatedQuestionIds: ['GOV-P04', 'GOV-P05'],
+
+      mnemonic_en:
+        'Amend the Constitution: Congress proposes (2/3 vote) OR convention (2/3 of states). Then 3/4 states ratify.',
+      funFact_en:
+        'A constitutional convention has never been used to propose amendments — all 27 were proposed by Congress.',
+      funFact_my:
+        'ပြင်ဆင်ချက်များ အဆိုပြုရန် ဖွဲ့စည်းပုံညီလာခံ တစ်ကြိမ်မှ မသုံးခဲ့ပါ — ၂၇ ခုလုံးကို ကွန်ဂရက်က အဆိုပြုခဲ့သည်။',
+      commonMistake_en:
+        'Amending the Constitution requires BOTH proposal and ratification — Congress alone cannot change it.',
+      commonMistake_my:
+        'ဖွဲ့စည်းပုံပြင်ဆင်ရန် အဆိုပြုခြင်းနှင့် အတည်ပြုခြင်း နှစ်ခုလုံး လိုအပ်ပြီး ကွန်ဂရက်တစ်ခုတည်း ပြောင်းလဲ၍ မရပါ။',
     },
   },
   // ============================================
@@ -194,6 +236,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'အောက်လွှတ်တော်ဥက္ကဋ္ဌ (Speaker) သည် ဥပဒေပြုဆွေးနွေးမှုကို ဦးဆောင်ပြီး အစီအစဉ်သတ်မှတ်ကာ စည်းကမ်းထိန်းသိမ်းသည်။ အောက်လွှတ်တော်၏ အမြင့်ဆုံးရာထူးရှိသူအနေဖြင့် ဒုတိယသမ္မတနောက်မှ သမ္မတအဆင့်ဆင့် ဆက်ခံရေးတွင် ဒုတိယမြောက်ဖြစ်သည်။',
       relatedQuestionIds: ['GOV-S07', 'GOV-S08'],
+
+      mnemonic_en:
+        'Speaker of the House = LEADS the House of Representatives, sets the legislative agenda.',
+      funFact_en:
+        'The Speaker does not have to be a member of the House, though every Speaker so far has been one.',
+      funFact_my:
+        'ဥက္ကဋ္ဌသည် အောက်လွှတ်တော်အမတ် ဖြစ်ရန် မလိုအပ်သော်လည်း ယခုအထိ ဥက္ကဋ္ဌတိုင်း အမတ်ဖြစ်ခဲ့သည်။',
+      commonMistake_en:
+        'The Speaker leads the HOUSE, not the Senate or Supreme Court. Speaker does NOT command the military.',
+      commonMistake_my:
+        'ဥက္ကဋ္ဌသည် အောက်လွှတ်တော်ကို ဦးဆောင်ပြီး အထက်လွှတ်တော်/တရားရုံးချုပ် မဟုတ်ပါ။ စစ်တပ်ကို အမိန့်ပေးခြင်း မဟုတ်ပါ။',
+      citation: 'Article I, Section 2',
     },
   },
   {
@@ -214,6 +268,17 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'ဝါရှင်တန်ဒီစီရှိ ပင်ဆယ်ဗေးနီးယားလမ်း ၁၆၀၀ ရှိ အိမ်ဖြူတော် (White House) သည် ၁၈၀၀ ခုနှစ် ဂျွန်အဒမ်စ် လက်ထက်မှစ၍ သမ္မတတိုင်း၏ တရားဝင်နေအိမ်ဖြစ်သည်။ သမ္မတ၏နေအိမ်နှင့် အုပ်ချုပ်ရေးဌာနခွဲ ဗဟိုဌာနအဖြစ် နှစ်မျိုးလုံး ဆောင်ရွက်သည်။',
       relatedQuestionIds: ['GOV-S12', 'GOV-S13'],
+
+      mnemonic_en: "White House = President's home and office in Washington, D.C.",
+      funFact_en:
+        'The White House has 132 rooms, 35 bathrooms, and its own bowling alley and movie theater.',
+      funFact_my:
+        'အိမ်ဖြူတော်တွင် အခန်း ၁၃၂ ခု၊ ရေချိုးခန်း ၃၅ ခု၊ ဘောလင်းကွင်းနှင့် ရုပ်ရှင်ရုံ ပါဝင်သည်။',
+      commonMistake_en:
+        'The President lives in the WHITE HOUSE, not the Capitol (that is where Congress works).',
+      commonMistake_my:
+        'သမ္မတ အိမ်ဖြူတော်တွင် နေထိုင်ပြီး Capitol အဆောက်အအုံ (ကွန်ဂရက် အလုပ်လုပ်သည့်နေရာ) မဟုတ်ပါ။',
+      citation: '1600 Pennsylvania Avenue NW, Washington, D.C.',
     },
   },
   {
@@ -248,7 +313,18 @@ export const uscis2025Additions: Question[] = [
         'တရားရုံးပြန်လည်သုံးသပ်မှု (judicial review) ဆိုသည်မှာ ဥပဒေများနှင့် အစိုးရလုပ်ဆောင်ချက်များကို စစ်ဆေးပြီး ဖွဲ့စည်းပုံချိုးဖောက်သည်များကို ပယ်ဖျက်နိုင်သော တရားရုံးများ၏ အာဏာဖြစ်သည်။ Marbury v. Madison (၁၈၀၃) အမှုမှ ချမှတ်ခဲ့ပြီး ဥပဒေပြုနှင့် အုပ်ချုပ်ရေးအာဏာကို ထိန်းညှိသော အရေးကြီးသည့် ယန္တရားဖြစ်သည်။',
       citation: 'Marbury v. Madison (1803)',
       relatedQuestionIds: ['GOV-S24', 'GOV-S25'],
+
+      mnemonic_en:
+        'Judicial review = courts can declare laws UNCONSTITUTIONAL and strike them down.',
+      funFact_en:
+        'Judicial review was established by Marbury v. Madison (1803), not written in the Constitution itself.',
+      funFact_my:
+        'တရားစီရင်ပြန်လည်သုံးသပ်ခြင်းကို Marbury v. Madison (၁၈၀၃) တွင် ချမှတ်ခဲ့ပြီး ဖွဲ့စည်းပုံတွင် ရေးသားထားခြင်း မဟုတ်ပါ။',
+      commonMistake_en:
+        'Judicial review is done by COURTS, not Congress. Courts check if laws follow the Constitution.',
+      commonMistake_my: 'တရားစီရင်ပြန်လည်သုံးသပ်ခြင်းကို ကွန်ဂရက်မဟုတ်ဘဲ တရားရုံးများက ပြုလုပ်သည်။',
     },
+    tricky: true,
   },
   {
     id: 'GOV-S39',
@@ -269,6 +345,16 @@ export const uscis2025Additions: Question[] = [
         'အပိုဒ် ၂ (Article II) အရ သမ္မတက ဖက်ဒရယ်တရားသူကြီးများကို အမည်စာရင်းတင်သွင်းပြီး အထက်လွှတ်တော် (Senate) က အတည်ပြုရသည်။ ဤလုပ်ငန်းစဉ်သည် အုပ်ချုပ်ရေးနှင့် ဥပဒေပြုဌာနခွဲ နှစ်ခုလုံး တရားစီရင်ရေးဖွဲ့စည်းမှုတွင် တာဝန်ခွဲဝေရာ အာဏာချိန်ခွင်ညှာကို ထိန်းသိမ်းသည်။',
       citation: 'Article II, Section 2',
       relatedQuestionIds: ['GOV-S24', 'GOV-S38'],
+
+      mnemonic_en: 'President APPOINTS federal judges. Senate CONFIRMS them. Two-step process.',
+      funFact_en:
+        'Federal judges serve for life ("during good behavior") — they can only be removed by impeachment.',
+      funFact_my:
+        'ဖက်ဒရယ်တရားသူကြီးများ တစ်သက်တာ ("ကောင်းမွန်သောအကျင့်စာရိတ္တကာလ") တာဝန်ထမ်းဆောင်ပြီး စွပ်စွဲခြင်းဖြင့်သာ ဖယ်ရှားနိုင်သည်။',
+      commonMistake_en:
+        'The PRESIDENT appoints federal judges, not Congress. But the Senate must CONFIRM them.',
+      commonMistake_my:
+        'သမ္မတ ဖက်ဒရယ်တရားသူကြီးများကို ခန့်အပ်ပြီး ကွန်ဂရက် မဟုတ်ပါ။ သို့သော် အထက်လွှတ်တော်က အတည်ပြုရမည်။',
     },
   },
   // ============================================
@@ -311,6 +397,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'သစ္စာဆိုစာ (Oath of Allegiance) တွင် ကတိကဝတ်များစွာ ပါဝင်သည် — နိုင်ငံခြားအပေါ် သစ္စာကို စွန့်လွှတ်ခြင်း၊ ဖွဲ့စည်းပုံကို ထောက်ခံကာကွယ်ခြင်း၊ လိုအပ်ပါက စစ်မှုထမ်း သို့မဟုတ် အရပ်ဘက်ဝန်ဆောင်မှု ထမ်းဆောင်ခြင်း စသည်ဖြင့် အမေရိကန်ပြည်ထောင်စုအပေါ် အပြည့်အဝ သက်ဝင်ခြင်းကို ကိုယ်စားပြုသည်။',
       relatedQuestionIds: ['RR-12', 'RR-13'],
+
+      mnemonic_en:
+        'Oath promises: support the Constitution, obey U.S. laws, defend the U.S., serve the nation.',
+      funFact_en:
+        'The Oath of Allegiance requires renouncing loyalty to any foreign country or leader.',
+      funFact_my:
+        'သစ္စာတော်ခံသည့်ကျမ်းကျိန်ချက်တွင် နိုင်ငံခြားနိုင်ငံ သို့မဟုတ် ခေါင်းဆောင်များအပေါ် သစ္စာကို စွန့်လွှတ်ရန် လိုအပ်သည်။',
+      commonMistake_en:
+        'The Oath is taken when becoming a CITIZEN, not when getting a green card or visa.',
+      commonMistake_my:
+        'ကျမ်းကျိန်ဆိုခြင်းသည် နိုင်ငံသားဖြစ်လာသောအခါ ပြုလုပ်ပြီး ဂရင်းကဒ်/ဗီဇာရသောအခါ မဟုတ်ပါ။',
+      citation: 'INA Section 337; 8 U.S.C. Section 1448',
     },
   },
   {
@@ -342,6 +440,15 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'အမေရိကန်တွင် နေထိုင်သူတိုင်း — နိုင်ငံသားဖြစ်စေ မဖြစ်စေ — ဖက်ဒရယ်၊ ပြည်နယ်နှင့် ဒေသန္တရဥပဒေများကို လိုက်နာရမည်ဖြစ်ပြီး လိုအပ်သည့်အခွန်ကို ပေးဆောင်ရသည်။ ဤတာဝန်များသည် လူမှုစနစ်ထိန်းသိမ်းရန်နှင့် အများပြည်သူဝန်ဆောင်မှုများ ရန်ပုံငွေရှာရန် မရှိမဖြစ်လိုအပ်သည်။',
       relatedQuestionIds: ['RR-11', 'RR-13'],
+
+      mnemonic_en: 'Everyone in U.S. must: obey the law, pay taxes. These are not optional.',
+      funFact_en:
+        'Non-citizens living in the U.S. must also pay taxes and obey laws, just like citizens.',
+      funFact_my:
+        'အမေရိကန်တွင် နေထိုင်သော နိုင်ငံသား မဟုတ်သူများလည်း နိုင်ငံသားများကဲ့သို့ အခွန်ပေးဆောင်ပြီး ဥပဒေလိုက်နာရမည်။',
+      commonMistake_en: 'These responsibilities apply to EVERYONE in the U.S., not just citizens.',
+      commonMistake_my: 'ဤတာဝန်များသည် နိုင်ငံသားများသာမက အမေရိကန်ရှိ လူတိုင်းအတွက် ဖြစ်သည်။',
+      citation: 'Various federal and state laws',
     },
   },
   {
@@ -370,6 +477,17 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'အမေရိကန်များသည် စစ်မှုထမ်းခြင်း၊ အစိုးရအတွက် အလုပ်လုပ်ခြင်း၊ အသိုင်းအဝိုင်းတွင် စေတနာဝန်ထမ်းခြင်း သို့မဟုတ် မဲပေးခြင်းနှင့် ဂျူရီတာဝန်ကဲ့သို့ နိုင်ငံသားတာဝန်ထမ်းဆောင်ခြင်းဖြင့် နိုင်ငံကို ဝန်ဆောင်နိုင်သည်။ ဤဝန်ဆောင်မှုသည် ဒီမိုကရေစီကို အားကောင်းစေပြီး နိုင်ငံသားများကို မျှဝေတာဝန်များဖြင့် ချိတ်ဆက်ပေးသည်။',
       relatedQuestionIds: ['RR-11', 'RR-12'],
+
+      mnemonic_en: 'Serve your country: VOTE, join military, run for office, community service.',
+      funFact_en:
+        'About 60% of eligible Americans vote in presidential elections — lower than many other democracies.',
+      funFact_my:
+        'သမ္မတရွေးကောက်ပွဲများတွင် အရည်အချင်းပြည့်မီသော အမေရိကန်များ၏ ၆၀% ခန့်သာ မဲပေးကြသည်။',
+      commonMistake_en:
+        'Serving your country includes voting, volunteering, and being involved — not just military service.',
+      commonMistake_my:
+        'နိုင်ငံကို အစေခံခြင်းတွင် စစ်မှုထမ်းခြင်းသာမက မဲပေးခြင်း/စေတနာ့ဝန်ထမ်းလုပ်ခြင်း/ပါဝင်ပတ်သက်ခြင်း ပါဝင်သည်။',
+      citation: 'USCIS Civics Test Study Materials',
     },
   },
   // ============================================
@@ -414,6 +532,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         '၁၇၇၃ ခုနှစ်တွင် အမေရိကန်ကိုလိုနီများက "ကိုယ်စားပြုမှုမပါဘဲ အခွန်ကောက်ခြင်း" ကို ဆန့်ကျင်၍ ဗြိတိသျှသင်္ဘောများပေါ်တက်ပြီး လက်ဖက်ရည်ကို ဘော့စတန်ဆိပ်ကမ်းထဲ ပစ်ချခဲ့သည်။ ဤဆန့်ကျင်လှုပ်ရှားမှုသည် အမေရိကန်တော်လှန်ရေးဆီသို့ ဦးတည်သော အရေးကြီးသည့် အခိုက်အတန့်ဖြစ်သည်။',
       relatedQuestionIds: ['HIST-C01', 'HIST-C03'],
+
+      mnemonic_en:
+        'Boston Tea Party = colonists dumped TEA to protest British TAXES. "No taxation without representation."',
+      funFact_en:
+        "The colonists dumped 342 chests of tea worth about $1.7 million in today's money into Boston Harbor.",
+      funFact_my:
+        'ကိုလိုနီသားများသည် ယနေ့ ဒေါ်လာ ၁.၇ သန်း တန်ဖိုးရှိ လက်ဖက်ခြောက်ပုံး ၃၄၂ ခုကို ဘော်စတွန်ဆိပ်ကမ်းသို့ စွန့်ပစ်ခဲ့သည်။',
+      commonMistake_en:
+        'The Boston Tea Party was a PROTEST against taxes, not an actual tea party or celebration.',
+      commonMistake_my:
+        'ဘော်စတွန်လက်ဖက်ခြောက်ပွဲတော်သည် အခွန်ဆန့်ကျင်ဆန္ဒပြခြင်း ဖြစ်ပြီး တကယ့်လက်ဖက်ခြောက်ပွဲ/ပွဲတော် မဟုတ်ပါ။',
+      citation: 'USCIS Civics Test Item 117',
     },
   },
   {
@@ -442,6 +572,14 @@ export const uscis2025Additions: Question[] = [
       commonMistake_my:
         'အလက်စကာ၊ ဟာဝိုင်နှင့် ကယ်လီဖိုးနီးယားတို့သည် မူလကိုလိုနီ ၁၃ ခုတွင် မပါဝင်ပါ — ၎င်းတို့ ပိုမိုနောက်ကျမှ ပြည်နယ်ဖြစ်လာခဲ့သည်။',
       relatedQuestionIds: ['HIST-C01', 'HIST-C02'],
+
+      mnemonic_en:
+        'Remember a few: Virginia, Massachusetts, Pennsylvania, New York, Maryland, etc.',
+      funFact_en:
+        'Virginia was the first colony (1607) and Massachusetts was second (1620 Plymouth).',
+      funFact_my:
+        'ဗာဂျီးနီးယားသည် ပထမဆုံးကိုလိုနီ (၁၆၀၇) ဖြစ်ပြီး မက်ဆာချူးဆက်သည် ဒုတိယ (၁၆၂၀ Plymouth) ဖြစ်သည်။',
+      citation: 'USCIS Civics Test Item 118',
     },
   },
   {
@@ -462,6 +600,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'ဘုရင်ဂျော့ဂျ်သုံး (King George III) သည် အမေရိကန်တော်လှန်ရေး (၁၇၇၅-၁၇၈၃) ကာလတွင် ဗြိတိန်ကို အုပ်ချုပ်ခဲ့သည်။ အခွန်ကြီးကောက်ခံခြင်းနှင့် ကိုလိုနီကိုယ်ပိုင်အုပ်ချုပ်ရေးကို ကန့်သတ်ခြင်းတို့ကြောင့် ကိုလိုနီသားများ၏ လွတ်လပ်ရေးလိုလားမှုကို မီးရှုးညှိခဲ့သည်။',
       relatedQuestionIds: ['HIST-C01', 'HIST-C14'],
+
+      mnemonic_en:
+        'King George III ruled during the American Revolution. "George III = the one we revolted against."',
+      funFact_en:
+        'King George III later suffered from a mental illness, possibly porphyria, that affected his ability to rule.',
+      funFact_my:
+        'ဘုရင် George III သည် နောက်ပိုင်းတွင် သူ၏အုပ်ချုပ်နိုင်စွမ်းကို ထိခိုက်စေသော စိတ်ကျန်းမာရေးပြဿနာ ခံစားခဲ့ရသည်။',
+      commonMistake_en:
+        'King George III was King during the Revolution, NOT Queen Elizabeth or King George I.',
+      commonMistake_my:
+        'ဘုရင် George III သည် တော်လှန်ရေးအတွင်း ဘုရင်ဖြစ်ပြီး ဘုရင်မ Elizabeth သို့မဟုတ် George I မဟုတ်ပါ။',
+      citation: 'USCIS Civics Test Item 119',
     },
   },
   // ============================================
@@ -498,6 +648,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'ဟာရီယက်တပ်ဘ်မန် (Harriet Tubman) သည် ကျွန်ဘဝမှ လွတ်မြောက်ပြီးနောက် Underground Railroad မှတဆင့် အခြားသူများကို လွတ်လပ်ရေးသို့ ပို့ဆောင်ရန် အသက်အန္တရာယ်ကို ထပ်ခါထပ်ခါ စွန့်စားခဲ့သည်။ တောင်ပိုင်းသို့ ခရီးစဉ် ၁၃ ခန့်ပြန်သွားပြီး ကျွန် ၇၀ ခန့်ကို ကယ်တင်ခဲ့သဖြင့် "မိုးဇက" ဟု အမည်ရခဲ့သည်။',
       relatedQuestionIds: ['HIST-109'],
+
+      mnemonic_en:
+        'Harriet Tubman = Underground Railroad conductor who helped slaves escape to freedom.',
+      funFact_en:
+        'Tubman made about 13 trips on the Underground Railroad and freed approximately 70 enslaved people.',
+      funFact_my:
+        'Tubman သည် Underground Railroad ပေါ်တွင် ခရီး ၁၃ ကြိမ်ခန့် သွားခဲ့ပြီး ကျွန် ၇၀ ခန့်ကို လွတ်မြောက်စေခဲ့သည်။',
+      commonMistake_en:
+        "Harriet Tubman helped SLAVES escape via the Underground Railroad — she was NOT Susan B. Anthony (who fought for women's voting rights).",
+      commonMistake_my:
+        'Harriet Tubman သည် Underground Railroad မှတစ်ဆင့် ကျွန်များ ထွက်ပြေးရန် ကူညီခဲ့ပြီး Susan B. Anthony (အမျိုးသမီးမဲပေးခွင့်) မဟုတ်ပါ။',
+      citation: 'USCIS Civics Test Item 108',
     },
   },
   {
@@ -539,6 +701,14 @@ export const uscis2025Additions: Question[] = [
       commonMistake_my:
         'အမည်ရှိသော်လည်း ရထားလမ်း သို့မဟုတ် မြေအောက်ရထားနှင့် ဘာမှမဆိုင်ပါ — "underground" ဆိုသည်မှာ လျှို့ဝှက်ခြင်းကို ရည်ညွှန်းသည်။',
       relatedQuestionIds: ['HIST-108'],
+
+      mnemonic_en:
+        'Underground Railroad = secret NETWORK of routes and safe houses to help slaves escape to freedom.',
+      funFact_en:
+        'The Underground Railroad was not underground or a railroad — it was a network of secret routes and safe houses.',
+      funFact_my:
+        'Underground Railroad သည် မြေအောက် သို့မဟုတ် ရထားလမ်း မဟုတ်ဘဲ လျှို့ဝှက်လမ်းကြောင်းများနှင့် ဘေးကင်းရာအိမ်များ ကွန်ရက် ဖြစ်သည်။',
+      citation: 'USCIS Civics Test Item 109',
     },
   },
   // ============================================
@@ -579,6 +749,18 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         '၁၉၆၁ ခုနှစ်တွင် ကွန်မြူနစ်အရှေ့ဂျာမနီက တည်ဆောက်ခဲ့သော ဘာလင်နံရံ (Berlin Wall) သည် ဘာလင်မြို့ကို ၂၈ နှစ်ကြာ ရုပ်ပိုင်းဆိုင်ရာ ခွဲခြားထားခဲ့သည်။ ၁၉၈၉ တွင် ၎င်းပြိုကျခြင်းသည် စစ်အေးကာလ အဆုံးသတ်ခြင်းနှင့် အရှေ့ဥရောပတစ်ဝှမ်း ကွန်မြူနစ်အစိုးရများ ပြိုကျခြင်းကို သင်္ကေတပြုခဲ့သည်။',
       relatedQuestionIds: ['HIST-R03'],
+
+      mnemonic_en:
+        'Berlin Wall = divided communist East and free West Berlin (1961-1989). Symbol of Cold War.',
+      funFact_en:
+        'The Berlin Wall fell on November 9, 1989. Germany reunified less than a year later in October 1990.',
+      funFact_my:
+        'ဘာလင်တံတိုင်း ၁၉၈၉ နိုဝင်ဘာ ၉ တွင် ပြိုကျခဲ့သည်။ ဂျာမနီ ၁၉၉၀ အောက်တိုဘာတွင် ပြန်လည်ပေါင်းစည်းခဲ့သည်။',
+      commonMistake_en:
+        'The Berlin Wall divided BERLIN (a city in Germany), not the entire country of Germany.',
+      commonMistake_my:
+        'ဘာလင်တံတိုင်းသည် ဂျာမနီနိုင်ငံတစ်ခုလုံး မဟုတ်ဘဲ ဘာလင်မြို့ (ဂျာမနီမြို့) ကို ပိုင်းခြားခဲ့သည်။',
+      citation: 'USCIS Civics Test supplementary materials',
     },
   },
   {
@@ -614,6 +796,17 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'ဒုတိယကမ္ဘာစစ်ပြီးနောက် ၁၉၄၅ ခုနှစ်တွင် တည်ထောင်ခဲ့သော ကုလသမဂ္ဂ (United Nations) သည် နိုင်ငံပေါင်း ၁၉၃ ခုကို စုစည်းပြီး နိုင်ငံတကာငြိမ်းချမ်းရေး၊ လုံခြုံရေးနှင့် ပူးပေါင်းဆောင်ရွက်ရေးကို မြှင့်တင်သည်။ အမေရိကန်က ကုလသမဂ္ဂ ဖန်တီးရာတွင် ဦးဆောင်ခဲ့ပြီး ဌာနချုပ်သည် နယူးယောက်မြို့တွင် ရှိသည်။',
       relatedQuestionIds: ['HIST-R03', 'HIST-R11'],
+
+      mnemonic_en:
+        'United Nations (UN) = international organization for world peace and cooperation.',
+      funFact_en: 'The UN has 193 member states. The U.S. was a founding member in 1945.',
+      funFact_my:
+        'ကုလသမဂ္ဂတွင် အဖွဲ့ဝင်နိုင်ငံ ၁၉၃ ခု ရှိသည်။ အမေရိကန်သည် ၁၉၄၅ တွင် တည်ထောင်အဖွဲ့ဝင် ဖြစ်ခဲ့သည်။',
+      commonMistake_en:
+        'The UN is an INTERNATIONAL organization, not a U.S. government body. It is headquartered in New York.',
+      commonMistake_my:
+        'ကုလသမဂ္ဂသည် အမေရိကန်အစိုးရအဖွဲ့အစည်း မဟုတ်ဘဲ နိုင်ငံတကာအဖွဲ့အစည်း ဖြစ်သည်။ နယူးယောက်တွင် ဌာနချုပ်ရှိသည်။',
+      citation: 'UN Charter (1945)',
     },
   },
   // ============================================
@@ -641,6 +834,13 @@ export const uscis2025Additions: Question[] = [
       commonMistake_my:
         'လူများစွာက "E Pluribus Unum" ကို တရားဝင်ဆောင်ပုဒ်ဟု ထင်မှတ်ကြသည်။ အရေးကြီးသော်လည်း ဥပဒေအရ သတ်မှတ်ထားသော အမျိုးသားဆောင်ပုဒ်မှာ "In God We Trust" ဖြစ်သည်။',
       relatedQuestionIds: ['SYM-01', 'SYM-02'],
+
+      mnemonic_en: '"In God We Trust" = the national motto. It is on all U.S. currency.',
+      funFact_en:
+        '"In God We Trust" became the official national motto in 1956, replacing "E Pluribus Unum" (Out of Many, One).',
+      funFact_my:
+        '"In God We Trust" သည် ၁၉၅၆ တွင် "E Pluribus Unum" (အများမှ တစ်ခုတည်း) ကို အစားထိုး၍ တရားဝင်နိုင်ငံတော်ဆောင်ပုဒ် ဖြစ်လာခဲ့သည်။',
+      citation: '36 U.S.C. Section 302',
     },
   },
   {
@@ -661,6 +861,17 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'သမ္မတရော်နယ်ရေဂင် (Ronald Reagan) က ၁၉၈၆ ခုနှစ်တွင် နှင်းဆီပန်းကို အမေရိကန်အမျိုးသားပန်းအဖြစ် ကြေညာခဲ့သည်။ နှင်းဆီပန်းသည် ကိုလိုနီခေတ်ကတည်းက အမေရိကတွင် စိုက်ပျိုးခဲ့ပြီး လှပမှု၊ ခိုင်ခံ့မှုနှင့် နိုင်ငံ၏ မတူကွဲပြားသော ဝိသေသကို သင်္ကေတပြုသည်။',
       relatedQuestionIds: ['SYM-14'],
+
+      mnemonic_en: 'The ROSE is the national flower of the United States. Designated in 1986.',
+      funFact_en:
+        'President Reagan signed the proclamation designating the rose as the national flower in 1986.',
+      funFact_my:
+        'သမ္မတရေဂင်သည် ၁၉၈၆ တွင် နှင်းဆီကို နိုင်ငံတော်ပန်းအဖြစ် သတ်မှတ်သည့် ကြေညာချက်ကို လက်မှတ်ထိုးခဲ့သည်။',
+      commonMistake_en:
+        'The national flower is the ROSE, not the sunflower, daisy, or cherry blossom.',
+      commonMistake_my:
+        'နိုင်ငံတော်ပန်းသည် နှင်းဆီဖြစ်ပြီး နေကြာ၊ ခြယောပန်း သို့မဟုတ် ချယ်ရီပန်း မဟုတ်ပါ။',
+      citation: 'Proclamation 5574 (1986)',
     },
   },
   // ============================================
@@ -712,6 +923,17 @@ export const uscis2025Additions: Question[] = [
       brief_my:
         'တည်ထောင်ဖခင်များက ဖွဲ့စည်းပုံရေးဆွဲရာတွင် အစောပိုင်းစာရွက်စာတမ်းများစွာကို ကိုးကားခဲ့သည်။ မဂ္ဂနာကာတာ (Magna Carta, ၁၂၁၅) က မည်သူမျှ ဥပဒေအထက် မရှိဟူသော မူကို ချမှတ်ခဲ့ပြီး အင်္ဂလိပ်အခွင့်အရေးဥပဒေ (English Bill of Rights, ၁၆၈၉) က ဘုရင့်အာဏာကို ကန့်သတ်ခဲ့ကာ လွတ်လပ်ရေးကြေညာစာတမ်းက သဘာဝအခွင့်အရေးများကို ဖော်ပြခဲ့သည်။',
       relatedQuestionIds: ['GOV-P01', 'GOV-P02'],
+
+      mnemonic_en:
+        'Magna Carta, Mayflower Compact, Declaration of Independence, Articles of Confederation all influenced the Constitution.',
+      funFact_en:
+        'The Magna Carta (1215) was signed over 500 years before the Constitution but influenced its concepts of limited government.',
+      funFact_my:
+        'Magna Carta (၁၂၁၅) ကို ဖွဲ့စည်းပုံမတိုင်မီ ၅၀၀ နှစ်ကျော်က လက်မှတ်ထိုးခဲ့သော်လည်း ကန့်သတ်အစိုးရ သဘောတရားကို လွှမ်းမိုးခဲ့သည်။',
+      commonMistake_en:
+        'The Constitution was influenced by MULTIPLE documents, not just the Declaration of Independence.',
+      commonMistake_my: 'ဖွဲ့စည်းပုံကို လွတ်လပ်ရေးကြေညာစာတမ်းသာမက စာတမ်းများစွာက လွှမ်းမိုးခဲ့သည်။',
+      citation: 'Constitutional Convention records (1787)',
     },
   },
   {
@@ -759,6 +981,17 @@ export const uscis2025Additions: Question[] = [
         'အောက်လွှတ်တော်အမတ်များသည် သက်တမ်းနှစ်နှစ်ဖြင့် တာဝန်ထမ်းဆောင်ရသဖြင့် မဲဆန္ဒရှင်များနှင့် မကြာခဏ ရင်ဆိုင်ပြီး ပြည်သူ့အမြင်ကို နီးကပ်စွာ လိုက်နာရသည်။ အထက်လွှတ်တော်အမတ်များ (senators) က သက်တမ်းခြောက်နှစ်ဖြစ်၍ ရေရှည်မူဝါဒကို လွတ်လပ်စွာ အာရုံစိုက်နိုင်သည်။',
       citation: 'Article I, Sections 2 and 3',
       relatedQuestionIds: ['GOV-S05', 'GOV-S41'],
+
+      mnemonic_en:
+        'Short terms (2 years) = more accountable to voters. Representatives stay close to the people.',
+      funFact_en:
+        'The Founders wanted the House to be the "people\'s chamber" — responsive to public opinion.',
+      funFact_my:
+        'တည်ထောင်သူများက အောက်လွှတ်တော်ကို "ပြည်သူ့ခန်းမ" — အများပြည်သူ၏ အမြင်ကို တုံ့ပြန်နိုင်စေလိုခဲ့သည်။',
+      commonMistake_en:
+        'Shorter terms make Representatives MORE accountable, not less. They must face voters every 2 years.',
+      commonMistake_my:
+        'သက်တမ်းတိုခြင်းက အောက်လွှတ်တော်အမတ်များကို ပိုတာဝန်ယူစေပြီး ၂ နှစ်တိုင်း မဲဆန္ဒရှင်ရှေ့ ရပ်ရမည်။',
     },
   },
   {
@@ -788,6 +1021,12 @@ export const uscis2025Additions: Question[] = [
       commonMistake_my:
         'လူဦးရေက အောက်လွှတ်တော်ကိုယ်စားလှယ်အရေအတွက်ကို ဆုံးဖြတ်သည်၊ အထက်လွှတ်တော်အမတ်များကို မဟုတ်ပါ။ အထက်လွှတ်တော်ကိုယ်စားပြုမှုသည် ပြည်နယ်တစ်ခုလျှင် နှစ်ဦး အမြဲဖြစ်သည်။',
       relatedQuestionIds: ['GOV-S42', 'GOV-S05'],
+
+      mnemonic_en: 'Every state gets exactly 2 senators. 50 states x 2 = 100 total.',
+      funFact_en:
+        'This "equal suffrage" in the Senate is the only part of the Constitution that cannot be amended without a state\'s consent.',
+      funFact_my:
+        'အထက်လွှတ်တော်ရှိ "တန်းတူမဲပေးခွင့်" သည် ပြည်နယ်၏ သဘောတူညီမှုမပါဘဲ ပြင်ဆင်၍မရသော ဖွဲ့စည်းပုံ၏ တစ်ခုတည်းသော အစိတ်အပိုင်း ဖြစ်သည်။',
     },
   },
   {
@@ -834,6 +1073,17 @@ export const uscis2025Additions: Question[] = [
         'တန်းတူအထက်လွှတ်တော်ကိုယ်စားပြုမှုသည် ဖွဲ့စည်းပုံညီလာခံ၏ ကြီးမားသောအပေးအယူ (Great Compromise) ၏ အစိတ်အပိုင်းဖြစ်သည်။ ပြည်နယ်ငယ်များက ပြည်နယ်ကြီးများ၏ လွှမ်းမိုးမှုကို စိုးရိမ်ခဲ့သဖြင့် ကွန်ဂရက်အခန်းတစ်ခုတွင်မူ အသံတူညီမှုရှိစေရန် ပြည်နယ်တိုင်းတွင် အထက်လွှတ်တော်အမတ် နှစ်ဦးရှိမည်ဟု သဘောတူခဲ့သည်။',
       citation: 'Article I, Section 3; Great Compromise',
       relatedQuestionIds: ['GOV-S41', 'GOV-S05'],
+
+      mnemonic_en:
+        'Equal representation = every state has the SAME voice in the Senate, big or small.',
+      funFact_en:
+        'The Great Compromise of 1787 settled the dispute: equal in Senate, proportional in House.',
+      funFact_my:
+        '၁၇၈၇ ကြီးမားသောအပေးအယူက အငြင်းပွားမှုကို ဖြေရှင်းခဲ့: အထက်လွှတ်တော်တွင် တန်းတူ၊ အောက်လွှတ်တော်တွင် အချိုးကျ။',
+      commonMistake_en:
+        'Equal representation in the Senate ensures SMALL states have the same voice as large states.',
+      commonMistake_my:
+        'အထက်လွှတ်တော်ရှိ တန်းတူကိုယ်စားပြုမှုသည် ပြည်နယ်ငယ်များ ပြည်နယ်ကြီးများနှင့် အသံတူရှိကြောင်း သေချာစေသည်။',
     },
   },
   {
@@ -884,6 +1134,17 @@ export const uscis2025Additions: Question[] = [
         '၁၉၅၁ ခုနှစ်တွင် အတည်ပြုခဲ့သော ပြင်ဆင်ချက် ၂၂ (22nd Amendment) က သမ္မတကို လေးနှစ်သက်တမ်း နှစ်ခုသာ ကန့်သတ်သည်။ ဖရန်ကလင် ရူးဆဗဲ့ (Franklin Roosevelt) က ဆက်တိုက်လေးကြိမ် ရွေးကောက်ခံရပြီး ဂျော့ဝါရှင်တန် ချမှတ်ခဲ့သော နှစ်ကြိမ်ဓလေ့ကို ချိုးဖောက်ခဲ့သဖြင့် အာဏာစုစည်းမှုကို တားဆီးရန် ဤပြင်ဆင်ချက်ကို ပြဌာန်းခဲ့သည်။',
       citation: '22nd Amendment (1951)',
       relatedQuestionIds: ['GOV-S12', 'GOV-P04'],
+
+      mnemonic_en:
+        '22nd Amendment = 2 terms max for President. Prevents one person holding power too long.',
+      funFact_en:
+        'The 22nd Amendment was ratified in 1951, partly in reaction to FDR serving 4 terms.',
+      funFact_my:
+        '၂၂ ကြိမ်မြောက်ပြင်ဆင်ချက်ကို ၁၉၅၁ တွင် FDR ၄ ကြိမ်တာဝန်ထမ်းဆောင်ခဲ့မှုကို တုံ့ပြန်ခြင်းအဖြစ် အတည်ပြုခဲ့သည်။',
+      commonMistake_en:
+        'The two-term limit is from the 22nd AMENDMENT (1951), not the original Constitution.',
+      commonMistake_my:
+        'သက်တမ်းနှစ်ကြိမ်ကန့်သတ်ချက်သည် ၂၂ ကြိမ်မြောက်ပြင်ဆင်ချက် (၁၉၅၁) မှ ဖြစ်ပြီး မူရင်းဖွဲ့စည်းပုံ မဟုတ်ပါ။',
     },
   },
   {
@@ -930,7 +1191,19 @@ export const uscis2025Additions: Question[] = [
         'ရွေးကောက်တင်မြှောက်ရေးအဖွဲ့ (Electoral College) သည် သမ္မတနှင့် ဒုတိယသမ္မတကို တရားဝင်ရွေးကောက်တင်မြှောက်သော စနစ်ဖြစ်သည်။ ပြည်နယ်တစ်ခုစီတွင် ကွန်ဂရက်ကိုယ်စားလှယ်အရေအတွက်နှင့် ညီမျှသော ရွေးကောက်တင်မြှောက်သူများ ရရှိပြီး ပြည်သူ့တိုက်ရိုက်မဲနှင့် ကွန်ဂရက်ရွေးချယ်မှုကြား အပေးအယူဖန်တီးသည်။',
       citation: 'Article II, Section 1; 12th Amendment',
       relatedQuestionIds: ['GOV-S12', 'GOV-S43'],
+
+      mnemonic_en:
+        'Electoral College = the system that actually ELECTS the President (not direct popular vote).',
+      funFact_en:
+        'Five presidents won the Electoral College but lost the popular vote, including Bush (2000) and Trump (2016).',
+      funFact_my:
+        'သမ္မတ ၅ ဦးသည် ပြည်သူ့မဲမနိုင်ဘဲ Electoral College နိုင်ခဲ့သည် — Bush (၂၀၀၀) နှင့် Trump (၂၀၁၆) အပါအဝင်။',
+      commonMistake_en:
+        'The President is NOT elected by direct popular vote — the Electoral College system decides.',
+      commonMistake_my:
+        'သမ္မတကို တိုက်ရိုက်ပြည်သူ့မဲဖြင့် ရွေးကောက်ခြင်း မဟုတ်ပါ — Electoral College စနစ်က ဆုံးဖြတ်သည်။',
     },
+    tricky: true,
   },
   {
     id: 'GOV-S45',
@@ -973,6 +1246,16 @@ export const uscis2025Additions: Question[] = [
         'တရားရုံးချုပ်တရားသူကြီးများသည် တသက်တာ ခန့်အပ်ခြင်းခံရပြီး အနားယူချင်သည်အထိ၊ ကွယ်လွန်သည်အထိ သို့မဟုတ် စွပ်စွဲခံရ၍ ဖယ်ရှားခံရသည်အထိ ရာထူးထမ်းဆောင်သည်။ ဖွဲ့စည်းပုံ အပိုဒ် ၃ (Article III) က တရားစီရင်ရေးကို နိုင်ငံရေးဖိအားမှ ကာကွယ်ရန် ဤအချက်ကို ချမှတ်ထားသည်။',
       citation: 'Article III, Section 1',
       relatedQuestionIds: ['GOV-S46', 'GOV-S39'],
+
+      mnemonic_en: 'Supreme Court justices serve for LIFE ("during good behavior"). No fixed term.',
+      funFact_en:
+        'The longest-serving justice was William O. Douglas, who served for 36 years (1939-1975).',
+      funFact_my:
+        'အကြာဆုံးတာဝန်ထမ်းဆောင်ခဲ့သော တရားသူကြီးမှာ ၃၆ နှစ် (၁၉၃၉-၁၉၇၅) တာဝန်ထမ်းဆောင်ခဲ့သော William O. Douglas ဖြစ်သည်။',
+      commonMistake_en:
+        'Justices serve for LIFE, not a fixed number of years. They can retire voluntarily.',
+      commonMistake_my:
+        'တရားသူကြီးများ ကာလသတ်မှတ်ချက်မရှိဘဲ တစ်သက်တာ တာဝန်ထမ်းဆောင်သည်။ ဆန္ဒအလျောက် အနားယူနိုင်သည်။',
     },
   },
   {
@@ -1019,6 +1302,17 @@ export const uscis2025Additions: Question[] = [
         'တရားရုံးချုပ်တရားသူကြီးများ၏ တသက်တာသက်တမ်းသည် ရွေးကောက်ပွဲ သို့မဟုတ် နိုင်ငံရေးလက်စားချေမှုကို စိုးရိမ်ရန် မလိုအပ်စေခြင်းဖြင့် တရားစီရင်ရေးလွတ်လပ်မှုကို သေချာစေသည်။ မဲဆန္ဒရှင်များ သို့မဟုတ် နိုင်ငံရေးသမားများကို ကျေနပ်စေရန် မလိုအပ်ဘဲ လူထုအမြင်ထက် ဥပဒေကို အခြေခံ၍ ဖွဲ့စည်းပုံကို ဘက်မလိုက်ဘဲ အဓိပ္ပာယ်ဖွင့်ဆိုနိုင်သည်။',
       citation: 'Article III, Section 1',
       relatedQuestionIds: ['GOV-S45', 'GOV-S38'],
+
+      mnemonic_en:
+        'Life tenure = independence from politics. Justices do not worry about re-election.',
+      funFact_en:
+        'Alexander Hamilton argued in Federalist No. 78 that life tenure was needed to protect judicial independence.',
+      funFact_my:
+        'Alexander Hamilton က Federalist အမှတ် ၇၈ တွင် တရားစီရင်ရေးလွတ်လပ်မှု ကာကွယ်ရန် တစ်သက်တာသက်တမ်း လိုအပ်ကြောင်း ငြင်းခုန်ခဲ့သည်။',
+      commonMistake_en:
+        'Life tenure ensures INDEPENDENCE — justices are free from political pressure and elections.',
+      commonMistake_my:
+        'တစ်သက်တာသက်တမ်းသည် လွတ်လပ်မှုသေချာစေပြီး တရားသူကြီးများ နိုင်ငံရေးဖိအားနှင့် ရွေးကောက်ပွဲများမှ ကင်းလွတ်သည်။',
     },
   },
 ];

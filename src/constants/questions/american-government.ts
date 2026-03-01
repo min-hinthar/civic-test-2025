@@ -55,7 +55,14 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'လွတ်လပ်ရေးကြေညာစာ (Declaration of Independence) က ဗြိတိန်ဆီက လွတ်လပ်ရေးကို ကြေညာခဲ့ပေမယ့် အစိုးရလုပ်ပုံလုပ်နည်းကို မသတ်မှတ်ဘူး — အဲဒါက ဖွဲ့စည်းပုံ (Constitution) ရဲ့ တာဝန်ပဲ။',
       relatedQuestionIds: ['GOV-P02', 'GOV-P03'],
+
+      mnemonic_en: 'SUPREME = Constitution. It is the highest law — all other laws must follow it.',
+      funFact_en:
+        'The U.S. Constitution is the oldest written national constitution still in use, ratified in 1788.',
+      funFact_my:
+        'အမေရိကန်ဖွဲ့စည်းပုံအခြေခံဥပဒေသည် ၁၇၈၈ ခုနှစ်တွင် အတည်ပြုခဲ့ပြီး ဆက်လက်အသုံးပြုနေသော အဟောင်းဆုံးဖွဲ့စည်းပုံ ဖြစ်သည်။',
     },
+    tricky: true,
   },
   {
     id: 'GOV-P02',
@@ -99,6 +106,15 @@ export const americanGovernmentQuestions: Question[] = [
         'ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) က အဓိကအရာသုံးခုကို လုပ်ဆောင်တယ် — အစိုးရဖွဲ့စည်းပုံ ချမှတ်ခြင်း၊ ဌာနခွဲတစ်ခုစီရဲ့ လုပ်ပိုင်ခွင့်တွေ သတ်မှတ်ခြင်းနဲ့ အမေရိကန်အားလုံးရဲ့ အခြေခံအခွင့်အရေးတွေကို ကာကွယ်ခြင်း ဖြစ်တယ်။',
       citation: 'Preamble and Articles I-VII',
       relatedQuestionIds: ['GOV-P01', 'GOV-P05'],
+
+      mnemonic_en: 'S-D-P: Sets up government, Defines branches, Protects rights.',
+      funFact_en:
+        'The original Constitution is only about 4,400 words — shorter than most app terms of service.',
+      funFact_my: 'မူရင်းဖွဲ့စည်းပုံအခြေခံဥပဒေသည် စာလုံး ၄,၄၀၀ ခန့်သာ ရှိသည်။',
+      commonMistake_en:
+        'The Constitution does NOT declare independence — that is the Declaration of Independence (1776).',
+      commonMistake_my:
+        'ဖွဲ့စည်းပုံသည် လွတ်လပ်ရေးကြေညာခြင်း မဟုတ်ပါ — ၎င်းသည် လွတ်လပ်ရေးကြေညာစာတမ်း (၁၇၇၆) ဖြစ်သည်။',
     },
   },
   {
@@ -134,6 +150,12 @@ export const americanGovernmentQuestions: Question[] = [
       funFact_my:
         'မူရင်းဖွဲ့စည်းပုံအခြေခံဥပဒေကို ဝါရှင်တန်ဒီစီရှိ နိုင်ငံတော်မှတ်တမ်းတိုက်တွင် ပြသထားသည်။ မင်ကုန်သွားသဖြင့် "We the People" သည် ယနေ့တိုင် ဖတ်ရလွယ်ကူသော အစိတ်အပိုင်းအနည်းငယ်ထဲမှ တစ်ခုဖြစ်သည်!',
       relatedQuestionIds: ['GOV-P01', 'GOV-P02'],
+
+      mnemonic_en: '"We the People" — the first three words show government serves THE PEOPLE.',
+      commonMistake_en:
+        'The Constitution does NOT begin with "In God We Trust" — "We the People" is the opening phrase.',
+      commonMistake_my:
+        'ဖွဲ့စည်းပုံသည် "In God We Trust" ဖြင့် မစပါ — "We the People" သည် ဖွင့်စကား ဖြစ်သည်။',
     },
   },
   {
@@ -168,6 +190,15 @@ export const americanGovernmentQuestions: Question[] = [
         'ပြင်ဆင်ချက် (Amendment) ဆိုတာ ဖွဲ့စည်းပုံအခြေခံဥပဒေ (Constitution) ကို ပြောင်းလဲခြင်း ဒါမှမဟုတ် ထပ်ဖြည့်ခြင်း ဖြစ်တယ်။ နိုင်ငံနဲ့အတူ တိုးတက်နိုင်အောင် ဒီလိုလုပ်ထုံးကို ရေးဆွဲထားပေမယ့် လွယ်လွယ်ပြောင်းလဲလို့ မရဘူး။',
       citation: 'Article V',
       relatedQuestionIds: ['GOV-P05', 'GOV-P07'],
+
+      mnemonic_en: 'Amendments = Changes to the Constitution. "Amend" means "to fix or add."',
+      funFact_en:
+        'Over 11,000 amendments have been proposed but only 27 ratified — less than 0.25% success rate.',
+      funFact_my: 'ပြင်ဆင်ချက် ၁၁,၀၀၀ ကျော် အဆိုပြုခဲ့သော်လည်း ၂၇ ခုသာ အတည်ပြုခဲ့သည်။',
+      commonMistake_en:
+        'An amendment becomes PART of the Constitution once ratified, not a separate law.',
+      commonMistake_my:
+        'ပြင်ဆင်ချက်သည် အတည်ပြုပြီးသည်နှင့် ဖွဲ့စည်းပုံ၏ အစိတ်အပိုင်း ဖြစ်လာပြီး သီးခြားဥပဒေ မဟုတ်ပါ။',
     },
   },
   {
@@ -214,6 +245,13 @@ export const americanGovernmentQuestions: Question[] = [
       mnemonic_my:
         'Bill of Rights = "Bill" ဆိုတာ စာရင်းတစ်ခု ဖြစ်ပါတယ်။ သင့်အခွင့်အရေးများ စာရင်း ဖြစ်ပါတယ်!',
       relatedQuestionIds: ['GOV-P04', 'GOV-P06', 'GOV-P07'],
+
+      funFact_en:
+        'The Bill of Rights was inspired by the Virginia Declaration of Rights (1776) and the English Bill of Rights (1689).',
+      funFact_my:
+        'အခွင့်အရေးဥပဒေသည် ဗာဂျီးနီးယားအခွင့်အရေးကြေညာချက် (၁၇၇၆) နှင့် အင်္ဂလိပ်အခွင့်အရေးဥပဒေ (၁၆၈၉) တို့မှ မှုတ်သွင်းခံရသည်။',
+      commonMistake_en: 'The Bill of Rights is the FIRST 10 amendments, not all 27.',
+      commonMistake_my: 'အခွင့်အရေးဥပဒေသည် ပထမ ၁၀ ခု ပြင်ဆင်ချက် ဖြစ်ပြီး ၂၇ ခုလုံး မဟုတ်ပါ။',
     },
   },
   {
@@ -251,6 +289,11 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'လက်နက်ကိုင်ဆောင်ခွင့် (ဒုတိယပြင်ဆင်ချက်) နှင့် ဂျူရီလူကြီးဖြင့် စစ်ဆေးခြင်း (ခြောက်/ခုနစ်) တို့သည် ပထမပြင်ဆင်ချက်တွင် မပါဝင်ပါ။',
       relatedQuestionIds: ['GOV-P05', 'GOV-P10', 'RR-04'],
+
+      funFact_en:
+        'The First Amendment protects five distinct freedoms: religion, speech, press, assembly, and petition.',
+      funFact_my:
+        'ပထမပြင်ဆင်ချက်သည် မတူညီသော လွတ်လပ်ခွင့် ၅ ခုကို ကာကွယ်သည် — ဘာသာရေး၊ ပြောဆိုခွင့်၊ သတင်းမီဒီယာ၊ စုဝေးခွင့်နှင့် တိုင်တန်းခွင့်။',
     },
   },
   {
@@ -276,6 +319,12 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'လူများက ပြင်ဆင်ချက် ၂၇ ခုကို ပြည်နယ် ၅၀ သို့မဟုတ် ၁၀ (အခွင့်အရေးဥပဒေကြမ်း) နှင့် မှားတတ်သည်။ စုစုပေါင်း ပြင်ဆင်ချက် ၂၇ ခုဟု မှတ်ထားပါ။',
       relatedQuestionIds: ['GOV-P04', 'GOV-P05'],
+
+      mnemonic_en: '27 amendments total. First 10 = Bill of Rights. Most recent = 27th (1992).',
+      funFact_en:
+        'The 27th Amendment took 202 years to ratify — proposed in 1789, approved in 1992.',
+      funFact_my:
+        '၂၇ ကြိမ်မြောက်ပြင်ဆင်ချက်ကို အတည်ပြုရန် ၂၀၂ နှစ်ကြာခဲ့သည် — ၁၇၈၉ တွင် အဆိုပြုပြီး ၁၉၉၂ တွင် အတည်ပြုခဲ့သည်။',
     },
   },
   {
@@ -321,6 +370,18 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'လွတ်လပ်ရေးကြေညာစာတမ်းကို ၁၇၇၆ တွင် ရေးသားခဲ့ပြီး အမေရိကန်ကိုလိုနီများသည် ဗြိတိသျှအုပ်ချုပ်ရေးမှ ခွဲထွက်ကြောင်း ကြေညာခဲ့သည်။ အစိုးရကို ဖွဲ့စည်းခြင်း မဟုတ်ပါ — ၎င်းကို ဖွဲ့စည်းပုံအခြေခံဥပဒေက ၁၁ နှစ်အကြာတွင် လုပ်ဆောင်ခဲ့သည်။',
       relatedQuestionIds: ['GOV-P01', 'GOV-P09', 'HIST-C05', 'HIST-C06'],
+
+      mnemonic_en:
+        'Declaration = ANNOUNCED freedom from Britain in 1776. It did NOT create the government.',
+      funFact_en:
+        'Jefferson wrote the first draft of the Declaration in just 17 days, and Congress edited about a quarter of his text.',
+      funFact_my:
+        'ဂျက်ဖာဆင်သည် ကြေညာစာတမ်း ပထမမူကြမ်းကို ၁၇ ရက်အတွင်း ရေးသားခဲ့ပြီး ကွန်ဂရက်က သူ၏စာသားကို လေးပုံတစ်ပုံခန့် ပြင်ဆင်ခဲ့သည်။',
+      commonMistake_en:
+        'The Declaration did NOT create the government or free the slaves — it only announced independence from Britain.',
+      commonMistake_my:
+        'ကြေညာစာတမ်းသည် အစိုးရဖွဲ့စည်းခြင်း/ကျွန်များလွတ်မြောက်ခြင်း မဟုတ်ဘဲ ဗြိတိန်မှ လွတ်လပ်ရေးကြေညာခြင်းသာ ဖြစ်သည်။',
+      citation: 'Declaration of Independence (1776)',
     },
   },
   {
@@ -365,6 +426,13 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'ပြောဆိုခွင့်နှင့် ဘာသာရေးလွတ်လပ်ခွင့်တို့သည် အခွင့်အရေးဥပဒေကြမ်း (ပထမပြင်ဆင်ချက်) မှဖြစ်ပြီး လွတ်လပ်ရေးကြေညာစာတမ်းမှ မဟုတ်ပါ။',
       relatedQuestionIds: ['GOV-P08', 'HIST-C06'],
+
+      mnemonic_en: 'L-L-P: Life, Liberty, Pursuit of happiness — the three unalienable rights.',
+      funFact_en:
+        'Jefferson originally wrote "pursuit of property" but changed it to "pursuit of Happiness."',
+      funFact_my:
+        'ဂျက်ဖာဆင်သည် မူလ "ပိုင်ဆိုင်မှုရှာဖွေခြင်း" ဟု ရေးခဲ့သော်လည်း "ပျော်ရွှင်မှုရှာဖွေခြင်း" သို့ ပြောင်းခဲ့သည်။',
+      citation: 'Declaration of Independence, Preamble paragraph 2',
     },
   },
   {
@@ -407,6 +475,17 @@ export const americanGovernmentQuestions: Question[] = [
         'ဘာသာရေးလွတ်လပ်ခွင့်ဆိုတာ ကြိုက်တဲ့ဘာသာကို ကိုးကွယ်နိုင်တယ်၊ ဒါမှမဟုတ် ဘာသာတစ်ခုမှ မကိုးကွယ်ဘဲနေနိုင်တယ်။ အစိုးရက ဘာသာတစ်ခုကို အတင်းကိုးကွယ်ခိုင်းလို့ မရဘူး။',
       citation: '1st Amendment (Establishment Clause & Free Exercise Clause)',
       relatedQuestionIds: ['GOV-P06', 'RR-04'],
+
+      mnemonic_en:
+        'Freedom of Religion = practice ANY religion OR none at all. Government stays out.',
+      funFact_en:
+        'Freedom of religion means both freedom TO practice AND freedom FROM government-imposed religion.',
+      funFact_my:
+        'ဘာသာရေးလွတ်လပ်ခွင့်ဆိုသည်မှာ ကျင့်သုံးရန်လွတ်လပ်ခွင့်နှင့် အစိုးရသတ်မှတ်ဘာသာမှ ကင်းလွတ်ခွင့် နှစ်ခုလုံး ဖြစ်သည်။',
+      commonMistake_en:
+        'Freedom of religion is NOT just about Christianity — it covers ALL religions and the right to have no religion.',
+      commonMistake_my:
+        'ဘာသာရေးလွတ်လပ်ခွင့်သည် ခရစ်ယာန်ဘာသာအတွက်သာ မဟုတ်ဘဲ ဘာသာအားလုံးနှင့် ဘာသာမဲ့နေပိုင်ခွင့်ကိုလည်း ကာကွယ်သည်။',
     },
   },
   {
@@ -430,6 +509,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'အမေရိကန်သည် အရင်းရှင် (သို့မဟုတ် စျေးကွက်) စီးပွားရေးစနစ်ကို ကျင့်သုံးပြီး ပုဂ္ဂလိကလုပ်ငန်းများနှင့် လူပုဂ္ဂိုလ်များက စီးပွားရေးဆိုင်ရာ ဆုံးဖြတ်ချက်အများစုကို ချမှတ်သည်။ လူများ ပစ္စည်းပိုင်ဆိုင်ခွင့်၊ လုပ်ငန်းထူထောင်ခွင့်နှင့် စျေးကွက်တွင် လွတ်လပ်စွာ ယှဉ်ပြိုင်ခွင့် ရှိသည်။',
       relatedQuestionIds: ['GOV-P12'],
+
+      mnemonic_en: 'Capitalism = Free market. People choose jobs, start businesses, own property.',
+      funFact_en:
+        'The U.S. has a "mixed economy" — mostly free market with some government regulation for safety and fairness.',
+      funFact_my:
+        'အမေရိကန်တွင် "ရောစပ်စီးပွားရေး" ရှိသည် — အများအားဖြင့် လွတ်လပ်သောစျေးကွက်နှင့် အစိုးရထိန်းချုပ်မှု အချို့ ပါဝင်သည်။',
+      commonMistake_en:
+        'The U.S. is NOT a socialist or communist economy. It is a capitalist/free market economy.',
+      commonMistake_my:
+        'အမေရိကန်သည် ဆိုရှယ်လစ် သို့မဟုတ် ကွန်မြူနစ်စီးပွားရေး မဟုတ်ပါ။ အရင်းရှင်/လွတ်လပ်သောစျေးကွက်စီးပွားရေး ဖြစ်သည်။',
+      citation: 'Article I, Section 8 (Commerce Clause)',
     },
   },
   {
@@ -471,6 +561,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'တရားဥပဒေစိုးမိုးရေးဆိုသည်မှာ သမ္မတ၊ ကွန်ဂရက်နှင့် တရားသူကြီးများအပါအဝင် လူတိုင်းသည် ဥပဒေကို လိုက်နာရမည်ဟု ဆိုလိုသည်။ ဘယ်သူမှ ဥပဒေအထက်တွင် မရှိပြီး ဥပဒေသည် လူတိုင်းကို တန်းတူကျင့်သုံးသည်။',
       relatedQuestionIds: ['GOV-P01', 'GOV-P03'],
+
+      mnemonic_en: 'Rule of Law = NO ONE is above the law, not even the President.',
+      funFact_en:
+        'The concept of "rule of law" dates back to ancient Greece and was built into the Constitution through checks and balances.',
+      funFact_my:
+        '"ဥပဒေစိုးမိုးရေး" သဘောတရားသည် ရှေးဂရိခေတ်မှ ဆင်းသက်လာပြီး ထိန်းညှိမှုဖြင့် ဖွဲ့စည်းပုံထဲသို့ ထည့်သွင်းခဲ့သည်။',
+      commonMistake_en:
+        'Rule of law does NOT mean the President makes all the rules. It means EVERYONE must follow the law equally.',
+      commonMistake_my:
+        'ဥပဒေစိုးမိုးရေးဆိုသည်မှာ သမ္မတက စည်းမျဉ်းအားလုံးပြုလုပ်သည်ဟု မဆိုလိုပါ။ လူတိုင်း ဥပဒေကို တန်းတူလိုက်နာရမည်ဟု ဆိုလိုသည်။',
+      citation: 'Article VI; 14th Amendment, Section 1',
     },
   },
 
@@ -503,7 +604,17 @@ export const americanGovernmentQuestions: Question[] = [
         'အမေရိကန်အစိုးရမှာ ဌာနခွဲ ၃ ခုရှိတယ် — ဥပဒေပြုရေးဌာန (ကွန်ဂရက်)၊ အုပ်ချုပ်ရေးဌာန (သမ္မတ) နဲ့ တရားစီရင်ရေးဌာန (တရားရုံးများ)။ အုပ်စုတစ်ခုတည်းက အာဏာအလွန်ကြီးမားတာကို ကာကွယ်တယ်။',
       citation: 'Articles I, II, III',
       relatedQuestionIds: ['GOV-S02', 'GOV-S03', 'GOV-S04', 'GOV-S25'],
+
+      mnemonic_en: 'Three branches: L-E-J = Legislative, Executive, Judicial.',
+      funFact_en:
+        'The three-branch system was inspired by Montesquieu\'s "The Spirit of the Laws" (1748).',
+      funFact_my: 'သုံးဌာနစနစ်သည် Montesquieu ၏ "ဥပဒေ၏စိတ်ဓာတ်" (၁၇၄၈) မှ မှုတ်သွင်းခံရသည်။',
+      commonMistake_en:
+        'There are THREE branches, not two or four. Legislative, Executive, and Judicial.',
+      commonMistake_my:
+        'ဌာနခွဲ သုံးခု ရှိပြီး နှစ်ခု သို့မဟုတ် လေးခု မဟုတ်ပါ — ဥပဒေပြု၊ အုပ်ချုပ်ရေးနှင့် တရားစီရင်ရေး။',
     },
+    tricky: true,
   },
   {
     id: 'GOV-S02',
@@ -531,6 +642,16 @@ export const americanGovernmentQuestions: Question[] = [
         'စစ်ဆေးမှုများနှင့် ဟန်ချက်ညီမှုများ (အာဏာခွဲဝေမှုဟုလည်း ခေါ်သည်) ဆိုသည်မှာ ဌာနခွဲတစ်ခုစီက အခြားဌာနခွဲများကို ကန့်သတ်နိုင်သည်။ ဥပမာ — သမ္မတက ဥပဒေကို ဗီတိုပေးနိုင်ပြီး ကွန်ဂရက်က ဗီတိုကို ကျော်လွှား၍ တရားရုံးများက ဥပဒေကို ဖွဲ့စည်းပုံနှင့်မညီဟု ကြေညာနိုင်သည်။',
       citation: 'Articles I, II, III',
       relatedQuestionIds: ['GOV-S01', 'GOV-S21', 'GOV-S22', 'GOV-S25'],
+
+      mnemonic_en:
+        'Checks and Balances = each branch can CHECK and STOP the others from getting too powerful.',
+      funFact_en:
+        'The President vetoes laws, Congress overrides vetoes, and the Supreme Court strikes down unconstitutional laws.',
+      funFact_my:
+        'သမ္မတ ဗီတိုလုပ်သည်၊ ကွန်ဂရက် ဗီတိုကျော်လွန်သည်၊ တရားရုံးချုပ် ဖွဲ့စည်းပုံနှင့်မညီသော ဥပဒေများ ပယ်ဖျက်သည်။',
+      commonMistake_en: '"Checks and balances" is about government POWER, not money or banking.',
+      commonMistake_my:
+        '"ထိန်းညှိမှု" သည် အစိုးရအာဏာအကြောင်း ဖြစ်ပြီး ငွေကြေး/ဘဏ်လုပ်ငန်း မဟုတ်ပါ။',
     },
   },
   {
@@ -564,6 +685,15 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတ (President) က ဖက်ဒရယ် (Federal) ဥပဒေတွေကို အကောင်အထည်ဖော်ရတဲ့ အုပ်ချုပ်ရေးဌာန (Executive Branch) ကို ဦးဆောင်တယ်။ ဒီဌာနမှာ ဒုတိယသမ္မတ (Vice President) နဲ့ အစိုးရအဖွဲ့ (Cabinet) လည်း ပါဝင်တယ်။',
       citation: 'Article II, Section 1',
       relatedQuestionIds: ['GOV-S16', 'GOV-S20', 'GOV-S21'],
+
+      mnemonic_en: 'Executive branch = the President. "Execute" means to carry out the laws.',
+      funFact_en:
+        'The Executive branch includes over 4 million employees, making it the largest branch of government.',
+      funFact_my: 'အုပ်ချုပ်ရေးဌာနတွင် ဝန်ထမ်း ၄ သန်းကျော်ပါဝင်ပြီး အကြီးမားဆုံးဌာန ဖြစ်သည်။',
+      commonMistake_en:
+        'The President leads the Executive branch, NOT the Legislative. Congress is Legislative.',
+      commonMistake_my:
+        'သမ္မတ အုပ်ချုပ်ရေးဌာနကို ဦးဆောင်ပြီး ဥပဒေပြုရေးဌာန မဟုတ်ပါ။ ကွန်ဂရက်က ဥပဒေပြုရေး ဖြစ်သည်။',
     },
   },
   {
@@ -599,6 +729,14 @@ export const americanGovernmentQuestions: Question[] = [
         'ကွန်ဂရက် (အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော်) သည် ဖက်ဒရယ်ဥပဒေများ ပြုလုပ်သော ဥပဒေပြုဌာန ဖြစ်သည်။ ဥပဒေကြမ်းတစ်ခုကို သမ္မတထံ လက်မှတ်ရေးထိုးရန် မပို့မီ လွှတ်တော်နှစ်ရပ်စလုံး သဘောတူရမည်။',
       citation: 'Article I, Section 1',
       relatedQuestionIds: ['GOV-S01', 'GOV-S05', 'GOV-S21'],
+
+      mnemonic_en: 'Congress = Senate + House = makes federal laws. They LEGISLATE.',
+      funFact_en: 'The first Congress met in New York City in 1789, not Washington D.C.',
+      funFact_my: 'ပထမဆုံးကွန်ဂရက်သည် ၁၇၈၉ တွင် ဝါရှင်တန်ဒီစီမဟုတ်ဘဲ နယူးယောက်တွင် တွေ့ဆုံခဲ့သည်။',
+      commonMistake_en:
+        'Congress makes laws, NOT the President. The President signs them into law.',
+      commonMistake_my:
+        'ကွန်ဂရက်က ဥပဒေပြုပြီး သမ္မတ မဟုတ်ပါ။ သမ္မတက လက်မှတ်ထိုးပြီး ဥပဒေဖြစ်စေသည်။',
     },
   },
   {
@@ -641,6 +779,17 @@ export const americanGovernmentQuestions: Question[] = [
         'ကွန်ဂရက်တွင် အစိတ်အပိုင်းနှစ်ခုရှိသည် — အထက်လွှတ်တော် (အမတ် ၁၀၀၊ ပြည်နယ်တစ်ခုလျှင် ၂ ဦး) နှင့် အောက်လွှတ်တော် (အမတ် ၄၃၅၊ ပြည်နယ်လူဦးရေပေါ်မူတည်)။ တန်းတူကိုယ်စားပြုမှုနှင့် အချိုးအစားကိုယ်စားပြုမှု နှစ်ခုစလုံးကို သေချာစေသည်။',
       citation: 'Article I, Sections 2-3',
       relatedQuestionIds: ['GOV-S04', 'GOV-S06', 'GOV-S09'],
+
+      mnemonic_en:
+        'Senate + House of Representatives = the two parts of Congress. "Bi-cameral" = two chambers.',
+      funFact_en:
+        'The Great Compromise of 1787 created this two-chamber system: equal representation in Senate, proportional in House.',
+      funFact_my:
+        '၁၇၈၇ ၏ကြီးမားသောအပေးအယူက ဤနှစ်ခန်းမစနစ်ကို ဖန်တီးခဲ့သည်: အထက်လွှတ်တော်တွင် တန်းတူ၊ အောက်လွှတ်တော်တွင် အချိုးကျ။',
+      commonMistake_en:
+        'The two parts are Senate and House of Representatives — NOT "Congress" and "Senate."',
+      commonMistake_my:
+        'နှစ်ပိုင်းမှာ အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော် ဖြစ်ပြီး "ကွန်ဂရက်" နှင့် "အထက်လွှတ်တော်" မဟုတ်ပါ။',
     },
   },
   {
@@ -668,6 +817,15 @@ export const americanGovernmentQuestions: Question[] = [
       mnemonic_en: '50 states x 2 senators each = 100 Senators total.',
       mnemonic_my: 'ပြည်နယ် ၅၀ x ၂ ဦးစီ = စုစုပေါင်း အထက်လွှတ်တော်အမတ် ၁၀၀။',
       relatedQuestionIds: ['GOV-S05', 'GOV-S07', 'GOV-S09'],
+
+      funFact_en:
+        'Wyoming (580K people) has the same 2 senators as California (39M people) — equal representation regardless of size.',
+      funFact_my:
+        'ဝိုင်ယိုမင်း (လူ ၅၈၀,၀၀၀) နှင့် ကယ်လီဖိုးနီးယား (၃၉ သန်း) တွင် အထက်လွှတ်တော်အမတ် ၂ ဦးစီ တူတူရှိသည်။',
+      commonMistake_en:
+        'There are 100 senators total (2 x 50 states), not 50 or 435. 435 = House members.',
+      commonMistake_my:
+        'အထက်လွှတ်တော်အမတ် စုစုပေါင်း ၁၀၀ ရှိပြီး (ပြည်နယ် ၅၀ x ၂) ၅၀ သို့မဟုတ် ၄၃၅ မဟုတ်ပါ။',
     },
   },
   {
@@ -691,6 +849,14 @@ export const americanGovernmentQuestions: Question[] = [
       mnemonic_en: 'Senator = Six years. Both start with "S".',
       mnemonic_my: 'Senator = Six (ခြောက်) နှစ်။ နှစ်လုံးစလုံး "S" နဲ့ စတယ်။',
       relatedQuestionIds: ['GOV-S06', 'GOV-S10'],
+
+      funFact_en:
+        'Senators serve 6-year terms — the longest of any elected federal official in the regular government.',
+      funFact_my:
+        'အထက်လွှတ်တော်အမတ်များ ၆ နှစ်သက်တမ်း ဖြစ်ပြီး ရွေးကောက်ခံ ဖက်ဒရယ်အရာရှိများထဲတွင် အရှည်ဆုံး ဖြစ်သည်။',
+      commonMistake_en:
+        'Senators serve 6 years, not 2 or 4. Representatives serve 2 years, the President serves 4.',
+      commonMistake_my: 'အထက်လွှတ်တော်အမတ် ၆ နှစ်၊ အောက်လွှတ်တော်အမတ် ၂ နှစ်၊ သမ္မတ ၄ နှစ်။',
     },
   },
   // DYNAMIC(state): Senators vary by state. Update state-representatives.json after Senate elections.
@@ -726,6 +892,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'သင့်ပြည်နယ်၏ အထက်လွှတ်တော်အမတ်များသည် ကွန်ဂရက်တွင် သင့်ပြည်နယ်တစ်ခုလုံးကို ကိုယ်စားပြုသည်။ နိုင်ငံသားအဖြစ် စာမေးပွဲမတိုင်မီ သင့်ပြည်နယ်၏ လက်ရှိအထက်လွှတ်တော်အမတ်များကို စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S06', 'GOV-S12'],
+
+      mnemonic_en: 'This is a state-specific question. Know YOUR two senators by name.',
+      funFact_en:
+        'Each state has exactly 2 senators regardless of population — this was the Great Compromise of 1787.',
+      funFact_my:
+        'လူဦးရေ မည်မျှပင်ရှိစေ ပြည်နယ်တစ်ခုစီတွင် အထက်လွှတ်တော်အမတ် ၂ ဦးတိတိ ရှိသည် — ၁၇၈၇ ကြီးမားသော အပေးအယူ။',
+      commonMistake_en:
+        'This asks about YOUR state senators — the answer varies by state. Look up your state.',
+      commonMistake_my:
+        'ဤမေးခွန်းသည် သင့်ပြည်နယ်အထက်လွှတ်တော်အမတ်များကို မေးနေပြီး အဖြေ ပြည်နယ်အလိုက် ကွဲပြားသည်။',
+      citation: 'Article I, Section 3; 17th Amendment',
     },
   },
   {
@@ -757,6 +934,12 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'ကိုယ်စားလှယ် ၄၃၅ ဦးကို အထက်လွှတ်တော်အမတ် ၁၀၀ နှင့် မမှားပါစေ။ အထက်လွှတ်တော်တွင် ၁၀၀ (ပြည်နယ်တစ်ခုလျှင် ၂ ဦး)၊ အောက်လွှတ်တော်တွင် ၄၃၅ (လူဦးရေပေါ်မူတည်)။',
       relatedQuestionIds: ['GOV-S06', 'GOV-S13'],
+
+      mnemonic_en: '435 voting members in the House. Based on state population.',
+      funFact_en:
+        'The number 435 has been fixed since 1929. If it grew proportionally, there would be over 10,000 reps today.',
+      funFact_my:
+        '၄၃၅ ဟူသော ဂဏန်းကို ၁၉၂၉ ကတည်းက သတ်မှတ်ထားသည်။ အချိုးကျတိုးပါက ယနေ့ ၁၀,၀၀၀ ကျော် ရှိမည်။',
     },
   },
   {
@@ -781,6 +964,15 @@ export const americanGovernmentQuestions: Question[] = [
       mnemonic_en: 'Representatives = 2 years. "R" for "Re-elected often".',
       mnemonic_my: 'ကိုယ်စားလှယ် = ၂ နှစ်။ မကြာခဏ ပြန်ရွေးကောက်ခံရသည်။',
       relatedQuestionIds: ['GOV-S07', 'GOV-S14'],
+
+      funFact_en:
+        'ALL 435 House seats are up for election every 2 years, unlike the Senate where only 1/3 are up each cycle.',
+      funFact_my:
+        'အောက်လွှတ်တော်နေရာ ၄၃၅ ခုလုံးကို ၂ နှစ်တိုင်း ရွေးကောက်ပွဲကျင်းပသည်။ အထက်လွှတ်တော်တွင် ၃ ပုံ ၁ ပုံသာ။',
+      commonMistake_en:
+        'Representatives serve 2-year terms, NOT 4 or 6. They face voters most often.',
+      commonMistake_my:
+        'အောက်လွှတ်တော်အမတ် ၂ နှစ်သက်တမ်းဖြစ်ပြီး ၄ သို့မဟုတ် ၆ မဟုတ်ပါ။ မဲဆန္ဒရှင်နှင့် အမြဲဆုံးတွေ့ရသူ ဖြစ်သည်။',
     },
   },
   // DYNAMIC(state): Representatives vary by district. Update state-representatives.json after House elections (every 2 years).
@@ -816,6 +1008,18 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'သင့်ကိုယ်စားလှယ်သည် သင့်ကွန်ဂရက်ခရိုင်ကို အထူးတာဝန်ယူသည်။ နိုင်ငံသားအဖြစ် စာမေးပွဲမတိုင်မီ သင့်ဒေသကို ကိုယ်စားပြုသူ ဘယ်သူလဲ စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S08', 'GOV-S12', 'GOV-S13'],
+
+      mnemonic_en:
+        'This is location-specific. Know YOUR Representative by name based on your congressional district.',
+      funFact_en:
+        'Some congressional districts have been gerrymandered into bizarre shapes to favor one party.',
+      funFact_my:
+        'အချို့ ကွန်ဂရက်ခရိုင်များကို ပါတီတစ်ခုကို အားသာချက်ပေးရန် ထူးဆန်းသောပုံသဏ္ဍာန်များ ဆွဲထားသည်။',
+      commonMistake_en:
+        'This asks about YOUR specific Representative, not senators. The answer depends on your congressional district.',
+      commonMistake_my:
+        'ဤမေးခွန်းသည် သင့်အထူးသဖြင့် အောက်လွှတ်တော်အမတ်ကို မေးနေပြီး အထက်လွှတ်တော်အမတ် မဟုတ်ပါ။',
+      citation: 'Article I, Section 2',
     },
   },
   {
@@ -845,6 +1049,16 @@ export const americanGovernmentQuestions: Question[] = [
         'အထက်လွှတ်တော်အမတ်တစ်ဦးသည် ခရိုင်တစ်ခုတည်းကို မဟုတ်ဘဲ ပြည်နယ်ရှိ လူအားလုံးကို ကိုယ်စားပြုသည်။ ပြည်နယ်အတွင်း ကွန်ဂရက်ခရိုင်တစ်ခုတည်းကိုသာ ကိုယ်စားပြုသော ကိုယ်စားလှယ်နှင့် ကွာခြားသည်။',
       citation: 'Article I, Section 3; 17th Amendment',
       relatedQuestionIds: ['GOV-S08', 'GOV-S11', 'GOV-S13'],
+
+      mnemonic_en: 'Senator = represents ALL people of the entire state.',
+      funFact_en:
+        'Before the 17th Amendment (1913), senators were chosen by state legislatures, not by direct popular vote.',
+      funFact_my:
+        '၁၇ ကြိမ်မြောက်ပြင်ဆင်ချက် (၁၉၁၃) မတိုင်မီ အထက်လွှတ်တော်အမတ်များကို ပြည်နယ်လွှတ်တော်များက ရွေးချယ်ခဲ့ပြီး ပြည်သူ့တိုက်ရိုက်မဲ မဟုတ်ခဲ့ပါ။',
+      commonMistake_en:
+        'A senator represents their entire STATE, not a district. Representatives represent districts.',
+      commonMistake_my:
+        'အထက်လွှတ်တော်အမတ် ပြည်နယ်တစ်ခုလုံးကို ကိုယ်စားပြုပြီး ခရိုင် မဟုတ်ပါ။ အောက်လွှတ်တော်အမတ်က ခရိုင်ကိုယ်စားပြုသည်။',
     },
   },
   {
@@ -890,6 +1104,15 @@ export const americanGovernmentQuestions: Question[] = [
         'လူဦးရေပိုများသော ပြည်နယ်များက ကိုယ်စားလှယ်ပိုရသည်။ ၁၀ နှစ်တစ်ကြိမ် သန်းခေါင်စာရင်းကောက်ယူပြီး ကိုယ်စားပြုမှုကို ချိန်ညှိသည်။ ကယ်လီဖိုးနီးယားတွင် အများဆုံး (၅၂ ဦး) ရှိပြီး ဝိုင်းယိုမင်းကဲ့သို့ ပြည်နယ်များတွင် ၁ ဦးသာ ရှိသည်။',
       citation: 'Article I, Section 2',
       relatedQuestionIds: ['GOV-S09', 'GOV-S12'],
+
+      mnemonic_en: 'More people = more representatives. Population determines House seats.',
+      funFact_en:
+        'California has the most representatives (52) while states like Wyoming, Vermont, and Alaska have just 1 each.',
+      funFact_my:
+        'ကယ်လီဖိုးနီးယားတွင် အောက်လွှတ်တော်အမတ် အများဆုံး (၅၂) ရှိပြီး ဝိုင်ယိုမင်း၊ ဗားမောင့်၊ အလတ်စကားတွင် ၁ ဦးစီသာ ရှိသည်။',
+      commonMistake_en:
+        'The number of Representatives is based on POPULATION, not land area. Big states by area may have few reps.',
+      commonMistake_my: 'အောက်လွှတ်တော်အမတ်အရေအတွက်သည် မြေဧရိယာ မဟုတ်ဘဲ လူဦးရေအပေါ် မူတည်သည်။',
     },
   },
   {
@@ -911,6 +1134,17 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတကို ၄ နှစ်သက်တမ်းဖြင့် ရွေးကောက်တင်မြှောက်ပြီး အများဆုံး ၂ ကြိမ် (စုစုပေါင်း ၈ နှစ်) တာဝန်ထမ်းဆောင်နိုင်သည်။ FDR က ၄ ကြိမ်တာဝန်ထမ်းဆောင်ပြီးနောက် ၂၂ ကြိမ်မြောက် ပြင်ဆင်ချက်ဖြင့် ဒီကန့်သတ်ချက်ကို သတ်မှတ်ခဲ့သည်။',
       citation: 'Article II, Section 1; 22nd Amendment',
       relatedQuestionIds: ['GOV-S07', 'GOV-S10', 'GOV-S16'],
+
+      mnemonic_en:
+        'President = 4 years per term. Maximum 2 terms = 8 years total (22nd Amendment).',
+      funFact_en:
+        'Before the 22nd Amendment (1951), there was no term limit. FDR served 4 terms (12+ years).',
+      funFact_my:
+        '၂၂ ကြိမ်မြောက်ပြင်ဆင်ချက် (၁၉၅၁) မတိုင်မီ သက်တမ်းကန့်သတ်ချက် မရှိခဲ့ပါ။ FDR ၄ ကြိမ် တာဝန်ထမ်းဆောင်ခဲ့သည်။',
+      commonMistake_en:
+        'President serves 4 years per term, not 2 or 6. Senators serve 6, Representatives serve 2.',
+      commonMistake_my:
+        'သမ္မတ ၄ နှစ်ဖြစ်ပြီး ၂ နှစ် သို့မဟုတ် ၆ နှစ် မဟုတ်ပါ။ အထက်လွှတ်တော် ၆ နှစ်၊ အောက်လွှတ်တော် ၂ နှစ်။',
     },
   },
   {
@@ -935,6 +1169,12 @@ export const americanGovernmentQuestions: Question[] = [
       funFact_my:
         'ရွေးကောက်ပွဲနေ့သည် နိုဝင်ဘာလ ပထမဆုံးတနင်္လာနေ့ပြီးနောက် အင်္ဂါနေ့ ဖြစ်သည်။ ၁၈၄၅ တွင် ရွေးချယ်ခဲ့သည်မှာ ဗုဒ္ဓဟူးနေ့က စျေးနေ့ဖြစ်ပြီး တနင်္ဂနွေနေ့က ဘုရားကျောင်းနေ့ ဖြစ်သောကြောင့်!',
       relatedQuestionIds: ['GOV-S14', 'GOV-S16'],
+
+      mnemonic_en: 'November = election month. The Tuesday after the first Monday in November.',
+      commonMistake_en: 'Elections are in NOVEMBER, not January. January 20 is Inauguration Day.',
+      commonMistake_my:
+        'ရွေးကောက်ပွဲ နိုဝင်ဘာတွင်ဖြစ်ပြီး ဇန်နဝါရီ မဟုတ်ပါ။ ဇန်နဝါရီ ၂၀ = မင်္ဂလာခံယူပွဲနေ့။',
+      citation: '3 U.S.C. Section 1; 20th Amendment',
     },
   },
   // DYNAMIC: Update answer after presidential elections (every 4 years). Next check: Nov 2028.
@@ -966,6 +1206,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'လက်ရှိသမ္မတသည် သင့်နိုင်ငံသားအဖြစ် စာမေးပွဲအချိန်တွင် တာဝန်ထမ်းဆောင်နေသူ ဖြစ်သည်။ သမ္မတအသစ် တာဝန်ယူသောအခါ ဒီအဖြေ ပြောင်းလဲသည်။ စာမေးပွဲမတိုင်မီ နောက်ဆုံးအမည်ကို စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S17', 'GOV-S34'],
+
+      mnemonic_en: 'Know the CURRENT President by name. This changes over time.',
+      funFact_en:
+        'The President is both head of state and head of government — many countries separate these roles.',
+      funFact_my:
+        'သမ္မတသည် နိုင်ငံတော်အကြီးအကဲနှင့် အစိုးရအကြီးအကဲ နှစ်ခုလုံး ဖြစ်သည် — နိုင်ငံများစွာက ဤရာထူးများကို ခွဲထားသည်။',
+      commonMistake_en:
+        'This question asks the current President, not a historical one. The answer changes with each election.',
+      commonMistake_my:
+        'ဤမေးခွန်းသည် လက်ရှိသမ္မတကို မေးပြီး သမိုင်းဝင်သမ္မတ မဟုတ်ပါ။ ရွေးကောက်ပွဲတိုင်း အဖြေပြောင်းသည်။',
+      citation: 'Article II, Section 1',
     },
   },
   // DYNAMIC: Update answer after presidential elections (every 4 years). Next check: Nov 2028.
@@ -993,6 +1244,15 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'ဒုတိယသမ္မတသည် သမ္မတ၏ အရန်အဖြစ် တာဝန်ထမ်းဆောင်ပြီး အထက်လွှတ်တော်ဥက္ကဋ္ဌအဖြစ်လည်း တာဝန်ယူသည်။ သမ္မတကဲ့သို့ပင် ဒီအဖြေ ပြောင်းလဲနိုင်သည် — စာမေးပွဲမတိုင်မီ စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S16', 'GOV-S18'],
+
+      mnemonic_en: 'Know the CURRENT Vice President by name. VP = #1 in presidential succession.',
+      funFact_en:
+        'The Vice President is also President of the Senate and can cast tie-breaking votes.',
+      funFact_my: 'ဒု-သမ္မတသည် အထက်လွှတ်တော်ဥက္ကဋ္ဌလည်း ဖြစ်ပြီး မဲတူမဲခွဲ ပေးနိုင်သည်။',
+      commonMistake_en:
+        'This asks the CURRENT VP, not a historical one. The answer changes with each administration.',
+      commonMistake_my: 'ဤမေးခွန်းသည် လက်ရှိဒု-သမ္မတကို မေးပြီး သမိုင်းဝင် မဟုတ်ပါ။',
+      citation: 'Article II, Section 1; 12th Amendment',
     },
   },
   {
@@ -1026,6 +1286,14 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတ တာဝန်မထမ်းဆောင်နိုင်ပါက ဒုတိယသမ္မတက တာဝန်ယူသည်။ ဒီဆက်ခံမှုကို ဖွဲ့စည်းပုံအခြေခံဥပဒေက သတ်မှတ်ထားပြီး အမေရိကန်သမိုင်းတွင် ကိုးကြိမ် ဖြစ်ပွားခဲ့သည်။',
       citation: 'Article II, Section 1; 25th Amendment',
       relatedQuestionIds: ['GOV-S17', 'GOV-S19'],
+
+      mnemonic_en: 'VP = next in line. Vice President becomes President if President cannot serve.',
+      funFact_en: 'Nine VPs have become President due to death or resignation of the President.',
+      funFact_my: 'ဒု-သမ္မတ ၉ ဦးသည် သမ္မတ သေဆုံးခြင်း/နှုတ်ထွက်ခြင်းကြောင့် သမ္မတဖြစ်လာခဲ့သည်။',
+      commonMistake_en:
+        'The VICE PRESIDENT is first in line, not the Speaker of the House. Speaker is second.',
+      commonMistake_my:
+        'ဒု-သမ္မတ ပထမဖြစ်ပြီး အောက်လွှတ်တော်ဥက္ကဋ္ဌ မဟုတ်ပါ။ ဥက္ကဋ္ဌ ဒုတိယ ဖြစ်သည်။',
     },
   },
   {
@@ -1058,6 +1326,16 @@ export const americanGovernmentQuestions: Question[] = [
         'အောက်လွှတ်တော်ဥက္ကဋ္ဌသည် သမ္မတရာထူးအတွက် တတိယမြောက် ဆက်ခံသူ ဖြစ်သည်။ အစီအစဉ်မှာ — ဒုတိယသမ္မတ၊ ထို့နောက် အောက်လွှတ်တော်ဥက္ကဋ္ဌ၊ ထို့နောက် အထက်လွှတ်တော် ယာယီဥက္ကဋ္ဌ ဖြစ်သည်။',
       citation: 'Presidential Succession Act; 25th Amendment',
       relatedQuestionIds: ['GOV-S18', 'GOV-S35'],
+
+      mnemonic_en: 'Speaker of the House = #2 in succession. After VP, Speaker is next.',
+      funFact_en:
+        'The Speaker of the House has never actually had to assume the presidency in U.S. history.',
+      funFact_my:
+        'အမေရိကန်သမိုင်းတွင် အောက်လွှတ်တော်ဥက္ကဋ္ဌ သမ္မတတာဝန် တကယ်ထမ်းဆောင်ရဖူးခြင်း မရှိပါ။',
+      commonMistake_en:
+        'The SPEAKER becomes President next, NOT the Chief Justice or a Cabinet member.',
+      commonMistake_my:
+        'အောက်လွှတ်တော်ဥက္ကဋ္ဌ နောက်သမ္မတဖြစ်ပြီး တရားသူကြီးချုပ် သို့မဟုတ် အစိုးရအဖွဲ့ဝင် မဟုတ်ပါ။',
     },
   },
   {
@@ -1083,6 +1361,16 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတ (President) က စစ်တပ်ရဲ့ ကာကွယ်ရေးဦးစီးချုပ် ဖြစ်တယ်။ အရပ်သား (စစ်တပ်မဟုတ်တဲ့) ခေါင်းဆောင်မှုက တပ်မတော်ကို ထိန်းချုပ်တယ်ဆိုတာ အမေရိကန် ဒီမိုကရေစီ (Democracy) ရဲ့ အဓိကမူ တစ်ခုဖြစ်တယ်။',
       citation: 'Article II, Section 2',
       relatedQuestionIds: ['GOV-S03', 'GOV-S16'],
+
+      mnemonic_en:
+        'President = Commander in Chief of the military. Civilian control of the armed forces.',
+      funFact_en:
+        'The President commands the military but CANNOT declare war — only Congress can declare war.',
+      funFact_my:
+        'သမ္မတ စစ်တပ်ကို ညွှန်ကြားသော်လည်း စစ်ကြေညာခွင့် မရှိ — ကွန်ဂရက်သာ စစ်ကြေညာနိုင်သည်။',
+      commonMistake_en:
+        'The Commander in Chief is the PRESIDENT (a civilian), not a military general.',
+      commonMistake_my: 'စစ်ဦးစီးချုပ်သည် သမ္မတ (အရပ်သား) ဖြစ်ပြီး စစ်ဗိုလ်ချုပ် မဟုတ်ပါ။',
     },
   },
   {
@@ -1112,6 +1400,15 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတသည် ကွန်ဂရက်က အတည်ပြုထားသော ဥပဒေကြမ်းများကို တရားဝင်ဥပဒေ ဖြစ်စေရန် လက်မှတ်ရေးထိုးသည်။ သမ္မတ သဘောမတူပါက ဥပဒေကြမ်းကို ဗီတို (ပယ်ချ) နိုင်သည်။',
       citation: 'Article I, Section 7',
       relatedQuestionIds: ['GOV-S02', 'GOV-S04', 'GOV-S22'],
+
+      mnemonic_en: 'President SIGNS bills into law. Congress WRITES them, President SIGNS them.',
+      funFact_en:
+        'Presidents can also issue Executive Orders, which have the force of law without Congress.',
+      funFact_my:
+        'သမ္မတများ ဥပဒေအာဏာရှိသော အုပ်ချုပ်ရေးအမိန့်များလည်း ကွန်ဂရက်မပါဘဲ ထုတ်ပြန်နိုင်သည်။',
+      commonMistake_en: 'The President SIGNS bills but does NOT write them. Congress writes laws.',
+      commonMistake_my:
+        'သမ္မတ ဥပဒေကြမ်းလက်မှတ်ထိုးသည်၊ ရေးသားခြင်း မဟုတ်ပါ။ ကွန်ဂရက်က ဥပဒေရေးသားသည်။',
     },
   },
   {
@@ -1141,6 +1438,16 @@ export const americanGovernmentQuestions: Question[] = [
         'သမ္မတသည် ကွန်ဂရက်က အတည်ပြုထားသော ဥပဒေကြမ်းများကို ဗီတို (ပယ်ချ) နိုင်သည်။ သို့သော် ကွန်ဂရက်က အထက်လွှတ်တော်နှင့် အောက်လွှတ်တော် နှစ်ရပ်စလုံးတွင် သုံးပုံနှစ်ပုံ မဲဖြင့် ဗီတိုကို ကျော်လွှားနိုင်သည်။',
       citation: 'Article I, Section 7',
       relatedQuestionIds: ['GOV-S02', 'GOV-S21'],
+
+      mnemonic_en: 'President VETOES bills (rejects them). Congress can override with 2/3 vote.',
+      funFact_en:
+        'FDR vetoed more bills than any president — 635 vetoes. Congress overrode only 9.',
+      funFact_my:
+        'FDR သည် မည်သည့်သမ္မတထက်မဆို ဥပဒေကြမ်းများ အများဆုံးဗီတိုလုပ်ခဲ့သည် — ၆၃၅ ကြိမ်။ ကွန်ဂရက်က ၉ ကြိမ်သာ ကျော်လွန်ခဲ့သည်။',
+      commonMistake_en:
+        'The PRESIDENT vetoes bills, not Congress. Congress can override a veto with a 2/3 supermajority.',
+      commonMistake_my:
+        'သမ္မတ ဗီတိုလုပ်ပြီး ကွန်ဂရက် မဟုတ်ပါ။ ကွန်ဂရက်က ၃ ပုံ ၂ ပုံမဲဖြင့် ကျော်လွန်နိုင်သည်။',
     },
   },
   {
@@ -1168,6 +1475,15 @@ export const americanGovernmentQuestions: Question[] = [
         'အစိုးရအဖွဲ့သည် သမ္မတကို ဆုံးဖြတ်ချက်များ ချမှတ်ရာတွင် ကူညီသော အကြံပေးများအဖွဲ့ ဖြစ်သည်။ အစိုးရအဖွဲ့ဝင်တစ်ဦးစီသည် ဖက်ဒရယ်ဝန်ကြီးဌာန (ကာကွယ်ရေး၊ ပညာရေး သို့မဟုတ် နိုင်ငံခြားရေးကဲ့သို့) ကို ဦးဆောင်ပြီး ထိုနယ်ပယ်တွင် ကျွမ်းကျင်သူ ဖြစ်သည်။',
       citation: 'Article II, Section 2',
       relatedQuestionIds: ['GOV-S03', 'GOV-S24'],
+
+      mnemonic_en: 'Cabinet ADVISES the President on policy matters for their department.',
+      funFact_en:
+        'The Cabinet has grown from 4 members under Washington to 15 executive departments today.',
+      funFact_my: 'အစိုးရအဖွဲ့ ဝါရှင်တန်လက်ထက် ၄ ဦးမှ ယနေ့ အုပ်ချုပ်ရေးဌာန ၁၅ ခုသို့ တိုးလာခဲ့သည်။',
+      commonMistake_en:
+        'Cabinet members ADVISE the President — they do not make final decisions. The President decides.',
+      commonMistake_my:
+        'အစိုးရအဖွဲ့ဝင်များ သမ္မတကို အကြံပေးသည် — နောက်ဆုံးဆုံးဖြတ်ချက်ချခြင်း မဟုတ်ပါ။',
     },
   },
   {
@@ -1227,6 +1543,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'ဝန်ကြီးဌာန ၁၅ ခုရှိပြီး တစ်ခုစီကို ဝန်ကြီး (သို့မဟုတ် ရှေ့နေချုပ်) က ဦးဆောင်သည်။ နှစ်ခုသာ ပြောရန် လိုအပ်သည်။ အဖြစ်များသည်များမှာ နိုင်ငံခြားရေးဝန်ကြီး၊ ကာကွယ်ရေးဝန်ကြီးနှင့် ရှေ့နေချုပ် တို့ဖြစ်သည်။',
       relatedQuestionIds: ['GOV-S23'],
+
+      mnemonic_en:
+        'Secretary of State, Secretary of Defense, Attorney General, etc. — heads of executive departments.',
+      funFact_en:
+        'The newest Cabinet department is Homeland Security, created in 2002 after the 9/11 attacks.',
+      funFact_my:
+        'အသစ်ဆုံး အစိုးရအဖွဲ့ဌာနမှာ ၂၀၀၂ ခုနှစ် 9/11 အကြမ်းဖက်တိုက်ခိုက်မှုနောက် ဖွဲ့စည်းခဲ့သော ပြည်တွင်းလုံခြုံရေး ဖြစ်သည်။',
+      commonMistake_en: 'Cabinet members are APPOINTED by the President, not elected by voters.',
+      commonMistake_my:
+        'အစိုးရအဖွဲ့ဝင်များကို သမ္မတက ခန့်အပ်ပြီး မဲဆန္ဒရှင်များ ရွေးကောက်ခြင်း မဟုတ်ပါ။',
+      citation: 'Article II, Section 2',
     },
   },
   {
@@ -1256,6 +1583,17 @@ export const americanGovernmentQuestions: Question[] = [
         'တရားစီရင်ရေးဌာန (တရားရုံးများ) သည် ဥပဒေများကို ပြန်လည်သုံးသပ်၍ အဓိပ္ပာယ်ဖွင့်ဆိုပြီး အငြင်းပွားမှုများကို ဖြေရှင်းကာ ဥပဒေများ ဖွဲ့စည်းပုံနှင့် ညီမညီ ဆုံးဖြတ်သည်။ ဥပဒေပြုခြင်း (ကွန်ဂရက်) သို့မဟုတ် ဥပဒေစိုးမိုးစေခြင်း (သမ္မတ) ကိုမူ မလုပ်ပါ။',
       citation: 'Article III',
       relatedQuestionIds: ['GOV-S01', 'GOV-S02', 'GOV-S26'],
+
+      mnemonic_en:
+        'Judicial = JUDGES = reviews and explains laws, decides if laws are constitutional.',
+      funFact_en:
+        'Hamilton called the judiciary the "least dangerous" branch because it has no sword (military) or purse (budget).',
+      funFact_my:
+        'ဟာမီလ်တန်က စစ်တပ်/ဘတ်ဂျက်မရှိသဖြင့် တရားစီရင်ရေးကို "အန္တရာယ်အနည်းဆုံးဌာန" ဟု သတ်မှတ်ခဲ့သည်။',
+      commonMistake_en:
+        'Judicial branch INTERPRETS laws — does NOT write them (legislative) or enforce them (executive).',
+      commonMistake_my:
+        'တရားစီရင်ရေးဌာန ဥပဒေအဓိပ္ပာယ်ဖွင့်ဆိုသည် — ရေးသားခြင်း (ဥပဒေပြု)/အကောင်အထည်ဖော်ခြင်း (အုပ်ချုပ်ရေး) မဟုတ်ပါ။',
     },
   },
   {
@@ -1289,6 +1627,16 @@ export const americanGovernmentQuestions: Question[] = [
         'တရားရုံးချုပ်သည် နိုင်ငံ၏ အမြင့်ဆုံးတရားရုံး ဖြစ်သည်။ ၎င်း၏ ဆုံးဖြတ်ချက်များသည် အပြီးသတ်ဖြစ်ပြီး အခြားတရားရုံးမှ ပယ်ဖျက်၍ မရပါ။ ဖွဲ့စည်းပုံနှင့် မညီသော ဥပဒေများကို ဖျက်သိမ်းနိုင်သော "တရားစီရင်ရေး ပြန်လည်သုံးသပ်ခွင့်" ရှိသည်။',
       citation: 'Article III, Section 1',
       relatedQuestionIds: ['GOV-S25', 'GOV-S27', 'GOV-S28'],
+
+      mnemonic_en: 'Supreme Court = the HIGHEST court. "Supreme" = the top. No appeal above it.',
+      funFact_en:
+        'The Supreme Court gets about 7,000 petitions per year but only hears roughly 80 cases — about 1%.',
+      funFact_my:
+        'တရားရုံးချုပ် တစ်နှစ်လျှင် လျှောက်လွှာ ~၇,၀၀၀ လက်ခံပြီး ~၈၀ အမှုသာ ကြားနာ — ~၁%။',
+      commonMistake_en:
+        'The Supreme Court is the HIGHEST — there is no appeal above it, not even to the President.',
+      commonMistake_my:
+        'တရားရုံးချုပ်သည် အမြင့်ဆုံး ဖြစ်ပြီး ၎င်းအထက်တွင် အယူခံ မရှိပါ — သမ္မတထံတောင်မှ မရှိပါ။',
     },
   },
   {
@@ -1310,7 +1658,18 @@ export const americanGovernmentQuestions: Question[] = [
         'တရားရုံးချုပ်တွင် တရားသူကြီး ၉ ဦး ရှိသည်။ သမ္မတက ခန့်အပ်ပြီး အထက်လွှတ်တော်က အတည်ပြုကာ တသက်တာ တာဝန်ထမ်းဆောင်သည်။ အရေအတွက်ကို ဖွဲ့စည်းပုံတွင် မသတ်မှတ်ထားသော်လည်း ၁၈၆၉ ခုနှစ်ကတည်းက ၉ ဦး ဖြစ်သည်။',
       citation: 'Article III; Judiciary Act of 1869',
       relatedQuestionIds: ['GOV-S26', 'GOV-S28'],
+
+      mnemonic_en: '9 justices on the Supreme Court. Odd number prevents ties.',
+      funFact_en:
+        'The number started at 6 in 1789, briefly reached 10 during the Civil War, and has been 9 since 1869.',
+      funFact_my:
+        '၁၇၈၉ တွင် ၆ ဦးဖြင့်စတင်၊ ပြည်တွင်းစစ်တွင် ခဏ ၁၀ ဦး ဖြစ်ခဲ့ပြီး ၁၈၆၉ ကတည်းက ၉ ဦး ဖြစ်သည်။',
+      commonMistake_en:
+        'There are 9 justices, not 12 or 7. This number is set by Congress, not the Constitution.',
+      commonMistake_my:
+        'တရားသူကြီး ၉ ဦးရှိပြီး ၁၂ သို့မဟုတ် ၇ မဟုတ်ပါ။ ဤဂဏန်းကို ဖွဲ့စည်းပုံ မဟုတ်ဘဲ ကွန်ဂရက်က သတ်မှတ်သည်။',
     },
+    tricky: true,
   },
   // DYNAMIC: Update on Chief Justice retirement/death/impeachment. No fixed schedule — monitor news.
   {
@@ -1349,6 +1708,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'တရားသူကြီးချုပ်သည် တရားရုံးချုပ်ကို ဦးဆောင်သည်။ သမ္မတနှင့် ဒုတိယသမ္မတကဲ့သို့ပင် ဒီအဖြေ ပြောင်းလဲနိုင်သည် — နိုင်ငံသားအဖြစ် စာမေးပွဲမတိုင်မီ လက်ရှိအမည်ကို စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S26', 'GOV-S27'],
+
+      mnemonic_en: 'Know the CURRENT Chief Justice by name. This is a time-dynamic question.',
+      funFact_en:
+        'There have been only 17 Chief Justices in all of U.S. history — far fewer than Presidents.',
+      funFact_my:
+        'အမေရိကန်သမိုင်းတစ်လျှောက်တွင် တရားသူကြီးချုပ် ၁၇ ဦးသာ ရှိခဲ့ပြီး သမ္မတများထက် များစွာ နည်းသည်။',
+      commonMistake_en:
+        'Chief Justice is appointed for LIFE, not a fixed term. Know the current one by name.',
+      commonMistake_my:
+        'တရားသူကြီးချုပ်ကို သက်တမ်းကန့်သတ်မရှိဘဲ တစ်သက်တာ ခန့်အပ်သည်။ လက်ရှိအမည်ကို သိရမည်။',
+      citation: 'Article III, Section 1',
     },
   },
   {
@@ -1389,6 +1759,12 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'ပညာရေး၊ ရဲနှင့် ယာဉ်မောင်းလိုင်စင်တို့သည် ပြည်နယ်အာဏာ ဖြစ်ပြီး ဖက်ဒရယ်မဟုတ်ပါ။ ဖက်ဒရယ် = ငွေကြေးနှင့် စစ်တပ်ကဲ့သို့ နိုင်ငံအဆင့် ကိစ္စရပ်များ ဟု မှတ်ထားပါ။',
       relatedQuestionIds: ['GOV-S30'],
+
+      mnemonic_en: 'Federal powers: print MONEY, declare WAR, create ARMY, make TREATIES.',
+      funFact_en:
+        'Only the federal government can print money, declare war, and conduct foreign policy.',
+      funFact_my:
+        'ငွေကြေးရိုက်နှိပ်ခြင်း၊ စစ်ကြေညာခြင်းနှင့် နိုင်ငံခြားရေးမူဝါဒလုပ်ဆောင်ခြင်း ဖက်ဒရယ်အစိုးရသာ လုပ်နိုင်သည်။',
     },
   },
   {
@@ -1427,6 +1803,16 @@ export const americanGovernmentQuestions: Question[] = [
         'ပြည်နယ်အစိုးရများသည် ဒေသဆိုင်ရာ ကိစ္စရပ်များကို ကိုင်တွယ်သည် — ကျောင်းများ၊ ရဲ၊ မီးသတ်ဌာနများ၊ ယာဉ်မောင်းလိုင်စင်နှင့် ဇုန်သတ်မှတ်ခြင်း။ သင့်ရပ်ရွာတွင် နေ့စဉ်ဘဝကို တိုက်ရိုက်ထိခိုက်သော အရာများ ဖြစ်သည်။',
       citation: '10th Amendment',
       relatedQuestionIds: ['GOV-S29'],
+
+      mnemonic_en: "State powers: SCHOOLS, police, LICENSES (driver's), zoning, elections.",
+      funFact_en:
+        "Education, driver's licenses, and marriage laws are all handled by states, not the federal government.",
+      funFact_my:
+        'ပညာရေး၊ ယာဉ်မောင်းလိုင်စင်နှင့် လက်ထပ်ဥပဒေများကို ဖက်ဒရယ်အစိုးရ မဟုတ်ဘဲ ပြည်နယ်များက ကိုင်တွယ်သည်။',
+      commonMistake_en:
+        'States have their own powers separate from the federal government. Education is a STATE power.',
+      commonMistake_my:
+        'ပြည်နယ်များတွင် ဖက်ဒရယ်အစိုးရနှင့် သီးခြားအာဏာများ ရှိသည်။ ပညာရေးသည် ပြည်နယ်အာဏာ ဖြစ်သည်။',
     },
   },
   // DYNAMIC(state): Governor varies by state. Update state-representatives.json after gubernatorial elections.
@@ -1458,6 +1844,18 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'အုပ်ချုပ်ရေးမှူးသည် သမ္မတက ဖက်ဒရယ်အစိုးရကို ဦးဆောင်သကဲ့သို့ သင့်ပြည်နယ်အစိုးရ၏ အကြီးအကဲ ဖြစ်သည်။ ဒီအဖြေသည် ပြည်နယ်အလိုက် ကွဲပြားသည် — စာမေးပွဲမတိုင်မီ စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S32'],
+
+      mnemonic_en:
+        'Know YOUR state Governor by name. The Governor is like a "mini-President" for the state.',
+      funFact_en:
+        'Most governors serve 4-year terms, but Vermont and New Hampshire have 2-year terms.',
+      funFact_my:
+        'ပြည်နယ်ဝန်ကြီးချုပ်အများစု ၄ နှစ်သက်တမ်းဖြစ်သော်လည်း ဗားမောင့်နှင့် နယူးဟမ်ရှိုင်းယား ၂ နှစ်သက်တမ်း ဖြစ်သည်။',
+      commonMistake_en:
+        'Governor heads a STATE, not the country. Do not confuse with the President.',
+      commonMistake_my:
+        'ပြည်နယ်ဝန်ကြီးချုပ် ပြည်နယ်ကိုဦးဆောင်ပြီး နိုင်ငံ မဟုတ်ပါ။ သမ္မတနှင့် မရောထွေးပါနှင့်။',
+      citation: 'Tenth Amendment; state constitutions',
     },
   },
   // DYNAMIC(state): Capital varies by state but is effectively static. No regular updates needed.
@@ -1493,6 +1891,13 @@ export const americanGovernmentQuestions: Question[] = [
       commonMistake_my:
         'ပြည်နယ်မြို့တော်သည် အကြီးဆုံးမြို့ အမြဲမဟုတ်ပါ။ ဥပမာ — ကယ်လီဖိုးနီးယား၏ မြို့တော်သည် လော့စ်အိန်ဂျယ်လိစ် မဟုတ်ဘဲ ဆက်ကရမင်တို (Sacramento) ဖြစ်သည်။',
       relatedQuestionIds: ['GOV-S31', 'SYM-07'],
+
+      mnemonic_en: 'Know YOUR state capital. It is often NOT the biggest city in the state.',
+      funFact_en:
+        "California's capital is Sacramento (not LA), New York's is Albany (not NYC), Texas is Austin (not Houston).",
+      funFact_my:
+        'ကယ်လီဖိုးနီးယား မြို့တော် ဆက်ကရာမင်တို (LA မဟုတ်)၊ နယူးယောက် မြို့တော် အော်လ်ဘနီ (NYC မဟုတ်)။',
+      citation: 'State constitutions',
     },
   },
   {
@@ -1523,6 +1928,17 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'အမေရိကန်တွင် ဒီမိုကရက်တစ်နှင့် ရီပတ်ဘလစ်ကန် ပါတီနှစ်ခုက လွှမ်းမိုးသော စနစ်ရှိသည်။ အခြားပါတီများ (လစ်ဘရယ်၊ အစိမ်းရောင် စသည်) ရှိသော်လည်း ဒီနှစ်ခုက ၁၈၅၀ ပြည့်နှစ်များကတည်းက အဓိကရွေးကောက်ပွဲအားလုံးကို အနိုင်ရခဲ့သည်။',
       relatedQuestionIds: ['GOV-S34'],
+
+      mnemonic_en: 'D and R: Democratic Party and Republican Party are the two major parties.',
+      funFact_en:
+        'The Democratic Party (founded 1828) is the oldest active political party in the world.',
+      funFact_my:
+        'ဒီမိုကရက်ပါတီ (၁၈၂၈ တည်ထောင်) သည် ကမ္ဘာ့အဟောင်းဆုံး တက်ကြွသောနိုင်ငံရေးပါတီ ဖြစ်သည်။',
+      commonMistake_en:
+        'The TWO major parties are Democratic and Republican. Third parties exist but rarely win federal elections.',
+      commonMistake_my:
+        'အဓိကပါတီ ၂ ခု — ဒီမိုကရက်နှင့် ရီပါဘလီကန်။ တတိယပါတီ ရှိသော်လည်း ဖက်ဒရယ်ရွေးကောက်ပွဲတွင် ရှားပါးစွာ အနိုင်ရသည်။',
+      citation: 'No constitutional provision; established by practice',
     },
   },
   // DYNAMIC: Update after presidential elections (every 4 years). Next check: Nov 2028.
@@ -1550,6 +1966,15 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'သမ္မတအသစ် တာဝန်ယူသောအခါ ဒီအဖြေ ပြောင်းလဲသည်။ သမ္မတ၏ ပါတီဝင်ဖြစ်မှုသည် လူသိရှင်ကြား ဖြစ်သည် — စာမေးပွဲမတိုင်မီ လက်ရှိအချက်အလက်ကို စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S16', 'GOV-S33'],
+
+      mnemonic_en: "Know the CURRENT President's party. This is a time-dynamic question.",
+      funFact_en:
+        'George Washington was the only President who did not belong to any political party.',
+      funFact_my:
+        'ဂျော့ဝါရှင်တန်သည် မည်သည့်နိုင်ငံရေးပါတီမှ မပါဝင်ခဲ့သော တစ်ခုတည်းသော သမ္မတ ဖြစ်သည်။',
+      commonMistake_en: "This asks about the CURRENT President's party, not a historical one.",
+      commonMistake_my: 'ဤမေးခွန်းသည် လက်ရှိသမ္မတ၏ ပါတီကို မေးနေပြီး သမိုင်းဝင် မဟုတ်ပါ။',
+      citation: 'No constitutional requirement; political practice',
     },
   },
   // DYNAMIC: Update each new Congress (every 2 years) or on vacancy. Next check: Jan 2027.
@@ -1581,6 +2006,18 @@ export const americanGovernmentQuestions: Question[] = [
       brief_my:
         'အောက်လွှတ်တော်ဥက္ကဋ္ဌသည် အောက်လွှတ်တော်ကို ဦးဆောင်ပြီး သမ္မတရာထူးအတွက် ဒုတိယမြောက် ဆက်ခံသူ (ဒုတိယသမ္မတ ပြီးနောက်) ဖြစ်သည်။ ဒီအဖြေ ပြောင်းလဲနိုင်သည် — စာမေးပွဲမတိုင်မီ စစ်ဆေးပါ။',
       relatedQuestionIds: ['GOV-S19', 'GOV-S05'],
+
+      mnemonic_en:
+        'Know the CURRENT Speaker of the House by name. Speaker = leader of House of Representatives.',
+      funFact_en:
+        'The Speaker is elected by House members and is 2nd in presidential succession after the VP.',
+      funFact_my:
+        'ဥက္ကဋ္ဌကို အောက်လွှတ်တော်အမတ်များက ရွေးကောက်ပြီး ဒု-သမ္မတပြီးနောက် သမ္မတဆက်ခံရေးတွင် ဒုတိယ ဖြစ်သည်။',
+      commonMistake_en:
+        'Speaker of the House leads the HOUSE, not the Senate. The VP is President of the Senate.',
+      commonMistake_my:
+        'အောက်လွှတ်တော်ဥက္ကဋ္ဌသည် အောက်လွှတ်တော်ကို ဦးဆောင်ပြီး အထက်လွှတ်တော် မဟုတ်ပါ။',
+      citation: 'Article I, Section 2; Presidential Succession Act of 1947',
     },
   },
 ];
