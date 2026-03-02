@@ -49,11 +49,11 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 ## Current Position
 
 Phase: 46 of 47 (Cross-Device Sync)
-Plan: 1 of 3 in current phase
-Status: In Progress
-Last activity: 2026-03-01 -- Completed 46-01 (Settings/bookmark sync data layer + enhanced streak merge)
+Plan: 3 of 3 in current phase
+Status: Phase Complete
+Last activity: 2026-03-01 -- Completed 46-03 (Visibility sync & login hydration pull)
 
-Progress: [█████████░] 96%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -97,6 +97,7 @@ Progress: [█████████░] 96%
 | Phase 45 P02 | 3min | 2 tasks | 6 files |
 | Phase 45 P03 | 6min | 2 tasks | 9 files |
 | Phase 46 P01 | 8min | 2 tasks | 10 files |
+| Phase 46 P03 | 8min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -175,6 +176,9 @@ Recent decisions affecting current work:
 - [Phase 46]: Individual columns for settings (not JSONB) matching project pattern for type safety
 - [Phase 46]: Freeze recalculation removes freezes on dates with activity after merge, returns freed to pool capped at 3
 - [Phase 46]: Longest streak recomputed from merged dates via calculateStreak (not max of both)
+- [Phase 46]: callbacksRef synced in useEffect for React Compiler compliance (not during render)
+- [Phase 46]: 5-second throttle on visibility sync to prevent rapid-fire pulls from quick tab switches
+- [Phase 46]: SRS visibility sync (SYNC-01) confirmed already working via existing SRSContext handler
 
 ### Pending Todos
 
@@ -188,6 +192,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-01T23:49:00Z
-Stopped at: Completed 46-01-PLAN.md
+Last session: 2026-03-02T00:02:00Z
+Stopped at: Completed 46-03-PLAN.md
 Resume file: None

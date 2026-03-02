@@ -255,7 +255,7 @@ Note: Phases 42, 43, 45, 46 all depend on Phase 41. Phase 43.5 closes audit gaps
 | 43.5. Integration Wiring and Tech Debt | 2/2 | Complete    | 2026-02-25 |
 | 44. Test Date Countdown and Study Plan | 2/2 | Complete    | 2026-03-01 |
 | 45. Content Enrichment | 3/3 | Complete    | 2026-03-01 |
-| 46. Cross-Device Sync | 1/3 | In Progress|  |
+| 46. Cross-Device Sync | 2/3 | In Progress|  |
 | 47. Performance Optimization | 0/? | Complete    | 2026-03-01 |
 
 **Cumulative:**
