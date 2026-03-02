@@ -67,16 +67,36 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 - **Keyboard navigation** — full quiz flow, timer extension, high contrast mode
 - **44px minimum touch targets** on all interactive elements
 
+### Study Guidance
+
+- **Test readiness score** (0-100%) with accuracy, coverage, and consistency dimensions
+- **Weak-area drill mode** with 3 entry points and pre/post mastery delta tracking
+- **Test date countdown** with adaptive daily study targets
+- **Category-level drill buttons** for below-threshold categories
+
+### Content Enrichment
+
+- **Mnemonics** with lightbulb icon and amber accent border for all 128 questions
+- **Fun facts, common mistakes, citations** enriching every question
+- **7 category study tips** as dismissible bilingual cards
+- **Tricky Question badges** and Related Question chips linking similar content
+
+### Cross-Device Sync
+
+- **Settings, bookmarks, streaks, answer history** sync via Supabase
+- **Visibility-based re-pull** on tab focus with 5s throttle
+- **Login hydration** for instant sync on new device
+
 ### Authentication & Social
 
 - **Supabase Auth** with email/password and Google One Tap OAuth
 - **Privacy-first leaderboard** — opt-in with Row Level Security
 - **Study streaks, badges, milestone celebrations** with Canvas-rendered share cards
-- **Bookmark system** with dedicated IndexedDB store
+- **Cross-device bookmark sync** with dedicated IndexedDB store and Supabase backup
 
 ### Security
 
-- **Content Security Policy** with hash-based allowlisting (Pages Router + Vercel)
+- **Nonce-based CSP** with strict-dynamic (App Router proxy.ts generates per-request nonces)
 - **PII sanitization** before Sentry error reporting
 - **JWT-verified push API** with rate limiting
 - **104-item security checklist** — 93 pass, 5 fixed, 5 acceptable risk
@@ -88,9 +108,9 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 15.5 + React 19 |
-| Language | TypeScript (strict, zero `any`) |
-| Styling | Tailwind CSS + CSS custom property design tokens |
+| Framework | Next.js 16 (App Router) + React 19 |
+| Language | TypeScript 5.9 (strict, zero `any`) |
+| Styling | Tailwind CSS 3 + CSS custom property design tokens |
 | Animation | motion/react (spring physics) + canvas-confetti + DotLottie |
 | Auth | Supabase Auth (email + Google OAuth) |
 | Database | Supabase (PostgreSQL + RLS) |
@@ -99,7 +119,7 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 | Audio | Web Audio API (celebration sounds) + edge-tts (Burmese MP3s) |
 | Error Tracking | Sentry (error boundaries, Web Vitals, fingerprinting) |
 | UI Primitives | Radix UI (Dialog, Toast, Progress) |
-| Routing | react-router-dom (hash routing inside Next.js catch-all) |
+| Routing | Next.js App Router (file-based routing) |
 | Package Manager | pnpm 10.28 |
 | Deployment | Vercel |
 
@@ -108,15 +128,17 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 ## Architecture
 
 ```
-Pages Router (Next.js)
-  └── [[...slug]].tsx (catch-all)
-        └── AppShell.tsx (dynamic import, SSR disabled)
-              └── Provider Tree (9 nested contexts)
-                    └── Hash Router (react-router-dom)
-                          └── Routes (#/, #/auth, #/test, #/dashboard, ...)
+App Router (Next.js 16)
+  ├── app/layout.tsx (Server Component root)
+  │     └── ClientProviders (10 nested contexts)
+  │           └── NavigationShell + file-based routes
+  ├── app/(protected)/ (auth guard layout)
+  │     └── /home, /study, /test, /practice, /drill, ...
+  ├── app/auth/ (public)
+  └── app/api/push/ (Route Handlers)
 ```
 
-**Provider hierarchy:**
+**Provider hierarchy (10 nested contexts):**
 ```
 ErrorBoundary → LanguageProvider → ThemeProvider → TTSProvider → ToastProvider
 → OfflineProvider → AuthProvider → SocialProvider → SRSProvider → StateProvider
@@ -172,7 +194,20 @@ pnpm test:run     # Vitest (single run)
 
 ### Deployment
 
-Optimized for Vercel. Set environment variables in the Vercel dashboard. The build chain is `@serwist/next` (PWA) wrapping `@sentry/nextjs` (error tracking) in `next.config.mjs`.
+Optimized for **Vercel**:
+
+1. Connect the repo in the Vercel dashboard
+2. Set environment variables (see above)
+3. Deploy — Vercel auto-detects Next.js
+
+| Setting | Value |
+|---------|-------|
+| Build command | `pnpm build` |
+| Output directory | `.next` |
+| Node.js version | 18+ |
+| Framework preset | Next.js |
+
+The build chain is `@serwist/next` (PWA) wrapping `@sentry/nextjs` (error tracking) in `next.config.mjs`. Uses the `--webpack` flag for Sentry + Serwist plugin compatibility (Turbopack not yet supported).
 
 ---
 
@@ -180,11 +215,12 @@ Optimized for Vercel. Set environment variables in the Vercel dashboard. The bui
 
 | Metric | Value |
 |--------|-------|
-| Milestones shipped | 4 (v1.0, v2.0, v2.1, v3.0) |
-| Phases completed | 38 |
-| Plans executed | 248 |
-| Requirements validated | 188/189 |
-| TypeScript LOC | 70,000+ |
+| Milestones shipped | 5 (v1.0, v2.0, v2.1, v3.0, v4.0) |
+| Phases completed | 48 |
+| Plans executed | 278 |
+| Requirements validated | 226/227 |
+| TypeScript LOC | 78,000+ |
+| Tests passing | 618 |
 | USCIS questions | 128 (all with bilingual explanations) |
 | Burmese audio files | 256 pre-generated MP3s |
 | IndexedDB stores | 10 |
@@ -194,7 +230,7 @@ Optimized for Vercel. Set environment variables in the Vercel dashboard. The bui
 
 ## Development Journey
 
-This project was built iteratively across 4 milestones over 2 weeks using a structured planning methodology (GSD workflow). Each milestone went through requirements definition, phase planning, execution with atomic commits, verification, and audit before archival.
+This project was built iteratively across 5 milestones over ~4 weeks using a structured planning methodology (GSD workflow). Each milestone went through requirements definition, phase planning, execution with atomic commits, verification, and audit before archival.
 
 **AI-assisted development:** Built with Claude Code (Anthropic) for architecture design, implementation, code review, and quality assurance. Human oversight focused on product direction, UX decisions, security review, and accessibility standards.
 
