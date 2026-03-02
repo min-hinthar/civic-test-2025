@@ -1,8 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-import { getAllBookmarkIds, setBookmark as persistBookmark } from '@/lib/bookmarks';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import {
+  getAllBookmarkIds,
+  setBookmark as persistBookmark,
+  syncBookmarksToSupabase,
+} from '@/lib/bookmarks';
 
 export function useBookmarks() {
+  const { user } = useAuth();
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,6 +53,13 @@ export function useBookmarks() {
       // Persist to IndexedDB
       try {
         await persistBookmark(questionId, !wasBookmarked);
+
+        // Fire-and-forget sync to Supabase after successful persist
+        if (userRef.current?.id) {
+          getAllBookmarkIds().then(allIds => {
+            syncBookmarksToSupabase(userRef.current!.id, allIds);
+          });
+        }
       } catch {
         // Revert optimistic update on failure
         setBookmarkedIds(prev => {

@@ -4,6 +4,11 @@ import { isValidElement, type ReactElement } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { highlightKeywords, KeywordHighlight } from './KeywordHighlight';
 
+// Mock useAuth -- LanguageProvider now calls useAuth() for settings sync
+vi.mock('@/contexts/SupabaseAuthContext', () => ({
+  useAuth: () => ({ user: null }),
+}));
+
 // Mock localStorage for LanguageProvider (jsdom sometimes lacks full implementation)
 beforeAll(() => {
   const store: Record<string, string> = {};

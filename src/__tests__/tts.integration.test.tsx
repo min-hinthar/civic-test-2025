@@ -13,6 +13,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TTSContext, TTSProvider } from '@/contexts/TTSContext';
 import SpeechButton from '@/components/ui/SpeechButton';
 
+// Mock useAuth -- TTSProvider now calls useAuth() for settings sync
+vi.mock('@/contexts/SupabaseAuthContext', () => ({
+  useAuth: () => ({ user: null }),
+}));
+
 // ---------------------------------------------------------------------------
 // Mock infrastructure (mirrors ttsCore.test.ts pattern)
 // ---------------------------------------------------------------------------
