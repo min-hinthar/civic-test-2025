@@ -97,6 +97,7 @@ Progress: [██████████] 98%
 | Phase 45 P02 | 3min | 2 tasks | 6 files |
 | Phase 45 P03 | 6min | 2 tasks | 9 files |
 | Phase 46 P01 | 8min | 2 tasks | 10 files |
+| Phase 46 P02 | 11min | 2 tasks | 9 files |
 | Phase 46 P03 | 8min | 2 tasks | 3 files |
 
 ## Accumulated Context
@@ -176,6 +177,8 @@ Recent decisions affecting current work:
 - [Phase 46]: Individual columns for settings (not JSONB) matching project pattern for type safety
 - [Phase 46]: Freeze recalculation removes freezes on dates with activity after merge, returns freed to pool capped at 3
 - [Phase 46]: Longest streak recomputed from merged dates via calculateStreak (not max of both)
+- [Phase 46]: useRef+useEffect pattern for user ID to satisfy React Compiler react-hooks/refs rule
+- [Phase 46]: gatherCurrentSettings() centralized in settingsSync.ts for single-source localStorage key mapping
 - [Phase 46]: callbacksRef synced in useEffect for React Compiler compliance (not during render)
 - [Phase 46]: 5-second throttle on visibility sync to prevent rapid-fire pulls from quick tab switches
 - [Phase 46]: SRS visibility sync (SYNC-01) confirmed already working via existing SRSContext handler
@@ -192,6 +195,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-02T00:02:00Z
-Stopped at: Completed 46-03-PLAN.md
+Last session: 2026-03-02T00:04:39Z
+Stopped at: Completed 46-02-PLAN.md (46-03 also complete)
 Resume file: None
