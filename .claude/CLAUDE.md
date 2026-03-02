@@ -52,19 +52,19 @@ Run before completing: `pnpm lint && pnpm lint:css && pnpm format:check && pnpm 
 
 ```
 ErrorBoundary
-  -> LanguageProvider (en/my)
-    -> ThemeProvider (light/dark)
-      -> TTSProvider (async engine init)
-        -> ToastProvider (bilingual)
-          -> OfflineProvider (uses useToast!)
-            -> AuthProvider
+  -> AuthProvider
+    -> LanguageProvider (en/my, uses useAuth for sync)
+      -> ThemeProvider (light/dark, uses useAuth for sync)
+        -> TTSProvider (async engine init, uses useAuth for sync)
+          -> ToastProvider (bilingual)
+            -> OfflineProvider (uses useToast!)
               -> SocialProvider
                 -> SRSProvider
                   -> StateProvider
                     -> NavigationProvider
 ```
 
-OfflineProvider MUST be inside ToastProvider. TTSProvider async init must throw when engine isn't ready.
+AuthProvider MUST be above Language/Theme/TTS providers (they call useAuth for cross-device sync). OfflineProvider MUST be inside ToastProvider. TTSProvider async init must throw when engine isn't ready.
 
 ## Critical Notes
 

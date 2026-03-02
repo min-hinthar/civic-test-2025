@@ -24,9 +24,13 @@ installHistoryGuard();
  * Shared client-side provider tree for App Router layout.tsx.
  *
  * Nesting order:
- *   ErrorBoundary > LanguageProvider > ThemeProvider > TTSProvider > ToastProvider
- *   > OfflineProvider > AuthProvider > SocialProvider > SRSProvider > StateProvider
+ *   ErrorBoundary > AuthProvider > LanguageProvider > ThemeProvider > TTSProvider
+ *   > ToastProvider > OfflineProvider > SocialProvider > SRSProvider > StateProvider
  *   > NavigationProvider > {children}
+ *
+ * AuthProvider must be above Language/Theme/TTS providers because they
+ * call useAuth() for cross-device settings sync.
+ * OfflineProvider must be inside ToastProvider (uses useToast).
  */
 interface ClientProvidersProps {
   children: ReactNode;
@@ -44,12 +48,12 @@ export function ClientProviders({ children }: ClientProvidersProps) {
 
   return (
     <ErrorBoundary>
-      <LanguageProvider>
-        <ThemeProvider>
-          <TTSProvider>
-            <ToastProvider>
-              <OfflineProvider>
-                <AuthProvider>
+      <AuthProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <TTSProvider>
+              <ToastProvider>
+                <OfflineProvider>
                   <SocialProvider>
                     <SRSProvider>
                       <StateProvider>
@@ -57,12 +61,12 @@ export function ClientProviders({ children }: ClientProvidersProps) {
                       </StateProvider>
                     </SRSProvider>
                   </SocialProvider>
-                </AuthProvider>
-              </OfflineProvider>
-            </ToastProvider>
-          </TTSProvider>
-        </ThemeProvider>
-      </LanguageProvider>
+                </OfflineProvider>
+              </ToastProvider>
+            </TTSProvider>
+          </ThemeProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
