@@ -1,18 +1,33 @@
-# Provider Ordering in AppShell.tsx
+# Provider Ordering in ClientProviders.tsx
+
+## AuthProvider must be above Language/Theme/TTS providers
+
+**Context:** v4.0 Phase 46 (cross-device sync) added `useAuth()` calls to LanguageContext, ThemeContext, and TTSContext for settings sync. But AuthProvider was below them in the tree, causing "useAuth must be used within an AuthProvider" on every page load.
+
+**Learning:** Any provider that calls `useAuth()` must be nested **inside** `AuthProvider`. When adding sync features to existing providers, verify provider hierarchy.
+
+Correct order in `src/components/ClientProviders.tsx`:
+```
+ErrorBoundary > AuthProvider > LanguageProvider > ThemeProvider > TTSProvider > ToastProvider > OfflineProvider > SocialProvider > SRSProvider > StateProvider > NavigationProvider
+```
+
+**Key constraints:**
+- `AuthProvider` — must be above Language/Theme/TTS (they call `useAuth` for sync)
+- `OfflineProvider` — must be inside `ToastProvider` (calls `useToast`)
+- `TTSProvider` — async init must throw when engine isn't ready
+
+**Apply when:** Adding `useAuth()` or any context hook to a provider — check if the consumed provider is above the consuming one in the tree.
+
+**Supersedes:** Previous entry referencing `AppShell.tsx` and old provider order (AuthProvider was below OfflineProvider).
 
 ## OfflineProvider must be inside ToastProvider
 
 **Context:** Debugging Sentry error "Toast called outside of ToastContextProvider"
 **Learning:** `OfflineProvider` calls `useToast()` for sync notifications. It must be nested inside `ToastProvider` in the component tree.
 
-Correct order in `src/AppShell.tsx`:
-```
-ErrorBoundary > LanguageProvider > ThemeProvider > TTSProvider > ToastProvider > OfflineProvider > AuthProvider > SocialProvider > SRSProvider > StateProvider
-```
-
 **Why it hid:** The old `use-toast.ts` (deleted in Phase 10-02) used `console.warn` with a no-op fallback. The replacement `BilingualToast.tsx` throws, making this a crash instead of a warning. The crash only triggers when offline sync completes — rare in dev/test.
 
-**Apply when:** Adding new providers to AppShell, or when any provider needs toast/notification access.
+**Apply when:** Adding new providers, or when any provider needs toast/notification access.
 
 ## Async Provider Initialization — Hooks Must Not Silently Succeed on Null
 
