@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA. Designed for Burmese immigrants studying for the naturalization civics test, featuring a premium iOS-inspired UI with glass-morphism, spring micro-interactions, and multi-sensory celebration choreography. Offers five study modes: timed mock tests, category practice, flashcard sorting, spaced repetition, and voice-driven interview simulation with Practice/Real USCIS modes. English mode shows English only; Myanmar mode shows bilingual content throughout. All 128 USCIS 2025 questions available with bilingual explanations and pre-generated Burmese audio.
+A bilingual (English/Burmese) US Civics Test preparation app built as an installable PWA on Next.js 16 App Router. Designed for Burmese immigrants studying for the naturalization civics test, featuring a premium iOS-inspired UI with glass-morphism, spring micro-interactions, and multi-sensory celebration choreography. Offers five study modes: timed mock tests, category practice, flashcard sorting, spaced repetition, and voice-driven interview simulation with Practice/Real USCIS modes. Includes test readiness scoring with weak-area drilling, adaptive daily study plans, content enrichment (mnemonics, fun facts, citations), and cross-device sync via Supabase. English mode shows English only; Myanmar mode shows bilingual content throughout. All 128 USCIS 2025 questions available with bilingual explanations and pre-generated Burmese audio.
 
 ## Core Value
 
@@ -160,22 +160,19 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Flashcard chip row + toolbar replacing dropdown — v3.0
 - ✓ Flashcard auto-play study mode with isolated TTS — v3.0
 
+- ✓ Next.js 16 App Router with file-based routing (react-router-dom removed) — v4.0
+- ✓ Nonce-based CSP replacing hash-based allowlisting — v4.0
+- ✓ Test readiness score (0-100%) with per-dimension breakdown — v4.0
+- ✓ Weak-area drill mode with pre/post mastery delta — v4.0
+- ✓ Test date countdown with adaptive daily study targets — v4.0
+- ✓ Mnemonics, fun facts, common mistakes, citations for all 128 questions — v4.0
+- ✓ Study tips per category and related question links — v4.0
+- ✓ Cross-device sync for settings, bookmarks, streaks, and answer history — v4.0
+- ✓ Dynamic imports and bundle optimization with documented before/after — v4.0
+
 ### Active
 
-## Current Milestone: v4.0 Next-Gen Architecture
-
-**Goal:** Migrate to Next.js 16 App Router with file-based routing, add intelligent study guidance features, enrich learning content, and optimize performance.
-
-**Target features:**
-- Next.js 16 upgrade with full App Router migration (replace react-router-dom)
-- Test readiness score synthesizing all progress data
-- Test date countdown with daily study targets
-- Smart weak-area drill mode
-- Mnemonics/memory aids for hard questions
-- Deeper explanations with historical context
-- Study tips per category
-- Bundle optimization and code splitting
-- Known gap fixes (DotLottie, dark mode QA)
+(No active milestone — use `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -198,11 +195,11 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ## Context
 
-**Current state (post v3.0):** Premium bilingual PWA with 188 validated requirements across 4 milestones (v1.0 + v2.0 + v2.1 + v3.0). 70,066 LOC TypeScript across ~300 source files. 38 phases, 248 plans executed. Deployed at https://civic-test-2025.vercel.app/
+**Current state (post v4.0):** Premium bilingual PWA with 226 validated requirements across 5 milestones (v1.0 + v2.0 + v2.1 + v3.0 + v4.0). 78,281 LOC TypeScript across ~300 source files. 48 phases, 278 plans executed. Deployed at https://civic-test-2025.vercel.app/
 
-**Tech stack:** Next.js 15.5 + React 19 + Supabase + React Router DOM (SPA inside Next.js catch-all route). Tailwind CSS with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. Deployed on Vercel.
+**Tech stack:** Next.js 16 (App Router) + React 19 + TypeScript 5.9 + Supabase (Auth + Postgres + RLS). Tailwind CSS 3 with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. ts-fsrs for spaced repetition. Deployed on Vercel.
 
-**Architecture:** Provider hierarchy: ErrorBoundary → Language → Theme → TTS → Toast → Offline → Auth → Social → SRS → State → Navigation → Router. IndexedDB for offline storage (10 stores including sessions + bookmarks), Supabase for cloud sync. CSP middleware with hash-based allowlisting. JWT-verified push API with rate limiting. withRetry/safeAsync async utilities for transient failure recovery.
+**Architecture:** App Router with file-based routing (15+ routes). Provider hierarchy: ErrorBoundary → Language → Theme → TTS → Toast → Offline → Auth → Social → SRS → State → Navigation. IndexedDB for offline storage (10 stores including sessions + bookmarks), Supabase for cloud sync (answer history, bookmarks, settings, streaks). Nonce-based CSP via proxy.ts with strict-dynamic. JWT-verified push API with rate limiting. withRetry/safeAsync async utilities for transient failure recovery.
 
 **User base:** Burmese immigrants preparing for the US naturalization civics test. Many users are more comfortable in Burmese than English. The app feels warm and supportive.
 
@@ -212,7 +209,6 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - BRMSE-01: Burmese translation naturalness needs native speaker assessment
 - CELB-06: DotLottie animation assets not sourced (code complete, graceful degradation)
 - VISC-05: Dark mode glass panel readability needs human visual QA
-- ~15 stale Sentry issues to resolve manually in dashboard
 
 ## Constraints
 
@@ -222,21 +218,21 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - **Platform**: PWA — installable web app, not native wrapper
 - **Design**: iOS-inspired glass-morphism — evolve, don't rebrand
 - **Languages**: English mode = English only; Myanmar mode = bilingual (English + Burmese) except navbar
-- **CSP**: Hash-based allowlisting (Pages Router on Vercel can't forward nonce headers)
+- **CSP**: Nonce-based allowlisting with strict-dynamic via proxy.ts
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | PWA over native wrapper | Keeps deployment simple, avoids app store review | ✓ Validated — installable PWA on iOS/Android/desktop |
-| React Router DOM inside Next.js | Rewriting routing is high risk for low reward | ✓ Validated — hash routing works, catch-all route serving SPA |
+| App Router file-based routing | react-router-dom removed in v4.0; clean URLs, native Next.js routing | ✓ Validated — 15+ routes migrated, zero hash routing |
 | Both languages always visible | Users shouldn't have to choose — seeing both builds confidence | ✓ Validated — BilingualText/Button/Heading throughout |
 | FSRS over SM-2 for spaced repetition | Newer, more accurate, actively maintained | ✓ Validated — ts-fsrs integrated, 31 tests passing |
 | Privacy-first social features | Immigrant users cautious about visibility | ✓ Validated — opt-in leaderboard, RLS, bilingual privacy notice |
 | Canvas-only share cards | No external images avoids CORS issues in PWA | ✓ Validated — 1080x1080 bilingual cards render without server |
 | IndexedDB primary, Supabase sync | Offline-first for unreliable connectivity | ✓ Validated — 10 stores, fire-and-forget sync |
 | Two-tier design tokens (CSS vars → Tailwind) | Single source of truth, dark mode via variable swap | ✓ Validated — eliminated 3-way fragmentation |
-| CSP hash-based (not nonce) | Pages Router on Vercel can't forward nonce headers to _document | ✓ Validated — hash allowlisting works in prod |
+| CSP nonce-based with strict-dynamic | App Router proxy.ts generates per-request nonces | ✓ Validated — nonce CSP works in prod, replaces hash-based |
 | NBA Dashboard over multi-widget | Users overwhelmed by 11 sections; single CTA is clearer | ✓ Validated — contextual recommendations based on user state |
 | Progress Hub consolidation | 3 separate pages → 1 tabbed page reduces navigation | ✓ Validated — Overview/Categories/History/Achievements tabs |
 | Glass-morphism tiers (light/medium/heavy) | Consistent visual hierarchy across all surfaces | ✓ Validated — 3 tiers with CSS custom properties |
@@ -252,7 +248,12 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | DOM CustomEvents for celebrations | No new Context provider needed; singleton overlay | ✓ Validated — useCelebration dispatches, CelebrationOverlay listens |
 | withRetry for transient failures | Exponential backoff prevents cascade failures on network hiccups | ✓ Validated — 14 production call sites, auth/quota errors throw immediately |
 | Sentry DSN in env var | Per-environment config, rotation without code changes | ✓ Validated — NEXT_PUBLIC_SENTRY_DSN across all config files |
-| Local-only bookmarks (no Supabase sync) | Simplicity over sync for optional feature | ✓ Validated — dedicated IndexedDB store, no server roundtrips |
+| Local-only bookmarks (no Supabase sync) | Simplicity over sync for optional feature | ⚠️ Revisit — v4.0 added cross-device bookmark sync via Supabase |
+| All-at-once route migration | Mixed Pages/App Router causes hard navigations destroying provider state | ✓ Validated — 15+ routes migrated in one phase, zero regressions |
+| Webpack over Turbopack for builds | Sentry + Serwist plugin chain incompatible with Turbopack | ✓ Validated — `--webpack` flag works reliably |
+| Readiness score 60% cap on zero-coverage | Prevents inflated scores when categories unstudied | ✓ Validated — uses 3 main USCIS categories |
+| Cross-device sync via individual columns | Not JSONB — matches project pattern for type safety | ✓ Validated — separate user_settings + user_bookmarks tables |
+| Visibility-based sync re-pull | 5s throttle prevents rapid-fire from quick tab switches | ✓ Validated — useVisibilitySync with SocialContext trigger |
 
 ## Milestones
 
@@ -262,6 +263,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v2.0 | Complete | 2026-02-13 | 29/29 |
 | v2.1 | Complete | 2026-02-19 | 65/66 |
 | v3.0 | Complete | 2026-02-22 | 39/39 |
+| v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-02-23 after v4.0 milestone started*
+*Last updated: 2026-03-02 after v4.0 milestone completed*

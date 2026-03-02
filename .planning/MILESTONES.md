@@ -1,4 +1,23 @@
 # Milestones
+## v4.0 Next-Gen Architecture (Shipped: 2026-03-02)
+
+**Phases:** 39-47 + 43.5 (10 phases, 30 plans, 59 tasks)
+**Commits:** 147 | **Timeline:** 7 days (2026-02-23 → 2026-03-01)
+**Requirements:** 38/38 satisfied (MIGR, RDNS, CONT, SYNC, PERF)
+
+**Key accomplishments:**
+1. Migrated to Next.js 16 App Router with file-based routing — removed react-router-dom, clean URLs, nonce-based CSP
+2. Test readiness scoring (0-100%) with per-dimension breakdown, zero-coverage cap, and FSRS retrievability projection
+3. Weak-area drill mode with category-level entry points and pre/post mastery delta
+4. Test date countdown with adaptive daily study targets that recalculate dynamically
+5. Content enrichment: mnemonics, fun facts, common mistakes, citations, study tips, and related question links for all 128 questions
+6. Cross-device sync: settings, bookmarks, streaks, and answer history sync to Supabase with visibility-based re-pull
+7. Performance optimization: dynamic imports for recharts/confetti, optimizePackageImports, documented bundle size reduction
+
+See `.planning/milestones/v4.0-ROADMAP.md` for full phase archive.
+
+---
+
 
 ## v3.0 World-Class UX (Shipped: 2026-02-22)
 
