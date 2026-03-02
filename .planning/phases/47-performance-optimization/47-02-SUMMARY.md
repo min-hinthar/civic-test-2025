@@ -1,3 +1,9 @@
+---
+requirements-completed:
+  - PERF-03
+  - PERF-04
+---
+
 # Plan 47-02 Summary
 
 **Status:** COMPLETE
