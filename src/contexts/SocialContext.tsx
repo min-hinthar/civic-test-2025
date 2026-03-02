@@ -30,6 +30,14 @@ import {
   syncStreakToSupabase,
 } from '@/lib/social/streakSync';
 import { getStreakData, saveStreakData } from '@/lib/social/streakStore';
+import { useVisibilitySync } from '@/hooks/useVisibilitySync';
+import { loadSettingsFromSupabase } from '@/lib/settings';
+import {
+  loadBookmarksFromSupabase,
+  mergeBookmarks,
+  getAllBookmarkIds,
+  setBookmark as persistBookmark,
+} from '@/lib/bookmarks';
 
 // ---------------------------------------------------------------------------
 // Context value interface
@@ -150,6 +158,74 @@ export function SocialProvider({ children }: SocialProviderProps) {
       cancelled = true;
     };
   }, [user?.id, loadProfile]);
+
+  // -------------------------------------------------------------------------
+  // Visibility sync: re-pull all synced data when tab becomes visible
+  // -------------------------------------------------------------------------
+  useVisibilitySync(user?.id, {
+    pullSettings: async () => {
+      if (!user?.id) return;
+      const remote = await loadSettingsFromSupabase(user.id);
+      if (!remote) return;
+      try {
+        localStorage.setItem('civic-theme', remote.theme);
+        localStorage.setItem('civic-test-language-mode', remote.languageMode);
+        localStorage.setItem(
+          'civic-prep-tts-settings',
+          JSON.stringify({
+            rate: remote.ttsRate,
+            pitch: remote.ttsPitch,
+            autoRead: remote.ttsAutoRead,
+            autoReadLang: remote.ttsAutoReadLang,
+            ...(() => {
+              try {
+                return {
+                  preferredVoiceName: JSON.parse(
+                    localStorage.getItem('civic-prep-tts-settings') ?? '{}'
+                  ).preferredVoiceName,
+                };
+              } catch {
+                return {};
+              }
+            })(),
+          })
+        );
+        if (remote.testDate) {
+          localStorage.setItem('civic-prep-test-date', remote.testDate);
+        } else {
+          localStorage.removeItem('civic-prep-test-date');
+        }
+      } catch {
+        /* localStorage unavailable */
+      }
+    },
+    pullBookmarks: async () => {
+      if (!user?.id) return;
+      const [remoteIds, localIds] = await Promise.all([
+        loadBookmarksFromSupabase(user.id),
+        getAllBookmarkIds(),
+      ]);
+      const merged = mergeBookmarks(localIds, remoteIds);
+      const localSet = new Set(localIds);
+      for (const id of merged) {
+        if (!localSet.has(id)) {
+          await persistBookmark(id, true);
+        }
+      }
+    },
+    pullStreaks: async () => {
+      if (!user?.id) return;
+      const [remoteStreak, localStreak] = await Promise.all([
+        loadStreakFromSupabase(user.id),
+        getStreakData(),
+      ]);
+      if (remoteStreak) {
+        const merged = mergeStreakData(localStreak, remoteStreak);
+        await saveStreakData(merged);
+        syncStreakToSupabase(user.id, merged);
+      }
+    },
+  });
 
   // -------------------------------------------------------------------------
   // Actions

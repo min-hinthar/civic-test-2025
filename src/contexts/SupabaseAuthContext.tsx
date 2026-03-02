@@ -14,6 +14,13 @@ import { supabase } from '@/lib/supabaseClient';
 import { captureError } from '@/lib/sentry';
 import { createSaveSessionGuard } from '@/lib/saveSession';
 import { queueTestResult } from '@/lib/pwa/offlineDb';
+import { loadSettingsFromSupabase } from '@/lib/settings';
+import {
+  loadBookmarksFromSupabase,
+  mergeBookmarks,
+  getAllBookmarkIds,
+  setBookmark,
+} from '@/lib/bookmarks';
 import type {
   QuestionResult,
   TestEndReason,
@@ -134,6 +141,72 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       testHistory: history,
     });
     setIsLoading(false);
+
+    // Pull settings from Supabase (server wins) -- Phase 46
+    loadSettingsFromSupabase(authUser.id)
+      .then(remoteSettings => {
+        if (!remoteSettings) return;
+        // Write synced values to existing localStorage keys
+        // so contexts hydrate correctly on next mount
+        try {
+          localStorage.setItem('civic-theme', remoteSettings.theme);
+          localStorage.setItem('civic-test-language-mode', remoteSettings.languageMode);
+          localStorage.setItem(
+            'civic-prep-tts-settings',
+            JSON.stringify({
+              rate: remoteSettings.ttsRate,
+              pitch: remoteSettings.ttsPitch,
+              autoRead: remoteSettings.ttsAutoRead,
+              autoReadLang: remoteSettings.ttsAutoReadLang,
+              // Preserve device-local preferredVoiceName
+              ...(() => {
+                try {
+                  return {
+                    preferredVoiceName: JSON.parse(
+                      localStorage.getItem('civic-prep-tts-settings') ?? '{}'
+                    ).preferredVoiceName,
+                  };
+                } catch {
+                  return {};
+                }
+              })(),
+            })
+          );
+          if (remoteSettings.testDate) {
+            localStorage.setItem('civic-prep-test-date', remoteSettings.testDate);
+          } else {
+            localStorage.removeItem('civic-prep-test-date');
+          }
+        } catch {
+          // localStorage unavailable
+        }
+      })
+      .catch(() => {
+        /* silent -- settings pull failure is non-critical */
+      });
+
+    // Pull and merge bookmarks from Supabase (add-wins) -- Phase 46
+    Promise.all([loadBookmarksFromSupabase(authUser.id), getAllBookmarkIds()])
+      .then(async ([remoteIds, localIds]) => {
+        const merged = mergeBookmarks(localIds, remoteIds);
+
+        // Write merged set to IndexedDB (add any remote IDs not in local)
+        const localSet = new Set(localIds);
+        for (const id of merged) {
+          if (!localSet.has(id)) {
+            await setBookmark(id, true);
+          }
+        }
+
+        // Push merged set back to Supabase for consistency
+        if (merged.length > localIds.length || merged.length > remoteIds.length) {
+          const { syncBookmarksToSupabase } = await import('@/lib/bookmarks');
+          syncBookmarksToSupabase(authUser.id, merged);
+        }
+      })
+      .catch(() => {
+        /* silent -- bookmark pull failure is non-critical */
+      });
   }, []);
 
   useEffect(() => {
