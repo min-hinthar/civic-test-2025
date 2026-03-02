@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     const authUser: SupabaseUser = session.user;
-    const [{ data: profileData }, { data: testsData }] = await Promise.all([
+    const [profileResult, testsResult] = await Promise.all([
       supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
       supabase
         .from('mock_tests')
@@ -132,12 +132,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .order('completed_at', { ascending: false }),
     ]);
 
-    const history: TestSession[] = ((testsData ?? []) as MockTestRow[]).map(mapResponses);
+    // Log query errors but still hydrate the user with available data
+    if (profileResult.error) {
+      captureError(profileResult.error, { operation: 'AuthContext.hydrateFromSupabase.profile' });
+    }
+    if (testsResult.error) {
+      captureError(testsResult.error, { operation: 'AuthContext.hydrateFromSupabase.tests' });
+    }
+
+    const history: TestSession[] = ((testsResult.data ?? []) as MockTestRow[]).map(mapResponses);
 
     setUser({
       id: authUser.id,
       email: authUser.email ?? '',
-      name: profileData?.full_name ?? authUser.email ?? 'Learner',
+      name: profileResult.data?.full_name ?? authUser.email ?? 'Learner',
       testHistory: history,
     });
     setIsLoading(false);
@@ -212,14 +220,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let mounted = true;
     const bootstrap = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!mounted) return;
-      await hydrateFromSupabase(data.session ?? null);
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        await hydrateFromSupabase(data.session ?? null);
+      } catch (error) {
+        captureError(error, { operation: 'AuthContext.bootstrap' });
+        if (mounted) {
+          setUser(null);
+          setIsLoading(false);
+        }
+      }
     };
     bootstrap();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      hydrateFromSupabase(session);
+    // IMPORTANT: Supabase holds a lock during onAuthStateChange processing.
+    // Making async Supabase API calls (e.g. .from().select()) inside this
+    // callback creates a deadlock. Defer with setTimeout(0) so the lock is
+    // released before hydrateFromSupabase runs its queries.
+    // See: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
+      setTimeout(() => {
+        if (!mounted) return;
+        hydrateFromSupabase(session).catch((error: unknown) => {
+          captureError(error, { operation: 'AuthContext.onAuthStateChange' });
+        });
+      }, 0);
     });
 
     return () => {
