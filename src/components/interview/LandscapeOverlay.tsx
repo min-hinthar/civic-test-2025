@@ -24,7 +24,7 @@ export function LandscapeOverlay({ active }: LandscapeOverlayProps) {
   if (!active) return null;
 
   return (
-    <div className="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/95 landscape:flex portrait:hidden">
+    <div className="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/95 max-md:landscape:flex portrait:hidden">
       <div className="flex flex-col items-center gap-6 px-8 text-center">
         <RotateCcw className="h-16 w-16 text-primary" />
 
