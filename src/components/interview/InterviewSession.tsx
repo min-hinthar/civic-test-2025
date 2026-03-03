@@ -881,14 +881,14 @@ export function InterviewSession({
     }, 600);
 
     if (mode === 'practice') {
-      // Practice: show correct answer with randomized feedback phrase
-      const primaryAnswer = currentQuestion.studyAnswers[0]?.text_en ?? '';
+      // Practice: show ALL correct answers with randomized feedback phrase
+      const allAnswers = currentQuestion.studyAnswers.map(a => a.text_en).join('; ');
       const feedback =
         lastResult.selfGrade === 'correct' ? getCorrectFeedback() : getIncorrectFeedback();
       const feedbackText =
         lastResult.selfGrade === 'correct'
-          ? `${feedback.text} The answer is: ${primaryAnswer}`
-          : `${feedback.text} The correct answer is: ${primaryAnswer}`;
+          ? `${feedback.text} The answer is: ${allAnswers}`
+          : `${feedback.text} The correct answer is: ${allAnswers}`;
 
       addMessage(
         'examiner',
@@ -900,6 +900,7 @@ export function InterviewSession({
       );
 
       // Play feedback audio phrase then answer audio
+      const ttsAnswerFallback = currentQuestion.studyAnswers[0]?.text_en ?? '';
       safePlayInterview(feedback.audio)
         .then(async () => {
           if (cancelled) return;
@@ -907,8 +908,8 @@ export function InterviewSession({
             const answerUrl = getEnglishAudioUrl(currentQuestion.id, 'a');
             // Check if answer audio failed pre-caching
             if (failedUrls.has(answerUrl)) {
-              // TTS fallback for answer
-              await ttsFallbackSpeak(primaryAnswer, { rate: numericRate });
+              // TTS fallback for answer (read first answer aloud)
+              await ttsFallbackSpeak(ttsAnswerFallback, { rate: numericRate });
             } else {
               await getEnglishPlayer().play(answerUrl, numericRate);
             }
@@ -924,18 +925,13 @@ export function InterviewSession({
           }, TRANSITION_DELAY_MS);
         });
     } else {
-      // Real mode: brief feedback acknowledgment (no answer reveal)
-      const feedback =
-        lastResult.selfGrade === 'correct' ? getCorrectFeedback() : getIncorrectFeedback();
-      addMessage('examiner', feedback.text);
+      // Real mode: neutral acknowledgment only (no correct/incorrect indication)
+      addMessage('examiner', 'Thank you. Next question.');
 
-      // Play brief feedback audio then advance
-      safePlayInterview(feedback.audio).then(() => {
-        if (cancelled) return;
-        transitionTimerRef.current = setTimeout(() => {
-          if (!cancelled) advanceToNext();
-        }, 500);
-      });
+      // Brief pause then advance (no feedback audio -- neutral)
+      transitionTimerRef.current = setTimeout(() => {
+        if (!cancelled) advanceToNext();
+      }, 800);
     }
 
     return () => {
@@ -1407,14 +1403,14 @@ export function InterviewSession({
             <div className="flex items-center justify-center py-2">
               <span className="text-xs text-white/30">
                 {isGreeting
-                  ? 'The examiner is greeting you...'
+                  ? 'The USCIS officer is greeting you...'
                   : questionPhase === 'grading' || questionPhase === 'feedback'
                     ? 'Reviewing your answer...'
                     : ''}
                 {showBurmese && (
                   <span className="block font-myanmar mt-0.5">
                     {isGreeting
-                      ? 'စစ်ဆေးသူက နှုတ်ဆက်နေပါသည်...'
+                      ? 'USCIS အရာရှိက နှုတ်ဆက်နေပါသည်...'
                       : questionPhase === 'grading' || questionPhase === 'feedback'
                         ? 'သင့်အဖြေကို စစ်ဆေးနေပါသည်...'
                         : ''}

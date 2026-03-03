@@ -21,7 +21,7 @@ export function TypingIndicator() {
           .typing-dot:nth-child(2) { animation-delay: 0.15s; }
           .typing-dot:nth-child(3) { animation-delay: 0.3s; }
         `}</style>
-        <div className="flex gap-1" aria-label="Examiner is typing">
+        <div className="flex gap-1" aria-label="USCIS officer is typing">
           <span className="typing-dot h-2 w-2 rounded-full bg-muted-foreground/60" />
           <span className="typing-dot h-2 w-2 rounded-full bg-muted-foreground/60" />
           <span className="typing-dot h-2 w-2 rounded-full bg-muted-foreground/60" />

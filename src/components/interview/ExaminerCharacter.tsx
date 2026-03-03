@@ -33,7 +33,7 @@ export function ExaminerCharacter({ state, size = 'md' }: ExaminerCharacterProps
       className="relative mx-auto"
       style={{ width: px, height: px }}
       role="img"
-      aria-label="USCIS examiner"
+      aria-label="USCIS officer"
     >
       {/* Inline CSS keyframe animations */}
       <style>{`
