@@ -21,3 +21,11 @@
 **Why it hid:** Worked in dev (HMR injection order differs from production build). Also worked before Phase 29 because the old CSS generation order happened to place `bg-black/20` after `bg-card`.
 
 **Apply when:** Passing Tailwind className overrides to child components that have their own background/text classes. Especially after modifying `tailwind.config.js` — always recheck component overrides for visual regressions.
+
+## Tailwind `landscape:` Variant Triggers on Desktop
+
+**Context:** `src/components/interview/LandscapeOverlay.tsx` used `landscape:flex` to show a "rotate to portrait" overlay. This appeared on desktop browsers because wide windows match the `landscape` media query.
+
+**Learning:** CSS `@media (orientation: landscape)` — and Tailwind's `landscape:` variant — fires based on viewport aspect ratio, not device type. A 1920x1080 desktop window is "landscape". To restrict orientation-dependent UI to mobile devices, stack with a max-width variant: `max-md:landscape:flex` (Tailwind v3.2+).
+
+**Apply when:** Using `landscape:` or `portrait:` Tailwind variants for mobile-specific behavior. Always pair with a responsive breakpoint (`max-sm:`, `max-md:`) to exclude desktop viewports.
