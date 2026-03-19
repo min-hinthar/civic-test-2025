@@ -172,7 +172,26 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ### Active
 
-(No active milestone — use `/gsd:new-milestone` to start next)
+## Current Milestone: v4.1 Production Hardening
+
+**Goal:** Address all concerns from the deep-dive codebase audit — testing infrastructure, security hardening, architecture resilience, accessibility compliance, dependency cleanup, and developer experience improvements.
+
+**Target features:**
+- E2E test framework (Playwright) with critical flow coverage
+- Unit tests for 8 untested context providers and 14 page views
+- Component-level error boundaries for high-risk features
+- Error.tsx sanitization + bilingual rendering
+- Provider ordering guard with dev-time validation
+- Service worker update UX with user notification
+- Settings sync conflict resolution (offline change preservation)
+- InterviewSession.tsx decomposition into sub-components
+- WCAG 2.2 touch target audit + glass morphism contrast verification
+- DotLottie dependency resolution (source assets or remove)
+- react-joyride stable version migration
+- Shared test render utility + coverage thresholds
+- lint:css in CI pipeline + Sentry fingerprinting
+- Dead code cleanup (safeAsync, redundant RLS policies)
+- IndexedDB cache versioning
 
 ### Out of Scope
 
@@ -266,4 +285,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-02 after v4.0 milestone completed*
+*Last updated: 2026-03-19 after v4.1 milestone started*

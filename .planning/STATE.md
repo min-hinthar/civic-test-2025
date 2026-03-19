@@ -1,32 +1,32 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: Next-Gen Architecture
-status: completed
-last_updated: "2026-03-02T00:00:00Z"
+milestone: v4.1
+milestone_name: Production Hardening
+status: requirements
+last_updated: "2026-03-19T00:00:00Z"
 progress:
-  total_phases: 10
-  completed_phases: 10
-  total_plans: 30
-  completed_plans: 30
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-02)
+See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v4.0 completed — ready for next milestone
+**Current focus:** v4.1 Production Hardening — defining requirements
 
 ## Current Position
 
-Milestone: v4.0 Next-Gen Architecture — SHIPPED 2026-03-02
-Status: Complete
-Last activity: 2026-03-02 — Milestone archived
-
-Progress: [##########] 100%
+Milestone: v4.1 Production Hardening
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-19 — Milestone v4.1 started
 
 ## Performance Metrics
 
@@ -35,13 +35,6 @@ Progress: [##########] 100%
 - Total phases: 48
 - Total plans: 278
 - Total requirements: 226/227
-
-**v4.0 Stats:**
-- Phases: 10 (39-47 + 43.5)
-- Plans: 30
-- Tasks: 59
-- Timeline: 7 days (2026-02-23 → 2026-03-01)
-- Tests: 588 passing
 
 ## Accumulated Context
 
@@ -61,6 +54,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: v4.0 milestone completed and archived
+Last session: 2026-03-19
+Stopped at: Defining v4.1 requirements
 Resume file: None
