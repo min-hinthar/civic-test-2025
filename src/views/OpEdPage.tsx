@@ -1,242 +1,272 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, BookOpen, Megaphone, Shield, Share2, Users } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { ExternalLink, Share2, Check } from 'lucide-react';
 import { GlassHeader } from '@/components/navigation/GlassHeader';
-
-const opEdShareUrl = 'https://civic-test-2025.vercel.app/op-ed';
-const opEdShareText =
-  'Read and share our op-ed on why the TPS story for Burma matters for families, safety, and democracy.';
-
+import { useLanguage } from '@/contexts/LanguageContext';
+import { opEdContent, opEdShareUrl } from '@/constants/opEd/opEdContent';
+import { FadeIn } from '@/components/animations/StaggeredList';
 const OpEdPage = () => {
-  // Track hash for scroll-to-section behavior
-  const [hash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
+  const { showBurmese } = useLanguage();
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (hash) {
-      const target = document.getElementById(hash.replace('#', ''));
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const c = opEdContent;
+  const lang = showBurmese ? 'my' : 'en';
+
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(c.meta.tweetText[lang])}&url=${encodeURIComponent(opEdShareUrl)}`;
+
+  const handleShare = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: c.hero.title.en,
+          text: c.meta.tweetText.en,
+          url: opEdShareUrl,
+        });
+        return;
+      } catch {
+        // User cancelled or share failed, fall through to clipboard
+      }
     }
-  }, [hash]);
+
+    try {
+      await navigator.clipboard.writeText(opEdShareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard not available
+    }
+  }, [c]);
 
   return (
     <div className="page-shell">
       <GlassHeader showBack backHref="/" />
-      <main className="mx-auto max-w-4xl px-6 py-10 space-y-10">
-        <header className="glass-medium relative overflow-hidden border border-border/70 bg-gradient-to-br from-[hsl(var(--color-background))] via-[hsl(var(--color-surface))] to-[hsl(var(--color-background))] p-8 text-white shadow-2xl shadow-primary/25 transition duration-500 hover:-translate-y-1 hover:shadow-primary/30">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-[100px]" />
-          <div className="pointer-events-none absolute -bottom-20 right-10 h-64 w-64 rounded-full bg-accent/20 blur-[120px]" />
-          <div className="relative space-y-4">
-            <Link
-              href="/"
-              className="inline-flex items-center text-sm text-white/70 hover:text-white"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to landing page
-            </Link>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-              Op-ed · TPS for Burma
+
+      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 space-y-10">
+        {/* Hero */}
+        <FadeIn>
+          <header className="space-y-3 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              {c.hero.tag.en}
             </p>
-            <h1 className="text-3xl font-bold sm:text-4xl">Why the TPS story for Burma matters</h1>
-            <p className="text-base text-white/80">
-              A bilingual editorial on how Temporary Protected Status intersects with safety,
-              propaganda, and the everyday lives of Burmese families in the United States.
-            </p>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
-              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
-                English · <span className="font-myanmar">မြန်မာ</span>
-              </span>
-              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
-                5 min read
-              </span>
-              <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1">
-                Updated for 2024 renewals
-              </span>
+            {showBurmese && <p className="font-myanmar text-sm text-primary/80">{c.hero.tag.my}</p>}
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">{c.hero.title.en}</h1>
+            {showBurmese && (
+              <p className="font-myanmar text-2xl text-foreground/80 sm:text-3xl">
+                {c.hero.title.my}
+              </p>
+            )}
+            <p className="text-lg text-muted-foreground">{c.hero.subtitle.en}</p>
+            {showBurmese && (
+              <p className="font-myanmar text-base text-muted-foreground/80">
+                {c.hero.subtitle.my}
+              </p>
+            )}
+          </header>
+        </FadeIn>
+
+        {/* Meta card */}
+        <FadeIn delay={80}>
+          <div className="grid gap-4 rounded-2xl border border-border/60 bg-card/80 p-6 sm:grid-cols-3">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Author</p>
+              <p className="text-sm font-semibold text-foreground">{c.meta.author.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-foreground/80">{c.meta.author.my}</p>
+              )}
+              <p className="text-xs text-muted-foreground">{c.meta.authorNote.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground/70">
+                  {c.meta.authorNote.my}
+                </p>
+              )}
             </div>
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="https://civic-test-2025.vercel.app/op-ed"
-                className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-foreground shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
-              >
-                Read the Op-Ed
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Thesis</p>
+              <p className="text-sm font-semibold text-foreground">{c.meta.thesis.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-foreground/80">{c.meta.thesis.my}</p>
+              )}
+              <p className="text-xs text-muted-foreground">{c.meta.thesisNote.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-xs text-muted-foreground/70">
+                  {c.meta.thesisNote.my}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Read time
+              </p>
+              <p className="text-sm font-semibold text-foreground">{c.meta.readTime.en}</p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-foreground/80">{c.meta.readTime.my}</p>
+              )}
               <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(opEdShareText)}&url=${encodeURIComponent(opEdShareUrl)}`}
+                href={c.meta.docLink[lang]}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-white/60"
+                className="inline-flex items-center gap-1 text-xs text-primary hover:underline min-h-[44px]"
               >
-                <Share2 className="h-4 w-4" /> Share the op-ed
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                {showBurmese ? 'Google Doc ကိုဖွင့်ကြည့်ရန်' : 'View original document'}
               </a>
             </div>
           </div>
-        </header>
+        </FadeIn>
 
-        <section
-          id="families"
-          className="space-y-4 rounded-3xl border border-border/70 bg-card/80 p-6 shadow-xl shadow-primary/10"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-            <Users className="h-4 w-4" /> Families
-          </div>
-          <h2 className="text-2xl font-semibold text-foreground">
-            Protect Burmese families during TPS renewals
-          </h2>
-          <p className="text-muted-foreground">
-            When renewals drag on, households face impossible choices: pay for legal help they
-            cannot afford or risk gaps in work authorization. The op-ed tells the story of a Burmese
-            college student translating every form for her parents, hoping USCIS receipts arrive
-            before their restaurant misses payroll.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 p-4 shadow-inner">
-              <h3 className="text-lg font-semibold text-foreground">Everyday logistics</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Transportation, childcare, and translation costs all spike when biometrics
-                appointments shift.
-              </p>
-            </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-success/10 via-success/5 to-success/10 p-4 shadow-inner">
-              <h3 className="text-lg font-semibold text-foreground">What communities ask for</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Clearer renewal timelines, multilingual alerts, and protections for mixed-status
-                households.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="propaganda"
-          className="space-y-4 rounded-3xl border border-border/70 bg-card/80 p-6 shadow-xl shadow-primary/10"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-            <Shield className="h-4 w-4" /> Counter-propaganda
-          </div>
-          <h2 className="text-2xl font-semibold text-foreground">
-            Debunk misinformation targeting TPS holders
-          </h2>
-          <p className="text-muted-foreground">
-            The op-ed traces how disinformation reduces Burmese families to talking points. It
-            documents the real risks of being labeled as political pawns instead of people seeking
-            safety.
-          </p>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              {
-                title: 'Narrative checks',
-                description:
-                  'Side-by-side comparisons of propaganda claims vs. documented facts from USCIS and DHS.',
-                icon: BookOpen,
-              },
-              {
-                title: 'Media literacy prompts',
-                description:
-                  'Questions Burmese youth use with elders before resharing viral posts.',
-                icon: Megaphone,
-              },
-              {
-                title: 'Community guardrails',
-                description: (
-                  <>
-                    Ways churches, mosques, and temples can post accurate renewal steps in English
-                    and <span className="font-myanmar">မြန်မာ</span>.
-                  </>
-                ),
-                icon: Shield,
-              },
-            ].map(tile => (
-              <div
-                key={tile.title}
-                className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-slate-900/5 via-[hsl(var(--color-surface))]/10 to-slate-900/5 p-4 shadow-inner"
-              >
-                <div className="flex items-center gap-2 text-primary">
-                  <tile.icon className="h-5 w-5" />
-                  <span className="text-sm font-semibold">{tile.title}</span>
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">{tile.description}</p>
+        {/* Intro paragraphs */}
+        <FadeIn delay={160}>
+          <section className="space-y-5">
+            {c.introParagraphs.map((para, i) => (
+              <div key={i} className="space-y-2">
+                <p className="text-base leading-relaxed text-muted-foreground">{para.en}</p>
+                {showBurmese && (
+                  <p className="font-myanmar text-base leading-relaxed text-muted-foreground/80">
+                    {para.my}
+                  </p>
+                )}
               </div>
             ))}
-          </div>
-        </section>
+          </section>
+        </FadeIn>
 
-        <section
-          id="next-steps"
-          className="space-y-4 rounded-3xl border border-border/70 bg-card/80 p-6 shadow-xl shadow-primary/10"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-            <ArrowRight className="h-4 w-4" /> Next steps
-          </div>
-          <h2 className="text-2xl font-semibold text-foreground">
-            Actionable steps readers can take
-          </h2>
-          <p className="text-muted-foreground">
-            The piece ends with invitations to act. Whether you are a student, faith leader, or
-            policymaker, the op-ed offers specific next steps to keep TPS honest and
-            people-centered.
-          </p>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-warning/10 via-warning/10 to-warning/5 p-4 shadow-inner">
-              <h3 className="text-lg font-semibold text-foreground">Share with lawmakers</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Send the op-ed with a note about why Burmese TPS families need timely renewals.
-              </p>
-            </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-destructive/10 via-destructive/10 to-destructive/5 p-4 shadow-inner">
-              <h3 className="text-lg font-semibold text-foreground">Host a bilingual teach-in</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Use the talking points to hold community sessions in English and{' '}
-                <span className="font-myanmar">မြန်မာ</span>.
-              </p>
-            </div>
-            <div className="interactive-tile rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-primary/10 to-primary/5 p-4 shadow-inner">
-              <h3 className="text-lg font-semibold text-foreground">Circulate on social</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Share the link on X/Twitter, Facebook, Instagram, and LinkedIn using the buttons
-                below.
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Editorial sections */}
+        {c.sections.map((section, sectionIdx) => (
+          <FadeIn key={section.title.en} delay={200 + sectionIdx * 60}>
+            <article className="space-y-4">
+              <h2 className="text-2xl font-semibold text-foreground">{section.title.en}</h2>
+              {showBurmese && (
+                <p className="font-myanmar text-xl text-foreground/80">{section.title.my}</p>
+              )}
 
-        <section className="rounded-3xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-primary/10">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <span className="text-foreground font-semibold">Share the op-ed</span>
-            {[
-              {
-                label: 'X / Twitter',
-                href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(opEdShareText)}&url=${encodeURIComponent(opEdShareUrl)}`,
-                classes: 'bg-surface text-foreground',
-              },
-              {
-                label: 'Facebook',
-                href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(opEdShareUrl)}`,
-                classes: 'bg-[#1877F2] text-white',
-              },
-              {
-                label: 'Instagram',
-                href: `https://www.instagram.com/?url=${encodeURIComponent(opEdShareUrl)}`,
-                classes: 'bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white',
-              },
-              {
-                label: 'LinkedIn',
-                href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(opEdShareUrl)}`,
-                classes: 'bg-[#0A66C2] text-white',
-              },
-            ].map(button => (
+              {section.intro && (
+                <div className="space-y-2">
+                  <p className="text-base leading-relaxed text-muted-foreground">
+                    {section.intro.en}
+                  </p>
+                  {showBurmese && section.intro.my && (
+                    <p className="font-myanmar text-base leading-relaxed text-muted-foreground/80">
+                      {section.intro.my}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {section.paragraphs?.map((para, paraIdx) => (
+                <div key={paraIdx} className="space-y-2">
+                  <p className="text-base leading-relaxed text-muted-foreground">{para.en}</p>
+                  {showBurmese && (
+                    <p className="font-myanmar text-base leading-relaxed text-muted-foreground/80">
+                      {para.my}
+                    </p>
+                  )}
+                </div>
+              ))}
+
+              {section.bullets && (
+                <ul className="space-y-3 rounded-xl border border-border/40 bg-card/50 p-4">
+                  {section.bullets.map((bullet, bulletIdx) => (
+                    <li key={bulletIdx} className="flex gap-3 text-base leading-relaxed">
+                      <span
+                        className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                        aria-hidden
+                      />
+                      <div className="space-y-1">
+                        <span className="text-muted-foreground">{bullet.en}</span>
+                        {showBurmese && (
+                          <p className="font-myanmar text-muted-foreground/80">{bullet.my}</p>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {section.closing && (
+                <div className="space-y-2">
+                  <p className="text-base leading-relaxed text-muted-foreground">
+                    {section.closing.en}
+                  </p>
+                  {showBurmese && section.closing.my && (
+                    <p className="font-myanmar text-base leading-relaxed text-muted-foreground/80">
+                      {section.closing.my}
+                    </p>
+                  )}
+                </div>
+              )}
+            </article>
+          </FadeIn>
+        ))}
+
+        {/* Share section */}
+        <FadeIn delay={800}>
+          <section className="rounded-2xl border border-border/60 bg-card p-6 shadow-lg space-y-4 text-center">
+            <Share2 className="mx-auto h-6 w-6 text-primary" aria-hidden="true" />
+            <h2 className="text-xl font-semibold text-foreground">{c.share.headline.en}</h2>
+            {showBurmese && (
+              <p className="font-myanmar text-lg text-foreground/80">{c.share.headline.my}</p>
+            )}
+            <p className="text-sm leading-relaxed text-muted-foreground">{c.share.body.en}</p>
+            {showBurmese && (
+              <p className="font-myanmar text-sm leading-relaxed text-muted-foreground/80">
+                {c.share.body.my}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary/10 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-primary transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Link Copied!
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="h-4 w-4" />
+                    Share
+                  </>
+                )}
+              </button>
               <a
-                key={button.label}
-                href={button.href}
+                href={tweetUrl}
                 target="_blank"
                 rel="noreferrer"
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-primary/30 ${button.classes}`}
+                className="inline-flex items-center gap-2 rounded-xl border border-border/40 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
-                {button.label}
+                Share on X
               </a>
-            ))}
-          </div>
-        </section>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(opEdShareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-border/40 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                Facebook
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(opEdShareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-border/40 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                LinkedIn
+              </a>
+              <a
+                href={c.meta.docLink[lang]}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-border/40 px-5 py-2.5 min-h-[44px] text-sm font-semibold text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Google Doc
+              </a>
+            </div>
+          </section>
+        </FadeIn>
       </main>
     </div>
   );
