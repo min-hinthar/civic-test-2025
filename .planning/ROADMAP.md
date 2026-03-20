@@ -131,11 +131,12 @@ Plans:
   2. A crash in InterviewSession, PracticeSession, TestPage, or CelebrationOverlay shows a localized error fallback without disrupting other parts of the app
   3. When an error boundary catches a crash during an active session, in-progress state is saved to IndexedDB before the fallback renders
   4. In development mode, mounting providers in the wrong order produces a console warning identifying the ordering violation
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 49-01: TBD
-- [ ] 49-02: TBD
+- [ ] 49-01-PLAN.md -- SharedErrorFallback component + error.tsx/global-error.tsx/not-found.tsx bilingual sanitization
+- [ ] 49-02-PLAN.md -- ProviderOrderGuard dev-mode validation + console.error to captureError() migration
+- [ ] 49-03-PLAN.md -- Session error boundaries on 4 components with cleanup callbacks + ErrorBoundary test expansion
 
 ### Phase 50: PWA + Sync Resilience
 **Goal**: Users are notified of app updates without mid-session disruption, offline settings changes survive sync, and stale cached data is invalidated on version mismatch
@@ -204,7 +205,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 48. Test Infrastructure + Quick Wins | 4/4 | Complete    | 2026-03-20 |
-| 49. Error Handling + Security | 0/TBD | Not started | - |
+| 49. Error Handling + Security | 0/3 | Not started | - |
 | 50. PWA + Sync Resilience | 0/TBD | Not started | - |
 | 51. Unit Test Expansion | 0/TBD | Not started | - |
 | 52. E2E Critical Flows + Accessibility | 0/TBD | Not started | - |
