@@ -15,6 +15,7 @@
 import { useState, useEffect } from 'react';
 import { useSRS } from '@/contexts/SRSContext';
 import { getAllSessions } from '@/lib/sessions/sessionStore';
+import { swUpdateManager } from '@/lib/pwa/swUpdateManager';
 import type { NavBadges } from './navConfig';
 
 const EARNED_KEY = 'civic-prep-earned-badge-count';
@@ -61,11 +62,17 @@ export function useNavBadges(): NavBadges {
     // The initial check also runs via this pattern by scheduling it
     // as a microtask to avoid synchronous setState in effect body.
     const runCheck = () => {
-      checkSWUpdate().then(hasUpdate => {
-        if (!cancelled && hasUpdate) {
-          setSettingsHasUpdate(true);
-        }
-      });
+      // Check both swUpdateManager state AND legacy registration.waiting
+      const managerState = swUpdateManager.getState();
+      if (managerState.updateAvailable) {
+        if (!cancelled) setSettingsHasUpdate(true);
+      } else {
+        checkSWUpdate().then(hasUpdate => {
+          if (!cancelled && hasUpdate) {
+            setSettingsHasUpdate(true);
+          }
+        });
+      }
       // Hub badge check is synchronous (localStorage)
       if (!cancelled) {
         setHubHasUpdate(checkHubBadge());
