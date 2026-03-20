@@ -19,15 +19,13 @@ function makeErrorEvent(errorMessage: string, overrides?: Partial<ErrorEvent>): 
 const emptyHint = {} as EventHint;
 
 describe('beforeSendHandler', () => {
-  const originalEnv = process.env.NODE_ENV;
-
   beforeEach(() => {
     // Set production mode so PII stripping is active
-    process.env.NODE_ENV = 'production';
+    vi.stubEnv('NODE_ENV', 'production');
   });
 
   afterEach(() => {
-    process.env.NODE_ENV = originalEnv;
+    vi.unstubAllEnvs();
   });
 
   describe('fingerprinting', () => {
