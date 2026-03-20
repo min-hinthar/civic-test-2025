@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Completed 50-02-PLAN.md
-last_updated: "2026-03-20T08:49:25.920Z"
+stopped_at: Completed 50-03-PLAN.md
+last_updated: "2026-03-20T09:02:40.171Z"
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 
 ## Current Position
 
-Phase: 50 (PWA + Sync Resilience) — EXECUTING
-Plan: 3 of 3
+Phase: 50 (PWA + Sync Resilience) — COMPLETE
+Plan: 3 of 3 (all complete)
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Plan: 3 of 3
 | Phase 49 P03 | 8min | 2 tasks | 7 files |
 | Phase 50 P01 | 13min | 2 tasks | 4 files |
 | Phase 50 P02 | 14min | 2 tasks | 6 files |
+| Phase 50 P03 | 9min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Plan: 3 of 3
 - [Phase 50]: SWUpdateWatcher is component not provider -- no provider reorder needed
 - [Phase 50]: Dual session lock: NavigationProvider.isLocked + history.state.interviewGuard for complete coverage
 - [Phase 50]: Module-level manager pattern (createSWUpdateManager) enables both singleton export and testable factory
+- [Phase 50]: Pure merge function (no side effects) for testability -- localStorage helpers separated from merge logic
+- [Phase 50]: TTS field mapping: TTSSettings keys mapped to UserSettings keys via ttsFieldMap for per-field timestamp tracking
+- [Phase 50]: Dirty flags take absolute priority over timestamps -- offline changes always win regardless of remote timestamp
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T08:49:25.916Z
-Stopped at: Completed 50-02-PLAN.md
+Last session: 2026-03-20T09:02:40.168Z
+Stopped at: Completed 50-03-PLAN.md
 Resume file: None
