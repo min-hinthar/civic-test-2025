@@ -443,6 +443,12 @@ coverage/
 # Playwright MCP artifacts
 .playwright-mcp/
 
+# Playwright test artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Generated build artifacts
 scripts/questions-export.json
 
