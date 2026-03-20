@@ -218,6 +218,31 @@ export default defineConfig({
           functions: 100,
           lines: 89,
         },
+        // Context provider thresholds (Phase 51, Plan 02) — complex providers
+        'src/contexts/ThemeContext.tsx': {
+          statements: 93,
+          branches: 81,
+          functions: 93,
+          lines: 94,
+        },
+        'src/contexts/SocialContext.tsx': {
+          statements: 55,
+          branches: 34,
+          functions: 61,
+          lines: 61,
+        },
+        'src/contexts/SRSContext.tsx': {
+          statements: 85,
+          branches: 63,
+          functions: 84,
+          lines: 87,
+        },
+        'src/contexts/SupabaseAuthContext.tsx': {
+          statements: 48,
+          branches: 22,
+          functions: 50,
+          lines: 47,
+        },
       },
     },
   },
