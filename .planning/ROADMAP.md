@@ -98,7 +98,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 48: Test Infrastructure + Quick Wins** - Safety net for all subsequent phases: shared test utility, Playwright config, dead code removal, CI hardening, coverage thresholds, Sentry fingerprinting (completed 2026-03-20)
 - [x] **Phase 49: Error Handling + Security** - Error.tsx sanitization and bilingual rendering, component error boundaries with session save, provider ordering guard (completed 2026-03-20)
 - [x] **Phase 50: PWA + Sync Resilience** - Service worker update UX with session-lock guard, per-field LWW settings sync, IndexedDB cache versioning (completed 2026-03-20)
-- [ ] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup
+- [x] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup (completed 2026-03-20)
 - [ ] **Phase 52: E2E Critical Flows + Accessibility** - 7 Playwright E2E tests for critical user flows, axe-core WCAG 2.2 scans, touch target audit, glass contrast verification
 - [ ] **Phase 53: Component Decomposition** - InterviewSession.tsx split into state machine hook + rendering sub-components under full E2E safety net
 
@@ -209,7 +209,7 @@ Plans:
 | 48. Test Infrastructure + Quick Wins | 4/4 | Complete    | 2026-03-20 |
 | 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
 | 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
-| 51. Unit Test Expansion | 2/3 | In Progress|  |
+| 51. Unit Test Expansion | 3/3 | Complete   | 2026-03-20 |
 | 52. E2E Critical Flows + Accessibility | 0/TBD | Not started | - |
 | 53. Component Decomposition | 0/TBD | Not started | - |
 

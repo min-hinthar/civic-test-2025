@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Completed 51-03-PLAN.md
-last_updated: "2026-03-20T10:19:15.980Z"
+stopped_at: Completed 51-02-PLAN.md
+last_updated: "2026-03-20T10:44:22.000Z"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -48,6 +48,7 @@ Plan: 3 of 3 (COMPLETE)
 | Phase 50 P02 | 14min | 2 tasks | 6 files |
 | Phase 50 P03 | 9min | 2 tasks | 10 files |
 | Phase 51 P01 | 12min | 2 tasks | 5 files |
+| 51 | 02 | 23min | 2 | 5 |
 | 51 | 03 | 14min | 1 | 1 |
 
 ## Accumulated Context
@@ -85,6 +86,10 @@ Plan: 3 of 3 (COMPLETE)
 - [Phase 51]: CVE-2026-26996 removed from ignoreCves (no longer matches any advisory)
 - [Phase 51]: CVE-2025-69873 kept (matches ajv in eslint devDep chain, non-exploitable)
 - [Phase 51]: react-joyride 3.0.0 stable not published; kept at 3.0.0-7 prerelease
+- [Phase 51]: vi.hoisted() for auth mock state: mutable mockGetSession/mockOnAuthStateChange refs shared across tests
+- [Phase 51]: setupAuthenticated/setupUnauthenticated helpers encapsulate session + onAuthStateChange mock patterns
+- [Phase 51]: Global coverage floor kept at 40/40/30/40 (many UI components at 0% prevent bump to 45)
+- [Phase 51]: Per-file thresholds for complex providers: Theme 93/81/93/94, Social 55/34/61/61, SRS 85/63/84/87, Auth 48/22/50/47
 
 ### Pending Todos
 
@@ -99,6 +104,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T10:16:49Z
-Stopped at: Completed 51-03-PLAN.md
+Last session: 2026-03-20T10:44:22Z
+Stopped at: Completed 51-02-PLAN.md
 Resume file: None
