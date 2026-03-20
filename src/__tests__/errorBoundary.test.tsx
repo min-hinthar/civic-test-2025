@@ -2,6 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { withSessionErrorBoundary } from '@/components/withSessionErrorBoundary';
 
 // Suppress console.error during tests since we're testing error handling
 const originalError = console.error;
@@ -15,6 +16,29 @@ afterEach(() => {
 // Mock Sentry
 vi.mock('@sentry/nextjs', () => ({
   captureException: vi.fn(),
+}));
+
+// Mock captureError from sentry helper
+const mockCaptureError = vi.fn();
+vi.mock('@/lib/sentry', () => ({
+  captureError: (...args: unknown[]) => mockCaptureError(...args),
+}));
+
+// Mock useNavigation for withSessionErrorBoundary tests
+const mockSetLock = vi.fn();
+vi.mock('@/components/navigation/NavigationProvider', () => ({
+  useNavigation: () => ({
+    isExpanded: false,
+    setExpanded: vi.fn(),
+    toggleSidebar: vi.fn(),
+    tier: 'mobile' as const,
+    isLocked: false,
+    lockMessage: null,
+    setLock: mockSetLock,
+    navVisible: true,
+    badges: {},
+    sidebarRef: { current: null },
+  }),
 }));
 
 // Component that throws an error
@@ -211,6 +235,121 @@ describe('ErrorBoundary', () => {
 
       expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
       expect(screen.getByText('Custom error UI')).toBeInTheDocument();
+      // Should NOT render default fallback buttons
+      expect(screen.queryByText(/Try again/)).not.toBeInTheDocument();
     });
+
+    it('renders nothing when fallback is null (CelebrationOverlay pattern)', () => {
+      const { container } = render(
+        <ErrorBoundary fallback={null}>
+          <ThrowError shouldThrow={true} />
+        </ErrorBoundary>
+      );
+
+      // null fallback = silent failure, renders nothing
+      expect(container.innerHTML).toBe('');
+    });
+  });
+
+  describe('SharedErrorFallback rendering', () => {
+    it('renders bilingual content with heading and action buttons', () => {
+      render(
+        <ErrorBoundary>
+          <ThrowError shouldThrow={true} />
+        </ErrorBoundary>
+      );
+
+      // SharedErrorFallback renders h2 heading with sanitized message
+      expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
+      // Action buttons present
+      expect(screen.getByText(/Try again/)).toBeInTheDocument();
+      expect(screen.getByText(/Return home/)).toBeInTheDocument();
+    });
+
+    it('resets error boundary when Try again is clicked', () => {
+      let shouldThrow = true;
+      function ToggleError() {
+        if (shouldThrow) throw new Error('Resettable error');
+        return <div data-testid="recovered">Recovered content</div>;
+      }
+
+      render(
+        <ErrorBoundary>
+          <ToggleError />
+        </ErrorBoundary>
+      );
+
+      // Error boundary shows fallback
+      expect(screen.getByText(/Try again/)).toBeInTheDocument();
+      expect(screen.queryByTestId('recovered')).not.toBeInTheDocument();
+
+      // Stop throwing and click Try again
+      shouldThrow = false;
+      fireEvent.click(screen.getByRole('button', { name: /try again/i }));
+
+      // Should recover and render child
+      expect(screen.getByTestId('recovered')).toBeInTheDocument();
+      expect(screen.queryByText(/Try again/)).not.toBeInTheDocument();
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// withSessionErrorBoundary HOC tests
+// ---------------------------------------------------------------------------
+
+function ThrowingSession({ shouldThrow }: { shouldThrow: boolean }) {
+  if (shouldThrow) throw new Error('Session crash');
+  return <div data-testid="session-content">Session content</div>;
+}
+
+const ProtectedSession = withSessionErrorBoundary(ThrowingSession, {
+  componentName: 'TestSession',
+});
+
+describe('withSessionErrorBoundary', () => {
+  beforeEach(() => {
+    mockSetLock.mockClear();
+    mockCaptureError.mockClear();
+  });
+
+  it('renders wrapped component when no error occurs', () => {
+    render(<ProtectedSession shouldThrow={false} />);
+
+    expect(screen.getByTestId('session-content')).toBeInTheDocument();
+    expect(screen.getByText('Session content')).toBeInTheDocument();
+  });
+
+  it('calls setLock(false) on error to release navigation lock', () => {
+    render(<ProtectedSession shouldThrow={true} />);
+
+    // CRITICAL assertion: nav lock must be released
+    expect(mockSetLock).toHaveBeenCalledWith(false);
+  });
+
+  it('calls captureError with component context on error', () => {
+    render(<ProtectedSession shouldThrow={true} />);
+
+    expect(mockCaptureError).toHaveBeenCalledTimes(1);
+    expect(mockCaptureError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({
+        component: 'TestSession',
+        componentStack: expect.any(String),
+      })
+    );
+  });
+
+  it('renders ErrorBoundary fallback UI on crash', () => {
+    render(<ProtectedSession shouldThrow={true} />);
+
+    // SharedErrorFallback renders Try again and Return home buttons
+    expect(screen.getByText(/Try again/)).toBeInTheDocument();
+    expect(screen.getByText(/Return home/)).toBeInTheDocument();
+    expect(screen.queryByTestId('session-content')).not.toBeInTheDocument();
+  });
+
+  it('has correct displayName for debugging', () => {
+    expect(ProtectedSession.displayName).toBe('withSessionErrorBoundary(ThrowingSession)');
   });
 });
