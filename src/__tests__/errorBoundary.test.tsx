@@ -89,14 +89,14 @@ describe('ErrorBoundary', () => {
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
     });
 
-    it('displays "Return to home" button', () => {
+    it('displays "Return home" button', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
 
-      expect(screen.getByRole('button', { name: /return to home/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /return home/i })).toBeInTheDocument();
     });
   });
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { AlertCircle, Home, RefreshCw } from 'lucide-react';
 import { sanitizeError, sanitizeForSentry, type BilingualMessage } from '@/lib/errorSanitizer';
+import { SharedErrorFallback } from '@/components/ui/SharedErrorFallback';
 import * as Sentry from '@sentry/nextjs';
 
 /**
@@ -31,7 +31,7 @@ interface ErrorBoundaryState {
  * - Catches React component errors and displays bilingual fallback UI
  * - Sanitizes error messages before display (no sensitive data)
  * - Reports errors to Sentry with PII stripped
- * - Provides "Try again" and "Return to home" options
+ * - Provides "Try again" and "Return home" options via SharedErrorFallback
  *
  * Note: Error boundaries must be class components as of React 19.
  */
@@ -109,11 +109,28 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
-      // Default bilingual fallback UI
+      // Read language mode from localStorage (class component cannot use hooks)
+      const showBurmese = (() => {
+        try {
+          if (typeof window !== 'undefined') {
+            return localStorage.getItem('civic-test-language-mode') !== 'english-only';
+          }
+        } catch {
+          // localStorage unavailable (private browsing, test env, etc.)
+        }
+        return true;
+      })();
+
       return (
-        <ErrorFallback
-          errorMessage={this.state.errorMessage}
-          onReset={this.handleReset}
+        <SharedErrorFallback
+          message={
+            this.state.errorMessage ?? {
+              en: 'Something went wrong. Please try again.',
+              my: '\u1010\u1005\u103A\u1001\u102F\u1001\u102F \u1019\u103E\u102C\u1038\u101A\u103D\u1004\u103A\u1038\u101E\u103D\u102C\u1038\u101E\u100A\u103A\u104B \u1011\u1015\u103A\u1000\u103C\u102D\u102F\u1038\u1005\u102C\u1038\u1015\u102B\u104B',
+            }
+          }
+          showBurmese={showBurmese}
+          onRetry={this.handleReset}
           onGoHome={this.handleGoHome}
         />
       );
@@ -121,75 +138,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     return this.props.children;
   }
-}
-
-/**
- * Props for the ErrorFallback component.
- */
-interface ErrorFallbackProps {
-  errorMessage: BilingualMessage | null;
-  onReset: () => void;
-  onGoHome: () => void;
-}
-
-/**
- * Default fallback UI for error boundaries.
- * Displays a friendly, bilingual error message with recovery options.
- */
-function ErrorFallback({ errorMessage, onReset, onGoHome }: ErrorFallbackProps) {
-  // Read language mode directly from localStorage to avoid dependency on context
-  // (ErrorBoundary may catch errors from context providers themselves)
-  let showBurmese = true;
-  try {
-    if (typeof window !== 'undefined') {
-      showBurmese = localStorage.getItem('civic-test-language-mode') !== 'english-only';
-    }
-  } catch {
-    // localStorage unavailable (private browsing, test env, etc.)
-  }
-
-  const message = errorMessage ?? {
-    en: 'Something went wrong. Please try again.',
-    my: 'တစ်ခုခု မှားယွင်းသွားသည်။ ထပ်ကြိုးစားပါ။',
-  };
-
-  return (
-    <div className="flex min-h-[400px] items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-lg bg-surface p-8 text-center shadow-lg">
-        {/* Icon - friendly, not alarming */}
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
-          <AlertCircle className="h-8 w-8 text-warning" />
-        </div>
-
-        {/* English message */}
-        <h2 className="mb-2 text-xl font-semibold text-foreground">{message.en}</h2>
-
-        {/* Burmese message */}
-        {showBurmese && <p className="mb-8 text-lg text-foreground font-myanmar">{message.my}</p>}
-
-        {/* Action buttons */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <button
-            type="button"
-            onClick={onReset}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-          >
-            <RefreshCw className="h-5 w-5" />
-            <span>Try again</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onGoHome}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-          >
-            <Home className="h-5 w-5" />
-            <span>Return to home</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default ErrorBoundary;
