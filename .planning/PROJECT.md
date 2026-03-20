@@ -179,6 +179,10 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Knip dead code detection with 10 files removed — v4.1
 - ✓ safeAsync documented as reserved infrastructure — v4.1
 - ✓ 5 redundant RLS INSERT policies cleaned — v4.1
+- ✓ SharedErrorFallback bilingual error component, all error.tsx files sanitized — v4.1
+- ✓ Component-level error boundaries on 4 session components via withSessionErrorBoundary HOC — v4.1
+- ✓ ProviderOrderGuard dev-mode validation in ClientProviders — v4.1
+- ✓ 6 high-impact console.error calls migrated to captureError() — v4.1
 
 ### Active
 
@@ -295,4 +299,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-20 after Phase 48 complete*
+*Last updated: 2026-03-20 after Phase 49 complete*
