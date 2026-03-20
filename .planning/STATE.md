@@ -3,12 +3,27 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Phase 51 context gathered
-last_updated: "2026-03-20T09:49:00.408Z"
+stopped_at: Completed 51-01-PLAN.md
+last_updated: "2026-03-20T10:17:28.034Z"
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 10
+  total_plans: 13
+  completed_plans: 11
+  percent: 85
+---
+
+---
+gsd_state_version: 1.0
+milestone: v4.1
+milestone_name: Production Hardening
+status: unknown
+stopped_at: Phase 51 context gathered
+last_updated: "2026-03-20T10:01:39.682Z"
+progress:
+  [█████████░] 85%
+  completed_phases: 3
+  total_plans: 13
   completed_plans: 10
 ---
 
@@ -19,12 +34,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 50 — PWA + Sync Resilience
+**Current focus:** Phase 51 — Unit Test Expansion
 
 ## Current Position
 
-Phase: 50 (PWA + Sync Resilience) — COMPLETE
-Plan: 3 of 3 (all complete)
+Phase: 51 (Unit Test Expansion) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -47,6 +62,7 @@ Plan: 3 of 3 (all complete)
 | Phase 50 P01 | 13min | 2 tasks | 4 files |
 | Phase 50 P02 | 14min | 2 tasks | 6 files |
 | Phase 50 P03 | 9min | 2 tasks | 10 files |
+| Phase 51 P01 | 12min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -77,6 +93,8 @@ Plan: 3 of 3 (all complete)
 - [Phase 50]: Pure merge function (no side effects) for testability -- localStorage helpers separated from merge logic
 - [Phase 50]: TTS field mapping: TTSSettings keys mapped to UserSettings keys via ttsFieldMap for per-field timestamp tracking
 - [Phase 50]: Dirty flags take absolute priority over timestamps -- offline changes always win regardless of remote timestamp
+- [Phase 51]: Mock hooks directly (useMediaTier, useNavBadges, useOnlineStatus) instead of transitive deps for cleaner provider test isolation
+- [Phase 51]: Consumer component pattern: each provider test creates a component that reads full context and exposes actions via button handlers
 
 ### Pending Todos
 
@@ -91,6 +109,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T09:49:00.404Z
-Stopped at: Phase 51 context gathered
-Resume file: .planning/phases/51/51-CONTEXT.md
+Last session: 2026-03-20T10:17:28.030Z
+Stopped at: Completed 51-01-PLAN.md
+Resume file: None

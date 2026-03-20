@@ -18,7 +18,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [ ] **TEST-07**: E2E test: offline -> online sync (go offline, answer, reconnect, verify sync)
 - [ ] **TEST-08**: E2E test: interview session (setup, questions, text input, grading, results)
 - [ ] **TEST-09**: E2E test: service worker update (detect new version, toast, user-triggered reload)
-- [ ] **TEST-10**: Unit tests for 8 untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation)
+- [x] **TEST-10**: Unit tests for 8 untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation)
 - [x] **TEST-11**: Coverage thresholds enforced on all `src/lib/` files with existing test suites (~15 files)
 - [x] **TEST-12**: Global coverage minimum floor established
 
@@ -94,7 +94,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | TEST-07 | Phase 52 | Pending |
 | TEST-08 | Phase 52 | Pending |
 | TEST-09 | Phase 52 | Pending |
-| TEST-10 | Phase 51 | Pending |
+| TEST-10 | Phase 51 | Complete |
 | TEST-11 | Phase 48 | Complete |
 | TEST-12 | Phase 48 | Complete |
 | ERRS-01 | Phase 49 | Complete |
