@@ -71,9 +71,6 @@ alter table public.mock_tests enable row level security;
 drop policy if exists "Users can manage their own mock tests" on public.mock_tests;
 create policy "Users can manage their own mock tests" on public.mock_tests
   using (auth.uid() = user_id);
-drop policy if exists "Users can insert their own mock tests" on public.mock_tests;
-create policy "Users can insert their own mock tests" on public.mock_tests
-  for insert with check (auth.uid() = user_id);
 
 -- Individual question level analytics for category level insights
 create table if not exists public.mock_test_responses (
@@ -248,9 +245,6 @@ alter table public.streak_data enable row level security;
 drop policy if exists "Users can manage own streak data" on public.streak_data;
 create policy "Users can manage own streak data" on public.streak_data
   for all using (auth.uid() = user_id);
-drop policy if exists "Users can insert own streak data" on public.streak_data;
-create policy "Users can insert own streak data" on public.streak_data
-  for insert with check (auth.uid() = user_id);
 
 -- Earned badges for per-user achievement tracking
 create table if not exists public.earned_badges (
@@ -275,9 +269,6 @@ create policy "Anyone can view opted-in users badges" on public.earned_badges
 drop policy if exists "Users can manage own badges" on public.earned_badges;
 create policy "Users can manage own badges" on public.earned_badges
   for all using (auth.uid() = user_id);
-drop policy if exists "Users can insert own badges" on public.earned_badges;
-create policy "Users can insert own badges" on public.earned_badges
-  for insert with check (auth.uid() = user_id);
 
 create index if not exists earned_badges_user_idx
   on public.earned_badges (user_id);
@@ -336,9 +327,6 @@ alter table public.user_settings enable row level security;
 drop policy if exists "Users can manage own settings" on public.user_settings;
 create policy "Users can manage own settings" on public.user_settings
   for all using (auth.uid() = user_id);
-drop policy if exists "Users can insert own settings" on public.user_settings;
-create policy "Users can insert own settings" on public.user_settings
-  for insert with check (auth.uid() = user_id);
 
 -- ============================================================
 -- User Bookmarks for Cross-Device Sync (Phase 46)
@@ -355,9 +343,6 @@ alter table public.user_bookmarks enable row level security;
 drop policy if exists "Users can manage own bookmarks" on public.user_bookmarks;
 create policy "Users can manage own bookmarks" on public.user_bookmarks
   for all using (auth.uid() = user_id);
-drop policy if exists "Users can insert own bookmarks" on public.user_bookmarks;
-create policy "Users can insert own bookmarks" on public.user_bookmarks
-  for insert with check (auth.uid() = user_id);
 
 -- ============================================================
 -- Leaderboard Functions (Phase 7)

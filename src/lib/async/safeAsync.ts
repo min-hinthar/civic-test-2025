@@ -1,8 +1,14 @@
 /**
+ * @reserved Reserved infrastructure -- not currently consumed in production code.
+ *
  * Safe async wrapper that catches errors, reports to Sentry, and returns result tuples.
+ * Kept for future error-handling standardization (Result-tuple pattern).
+ * Cost: ~50 LOC, zero runtime impact (tree-shaken when unused).
  *
  * Use for fire-and-forget async operations where failure should not crash the app.
  * Errors are normalized to Error objects and reported via captureError with optional context.
+ *
+ * @see withRetry -- the actively-used sibling in this module (8+ import sites)
  */
 
 import { captureError } from '@/lib/sentry';

@@ -1,8 +1,8 @@
 /**
  * Async utilities for standardized error handling.
  *
- * - withRetry: Retry failed async ops with exponential backoff
- * - safeAsync: Catch errors, report to Sentry, return result tuples
+ * - withRetry: Retry failed async ops with exponential backoff (ACTIVE -- 8+ consumers)
+ * - safeAsync: Catch errors, report to Sentry, return result tuples (RESERVED -- no production consumers)
  * - isRetryableError: Classify errors as retryable (network) or not (auth/quota)
  */
 
