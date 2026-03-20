@@ -183,6 +183,9 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Component-level error boundaries on 4 session components via withSessionErrorBoundary HOC — v4.1
 - ✓ ProviderOrderGuard dev-mode validation in ClientProviders — v4.1
 - ✓ 6 high-impact console.error calls migrated to captureError() — v4.1
+- ✓ Service worker update UX with persistent bilingual toast and session-lock deferral — v4.1
+- ✓ Per-field LWW settings sync preserving offline changes on cross-device login — v4.1
+- ✓ IndexedDB cache versioning with per-store constants and stale data invalidation — v4.1
 
 ### Active
 
@@ -228,7 +231,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ## Context
 
-**Current state (v4.1 in progress, Phase 48 complete):** Premium bilingual PWA with 226 validated requirements across 5 milestones + Phase 48 of v4.1 complete. 643 tests passing across 36 test files. Playwright E2E framework configured. Coverage thresholds on 22 src/lib/ files. DotLottie removed. Deployed at https://civic-test-2025.vercel.app/
+**Current state (v4.1 in progress, Phase 50 complete):** Premium bilingual PWA with 226 validated requirements across 5 milestones + Phase 50 of v4.1 complete. SW update UX with persistent bilingual toast and session-lock deferral. Per-field LWW settings sync preserving offline changes. IndexedDB cache versioning with stale data invalidation. Deployed at https://civic-test-2025.vercel.app/
 
 **Tech stack:** Next.js 16 (App Router) + React 19 + TypeScript 5.9 + Supabase (Auth + Postgres + RLS). Tailwind CSS 3 with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. ts-fsrs for spaced repetition. Deployed on Vercel.
 
@@ -299,4 +302,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-20 after Phase 49 complete*
+*Last updated: 2026-03-20 after Phase 50 complete*
