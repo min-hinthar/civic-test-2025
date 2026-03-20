@@ -3,28 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Completed 51-01-PLAN.md
-last_updated: "2026-03-20T10:17:28.034Z"
+stopped_at: Completed 51-03-PLAN.md
+last_updated: "2026-03-20T10:19:15.980Z"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 13
-  completed_plans: 11
-  percent: 85
----
-
----
-gsd_state_version: 1.0
-milestone: v4.1
-milestone_name: Production Hardening
-status: unknown
-stopped_at: Phase 51 context gathered
-last_updated: "2026-03-20T10:01:39.682Z"
-progress:
-  [█████████░] 85%
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 10
+  completed_plans: 12
 ---
 
 # Project State
@@ -39,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 51 (Unit Test Expansion) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3 (COMPLETE)
 
 ## Performance Metrics
 
@@ -63,6 +48,7 @@ Plan: 2 of 3
 | Phase 50 P02 | 14min | 2 tasks | 6 files |
 | Phase 50 P03 | 9min | 2 tasks | 10 files |
 | Phase 51 P01 | 12min | 2 tasks | 5 files |
+| 51 | 03 | 14min | 1 | 1 |
 
 ## Accumulated Context
 
@@ -95,6 +81,10 @@ Plan: 2 of 3
 - [Phase 50]: Dirty flags take absolute priority over timestamps -- offline changes always win regardless of remote timestamp
 - [Phase 51]: Mock hooks directly (useMediaTier, useNavBadges, useOnlineStatus) instead of transitive deps for cleaner provider test isolation
 - [Phase 51]: Consumer component pattern: each provider test creates a component that reads full context and exposes actions via button handlers
+- [Phase 51]: All 3 pnpm.overrides still required: bn.js (asn1.js ^4.0.0), rollup (multi-dep), serialize-javascript (terser-webpack-plugin ^6.0.2)
+- [Phase 51]: CVE-2026-26996 removed from ignoreCves (no longer matches any advisory)
+- [Phase 51]: CVE-2025-69873 kept (matches ajv in eslint devDep chain, non-exploitable)
+- [Phase 51]: react-joyride 3.0.0 stable not published; kept at 3.0.0-7 prerelease
 
 ### Pending Todos
 
@@ -109,6 +99,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T10:17:28.030Z
-Stopped at: Completed 51-01-PLAN.md
+Last session: 2026-03-20T10:16:49Z
+Stopped at: Completed 51-03-PLAN.md
 Resume file: None

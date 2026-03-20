@@ -52,8 +52,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [x] **DEPS-01**: Remove `@lottiefiles/dotlottie-react` and DotLottie infrastructure (CELB-06 resolution)
 - [x] **DEPS-02**: Remove `safeAsync` dead code (or document as reserved infrastructure)
 - [x] **DEPS-03**: Remove redundant RLS INSERT policies on `streak_data` and `earned_badges`
-- [ ] **DEPS-04**: Re-evaluate ignored CVEs and dependency overrides
-- [ ] **DEPS-05**: Pin react-joyride to stable 3.0.0 when available (monitor)
+- [x] **DEPS-04**: Re-evaluate ignored CVEs and dependency overrides
+- [x] **DEPS-05**: Pin react-joyride to stable 3.0.0 when available (monitor)
 
 ### Developer Experience
 
@@ -116,8 +116,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | DEPS-01 | Phase 48 | Complete |
 | DEPS-02 | Phase 48 | Complete |
 | DEPS-03 | Phase 48 | Complete |
-| DEPS-04 | Phase 51 | Pending |
-| DEPS-05 | Phase 51 | Pending |
+| DEPS-04 | Phase 51 | Complete |
+| DEPS-05 | Phase 51 | Complete |
 | DX-01 | Phase 48 | Complete |
 | DX-02 | Phase 48 | Complete |
 | DX-03 | Phase 49 | Complete |
