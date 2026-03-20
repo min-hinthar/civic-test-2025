@@ -15,6 +15,7 @@ import { ToastProvider } from '@/components/BilingualToast';
 import { NavigationProvider } from '@/components/navigation/NavigationProvider';
 import { useViewportHeight } from '@/lib/useViewportHeight';
 import { cleanExpiredSessions } from '@/lib/sessions/sessionStore';
+import { ProviderOrderGuard } from '@/lib/providerOrderGuard';
 
 // Install history guard before component mounts -- catches Safari SecurityError
 // from rate-limited replaceState/pushState calls so they don't crash navigation.
@@ -57,7 +58,10 @@ export function ClientProviders({ children }: ClientProvidersProps) {
                   <SocialProvider>
                     <SRSProvider>
                       <StateProvider>
-                        <NavigationProvider>{children}</NavigationProvider>
+                        <NavigationProvider>
+                          {process.env.NODE_ENV === 'development' && <ProviderOrderGuard />}
+                          {children}
+                        </NavigationProvider>
                       </StateProvider>
                     </SRSProvider>
                   </SocialProvider>
