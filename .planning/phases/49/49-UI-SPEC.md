@@ -54,8 +54,10 @@ Source: `tokens.css --space-*`, existing `ErrorBoundary.tsx` patterns
 | Error title (en) | 20px (1.25rem) | 600 (semibold) | 1.5 | `text-xl font-semibold` | English error heading in SharedErrorFallback |
 | Error subtitle (my) | 18px (1.125rem) | 400 (normal) | 1.6 | `text-lg font-myanmar` | Burmese error message below English |
 | Error body (en) | 16px (1rem) | 400 (normal) | 1.5 | `text-base` | Supplementary context text |
-| Button label | 16px (1rem) | 500 (medium) | 1.5 | `text-base font-medium` | "Try again" / "Return home" buttons |
-| 404 display | 36px (2.25rem) | 800 (extrabold) | 1.2 | `text-display` | 404 page number |
+| Button label | 16px (1rem) | 600 (semibold) | 1.5 | `text-base font-semibold` | "Try again" / "Return home" buttons |
+| 404 display | 36px (2.25rem) | 600 (semibold) | 1.2 | `text-display font-semibold` | 404 page number |
+
+**Weight budget:** 2 weights only -- 400 (normal) and 600 (semibold). All body/subtitle text uses 400. All headings, buttons, and display text uses 600.
 
 **Myanmar typography rules (mandatory):**
 - Always apply `font-myanmar` class to Burmese text
@@ -100,7 +102,7 @@ Source: `tokens.css`, `49-PRECONTEXT-RESEARCH.md` section 4, `49-CONTEXT.md` dec
 |    "Something went wrong"                    |  text-xl font-semibold text-foreground
 |    "..." (Burmese)                           |  text-lg font-myanmar text-foreground mt-1
 |                mb-8                          |
-|    [Try again]      [Return home]            |  min-h-[44px] gap-3
+|    [Try again]      [Return home]            |  min-h-[44px] gap-3 font-semibold
 +---------------------------------------------+
   Container: max-w-md, p-8, rounded-2xl, bg-muted/30
   Outer: min-h-[400px] flex items-center justify-center p-6
@@ -138,10 +140,12 @@ Source: `tokens.css`, `49-PRECONTEXT-RESEARCH.md` section 4, `49-CONTEXT.md` dec
 
 ### app/not-found.tsx (404 page)
 
-- Large "404" display number: `text-display font-extrabold text-primary`
+**Eye path (primary to tertiary):** "404" number (primary focal anchor) -> heading "Page Not Found" -> body text -> "Go home" CTA button.
+
+- Large "404" display number: `text-display font-semibold text-primary` -- primary visual anchor, largest element on page
 - Bilingual heading: "Page Not Found" / Burmese equivalent
 - Bilingual body text with next-step guidance
-- "Return home" Link component: `min-h-[44px]` button styling
+- "Go home" Link component: `min-h-[44px]` button styling, `font-semibold`
 - Uses `useLanguage()` hook (inside provider tree)
 
 ### Session Error Boundary Fallback (component-level)
