@@ -1,6 +1,7 @@
 export {
   syncSettingsToSupabase,
   loadSettingsFromSupabase,
+  loadSettingsRowFromSupabase,
   gatherCurrentSettings,
   mapRowToSettings,
   mapSettingsToRow,

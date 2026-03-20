@@ -13,6 +13,7 @@ import { flushSync } from 'react-dom';
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
+import { setFieldTimestamp, markFieldDirty } from '@/lib/settings/settingsTimestamps';
 
 type Theme = 'light' | 'dark';
 
@@ -58,6 +59,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     root.classList.add(theme);
     root.style.setProperty('color-scheme', theme);
     window.localStorage.setItem('civic-theme', theme);
+
+    // Record per-field timestamp for LWW merge (Phase 50: ARCH-03)
+    setFieldTimestamp('theme');
+    if (!navigator.onLine) markFieldDirty('theme');
 
     // Fire-and-forget sync to Supabase
     if (userRef.current?.id) {

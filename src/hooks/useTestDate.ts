@@ -15,6 +15,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
+import { setFieldTimestamp, markFieldDirty } from '@/lib/settings/settingsTimestamps';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -84,6 +85,10 @@ export function useTestDate(): UseTestDateReturn {
       localStorage.removeItem(TEST_DATE_KEY);
     }
 
+    // Record per-field timestamp for LWW merge (Phase 50: ARCH-03)
+    setFieldTimestamp('testDate');
+    if (!navigator.onLine) markFieldDirty('testDate');
+
     // Fire-and-forget sync to Supabase
     if (userRef.current?.id) {
       const settings = gatherCurrentSettings();
@@ -99,6 +104,10 @@ export function useTestDate(): UseTestDateReturn {
       // Clear test date on pass
       localStorage.removeItem(TEST_DATE_KEY);
       setTestDateState(null);
+
+      // Record per-field timestamp for LWW merge (Phase 50: ARCH-03)
+      setFieldTimestamp('testDate');
+      if (!navigator.onLine) markFieldDirty('testDate');
 
       // Fire-and-forget sync to Supabase (testDate is now null)
       if (userRef.current?.id) {

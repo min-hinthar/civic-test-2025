@@ -12,6 +12,8 @@ import {
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
+import { setFieldTimestamp, markFieldDirty } from '@/lib/settings/settingsTimestamps';
+import type { UserSettings } from '@/lib/settings/settingsSync';
 
 import { createTTSEngine, loadVoices } from '../lib/ttsCore';
 import type { TTSEngine, TTSSettings, TTSState } from '../lib/ttsTypes';
@@ -171,6 +173,22 @@ export function TTSProvider({ children }: { children: ReactNode }) {
             lang: next.lang,
             preferredVoiceName: next.preferredVoiceName,
           });
+        }
+
+        // Record per-field timestamps for LWW merge (Phase 50: ARCH-03)
+        // Map TTSSettings keys to UserSettings keys for sync tracking
+        const ttsFieldMap: Partial<Record<keyof TTSSettings, keyof UserSettings>> = {
+          rate: 'ttsRate',
+          pitch: 'ttsPitch',
+          autoRead: 'ttsAutoRead',
+          autoReadLang: 'ttsAutoReadLang',
+        };
+        for (const key of Object.keys(partial) as (keyof TTSSettings)[]) {
+          const settingsField = ttsFieldMap[key];
+          if (settingsField) {
+            setFieldTimestamp(settingsField);
+            if (!navigator.onLine) markFieldDirty(settingsField);
+          }
         }
 
         // Fire-and-forget sync to Supabase

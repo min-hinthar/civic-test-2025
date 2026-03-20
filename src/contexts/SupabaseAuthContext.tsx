@@ -14,7 +14,18 @@ import { supabase } from '@/lib/supabaseClient';
 import { captureError } from '@/lib/sentry';
 import { createSaveSessionGuard } from '@/lib/saveSession';
 import { queueTestResult } from '@/lib/pwa/offlineDb';
-import { loadSettingsFromSupabase } from '@/lib/settings';
+import {
+  loadSettingsRowFromSupabase,
+  gatherCurrentSettings,
+  mapRowToSettings,
+  syncSettingsToSupabase,
+} from '@/lib/settings';
+import {
+  getSettingsTimestamps,
+  getDirtyFlags,
+  clearDirtyFlags,
+  mergeSettingsWithTimestamps,
+} from '@/lib/settings/settingsTimestamps';
 import {
   loadBookmarksFromSupabase,
   mergeBookmarks,
@@ -150,47 +161,81 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
     setIsLoading(false);
 
-    // Pull settings from Supabase (server wins) -- Phase 46
-    loadSettingsFromSupabase(authUser.id)
-      .then(remoteSettings => {
-        if (!remoteSettings) return;
-        // Write synced values to existing localStorage keys
-        // so contexts hydrate correctly on next mount
-        try {
-          localStorage.setItem('civic-theme', remoteSettings.theme);
-          localStorage.setItem('civic-test-language-mode', remoteSettings.languageMode);
-          localStorage.setItem(
-            'civic-prep-tts-settings',
-            JSON.stringify({
-              rate: remoteSettings.ttsRate,
-              pitch: remoteSettings.ttsPitch,
-              autoRead: remoteSettings.ttsAutoRead,
-              autoReadLang: remoteSettings.ttsAutoReadLang,
-              // Preserve device-local preferredVoiceName
-              ...(() => {
-                try {
-                  return {
-                    preferredVoiceName: JSON.parse(
-                      localStorage.getItem('civic-prep-tts-settings') ?? '{}'
-                    ).preferredVoiceName,
-                  };
-                } catch {
-                  return {};
-                }
-              })(),
-            })
-          );
-          if (remoteSettings.testDate) {
-            localStorage.setItem('civic-prep-test-date', remoteSettings.testDate);
-          } else {
-            localStorage.removeItem('civic-prep-test-date');
+    // Pull settings with per-field LWW merge (Phase 50: ARCH-03)
+    loadSettingsRowFromSupabase(authUser.id)
+      .then(remoteRow => {
+        if (!remoteRow) return;
+
+        const local = gatherCurrentSettings();
+        const localTimestamps = getSettingsTimestamps();
+        const localDirty = getDirtyFlags();
+        const remote = mapRowToSettings(remoteRow);
+
+        const { merged, changedFields } = mergeSettingsWithTimestamps({
+          local,
+          localTimestamps,
+          localDirty,
+          remote,
+          remoteUpdatedAt: remoteRow.updated_at,
+        });
+
+        // Only write changed fields to localStorage
+        if (changedFields.length > 0) {
+          try {
+            if (changedFields.includes('theme')) {
+              localStorage.setItem('civic-theme', merged.theme);
+            }
+            if (changedFields.includes('languageMode')) {
+              localStorage.setItem('civic-test-language-mode', merged.languageMode);
+            }
+            if (
+              changedFields.includes('ttsRate') ||
+              changedFields.includes('ttsPitch') ||
+              changedFields.includes('ttsAutoRead') ||
+              changedFields.includes('ttsAutoReadLang')
+            ) {
+              localStorage.setItem(
+                'civic-prep-tts-settings',
+                JSON.stringify({
+                  rate: merged.ttsRate,
+                  pitch: merged.ttsPitch,
+                  autoRead: merged.ttsAutoRead,
+                  autoReadLang: merged.ttsAutoReadLang,
+                  // Preserve device-local preferredVoiceName
+                  ...(() => {
+                    try {
+                      return {
+                        preferredVoiceName: JSON.parse(
+                          localStorage.getItem('civic-prep-tts-settings') ?? '{}'
+                        ).preferredVoiceName,
+                      };
+                    } catch {
+                      return {};
+                    }
+                  })(),
+                })
+              );
+            }
+            if (changedFields.includes('testDate')) {
+              if (merged.testDate) {
+                localStorage.setItem('civic-prep-test-date', merged.testDate);
+              } else {
+                localStorage.removeItem('civic-prep-test-date');
+              }
+            }
+          } catch {
+            // localStorage unavailable
           }
-        } catch {
-          // localStorage unavailable
         }
+
+        // Clear dirty flags after successful merge
+        clearDirtyFlags();
+
+        // Push merged result back to Supabase for consistency
+        syncSettingsToSupabase(authUser.id, merged);
       })
       .catch(() => {
-        /* silent -- settings pull failure is non-critical */
+        /* silent -- settings merge failure is non-critical */
       });
 
     // Pull and merge bookmarks from Supabase (add-wins) -- Phase 46

@@ -168,6 +168,28 @@ export async function syncSettingsToSupabase(
  * Used on sign-in to load remote settings (server wins).
  * Returns null if no data exists or on error (graceful degradation).
  */
+/**
+ * Load raw settings row from Supabase (includes updated_at for LWW merge).
+ * Used by SupabaseAuthContext for per-field timestamp comparison.
+ */
+export async function loadSettingsRowFromSupabase(userId: string): Promise<UserSettingsRow | null> {
+  try {
+    const { data, error } = await supabase
+      .from('user_settings')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return data as UserSettingsRow;
+  } catch (err) {
+    captureError(err, { operation: 'settingsSync.pullRow', userId });
+    return null;
+  }
+}
+
 export async function loadSettingsFromSupabase(userId: string): Promise<UserSettings | null> {
   try {
     const { data, error } = await supabase

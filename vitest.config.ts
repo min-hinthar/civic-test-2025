@@ -169,6 +169,12 @@ export default defineConfig({
           functions: 100,
           lines: 80,
         },
+        'src/lib/settings/settingsTimestamps.ts': {
+          statements: 97,
+          branches: 94,
+          functions: 100,
+          lines: 97,
+        },
         'src/lib/settings/settingsSync.ts': {
           statements: 40,
           branches: 57,

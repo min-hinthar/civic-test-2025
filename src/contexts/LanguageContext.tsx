@@ -12,6 +12,7 @@ import {
 
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { gatherCurrentSettings, syncSettingsToSupabase } from '@/lib/settings';
+import { setFieldTimestamp, markFieldDirty } from '@/lib/settings/settingsTimestamps';
 
 export type LanguageMode = 'bilingual' | 'english-only';
 
@@ -66,6 +67,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setModeState(newMode);
     localStorage.setItem(STORAGE_KEY, newMode);
     document.documentElement.lang = langAttrForMode(newMode);
+
+    // Record per-field timestamp for LWW merge (Phase 50: ARCH-03)
+    setFieldTimestamp('languageMode');
+    if (!navigator.onLine) markFieldDirty('languageMode');
 
     // Fire-and-forget sync to Supabase
     if (userRef.current?.id) {
