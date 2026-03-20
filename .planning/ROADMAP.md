@@ -147,11 +147,12 @@ Plans:
   2. During an active mock test or interview, the update toast is suppressed until the session completes
   3. A user who changes settings offline and then logs in on another device retains their offline changes via per-field last-write-wins merge
   4. When the app deploys with updated question content, stale IndexedDB-cached questions are invalidated and refreshed on next load
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 50-01: TBD
-- [ ] 50-02: TBD
+- [ ] 50-01-PLAN.md -- IndexedDB cache versioning with centralized STORAGE_VERSIONS constants and questions cache validation
+- [ ] 50-02-PLAN.md -- SW update toast with persistent bilingual notification and session-lock deferral guard
+- [ ] 50-03-PLAN.md -- Per-field LWW settings sync with timestamps, dirty flags, and merge algorithm
 
 ### Phase 51: Unit Test Expansion
 **Goal**: All context providers have unit test coverage, preventing provider bugs from reaching production undetected
@@ -206,7 +207,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 48. Test Infrastructure + Quick Wins | 4/4 | Complete    | 2026-03-20 |
 | 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
-| 50. PWA + Sync Resilience | 0/TBD | Not started | - |
+| 50. PWA + Sync Resilience | 0/3 | Not started | - |
 | 51. Unit Test Expansion | 0/TBD | Not started | - |
 | 52. E2E Critical Flows + Accessibility | 0/TBD | Not started | - |
 | 53. Component Decomposition | 0/TBD | Not started | - |
