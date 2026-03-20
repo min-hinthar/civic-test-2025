@@ -186,6 +186,8 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Service worker update UX with persistent bilingual toast and session-lock deferral — v4.1
 - ✓ Per-field LWW settings sync preserving offline changes on cross-device login — v4.1
 - ✓ IndexedDB cache versioning with per-store constants and stale data invalidation — v4.1
+- ✓ Unit tests for 8 context providers (94 tests, 8 per-file coverage thresholds) — v4.1
+- ✓ Dependency audit: CVE-2026-26996 removed, 3 overrides validated, react-joyride documented — v4.1
 
 ### Active
 
@@ -231,7 +233,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ## Context
 
-**Current state (v4.1 in progress, Phase 50 complete):** Premium bilingual PWA with 226 validated requirements across 5 milestones + Phase 50 of v4.1 complete. SW update UX with persistent bilingual toast and session-lock deferral. Per-field LWW settings sync preserving offline changes. IndexedDB cache versioning with stale data invalidation. Deployed at https://civic-test-2025.vercel.app/
+**Current state (v4.1 in progress, Phase 51 complete):** Premium bilingual PWA with 226 validated requirements across 5 milestones + Phase 51 of v4.1 complete. 94 unit tests covering all 8 context providers with per-file coverage thresholds. 779 total tests passing. Dependency audit clean (0 prod vulnerabilities). Deployed at https://civic-test-2025.vercel.app/
 
 **Tech stack:** Next.js 16 (App Router) + React 19 + TypeScript 5.9 + Supabase (Auth + Postgres + RLS). Tailwind CSS 3 with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. ts-fsrs for spaced repetition. Deployed on Vercel.
 
@@ -302,4 +304,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-20 after Phase 50 complete*
+*Last updated: 2026-03-20 after Phase 51 complete*
