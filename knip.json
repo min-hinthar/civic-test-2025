@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["app/**/*.{ts,tsx}", "src/instrumentation*.ts", "src/sw.ts", "src/__tests__/setup.ts"],
+  "project": ["app/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"],
+  "ignoreDependencies": ["lint-staged", "serwist", "@playwright/test"],
+  "ignoreBinaries": ["lint-staged"],
+  "next": {
+    "entry": [
+      "app/**/page.{ts,tsx}",
+      "app/**/layout.{ts,tsx}",
+      "app/**/error.{ts,tsx}",
+      "app/**/loading.{ts,tsx}",
+      "app/**/not-found.{ts,tsx}",
+      "app/**/route.{ts,tsx}",
+      "app/global-error.{ts,tsx}",
+      "next.config.{js,ts,mjs}",
+      "next-env.d.ts"
+    ]
+  }
+}
