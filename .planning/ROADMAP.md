@@ -114,12 +114,13 @@ See `.planning/MILESTONES.md` for completed milestone details.
   3. CI pipeline fails on CSS regressions (lint:css) and coverage drops below established thresholds on src/lib/ files
   4. The @lottiefiles/dotlottie-react package and its WASM infrastructure are fully removed from the bundle
   5. Sentry groups network/IndexedDB/Supabase errors by operation class instead of creating individual issues per occurrence
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 48-01: TBD
-- [ ] 48-02: TBD
-- [ ] 48-03: TBD
+- [ ] 48-01-PLAN.md -- Dependency cleanup: DotLottie removal, safeAsync docs, RLS policy cleanup
+- [ ] 48-02-PLAN.md -- CI hardening: lint:css step, per-file coverage thresholds, global 40% floor
+- [ ] 48-03-PLAN.md -- renderWithProviders test utility with preset system
+- [ ] 48-04-PLAN.md -- Playwright E2E setup, Knip dead code detection, Sentry fingerprinting verification
 
 ### Phase 49: Error Handling + Security
 **Goal**: Users never see raw error messages or English-only error screens, and feature-level crashes are contained without killing the entire app
@@ -202,7 +203,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 48. Test Infrastructure + Quick Wins | 0/TBD | Not started | - |
+| 48. Test Infrastructure + Quick Wins | 0/4 | Planning complete | - |
 | 49. Error Handling + Security | 0/TBD | Not started | - |
 | 50. PWA + Sync Resilience | 0/TBD | Not started | - |
 | 51. Unit Test Expansion | 0/TBD | Not started | - |
