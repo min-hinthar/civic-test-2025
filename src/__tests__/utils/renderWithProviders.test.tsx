@@ -229,6 +229,29 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
     clearTimeout(id);
 }
 
+// Enhance speechSynthesis mock with addEventListener/removeEventListener
+// (global setup only provides speak/cancel/getVoices -- TTSContext needs event listeners)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'speechSynthesis', {
+    writable: true,
+    configurable: true,
+    value: {
+      speak: vi.fn(),
+      cancel: vi.fn(),
+      pause: vi.fn(),
+      resume: vi.fn(),
+      getVoices: vi.fn().mockReturnValue([]),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+      onvoiceschanged: null,
+      paused: false,
+      pending: false,
+      speaking: false,
+    },
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
