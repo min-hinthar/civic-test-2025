@@ -475,11 +475,30 @@ describe('SocialContext', () => {
     const { loadStreakFromSupabase, mergeStreakData } = await import('@/lib/social/streakSync');
     const { getStreakData } = await import('@/lib/social/streakStore');
 
-    const remoteStreak = { activityDates: ['2025-01-01'], currentStreak: 3, longestStreak: 5 };
-    vi.mocked(loadStreakFromSupabase).mockResolvedValue(remoteStreak);
-    vi.mocked(getStreakData).mockResolvedValue({ activityDates: ['2025-01-02'] });
+    const fullStreak = {
+      activityDates: ['2025-01-01'],
+      freezesAvailable: 0,
+      freezesUsed: [] as string[],
+      longestStreak: 5,
+      lastSyncedAt: null,
+      dailyActivityCounts: { srsReviewCount: 0, practiceTestCompleted: false },
+    };
+    vi.mocked(loadStreakFromSupabase).mockResolvedValue(fullStreak);
+    vi.mocked(getStreakData).mockResolvedValue({
+      activityDates: ['2025-01-02'],
+      freezesAvailable: 0,
+      freezesUsed: [],
+      longestStreak: 0,
+      lastSyncedAt: null,
+      dailyActivityCounts: { srsReviewCount: 0, practiceTestCompleted: false },
+    });
     vi.mocked(mergeStreakData).mockReturnValue({
       activityDates: ['2025-01-01', '2025-01-02'],
+      freezesAvailable: 0,
+      freezesUsed: [],
+      longestStreak: 5,
+      lastSyncedAt: null,
+      dailyActivityCounts: { srsReviewCount: 0, practiceTestCompleted: false },
     });
 
     renderWithProviders(<SocialConsumer />, { preset: 'full' });
@@ -501,6 +520,11 @@ describe('SocialContext', () => {
     // Local has activity
     vi.mocked(getStreakData).mockResolvedValue({
       activityDates: ['2025-01-15'],
+      freezesAvailable: 0,
+      freezesUsed: [],
+      longestStreak: 1,
+      lastSyncedAt: null,
+      dailyActivityCounts: { srsReviewCount: 0, practiceTestCompleted: false },
     });
 
     renderWithProviders(<SocialConsumer />, { preset: 'full' });
@@ -508,6 +532,11 @@ describe('SocialContext', () => {
     await waitFor(() => {
       expect(syncStreakToSupabase).toHaveBeenCalledWith('test-user-id', {
         activityDates: ['2025-01-15'],
+        freezesAvailable: 0,
+        freezesUsed: [],
+        longestStreak: 1,
+        lastSyncedAt: null,
+        dailyActivityCounts: { srsReviewCount: 0, practiceTestCompleted: false },
       });
     });
   });

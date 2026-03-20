@@ -289,7 +289,7 @@ describe('ThemeContext', () => {
     reducedMotionMatches = false;
     originalStartViewTransition = document.startViewTransition;
     // Default: no View Transitions API
-    (document as Record<string, unknown>).startViewTransition = undefined;
+    (document as unknown as Record<string, unknown>).startViewTransition = undefined;
     // Set up matchMedia mock
     window.matchMedia = createMatchMediaMock();
     // Create meta theme-color tag for tests
@@ -304,7 +304,8 @@ describe('ThemeContext', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-    (document as Record<string, unknown>).startViewTransition = originalStartViewTransition;
+    (document as unknown as Record<string, unknown>).startViewTransition =
+      originalStartViewTransition;
   });
 
   it('initializes with light theme by default (no localStorage, system preference=light)', async () => {
@@ -403,10 +404,12 @@ describe('ThemeContext', () => {
     const mockTransition = {
       ready: Promise.resolve(),
     };
-    (document as Record<string, unknown>).startViewTransition = vi.fn((cb: () => void) => {
-      cb();
-      return mockTransition;
-    });
+    (document as unknown as Record<string, unknown>).startViewTransition = vi.fn(
+      (cb: () => void) => {
+        cb();
+        return mockTransition;
+      }
+    );
     // Need to also mock document.documentElement.animate
     document.documentElement.animate = vi.fn();
 
@@ -442,7 +445,7 @@ describe('ThemeContext', () => {
     reducedMotionMatches = true;
     window.matchMedia = createMatchMediaMock();
     const mockStartViewTransition = vi.fn();
-    (document as Record<string, unknown>).startViewTransition = mockStartViewTransition;
+    (document as unknown as Record<string, unknown>).startViewTransition = mockStartViewTransition;
 
     renderWithProviders(<ThemeConsumer />, { preset: 'full' });
     await waitFor(() => {
