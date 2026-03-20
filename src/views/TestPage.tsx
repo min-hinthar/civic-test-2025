@@ -31,6 +31,7 @@ import { UpdateBanner } from '@/components/update/UpdateBanner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { playCorrect, playIncorrect, playTimerWarningTick } from '@/lib/audio/soundEffects';
 import { saveSession, getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
+import { captureError } from '@/lib/sentry';
 import type { MockTestSnapshot } from '@/lib/sessions/sessionTypes';
 import { SESSION_VERSION } from '@/lib/sessions/sessionTypes';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
@@ -356,7 +357,7 @@ const TestPage = () => {
           my: `စမ်းသပ်စာမေးပွဲ သိမ်းဆည်းပြီး — အဖြေမှန် ${finalCorrect} ခု`,
         });
       } catch (error) {
-        console.error(error);
+        captureError(error, { operation: 'saveTestSession', component: 'TestPage' });
         hasSavedSessionRef.current = false;
         showWarning({
           en: 'Unable to save test — please check your connection',

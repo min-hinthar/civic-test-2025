@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import { useSRS } from '@/contexts/SRSContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/components/BilingualToast';
+import { captureError } from '@/lib/sentry';
 
 export interface AddToDeckButtonProps {
   /** Question ID to add/remove from deck */
@@ -70,7 +71,7 @@ export function AddToDeckButton({
           });
         }
       } catch (error) {
-        console.error('[AddToDeckButton] Toggle failed:', error);
+        captureError(error, { operation: 'deckToggle', component: 'AddToDeckButton' });
       } finally {
         setIsProcessing(false);
       }

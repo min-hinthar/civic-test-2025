@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useToast } from '@/components/BilingualToast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { captureError } from '@/lib/sentry';
 
 import GoogleOneTapSignIn from '@/components/GoogleOneTapSignIn';
 import { Button } from '@/components/ui/Button';
@@ -55,7 +56,7 @@ const AuthPage = ({ nonce }: AuthPageProps) => {
           : '/home';
       router.replace(redirectTo);
     } catch (error) {
-      console.error(error);
+      captureError(error, { operation: 'authRedirect', component: 'AuthPage' });
     }
   };
 

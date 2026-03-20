@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { useToast } from '@/components/BilingualToast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/supabaseClient';
+import { captureError } from '@/lib/sentry';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
@@ -27,7 +28,7 @@ const GoogleOneTapSignIn = ({ nonce }: GoogleOneTapSignInProps) => {
       try {
         await loginWithGoogleIdToken(credential);
       } catch (error) {
-        console.error('Google One Tap failed', error);
+        captureError(error, { operation: 'googleOneTap', component: 'GoogleOneTapSignIn' });
         showError({
           en: 'Google sign-in blocked — please try again or use email',
           my: 'Google ဝင်ရောက်မှု ပိတ်ဆို့ခံရပါသည်',
@@ -86,7 +87,7 @@ const GoogleOneTapSignIn = ({ nonce }: GoogleOneTapSignInProps) => {
         window.location.href = data.url;
       }
     } catch (error) {
-      console.error('Supabase Google OAuth fallback failed', error);
+      captureError(error, { operation: 'googleOAuthFallback', component: 'GoogleOneTapSignIn' });
       showError({
         en: 'Google sign-in unavailable — please try email login instead',
         my: 'Google ဝင်ရောက်မှု မရရှိနိုင်ပါ',

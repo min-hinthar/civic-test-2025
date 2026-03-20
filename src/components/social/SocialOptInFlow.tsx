@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/Button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSocial } from '@/contexts/SocialContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { captureError } from '@/lib/sentry';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -68,7 +69,7 @@ export function SocialOptInFlow({ open, onComplete, onCancel }: SocialOptInFlowP
       await optIn(displayName.trim());
       onComplete();
     } catch (error) {
-      console.error('[SocialOptInFlow] Opt-in failed:', error);
+      captureError(error, { operation: 'socialOptIn', component: 'SocialOptInFlow' });
     } finally {
       setIsSubmitting(false);
     }
