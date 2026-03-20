@@ -28,7 +28,7 @@ No user-facing changes. No new features. Infrastructure only.
 - Config + webServer + single smoke test only — Phase 52 writes the 7 real E2E tests
 - `pnpm start` (production build) for CI, `pnpm dev` for local with `reuseExistingServer`
 - Test directory: `e2e/`
-- Projects: chromium, firefox, webkit
+- Projects: chromium only for Phase 48 smoke test (full matrix chromium/firefox/webkit deferred to Phase 52 E2E tests)
 - Smoke test: navigate to homepage, verify title/heading renders
 - New script: `pnpm test:e2e`
 
