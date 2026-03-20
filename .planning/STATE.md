@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Completed 48-01-PLAN.md
-last_updated: "2026-03-20T02:12:53.991Z"
+stopped_at: Completed 48-02-PLAN.md
+last_updated: "2026-03-20T02:13:58.348Z"
 progress:
   total_phases: 6
   completed_phases: 0
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 48 (Test Infrastructure + Quick Wins) — EXECUTING
-Plan: 2 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -38,6 +38,8 @@ Plan: 2 of 4
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 48 | 01 | 12min | 2 | 7 |
+| 48 | 02 | 13min | 2 | 2 |
+| 48 | 03 | 13min | 1 | 2 |
 
 ## Accumulated Context
 
@@ -45,6 +47,10 @@ Plan: 2 of 4
 
 - DotLottie removal safe: no .lottie assets in public/, component rendered nothing
 - safeAsync kept as reserved infrastructure (tree-shaken, zero runtime cost)
+- Coverage thresholds floored from actual values (not aspirational) per G-06 guardrail
+- Global branches threshold 30% (lower than 40% for lines/functions/statements)
+- Core preset includes 6 providers (ErrorBoundary, Auth, Language, Theme, Toast, State) for ~78% test coverage
+- Provider ordering enforced via PROVIDER_ORDER array matching ClientProviders.tsx
 
 ### Pending Todos
 
@@ -59,6 +65,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T02:12:38.450Z
-Stopped at: Completed 48-01-PLAN.md
+Last session: 2026-03-20T02:13:58.344Z
+Stopped at: Completed 48-02-PLAN.md
 Resume file: None

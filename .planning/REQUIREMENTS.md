@@ -9,7 +9,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 ### Testing Infrastructure
 
-- [ ] **TEST-01**: Shared `renderWithProviders` test utility with configurable provider stack and sensible defaults
+- [x] **TEST-01**: Shared `renderWithProviders` test utility with configurable provider stack and sensible defaults
 - [ ] **TEST-02**: Playwright E2E framework configured with `webServer` pointing to production build
 - [ ] **TEST-03**: E2E test: auth login -> dashboard render with user data
 - [ ] **TEST-04**: E2E test: mock test lifecycle (start, answer 20 questions, timer, pass/fail, results saved)
@@ -85,7 +85,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEST-01 | Phase 48 | Pending |
+| TEST-01 | Phase 48 | Complete |
 | TEST-02 | Phase 48 | Pending |
 | TEST-03 | Phase 52 | Pending |
 | TEST-04 | Phase 52 | Pending |
