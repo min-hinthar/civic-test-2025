@@ -19,8 +19,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [ ] **TEST-08**: E2E test: interview session (setup, questions, text input, grading, results)
 - [ ] **TEST-09**: E2E test: service worker update (detect new version, toast, user-triggered reload)
 - [ ] **TEST-10**: Unit tests for 8 untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation)
-- [ ] **TEST-11**: Coverage thresholds enforced on all `src/lib/` files with existing test suites (~15 files)
-- [ ] **TEST-12**: Global coverage minimum floor established
+- [x] **TEST-11**: Coverage thresholds enforced on all `src/lib/` files with existing test suites (~15 files)
+- [x] **TEST-12**: Global coverage minimum floor established
 
 ### Error Handling & Security
 
@@ -57,7 +57,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 ### Developer Experience
 
-- [ ] **DX-01**: `lint:css` step added to CI pipeline
+- [x] **DX-01**: `lint:css` step added to CI pipeline
 - [ ] **DX-02**: Dead code detection run (Knip) with findings addressed
 - [ ] **DX-03**: Console output in production replaced with structured `captureError()` where impactful
 
@@ -95,8 +95,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | TEST-08 | Phase 52 | Pending |
 | TEST-09 | Phase 52 | Pending |
 | TEST-10 | Phase 51 | Pending |
-| TEST-11 | Phase 48 | Pending |
-| TEST-12 | Phase 48 | Pending |
+| TEST-11 | Phase 48 | Complete |
+| TEST-12 | Phase 48 | Complete |
 | ERRS-01 | Phase 49 | Pending |
 | ERRS-02 | Phase 49 | Pending |
 | ERRS-03 | Phase 49 | Pending |
@@ -118,7 +118,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | DEPS-03 | Phase 48 | Complete |
 | DEPS-04 | Phase 51 | Pending |
 | DEPS-05 | Phase 51 | Pending |
-| DX-01 | Phase 48 | Pending |
+| DX-01 | Phase 48 | Complete |
 | DX-02 | Phase 48 | Pending |
 | DX-03 | Phase 49 | Pending |
 
