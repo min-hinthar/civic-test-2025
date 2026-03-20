@@ -104,8 +104,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   render(): ReactNode {
     if (this.state.hasError) {
-      // If a custom fallback is provided, use it
-      if (this.props.fallback) {
+      // If a custom fallback is provided, use it (null = silent failure)
+      if (this.props.fallback !== undefined) {
         return this.props.fallback;
       }
 

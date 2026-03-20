@@ -6,6 +6,7 @@ import { TestResultsScreen } from '@/components/results/TestResultsScreen';
 import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 import { useNavigation } from '@/components/navigation/NavigationProvider';
+import { withSessionErrorBoundary } from '@/components/withSessionErrorBoundary';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import SpeechButton from '@/components/ui/SpeechButton';
 import { BurmeseSpeechButton } from '@/components/ui/BurmeseSpeechButton';
@@ -958,4 +959,8 @@ const TestPage = () => {
   );
 };
 
-export default TestPage;
+const ProtectedTestPage = withSessionErrorBoundary(TestPage, {
+  componentName: 'TestPage',
+});
+
+export default ProtectedTestPage;

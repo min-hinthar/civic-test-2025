@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Dynamic imports with ssr: false — these components use browser-only APIs
 // (canvas-confetti path shapes, localStorage, matchMedia, etc.)
@@ -34,7 +35,9 @@ const SyncStatusIndicator = dynamic(
 export function GlobalOverlays() {
   return (
     <>
-      <CelebrationOverlay />
+      <ErrorBoundary fallback={null}>
+        <CelebrationOverlay />
+      </ErrorBoundary>
       <PWAOnboardingFlow />
       <OnboardingTour />
       <GreetingFlow />

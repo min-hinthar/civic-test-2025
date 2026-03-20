@@ -6,6 +6,7 @@ import { useNavigation } from '@/components/navigation/NavigationProvider';
 import { PracticeConfig, type PracticeConfigType } from '@/components/practice/PracticeConfig';
 import { PracticeSession } from '@/components/practice/PracticeSession';
 import { PracticeResults } from '@/components/practice/PracticeResults';
+import { withSessionErrorBoundary } from '@/components/withSessionErrorBoundary';
 import { selectPracticeQuestions, getWeakQuestions } from '@/lib/practice/questionSelection';
 import {
   getCategoryQuestionIds,
@@ -26,6 +27,10 @@ import type { USCISCategory, CategoryName } from '@/lib/mastery';
 import type { SessionSnapshot } from '@/lib/sessions/sessionTypes';
 
 type PracticePhase = 'config' | 'session' | 'results';
+
+const ProtectedPracticeSession = withSessionErrorBoundary(PracticeSession, {
+  componentName: 'PracticeSession',
+});
 
 const categoryColorToTailwind: Record<string, string> = {
   blue: 'text-primary',
@@ -270,7 +275,7 @@ const PracticePage = () => {
         <PracticeConfig onStart={handleStart} initialCategory={initialCategory} />
       )}
       {phase === 'session' && practiceQuestions.length > 0 && (
-        <PracticeSession
+        <ProtectedPracticeSession
           questions={practiceQuestions}
           timerEnabled={timerEnabled}
           onComplete={handleComplete}

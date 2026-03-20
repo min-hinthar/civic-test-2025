@@ -8,6 +8,7 @@ import { InterviewSetup } from '@/components/interview/InterviewSetup';
 import { InterviewCountdown } from '@/components/interview/InterviewCountdown';
 import { InterviewSession } from '@/components/interview/InterviewSession';
 import { InterviewResults } from '@/components/interview/InterviewResults';
+import { withSessionErrorBoundary } from '@/components/withSessionErrorBoundary';
 import { getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { allQuestions } from '@/constants/questions';
@@ -19,6 +20,10 @@ import type { InterviewSpeechOverrides } from '@/components/interview/InterviewS
 import type { InterviewMode, InterviewResult, InterviewEndReason, Question } from '@/types';
 
 type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
+
+const ProtectedInterviewSession = withSessionErrorBoundary(InterviewSession, {
+  componentName: 'InterviewSession',
+});
 
 /** Number of questions per interview session */
 const QUESTIONS_PER_SESSION = 20;
@@ -221,7 +226,7 @@ const InterviewPage = () => {
       )}
       {phase === 'session' && (
         <>
-          <InterviewSession
+          <ProtectedInterviewSession
             mode={mode}
             onComplete={handleSessionComplete}
             micPermission={micPermission}
