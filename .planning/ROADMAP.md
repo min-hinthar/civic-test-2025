@@ -162,11 +162,12 @@ Plans:
   1. All 8 previously untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation) have unit tests exercising their core behaviors
   2. Per-file coverage thresholds are added simultaneously with each new test file -- no speculative thresholds on untested code
   3. Dependency overrides and ignored CVEs are re-evaluated with current audit data, and react-joyride is pinned to stable 3.0.0 if available
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 51-01: TBD
-- [ ] 51-02: TBD
+- [ ] 51-01-PLAN.md -- Unit tests for State, Navigation, Language, Offline providers + 4 per-file coverage thresholds
+- [ ] 51-02-PLAN.md -- Unit tests for Theme, Social, SRS, SupabaseAuth providers + 4 per-file thresholds + global floor bump
+- [ ] 51-03-PLAN.md -- Dependency audit re-evaluation (overrides, CVEs, react-joyride status)
 
 ### Phase 52: E2E Critical Flows + Accessibility
 **Goal**: The 7 most critical user flows have automated regression detection, and WCAG 2.2 compliance gaps in touch targets and glass contrast are identified and resolved
@@ -208,7 +209,7 @@ Plans:
 | 48. Test Infrastructure + Quick Wins | 4/4 | Complete    | 2026-03-20 |
 | 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
 | 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
-| 51. Unit Test Expansion | 0/TBD | Not started | - |
+| 51. Unit Test Expansion | 0/3 | Not started | - |
 | 52. E2E Critical Flows + Accessibility | 0/TBD | Not started | - |
 | 53. Component Decomposition | 0/TBD | Not started | - |
 
