@@ -76,13 +76,15 @@ export function beforeSendHandler(event: ErrorEvent, _hint: EventHint): ErrorEve
     return null;
   }
 
-  // --- App-specific fingerprinting ---
-  if (/network|fetch|ECONNREFUSED|ERR_INTERNET_DISCONNECTED/i.test(errorValue)) {
-    event.fingerprint = ['network-error'];
-  } else if (/IndexedDB|QuotaExceeded|IDBDatabase/i.test(errorValue)) {
-    event.fingerprint = ['indexeddb-error'];
-  } else if (/SpeechSynthesis|speechSynthesis|utterance/i.test(errorValue)) {
-    event.fingerprint = ['tts-error'];
+  // --- App-specific fingerprinting (skip if already fingerprinted above) ---
+  if (!event.fingerprint) {
+    if (/network|fetch|ECONNREFUSED|ERR_INTERNET_DISCONNECTED/i.test(errorValue)) {
+      event.fingerprint = ['network-error'];
+    } else if (/IndexedDB|QuotaExceeded|IDBDatabase/i.test(errorValue)) {
+      event.fingerprint = ['indexeddb-error'];
+    } else if (/SpeechSynthesis|speechSynthesis|utterance/i.test(errorValue)) {
+      event.fingerprint = ['tts-error'];
+    }
   }
 
   // Strip PII from exception messages
