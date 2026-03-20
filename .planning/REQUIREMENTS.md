@@ -10,7 +10,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 ### Testing Infrastructure
 
 - [x] **TEST-01**: Shared `renderWithProviders` test utility with configurable provider stack and sensible defaults
-- [ ] **TEST-02**: Playwright E2E framework configured with `webServer` pointing to production build
+- [x] **TEST-02**: Playwright E2E framework configured with `webServer` pointing to production build
 - [ ] **TEST-03**: E2E test: auth login -> dashboard render with user data
 - [ ] **TEST-04**: E2E test: mock test lifecycle (start, answer 20 questions, timer, pass/fail, results saved)
 - [ ] **TEST-05**: E2E test: practice session (category filter, answer, feedback panel, keyword highlights)
@@ -28,7 +28,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [ ] **ERRS-02**: All 3 error.tsx files render bilingual error messages with "Return home" navigation
 - [ ] **ERRS-03**: Component-level error boundaries on InterviewSession, PracticeSession, TestPage, CelebrationOverlay
 - [ ] **ERRS-04**: Error boundaries trigger session save in `componentDidCatch` to prevent data loss
-- [ ] **ERRS-05**: Sentry error fingerprinting groups network/IndexedDB/Supabase errors by class
+- [x] **ERRS-05**: Sentry error fingerprinting groups network/IndexedDB/Supabase errors by class
 - [ ] **ERRS-06**: Provider ordering dev-mode runtime guard validates mount order in `ClientProviders.tsx`
 
 ### Architecture Resilience
@@ -58,7 +58,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 ### Developer Experience
 
 - [x] **DX-01**: `lint:css` step added to CI pipeline
-- [ ] **DX-02**: Dead code detection run (Knip) with findings addressed
+- [x] **DX-02**: Dead code detection run (Knip) with findings addressed
 - [ ] **DX-03**: Console output in production replaced with structured `captureError()` where impactful
 
 ## Future Requirements
@@ -86,7 +86,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TEST-01 | Phase 48 | Complete |
-| TEST-02 | Phase 48 | Pending |
+| TEST-02 | Phase 48 | Complete |
 | TEST-03 | Phase 52 | Pending |
 | TEST-04 | Phase 52 | Pending |
 | TEST-05 | Phase 52 | Pending |
@@ -101,7 +101,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | ERRS-02 | Phase 49 | Pending |
 | ERRS-03 | Phase 49 | Pending |
 | ERRS-04 | Phase 49 | Pending |
-| ERRS-05 | Phase 48 | Pending |
+| ERRS-05 | Phase 48 | Complete |
 | ERRS-06 | Phase 49 | Pending |
 | ARCH-01 | Phase 50 | Pending |
 | ARCH-02 | Phase 50 | Pending |
@@ -119,7 +119,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | DEPS-04 | Phase 51 | Pending |
 | DEPS-05 | Phase 51 | Pending |
 | DX-01 | Phase 48 | Complete |
-| DX-02 | Phase 48 | Pending |
+| DX-02 | Phase 48 | Complete |
 | DX-03 | Phase 49 | Pending |
 
 **Coverage:**

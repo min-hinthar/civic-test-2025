@@ -95,7 +95,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 
 ## Phases
 
-- [ ] **Phase 48: Test Infrastructure + Quick Wins** - Safety net for all subsequent phases: shared test utility, Playwright config, dead code removal, CI hardening, coverage thresholds, Sentry fingerprinting
+- [x] **Phase 48: Test Infrastructure + Quick Wins** - Safety net for all subsequent phases: shared test utility, Playwright config, dead code removal, CI hardening, coverage thresholds, Sentry fingerprinting (completed 2026-03-20)
 - [ ] **Phase 49: Error Handling + Security** - Error.tsx sanitization and bilingual rendering, component error boundaries with session save, provider ordering guard
 - [ ] **Phase 50: PWA + Sync Resilience** - Service worker update UX with session-lock guard, per-field LWW settings sync, IndexedDB cache versioning
 - [ ] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup
@@ -203,7 +203,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 48. Test Infrastructure + Quick Wins | 3/4 | In Progress|  |
+| 48. Test Infrastructure + Quick Wins | 4/4 | Complete   | 2026-03-20 |
 | 49. Error Handling + Security | 0/TBD | Not started | - |
 | 50. PWA + Sync Resilience | 0/TBD | Not started | - |
 | 51. Unit Test Expansion | 0/TBD | Not started | - |
