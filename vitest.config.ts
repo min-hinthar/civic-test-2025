@@ -181,6 +181,12 @@ export default defineConfig({
           functions: 33,
           lines: 32,
         },
+        'src/lib/db/storageVersions.ts': {
+          statements: 100,
+          branches: 100,
+          functions: 100,
+          lines: 100,
+        },
       },
     },
   },

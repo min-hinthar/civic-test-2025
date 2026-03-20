@@ -37,18 +37,16 @@ import { STORAGE_VERSIONS } from '@/lib/db/storageVersions';
 import { getCachedQuestions, hasQuestionsCache, cacheQuestions } from '@/lib/pwa/offlineDb';
 import type { Question } from '@/types';
 
-const mockQuestions: Question[] = [
+const mockQuestions = [
   {
-    id: '1',
+    id: 'GOV-01',
     question_en: 'What is the supreme law of the land?',
     question_my: 'test',
-    answers_en: ['The Constitution'],
-    answers_my: ['test'],
-    category: 'principles',
-    subcategory: 'test',
-    difficulty: 1,
+    category: 'Principles of American Democracy',
+    studyAnswers: [],
+    answers: [],
   },
-] as Question[];
+] as unknown as Question[];
 
 describe('STORAGE_VERSIONS', () => {
   it('has keys for all 10 stores with value 1', () => {
