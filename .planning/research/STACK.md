@@ -1,455 +1,333 @@
-# Stack Research
+# Stack Research: v4.1 Production Hardening
 
-**Domain:** Next.js 16 App Router Migration + Intelligent Study Features + Bundle Optimization
-**Researched:** 2026-02-23
-**Confidence:** HIGH (core migration) / MEDIUM (new features) / HIGH (bundle optimization)
+**Domain:** Production hardening for existing bilingual PWA (testing, security, accessibility, resilience, DX)
+**Researched:** 2026-03-19
+**Confidence:** HIGH (all recommendations verified against official docs and npm registry)
 
-## Executive Summary
+## New Dependencies to Add
 
-This research covers stack additions and changes needed for the v4.0 milestone. The project currently runs Next.js 15.5.12 with Pages Router serving a client-side SPA via `react-router-dom` hash routing. The v4.0 migration targets Next.js 16 with full App Router file-based routing, eliminating `react-router-dom` entirely.
+### E2E Testing
 
-**Key finding:** Next.js 16 (released October 2025, latest 16.1.6) defaults to Turbopack, which does NOT support webpack plugins. The current `next.config.mjs` chains three webpack-based wrappers (`withBundleAnalyzer`, `withSerwist`, `withSentryConfig`). All three have Turbopack-compatible paths, but the migration order matters. Sentry auto-detects Turbopack. Serwist requires switching from `@serwist/next` to `@serwist/turbopack`. The old `@next/bundle-analyzer` is replaced by Next.js 16.1's built-in analyzer.
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| `@playwright/test` | ^1.58.0 | E2E test framework | Next.js officially documents Playwright setup. Free parallelization (Cypress requires paid Cloud). WebKit support critical for iOS PWA testing. ~290ms/action vs Cypress ~420ms. Built-in `webServer` config starts Next.js automatically. |
+| `@axe-core/playwright` | ^4.11.1 | Accessibility auditing in E2E | Deque's official Playwright integration. Runs axe-core engine inside Playwright pages. Detects WCAG violations programmatically at full-page level, complementing existing vitest-axe unit tests. |
 
-**No new runtime libraries needed for study features.** Test readiness scoring, study planning, and smart drills are computed from existing FSRS data and question metadata using pure TypeScript utility modules. Mnemonics/memory aids and deeper explanations are static content additions to the existing questions data structure. The only new dependency is `date-fns` for test date countdown calculations.
+**Playwright over Cypress because:**
+1. Next.js official docs recommend both equally, but Playwright has first-class `webServer` integration
+2. Free parallel execution via `--shard` flag (Cypress parallelization requires paid Cypress Cloud)
+3. WebKit browser engine support -- critical for a PWA targeting iOS Safari
+4. Lower resource usage: ~2.1GB RAM for 10 parallel tests vs Cypress ~3.2GB
+5. Native multi-browser testing (Chromium + Firefox + WebKit) without plugins
+6. Better CI performance -- headless by default, no Electron overhead
 
-## Recommended Stack
-
-### Core Framework Upgrades
-
-| Technology | Current | Target | Purpose | Why |
-|------------|---------|--------|---------|-----|
-| Next.js | 15.5.12 | ^16.1.6 | Framework | App Router with file-based routing, Turbopack default, React Compiler support, `proxy.ts` replacing `middleware.ts`, built-in bundle analyzer |
-| React | ^19.2.0 | ^19.2.0 | UI library | Already at required version. Next.js 16 uses React canary with View Transitions, `useEffectEvent`, `<Activity>` |
-| TypeScript | ~5.8.2 | ~5.8.2 | Type safety | Already meets 5.1+ minimum required by Next.js 16 |
-| Node.js | (runtime) | >=20.9.0 | Runtime | Next.js 16 drops Node.js 18 support. Verify Vercel deployment runtime. |
-
-### Packages to REMOVE
-
-| Package | Current Version | Why Remove |
-|---------|----------------|------------|
-| `react-router-dom` | ^7.0.2 | Replaced by Next.js App Router file-based routing. All 15 routes convert to `app/` directory structure. |
-| `@next/bundle-analyzer` | ^16.1.6 (dev) | Next.js 16.1 has built-in experimental bundle analyzer for Turbopack. `@next/bundle-analyzer` only works with webpack. |
-| `@serwist/next` | ^9.5.4 | Replaced by `@serwist/turbopack` for Turbopack compatibility. Same `serwist` core, different build integration. |
-
-### Packages to ADD
-
-| Package | Version | Purpose | Why |
-|---------|---------|---------|-----|
-| `@serwist/turbopack` | ^9.5.5 | PWA service worker with Turbopack | Replaces `@serwist/next` for Turbopack builds. Same service worker API, different build-time integration. Actively maintained (updated daily). |
-| `date-fns` | ^4.1.0 | Test date countdown, daily study targets | Tree-shakeable (only import `differenceInDays`, `format`, `addDays`). ~6KB gzipped for needed functions. Functional API matches project style. No mutable Date objects. |
-| `babel-plugin-react-compiler` | ^1.0.0 (dev) | React Compiler | Optional but recommended. Auto-memoization eliminates manual `useMemo`/`useCallback`. Stable in Next.js 16. Increases build time but eliminates entire category of re-render bugs. |
-
-### Packages to UPGRADE (Breaking Changes)
-
-| Package | Current | Target | Breaking Changes |
-|---------|---------|--------|-----------------|
-| `@sentry/nextjs` | ^10.26.0 | ^10.39.0+ | Auto-detects Turbopack. `autoInstrumentServerFunctions`, `autoInstrumentMiddleware`, `excludeServerRoutes` are no-ops with Turbopack. Source maps use native Debug IDs (Next.js 16+). |
-| `serwist` (dev) | ^9.5.4 | ^9.5.5 | Keep in sync with `@serwist/turbopack`. |
-
-### Packages UNCHANGED (No Migration Needed)
-
-| Package | Version | Notes |
-|---------|---------|-------|
-| `@supabase/supabase-js` | ^2.81.1 | Works identically in App Router. API routes become Route Handlers (`app/api/push/route.ts`). |
-| `motion` (motion/react) | ^12.33.0 | Client component library, unaffected by routing change. |
-| `ts-fsrs` | ^5.2.3 | Pure computation library. Readiness scoring uses existing FSRS card data (stability, difficulty, retrievability). |
-| `idb-keyval` | ^6.2.2 | IndexedDB abstraction, browser-only, unaffected. |
-| `tailwindcss` | ^3.4.17 | CSS framework, unaffected by router migration. |
-| `@radix-ui/*` | current | Client components, unaffected. |
-| `lucide-react` | ^0.475.0 | Icon library, already optimized via `optimizePackageImports`. |
-| `recharts` | ^3.4.1 | Chart library for dashboard, client-only. |
-| `clsx` | ^2.1.1 | Utility, no changes. |
-| `react-canvas-confetti` | ^2.0.7 | Celebration animations, client-only. |
-| `@lottiefiles/dotlottie-react` | ^0.18.1 | Animation library, client-only. |
-
-## Migration-Critical Configuration Changes
-
-### next.config.mjs to next.config.ts
-
-Next.js 16 supports native TypeScript configs. The current webpack wrapper chain:
-
-```javascript
-// CURRENT (v15 - webpack-based)
-export default withSentryConfig(analyzer(withSerwist(nextConfig)), sentryOptions);
-```
-
-Becomes:
-
+**Playwright config for this project:**
 ```typescript
-// TARGET (v16 - Turbopack-based)
-import { withSerwist } from '@serwist/turbopack';
-import { withSentryConfig } from '@sentry/nextjs';
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
 
-const nextConfig: NextConfig = {
-  reactCompiler: true, // Stable in Next.js 16
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'date-fns'],
+export default defineConfig({
+  testDir: './e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
   },
-};
-
-export default withSentryConfig(withSerwist(nextConfig), sentryOptions);
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'mobile-safari', use: { ...devices['iPhone 13'] } },
+  ],
+  webServer: {
+    command: 'pnpm build && pnpm start',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+  },
+});
 ```
 
-**Key changes:**
-- `@next/bundle-analyzer` wrapper removed (use `next build --analyze` instead)
-- `withSerwistInit` from `@serwist/next` replaced by `withSerwist` from `@serwist/turbopack`
-- `withSentryConfig` wrapper preserved (auto-detects bundler)
-- `reactCompiler: true` at top level (was `experimental.reactCompiler` in v15)
-- Turbopack is default -- no `--turbopack` flag needed
+### Error Boundaries
 
-### middleware.ts to proxy.ts
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| *(none -- use existing custom ErrorBoundary)* | -- | Component-level error boundaries | The existing `ErrorBoundary` class component already has bilingual support, Sentry integration, sanitization, and custom fallback props. Adding `react-error-boundary` (v6.1.1) would duplicate this. Instead, reuse the existing component with `fallback` prop variants per feature. |
 
-```typescript
-// CURRENT: middleware.ts with named export `middleware`
-export function middleware() { ... }
+**Decision: Do NOT add `react-error-boundary`.**
 
-// TARGET: proxy.ts with named export `proxy`
-export function proxy() { ... }
-// Also: skipMiddlewareUrlNormalize -> skipProxyUrlNormalize
-```
+The project already has a battle-tested `ErrorBoundary` at `src/components/ErrorBoundary.tsx` with:
+- Bilingual error messages (reads `localStorage` directly to avoid context dependency)
+- `sanitizeError()` for PII stripping
+- Sentry reporting via `sanitizeForSentry()`
+- `fallback` prop for custom fallback UIs
+- Reset and navigate-home actions
 
-CSP logic stays identical. The rename is cosmetic but required for deprecation path. Note: `proxy.ts` runs on Node.js runtime (not Edge), which is actually simpler.
-
-### API Routes to Route Handlers
-
-Pages Router API routes (`pages/api/push/*.ts`) become App Router Route Handlers:
-
-```
-pages/api/push/subscribe.ts    -> app/api/push/subscribe/route.ts
-pages/api/push/send.ts         -> app/api/push/send/route.ts
-pages/api/push/srs-reminder.ts -> app/api/push/srs-reminder/route.ts
-pages/api/push/weak-area-nudge.ts -> app/api/push/weak-area-nudge/route.ts
-```
-
-**Signature change:**
-```typescript
-// CURRENT (Pages Router)
-export default async function handler(req: NextApiRequest, res: NextApiResponse) { ... }
-
-// TARGET (App Router Route Handler)
-export async function POST(request: Request) {
-  // return new Response(JSON.stringify({ success: true }), { status: 200 });
-  // return NextResponse.json({ success: true });
-}
-export async function DELETE(request: Request) { ... }
-```
-
-### Sentry Configuration Files
-
-The existing `sentry.server.config.ts` and `sentry.edge.config.ts` at project root continue to work with App Router. Sentry's App Router integration also requires:
-- `app/global-error.tsx` for React rendering error capture
-- `instrumentation.ts` at project root for server-side Sentry initialization
-
-### _document.tsx Theme Script Migration
-
-The blocking theme script currently in `pages/_document.tsx` moves to `app/layout.tsx`:
-
+To add component-level boundaries, wrap high-risk features with the existing component:
 ```tsx
-// app/layout.tsx
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
-      <body>{children}</body>
-    </html>
-  );
+<ErrorBoundary fallback={<InterviewErrorFallback />}>
+  <InterviewSession />
+</ErrorBoundary>
+```
+
+React 19 still requires class components for error boundaries (no hooks API). The existing class component is the correct pattern.
+
+### Service Worker Update Notification
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| `@serwist/window` | ^9.5.6 | Client-side SW lifecycle events | Already a transitive dependency (in pnpm-lock.yaml). Provides `Serwist` class with `waiting`, `controlling`, `installed` events. Use `messageSkipWaiting()` to trigger update. |
+
+**Not a new dependency** -- already in the dependency tree via `@serwist/next`. Just needs explicit import in client code.
+
+**Implementation pattern:**
+```typescript
+import { Serwist } from '@serwist/window';
+
+const serwist = new Serwist('/sw.js', { scope: '/' });
+
+serwist.addEventListener('waiting', () => {
+  // Show "Update available" toast
+  serwist.addEventListener('controlling', () => window.location.reload());
+  serwist.messageSkipWaiting();
+});
+
+serwist.register();
+```
+
+**Current SW uses `skipWaiting: true`** which means new SWs activate immediately. The `@serwist/window` listener catches the brief window between install and activation to notify the user. Consider changing to `skipWaiting: false` and letting the user trigger the update via the toast, which prevents jarring mid-session reload.
+
+## Configuration Changes (No New Dependencies)
+
+### Vitest Coverage Thresholds
+
+**No new package needed.** Vitest 4.x already supports glob-pattern thresholds in `vitest.config.ts`.
+
+**Current state:** 4 files have thresholds. No global minimum.
+
+**Recommended additions to `vitest.config.ts` `coverage.thresholds`:**
+
+```typescript
+thresholds: {
+  // Existing
+  'src/lib/shuffle.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+  'src/lib/errorSanitizer.ts': { lines: 90, functions: 90, branches: 90, statements: 90 },
+  'src/components/ErrorBoundary.tsx': { lines: 70, functions: 70, branches: 70, statements: 70 },
+  'src/lib/saveSession.ts': { lines: 70, functions: 70, branches: 70, statements: 70 },
+
+  // NEW: business-critical lib modules
+  'src/lib/srs/fsrsEngine.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/interview/answerGrader.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/readiness/readinessEngine.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/social/streakTracker.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/social/badgeEngine.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/async/withRetry.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/nba/determineNBA.ts': { lines: 80, functions: 80, branches: 70, statements: 80 },
+  'src/lib/sort/sortReducer.ts': { lines: 80, functions: 80, branches: 75, statements: 80 },
+  'src/lib/ttsCore.ts': { lines: 70, functions: 70, branches: 65, statements: 70 },
 }
 ```
 
-CSP hash for the theme script remains the same since the script content is unchanged.
+**Also add `perFile: true`** to the thresholds config so each matched file is checked individually rather than aggregated.
 
-## App Router Directory Structure
+### Provider Ordering Validation
 
-The current SPA routes in `AppShell.tsx` map to file-based routes:
+**No library exists for this.** This is a custom dev-time assertion.
 
-```
-app/
-  layout.tsx              -- Root layout (providers, meta, theme script, fonts)
-  page.tsx                -- Landing page (/)
-  global-error.tsx        -- Sentry error boundary
-  not-found.tsx           -- 404 page
-  providers.tsx           -- 'use client' provider tree (all 8 contexts)
-  auth/
-    page.tsx              -- Auth page
-    forgot/page.tsx       -- Password reset
-    update-password/page.tsx
-  (protected)/            -- Route group with auth guard layout
-    layout.tsx            -- ProtectedRoute wrapper
-    home/page.tsx         -- Dashboard
-    hub/
-      layout.tsx          -- Hub tabs layout
-      overview/page.tsx
-      categories/page.tsx
-      history/page.tsx
-      achievements/page.tsx
-    test/page.tsx
-    study/page.tsx
-    practice/page.tsx
-    interview/page.tsx
-    settings/page.tsx
-  about/page.tsx
-  op-ed/page.tsx
-  api/
-    push/
-      subscribe/route.ts
-      send/route.ts
-      srs-reminder/route.ts
-      weak-area-nudge/route.ts
-```
+**Recommended approach: runtime dev-only guard in ClientProviders.tsx.**
 
-**All page components are `'use client'`** -- this is a client-heavy SPA. Server Components are used only for the root layout, metadata, and API route handlers. This is the correct architecture for an offline-first PWA where everything must work without a server.
-
-## New Feature Stack (No New Dependencies)
-
-### Test Readiness Score
-
-Pure TypeScript module using existing data:
+The pattern is a `useEffect` that validates the context tree at mount time in development:
 
 ```typescript
-// src/lib/readiness/readinessScore.ts
-// Inputs: FSRS card states, test history, category mastery percentages
-// Output: 0-100 readiness score with breakdown
-// Algorithm: Weighted composite of:
-//   - Category coverage (have you seen all categories?) 25%
-//   - Retention rate (FSRS retrievability across all cards) 30%
-//   - Recent test performance (last 3 mock test scores) 25%
-//   - Weak area depth (lowest category mastery) 20%
-```
-
-**No ML library needed.** FSRS already provides per-card retrievability (probability of recall). The readiness score is a weighted average of existing metrics.
-
-### Test Date Countdown + Study Plan
-
-Uses `date-fns` for date arithmetic:
-
-```typescript
-// src/lib/planner/studyPlan.ts
-import { differenceInDays, addDays, format } from 'date-fns';
-// Calculates: days remaining, questions per day, recommended daily sessions
-// Stored: test date in localStorage (same as theme/language preference)
-```
-
-### Smart Weak-Area Drill
-
-Pure TypeScript using existing SRS data:
-
-```typescript
-// src/lib/drill/weakAreaDrill.ts
-// Reads: category mastery from SRS context, test history errors
-// Generates: prioritized question queue weighted toward weak categories
-// No new dependencies -- uses existing question bank + FSRS state
-```
-
-### Mnemonics / Memory Aids Content
-
-Static content additions to existing question data structure:
-
-```typescript
-// Extend existing Question type in src/constants/questions/types.ts
-interface QuestionEnrichment {
-  mnemonic?: {
-    en: string;      // English mnemonic
-    my?: string;     // Burmese mnemonic (optional)
-    type: 'acronym' | 'association' | 'rhyme' | 'visual' | 'chunking';
-  };
-  historicalContext?: {
-    en: string;
-    my?: string;
-  };
-  studyTip?: {
-    en: string;
-    my?: string;
-  };
+function ProviderOrderGuard({ children }: { children: ReactNode }) {
+  if (process.env.NODE_ENV === 'development') {
+    // Attempt to call each hook -- if any throws, the ordering is wrong
+    // This catches the error at mount with a clear message
+    try {
+      useAuth();     // Must be available (AuthProvider above)
+      useLanguage(); // Must be available (LanguageProvider above)
+      useTheme();    // Must be available (ThemeProvider above)
+    } catch {
+      throw new Error(
+        'Provider ordering violation! Check ClientProviders.tsx nesting order.\n' +
+        'Required: ErrorBoundary > Auth > Language > Theme > TTS > Toast > Offline > ...'
+      );
+    }
+  }
+  return <>{children}</>;
 }
 ```
 
-**No AI/LLM dependency.** Mnemonics are hand-crafted content stored in TypeScript constant files alongside existing question data. This keeps the app free (no API costs) and works offline.
+**Alternative: ESLint custom rule.** Write a custom ESLint rule that parses JSX nesting in `ClientProviders.tsx` and enforces the ordering. Higher effort, compile-time guarantee. Recommended only if the runtime guard proves insufficient.
 
-## Bundle Optimization Strategy
+**Recommendation:** Start with the runtime dev-only guard. It catches the exact problem that caused the v4.0 crash (adding `useAuth()` to a provider above `AuthProvider`) with zero dependency cost.
 
-### Built-in Next.js 16 Optimizations (Zero Configuration)
+## Dependencies to Remove
 
-| Optimization | How It Works |
-|-------------|-------------|
-| Turbopack builds | 2-5x faster production builds than webpack |
-| Route-based code splitting | Each `app/` route is automatically a separate bundle |
-| Layout deduplication | Shared layouts downloaded once, not per-route |
-| Incremental prefetching | Only prefetch what is not in cache |
-| Tree shaking | Turbopack removes unused exports |
+### DotLottie
 
-### Configuration-Based Optimizations
+| Package | Current Version | Action | Rationale |
+|---------|----------------|--------|-----------|
+| `@lottiefiles/dotlottie-react` | ^0.18.2 | **REMOVE** | Zero `.lottie` asset files exist in `public/lottie/`. The 150-line `DotLottieAnimation.tsx` component has never rendered visible output. ~200KB WASM renderer is dead weight. Has been flagged since v3.0 (CELB-06). The celebration system works fine without it -- confetti + sound + haptics already fire. |
 
-| Setting | Config | Effect |
-|---------|--------|--------|
-| `optimizePackageImports` | `['lucide-react', 'date-fns', 'recharts']` | Tree-shake barrel exports without full traversal |
-| `reactCompiler: true` | Top-level config | Auto-memoization, fewer re-renders |
-| Dynamic imports | `next/dynamic` with `ssr: false` | Lazy-load heavy client components |
+**If Lottie animations are ever wanted later:**
+- Source free `.lottie` files from LottieFiles marketplace
+- Re-add `@lottiefiles/dotlottie-react` (currently at 0.18.7, still pre-1.0 but actively maintained with releases every few days)
+- The existing `DotLottieAnimation.tsx` code can be recovered from git history
 
-### Lazy-Load Candidates (Dynamic Import)
+**Files to clean up on removal:**
+- `package.json`: remove `@lottiefiles/dotlottie-react`
+- `src/components/celebrations/DotLottieAnimation.tsx`: delete
+- `src/components/celebrations/CelebrationOverlay.tsx`: remove DotLottie import/usage
+- `public/lottie/`: remove empty directory if present
 
-Components that should use `next/dynamic` with `{ ssr: false }`:
+### react-joyride
 
-| Component | Estimated Size | Why Lazy |
-|-----------|---------------|----------|
-| `CelebrationOverlay` | ~15KB | Only shown on achievements |
-| `OnboardingTour` (react-joyride) | ~40KB | Only for first-time users |
-| `InterviewPage` | ~25KB | Complex speech recognition, only one route |
-| `recharts` components | ~80KB | Only on Hub/dashboard pages |
-| `@lottiefiles/dotlottie-react` | ~20KB | Only during celebrations |
-| `react-canvas-confetti` | ~10KB | Only during celebrations |
+| Package | Current Version | Action | Rationale |
+|---------|----------------|--------|-----------|
+| `react-joyride` | 3.0.0-7 (pre-release) | **KEEP pinned** | No stable 3.0.0 has been released. Last npm publish was over a year ago. The 7-step onboarding tour works and is dynamically imported. The pre-release risk is mitigated by pinning and lazy loading. |
 
-### Measurement
+**Alternatives evaluated:**
 
-- **Development:** `next dev` with `--inspect` for profiling (new in 16.1)
-- **Production:** `next build --analyze` (built-in Turbopack analyzer in 16.1+)
-- **Runtime:** Web Vitals already reported to Sentry (existing integration)
+| Library | Verdict | Why Not |
+|---------|---------|---------|
+| Shepherd.js | NOT recommended | Different API paradigm (imperative), would require full tour rewrite. Larger bundle. The tour works fine. |
+| Intro.js | NOT recommended | Commercial license for production use. React wrapper is community-maintained. |
+| OnboardJS | NOT recommended | Headless (no UI) -- would require building all tooltip/spotlight UI from scratch. Overkill for a working 7-step tour. |
+| Reactour | Possible future option | Simpler API, smaller bundle. If react-joyride causes issues, this is the first alternative to evaluate. |
+
+**Recommendation:** Keep `react-joyride@3.0.0-7` pinned (already pinned without `^`). The tour is dynamically imported, isolated, and working. Replacing a functioning pre-release dependency with a rewrite is not production hardening -- it is scope creep. Revisit only if it causes actual bugs or React 19 incompatibility.
+
+## IndexedDB Cache Versioning
+
+**No new library needed.** The project uses `idb-keyval` which is intentionally a minimal key-value store (~600B). Adding a full IndexedDB migration library like `idb` (1KB) would be over-engineering for the actual need.
+
+**The actual problem:** `src/lib/pwa/offlineDb.ts` stores a `version: 1` field in cache metadata but never checks it on read.
+
+**Recommended fix (no dependency):**
+
+```typescript
+const CACHE_VERSION = 2; // Bump when question format changes
+
+async function getCachedQuestions(): Promise<Question[] | null> {
+  const cached = await get('questions', questionsStore);
+  if (!cached || cached.version !== CACHE_VERSION) {
+    // Stale cache -- delete and return null to trigger fresh fetch
+    await del('questions', questionsStore);
+    return null;
+  }
+  return cached.data;
+}
+```
+
+This is a 5-line fix, not a library addition. The `idb-keyval` stores are simple key-value pairs -- there are no object stores or indexes to migrate. Version bumping the cache key invalidates stale data.
+
+## Installation Summary
+
+```bash
+# New dev dependencies
+pnpm add -D @playwright/test @axe-core/playwright
+
+# Install Playwright browsers (Chromium + WebKit for iOS testing)
+pnpm exec playwright install --with-deps chromium webkit
+
+# Remove unused production dependency
+pnpm remove @lottiefiles/dotlottie-react
+```
+
+**Net dependency change: -1 production, +2 dev**
 
 ## Alternatives Considered
 
 | Recommended | Alternative | Why Not |
 |-------------|-------------|---------|
-| `date-fns` for date math | `dayjs` | `date-fns` is tree-shakeable by default (import individual functions). `dayjs` requires plugin system for features like locale. `date-fns` functional API matches project's utility-function patterns. |
-| `date-fns` for date math | Native `Temporal` API | Not yet widely available in browsers. Polyfills add more weight than `date-fns`. |
-| Hand-crafted mnemonics | AI-generated (OpenAI API) | Project constraint: free tier only, no paid API costs. Mnemonics are finite (128 questions) so hand-crafting is feasible. Also works offline. |
-| Pure TS readiness scoring | ML library (tensorflow.js, brain.js) | Massive overkill. FSRS already has the ML model built in. Readiness is a weighted average of existing metrics. Adding ML would add 100KB+ for no benefit. |
-| `@serwist/turbopack` | `next-pwa` | `next-pwa` is abandoned. Serwist is the maintained successor. Already using Serwist, just switching to the Turbopack-compatible package. |
-| Built-in bundle analyzer | `webpack-bundle-analyzer` | Next.js 16.1 built-in analyzer works with Turbopack. External analyzer requires `--webpack` flag. |
-| `proxy.ts` (Next.js 16) | Keep `middleware.ts` | `middleware.ts` is deprecated in Next.js 16. `proxy.ts` runs on Node.js runtime (not edge), which is simpler for CSP header injection. |
-| React Compiler | Manual `useMemo`/`useCallback` | Project already has React Compiler ESLint rules enforced. Enabling the compiler would eliminate the need for manual memoization and reduce the cognitive burden of those rules. However, it increases build time, so it is recommended but optional. |
+| Playwright | Cypress | Paid parallelization, no WebKit, higher resource usage, Electron overhead |
+| Existing ErrorBoundary | react-error-boundary v6.1.1 | Would duplicate existing bilingual+Sentry+sanitization. Extra 3.5KB for no gain. |
+| @serwist/window events | Manual `navigator.serviceWorker` | @serwist/window already in dep tree, provides cleaner lifecycle API |
+| idb-keyval + version field | idb (full IndexedDB wrapper) | Over-engineering. No object stores or indexes to migrate. Version check is 5 lines. |
+| Runtime provider guard | ESLint custom rule | Runtime guard is zero-dependency, catches exact crash scenario. Custom rule is high effort. |
+| Keep react-joyride pinned | Rewrite with Reactour/Shepherd | Working feature, dynamically imported, isolated. Rewrite has no production value. |
+| Remove dotlottie-react | Source .lottie assets | No assets have been sourced in 4 milestones. Celebrations work without it. Remove dead weight. |
 
-## What NOT to Use
+## What NOT to Add
 
-| Avoid | Why | Use Instead |
-|-------|-----|-------------|
-| `next/font` for Myanmar font | Self-hosted fonts via `@fontsource` already work offline. `next/font` optimizes Google Fonts loading but the PWA needs guaranteed offline access to font files. | Keep `@fontsource/noto-sans-myanmar` |
-| `server actions` for data mutations | The app is offline-first with IndexedDB as primary store. Server Actions require network. All mutations go through IndexedDB first, then sync to Supabase. | Keep existing IndexedDB + sync queue pattern |
-| Cache Components / `"use cache"` | The app is a client-heavy SPA. Pages are `'use client'` because they need IndexedDB, SpeechSynthesis, and other browser APIs. Server-side caching adds complexity without benefit for an offline-first PWA. | Static generation for the shell, client-side data fetching |
-| View Transitions API (React 19.2) | Tempting for page transitions, but the existing `motion/react` `PageTransition` component is battle-tested and works in all browsers. View Transitions has limited browser support (no Firefox as of Feb 2026). | Keep `motion/react` PageTransition |
-| `zustand` or `jotai` for state | 8 React Context providers work. Adding a state library would require rewriting all providers for no user-visible benefit. | Keep existing Context providers |
-| `@tanstack/react-query` | The app has 4 API route handlers and uses IndexedDB as primary storage. React Query's caching model conflicts with the offline-first sync queue. | Keep existing `withRetry` + `safeAsync` patterns |
-| Tailwind CSS v4 | Breaking change with new config format. Current v3 config with design tokens is stable and comprehensive. Migration effort with zero user-visible benefit. | Keep Tailwind v3 |
-
-## Stack Patterns by Variant
-
-**If the build fails with Turbopack due to Sentry/Serwist wrapper issues:**
-- Use `next build --webpack` as temporary fallback
-- Sentry and Serwist wrappers both still support webpack mode
-- File a GitHub issue against the offending package
-
-**If React Compiler causes runtime issues:**
-- Disable with `reactCompiler: false` in next.config.ts
-- Remove `babel-plugin-react-compiler` dev dependency
-- Existing manual `useMemo`/`useCallback` patterns remain functional
-- The ESLint rules for React Compiler compatibility are still beneficial even without the compiler
-
-**If Serwist Turbopack integration is unstable:**
-- Use `@serwist/next` (webpack) with `next build --webpack` for production
-- Turbopack for `next dev` (Serwist is disabled in dev anyway per current config)
+| Avoid | Why | Do Instead |
+|-------|-----|------------|
+| `react-error-boundary` | Duplicates existing custom ErrorBoundary with bilingual support | Reuse existing `<ErrorBoundary fallback={...}>` with feature-specific fallbacks |
+| `idb` (full IndexedDB wrapper) | Only need version check on idb-keyval stores | Add 5-line version comparison in `offlineDb.ts` |
+| `cypress` | Paid parallelization, no WebKit, heavier CI | Use Playwright |
+| `@testing-library/user-event` for E2E | Mixing unit test tools into E2E | Use Playwright's built-in `page.click()`, `page.fill()`, etc. |
+| `jest` | Project already on Vitest 4.x with full config | Keep Vitest for unit/component tests |
+| `axe-core` standalone | Already have `vitest-axe` for unit tests | Add `@axe-core/playwright` for E2E accessibility only |
+| `storybook` | Solo dev, 30+ component dirs, massive config overhead | Use Playwright component tests if visual testing needed |
+| Visual regression tools (Percy, Chromatic) | Maintenance burden flagged as out-of-scope in PROJECT.md | Manual visual QA + axe-core automated a11y |
 
 ## Version Compatibility
 
-| Package A | Compatible With | Notes |
-|-----------|-----------------|-------|
-| next@^16.1.6 | react@^19.2.0, react-dom@^19.2.0 | Already at compatible React version |
-| next@^16.1.6 | typescript@~5.8.2 | Requires TS 5.1+, already met |
-| next@^16.1.6 | node@>=20.9.0 | Drops Node 18. Verify Vercel runtime. |
-| @sentry/nextjs@^10.39.0 | next@^16.0.0 | Auto-detects Turbopack. Tested with Next.js 16 e2e. |
-| @serwist/turbopack@^9.5.5 | next@^16.0.0 | Turbopack-native PWA integration. |
-| serwist@^9.5.5 | @serwist/turbopack@^9.5.5 | Keep versions in sync. |
-| babel-plugin-react-compiler@^1.0.0 | next@^16.0.0, react@^19.2.0 | Stable in Next.js 16. Optional. |
-| date-fns@^4.1.0 | (standalone) | Pure functions, no framework dependency. Tree-shakeable. |
-| ts-fsrs@^5.2.3 | node@>=18.0.0 | Already compatible. |
-| eslint-plugin-react-hooks@^7.0.1 | react@^19.0.0 | Already compatible, includes React Compiler rules. |
+| Package | Compatible With | Notes |
+|---------|-----------------|-------|
+| `@playwright/test@^1.58` | Node.js 22.x | Requires Node 18+. Project's Node 22.x is fine. |
+| `@playwright/test@^1.58` | Next.js 16.1.7 | Tested with App Router. `webServer` config handles build+start. |
+| `@axe-core/playwright@^4.11` | `@playwright/test@^1.58` | Peer dependency on `playwright-core`. Must match major version. |
+| `@serwist/window@^9.5.6` | `@serwist/next@^9.5.6` | Same package ecosystem, already aligned at 9.5.6. |
+| `react-error-boundary@6.1.1` | React 19 | Compatible (peer: `react >= 16.13.1`) but NOT recommended -- see above. |
+| `react-joyride@3.0.0-7` | React 19 | Working in production. Pinned without caret. |
 
-## Installation
+## CI Pipeline Changes
 
-```bash
-# Upgrade core framework
-pnpm add next@latest react@latest react-dom@latest
+Current CI pipeline (`.github/workflows/ci.yml`) needs these additions:
 
-# Replace @serwist/next with Turbopack version
-pnpm remove @serwist/next
-pnpm add @serwist/turbopack@latest
+```yaml
+# After existing test:coverage step, add E2E:
+- name: Install Playwright browsers
+  run: pnpm exec playwright install --with-deps chromium webkit
 
-# Add new dependencies
-pnpm add date-fns@latest
+- name: Build application
+  run: pnpm build
 
-# Upgrade Sentry
-pnpm add @sentry/nextjs@latest
+- name: Run E2E tests
+  run: pnpm exec playwright test
 
-# Remove replaced dev dependencies
-pnpm remove @next/bundle-analyzer
+- name: Upload Playwright report
+  uses: actions/upload-artifact@v4
+  if: always()
+  with:
+    name: playwright-report
+    path: playwright-report/
+    retention-days: 7
 
-# Optional: Enable React Compiler
-pnpm add -D babel-plugin-react-compiler@latest
-
-# Keep serwist dev dep in sync
-pnpm add -D serwist@latest
-
-# Upgrade types
-pnpm add -D @types/react@latest @types/react-dom@latest
+# Also add lint:css (currently missing from CI):
+- name: CSS lint
+  run: pnpm run lint:css
 ```
 
-```bash
-# Post-install: Run Next.js 16 codemod
-pnpm dlx @next/codemod@canary upgrade latest
-
-# This automates:
-# - middleware.ts -> proxy.ts rename
-# - experimental.turbopack -> turbopack config move
-# - ESLint flat config migration
-# - next lint -> eslint CLI migration
-```
-
-## Build Scripts Update
-
+**New `package.json` scripts:**
 ```json
 {
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "analyze": "ANALYZE=true next build --analyze"
-  }
+  "test:e2e": "playwright test",
+  "test:e2e:ui": "playwright test --ui",
+  "test:e2e:headed": "playwright test --headed"
 }
 ```
 
-**Key changes:**
-- `"lint": "next lint"` replaced by `"lint": "eslint ."` (Next.js 16 removed `next lint`)
-- `"analyze"` uses built-in `--analyze` flag instead of `@next/bundle-analyzer` env var
-- `"dev"` and `"build"` no longer need `--turbopack` flag (it is the default)
-
-## Migration Risk Assessment
-
-| Area | Risk | Mitigation |
-|------|------|------------|
-| Turbopack + Sentry | LOW | Sentry auto-detects bundler. Well-documented, tested with Next.js 16. |
-| Turbopack + Serwist PWA | MEDIUM | Package swap (`@serwist/next` to `@serwist/turbopack`). API differences in config setup. Service worker code unchanged. |
-| react-router-dom removal | HIGH | 15 routes to convert. Every navigation call (`useNavigate`, `<Link>`, `<Navigate>`) must change to Next.js equivalents (`useRouter`, `next/link`, `redirect`). ~30 components reference React Router. |
-| API route migration | LOW | 4 API routes with straightforward `NextApiRequest/Response` to `Request/Response` conversion. |
-| Context providers in App Router | MEDIUM | All 8 providers need `'use client'` directive and move to a `providers.tsx` wrapper imported in root layout. Provider ordering must be preserved. |
-| CSP middleware to proxy | LOW | Rename file, rename export. CSP logic unchanged. |
-| Theme script (FOUC prevention) | LOW | Move from `_document.tsx` to `app/layout.tsx` `<head>`. Hash unchanged. |
-
 ## Sources
 
-- [Next.js 16 Release Blog](https://nextjs.org/blog/next-16) -- HIGH confidence, official source
-- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) -- HIGH confidence, official docs
-- [Next.js 16.1 Release Blog](https://nextjs.org/blog/next-16-1) -- HIGH confidence, built-in bundle analyzer
-- [Sentry Turbopack Support Blog](https://blog.sentry.io/turbopack-support-next-js-sdk/) -- HIGH confidence, official Sentry blog
-- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) -- HIGH confidence, official docs
-- [Serwist Next.js Docs](https://serwist.pages.dev/docs/next) -- HIGH confidence, official docs
-- [@serwist/turbopack npm](https://www.npmjs.com/package/@serwist/turbopack) -- HIGH confidence, v9.5.5
-- [Next.js App Router Migration Guide](https://nextjs.org/docs/app/guides/migrating/app-router-migration) -- HIGH confidence, official docs
-- [FSRS Algorithm Wiki](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm) -- HIGH confidence, official FSRS docs
-- [ts-fsrs npm](https://www.npmjs.com/package/ts-fsrs) -- HIGH confidence, v5.2.3
-- [date-fns vs dayjs comparison](https://www.dhiwise.com/post/date-fns-vs-dayjs-the-battle-of-javascript-date-libraries) -- MEDIUM confidence
-- [Next.js Bundle Optimization Guide](https://nextjs.org/docs/app/guides/package-bundling) -- HIGH confidence, official docs
+- [Next.js Testing: Playwright](https://nextjs.org/docs/app/guides/testing/playwright) -- official setup guide, verified 2026-03-16 (HIGH confidence)
+- [Playwright Release Notes](https://playwright.dev/docs/release-notes) -- v1.58.0 confirmed latest (HIGH confidence)
+- [@axe-core/playwright npm](https://www.npmjs.com/package/@axe-core/playwright) -- v4.11.1 verified (HIGH confidence)
+- [Vitest Coverage Config](https://vitest.dev/config/coverage) -- glob thresholds, perFile, autoUpdate (HIGH confidence)
+- [@serwist/window docs](https://serwist.pages.dev/docs/window) -- waiting/controlling events, messageSkipWaiting (HIGH confidence)
+- [react-error-boundary npm](https://www.npmjs.com/package/react-error-boundary) -- v6.1.1, React 19 compatible, not needed (MEDIUM confidence)
+- [react-joyride releases](https://github.com/gilbarbara/react-joyride/releases) -- no stable 3.0.0, last publish >1 year (HIGH confidence)
+- [@lottiefiles/dotlottie-react npm](https://www.npmjs.com/package/@lottiefiles/dotlottie-react) -- v0.18.7, still pre-1.0 (HIGH confidence)
+- [Playwright vs Cypress 2026](https://www.d4b.dev/blog/2026-02-17-why-playwright-seems-to-be-winning-over-cypress-for-end-to-end-testing) -- independent benchmark data (MEDIUM confidence)
+- [Serwist SW update patterns](https://developer.chrome.com/docs/workbox/handling-service-worker-updates) -- Workbox/Serwist lifecycle (HIGH confidence)
+- [React onboarding tour evaluation](https://sandroroth.com/blog/evaluating-tour-libraries/) -- Shepherd.js, Intro.js, Reactour (MEDIUM confidence)
+- [Playwright Accessibility Testing](https://playwright.dev/docs/accessibility-testing) -- axe-core integration guide (HIGH confidence)
 
 ---
-*Stack research for: Civic Test Prep 2025 v4.0 -- Next-Gen Architecture*
-*Researched: 2026-02-23*
+*Stack research for: v4.1 Production Hardening*
+*Researched: 2026-03-19*

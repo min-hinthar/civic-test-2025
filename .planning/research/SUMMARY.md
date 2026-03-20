@@ -1,221 +1,209 @@
 # Project Research Summary
 
-**Project:** Civic Test Prep 2025 v4.0 — Next-Gen Architecture
-**Domain:** Bilingual PWA migration + intelligent study features + content enrichment
-**Researched:** 2026-02-23
-**Confidence:** HIGH (migration) / HIGH (features) / HIGH (architecture) / HIGH (pitfalls)
+**Project:** Civic Test 2025 — v4.1 Production Hardening
+**Domain:** Production hardening of existing 78K LOC bilingual PWA (Next.js 16 App Router, React 19, Supabase, IndexedDB, Serwist)
+**Researched:** 2026-03-19
+**Confidence:** HIGH
 
 ## Executive Summary
 
-The v4.0 milestone is fundamentally a migration with features on top. The project is a mature, 70K LOC offline-first PWA that currently runs on Next.js 15 Pages Router with react-router-dom handling all client-side routing inside a single catch-all `pages/[[...slug]].tsx` shell. The migration target is Next.js 16 App Router with file-based routing, eliminating react-router-dom entirely. This migration is the highest-risk work in v4.0 — it touches every page component (~40-60 files) and replaces the entire routing and navigation layer — but it delivers clean URLs, nonce-based CSP, automatic per-route code splitting, and a proper foundation for future server-side features. Critically, this migration does NOT mean converting to server-rendered pages: every page component stays `'use client'` because the app requires IndexedDB, SpeechSynthesis, and other browser-only APIs.
+This milestone adds zero user-facing features. The focus is hardening an already-shipped 226-requirement codebase against regressions, security leaks, and maintenance burden. All four research areas converge on the same conclusion: the existing architecture is sound, but systematic gaps in testing infrastructure, error handling, and operational tooling mean that real problems go undetected until users encounter them. The highest-confidence, highest-ROI investment is establishing E2E test infrastructure (Playwright) and shared unit test utilities before any other hardening work, because every subsequent phase changes working code and requires a safety net to catch regressions during those changes.
 
-On top of the migration, v4.0 adds intelligent study features using infrastructure that already exists in the codebase. The readiness scoring system (`computeReadiness`), category mastery calculations (`calculateCategoryMastery`), weak area detection (`detectWeakAreas`), and FSRS spaced repetition state are all already implemented — they are just not surfaced to users. The highest-value work is promoting internal logic to first-class UI: a visible readiness ring, a dedicated weak-area drill entry point, and a test date countdown with daily targets. No new state management, no new ML libraries, no new API costs — these features are pure TypeScript utility modules consuming existing data.
+The recommended technology additions are minimal and deliberate: Playwright and @axe-core/playwright as dev dependencies, removal of @lottiefiles/dotlottie-react (~200KB dead WASM with zero .lottie source assets), and no other new runtime dependencies. All other hardening is configuration changes, 5-50 line additions to existing files, and pattern application of already-present utilities (sanitizeError, BilingualMessage, ErrorBoundary, @serwist/window events). The existing custom ErrorBoundary, idb-keyval version tracking, and provider context hooks are already fit for purpose — the work is wiring them up correctly, not replacing them.
 
-The critical risks are: (1) Turbopack default in Next.js 16 breaks the webpack plugin chain immediately on upgrade — use `next build --webpack` from day one; (2) mixing Pages Router and App Router routes during incremental migration causes hard navigations that lose all React state and re-initialize the 12-deep provider hierarchy — migrate all routes in one phase, not incrementally; (3) the readiness score algorithm must penalize unstudied categories heavily or it will give false confidence to users who may fail their USCIS interview; (4) content enrichment (mnemonics) must be English-first since Burmese mnemonics require native speaker input and language-specific mnemonic devices that do not transfer across scripts.
+The dominant risk is ordering-sensitive changes that affect every deployed user simultaneously. The service worker update UX change (skipWaiting: true -> false with user-triggered update) is the single highest-risk task: a defect causes infinite reload loops in cached PWAs that are difficult to recover from remotely. InterviewSession decomposition (1,474 lines, 9-phase state machine, 29 callbacks) is the highest-effort task and must be deferred until full E2E coverage of the interview flow exists. Both must come last in the phase sequence.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The stack changes for v4.0 are minimal on the dependencies side but significant on the configuration side. The core upgrade is Next.js 15.5.12 to Next.js ^16.1.6, which forces three related changes: `@serwist/next` must be replaced by `@serwist/turbopack` (or a webpack flag used as fallback), `@next/bundle-analyzer` is removed in favor of the built-in `next build --analyze`, and `middleware.ts` must be renamed to `proxy.ts` with the export renamed from `middleware` to `proxy`. The only new runtime dependency is `date-fns@^4.1.0` for test date countdown arithmetic. React, TypeScript, and all other dependencies are unchanged.
+The project stack is unchanged for this milestone. The only meaningful dependency changes are Playwright + @axe-core/playwright as dev dependencies and removal of @lottiefiles/dotlottie-react. Playwright is the correct E2E choice over Cypress: free parallel execution via --shard, WebKit support for iOS PWA testing (critical for this PWA), native multi-browser without plugins, and official Next.js docs recommend it. The @serwist/window package is already in the dependency tree transitively via @serwist/next — it can be used for SW lifecycle events without a new install. No other new libraries are warranted; react-error-boundary would duplicate the existing bilingual ErrorBoundary, and a full idb migration library would over-engineer a 5-line version check.
 
-**Core technologies:**
-- `next@^16.1.6`: App Router with file-based routing, Turbopack default, built-in bundle analyzer — official upgrade path from current 15.5.12
-- `@serwist/turbopack@^9.5.5`: Turbopack-compatible PWA service worker — replaces `@serwist/next`; same service worker API, different build integration; use `--webpack` flag as fallback if Serwist Turbopack is unstable
-- `@sentry/nextjs@^10.39.0+`: Auto-detects Turbopack, requires new `instrumentation.ts` and `app/global-error.tsx` for App Router
-- `date-fns@^4.1.0`: Tree-shakeable date arithmetic for test date countdown (~6KB gzipped for needed functions only)
-- `react-router-dom`: REMOVED — replaced by Next.js file-based routing and `next/navigation` hooks
+**Core technologies (new or changed):**
+- `@playwright/test ^1.58.0`: E2E test framework — chosen for free parallelization, WebKit (iOS Safari) support, Next.js webServer integration, and lower CI resource usage than Cypress
+- `@axe-core/playwright ^4.11.1`: Accessibility auditing in E2E — Deque's official Playwright integration, catches WCAG violations at full-page level, complements existing vitest-axe unit tests
+- `@lottiefiles/dotlottie-react` (REMOVE): ~200KB WASM renderer with zero .lottie source assets after 4 milestones; celebrations work without it via confetti + sound + haptics
+- `react-joyride@3.0.0-7` (KEEP PINNED): Pre-release but working, dynamically imported, isolated; no stable 3.0.0 has shipped; replacement is scope creep not hardening
 
-**What stays unchanged:** `@supabase/supabase-js`, `motion/react`, `ts-fsrs`, `idb-keyval`, `tailwindcss`, all `@radix-ui/*`, `recharts`, `lucide-react`, `react-canvas-confetti`, `@lottiefiles/dotlottie-react`. The service worker logic, IndexedDB stores, Supabase auth, and all context providers retain the same logic — only their housing changes.
+**No new runtime dependencies.** @serwist/window is already present. idb-keyval versioning is a 5-line code change. react-error-boundary is explicitly not needed given the existing custom ErrorBoundary.
 
 ### Expected Features
 
-The feature research revealed that the existing codebase has substantial study intelligence that is invisible to users. The v4.0 feature work is primarily about surfacing existing logic rather than building new intelligence from scratch.
+This milestone's "features" are infrastructure and correctness work, not user-facing capabilities.
 
-**Must have (table stakes):**
-- **Test readiness score as a visible UI element** — the `computeReadiness` function already exists internally; users need an answer to "Am I ready?" with a radial ring (color-coded: red/amber/green/gold) and per-dimension breakdown (accuracy, coverage, consistency, test performance)
-- **Dedicated weak-area drill mode** — `getWeakQuestions()` and `detectWeakAreas()` already exist; users need an explicit "Drill Weak Areas" entry point, not just the implicit 70/30 selection in practice mode
-- **Test date countdown with daily targets** — users with a scheduled USCIS interview date need a countdown and a simple "Today: review X SRS cards + study Y new questions" card on the dashboard
+**Must have (table stakes — prevent production incidents):**
+- Error.tsx sanitization + bilingual rendering — raw `error.message` exposes SQL/stack traces; Burmese-primary users see English-only errors in all 3 error.tsx files
+- Component-level error boundaries on InterviewSession, PracticeSession, TestPage, CelebrationOverlay — single root boundary means any feature crash kills the entire app
+- Service worker update notification — skipWaiting: true silently swaps versions mid-session; users see stale pages with no explanation
+- Shared renderWithProviders test utility — prerequisite for all provider and view tests; without it every test file reinvents provider wrappers
+- Coverage thresholds on business-critical lib files — fsrsEngine, answerGrader, readinessEngine have tests but no threshold; coverage silently regresses
+- Playwright E2E setup + 7 critical flow tests — zero E2E coverage on auth, study, sync, and interview flows; regressions reach users undetected
+- lint:css in CI — CSS regressions currently caught only locally
+- Dead code cleanup (DotLottie, safeAsync, redundant RLS policies) — 200KB dead WASM and dead test files inflate build and confuse coverage
 
-**Should have (differentiators):**
-- **Mnemonics expanded to all 128 questions** — currently 17/128 have mnemonics; this is the single most effective memorization tool for arbitrary factual recall; the data structure already supports `mnemonic_en`/`mnemonic_my` fields
-- **Category study tips** — 7 authored introduction objects (one per USCIS category) with study strategy, common pitfalls, and estimated study time; shown as dismissible cards at the top of category practice
-- **"See Also" related questions** — all 128 questions already have `relatedQuestionIds` populated; rendering these as clickable chips is a UI-only change
+**Should have (resilience and maintainability differentiators):**
+- Provider ordering guard (dev-time) — 10-provider chain has caused 2 production bugs; runtime sentinel catches reordering before it ships
+- Context provider unit tests (8 of 10 providers untested) — provider bugs have reached production; providers are the hardest part of the app to debug
+- Settings sync conflict resolution (per-field LWW timestamps) — server-wins strategy silently drops offline settings changes on login
+- Automated WCAG 2.2 audit — glass-morphism contrast and touch targets unverified; axe-core catches ~57% of issues automatically
+- IndexedDB cache versioning — version field exists in offlineDb.ts but is never checked on read
+- Sentry error fingerprinting — network/IndexedDB errors each create separate Sentry issues; noise obscures real errors
 
-**Defer to later milestone:**
-- AI-generated study plans (API cost, offline incompatibility, risk of hallucinated advice for a consequential real-world test)
-- Calendar-based scheduling UI (over-engineering for a 128-question single-subject test)
-- Predictive pass probability (misleading without validated psychometric models)
-- Video content (storage, bandwidth, production cost)
-- User-generated mnemonics (moderation burden, quality risk for a bilingual audience)
+**Defer until E2E safety net is complete:**
+- InterviewSession decomposition — 1,474 lines, 9-phase state machine, 29 callbacks; cannot be safely extracted until full interview E2E coverage exists
+- Page-level view tests — E2E covers critical paths more efficiently than JSdom view tests
+- react-joyride stable migration — wait for upstream 3.0.0 stable release; working, isolated, non-critical
 
-**Content enrichment (high effort, high value, can parallel feature phases):**
-- Fun facts: 25/128 populated, target 128/128
-- Common mistakes: 28/128 populated, target 128/128
-- Citations: 48/128 populated, target 128/128
+**Anti-features (do not implement in this milestone):**
+- Visual regression testing (Percy/Chromatic) — maintenance burden extreme for solo dev; manual visual QA + axe-core is sufficient
+- Full CRDT sync engine — CRDTs add 30-100KB; single-user, one-device-at-a-time conflict window makes per-field LWW timestamps sufficient
+- 100% coverage target — diminishing returns past 70-80% for UI code; tiered thresholds are correct
+- MSW for E2E tests — E2E should hit real endpoints; Playwright route interception handles specific flaky scenarios
 
 ### Architecture Approach
 
-The App Router migration preserves the fundamental architecture: a client-side SPA where Next.js serves a shell, all pages are Client Components, IndexedDB is the primary data store, and Supabase provides auth and cloud sync. The structural changes are: the 12-provider hierarchy moves from `AppShell.tsx` into a `ClientProviders.tsx` file (marked `'use client'`) imported by `app/layout.tsx` (which stays as a Server Component); BrowserRouter from react-router-dom is removed; routing is handled by the `app/` directory structure and `next/navigation` hooks. The existing provider nesting order constraints (OfflineProvider inside ToastProvider, TTSProvider wrapping TTS consumers) are preserved exactly.
+The hardening integrates into the existing architecture at 12 well-defined touchpoints (H1-H12) without structural changes to the provider tree, routing, or data layer. New files are additive (ErrorFallbackUI.tsx, providerOrderGuard.ts, useServiceWorkerUpdate.ts, renderWithProviders.tsx). Modified files receive targeted changes — typically 1-5 lines per file for the distributed settings sync, provider guard registration, and error boundary wrapping. The biggest structural addition is extracting a shared ErrorFallbackUI component from ErrorBoundary.tsx so both the React error boundary and the Next.js error.tsx files share bilingual sanitized error display without code duplication.
 
-**Major components:**
-1. `app/layout.tsx` (Server Component) — root layout; reads nonce from headers; exports metadata, viewport, PWA config; imports fonts and global CSS; wraps children in `ClientProviders`
-2. `src/components/ClientProviders.tsx` ('use client') — the 12-provider hierarchy (ErrorBoundary -> Language -> Theme -> TTS -> Toast -> Offline -> Auth -> Social -> SRS -> State -> Navigation); preserves existing nesting order constraints
-3. `app/(protected)/layout.tsx` ('use client') — auth guard; replaces `ProtectedRoute` component; wraps protected routes in NavigationShell; uses `useAuth` + `redirect` pattern
-4. `app/(protected)/template.tsx` — page transition wrapper using `usePathname()` as AnimatePresence key; replaces react-router location-keyed transitions; delivers enter-only animations (exit animations are an unresolved App Router limitation)
-5. `proxy.ts` — renamed from `middleware.ts`; generates per-request nonce; enables CSP to switch from hash-based to nonce-based (App Router advantage over Pages Router)
-6. `src/lib/readiness/readinessEngine.ts` — pure function; calculates 0-100 readiness score from existing FSRS data, mastery, test history, and streak; projects FSRS retrievability to test date rather than using today's R value
-7. `src/lib/readiness/weakAreaDrill.ts` — pure function; generates focused drill sessions from category mastery data
+**Major components and changes:**
+1. `ErrorFallbackUI.tsx` (new) — shared bilingual error fallback used by ErrorBoundary, error.tsx, and feature-level boundaries; reads language mode from localStorage directly (no context dependency)
+2. `providerOrderGuard.ts` (new) — module-scoped mount registration; each provider calls registerProvider() on mount in dev mode only; fires before first render assertions pass
+3. `useServiceWorkerUpdate.ts` (new) — hook consuming raw ServiceWorker API; exposes { updateAvailable, applyUpdate }; consumed in NavigationShell; no new provider needed
+4. `renderWithProviders.tsx` (new) — configurable test wrapper using real providers for pure-React contexts (Language, Theme, Toast, State) and mocked values for external deps (Supabase, IndexedDB, speechSynthesis)
+5. `settingsSync.ts` (modified) — adds markLocalSettingsChanged() timestamp tracking + per-field LWW merge logic on login; 4 call sites each get 1 new line
+6. `sw.ts` (modified) — skipWaiting: false + SKIP_WAITING message listener; client controls activation timing via postMessage
+7. CI pipeline (modified) — separate e2e-tests job parallel with unit-tests; lint:css added to lint-typecheck job; lint:css currently missing from CI entirely
+
+The settings sync fix is deliberately minimal: distributed pattern preserved, no new centralized hook. The SW update notification is a hook, not a new provider — the state is a single boolean consumed in 1-2 places, which does not warrant adding to the fragile 11-provider chain.
 
 ### Critical Pitfalls
 
-1. **Turbopack default breaks webpack plugin chain** — Add `"build": "next build --webpack"` to package.json scripts immediately when upgrading to Next.js 16. The `@serwist/next` + `@sentry/nextjs` + `@next/bundle-analyzer` wrapper chain is entirely webpack-based; Turbopack does not support webpack plugins. Build fails in CI/CD on day one without this flag. Plan Turbopack migration as a separate future task after all three plugins have stable Turbopack equivalents.
+1. **E2E flakiness on 11-provider async hydration** — The AuthProvider alone triggers 4+ async Supabase queries on mount; SRSProvider reads from IndexedDB; tests written against DOM state that depends on async hydration are intermittently flaky in CI. Prevention: implement data-app-ready attribute gating on all providers initializing before writing any E2E tests; mock Supabase via page.route() for deterministic timing. This must exist before the first test is written or every test is retroactively flaky.
 
-2. **Mixed Pages Router and App Router causes hard navigations** — Do NOT incrementally migrate routes. When Pages Router routes and App Router routes coexist, navigation between them causes full page reloads, losing all React state including the 12 context providers, TTS engine state, auth session, navigation locks, and SRS deck state. Migrate all 15 routes in a single phase by keeping everything under one router boundary at all times.
+2. **SW update infinite reload loop** — With skipWaiting: true, a controllerchange listener calling window.location.reload() loops indefinitely on every deployment. The cached SW triggers controllerchange, the page reloads, the next SW activates, fires controllerchange again. Prevention: change to skipWaiting: false, require explicit user action (toast "Update now" button), guard with a reloading flag. This is the highest-risk change in the milestone — a defect in a cached SW is hard to push a fix for.
 
-3. **Provider hierarchy must be a Client Component wrapper** — `app/layout.tsx` is a Server Component. All 12 context providers use `useState`/`useEffect`/`createContext` and cannot run in a Server Component. Create a `ClientProviders.tsx` with `'use client'` directive that wraps all providers; import it into `layout.tsx`. Do NOT mark `layout.tsx` itself as `'use client'` — that defeats Server Component benefits and grows the bundle unnecessarily.
+3. **Coverage thresholds immediately blocking CI** — A global threshold fails against InterviewSession.tsx (1,474 lines, 0% covered), PracticeSession.tsx (1,018 lines, 0% covered), and 14 untested page views. Prevention: use per-file thresholds exclusively, added simultaneously with the test file for each module; enable autoUpdate: true so thresholds ratchet automatically without manual bumps.
 
-4. **Readiness score gives false confidence** — A weighted average over accuracy and coverage can score a user "85% ready" when they have never studied key categories. Any unstudied category is a real risk since the USCIS test draws randomly from all 128 questions. The algorithm must: penalize zero-coverage categories (cap readiness at 60% if any category is unstudied), use FSRS retrievability projected to the test date not today's R value, and weight mock test performance more heavily than practice/flashcard performance.
+4. **Error boundary reset loses in-progress session state** — Error boundary reset remounts InterviewSession from scratch; all in-progress state (question index, transcript, timer, audio player) is lost. Prevention: ensure saveSessionSnapshot fires via componentDidCatch before showing fallback; offer "Resume session" from IndexedDB on remount. Do not add error boundaries without also adding session save-on-error.
 
-5. **CSP migration is its own phase** — The move from hash-based to nonce-based CSP is an App Router advantage, but it must be a separate sub-phase after routing is stable. Simultaneously migrating routing and CSP doubles the debugging surface. Hash-based CSP still works in App Router; keep it initially, then migrate to nonces in a dedicated step with targeted testing of Google OAuth, Sentry, TTS, service worker, and push notifications.
+5. **InterviewSession decomposition breaks the 9-phase state machine** — 29 useCallback hooks form an interconnected dependency web; extracting sub-components that own logic causes stale closures, audio player recreation, and lost ref access. Prevention: extract rendering only (JSX per phase into UI child components), keep all useState/useRef/useCallback in the parent; defer until E2E interview coverage exists; verify full 20-question interview flow after each extraction step.
+
+6. **Provider ordering guard false positives** — JSX nesting order detection is fragile; class components (ErrorBoundary), conditional providers, and formatters all break string-based detection. Prevention: use module-scoped mount registration (registerProvider() in useEffect/componentDidMount), warn in dev only, never throw; the existing useAuth() throws are often sufficient enforcement on their own.
 
 ## Implications for Roadmap
 
-Based on combined research, the pitfall ordering constraints dictate the phase structure. The routing migration is the critical path; all other work depends on completing it without breaking the app's core offline-first functionality.
+The pitfall analysis and feature dependency graph converge on the same phase ordering. The primary constraint: test infrastructure must precede architecture changes, and architecture changes must precede component decomposition. The SW update change must have E2E verification before shipping due to the cached-SW rollback difficulty.
 
-### Phase 1: Next.js 16 Upgrade and Tooling
+### Phase 1: Test Infrastructure and Quick Wins
+**Rationale:** Every subsequent phase changes working code. A safety net must exist first. Quick wins (lint:css, dead code, coverage thresholds) ship high-value, low-risk improvements immediately without blocking anything downstream.
+**Delivers:** renderWithProviders utility and mockContextValues; Playwright config, e2e/ directory, data-app-ready attribute implementation; Playwright CI job (separate from unit-tests, parallel); lint:css step added to CI lint-typecheck job; dead code removal (DotLottie, safeAsync, redundant RLS policies); coverage thresholds expanded to all tested src/lib/ files; package.json test:e2e script
+**Addresses:** Testing infrastructure gaps, 200KB dead WASM, coverage regression risk
+**Avoids:** Pitfall 1 (data-app-ready must exist before first test), Pitfall 2 (per-file thresholds only, added incrementally), DotLottie WASM hanging in jsdom (removed before context provider tests are written)
 
-**Rationale:** Build tooling must be resolved before touching any routing or features. Turbopack compatibility is a build-time dependency that blocks all subsequent phases if unresolved. Sentry must be reconfigured immediately so errors are captured during the migration itself.
-**Delivers:** Working Next.js 16 build with webpack flag; updated Sentry configuration (`instrumentation.ts`, `global-error.tsx`); `middleware.ts` renamed to `proxy.ts` with export renamed; build scripts updated (`lint: eslint .`, `analyze: next build --analyze`); Vercel Node.js 20+ runtime verified; `@serwist/next` replaced by `@serwist/turbopack` (or webpack fallback confirmed); `date-fns` added.
-**Avoids:** Pitfall 1 (Turbopack build failure), Pitfall 2 (middleware rename), Pitfall 9 (Sentry App Router requirements), Pitfall 18 (async request APIs in new Server Component code).
-**Research flag:** SKIP — official Next.js 16 upgrade guide and Sentry docs provide exact steps. No novel research needed.
+### Phase 2: Security and Error Resilience
+**Rationale:** Error.tsx sanitization is a security issue (raw SQL/stack traces exposed to users) and the simplest change in the milestone. Component-level error boundaries and provider guard are independent of E2E tests. All are low-to-medium risk with no state machine changes.
+**Delivers:** All 3 error.tsx files sanitized + bilingual; ErrorFallbackUI shared component extracted from ErrorBoundary.tsx; feature-level ErrorBoundaries on InterviewSession, PracticeSession, TestPage, CelebrationOverlay with session save-on-error via componentDidCatch; providerOrderGuard dev-time sentinel (warn only, dev mode only); Sentry fingerprinting by operation context
+**Addresses:** Raw error.message leak, English-only errors for Burmese users, full-app crash on feature error
+**Avoids:** Pitfall 4 (error boundary state loss — session save before fallback show required), Pitfall 6 (provider guard false positives — warn never throw)
 
-### Phase 2: App Router Foundation (Layout and Providers)
+### Phase 3: PWA and Sync Resilience
+**Rationale:** SW update UX and settings sync conflict resolution are independent of testing and error handling. Both affect core offline-first reliability. The SW change requires E2E verification via Phase 1's Playwright setup before shipping.
+**Delivers:** skipWaiting: false + SKIP_WAITING message handler in sw.ts; useServiceWorkerUpdate hook; bilingual update toast in NavigationShell with session-lock guard (suppressed during active test/interview); per-field LWW settings sync with markLocalSettingsChanged() at 4 call sites + merge logic in settingsSync.ts; IndexedDB cache versioning (5-line version check in offlineDb.ts)
+**Addresses:** Stale version mid-session, offline settings silently overwritten on login, stale questions after content update
+**Avoids:** Pitfall 3 (infinite reload loop — user-triggered update only, reloading guard, skipWaiting: false), SW update toast during active session (NavigationProvider.isLocked check)
 
-**Rationale:** The provider hierarchy and root layout must exist before any routes can be migrated. This phase creates the structural shell that all page components will live inside. No user-facing changes.
-**Delivers:** `app/layout.tsx` (Server Component with metadata, fonts, theme script, hash-based CSP initially); `ClientProviders.tsx` (12-provider hierarchy extracted from `AppShell.tsx`); route group directories `app/(public)/`, `app/(auth)/`, `app/(protected)/` with shell layout files; `app/(protected)/layout.tsx` auth guard.
-**Avoids:** Pitfall 5 (provider hierarchy in Server Component), Pitfall 3 (mixed router hard navigations — foundation only, no routes moved yet).
-**Research flag:** SKIP — well-documented App Router pattern. Official Next.js SPA guide covers this exactly.
+### Phase 4: Unit Test Expansion
+**Rationale:** With renderWithProviders from Phase 1 and a stable provider tree from Phase 2, writing provider tests is straightforward. Thresholds are added file-by-file as each test is written, never speculatively.
+**Delivers:** Tests for all 8 untested context providers (SupabaseAuthContext, LanguageContext, ThemeContext, TTSContext, SRSContext, SocialContext, OfflineContext, StateContext); per-file coverage thresholds added simultaneously with each test file; key hook tests (useServiceWorkerUpdate, useTestDate)
+**Addresses:** Provider bugs reaching production undetected; 8-of-10 providers with zero test coverage
+**Avoids:** Pitfall 2 (thresholds added only when test exists, never at 0%, never global)
 
-### Phase 3: Route Migration (All 15 Routes, One Phase)
+### Phase 5: E2E Critical Flows and Accessibility
+**Rationale:** E2E tests require a stable built app (pnpm build && pnpm start via Playwright webServer), stable provider tree from Phase 2, and working SW update behavior from Phase 3. Accessibility audit requires stable component structure to avoid re-running after further refactoring.
+**Delivers:** E2E tests for 7 critical flows (auth login->dashboard, mock test lifecycle, practice session, flashcard sort, offline->online sync, interview session via text input fallback, SW update toast); @axe-core/playwright scans on dashboard, test page, interview, settings pages tagged wcag22aa; vitest-axe expansion for all interactive components; glass-morphism contrast axe exclusion config (per-element, never global rule disable)
+**Addresses:** Auth/study/sync regression detection, WCAG 2.2 compliance gaps, glass-morphism contrast false positive management
+**Avoids:** E2E against dev server (always test pnpm start), axe false positives on backdrop-filter elements (selector-scoped exclusion, never global), IndexedDB state leaking between test files (newContext() per file + explicit IDB cleanup)
 
-**Rationale:** The hard navigation pitfall (Pitfall 3) requires migrating all routes at once. This is the largest single phase — approximately 40-60 files need react-router-dom hook replacements. The Next.js codemod handles mechanical changes; the remaining work is `useNavigate` -> `useRouter`, `useLocation` -> `usePathname`, `Navigate` -> `redirect`, and converting `pages/` files to `app/` directory structure.
-**Delivers:** All 15+ SPA routes as `app/` page files; `react-router-dom` removed from package.json; `AppShell.tsx` deleted; `ProtectedRoute` converted to `(protected)/layout.tsx`; `PageTransition` updated to `usePathname()` + `template.tsx` pattern (enter-only animations accepted); `HubPage` sub-routes converted to `app/(protected)/hub/*/page.tsx` nested structure; API routes migrated to `app/api/push/*/route.ts` Route Handlers; clean URLs (no more `#` prefix).
-**Avoids:** Pitfall 3 (mixed router hard navigations — all routes migrated at once), Pitfall 6 (router hook replacement scope — inventory all imports first), Pitfall 7 (page transitions — accept enter-only via template.tsx), Pitfall 8 (next/head removal — use metadata exports), Pitfall 16 (useRouter import confusion), Pitfall 17 (theme script moves to layout.tsx), Pitfall 21 (circular dependencies — keep route config in constants).
-**Research flag:** SKIP — mechanical migration. The codemod `pnpm dlx @next/codemod@canary upgrade latest` automates most changes; remaining work follows documented patterns.
-
-### Phase 4: CSP Nonce Migration and PWA Update
-
-**Rationale:** CSP migration is isolated here after routing is stable. Simultaneous CSP and routing changes would double the debugging surface. Service worker path updates are grouped with CSP because both affect the app's security and caching infrastructure.
-**Delivers:** `proxy.ts` updated with per-request nonce generation; `app/layout.tsx` reads nonce via `headers()` and passes to theme script via `<Script strategy="beforeInteractive" nonce={nonce}>`; CSP switches from hash-based to nonce-based with `'strict-dynamic'`; service worker source moved to `app/sw.ts`; offline fallback verified on all routes; push notification API routes verified as Route Handlers.
-**Avoids:** Pitfall 4 (CSP strategy change — isolated phase), Pitfall 10 (service worker path changes).
-**Research flag:** SKIP — official Next.js CSP guide documents the nonce pattern exactly. Serwist App Router docs cover service worker placement.
-
-### Phase 5: Test Readiness Score and Drill Mode
-
-**Rationale:** With the migration complete and the app stable, the highest-impact feature work begins. Readiness scoring is the foundation that study plan recommendations depend on. Pure TypeScript computation using existing FSRS and mastery data — no new libraries, no UI framework changes.
-**Delivers:** `src/lib/readiness/readinessEngine.ts` (pure function, unit tested); `useReadinessScore` hook aggregating existing `useStreak`, `useSRS`, `useCategoryMastery`, `useAuth`, and `getInterviewHistory`; ReadinessRing component on Dashboard and Progress Hub Overview tab; per-dimension breakdown display (knowledge, retention, test performance, consistency); readiness formula penalizing zero-coverage categories and projecting FSRS R to test date; dedicated "Drill Weak Areas" entry point on Dashboard and Progress Hub; category-level drill buttons; drill session pre/post mastery delta display.
-**Addresses:** Test Readiness Score (table stakes, Priority 1) and Smart Weak-Area Drill (table stakes, Priority 2) from FEATURES.md.
-**Avoids:** Pitfall 12 (false confidence — penalize zero-coverage categories, project R to test date), Pitfall 20 (FSRS retrievability misuse — use `forgetting_curve(elapsed_days, stability)` to project future R).
-**Research flag:** NEEDS RESEARCH — the exact `ts-fsrs@5.2.3` API for projecting retrievability to a future date (`forgetting_curve` function signature) needs verification before implementation. Recommend a targeted research task at the start of this phase.
-
-### Phase 6: Test Date Countdown and Study Plan
-
-**Rationale:** Depends on readiness score (Phase 5) being visible, since the "take a mock test" recommendation is driven by readiness data. Simple arithmetic using `date-fns`, not complex scheduling logic.
-**Delivers:** Test date input in Settings (date picker, stored in localStorage); countdown display on Dashboard and Progress Hub; "Today's Plan" card on Dashboard (daily new questions + SRS review count + mock test recommendation when readiness score suggests it); adaptive recalculation on each Dashboard visit; positive framing that never shows "behind schedule" messaging; graceful no-op when no test date is set.
-**Addresses:** Test Date Countdown with Daily Targets (table stakes, Priority 3) from FEATURES.md.
-**Avoids:** Pitfall 13 (rigid scheduling causing abandonment — recalculate daily, frame positively, celebrate partial completion).
-**Research flag:** SKIP — simple date arithmetic with `date-fns`. Adaptive framing is a design decision, not a research question.
-
-### Phase 7: Content Enrichment (Mnemonics, Tips, Depth)
-
-**Rationale:** Fully independent of the migration and can be parallelized with Phases 5-6 if resources allow. Highest content authoring effort, but code changes are small. English mnemonics first; Burmese mnemonics deferred given the BRMSE-01 known constraint.
-**Delivers:** Mnemonics authored for all 128 questions (currently 17/128 have them); visual mnemonic treatment in FeedbackPanel and flashcards (lightbulb icon, distinct styling block with accent border); 7 category introduction objects with study strategy and common pitfalls (shown as dismissible cards, dismissal stored in localStorage); "Tricky Questions" difficulty badges; "See Also" related question chips (data exists for all 128, UI missing); expanded fun facts (25->128), common mistakes (28->128), citations (48->128).
-**Addresses:** Mnemonics (differentiator, Priority 4), Study Tips (differentiator, Priority 5), Content Depth (Priority 6) from FEATURES.md.
-**Avoids:** Pitfall 14 (culturally inappropriate mnemonics — English-only initially, prefer visual/structural devices over English wordplay or letter-based acronyms).
-**Research flag:** SKIP for code work. Content authoring is a content task, not a technical research question. Flag BRMSE-01 for native speaker review before adding any Burmese mnemonics.
-
-### Phase 8: Performance Optimization and Bundle Audit
-
-**Rationale:** Performance optimization is data-driven and requires the completed app. Bundle analysis before migration is premature since App Router's automatic per-route code splitting is the biggest structural improvement and is only measurable after all routes exist.
-**Delivers:** Dynamic imports for heavy components (recharts on Hub pages, DotLottie/confetti on celebrations, InterviewPage speech recognition); `optimizePackageImports` extended to cover `date-fns` and `recharts` in next.config.ts; bundle size before/after comparison documented; service worker precache list verified correct for App Router assets; Web Vitals regression check against v3.0 baseline.
-**Addresses:** Bundle optimization goals from STACK.md. Estimated improvement from ~300KB initial JS to ~150KB with per-route splitting.
-**Avoids:** Pitfall 15 (bundle size regression — monitor with `next build --analyze` at each step), Pitfall 19 (OneDrive webpack cache corruption — `rm -rf .next` before each major build step).
-**Research flag:** SKIP — standard Next.js bundle optimization patterns. Official bundle optimization guide covers `dynamic()`, `optimizePackageImports`, and the built-in analyzer.
+### Phase 6: Component Decomposition
+**Rationale:** Decomposing InterviewSession (1,474 lines) is unconditionally last. Full E2E interview coverage from Phase 5 is required to catch regressions. This is a maintainability improvement on working code — correctness is already validated. Attempting this earlier risks breaking the interview flow without a safety net.
+**Delivers:** InterviewSession split into useInterviewStateMachine hook + rendering-only sub-components per phase (InterviewGreetingUI, InterviewQuestioningUI, InterviewFeedbackUI, InterviewTransitionUI); parent component under 400 lines; each phase UI component independently testable; all hooks and state remain in parent
+**Addresses:** Untestable 1,474-line monolith; cascading changes required for any interview feature
+**Avoids:** Pitfall 5 (extract rendering only, not logic; keep all useState/useRef/useCallback in parent; verify full 20-question Practice and Real interview flows after each extraction step; do not memo-wrap without profiling evidence)
 
 ### Phase Ordering Rationale
 
-- Phases 1-4 form a strict dependency chain: tooling must work before routes migrate; routes must be stable before CSP changes; CSP must be isolated from routing to keep the debugging surface tractable.
-- Phases 5-6 have a soft dependency (study plan uses readiness score) and can begin only after Phase 3 completes since features must target the new App Router route structure.
-- Phase 7 is fully independent and can be parallelized with Phases 5-6 if separate authoring and development tracks are available.
-- Phase 8 is intentionally last: the App Router's automatic code splitting (the biggest bundle win) is only measurable after all routes exist, and optimization is only meaningful on a complete app.
-- This ordering aligns exactly with the pitfall analysis's recommended sequence: upgrade -> foundation -> routes -> CSP/PWA -> features -> content -> performance.
+- Phase 1 is unconditionally first: data-app-ready must exist before E2E tests are written (Pitfall 1); dead code removal before coverage thresholds prevents dead test files from inflating calculations (Pitfall 2)
+- Phase 2 can technically overlap with Phase 3 in planning (they are independent), but Phase 2 must complete before Phase 4 (provider tests need a stable error handling layer)
+- Phase 3 (SW update) requires Phase 1's Playwright config to write the update flow E2E test before shipping
+- Phase 4 (unit tests) requires Phase 1 (renderWithProviders) and benefits from Phase 2 (stable error boundaries don't interfere with test renders)
+- Phase 5 (E2E) requires Phase 3 (stable SW behavior) and is most effective after Phase 4 (unit tests already cover edge cases; E2E tests cover integration)
+- Phase 6 (decomposition) is unconditionally last; it requires the full E2E safety net from Phase 5 and improves maintainability on already-correct code
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 5 (Readiness Scoring):** The `ts-fsrs@5.2.3` API for projecting retrievability to a future date needs verification. Specifically: the `forgetting_curve(elapsed_days, stability)` function signature and whether the library exposes it for external use. Recommend a targeted research task (not a full research-phase) at the start of Phase 5 planning.
+Phases needing targeted investigation before or during planning:
+- **Phase 3 (SW update UX):** The skipWaiting: false transition has a one-deployment gap where existing users still have skipWaiting: true. Confirm exact rollout behavior — specifically whether the first deploy after the change auto-activates (old SW's skipWaiting: true) and second deploy onward shows the prompt.
+- **Phase 5 (E2E IndexedDB isolation):** No reusable Playwright fixture for IndexedDB cleanup exists. Must be built as part of Phase 5 setup — navigate to about:blank + page.evaluate to delete IDB databases per test file.
+- **Phase 5 (E2E interview with SpeechRecognition):** SpeechRecognition is unavailable in Playwright Chromium headless. Must confirm whether page.addInitScript mock or text input fallback path is used for interview E2E; decide before writing tests.
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Next.js 16 Upgrade):** Official upgrade guide is comprehensive and step-by-step.
-- **Phase 2 (App Router Foundation):** Official Next.js SPA guide covers the exact pattern for this app.
-- **Phase 3 (Route Migration):** Mechanical — the Next.js codemod handles most changes; remaining changes follow `useNavigate` -> `useRouter` patterns.
-- **Phase 4 (CSP/PWA):** Official Next.js CSP guide covers nonce pattern precisely; Serwist docs cover service worker.
-- **Phase 6 (Study Plan):** Simple date arithmetic; design decisions are not research questions.
-- **Phase 7 (Content Enrichment):** Content authoring task, not a technical research question.
-- **Phase 8 (Performance):** Standard optimization patterns with official documentation.
+Phases with well-documented patterns (skip research-phase):
+- **Phase 1 (Playwright setup):** Next.js official docs provide verbatim config including webServer. No novel research needed.
+- **Phase 2 (error.tsx sanitization):** Pattern already exists in ErrorBoundary.tsx line 143. Mechanical application.
+- **Phase 2 (component-level ErrorBoundary):** Existing ErrorBoundary accepts fallback prop; wrapping 4 views is a one-liner each.
+- **Phase 3 (settings LWW):** Architecture doc specifies exact file changes (settingsSync.ts + 4 one-line additions). No research needed.
+- **Phase 4 (provider unit tests):** Testing Library renderHook pattern is documented; mock strategy per provider is specified in ARCHITECTURE.md H9.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Next.js 16 official docs, Serwist/Sentry official docs, verified package versions. The webpack fallback strategy is confirmed. Only uncertainty is Serwist Turbopack stability at `@serwist/turbopack@9.5.5` — mitigated by keeping `--webpack` fallback. |
-| Features | HIGH | Existing codebase analyzed thoroughly; new features are mostly UI promotion of already-implemented logic. Feature priorities reasoned against competitor research (Achievable, Brainscape, UWorld, 300Hours). Content enrichment scope (128 questions) is definite and finite. |
-| Architecture | HIGH | Official Next.js 16 and App Router migration guides are comprehensive. Codebase analysis of 300+ source files informs the exact migration surface. Provider hierarchy ordering constraints documented in CLAUDE.md and preserved in architecture recommendations. |
-| Pitfalls | HIGH | Critical pitfalls confirmed from official docs (Turbopack, middleware rename, mixed router hard navigation, provider server component constraint). Exit animation limitation confirmed from Next.js GitHub discussions with 2000+ comments. FSRS retrievability projection pitfall is MEDIUM confidence — based on algorithm understanding, needs API verification. |
+| Stack | HIGH | All recommendations verified against official npm registry and official docs. Playwright 1.58.0 confirmed latest; @axe-core/playwright 4.11.1 peer deps confirmed; @serwist/window confirmed already in dep tree at 9.5.6. |
+| Features | HIGH | Based on direct codebase audit with exact file names and line numbers. No speculation. Current state of each gap (e.g., 8-of-10 providers untested, 3 error.tsx files unsanitized) is verified. |
+| Architecture | HIGH | Integration points derived from reading actual source files. File modification list specifies exact files with line-level rationale. Data flow diagrams for SW update, settings sync, and error handling are concrete. |
+| Pitfalls | HIGH | Critical pitfalls 1 and 3 verified against specific GitHub issues (Workbox #3260 infinite loop, axe-core #2851 backdrop-filter). Pitfall 5 (InterviewSession decomposition) verified against codebase reading of specific line counts and callback dependencies. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **FSRS retrievability projection API:** The `ts-fsrs@5.2.3` `forgetting_curve` function signature needs verification before the readiness engine is implemented. Mitigate by allocating a targeted research task before Phase 5.
-- **Serwist Turbopack stability:** `@serwist/turbopack@9.5.5` is actively maintained but less battle-tested than `@serwist/next`. Mitigate by keeping `--webpack` fallback build script throughout Phases 1-7; attempt full Turbopack only in Phase 8 if all plugins are confirmed stable.
-- **Exit animation regression:** App Router does not support AnimatePresence exit animations on route transitions (confirmed GitHub issue, unresolved as of 2026). The `template.tsx` workaround delivers enter-only animations. This is an accepted regression for v4.0; revisit with React 19.2 ViewTransition API in a future milestone.
-- **Burmese mnemonic quality (BRMSE-01):** English mnemonics in Phase 7 are tractable. Burmese mnemonics require native speaker review since wordplay and letter-based mnemonics do not transfer across scripts. Plan native speaker review as a separate content QA task before any Burmese mnemonics are authored.
-- **Readiness algorithm calibration:** Formula weights (accuracy, coverage, consistency, test performance) are reasoned but not empirically validated. Post-launch, compare readiness score predictions against mock test results to tune weights. Never display 100% readiness.
+- **Supabase E2E strategy (test project vs. route interception):** Research recommends page.route() mocking for Supabase REST calls, but auth state persistence across E2E tests may require a dedicated Supabase test project. Decide before writing E2E auth tests in Phase 5.
+- **IDB cleanup fixture:** No reusable Playwright fixture for IndexedDB isolation exists. Must be written as part of Phase 5 setup, not per-test.
+- **SpeechRecognition in E2E:** Interview E2E must use text input fallback path or page.addInitScript mock. Clarify approach before Phase 5.
+- **lint:css first-run violations:** Run pnpm lint:css locally before adding to CI — may surface existing violations that were never caught. Fix violations before the CI step is added.
+- **Settings sync schema migration:** Adding updated_at column to user_settings table is a production Supabase migration. Verify the migration does not break existing sync behavior for users who log in during the migration window.
+- **CSP wasm-unsafe-eval audit:** If wasm-unsafe-eval was added to CSP solely for DotLottie WASM, removing DotLottie enables removing that CSP directive too. Audit before and after removal.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) — migration steps, breaking changes, async APIs
-- [Next.js 16.1 Release Blog](https://nextjs.org/blog/next-16-1) — built-in bundle analyzer
-- [Next.js App Router Migration Guide](https://nextjs.org/docs/app/guides/migrating/app-router-migration) — Pages to App Router pattern
-- [Next.js SPA Guide](https://nextjs.org/docs/app/guides/single-page-applications) — SPA pattern in App Router (exact use case for this app)
-- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy) — nonce-based CSP in App Router
-- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) — `instrumentation.ts`, `global-error.tsx` requirements
-- [Sentry Turbopack Support Blog](https://blog.sentry.io/turbopack-support-next-js-sdk/) — Sentry Turbopack compatibility confirmation
-- [Serwist Next.js Docs](https://serwist.pages.dev/docs/next/getting-started) — service worker migration path
-- [@serwist/turbopack npm](https://www.npmjs.com/package/@serwist/turbopack) — v9.5.5, Turbopack-native PWA integration
-- [FSRS Algorithm Wiki](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm) — retrievability, stability, forgetting curve
-- [Next.js Discussion #42658](https://github.com/vercel/next.js/discussions/42658) — exit animation limitation in App Router (confirmed unresolved)
-- [Next.js Issue #61694](https://github.com/vercel/next.js/issues/61694) — CSP nonces in App Router
-- [USCIS Naturalization Test Performance Data](https://www.uscis.gov/citizenship-resource-center/naturalization-related-data-and-statistics/naturalization-test-performance) — official test format and question selection
-- Codebase analysis of 300+ source files — provider hierarchy constraints, existing mastery algorithms, question data structures, IndexedDB stores
+- [Next.js Testing: Playwright](https://nextjs.org/docs/app/guides/testing/playwright) — Playwright setup, webServer config for Next.js
+- [Next.js Error Handling](https://nextjs.org/docs/app/getting-started/error-handling) — error.tsx vs global-error.tsx scope and constraints
+- [Playwright Release Notes](https://playwright.dev/docs/release-notes) — v1.58.0 confirmed latest
+- [@axe-core/playwright npm](https://www.npmjs.com/package/@axe-core/playwright) — v4.11.1 peer dependency requirements
+- [Vitest Coverage Configuration](https://vitest.dev/config/coverage) — perFile, glob thresholds, autoUpdate
+- [@serwist/window Documentation](https://serwist.pages.dev/docs/window) — waiting/controlling events, messageSkipWaiting API
+- [Workbox Infinite Loop Issue #3260](https://github.com/GoogleChrome/workbox/issues/3260) — confirmed root cause of SW infinite reload
+- [axe-core Color Contrast False Positives #2851](https://github.com/dequelabs/axe-core/issues/2851) — backdrop-filter limitation confirmed
+- [React Error Boundaries (react.dev)](https://react.dev/reference/react/Component) — componentDidCatch, getDerivedStateFromError
+- [Chrome Developers: Handling SW Updates](https://developer.chrome.com/docs/workbox/handling-service-worker-updates) — skipWaiting patterns and user notification flow
+- [Playwright CI Integration](https://playwright.dev/docs/ci) — GitHub Actions job structure, artifact upload
+- [Playwright Accessibility Testing](https://playwright.dev/docs/accessibility-testing) — @axe-core/playwright integration guide
 
 ### Secondary (MEDIUM confidence)
-- [Achievable Test Readiness Score Discussion](https://talk.achievable.me/t/how-does-test-readiness-score-work/2522) — readiness scoring UX patterns
-- [Brainscape CBR Whitepaper](https://edcuration.com/resource/product/3/Brainscape%20whitepaper.pdf) — confidence-based repetition and weak area drilling patterns
-- [300Hours CFA Study Planner](https://300hours.com/cfa-study-planner/) — study plan UX patterns
-- [FSRS Algorithm Explanation](https://expertium.github.io/Algorithm.html) — retrievability projection mechanics
-- [Serwist + Next.js 16 PWA](https://aurorascharff.no/posts/dynamically-generating-pwa-app-icons-nextjs-16-serwist/) — App Router service worker setup reference
-- [Vercel Blog: Common App Router Mistakes](https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them) — provider pattern, client component boundaries
+- [Playwright vs Cypress 2026](https://www.d4b.dev/blog/2026-02-17-why-playwright-seems-to-be-winning-over-cypress-for-end-to-end-testing) — benchmark data for CI resource comparison
+- [LWW vs CRDTs](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts) — conflict resolution tradeoffs for single-writer apps
+- [Modularizing React Apps (Martin Fowler)](https://martinfowler.com/articles/modularizing-react-apps.html) — component decomposition patterns
+- [PWA Update Patterns (web.dev)](https://web.dev/learn/pwa/update) — service worker update UX
+- [Playwright Flaky Test Research (BrowserStack)](https://www.browserstack.com/guide/playwright-flaky-tests) — async state timing root causes
+- [Service Worker Pitfalls (Rich Harris)](https://gist.github.com/Rich-Harris/fd6c3c73e6e707e312d7c5d7d0f3b2f9) — SW anti-patterns including skipWaiting misuse
+- [Slack Automated Accessibility Testing](https://slack.engineering/automated-accessibility-testing-at-slack/) — enterprise a11y CI patterns
 
 ### Tertiary (LOW confidence, needs validation)
-- [date-fns vs dayjs comparison](https://www.dhiwise.com/post/date-fns-vs-dayjs-the-battle-of-javascript-date-libraries) — library selection rationale (date-fns chosen for tree-shakeability; recommendation accepted)
+- [Playwright PWA Testing Guide](https://dev.to/pritig/how-playwright-simplifies-ui-testing-for-progressive-web-apps-pwas-9n8) — PWA-specific E2E patterns
+- [WCAG 2.2 Guide (2026)](https://www.vervali.com/blog/accessibility-testing-services-in-2026-the-complete-guide-to-wcag-2-2-ada-section-508-and-eaa-compliance/) — WCAG 2.2 AA criteria coverage by axe-core
 
 ---
-*Research completed: 2026-02-23*
+*Research completed: 2026-03-19*
 *Ready for roadmap: yes*
-*Recommended phases: 8*
-*Critical path: Phase 1 (Tooling) -> Phase 2 (Foundation) -> Phase 3 (Route Migration) -> Phase 4 (CSP/PWA) -> Phase 5 (Readiness Score)*
-*Parallel opportunity: Phase 7 (Content Enrichment) can run alongside Phases 5-6*
+*Recommended phases: 6*
+*Critical path: Phase 1 (Test Infrastructure) -> Phase 2 (Error Resilience) -> Phase 3 (PWA/Sync) -> Phase 4 (Unit Tests) -> Phase 5 (E2E + A11y) -> Phase 6 (Decomposition)*
+*Parallel opportunity: Phases 2 and 3 can be planned in parallel; Phase 3 SW change needs Phase 1 Playwright config before shipping*

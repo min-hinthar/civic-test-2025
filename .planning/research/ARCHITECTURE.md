@@ -1,958 +1,712 @@
-# Architecture Research: Next.js 16 App Router Migration, Readiness Scoring, Content Enrichment
+# Architecture Research: Production Hardening Integration
 
-**Domain:** Bilingual Civics Test Prep PWA -- v4.0 Next-Gen Architecture
-**Researched:** 2026-02-23
-**Confidence:** HIGH (Next.js 16 official docs, Sentry/Serwist official docs, codebase analysis of 300+ source files)
+**Domain:** Production hardening of existing bilingual PWA (Next.js 16 App Router)
+**Researched:** 2026-03-19
+**Confidence:** HIGH
 
----
-
-## Executive Summary
-
-The v4.0 milestone has four pillars: (1) Next.js 16 App Router migration replacing react-router-dom, (2) test readiness scoring synthesizing existing progress data, (3) content enrichment with mnemonics and deeper explanations, and (4) performance optimization. The migration is the highest-risk, highest-reward change -- it replaces the entire routing and navigation layer while preserving the offline-first PWA behavior, 12-deep provider hierarchy, and 70K+ LOC of client-side logic.
-
-**Critical architectural insight:** This app is fundamentally a client-side SPA that happens to be served by Next.js. The current architecture uses Next.js purely as a shell (`pages/[[...slug]].tsx` -> dynamically imported `AppShell.tsx` with SSR disabled). The migration to App Router does NOT mean converting to server-rendered pages. Instead, it means replacing react-router-dom hash routes with Next.js file-based routes while keeping every page as a Client Component. The App Router's SPA guide explicitly supports this pattern.
-
-**What changes:**
-- `pages/` directory -> `app/` directory with file-based routes
-- react-router-dom (`BrowserRouter`, `Routes`, `Route`, `Navigate`, `useNavigate`, `useLocation`) -> Next.js navigation (`next/link`, `useRouter`, `usePathname`, `useSearchParams` from `next/navigation`)
-- `pages/_document.tsx` + `pages/_app.tsx` -> `app/layout.tsx` (root layout)
-- `middleware.ts` -> `proxy.ts` (Next.js 16 rename)
-- CSP hash-based -> CSP nonce-based (App Router supports nonce forwarding that Pages Router could not)
-- `next/head` in components -> `metadata` exports in layouts/pages
-
-**What stays the same:**
-- All 12 context providers (same hierarchy, same logic, same hooks)
-- IndexedDB stores (10 stores, unchanged)
-- Supabase auth + sync (unchanged)
-- Service worker (@serwist/next, relocate sw.ts source)
-- Sentry integration (update config file pattern)
-- All components, hooks, utilities (unchanged internal logic)
-- motion/react animations, Tailwind CSS, design tokens (unchanged)
-
-**What's new (not migration):**
-- Readiness score engine (pure function consuming existing data)
-- Test date countdown (new UI component + localStorage persistence)
-- Smart weak-area drill (new mode using existing mastery data)
-- Mnemonics/memory aids (new content data per question)
-- Deeper explanations with historical context (content enrichment)
-- Study tips per category (new content data)
-- Bundle optimization (dynamic imports, code splitting)
-
----
-
-## Part 1: Next.js 16 App Router Migration Architecture
-
-### 1.1 Current Architecture (Before)
+## System Overview: Current Architecture + Hardening Touchpoints
 
 ```
-pages/
-  _app.tsx           -- CSS imports only, passes Component/pageProps through
-  _document.tsx      -- <Html>, <Head> with theme script, viewport, PWA meta
-  _error.tsx         -- Error page
-  [[...slug]].tsx    -- Catch-all: dynamically imports AppShell with ssr:false
-  op-ed.tsx          -- Static page (SSR)
+CURRENT ARCHITECTURE                    HARDENING INTEGRATION POINTS
+===========================             =============================
 
-middleware.ts        -- CSP headers with hash-based script allowlisting
+Next.js App Router Shell                [H1] error.tsx sanitization + bilingual
+  app/layout.tsx ─────────────────────  [H2] global-error.tsx bilingual
+  app/(protected)/layout.tsx              (no change)
+  app/(protected)/template.tsx            (no change)
+  app/error.tsx ──────────────────────  [H1] sanitizeError() + BilingualMessage
+  app/(protected)/error.tsx ──────────  [H1] sanitizeError() + BilingualMessage
+  app/global-error.tsx ───────────────  [H2] minimal bilingual fallback
 
-src/AppShell.tsx     -- THE app: BrowserRouter -> 12 providers -> NavigationShell -> Routes
-  - Defines all routes via react-router-dom <Route> elements
-  - All pages are Client Components
-  - Hash routing (#/home, #/test, etc.)
+ClientProviders.tsx ──────────────────  [H3] ProviderOrderGuard (dev-time)
+  ErrorBoundary (root) ──────────────── (keep as-is, outermost)
+    AuthProvider
+      LanguageProvider
+        ThemeProvider
+          TTSProvider
+            ToastProvider ──────────── [H4] SW update toast target
+              OfflineProvider
+                SocialProvider
+                  SRSProvider
+                    StateProvider
+                      NavigationProvider
 
-src/pages/           -- "Pages" that are actually SPA route components
-  Dashboard.tsx      -- /home
-  TestPage.tsx       -- /test
-  StudyGuidePage.tsx -- /study
-  PracticePage.tsx   -- /practice
-  InterviewPage.tsx  -- /interview
-  HubPage.tsx        -- /hub/*
-  SettingsPage.tsx   -- /settings
-  AuthPage.tsx       -- /auth
-  LandingPage.tsx    -- /
-  ...8 more
+Feature Components ──────────────────  [H5] Component-level ErrorBoundaries
+  InterviewSession (1,474 LOC)
+  PracticeSession (1,018 LOC)
+  TestPage (960 LOC)
+  CelebrationOverlay
+
+Service Worker (sw.ts) ──────────────  [H6] skipWaiting: false + SKIP_WAITING
+Client SW hook ──────────────────────  [H7] useServiceWorkerUpdate hook
+
+Settings Sync ───────────────────────  [H8] Timestamp-based conflict detection
+  ThemeContext -> syncSettingsToSupabase
+  LanguageContext -> syncSettingsToSupabase
+  TTSContext -> syncSettingsToSupabase
+  useTestDate -> syncSettingsToSupabase
+
+Test Infrastructure ─────────────────  [H9] Shared render utility
+  34 test files, 0 E2E              [H10] Playwright E2E (separate CI job)
+  vitest.config.ts ──────────────────  [H11] Incremental coverage thresholds
+
+CI Pipeline (ci.yml) ────────────────  [H12] lint:css step + Playwright job
 ```
 
-**Key characteristics:**
-- Next.js is just a static shell; ALL routing is client-side
-- react-router-dom v7 with BrowserRouter (hash routing)
-- `useNavigate()`, `useLocation()`, `Navigate` component throughout
-- ProtectedRoute wraps routes requiring auth
-- NavigationShell provides sidebar/bottom nav chrome
-- PageTransition wraps route content for enter/exit animations
-- CelebrationOverlay, PWAOnboardingFlow, OnboardingTour, GreetingFlow sit outside routes
+## Integration Point Details
 
-### 1.2 Target Architecture (After)
+### H1: error.tsx Sanitization + Bilingual Rendering
+
+**What changes:** 3 files modified (`app/error.tsx`, `app/(protected)/error.tsx`, `app/global-error.tsx`)
+**New components:** None -- reuses existing `sanitizeError()` from `src/lib/errorSanitizer.ts`
+**Data flow change:** `error.message` no longer rendered raw; passes through `sanitizeError()` and shows `BilingualMessage`
+
+**Composition with existing ErrorBoundary:**
+Next.js error.tsx boundaries wrap `page.tsx` and child `layout.tsx`, but NOT the layout at the same level. The existing React `ErrorBoundary` in `ClientProviders.tsx` wraps everything inside the root layout. The two systems are complementary:
 
 ```
-app/
-  layout.tsx         -- Root layout: <html>, <body>, global CSS, fonts, PWA meta
-                        Metadata export replaces next/head
-                        Wraps children in ClientProviders component
-  page.tsx           -- Landing page (/ route)
-  global-error.tsx   -- Sentry error boundary (App Router convention)
-  not-found.tsx      -- 404 page
-  manifest.json      -- PWA manifest (moved from public/)
-  sw.ts              -- Service worker source (Serwist App Router convention)
-
-  (auth)/
-    auth/page.tsx           -- /auth
-    auth/forgot/page.tsx    -- /auth/forgot
-    auth/update-password/page.tsx -- /auth/update-password
-
-  (public)/
-    op-ed/page.tsx          -- /op-ed
-    about/page.tsx          -- /about
-
-  (protected)/
-    layout.tsx              -- ProtectedLayout: auth guard wrapper
-    home/page.tsx           -- /home (Dashboard)
-    test/page.tsx           -- /test
-    study/page.tsx          -- /study
-    practice/page.tsx       -- /practice
-    interview/page.tsx      -- /interview
-    hub/
-      layout.tsx            -- Hub layout (shared tab bar)
-      page.tsx              -- /hub (redirects to /hub/overview)
-      overview/page.tsx     -- /hub/overview
-      categories/page.tsx   -- /hub/categories
-      history/page.tsx      -- /hub/history
-      achievements/page.tsx -- /hub/achievements
-    settings/page.tsx       -- /settings
-
-proxy.ts             -- CSP with nonce-based allowlisting (renamed from middleware.ts)
-instrumentation.ts   -- Sentry server/edge registration
-instrumentation-client.ts -- Sentry client init
+app/layout.tsx
+  global-error.tsx  <-- catches root layout errors (replaces entire <html>)
+  ClientProviders
+    ErrorBoundary   <-- catches React render errors in all children (bilingual)
+    app/(protected)/layout.tsx
+      error.tsx     <-- catches page/child errors within protected routes
+      page.tsx
 ```
 
-### 1.3 Route Group Strategy
+**Key insight:** error.tsx catches hydration and server component errors that the React ErrorBoundary never sees. The React ErrorBoundary catches client-side render errors that bubble up from context providers and components. Both need sanitization. Both need bilingual support.
 
-Three route groups organize the `app/` directory without affecting URL paths:
+**Implementation:** Extract shared `ErrorFallbackUI` component from the existing `ErrorBoundary.tsx`'s `ErrorFallback` function. The error.tsx files import and use this shared UI. The ErrorFallback reads language mode directly from localStorage (already does this -- no context dependency), so it works in both error.tsx and ErrorBoundary contexts.
 
-| Group | Purpose | Layout Behavior |
-|-------|---------|-----------------|
-| `(public)` | No auth required, no navigation shell | Minimal layout |
-| `(auth)` | Auth pages (login, reset) | No navigation shell |
-| `(protected)` | All authenticated routes | Auth guard + NavigationShell |
+**New file:** `src/components/ErrorFallbackUI.tsx` (extracted from ErrorBoundary.tsx)
+**Modified files:** `app/error.tsx`, `app/(protected)/error.tsx`, `app/global-error.tsx`, `src/components/ErrorBoundary.tsx` (imports shared UI)
 
-The `(protected)/layout.tsx` replaces the current `ProtectedRoute` component by wrapping all protected children in an auth check. This is a Client Component layout:
+### H2: global-error.tsx Bilingual Rendering
 
-```tsx
-// app/(protected)/layout.tsx
-'use client';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { redirect } from 'next/navigation';
-import { NavigationShell } from '@/components/navigation/NavigationShell';
+**Constraint:** `global-error.tsx` replaces the entire `<html>` and `<body>` -- no Tailwind, no design tokens, no providers available.
+**Approach:** Inline styles only. Read `civic-test-language-mode` from localStorage in a try/catch. Minimal bilingual text. This is a last-resort fallback.
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+**Modified file:** `app/global-error.tsx`
 
-  if (isLoading) return <LoadingSpinner />;
-  if (!user) redirect('/auth');
+### H3: Provider Ordering Guard
 
-  return <NavigationShell>{children}</NavigationShell>;
-}
-```
+**Options evaluated:**
 
-### 1.4 Provider Tree Migration
+| Approach | Enforcement | DX | Effort |
+|----------|------------|-----|--------|
+| Runtime assertion in dev | Catches at render time | Clear error message | LOW |
+| ESLint rule | Catches in editor | Requires custom rule authoring | HIGH |
+| TypeScript constraint | Catches at compile time | Not feasible -- JSX nesting is not typed | N/A |
 
-The 12-provider hierarchy moves from `AppShell.tsx` into a dedicated `ClientProviders` component imported by the root layout:
+**Recommendation: Runtime dev-time assertion.** Add a `useProviderOrderGuard()` hook that runs only in `process.env.NODE_ENV === 'development'`. It registers each provider when it mounts (using a module-scoped array), and asserts the mount order matches the expected sequence. If wrong, throws an error with a clear message naming the misplaced provider.
 
-```tsx
-// app/layout.tsx (Server Component)
-import { ClientProviders } from '@/components/ClientProviders';
-import '@fontsource/noto-sans-myanmar/400.css';
-import '@fontsource/noto-sans-myanmar/500.css';
-import '@fontsource/noto-sans-myanmar/700.css';
-import '@/styles/globals.css';
+**Why not ESLint:** Custom ESLint rules for JSX nesting depth analysis are fragile, hard to maintain, and the team is one person. A runtime check catches the exact same bug with 10x less code.
 
-export const metadata = {
-  title: 'Civic Test Prep - Master Your U.S. Citizenship Test',
-  description: 'Bilingual English-Burmese civic test preparation...',
-};
+**Why not TypeScript:** JSX element nesting order is not expressible in the type system. You cannot create a type that says "LanguageProvider must be a child of AuthProvider."
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ClientProviders>{children}</ClientProviders>
-      </body>
-    </html>
-  );
-}
-```
+**Implementation pattern:**
 
-```tsx
-// src/components/ClientProviders.tsx
-'use client';
+```typescript
+// src/lib/providerOrderGuard.ts
+const EXPECTED_ORDER = [
+  'ErrorBoundary', 'AuthProvider', 'LanguageProvider', 'ThemeProvider',
+  'TTSProvider', 'ToastProvider', 'OfflineProvider', 'SocialProvider',
+  'SRSProvider', 'StateProvider', 'NavigationProvider',
+];
 
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { TTSProvider } from '@/contexts/TTSContext';
-import { ToastProvider } from '@/components/BilingualToast';
-import { OfflineProvider } from '@/contexts/OfflineContext';
-import { AuthProvider } from '@/contexts/SupabaseAuthContext';
-import { SocialProvider } from '@/contexts/SocialContext';
-import { SRSProvider } from '@/contexts/SRSContext';
-import { StateProvider } from '@/contexts/StateContext';
-import { NavigationProvider } from '@/components/navigation/NavigationProvider';
-import { CelebrationOverlay } from '@/components/celebrations';
-// ... other global overlays
+const mountOrder: string[] = [];
 
-export function ClientProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <ErrorBoundary>
-      <LanguageProvider>
-        <ThemeProvider>
-          <TTSProvider>
-            <ToastProvider>
-              <OfflineProvider>
-                <AuthProvider>
-                  <SocialProvider>
-                    <SRSProvider>
-                      <StateProvider>
-                        <NavigationProvider>
-                          {children}
-                          <CelebrationOverlay />
-                          <PWAOnboardingFlow />
-                          <OnboardingTour />
-                          <SyncStatusIndicator />
-                        </NavigationProvider>
-                      </StateProvider>
-                    </SRSProvider>
-                  </SocialProvider>
-                </AuthProvider>
-              </OfflineProvider>
-            </ToastProvider>
-          </TTSProvider>
-        </ThemeProvider>
-      </LanguageProvider>
-    </ErrorBoundary>
-  );
-}
-```
-
-**Key change:** `<Router>` (BrowserRouter from react-router-dom) is REMOVED. The Next.js App Router handles routing natively. The `NavigationProvider` no longer needs to be inside a `<Router>` -- it switches from `useLocation()` (react-router) to `usePathname()` (next/navigation).
-
-**Provider ordering preserved:** The nesting order constraint (OfflineProvider inside ToastProvider, TTSProvider wrapping TTS consumers, etc.) is maintained exactly.
-
-**GreetingFlow:** Moves to `(protected)/layout.tsx` since it depends on `useAuth()` and only shows for authenticated users.
-
-### 1.5 Navigation Hook Migration Map
-
-Every component using react-router-dom hooks needs updating:
-
-| react-router-dom | next/navigation | Files Affected |
-|------------------|-----------------|----------------|
-| `useNavigate()` | `useRouter().push()` | Dashboard, TestPage, PracticePage, InterviewPage, StudyGuidePage, HubPage, NBAHeroCard, many more |
-| `useLocation()` | `usePathname()` + `useSearchParams()` | ProtectedRoute, NavigationShell, PageTransition, HubPage |
-| `useParams()` | `useParams()` (from next/navigation) | None currently (no dynamic params in use) |
-| `<Navigate to="..." replace />` | `redirect()` or `<Link>` | AppShell redirects, ProtectedRoute |
-| `<Link to="...">` | `<Link href="...">` (next/link) | Any react-router Link usage |
-
-**Estimated scope:** ~40-60 files need `useNavigate` -> `useRouter` changes. Each is mechanical: `navigate('/path')` -> `router.push('/path')`.
-
-**Hash routing elimination:** Current routes use `#/home`, `#/test`, etc. The App Router uses real paths `/home`, `/test`. Since the app already uses path-based routes within react-router (not actual hash fragments for state), the URLs simply lose the `#` prefix. This is transparent to users and improves SEO.
-
-### 1.6 PageTransition and AnimatePresence
-
-The current `PageTransition.tsx` uses react-router-dom's `useLocation()` as the `key` for `AnimatePresence`. In App Router:
-
-```tsx
-// Updated PageTransition.tsx
-'use client';
-import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion } from 'motion/react';
-
-export function PageTransition({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-```
-
-**Caveat:** App Router layouts persist across navigations (they don't unmount). The `PageTransition` wrapper should live in the `(protected)/layout.tsx` wrapping `{children}`, or within individual page components if per-page transitions are needed. AnimatePresence with App Router requires the `template.tsx` convention for per-page animation boundaries.
-
-**Recommendation:** Use `app/(protected)/template.tsx` instead of `layout.tsx` for the page transition wrapper. The `template.tsx` file creates a new instance for each navigation, which is exactly what AnimatePresence needs.
-
-### 1.7 CSP Migration: Hash-Based to Nonce-Based
-
-**Current (Pages Router limitation):**
-- `middleware.ts` sets CSP with `sha256` hash for the inline theme script
-- Hash approach required because Pages Router cannot forward nonce from middleware to `_document.tsx`
-
-**After (App Router advantage):**
-- `proxy.ts` (renamed from middleware.ts per Next.js 16) generates per-request nonce
-- Nonce set in `x-nonce` header, read by `app/layout.tsx` via `headers()` API
-- Next.js automatically applies nonce to framework scripts
-- Theme script moves from inline `_document.tsx` to a `<Script>` component with nonce
-
-```tsx
-// proxy.ts
-import { NextRequest, NextResponse } from 'next/server';
-
-export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const isDev = process.env.NODE_ENV === 'development';
-
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://accounts.google.com https://tiptopjar.com${isDev ? " 'unsafe-eval'" : ''};
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com;
-    img-src 'self' blob: data:;
-    font-src 'self' https://fonts.gstatic.com;
-    connect-src 'self' https://*.supabase.co https://*.ingest.us.sentry.io https://accounts.google.com https://tiptopjar.com${isDev ? ' ws://localhost:3000' : ''};
-    media-src 'self' blob:;
-    worker-src 'self' blob:;
-    frame-src https://accounts.google.com https://tiptopjar.com;
-    frame-ancestors 'none';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim();
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
-  requestHeaders.set('Content-Security-Policy', cspHeader);
-
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
-  response.headers.set('Content-Security-Policy', cspHeader);
-  return response;
-}
-
-export const config = {
-  matcher: [
-    {
-      source: '/((?!api|_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js|offline.html|audio).*)',
-      missing: [
-        { type: 'header', key: 'next-router-prefetch' },
-        { type: 'header', key: 'purpose', value: 'prefetch' },
-      ],
-    },
-  ],
-};
-```
-
-**Theme script handling:** The inline theme script in `_document.tsx` that prevents FOUC must be preserved. In App Router, use a `<Script>` component with `strategy="beforeInteractive"` and the nonce prop in `app/layout.tsx`.
-
-**Important:** Nonce-based CSP requires dynamic rendering. Since this app is already fully client-rendered (no static generation in use), this is not a regression. The pages were never statically generated anyway.
-
-### 1.8 Sentry Integration Migration
-
-**Current (Pages Router):**
-- `@sentry/nextjs` wraps next.config.mjs via `withSentryConfig`
-- `pages/_error.tsx` for error handling
-- Client-side ErrorBoundary component
-
-**After (App Router):**
-- `withSentryConfig` remains in next.config (unchanged)
-- NEW: `instrumentation.ts` in project root for server/edge Sentry init
-- NEW: `instrumentation-client.ts` for client-side Sentry init
-- NEW: `app/global-error.tsx` replaces `pages/_error.tsx`
-- Existing `ErrorBoundary` component remains for component-level error catching
-
-```tsx
-// instrumentation.ts
-import * as Sentry from '@sentry/nextjs';
-
-export async function register() {
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    await import('./sentry.server.config');
-  }
-  if (process.env.NEXT_RUNTIME === 'edge') {
-    await import('./sentry.edge.config');
+export function registerProvider(name: string): void {
+  if (process.env.NODE_ENV !== 'development') return;
+  mountOrder.push(name);
+  const idx = mountOrder.length - 1;
+  if (EXPECTED_ORDER[idx] !== name) {
+    throw new Error(
+      `Provider ordering violation: expected ${EXPECTED_ORDER[idx]} at position ${idx}, got ${name}. ` +
+      `Current order: [${mountOrder.join(' > ')}]`
+    );
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
-```
-
-```tsx
-// app/global-error.tsx
-'use client';
-import * as Sentry from '@sentry/nextjs';
-import { useEffect } from 'react';
-
-export default function GlobalError({ error, reset }: { error: Error; reset: () => void }) {
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
-  return (
-    <html>
-      <body>
-        <h2>Something went wrong</h2>
-        <button onClick={() => reset()}>Try again</button>
-      </body>
-    </html>
-  );
+export function resetProviderOrder(): void {
+  mountOrder.length = 0;
 }
 ```
 
-### 1.9 Service Worker Migration (@serwist/next)
+Each provider calls `registerProvider('ProviderName')` in its useEffect mount. The ErrorBoundary (class component) calls it in `componentDidMount`.
 
-**Current:**
-- `swSrc: 'src/lib/pwa/sw.ts'`
-- `swDest: 'public/sw.js'`
-- Disabled in development
+**New file:** `src/lib/providerOrderGuard.ts`
+**Modified files:** All 11 provider/context files (1 line each in dev mode)
 
-**After (App Router convention):**
-- `swSrc: 'app/sw.ts'` (App Router location)
-- `swDest: 'public/sw.js'` (unchanged)
-- Service worker code itself is unchanged (Serwist caching strategies, push handlers, etc.)
-- Offline fallback page may need updating from `offline.html` to an App Router page
+### H4: Service Worker Update UX
 
-**Turbopack consideration:** Next.js 16 makes Turbopack the default bundler. The current config uses `@sentry/nextjs` with `withSentryConfig` which adds webpack configuration. The build must use `--webpack` flag OR verify that `@sentry/nextjs` v10.26+ supports Turbopack. Since Sentry's `withSentryConfig` likely still uses webpack internals, plan to use `next build --webpack` initially and migrate to Turbopack later.
+**Current state:** `skipWaiting: true` + `clientsClaim: true` in `sw.ts`. SW activates immediately. No user notification. `useNavBadges` already checks `registration?.waiting` and shows a badge on Settings -- but only detects pre-existing waiting state, does not detect updates that arrive while the app is open.
 
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start"
+**Architecture decision: Hook, not Provider.**
+
+The SW update lifecycle is a single boolean (`updateAvailable`) plus one action (`acceptUpdate`). This does not warrant a new context provider. A hook is sufficient.
+
+**Where in the provider tree:** The hook will be consumed in two places:
+1. `useNavBadges.ts` (already checks SW update) -- enhanced to use the hook
+2. A toast notification triggered from `NavigationShell.tsx`
+
+The toast requires `useToast()`, which means the consumer must be inside `ToastProvider`. `NavigationShell.tsx` is inside all providers, making it the correct mount point.
+
+**SW-side changes:**
+1. Change `skipWaiting: false` in `sw.ts` (let client control activation)
+2. Add `message` listener for `SKIP_WAITING` in `sw.ts`
+
+**Client-side changes:**
+1. New `useServiceWorkerUpdate()` hook in `src/hooks/useServiceWorkerUpdate.ts`
+2. Listens for `statechange` on waiting worker + `controllerchange` on navigator.serviceWorker
+3. Exposes `{ updateAvailable: boolean; applyUpdate: () => void }`
+4. On `controllerchange`: `window.location.reload()`
+
+**Toast integration:** `NavigationShell.tsx` calls `useServiceWorkerUpdate()`, and when `updateAvailable` transitions to true, calls `showToast()` with bilingual "New version available / Refresh" message. Dismissible but persistent across navigations.
+
+`@serwist/window` is not installed on the client (only `@serwist/next` + `serwist` for build/SW), so use the raw ServiceWorker API directly. No new dependencies needed.
+
+**New file:** `src/hooks/useServiceWorkerUpdate.ts`
+**Modified files:** `src/lib/pwa/sw.ts`, `src/components/navigation/NavigationShell.tsx`, `src/components/navigation/useNavBadges.ts`
+
+### H5: Component-Level Error Boundaries
+
+**Which components need boundaries:**
+
+| Component | Risk | Crash Impact | Boundary Location |
+|-----------|------|-------------|-------------------|
+| InterviewSession | HIGH (1,474 LOC, speech API, audio) | Entire app crashes | Wrap in InterviewPage view |
+| PracticeSession | HIGH (1,018 LOC, quiz state machine) | Entire app crashes | Wrap in PracticePage view |
+| TestPage quiz flow | MEDIUM (960 LOC) | Entire app crashes | Wrap quiz section in TestPage |
+| CelebrationOverlay | LOW (DotLottie, audio, confetti) | Entire app crashes | Already has Suspense; add boundary |
+
+**Approach: Use Next.js 16 `unstable_catchError` or the existing `ErrorBoundary` class?**
+
+The existing `ErrorBoundary` class component already has bilingual fallback, Sentry reporting, and reset/home actions. Next.js `unstable_catchError` is still unstable API. **Use the existing `ErrorBoundary` component** with a custom `fallback` prop tailored to each feature context.
+
+```tsx
+// In InterviewPage.tsx view
+<ErrorBoundary
+  fallback={<InterviewErrorFallback />}
+  onError={(err) => captureError(err, { feature: 'interview' })}
+>
+  <InterviewSession {...props} />
+</ErrorBoundary>
+```
+
+**The root ErrorBoundary remains.** Component-level boundaries catch feature-specific errors and show contextual recovery (e.g., "Return to Study Guide" instead of "Return to Home"). Uncaught errors still bubble to root.
+
+**Composition hierarchy:**
+
+```
+Root ErrorBoundary (ClientProviders.tsx)
+  ...providers...
+    Next.js error.tsx (route-level, catches server/hydration errors)
+      InterviewPage
+        ErrorBoundary (feature-level, catches render errors in InterviewSession)
+          InterviewSession
+```
+
+**New files:** Feature-specific fallback components (can be inline or shared)
+**Modified files:** `src/views/InterviewPage.tsx`, `src/views/PracticePage.tsx`, `src/views/TestPage.tsx`
+
+### H6+H7: SW Configuration Changes
+
+**sw.ts changes:**
+
+```typescript
+// BEFORE
+const serwist = new Serwist({
+  skipWaiting: true,
+  clientsClaim: true,
+  ...
+});
+
+// AFTER
+const serwist = new Serwist({
+  skipWaiting: false,      // Let client control activation
+  clientsClaim: true,       // Keep: take control of uncontrolled clients
+  ...
+});
+
+// Add message handler for client-initiated skipWaiting
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
+});
+```
+
+**Risk:** Changing `skipWaiting` from `true` to `false` means existing users won't auto-update until they accept the prompt. First deploy after this change will still auto-activate (old SW has `skipWaiting: true`). Second deploy onward will show the update prompt.
+
+### H8: Settings Sync Conflict Detection
+
+**Current state:** 4 call sites independently call `gatherCurrentSettings()` + `syncSettingsToSupabase()`:
+- `ThemeContext.tsx` line 64-65
+- `LanguageContext.tsx` line 72-73
+- `TTSContext.tsx` line 178-179
+- `useTestDate.ts` line 89-90, 105-106
+
+**Problem:** Server-wins strategy (`loadSettingsFromSupabase` overwrites localStorage on login). Offline changes are silently lost.
+
+**Minimal conflict detection without touching all 4 providers:**
+
+Add a `localSettingsVersion` timestamp to `settingsSync.ts`:
+
+```typescript
+// In settingsSync.ts -- new exports
+const LOCAL_VERSION_KEY = 'civic-prep-settings-version';
+
+export function markLocalSettingsChanged(): void {
+  localStorage.setItem(LOCAL_VERSION_KEY, new Date().toISOString());
+}
+
+export function getLocalSettingsVersion(): string | null {
+  return localStorage.getItem(LOCAL_VERSION_KEY);
+}
+
+export function clearLocalSettingsVersion(): void {
+  localStorage.removeItem(LOCAL_VERSION_KEY);
 }
 ```
 
-### 1.10 _document.tsx Migration
+Each existing `syncSettingsToSupabase` call site adds one line: `markLocalSettingsChanged()`. This is the minimal touch.
 
-The current `_document.tsx` handles:
-1. Inline theme script (FOUC prevention)
-2. Viewport meta tag
-3. PWA manifest link
-4. Theme color meta
-5. Apple PWA meta tags
+In `loadSettingsFromSupabase`, compare `getLocalSettingsVersion()` against `row.updated_at`:
+- If local version > remote `updated_at`: local settings are newer (changed offline). Merge by keeping local values and pushing them to remote.
+- If local version <= remote `updated_at` or no local version: server wins (current behavior).
 
-All of these move to `app/layout.tsx`:
+**Modified files:** `src/lib/settings/settingsSync.ts` (add timestamp tracking + merge logic), plus 1-line additions to the 4 call sites.
+**No new providers, no new hooks, no structural changes.**
 
-```tsx
-// app/layout.tsx
-import type { Metadata, Viewport } from 'next';
-import { headers } from 'next/headers';
-import Script from 'next/script';
-import { ClientProviders } from '@/components/ClientProviders';
+### H9: Shared Test Render Utility
 
-// Fonts
-import '@fontsource/noto-sans-myanmar/400.css';
-import '@fontsource/noto-sans-myanmar/500.css';
-import '@fontsource/noto-sans-myanmar/700.css';
-import '@/styles/globals.css';
+**Current test pattern (repeated in every test):**
 
-export const metadata: Metadata = {
-  title: 'Civic Test Prep - Master Your U.S. Citizenship Test',
-  description: 'Bilingual English-Burmese civic test preparation app...',
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'US Civics',
+```typescript
+// Each test mocks individually:
+vi.mock('@/contexts/SupabaseAuthContext', () => ({
+  useAuth: () => ({ user: null }),
+}));
+```
+
+**Problem:** 8 of 10 context providers have no tests. Writing tests for them requires wrapping in the full provider tree. Each test file reinvents the wheel.
+
+**Shared utility architecture:**
+
+```typescript
+// src/__tests__/utils/renderWithProviders.tsx
+import { render, type RenderOptions } from '@testing-library/react';
+
+interface ProviderOverrides {
+  auth?: Partial<AuthContextValue>;
+  language?: Partial<LanguageContextValue>;
+  theme?: Partial<ThemeContextValue>;
+  srs?: Partial<SRSContextValue>;
+  // ... etc
+}
+
+function createTestProviders(overrides: ProviderOverrides = {}) {
+  // Returns a wrapper component that provides mock contexts
+  // Uses real providers where possible, mocks where needed
+}
+
+export function renderWithProviders(
+  ui: React.ReactElement,
+  options?: RenderOptions & { providerOverrides?: ProviderOverrides }
+) {
+  const Wrapper = createTestProviders(options?.providerOverrides);
+  return render(ui, { wrapper: Wrapper, ...options });
+}
+```
+
+**Mock strategy for 10 providers:**
+
+| Provider | Test Strategy | Why |
+|----------|--------------|-----|
+| ErrorBoundary | Use real | Class component, already tested |
+| AuthProvider | Mock via context value | Supabase client not available in jsdom |
+| LanguageProvider | Use real with localStorage mock | Pure localStorage, no side effects |
+| ThemeProvider | Use real with localStorage mock | Pure localStorage, no side effects |
+| TTSProvider | Mock via context value | speechSynthesis API not real in jsdom |
+| ToastProvider | Use real | Pure React state, no external deps |
+| OfflineProvider | Mock via context value | IndexedDB not available in jsdom |
+| SocialProvider | Mock via context value | Supabase dependency |
+| SRSProvider | Mock via context value | IndexedDB + Supabase dependency |
+| StateProvider | Use real | Pure static data, no side effects |
+| NavigationProvider | Mock via context value | DOM measurement APIs |
+
+**Principle:** Use real providers when they have no external dependencies. Mock providers that depend on browser APIs not available in jsdom (IndexedDB, speechSynthesis, Supabase).
+
+**New files:** `src/__tests__/utils/renderWithProviders.tsx`, `src/__tests__/utils/mockContextValues.ts`
+
+### H10: Playwright E2E Integration
+
+**CI pipeline architecture: Separate job, parallel with unit tests.**
+
+```yaml
+# .github/workflows/ci.yml
+jobs:
+  lint-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --prod --audit-level=high
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run lint:css        # [NEW]
+      - run: pnpm run format:check
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run test:coverage
+      - uses: actions/upload-artifact@v4
+        with: { name: coverage-report, path: coverage/, retention-days: 7 }
+
+  e2e-tests:                            # [NEW JOB]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run build
+      - run: pnpm exec playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with: { name: playwright-report, path: playwright-report/, retention-days: 7 }
+```
+
+**Why separate jobs, not separate steps:**
+1. Jobs run in parallel. Unit tests and E2E tests have no dependency on each other.
+2. E2E failures don't block seeing lint/type/unit results.
+3. E2E requires browser binaries (`playwright install`) which adds 1-2 min overhead. No reason to pay that cost for unit-only runs.
+4. Build artifact can be shared between unit-tests and e2e-tests if needed via `actions/upload-artifact`.
+
+**Why Chromium only:** Single browser covers 90%+ of PWA users. Firefox and WebKit add CI minutes with diminishing returns for a solo-dev project. Can expand later.
+
+**Playwright config:**
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e',
+  timeout: 30_000,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: process.env.CI ? 'blob' : 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
-};
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#002868',
-};
-
-const THEME_SCRIPT = `
-(function() {
-  try {
-    var stored = localStorage.getItem('civic-theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored || (prefersDark ? 'dark' : 'light');
-    document.documentElement.classList.add(theme);
-    document.documentElement.style.setProperty('color-scheme', theme);
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = theme === 'dark' ? '#1a1f36' : '#002868';
-  } catch(e) {}
-})();
-`;
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const nonce = (await headers()).get('x-nonce') ?? undefined;
-
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script
-          id="theme-script"
-          strategy="beforeInteractive"
-          nonce={nonce}
-          dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }}
-        />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-      </head>
-      <body>
-        <ClientProviders>{children}</ClientProviders>
-      </body>
-    </html>
-  );
-}
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+  ],
+  webServer: {
+    command: 'pnpm start',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+  },
+});
 ```
 
-### 1.11 Navigation Lock Migration
+**Test directory:** `e2e/` at project root (Playwright convention, separate from `src/` Vitest tests).
 
-The current navigation lock prevents users from leaving test/interview sessions. It works via:
-1. `NavigationProvider.setLock(true, message)` sets lock state
-2. `NavigationShell` checks lock before allowing tab switches
-3. `window.history` manipulation with `popstate` listener
-4. Safari history guard (`src/lib/historyGuard.ts`)
+**New files:** `playwright.config.ts`, `e2e/` directory with test files
+**Modified files:** `.github/workflows/ci.yml`, `package.json` (add `test:e2e` script), `.gitignore` (add playwright artifacts)
 
-In App Router, the navigation lock pattern changes:
-- `router.push()` from `next/navigation` replaces `navigate()` from react-router
-- The `beforePopState` callback is NOT available in App Router
-- Use `window.addEventListener('popstate', handler)` directly (already done)
-- The history guard (`installHistoryGuard`) still works since it patches `window.history` directly
-- `onbeforeunload` for preventing tab close during tests remains unchanged
+### H11: Incremental Coverage Thresholds
 
-**No architectural change needed** for navigation locks -- the current implementation already works at the `window.history` level, not the router level.
+**Current state:** 4 per-file thresholds. No global minimum.
+
+**Strategy: Ratcheting thresholds.**
+
+1. Set a LOW global floor (e.g., 20% lines) that won't block CI today
+2. Add per-file thresholds for all files that already have test suites (currently 34 test files covering ~30 source files)
+3. Enable `autoUpdate: true` in Vitest config -- when coverage improves, thresholds automatically ratchet up
+4. Each milestone, raise the global floor by 5-10%
+
+```typescript
+// vitest.config.ts coverage.thresholds additions
+thresholds: {
+  // Global floor -- won't block CI now, ratchets up over time
+  lines: 20,
+  functions: 20,
+  branches: 15,
+  statements: 20,
+
+  // Per-file (existing)
+  'src/lib/shuffle.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+  'src/lib/saveSession.ts': { lines: 70, functions: 70, branches: 70, statements: 70 },
+  'src/lib/errorSanitizer.ts': { lines: 90, functions: 90, branches: 90, statements: 90 },
+  'src/components/ErrorBoundary.tsx': { lines: 70, functions: 70, branches: 70, statements: 70 },
+
+  // Per-file (new -- business-critical)
+  'src/lib/srs/fsrsEngine.ts': { lines: 80, functions: 80, branches: 70, statements: 80 },
+  'src/lib/readiness/readinessEngine.ts': { lines: 80, functions: 80, branches: 70, statements: 80 },
+  'src/lib/interview/answerGrader.ts': { lines: 80, functions: 80, branches: 70, statements: 80 },
+  'src/lib/mastery/calculateMastery.ts': { lines: 80, functions: 80, branches: 70, statements: 80 },
+  'src/lib/sort/sortReducer.ts': { lines: 70, functions: 70, branches: 60, statements: 70 },
+},
+autoUpdate: true,
+```
+
+**Why autoUpdate matters:** Solo dev won't remember to bump thresholds. Auto-ratchet captures progress automatically.
+
+**Modified file:** `vitest.config.ts`
+
+### H12: lint:css in CI
+
+**Trivial addition.** Add `pnpm run lint:css` step to the lint-typecheck job between `lint` and `format:check`.
+
+**Modified file:** `.github/workflows/ci.yml`
+
+## Data Flow Changes
+
+### New: SW Update Notification Flow
+
+```
+[New SW installed]
+    |
+    v
+sw.ts: self.addEventListener('install', ...) -- SW enters waiting state
+    |
+    v
+useServiceWorkerUpdate: registration.waiting detected
+    |
+    v
+NavigationShell: calls showToast("New version available")
+    |
+    v
+[User taps "Refresh"]
+    |
+    v
+useServiceWorkerUpdate: postMessage({ type: 'SKIP_WAITING' })
+    |
+    v
+sw.ts: self.skipWaiting() -> activate -> controllerchange
+    |
+    v
+useServiceWorkerUpdate: navigator.serviceWorker.controllerchange -> window.location.reload()
+```
+
+### Modified: Settings Sync Flow (with conflict detection)
+
+```
+[Settings changed locally]
+    |
+    v
+ThemeContext/LanguageContext/TTSContext/useTestDate
+    |
+    v
+markLocalSettingsChanged() -- writes timestamp to localStorage  [NEW]
+    |
+    v
+gatherCurrentSettings() + syncSettingsToSupabase()  (unchanged)
 
 ---
 
-## Part 2: Readiness Score and Smart Drill Architecture
-
-### 2.1 Data Sources Already Available
-
-The readiness scoring system consumes data that ALREADY EXISTS in the codebase:
-
-| Data Source | Location | Access Pattern |
-|-------------|----------|----------------|
-| Category mastery (7 categories) | IndexedDB `civic-prep-mastery` | `getAnswerHistory()` -> `calculateCategoryMastery()` |
-| Sub-category mastery | Same as above | `useCategoryMastery()` hook |
-| Overall mastery % | Derived from above | `calculateOverallMastery()` |
-| SRS deck (due cards, intervals) | IndexedDB `srs-store` | `useSRS()` context |
-| Test history (scores, dates) | Supabase `user.testHistory` | `useAuth()` context |
-| Interview history | IndexedDB `interview-history` | `getInterviewHistory()` |
-| Study streak | IndexedDB `streak-store` | `useStreak()` hook |
-| Unique questions practiced | IndexedDB (derived from mastery) | `getAnswerHistory()` |
-| Bookmarks | IndexedDB `civic-prep-bookmarks` | Dedicated store |
-
-The existing `useNextBestAction` hook already aggregates 6 of these sources. The readiness score is a natural extension.
-
-### 2.2 Readiness Score Engine
-
-**Architecture:** Pure function, no side effects, testable in isolation.
-
-```typescript
-// src/lib/readiness/readinessEngine.ts
-
-export interface ReadinessInput {
-  // Category mastery (0-100 per category)
-  categoryMasteries: Record<string, number>;
-  // Overall mastery (0-100)
-  overallMastery: number;
-  // SRS metrics
-  srsDeckSize: number;
-  srsDueCount: number;
-  // Test performance
-  testHistory: Array<{ date: string; score: number; totalQuestions: number }>;
-  // Interview performance
-  interviewHistory: Array<{ date: string; passed: boolean }>;
-  // Coverage
-  uniqueQuestionsPracticed: number;
-  totalQuestions: number;
-  // Activity
-  currentStreak: number;
-  // Optional: target test date
-  targetDate?: string;
-}
-
-export interface ReadinessScore {
-  /** Overall readiness 0-100 */
-  overall: number;
-  /** Per-dimension breakdown */
-  dimensions: {
-    knowledge: number;      // Based on mastery + coverage
-    retention: number;      // Based on SRS health
-    testPerformance: number; // Based on mock test scores
-    interviewReady: number;  // Based on interview pass rate
-    consistency: number;     // Based on streak + recency
-  };
-  /** Human-readable assessment */
-  level: 'not-started' | 'beginning' | 'developing' | 'proficient' | 'test-ready';
-  /** Weakest dimension (drives recommendation) */
-  weakestDimension: keyof ReadinessScore['dimensions'];
-  /** If targetDate set: daily study target */
-  dailyTarget?: {
-    questionsPerDay: number;
-    reviewsPerDay: number;
-    estimatedMinutes: number;
-  };
-}
-
-export function calculateReadiness(input: ReadinessInput): ReadinessScore {
-  // Pure computation -- weights TBD during implementation
-  // Knowledge: 35% weight (mastery + coverage)
-  // Retention: 20% weight (SRS due ratio, deck health)
-  // Test performance: 25% weight (recent mock test accuracy)
-  // Interview: 10% weight (interview pass rate)
-  // Consistency: 10% weight (streak, recency of activity)
-}
+[User logs in on another device]
+    |
+    v
+loadSettingsFromSupabase(userId)
+    |
+    v
+Compare getLocalSettingsVersion() vs row.updated_at             [NEW]
+    |
+    v
+IF local newer: push local to remote (local wins)              [NEW]
+IF remote newer OR no local version: apply remote (server wins) (unchanged)
+    |
+    v
+clearLocalSettingsVersion()                                     [NEW]
 ```
 
-### 2.3 Readiness Score Hook
+### Error Handling Data Flow (with component boundaries)
 
-```typescript
-// src/hooks/useReadinessScore.ts
-// Composition hook that aggregates existing hooks + readiness engine
-
-export function useReadinessScore(): {
-  score: ReadinessScore | null;
-  isLoading: boolean;
-} {
-  // Reuses: useStreak, useSRSWidget, useCategoryMastery, useAuth
-  // Plus: getInterviewHistory, getAnswerHistory (IndexedDB async)
-  // Pattern: same as useNextBestAction -- waits for all sources, derives via useMemo
-}
 ```
-
-### 2.4 Test Date Countdown
-
-New component + localStorage persistence:
-
-```typescript
-// src/lib/readiness/testDateStore.ts
-// Simple localStorage get/set for target test date
-
-// src/components/readiness/TestDateCountdown.tsx
-// Displays days remaining, daily study target from readiness engine
-// Settings page integration for date picker
-```
-
-### 2.5 Smart Weak-Area Drill
-
-Uses existing mastery data to generate focused practice sessions:
-
-```typescript
-// src/lib/readiness/weakAreaDrill.ts
-
-export interface DrillSession {
-  questions: Question[];
-  focusCategory: string;
-  reason: string; // "Your American Government mastery is 42% -- focus here"
-}
-
-export function generateWeakAreaDrill(
-  categoryMasteries: Record<string, number>,
-  allQuestions: Question[],
-  sessionSize: number = 10
-): DrillSession {
-  // 1. Find weakest category
-  // 2. Within that category, find least-practiced questions
-  // 3. Mix in some review questions from other weak areas
-  // 4. Return ordered drill session
-}
-```
-
-**Integration point:** The existing `PracticePage.tsx` gains a new "Smart Drill" mode option alongside the current category selection. The drill mode calls `generateWeakAreaDrill()` instead of random/category selection.
+[Error in InterviewSession render]
+    |
+    v
+Feature ErrorBoundary catches
+    |
+    v
+Shows InterviewErrorFallback (contextual: "Return to Study Guide")
+Reports to Sentry via captureError()
+    |
+    v
+[User clicks "Try again" or "Return to Study Guide"]
 
 ---
 
-## Part 3: Content Enrichment Architecture
-
-### 3.1 Current Question Data Structure
-
-```typescript
-// src/types/index.ts (current)
-export interface Question {
-  id: string;
-  question: string;
-  questionBurmese: string;
-  answers: string[];
-  answersBurmese: string[];
-  category: string;
-  subCategory: string;
-  explanation?: {
-    text: string;
-    textBurmese: string;
-  };
-}
+[Error in InterviewSession that feature boundary misses]
+    |  (shouldn't happen, but defensive)
+    v
+Next.js error.tsx catches
+    |
+    v
+Shows sanitized bilingual error UI
+    |
+    v
+[Error in root layout]
+    |
+    v
+global-error.tsx catches (inline styles, minimal bilingual)
 ```
 
-### 3.2 Enriched Question Data Structure
+## Build Order: Dependency-Aware Sequencing
 
-```typescript
-// Extended (backward compatible -- all new fields optional)
-export interface Question {
-  // ... existing fields unchanged ...
+The hardening tasks have dependencies between them. Build in this order:
 
-  /** Memory aid / mnemonic for this question */
-  mnemonic?: {
-    text: string;
-    textBurmese: string;
-    type: 'acronym' | 'association' | 'story' | 'visual' | 'rhyme';
-  };
+### Phase 1: Foundations (no dependencies, enables everything else)
 
-  /** Historical context beyond the basic explanation */
-  historicalContext?: {
-    text: string;
-    textBurmese: string;
-  };
+| Task | Files | Rationale |
+|------|-------|-----------|
+| Shared test render utility | `src/__tests__/utils/` | Every subsequent test needs this |
+| ErrorFallbackUI extraction | `src/components/ErrorFallbackUI.tsx` | Needed by error.tsx fixes AND feature boundaries |
+| Provider order guard | `src/lib/providerOrderGuard.ts` + 11 providers | Pure addition, zero risk |
+| lint:css in CI | `.github/workflows/ci.yml` | Trivial, ship immediately |
 
-  /** Difficulty tier (1-3, derived from community data) */
-  difficulty?: 1 | 2 | 3;
+### Phase 2: Error Handling (depends on Phase 1 ErrorFallbackUI)
 
-  /** Related question IDs for cross-referencing */
-  relatedQuestions?: string[];
-}
+| Task | Files | Rationale |
+|------|-------|-----------|
+| error.tsx sanitization + bilingual | 3 error.tsx files | Uses extracted ErrorFallbackUI |
+| global-error.tsx bilingual | `app/global-error.tsx` | Independent of ErrorFallbackUI (inline styles) |
+| Component-level error boundaries | 3-4 view files | Uses existing ErrorBoundary + ErrorFallbackUI |
 
-// Per-category study tips (new file)
-// src/constants/studyTips.ts
-export interface CategoryStudyTip {
-  category: string;
-  tips: Array<{
-    text: string;
-    textBurmese: string;
-  }>;
-  commonMistakes: Array<{
-    text: string;
-    textBurmese: string;
-  }>;
-}
-```
+### Phase 3: SW Update UX (independent of Phase 1-2)
 
-**Data location:** Enrichment data lives alongside existing question files in `src/constants/questions/`. New fields are added to existing objects -- no new files needed per question. Category-level study tips go in a new `src/constants/studyTips.ts`.
+| Task | Files | Rationale |
+|------|-------|-----------|
+| sw.ts skipWaiting change | `src/lib/pwa/sw.ts` | Must deploy before client hook works |
+| useServiceWorkerUpdate hook | `src/hooks/useServiceWorkerUpdate.ts` | Depends on sw.ts change |
+| NavigationShell toast integration | `src/components/navigation/NavigationShell.tsx` | Depends on hook + ToastProvider |
+| useNavBadges update | `src/components/navigation/useNavBadges.ts` | Depends on hook |
 
-**Bundle impact:** Minimal. The enrichment adds ~200 bytes per question (128 questions = ~25KB uncompressed, ~5KB gzipped). This is well within budget for a PWA that already caches all question data.
+### Phase 4: Settings Sync (independent of Phase 1-3)
 
-### 3.3 Content Display Integration
+| Task | Files | Rationale |
+|------|-------|-----------|
+| Timestamp tracking in settingsSync.ts | `src/lib/settings/settingsSync.ts` | Core logic change |
+| 4 call site additions | 3 contexts + 1 hook (1 line each) | Minimal touch |
 
-New UI surfaces for enriched content:
+### Phase 5: Test Infrastructure (depends on Phase 1 render utility)
 
-| Feature | Location | Component |
-|---------|----------|-----------|
-| Mnemonic badge | ExplanationCard, StudyGuidePage | `MnemonicBadge` (new) |
-| Historical context | ExplanationCard expand section | `HistoricalContext` (new) |
-| Study tips | StudyGuidePage category header | `CategoryTips` (new) |
-| Related questions | ExplanationCard footer | `RelatedQuestions` (exists, extend) |
-| Difficulty indicator | Question cards, Study Guide | `DifficultyBadge` (new) |
+| Task | Files | Rationale |
+|------|-------|-----------|
+| Coverage thresholds | `vitest.config.ts` | No code changes, just config |
+| Playwright setup | `playwright.config.ts`, `e2e/`, CI | Independent framework |
+| Context provider tests | `src/contexts/*.test.tsx` | Uses shared render utility |
+| View-level tests | `src/views/*.test.tsx` | Uses shared render utility |
+| E2E critical flows | `e2e/*.spec.ts` | Uses built app |
 
-All new components are leaf components -- no provider changes, no new contexts.
+### Phase 6: Cleanup (independent, lowest priority)
 
----
+| Task | Files | Rationale |
+|------|-------|-----------|
+| DotLottie dependency removal | `package.json`, related files | Remove dead code |
+| react-joyride version pin | `package.json` | Wait for stable release |
+| Dead code removal (safeAsync) | `src/lib/async/` | Low-risk cleanup |
+| Sentry fingerprinting | `src/lib/sentry.ts` | Operational improvement |
+| IndexedDB cache versioning | `src/lib/pwa/offlineDb.ts` | Add version check |
 
-## Part 4: Performance Optimization Architecture
+## Anti-Patterns
 
-### 4.1 Bundle Optimization with App Router
+### Anti-Pattern 1: New Provider for SW Updates
 
-The App Router automatically code-splits per route. Moving from a single catch-all `[[...slug]].tsx` (which bundles ALL pages into one chunk) to individual `page.tsx` files means each page only loads its own code.
+**What people do:** Create a `ServiceWorkerProvider` and add it to the 11-provider chain.
+**Why it's wrong:** The SW update state is a single boolean consumed in 1-2 places. A provider adds nesting depth, potential re-render cascading, and another entry in the fragile ordering chain.
+**Do this instead:** A hook (`useServiceWorkerUpdate`) consumed directly where needed.
 
-**Current bundle problem:** Because `AppShell.tsx` imports ALL page components directly, the initial bundle includes every page even if the user only visits the dashboard.
+### Anti-Pattern 2: Centralized Settings Sync Hook Replacing All Call Sites
 
-**After migration:** Each `app/(protected)/test/page.tsx` only loads `TestPage` code. Navigation prefetches other pages in the background.
+**What people do:** Create `useSettingsSync()` hook that watches all localStorage keys and consolidates the 4 sync call sites into 1.
+**Why it's wrong:** Sounds clean, but requires ripping sync logic out of 4 providers, breaking their self-contained update-and-sync pattern. Introduces timing issues (does the watcher debounce? What if two settings change in the same frame?).
+**Do this instead:** Keep the distributed pattern. Add `markLocalSettingsChanged()` (1 line per call site) for conflict detection. The existing pattern is clear: each provider owns its own sync. Adding a centralized watcher creates a hidden dependency.
 
-**Estimated improvement:** The app currently ships ~300KB+ of JS to the client on first load. With per-route code splitting, the initial load drops to ~150KB (framework + providers + current page). Other pages load on navigation or prefetch.
+### Anti-Pattern 3: Per-File Coverage Thresholds Without autoUpdate
 
-### 4.2 Dynamic Imports for Heavy Components
+**What people do:** Set high thresholds manually, coverage drops below during refactoring, CI blocks for weeks.
+**Why it's wrong:** Thresholds become a nuisance instead of a ratchet. Developer wastes time writing low-value tests to satisfy the threshold.
+**Do this instead:** Start LOW, enable `autoUpdate: true`. Coverage naturally ratchets up as real tests are added.
 
-Components that are only used on specific pages should use `next/dynamic`:
+### Anti-Pattern 4: E2E Tests Against Dev Server
 
-| Component | Current Import | Dynamic? | Reason |
-|-----------|----------------|----------|--------|
-| Recharts (charts) | Direct in HubPage | YES | ~80KB, only used on /hub |
-| DotLottie | Direct in celebrations | YES | ~40KB, only on celebrations |
-| react-canvas-confetti | Direct in celebrations | YES | ~20KB, only on celebrations |
-| react-joyride | Direct in onboarding | Already dynamic | Only first visit |
-| react-countdown-circle-timer | Direct in TestPage | YES | ~10KB, only during tests |
+**What people do:** Run `pnpm dev` and then Playwright against it.
+**Why it's wrong:** Dev server has different behavior than production (no caching, different error pages, HMR interference, slower). Tests pass in CI but bugs appear in prod.
+**Do this instead:** Always test against `pnpm build && pnpm start`. The `webServer` config in Playwright handles this automatically.
 
-### 4.3 Service Worker Caching Enhancements
+### Anti-Pattern 5: Testing Providers by Mocking Everything
 
-The existing service worker already handles:
-- Precaching of static assets
-- CacheFirst for audio files (90-day expiry)
-- Offline fallback page
+**What people do:** Mock every dependency of every provider, test passes but verifies nothing real.
+**Why it's wrong:** The mock shapes diverge from real implementations over time. Tests pass but production breaks.
+**Do this instead:** Use real providers where possible (LanguageProvider, ThemeProvider, ToastProvider, StateProvider have no external deps). Only mock external APIs (Supabase, speechSynthesis, IndexedDB).
 
-Post-migration, add route-specific caching:
-- Runtime caching for API responses (Supabase sync)
-- Background sync for offline queue (already exists)
-- Navigation preload (already enabled)
+## New vs Modified Component Summary
 
----
+### New Files
 
-## Part 5: Component Boundaries and Data Flow
+| File | Purpose |
+|------|---------|
+| `src/components/ErrorFallbackUI.tsx` | Shared bilingual error fallback (extracted) |
+| `src/lib/providerOrderGuard.ts` | Dev-time provider ordering assertion |
+| `src/hooks/useServiceWorkerUpdate.ts` | SW update detection + apply |
+| `src/__tests__/utils/renderWithProviders.tsx` | Shared test render utility |
+| `src/__tests__/utils/mockContextValues.ts` | Default mock context values |
+| `playwright.config.ts` | Playwright E2E configuration |
+| `e2e/` | E2E test directory |
 
-### 5.1 New vs Modified Components
+### Modified Files
 
-**New components (created from scratch):**
-
-| Component | Purpose | Dependencies |
-|-----------|---------|-------------|
-| `ClientProviders` | Wraps all context providers (extracted from AppShell) | All existing providers |
-| `ReadinessRing` (exists, extend) | Visual readiness score display | readinessEngine |
-| `TestDateCountdown` | Days-to-test countdown with daily targets | readinessEngine, localStorage |
-| `SmartDrillSetup` | UI for starting weak-area drill | weakAreaDrill, useCategoryMastery |
-| `MnemonicBadge` | Displays memory aid for a question | Question data |
-| `HistoricalContext` | Expandable historical context section | Question data |
-| `CategoryTips` | Study tips for a category header | studyTips data |
-| `DifficultyBadge` | Visual difficulty indicator (1-3 stars) | Question data |
-| `app/global-error.tsx` | App Router error boundary | Sentry |
-| `app/(protected)/template.tsx` | Page transition wrapper | motion/react |
-
-**Modified components (existing, updated):**
-
-| Component | Change |
-|-----------|--------|
-| `NavigationProvider` | `useLocation()` -> `usePathname()` |
-| `NavigationShell` | `useLocation()` -> `usePathname()` |
-| `PageTransition` | `useLocation()` -> `usePathname()`, move to template.tsx |
-| `ProtectedRoute` | Becomes `(protected)/layout.tsx` |
-| `Dashboard` | `useNavigate()` -> `useRouter()` |
-| `TestPage` | `useNavigate()` -> `useRouter()` |
-| `PracticePage` | `useNavigate()` -> `useRouter()`, add Smart Drill mode |
-| `InterviewPage` | `useNavigate()` -> `useRouter()` |
-| `StudyGuidePage` | `useNavigate()` -> `useRouter()`, add study tips |
-| `HubPage` | `useNavigate()` -> `useRouter()`, sub-routes become file-based |
-| `ExplanationCard` | Add mnemonic + historical context sections |
-| `NBAHeroCard` | `useNavigate()` -> `useRouter()` |
-| All 40+ files using `useNavigate` | Mechanical migration |
-
-**Deleted components/files:**
-
-| File | Reason |
+| File | Change |
 |------|--------|
-| `pages/[[...slug]].tsx` | Replaced by `app/` directory |
-| `pages/_app.tsx` | Replaced by `app/layout.tsx` |
-| `pages/_document.tsx` | Replaced by `app/layout.tsx` |
-| `pages/_error.tsx` | Replaced by `app/global-error.tsx` |
-| `pages/op-ed.tsx` | Replaced by `app/(public)/op-ed/page.tsx` |
-| `src/AppShell.tsx` | Decomposed into `ClientProviders` + route groups |
-| `middleware.ts` | Renamed to `proxy.ts` |
-
-### 5.2 Data Flow Diagram
-
-```
-                      app/layout.tsx (Server Component)
-                           |
-                           | reads nonce from headers()
-                           | exports metadata
-                           |
-                    ClientProviders (Client Component)
-                    /          |          \
-              ErrorBoundary  Language  Theme  TTS  Toast  Offline  Auth  Social  SRS  State  Navigation
-                                                                    |
-                                                              Route Groups
-                                                           /        |         \
-                                                     (public)  (auth)  (protected)
-                                                                        |
-                                                                  ProtectedLayout
-                                                                  (auth guard)
-                                                                  NavigationShell
-                                                                  template.tsx (PageTransition)
-                                                                        |
-                                                                   Page Components
-                                                                   /     |     \
-                                                                home   test   study ...
-                                                                 |
-                                                           Dashboard
-                                                           /    |    \
-                                                   useNBA  useSRS  useMastery
-                                                      |
-                                                  useReadinessScore (NEW)
-                                                      |
-                                                  readinessEngine (NEW pure fn)
-```
-
----
-
-## Part 6: Migration Strategy and Build Order
-
-### Phase Ordering Rationale
-
-The migration must be sequenced carefully because:
-1. App Router migration touches EVERY page -- it's the foundation
-2. Feature additions (readiness, content) must target the NEW routing structure
-3. Performance optimization comes last (measure after migration)
-
-### Recommended Build Order
-
-**Phase 1: App Router Foundation**
-1. Create `app/layout.tsx` (root layout with metadata, fonts, CSP nonce)
-2. Create `ClientProviders.tsx` (extract provider tree from AppShell)
-3. Create `proxy.ts` (rename middleware.ts, add nonce generation)
-4. Create route group directories `(public)`, `(auth)`, `(protected)`
-5. Create `(protected)/layout.tsx` (auth guard)
-6. Verify: app boots with empty pages, providers work, CSP nonce flows
-
-**Phase 2: Route Migration (Page by Page)**
-1. Migrate landing page (/) -- simplest, no auth
-2. Migrate auth pages (/auth, /auth/forgot, /auth/update-password)
-3. Migrate public pages (/op-ed, /about)
-4. Migrate dashboard (/home) -- first protected route
-5. Migrate test page (/test)
-6. Migrate study guide (/study)
-7. Migrate practice (/practice)
-8. Migrate interview (/interview)
-9. Migrate hub (/hub/*) with nested layout
-10. Migrate settings (/settings)
-11. Set up redirects for old routes
-12. Delete `pages/` directory, `AppShell.tsx`, react-router-dom dependency
-
-**Phase 3: Sentry + Service Worker Update**
-1. Create `instrumentation.ts`, `instrumentation-client.ts`
-2. Create `app/global-error.tsx`
-3. Move service worker source to `app/sw.ts`
-4. Verify error tracking, offline functionality, push notifications
-
-**Phase 4: Readiness Score + Smart Drill**
-1. Build `readinessEngine.ts` (pure function + tests)
-2. Build `useReadinessScore` hook
-3. Build ReadinessRing dashboard component
-4. Build TestDateCountdown component
-5. Build `weakAreaDrill.ts` (pure function + tests)
-6. Integrate SmartDrillSetup into PracticePage
-
-**Phase 5: Content Enrichment**
-1. Add mnemonic data to question files
-2. Add historical context data
-3. Add difficulty ratings
-4. Add study tips per category
-5. Build UI components (MnemonicBadge, HistoricalContext, CategoryTips, DifficultyBadge)
-6. Integrate into ExplanationCard and StudyGuidePage
-
-**Phase 6: Performance + Polish**
-1. Audit bundle sizes post-migration
-2. Add dynamic imports for heavy components
-3. Fix known gaps (DotLottie assets, dark mode QA)
-4. Test offline functionality end-to-end
-5. Verify all 188 existing requirements still pass
-
----
-
-## Part 7: Scalability Considerations
-
-| Concern | Current (v3.0) | After v4.0 |
-|---------|----------------|------------|
-| Routing | Single bundle, all pages loaded | Per-route code splitting, lazy loading |
-| CSP | Hash-based (static, per-deploy) | Nonce-based (per-request, more secure) |
-| Error handling | Client ErrorBoundary only | Client + Server + Global error boundaries |
-| Bundle size | ~300KB+ initial JS | ~150KB initial + lazy routes |
-| Navigation | Hash-based URLs | Clean URLs, better SEO/sharing |
-| Page transitions | react-router AnimatePresence | Next.js template.tsx + AnimatePresence |
-| Metadata | `next/head` in components | Static metadata exports (better crawling) |
-
----
+| `app/error.tsx` | Sanitization + bilingual UI |
+| `app/(protected)/error.tsx` | Sanitization + bilingual UI |
+| `app/global-error.tsx` | Bilingual + inline styles |
+| `src/components/ErrorBoundary.tsx` | Import shared ErrorFallbackUI |
+| `src/components/ClientProviders.tsx` | Import providerOrderGuard reset |
+| `src/lib/pwa/sw.ts` | skipWaiting: false + SKIP_WAITING handler |
+| `src/components/navigation/NavigationShell.tsx` | SW update toast |
+| `src/components/navigation/useNavBadges.ts` | Use useServiceWorkerUpdate |
+| `src/lib/settings/settingsSync.ts` | Timestamp tracking + merge logic |
+| `src/contexts/ThemeContext.tsx` | +1 line: markLocalSettingsChanged() |
+| `src/contexts/LanguageContext.tsx` | +1 line: markLocalSettingsChanged() |
+| `src/contexts/TTSContext.tsx` | +1 line: markLocalSettingsChanged() |
+| `src/hooks/useTestDate.ts` | +2 lines: markLocalSettingsChanged() |
+| `src/views/InterviewPage.tsx` | Wrap InterviewSession in ErrorBoundary |
+| `src/views/PracticePage.tsx` | Wrap PracticeSession in ErrorBoundary |
+| `src/views/TestPage.tsx` | Wrap quiz section in ErrorBoundary |
+| `vitest.config.ts` | Coverage thresholds + autoUpdate |
+| `.github/workflows/ci.yml` | lint:css step + e2e-tests job |
+| `package.json` | test:e2e script |
+| 11 provider/context files | +1 line each: registerProvider() in dev |
 
 ## Sources
 
-- [Next.js 16 Upgrade Guide](https://nextjs.org/docs/app/guides/upgrading/version-16) -- Official, updated 2026-02-20 (HIGH confidence)
-- [Next.js SPA Guide](https://nextjs.org/docs/app/guides/single-page-applications) -- Official, updated 2026-02-20 (HIGH confidence)
-- [Next.js Pages to App Router Migration](https://nextjs.org/docs/app/guides/migrating/app-router-migration) -- Official, updated 2026-02-20 (HIGH confidence)
-- [Next.js CSP Guide](https://nextjs.org/docs/app/guides/content-security-policy) -- Official, updated 2026-02-20 (HIGH confidence)
-- [Sentry Next.js Manual Setup](https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/) -- Official (HIGH confidence)
-- [@serwist/next Getting Started](https://serwist.pages.dev/docs/next/getting-started) -- Official (HIGH confidence)
-- [Serwist + Next.js 16 PWA Icons](https://aurorascharff.no/posts/dynamically-generating-pwa-app-icons-nextjs-16-serwist/) -- Third-party, 2025 (MEDIUM confidence)
-- Codebase analysis of `src/AppShell.tsx`, `pages/`, `middleware.ts`, all context providers (HIGH confidence)
+- [Next.js Playwright Testing Guide](https://nextjs.org/docs/app/guides/testing/playwright) (v16.2.0, 2026-02-11)
+- [Next.js Error Handling](https://nextjs.org/docs/app/getting-started/error-handling) (v16.2.0, 2026-03-17)
+- [Vitest Coverage Configuration](https://vitest.dev/config/coverage)
+- [@serwist/window Documentation](https://serwist.pages.dev/docs/window)
+- [Playwright CI Integration](https://playwright.dev/docs/ci)
+- [Chrome Developers: Handling SW Updates](https://developer.chrome.com/docs/workbox/handling-service-worker-updates)
+
+---
+*Architecture research for: Production hardening integration of bilingual PWA*
+*Researched: 2026-03-19*

@@ -1,311 +1,337 @@
-# Feature Landscape: v4.0 Intelligent Study & Content Enrichment
+# Feature Research: v4.1 Production Hardening
 
-**Domain:** Bilingual civics test prep PWA -- adding intelligent study guidance, content depth, and test readiness awareness
-**Researched:** 2026-02-23
-**Focus:** Test readiness scoring, test date countdown with daily targets, smart weak-area drill, mnemonics/memory aids, study tips per category, deeper explanations
+**Domain:** Production hardening for bilingual PWA -- testing infrastructure, security hardening, architecture resilience, accessibility compliance, dependency cleanup
+**Researched:** 2026-03-19
+**Confidence:** HIGH
+**Supersedes:** v4.0 feature research (retained in git history)
 
-## Context: What Already Exists (v1.0-v3.0 Delivered)
+## Context: What Already Exists
 
-These features are BUILT and SHIPPED, and the new features depend on them:
+This milestone adds NO new user-facing features. It hardens the existing 226-requirement, 78K LOC codebase against regressions, security leaks, and maintenance burden.
 
-**Study intelligence infrastructure (already built):**
-- `calculateCategoryMastery()` -- recency-weighted mastery per category (exponential decay, 14-day half-life, test 1.0x / practice 0.7x weights)
-- `calculateOverallMastery()` -- question-count-weighted average across 7 USCIS categories
-- `detectWeakAreas()` -- categories below configurable threshold (default 60%), sorted weakest-first
-- `detectStaleCategories()` -- categories with no recent activity (default 7 days)
-- `getNextMilestone()` -- bronze (50%) / silver (75%) / gold (100%) progression
-- `selectPracticeQuestions()` -- 70/30 weak/strong mix using per-question accuracy
-- `getWeakQuestions()` -- all questions below accuracy threshold, shuffled
-- `computeReadiness()` in NBA engine: `accuracy * 0.4 + coverage * 0.5 + streakBonus (max 10)`
-- `determineNextBestAction()` -- 9-state priority chain recommending next study action
-- FSRS spaced repetition engine (ts-fsrs) with IndexedDB persistence and Supabase sync
-- Answer history stored per question with timestamps and session type
+**Testing infrastructure (current state):**
+- Vitest 4.x with jsdom, 31 test files, ~400 test cases
+- Coverage thresholds on 4 files only (shuffle 100%, errorSanitizer 90%, ErrorBoundary 70%, saveSession 70%)
+- No E2E framework, no Playwright, no Cypress
+- 8 of 10 context providers untested, 0 of 14 page views tested
+- No shared `renderWithProviders` utility
 
-**Content infrastructure (already built):**
-- 128 USCIS 2025 questions across 7 categories with stable IDs
-- `Explanation` type with fields: `brief_en`, `brief_my`, `mnemonic_en?`, `mnemonic_my?`, `citation?`, `funFact_en?`, `funFact_my?`, `relatedQuestionIds?`, `commonMistake_en?`, `commonMistake_my?`
-- Current content coverage: 17/128 have mnemonics, 25/128 have fun facts, 28/128 have common mistakes, 48/128 have citations, 128/128 have related question IDs
-- Bilingual rendering throughout (BilingualText, BilingualHeading)
+**Error handling (current state):**
+- Single root ErrorBoundary (class component) with bilingual sanitized messages
+- 3 Next.js error.tsx files expose raw `error.message`, English-only, no sanitization
+- No component-level error boundaries (InterviewSession crash kills entire app)
 
-**UI infrastructure (already built):**
-- Dashboard with NBA single-CTA, CompactStatRow (streak, mastery%, SRS due)
-- Progress Hub with 4 tabs (Overview/Categories/History/Achievements)
-- Glass-morphism 3-tier card system, spring animations, celebration choreography
+**Service worker (current state):**
+- Serwist with `skipWaiting: true` + `clientsClaim: true`
+- No user notification on version change
+- No guard against reload during active sessions
 
----
-
-## Table Stakes
-
-Features users expect from a test prep app once it has tracking and practice modes. Missing = the app gives data but no actionable guidance.
-
-### Test Readiness Score (Visible, Prominent)
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Readiness score as a first-class UI element** | Users need a single number answering "Am I ready?" Every serious test prep app (Achievable, NCLEX Archer, 300Hours CFA, TEVO) shows a readiness percentage prominently. The app already computes this in the NBA engine (`computeReadiness`) but it is NOT shown to the user as a visible score -- only used internally for NBA state transitions. | Med | The formula exists: `accuracy * 0.4 + coverage * 0.5 + streakBonus (max 10)`. Promote it from internal NBA helper to a first-class UI component. Show on Dashboard (replacing or augmenting the CompactStatRow mastery%) and in Progress Hub Overview tab. Use a radial progress ring or arc gauge for visual impact. Color-code: red (0-39), amber (40-59), green (60-79), gold (80-100). |
-| **Readiness score breakdown** | A single number without explanation is anxiety-inducing. Users need to see WHAT drives the score to know HOW to improve. Achievable shows "practice exams carry most weight." CFA 300Hours shows per-topic breakdown. | Low | Show sub-scores below the main readiness ring: (1) Recent Accuracy (last 5 tests) -- "How well you're scoring", (2) Question Coverage (unique questions practiced / 128) -- "How much you've covered", (3) Consistency Bonus (streak-based) -- "Your study consistency". Each with its own mini bar or percentage. Users can see which factor to improve. |
-| **Readiness formula tuning** | The current formula weights coverage at 50%, accuracy at 40%, streak at 10%. For a pass/fail civics test (12/20 = 60% threshold), accuracy should be dominant. A user who aced 5 mock tests but only covered 50 questions IS ready. A user who touched all 128 questions at 40% accuracy is NOT. | Low | Recommended rebalance: `accuracy * 0.5 + coverage * 0.35 + streakBonus (max 15)`. Also consider: (a) minimum mock test count threshold (no readiness above 70% without at least 2 mock tests), (b) weight recent tests exponentially more than older ones, (c) penalize zero-coverage categories (any category with 0 questions attempted caps readiness at 60%). Pure logic change, no UI work. |
-
-### Test Date Countdown with Daily Targets
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Set test date** | Every serious test prep app (CFA 300Hours, UWorld, Blueprint, Citizen Now, Canadian Citizenship Test app) lets users set their exam date. Without it, study feels aimless. Users preparing for USCIS interviews have a known N-400 interview date. | Low | Settings page: date picker to set test date. Store in localStorage (or IndexedDB with other user prefs). Optional -- app works fine without it. Display "X days remaining" prominently when set. |
-| **Countdown display** | Once a date is set, show it everywhere relevant: Dashboard, Progress Hub, study sessions. Creates urgency without anxiety. | Low | Dashboard: small countdown badge near readiness score ("23 days left"). Progress Hub: countdown in Overview tab header. Study session: subtle reminder in header ("Day 23 of 45"). Use warm, encouraging tone -- NOT scary red countdown. |
-| **Daily study targets** | Given a test date and current progress, calculate what the user should do each day. CFA study planners and UWorld generate daily task lists. For 128 civics questions this is simpler: backward-plan from test date to ensure all questions are reviewed. | Med | Algorithm: (1) Calculate days remaining, (2) Calculate uncovered questions, (3) Divide into daily chunks: `dailyNewQuestions = ceil(uncoveredQuestions / daysRemaining)`, (4) Factor in SRS review load (cards due today), (5) Output: "Today: Review X SRS cards + Study Y new questions + Take practice quiz if you haven't in 3+ days". Show as a card on Dashboard. Adjust dynamically as user completes tasks. |
-| **Adaptive pacing** | If the user misses a day, redistribute. If they study ahead, reduce. UWorld's Dynamic Study Planner adjusts automatically. FSRS Helper's "Load Balance" redistributes cards across days. | Low | Recalculate daily targets on each Dashboard visit. No need for complex rescheduling -- just divide remaining work by remaining days. If days remaining < 7, switch to "intensive mode" message: "Focus on weak areas and take a mock test every other day." |
-
-### Smart Weak-Area Drill Mode
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Dedicated weak-area drill entry point** | The app already has `selectPracticeQuestions()` with 70/30 weak/strong mix and `getWeakQuestions()`. But there is no dedicated UI entry point that says "Drill your weak areas." Users must infer this from category practice. Brainscape, Quizlet Learn, and AdeptLR all have explicit "focus on what you don't know" modes. | Low | Add a "Weak Area Drill" button/card on Dashboard (when weak areas exist) and in Study Guide. Routes to practice mode but pre-selects only weak questions (accuracy < 60%). Uses existing `getWeakQuestions()`. Show which categories will be drilled before starting. |
-| **Category-level drill recommendation** | When a category is weak, tell the user explicitly: "American History: Colonial Period is your weakest area at 32%. Drill it." The NBA engine already detects weak categories (`findWeakestCategory`) but only shows one at a time. | Low | In Progress Hub Categories tab, add a "Drill" button on categories below threshold. Color-code category cards: green (>75%), amber (50-75%), red (<50%). Show specific question count: "8 of 16 questions need review." |
-| **Drill session feedback** | After a weak-area drill session, show improvement. "You improved Colonial History from 32% to 48%!" Brainscape shows confidence rating changes. Quizlet shows "Not Studied -> Still Learning -> Mastered" transitions. | Low | On practice results screen, compare pre-session mastery to post-session mastery for each drilled category. Show delta with arrow icon. This is a display-only change using existing `calculateCategoryMastery()` before and after. |
+**Sync (current state):**
+- Settings: server-wins (offline changes lost on login)
+- Bookmarks: add-wins merge (deletions don't propagate)
+- SRS: three-way merge with recency preference (well-implemented)
+- Streaks: longer-streak-wins (correct)
 
 ---
 
-## Differentiators
+## Table Stakes (Users Expect These)
 
-Features that set the app apart from generic civics test apps. Not expected, but create the "this app actually helps me learn" feeling.
+Features that prevent regressions, data loss, and broken experiences. Missing these means production incidents go undetected.
 
-### Mnemonics & Memory Aids (Content Enrichment)
+| Feature | Why Expected | Complexity | Dependencies | Notes |
+|---------|--------------|------------|--------------|-------|
+| Error.tsx sanitization + bilingual rendering | 3 error.tsx files render raw `error.message` -- potential SQL/stack trace leak. Half the user base reads Burmese but sees English-only errors. | LOW | Existing `sanitizeError()` and `BilingualMessage` from ErrorBoundary.tsx | Apply `sanitizeError()` in all 3 error.tsx files. Read language mode from localStorage (same pattern as ErrorBoundary.tsx line 143). Add "Return home" navigation. No new dependencies. |
+| Component-level error boundaries | Single root ErrorBoundary means InterviewSession crash kills entire app. Users expect graceful feature-level recovery, not a full-app error screen. | MEDIUM | `react-error-boundary` v5 library | Wrap 4 high-risk components: InterviewSession, PracticeSession, TestPage, CelebrationOverlay. Use library's `resetKeys` + `FallbackComponent` API. Each fallback is bilingual with retry + "return to dashboard". CelebrationOverlay gets `fallback={null}` (silent -- non-critical). |
+| Service worker update notification | `skipWaiting: true` silently swaps versions. Users see stale cached pages or broken state mid-session with no explanation. 68% of PWAs use skipWaiting but best practice is to notify users. | MEDIUM | `controllerchange` event listener, existing BilingualToast | `useServiceWorkerUpdate` hook listens for `controllerchange`. Shows persistent toast: "New version available -- Tap to refresh". Guards against reload during active mock test/interview (check NavigationProvider.isLocked). Defers toast until session ends if locked. |
+| Shared test render utility | Each test file defines its own provider wrapper. Adding a new provider dependency means updating every test file. This blocks efficient test writing for providers and views. | LOW | New `src/__tests__/utils/renderWithProviders.tsx` | Configurable provider stack with sensible defaults (mocked auth=null, English language, light theme). Accept overrides: `renderWithProviders(<Component />, { language: 'bilingual', user: mockUser })`. Pattern from Testing Library docs. |
+| Coverage thresholds on business-critical files | Only 4 files have coverage enforcement. `readinessEngine.ts`, `fsrsEngine.ts`, `answerGrader.ts` have tests but no threshold -- coverage can silently regress. | LOW | `vitest.config.ts` threshold configuration | Add 80%+ thresholds for all `src/lib/` files with existing test suites (~15 files). Add global minimum floor (e.g., 40% lines). Prevents regressions. |
+| lint:css in CI pipeline | CI runs `lint`, `format:check`, `typecheck`, `test:coverage`, `build` but skips `lint:css`. CSS regressions only caught locally. | LOW | `.github/workflows/ci.yml` one-line addition | Add `pnpm run lint:css` step after `lint` step. |
+| Dead code cleanup | `safeAsync` (50 LOC + 80 LOC tests, zero consumers), `@lottiefiles/dotlottie-react` (~200KB WASM renderer, zero `.lottie` files in `public/lottie/`), redundant RLS INSERT policies on `streak_data` and `earned_badges`. | LOW | Knip for detection, manual removal | Run Knip to find all dead exports/dependencies. Remove safeAsync or document as reserved infrastructure. Remove DotLottie dependency (no assets sourced after 2 milestones -- CELB-06). Drop redundant INSERT policies. |
+| Sentry error fingerprinting | Network/IndexedDB errors create separate Sentry issues instead of grouping. Noise obscures real errors in the dashboard. | LOW | `beforeSend` rules in `src/lib/sentry.ts` | Group by error class: network errors -> one issue, IndexedDB quota -> one issue, Supabase timeout -> one issue. Pattern: `event.fingerprint = ['network-error']`. |
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Expand mnemonic coverage from 17 to 128 questions** | Currently only 17/128 questions have `mnemonic_en`/`mnemonic_my` populated. Mnemonics are the single most effective memorization tool for factual recall (Brainscape, Memrise, Picmonic all center on this). For civics questions with arbitrary facts ("How many amendments?" "27" -- WHY 27?), mnemonics are critical. | High | Content authoring task, not code. Types of mnemonics to use: (a) Acronyms -- "RAPPS" for First Amendment rights (already exists), (b) Number associations -- "Senator = Six years, both start with S" (already exists), (c) Rhymes -- "In 1492, Columbus sailed the ocean blue", (d) Visual associations -- "The Constitution has 7 articles like 7 days of the week", (e) Story hooks -- linking facts to memorable narratives. Must be bilingual. The Burmese mnemonics may need different devices than English ones since letter/sound associations differ. |
-| **Expand fun fact coverage from 25 to 128 questions** | Fun facts create emotional connections to dry material. "The Liberty Bell cracked the first time it was rung" makes the Symbols category memorable. Cultural connections help Burmese immigrants relate American concepts to familiar ones. | High | Content authoring task. Focus on: (a) surprising facts that stick, (b) cultural bridges to Myanmar/Burmese context where possible (e.g., comparing the US federal system to Myanmar's states), (c) human interest stories behind constitutional amendments. |
-| **Expand common mistake coverage from 28 to 128** | Knowing WHY wrong answers are wrong is as valuable as knowing the right answer. "Many people confuse the Declaration of Independence with the Constitution." The USCIS 2025 test explicitly targets common confusions (e.g., Federalist Papers question). | Med | Content authoring task. Focus on the questions with lowest accuracy rates (from real user data if available, or from published "hardest questions" lists). The 10 hardest citizenship test questions are well-documented and should be priority targets. |
-| **Mnemonic display in study/review contexts** | Mnemonics should appear: (a) in flashcard backs (already rendered if present via Explanation component), (b) in post-answer feedback panel, (c) in SRS review cards, (d) in a dedicated "Memory Aids" view per question. Currently, mnemonics render when present but there is no emphasis or special visual treatment. | Low | Add a lightbulb icon + distinct styling for mnemonic lines in FeedbackPanel and flashcard explanations. Make mnemonics visually distinct from explanations (e.g., indented block with accent border, slightly different background). This helps users recognize "this is a memory trick" vs "this is an explanation." |
-| **"Tricky Questions" collection** | Surface the questions that users statistically get wrong most often. USCIS publishes info about harder questions (Federalist Papers, amendments, etc.). Mark these in the UI so users know to pay extra attention. | Low | Add a `difficulty` field to Question type or derive it from global accuracy data. Show a "Tricky" badge on hard questions in Study Guide and flashcard views. Allow filtering by difficulty. The 2025 test expansion specifically added harder questions -- these should be flagged. |
+### E2E Test Coverage (Table Stakes, HIGH complexity)
 
-### Study Tips per Category
+This is broken out separately due to its scope. Playwright E2E tests are the highest-impact addition for regression prevention.
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Category introduction with study strategy** | Before drilling a category, show a brief intro card: "American Government has 47 questions covering the Constitution, branches of government, and your representatives. TIP: Focus on numbers first (how many senators, representatives, amendments) -- they are the most testable facts." | Med | Author 7 category introduction objects (one per USCIS category) with: (a) what the category covers, (b) how many questions, (c) study strategy tip, (d) common pitfalls for this category, (e) estimated study time. Bilingual. Display as a dismissible card at the top of category practice. Store dismissal in localStorage so it only shows once per category. |
-| **Post-session study tips** | After finishing a practice session, show a contextual tip based on performance. Did poorly on history dates? "Try creating a timeline -- ordering events helps you remember years." Did well? "Great job! Review these again in 3 days to lock them in." | Low | Map performance patterns to tip strings. 5-10 tips per category, selected based on: (a) accuracy in session, (b) types of questions missed (dates vs names vs concepts), (c) first attempt vs repeat. Bilingual. Show as a card on the results screen below the score. |
-| **"How to Study" tips in Settings/Help** | General study strategies page: (a) Use spaced repetition (explain what it is), (b) Study in short sessions (15-20 min), (c) Test yourself rather than re-reading, (d) Study the hardest questions first, (e) Take mock tests weekly. Localized for civics test context. | Low | Static content page accessible from Settings. 5-7 tips with bilingual explanations. Simple glass cards with icons. No dynamic data. One-time authoring effort. |
+| Critical Flow | What to Test | Flake Risk | Approach |
+|---------------|-------------|------------|----------|
+| Auth: login -> dashboard | Email login, session persistence, dashboard renders with user data | LOW | Use Playwright `storageState` for auth reuse across tests |
+| Mock test lifecycle | Start test, answer 20 questions, timer behavior, pass/fail, results saved to history | MEDIUM | Timer-dependent: use Playwright `page.clock` API for deterministic time |
+| Practice session | Category filter, answer question, check answer, feedback panel, keyword highlights | LOW | Stable flow, straightforward assertions |
+| Flashcard sort | Select category, swipe cards (Know/Don't Know), results, SRS batch add | MEDIUM | Touch gesture simulation via `page.touchscreen` |
+| Offline -> online sync | Go offline, answer questions, reconnect, verify sync queue processes | HIGH | `context.setOffline(true/false)` + route interception for Supabase |
+| Interview session | Setup -> questions -> speech/text input -> grading -> results (Practice mode) | HIGH | Must mock SpeechRecognition API; use text input fallback path |
+| Service worker update | Detect new version, show toast, user-triggered reload | MEDIUM | Requires building 2 app versions to test SW transition |
 
-### Deeper Explanations with Historical Context
-
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Expand citation coverage from 48 to 128** | Citations ground answers in authoritative sources. "Article I, Section 3 of the Constitution" or "The 19th Amendment (1920)". Only 48 questions currently have citations. For a civics test, constitutional/legal citations are expected. | Med | Content authoring task. Many questions have obvious citations (amendments, articles, laws). Some questions (geography, holidays) may not have formal citations -- use descriptive references instead ("Established by Congress in 1870" for Memorial Day). |
-| **"See Also" enhancement** | All 128 questions have `relatedQuestionIds` populated (128/128). Currently these are just IDs. Add a "Related Questions" section in the question detail view that shows clickable links to related questions. This creates a knowledge web -- studying one question naturally leads to related ones. | Low | UI-only work. When showing a question's explanation (in flashcard back, FeedbackPanel, or study guide), render related questions as tappable chips or a small list. Navigate to that question's detail on tap. This already has data; it just needs rendering. |
+**Setup requirements:**
+- `playwright.config.ts` with `webServer` pointing to `pnpm build && pnpm start` (test production build, not dev)
+- `e2e/` directory mirroring app route structure
+- Auth state saved to `storageState` file for test reuse
+- Supabase test project or route interception for deterministic data
+- CI integration: run E2E on PR, not every push (slow)
 
 ---
 
-## Anti-Features
+## Differentiators (Competitive Advantage)
 
-Features to explicitly NOT build. Each sounds valuable but adds complexity disproportionate to value for a 128-question civics test.
+Features that go beyond minimum viability. These make the codebase resilient and maintainable long-term.
 
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| **AI-generated personalized study plans** | Requires API calls (cost, latency, offline incompatibility), risk of hallucinated advice for a test with life-changing consequences. The question bank is finite (128) and the test format is known. Simple arithmetic (remaining questions / remaining days) is sufficient and deterministic. | Calculate daily targets with simple division. The existing FSRS algorithm already handles optimal review scheduling. |
-| **Adaptive difficulty engine** | Machine learning-based difficulty adjustment (like AdeptLR's 50-question calibration) is overkill for 128 fixed questions. The existing 70/30 weak/strong selection in `selectPracticeQuestions()` plus FSRS review scheduling already adapts to the user's level. Adding another layer of "intelligence" creates complexity without clear benefit. | Use existing weak-area detection + FSRS. These are battle-tested algorithms. Enhance their visibility in the UI rather than replacing them. |
-| **Gamified study streaks with penalties** | Duolingo's streak freeze and heart system creates anxiety. This app serves immigrants preparing for a consequential test -- anxiety reduction is a core design principle. Study consistency matters, but punishing breaks is counterproductive. | Keep the existing streak system (reward-only, no penalties). Add daily targets as gentle suggestions, not requirements. |
-| **User-generated mnemonics/content** | Memrise allows user-created "mems." For a bilingual app serving a specific community, user-generated content creates moderation burden, quality control issues, and potential for inappropriate/incorrect content. | Author all mnemonics editorially. Quality > quantity. A wrong mnemonic is worse than no mnemonic. |
-| **Video explanations** | Video content for 128 questions requires production, storage (CDN costs), bandwidth, and offline caching (massive). The USCIS already provides video resources. The app's value is in practice and tracking, not content delivery. | Link to official USCIS study videos from the "How to Study" page. Don't host video content. |
-| **Complex scheduling UI (calendar view, drag-to-reschedule)** | Calendar-based study planners (like UWorld, Blueprint) serve multi-month, multi-subject exam prep. Civics test prep is simpler: 128 questions, one subject, typically 1-3 months of study. A full calendar UI is over-engineering. | Show "Today's Plan" as a simple card with 2-3 tasks. No calendar. No drag-and-drop. |
-| **Predictive pass probability** | "You have a 78% chance of passing" sounds impressive but is misleading without validated psychometric models. The civics test format (10 questions from 128, answer 6 correctly in the 2008 version; 20 from 128, answer 12 in the 2025 version) makes prediction unreliable -- question selection is random. | Show readiness score as a percentage without claiming it predicts pass probability. Frame it as "study completeness" not "pass chance." |
+| Feature | Value Proposition | Complexity | Dependencies | Notes |
+|---------|-------------------|------------|--------------|-------|
+| Provider ordering guard | Dev-time validation catches provider reordering before runtime crash. The 10-provider chain has caused 2 production bugs already (auth deadlock, useAuth missing). | MEDIUM | New `ProviderOrderGuard` or `useProviderOrderCheck` | In dev mode, each provider registers itself in a global array on mount. A guard component verifies order matches expected sequence. Only runs in `NODE_ENV === 'development'`. Zero production overhead. |
+| Context provider unit tests (8 untested) | 8 of 10 providers have zero test coverage. Provider bugs (auth deadlock, ordering crash) reached production. Testing providers catches state machine bugs early. | HIGH | Shared render utility, Supabase/localStorage/idb-keyval mocks | Test each provider independently with `renderHook` + wrapper. Key: SupabaseAuthContext (login, hydration, session save, offline queue), LanguageContext (switch + sync), SRSContext (deck load, card ops, remote merge), OfflineContext (cache init, online transition). |
+| InterviewSession decomposition | 1,474 lines with 9 QuestionPhase states. Changes require understanding entire file. Testing individual phases is impossible without rendering the whole component. | HIGH | Careful state lifting, sub-component extraction | Extract by phase: `InterviewGreeting`, `InterviewQuestioning`, `InterviewFeedback`, `InterviewTransition`. Create `useInterviewStateMachine` hook for shared state. Target: parent under 400 lines, sub-components under 200 each. |
+| Settings sync conflict resolution | Server-wins strategy silently drops offline settings changes on login. User changes theme/language offline, logs in, all changes vanish. | MEDIUM | Supabase schema change (`updated_at` column) | Per-field last-write-wins with timestamps. Store `{ value, updatedAt }` in localStorage. Compare local vs remote `updated_at` per field. No CRDTs needed -- settings are single-writer, conflict window is small (offline duration only). |
+| Automated WCAG 2.2 accessibility audit | Glass-morphism contrast unverified (VISC-05). Touch target audit incomplete (A11Y-03). No systematic check across 30+ component directories. Axe-core catches ~57% of issues automatically. | MEDIUM | `@axe-core/playwright` for E2E, existing `vitest-axe` for unit | Two-tier: (1) Expand vitest-axe to cover all interactive components. (2) Add Playwright axe scans on dashboard, test page, interview, settings pages. Tag `wcag22aa`. Run comprehensive scans in nightly CI, smoke checks per commit. |
+| IndexedDB cache versioning | `version: 1` field exists in cache metadata but is never checked. Stale question format after content updates goes undetected. | LOW | `src/lib/pwa/offlineDb.ts` modification | On cache read, compare stored version against current app version constant. If mismatched, invalidate and re-fetch. Bump version when question schema changes. |
+
+---
+
+## Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| Visual regression testing (Playwright screenshots) | Catch glass-morphism / animation rendering changes | Maintenance burden extreme for solo dev: baseline images break on OS/font/browser updates, require manual approval workflow, slow CI. PROJECT.md lists this as out of scope. | Component-level vitest-axe for structural regressions + manual visual QA at milestone boundaries. |
+| Full CRDT sync engine | Proper conflict-free data merging, no data loss ever | CRDTs add 30-100KB (Yjs/Automerge). App sync data is simple key-value settings + append-only history. CRDT solves concurrent editing that doesn't exist here (single user, one device at a time). | Per-field last-write-wins with timestamps for settings. Existing append-only merge for history. Existing add-wins for bookmarks. |
+| 100% test coverage target | Comprehensive safety net | Diminishing returns past ~70-80% for UI code. View components are mostly declarative JSX. Forces testing implementation details over behavior. | Tiered thresholds: 80%+ for `src/lib/`, 70%+ for `src/contexts/`, no threshold for `src/views/` (covered by E2E). |
+| Cypress instead of Playwright | Familiar, good DX, time-travel debugging | Playwright is faster (parallel by default), better multi-browser support, better Next.js integration (official docs recommend it), better PWA/service worker testing. | Playwright. Official Next.js recommendation. |
+| MSW (Mock Service Worker) for E2E tests | Mock all API calls for deterministic E2E | E2E should hit real endpoints to catch integration bugs. MSW creates false confidence -- tests pass but real Supabase calls fail. | Use MSW only for unit/integration tests. E2E uses Playwright route interception (`page.route()`) for specific flaky endpoints only. |
+| react-joyride replacement | Pre-release dependency (3.0.0-7) is risky | Onboarding tour works, is dynamically imported, non-critical. Replacing means rewriting 7-step tour config and testing on all devices. | Pin to stable 3.0.0 when released. If 3.0.0 never ships in 6+ months, evaluate Shepherd.js. |
+| Console output replacement (36 calls) | Replace console.error/warn with structured logging | All 36 calls are in error-handling catch blocks and auth flows. No PII leaked. Low severity with no user impact. | Defer. Replace incrementally if Sentry fingerprinting reveals gaps. Not worth a dedicated effort. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Test Readiness Score]
-  Readiness formula tuning (pure logic, no UI)
-      |
-      v
-  Readiness score UI component (radial ring + breakdown)
-      |
-      v
-  Dashboard integration (replace/augment CompactStatRow mastery%)
-      |
-      v
-  Progress Hub integration (Overview tab)
+[Shared test render utility]
+    |--enables--> [Context provider unit tests]
+    |--enables--> [Page-level view tests (future)]
+    |--used by--> [Playwright E2E setup] (for consistent mocking patterns)
 
-[Test Date & Daily Targets]
-  Set test date (Settings page, localStorage)
-      |
-      v
-  Countdown display (Dashboard + Progress Hub)
-      |
-      v
-  Daily study target calculation
-      |
-      v
-  "Today's Plan" card on Dashboard
-      |
-  (depends on Readiness Score for "take a mock test" recommendation)
+[Playwright E2E setup]
+    |--enables--> [E2E critical flow tests]
+    |--enables--> [Automated WCAG audit via @axe-core/playwright]
+    |--enables--> [E2E offline->online sync verification]
+    |--enables--> [Service worker update UX verification]
 
-[Smart Weak-Area Drill]
-  Weak area drill entry point (Dashboard + Study Guide)
-      |  (uses existing getWeakQuestions() + detectWeakAreas())
-      v
-  Category-level drill buttons (Progress Hub Categories tab)
-      |
-      v
-  Drill session improvement feedback (results screen delta display)
+[Error.tsx sanitization]
+    |--independent--> (no dependencies, immediate fix)
 
-[Mnemonics & Memory Aids]
-  Author mnemonics for all 128 questions (content task, no code)
-      |  (populate existing mnemonic_en/mnemonic_my fields)
-      v
-  Mnemonic visual treatment in UI (lightbulb styling)
-      |
-      v
-  "Tricky Questions" collection (derived from accuracy data or hardcoded)
+[Component-level error boundaries]
+    |--enhances--> [Error.tsx sanitization] (consistent error UX)
+    |--independent of--> [E2E tests] (parallel work)
 
-[Study Tips]
-  Category introduction cards (7 authored objects)
-      |
-      v
-  Post-session contextual tips (performance-mapped strings)
-      |
-      v
-  "How to Study" static page (Settings-accessible)
+[InterviewSession decomposition]
+    |--enables--> [InterviewSession error boundary] (wraps smaller sub-components)
+    |--enables--> [InterviewSession unit tests] (test phases independently)
+    |--independent of--> [E2E tests] (refactoring, not new behavior)
 
-[Content Enrichment]
-  Expand fun facts (25 -> 128, content task)
-  Expand common mistakes (28 -> 128, content task)
-  Expand citations (48 -> 128, content task)
-      |  (all independent content tasks, no code deps)
-      v
-  "See Also" related questions UI (renders existing relatedQuestionIds)
+[Settings sync conflict resolution]
+    |--requires--> [Supabase schema: updated_at column on user_settings]
+    |--enables--> [E2E offline settings sync test]
 
-[Cross-cutting dependencies]
-  Readiness Score <-- needed by --> Daily Targets (mock test recommendations)
-  Weak-Area Drill <-- enhanced by --> Mnemonics (drill shows mnemonics in feedback)
-  Study Tips <-- contextual from --> Weak-Area Drill (post-drill tips)
-  Content Enrichment <-- consumed by --> all study/review/feedback UIs
+[Provider ordering guard]
+    |--independent--> (dev-time only, no production deps)
+
+[Dead code cleanup]
+    |--independent--> (removal, not addition)
+    |--should precede--> [Coverage thresholds] (remove dead code before measuring)
+
+[Sentry fingerprinting]
+    |--independent--> (configuration change only)
+
+[IndexedDB cache versioning]
+    |--independent--> (internal improvement)
+
+[lint:css in CI]
+    |--independent--> (CI config change)
 ```
 
----
+### Dependency Notes
 
-## MVP Recommendation
-
-### Priority 1: Test Readiness Score (Table Stakes, High Impact)
-1. **Readiness formula tuning** -- rebalance accuracy vs coverage weights
-2. **Readiness score UI component** -- radial ring with color-coded status
-3. **Readiness breakdown sub-scores** -- show what drives the score
-4. **Dashboard + Progress Hub integration** -- make score visible everywhere
-
-*Rationale: The readiness score already exists as internal logic. Promoting it to a visible UI element is the highest-impact change with lowest effort. Users immediately get an answer to "Am I ready?" This is the foundational feature that all other intelligent study features build on.*
-
-### Priority 2: Smart Weak-Area Drill (Table Stakes, Medium Impact)
-1. **Dedicated weak-area drill entry point** -- explicit "Drill Weak Areas" button
-2. **Category-level drill buttons** -- per-category drill in Progress Hub
-3. **Drill session improvement feedback** -- pre/post mastery delta display
-
-*Rationale: The algorithms exist. The practice mode exists. This is purely a UI/UX improvement that surfaces existing intelligence. Users who want to improve weak areas currently have to manually navigate to category practice and hope the 70/30 selection picks the right questions. Make it explicit.*
-
-### Priority 3: Test Date & Daily Targets (Table Stakes, Medium Impact)
-1. **Set test date** in Settings
-2. **Countdown display** on Dashboard and Progress Hub
-3. **Daily study target calculation** and "Today's Plan" card
-
-*Rationale: Depends on readiness score being visible (Priority 1) for "take mock test" recommendations. Simple arithmetic, not complex scheduling. Creates urgency and structure.*
-
-### Priority 4: Content Enrichment -- Mnemonics (Differentiator, High Effort)
-1. **Author mnemonics for remaining 111 questions** (17 already have them)
-2. **Mnemonic visual treatment** -- lightbulb icon, distinct styling
-3. **"Tricky Questions" collection** -- flag hard questions
-
-*Rationale: Highest content authoring effort but highest learning impact. Mnemonics are THE differentiator for memorization-heavy tests. Every competitor app is just flashcards -- adding curated mnemonics in two languages is genuinely unique.*
-
-### Priority 5: Study Tips (Differentiator, Low Effort)
-1. **Category introduction cards** (7 objects to author)
-2. **Post-session contextual tips** (performance-mapped)
-3. **"How to Study" static page**
-
-*Rationale: Low effort, nice polish. Can be done alongside content enrichment as authoring tasks.*
-
-### Priority 6: Content Enrichment -- Depth (Differentiator, Medium Effort)
-1. **Expand fun facts** (25 -> 128)
-2. **Expand common mistakes** (28 -> 128)
-3. **Expand citations** (48 -> 128)
-4. **"See Also" related questions UI** (render existing data)
-
-*Rationale: Content depth that makes the app feel comprehensive. "See Also" links are a quick UI win since all 128 questions already have `relatedQuestionIds` populated.*
-
-### Defer to Later Milestone
-- **AI-generated study plans** (cost, complexity, offline incompatibility)
-- **Calendar-based scheduling UI** (over-engineering for 128-question test)
-- **Predictive pass probability** (misleading without psychometric validation)
-- **User-generated mnemonics** (moderation burden, quality risk)
-- **Video content** (storage, bandwidth, production cost)
+- **Dead code cleanup should precede coverage thresholds:** Removing safeAsync and DotLottie eliminates dead test files from coverage calculations. Clean up first, then set thresholds.
+- **InterviewSession decomposition enables both testing and error boundaries:** Cannot add granular error boundaries or phase-level tests until the 1,474-line component is split. Highest-effort prerequisite.
+- **Settings sync requires schema change:** Adding `updated_at` timestamps to `user_settings` table means a Supabase migration. Plan early since it affects production data.
+- **Playwright E2E and shared render utility are soft dependencies:** E2E uses different mocking (route interception) from unit tests (vi.mock), so they can start in parallel.
 
 ---
 
-## Complexity Assessment Summary
+## Milestone Phase Structure
 
-| Feature Area | Code Complexity | Content Complexity | Dependencies on Existing |
-|--------------|----------------|-------------------|-------------------------|
-| Test Readiness Score | Low (formula exists, build UI) | None | `computeReadiness()` in NBA, `calculateOverallMastery()`, test history, SRS state |
-| Test Date Countdown | Low (date picker + arithmetic) | None | Readiness score for recommendations |
-| Daily Targets | Med (backward planning logic) | None | Test date, SRS due count, coverage data |
-| Weak-Area Drill UI | Low (route + button + existing functions) | None | `getWeakQuestions()`, `detectWeakAreas()`, `selectPracticeQuestions()` |
-| Drill Feedback | Low (before/after mastery comparison) | None | `calculateCategoryMastery()` |
-| Mnemonics (authoring) | None (populate existing fields) | High (111 bilingual mnemonics) | `Explanation.mnemonic_en/my` type fields |
-| Mnemonic UI treatment | Low (styling + icon) | None | Explanation rendering in FeedbackPanel, flashcards, SRS |
-| Tricky Questions | Low (badge + filter) | Low (curate list) | Question accuracy data or hardcoded list |
-| Study Tips (category) | Low (7 static objects + dismissible card) | Med (7 bilingual introductions) | Category mapping, localStorage for dismissal |
-| Study Tips (post-session) | Low (string mapping) | Med (35-70 bilingual tip strings) | Practice session results |
-| Study Tips (static page) | Low (static content page) | Low (5-7 bilingual tips) | Settings navigation |
-| Fun Facts (authoring) | None (populate existing fields) | High (103 bilingual fun facts) | `Explanation.funFact_en/my` type fields |
-| Common Mistakes (authoring) | None (populate existing fields) | Med (100 bilingual entries) | `Explanation.commonMistake_en/my` type fields |
-| Citations (authoring) | None (populate existing fields) | Med (80 citation strings) | `Explanation.citation` field |
-| Related Questions UI | Low (render clickable chips) | None | `relatedQuestionIds` (128/128 populated) |
+### Phase 1: Foundation (Infrastructure + Quick Wins)
+
+Core infrastructure that unblocks everything else.
+
+- [ ] Shared test render utility (`renderWithProviders`)
+- [ ] Playwright setup (`playwright.config.ts`, `e2e/` directory, CI integration)
+- [ ] Dead code cleanup via Knip (safeAsync, DotLottie, redundant RLS)
+- [ ] lint:css in CI pipeline
+- [ ] Coverage thresholds expanded to all tested `src/lib/` files
+
+### Phase 2: Security + Error Resilience
+
+Harden error handling and recovery.
+
+- [ ] Error.tsx sanitization + bilingual rendering (3 files)
+- [ ] Component-level error boundaries (4 components)
+- [ ] Sentry error fingerprinting
+- [ ] Provider ordering guard (dev-time)
+
+### Phase 3: Architecture Improvements
+
+Reduce complexity before testing complex components.
+
+- [ ] InterviewSession decomposition (9 phases -> sub-components + state machine hook)
+- [ ] Settings sync conflict resolution (LWW with per-field timestamps)
+- [ ] Service worker update UX (controllerchange + toast)
+- [ ] IndexedDB cache versioning
+
+### Phase 4: Test Coverage Expansion
+
+Architecture is cleaner -- test it.
+
+- [ ] Context provider unit tests (8 providers)
+- [ ] E2E critical flow tests (7 flows)
+- [ ] Automated WCAG 2.2 audit (vitest-axe expansion + Playwright axe scans)
+
+---
+
+## Feature Prioritization Matrix
+
+| Feature | User Value | Impl Cost | Risk if Skipped | Priority |
+|---------|------------|-----------|-----------------|----------|
+| Error.tsx sanitization + bilingual | HIGH | LOW | Raw errors leak to users | P1 |
+| Shared test render utility | HIGH (enables) | LOW | Every test reinvents wrappers | P1 |
+| lint:css in CI | MEDIUM | LOW | CSS regressions undetected | P1 |
+| Dead code cleanup (Knip) | MEDIUM | LOW | 200KB unused WASM, dead tests | P1 |
+| Coverage thresholds expansion | MEDIUM | LOW | Coverage silently regresses | P1 |
+| Component-level error boundaries | HIGH | MEDIUM | Feature crash kills entire app | P1 |
+| Service worker update UX | HIGH | MEDIUM | Stale pages, broken mid-session | P1 |
+| Sentry error fingerprinting | MEDIUM | LOW | Error noise obscures real issues | P1 |
+| Playwright E2E setup + critical flows | HIGH | HIGH | Auth/study/sync regressions undetected | P1 |
+| Provider ordering guard | MEDIUM | MEDIUM | Next reorder causes prod crash | P2 |
+| Context provider unit tests (8) | HIGH | HIGH | Provider bugs reach production | P2 |
+| InterviewSession decomposition | MEDIUM | HIGH | 1,474 lines untestable | P2 |
+| Settings sync conflict resolution | MEDIUM | MEDIUM | Offline settings silently lost | P2 |
+| Automated WCAG 2.2 audit | MEDIUM | MEDIUM | Contrast, touch targets unverified | P2 |
+| IndexedDB cache versioning | LOW | LOW | Stale questions after update | P2 |
+| Page-level view tests | LOW | HIGH | E2E covers critical paths | P3 |
+| Hook unit tests (20+) | LOW | HIGH | Low-risk hooks, high test cost | P3 |
+| react-joyride stable migration | LOW | LOW | Wait for upstream release | P3 |
+
+---
+
+## Implementation Patterns
+
+### Provider Testing Approach
+
+Test each provider in isolation with minimal wrapper, NOT all 10 together:
+
+```
+SupabaseAuthContext: mock Supabase client + onAuthStateChange
+LanguageContext:     mock useAuth (returns user or null)
+ThemeContext:        mock useAuth, mock matchMedia
+TTSContext:          mock useAuth, mock speechSynthesis
+SRSContext:          mock useAuth, mock Supabase, mock idb-keyval
+SocialContext:       mock useAuth, mock Supabase
+OfflineContext:      wrap in real ToastProvider (lightweight), mock navigator.onLine
+StateContext:        mock localStorage
+NavigationProvider:  mock usePathname from next/navigation
+```
+
+### Error Boundary Placement
+
+```
+ClientProviders (root ErrorBoundary -- keep existing class component)
+  |
+  +-- InterviewSession
+  |     react-error-boundary with FallbackComponent: bilingual "Interview crashed" + return to setup
+  |     resetKeys: [mode, sessionId]
+  |
+  +-- PracticeSession
+  |     react-error-boundary with FallbackComponent: bilingual "Practice error" + return to study guide
+  |     resetKeys: [categoryId]
+  |
+  +-- TestPage
+  |     react-error-boundary with FallbackComponent: bilingual "Test error, progress auto-saved"
+  |     resetKeys: [testId]
+  |
+  +-- CelebrationOverlay
+        react-error-boundary with fallback={null} (silent, non-critical)
+```
+
+### Service Worker Update UX Flow
+
+```
+1. User opens app (existing SW active)
+2. Browser checks for SW update in background
+3. New SW installs, activates (skipWaiting: true)
+4. controllerchange fires on existing page
+5. useServiceWorkerUpdate hook detects change
+6. Check NavigationProvider.isLocked:
+   - If locked (active test/interview): defer toast, show badge on Settings tab
+   - If unlocked: show persistent BilingualToast
+     EN: "New version available"
+     MY: "ဗားရှင်းသစ် ရနိုင်ပါပြီ"
+     Action: "Update now" / "ယခု အပ်ဒိတ်လုပ်ရန်"
+7. On action click: window.location.reload()
+```
+
+### Settings Sync: Per-Field LWW
+
+```
+Current (server-wins):
+  Login -> pull remote -> overwrite localStorage -> done
+  Problem: offline changes lost silently
+
+Proposed (per-field LWW):
+  Login -> pull remote settings with updated_at
+  For each field (theme, language, ttsRate, ttsPitch, ttsAutoRead, testDate):
+    if remote.updated_at > local.updatedAt: use remote
+    else: use local, queue push to remote
+
+  localStorage format: { value: 'dark', updatedAt: 1710849600000 }
+  Supabase: ALTER TABLE user_settings ADD COLUMN updated_at TIMESTAMPTZ DEFAULT NOW();
+```
+
+No CRDTs. Per-field timestamps suffice: single-writer (one user), conflict window is small (offline duration).
+
+### InterviewSession Decomposition Target
+
+```
+InterviewSession.tsx (1,474 lines)
+  -> useInterviewStateMachine.ts (~300 lines: state, transitions, timer)
+  -> InterviewSession.tsx (~400 lines: layout, phase routing)
+  -> InterviewGreeting.tsx (~100 lines: greeting phase UI)
+  -> InterviewQuestioning.tsx (~250 lines: reading + responding phases)
+  -> InterviewFeedback.tsx (~200 lines: grading + feedback phases)
+  -> InterviewTransition.tsx (~100 lines: transition between questions)
+```
+
+Each sub-component receives phase-specific props. State machine hook manages transitions. Parent routes to correct sub-component based on current phase.
 
 ---
 
 ## Sources
 
-### Test Readiness Scoring
-- [Achievable Test Readiness Score Discussion](https://talk.achievable.me/t/how-does-test-readiness-score-work/2522) - MEDIUM confidence (community forum, staff responses)
-- [CFA Level 2 Readiness: Mock Score Targets](https://www.swiftintellect.com/post/how-to-predict-cfa-level-2-readiness-mock-score-targets-error-patterns) - MEDIUM confidence
-- [NCLEX Readiness Assessment (Archer Review)](https://nurses.archerreview.com/features/archer-readiness-assessment) - MEDIUM confidence
-- [Duolingo Score (Duocon 2025)](https://duolingo.fandom.com/wiki/Score) - MEDIUM confidence
-
-### Spaced Repetition & Study Planning
-- [FSRS Algorithm Wiki](https://github.com/open-spaced-repetition/fsrs4anki/wiki/spaced-repetition-algorithm:-a-three%E2%80%90day-journey-from-novice-to-expert) - HIGH confidence (official)
-- [FSRS Helper (Anki add-on)](https://ankiweb.net/shared/info/759844606) - HIGH confidence (official)
-- [Anki Forums: FSRS for Exam Deadline](https://forums.ankiweb.net/t/how-do-i-use-fsrs-for-exam/43631) - MEDIUM confidence
-- [Anki Forums: Deadline Feature Request](https://forums.ankiweb.net/t/deadline-exam-date-feature/56675) - MEDIUM confidence
-- [300Hours CFA Study Planner](https://300hours.com/cfa-study-planner/) - MEDIUM confidence
-- [UWorld CPA Study Planner](https://accounting.uworld.com/cpa-review/cpa-courses/features/study-planner/) - MEDIUM confidence
-
-### Weak Area & Adaptive Practice
-- [Brainscape Confidence-Based Repetition](https://brainscape.zendesk.com/hc/en-us/articles/13103043051149-How-does-Brainscape-s-spaced-repetition-algorithm-work-i-e-Confidence-Based-Repetition) - HIGH confidence (official)
-- [Brainscape CBR Whitepaper](https://edcuration.com/resource/product/3/Brainscape%20whitepaper.pdf) - HIGH confidence (official)
-- [AdeptLR Adaptive Drilling](https://www.adeptlr.com/platform/adaptive-drilling) - MEDIUM confidence
-- [Quizlet Learning Mode](https://help.quizlet.com/hc/en-us/articles/360030986971-Studying-with-Learn) - MEDIUM confidence (official)
-- [Drill and Practice in 2025 Education (Brainscape Academy)](https://www.brainscape.com/academy/drill-and-practice-in-education/) - MEDIUM confidence
-
-### Mnemonics & Memory Aids
-- [Picmonic: Visual Mnemonics](https://www.picmonic.com/pages/why-do-mnemonics-work-its-science/) - MEDIUM confidence
-- [Brainscape: Do Mnemonics Work?](https://www.brainscape.com/academy/mnemonics-memorization-techniques/) - MEDIUM confidence
-- [Mnemonic Devices Types (Psych Central)](https://psychcentral.com/lib/memory-and-mnemonic-devices) - MEDIUM confidence
-- [Effective Flashcard Techniques (BrainApps)](https://brainapps.io/blog/2025/04/effective-flashcard-techniques-for-better/) - LOW confidence
-
-### Civics Test Specifics
-- [USCIS 2025 Civics Test Changes (NPR)](https://www.npr.org/2025/10/16/nx-s1-5566732/the-trump-administration-is-rolling-out-changes-to-the-u-s-citizenship-test) - HIGH confidence
-- [Hardest Citizenship Test Questions](https://www.citizenshipstudyguide.com/articles/The-10-Hardest-US-Citizenship-Test-Questions) - MEDIUM confidence
-- [USCIS Naturalization Test Performance Data](https://www.uscis.gov/citizenship-resource-center/naturalization-related-data-and-statistics/naturalization-test-performance) - HIGH confidence (official)
-- [USCIS Official Study Materials](https://www.uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test) - HIGH confidence (official)
-- [Citizen Now App](https://citizennow.com/) - MEDIUM confidence (competitor reference)
-
-### Study Tips & Contextual Help UX
-- [Contextual Help UX Patterns (Chameleon)](https://www.chameleon.io/blog/contextual-help-ux) - MEDIUM confidence
-- [Contextual Help UX Patterns (UserPilot)](https://userpilot.com/blog/contextual-help/) - MEDIUM confidence
-- [EZ Prep: How to Prepare for Citizenship Exam](https://eztestprep.com/post/the-best-way-to-study-for-the-u-s-citizenship-certification-exam-a-comprehensive-guide/) - MEDIUM confidence
-- [One Percent for America: Pass Civics Exam](https://www.onepercentforamerica.org/ask-the-expert/how-pass-civics-exam-your-first-attempt) - MEDIUM confidence
+- [Next.js Playwright Testing Guide](https://nextjs.org/docs/app/guides/testing/playwright) -- official E2E testing docs (HIGH confidence)
+- [Next.js Error Handling](https://nextjs.org/docs/app/getting-started/error-handling) -- error.tsx patterns (HIGH confidence)
+- [react-error-boundary](https://github.com/bvaughn/react-error-boundary) -- resetKeys, onReset, FallbackComponent API (HIGH confidence)
+- [Playwright Accessibility Testing](https://playwright.dev/docs/accessibility-testing) -- @axe-core/playwright integration (HIGH confidence)
+- [Playwright Service Workers](https://playwright.dev/docs/service-workers) -- SW testing support (HIGH confidence)
+- [Playwright Network](https://playwright.dev/docs/network) -- offline simulation, route interception (HIGH confidence)
+- [Knip](https://knip.dev) -- dead code detection for TypeScript, 100+ plugins including Next.js (HIGH confidence)
+- [Serwist Registration Docs](https://serwist.pages.dev/docs/next/configuring/register) -- manual SW registration options (HIGH confidence)
+- [PWA Update Patterns (web.dev)](https://web.dev/learn/pwa/update) -- service worker update UX (HIGH confidence)
+- [Testing Library React Context](https://testing-library.com/docs/example-react-context/) -- provider testing patterns (HIGH confidence)
+- [WCAG 2.2 Guide (2026)](https://www.vervali.com/blog/accessibility-testing-services-in-2026-the-complete-guide-to-wcag-2-2-ada-section-508-and-eaa-compliance/) -- WCAG 2.2 AA criteria and axe coverage (MEDIUM confidence)
+- [LWW vs CRDTs](https://dzone.com/articles/conflict-resolution-using-last-write-wins-vs-crdts) -- conflict resolution strategies (MEDIUM confidence)
+- [React Component Decomposition](https://medium.com/dailyjs/techniques-for-decomposing-react-components-e8a1081ef5da) -- extraction patterns (MEDIUM confidence)
+- [Modularizing React Apps (Martin Fowler)](https://martinfowler.com/articles/modularizing-react-apps.html) -- architecture patterns (HIGH confidence)
+- [Slack Automated Accessibility Testing](https://slack.engineering/automated-accessibility-testing-at-slack/) -- enterprise a11y CI patterns (MEDIUM confidence)
+- [CRDT Toolkits for Offline-First](https://medium.com/@2nick2patel2/typescript-crdt-toolkits-for-offline-first-apps-conflict-free-sync-without-tears-df456c7a169b) -- why CRDTs are overkill for simple sync (MEDIUM confidence)
 
 ---
-
-*Feature research for: Civic Test Prep v4.0 Intelligent Study & Content Enrichment*
-*Researched: 2026-02-23*
-*Supersedes: v3.0 feature research (retained in git history)*
+*Feature research for: v4.1 Production Hardening*
+*Researched: 2026-03-19*
