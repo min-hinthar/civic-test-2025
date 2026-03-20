@@ -85,48 +85,48 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| TEST-03 | — | Pending |
-| TEST-04 | — | Pending |
-| TEST-05 | — | Pending |
-| TEST-06 | — | Pending |
-| TEST-07 | — | Pending |
-| TEST-08 | — | Pending |
-| TEST-09 | — | Pending |
-| TEST-10 | — | Pending |
-| TEST-11 | — | Pending |
-| TEST-12 | — | Pending |
-| ERRS-01 | — | Pending |
-| ERRS-02 | — | Pending |
-| ERRS-03 | — | Pending |
-| ERRS-04 | — | Pending |
-| ERRS-05 | — | Pending |
-| ERRS-06 | — | Pending |
-| ARCH-01 | — | Pending |
-| ARCH-02 | — | Pending |
-| ARCH-03 | — | Pending |
-| ARCH-04 | — | Pending |
-| ARCH-05 | — | Pending |
-| ARCH-06 | — | Pending |
-| A11Y-01 | — | Pending |
-| A11Y-02 | — | Pending |
-| A11Y-03 | — | Pending |
-| A11Y-04 | — | Pending |
-| DEPS-01 | — | Pending |
-| DEPS-02 | — | Pending |
-| DEPS-03 | — | Pending |
-| DEPS-04 | — | Pending |
-| DEPS-05 | — | Pending |
-| DX-01 | — | Pending |
-| DX-02 | — | Pending |
-| DX-03 | — | Pending |
+| TEST-01 | Phase 48 | Pending |
+| TEST-02 | Phase 48 | Pending |
+| TEST-03 | Phase 52 | Pending |
+| TEST-04 | Phase 52 | Pending |
+| TEST-05 | Phase 52 | Pending |
+| TEST-06 | Phase 52 | Pending |
+| TEST-07 | Phase 52 | Pending |
+| TEST-08 | Phase 52 | Pending |
+| TEST-09 | Phase 52 | Pending |
+| TEST-10 | Phase 51 | Pending |
+| TEST-11 | Phase 48 | Pending |
+| TEST-12 | Phase 48 | Pending |
+| ERRS-01 | Phase 49 | Pending |
+| ERRS-02 | Phase 49 | Pending |
+| ERRS-03 | Phase 49 | Pending |
+| ERRS-04 | Phase 49 | Pending |
+| ERRS-05 | Phase 48 | Pending |
+| ERRS-06 | Phase 49 | Pending |
+| ARCH-01 | Phase 50 | Pending |
+| ARCH-02 | Phase 50 | Pending |
+| ARCH-03 | Phase 50 | Pending |
+| ARCH-04 | Phase 53 | Pending |
+| ARCH-05 | Phase 53 | Pending |
+| ARCH-06 | Phase 50 | Pending |
+| A11Y-01 | Phase 52 | Pending |
+| A11Y-02 | Phase 52 | Pending |
+| A11Y-03 | Phase 52 | Pending |
+| A11Y-04 | Phase 52 | Pending |
+| DEPS-01 | Phase 48 | Pending |
+| DEPS-02 | Phase 48 | Pending |
+| DEPS-03 | Phase 48 | Pending |
+| DEPS-04 | Phase 51 | Pending |
+| DEPS-05 | Phase 51 | Pending |
+| DX-01 | Phase 48 | Pending |
+| DX-02 | Phase 48 | Pending |
+| DX-03 | Phase 49 | Pending |
 
 **Coverage:**
 - v4.1 requirements: 36 total
-- Mapped to phases: 0
-- Unmapped: 36 ⚠️
+- Mapped to phases: 36
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 after roadmap creation*

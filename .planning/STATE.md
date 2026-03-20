@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
-status: requirements
+status: roadmap
 last_updated: "2026-03-19T00:00:00Z"
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,23 +18,25 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v4.1 Production Hardening — defining requirements
+**Current focus:** v4.1 Production Hardening -- Phase 48 ready to plan
 
 ## Current Position
 
-Milestone: v4.1 Production Hardening
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-19 — Milestone v4.1 started
+Milestone: v4.1 Production Hardening (6 phases, 36 requirements)
+Phase: 48 of 53 (Test Infrastructure + Quick Wins)
+Plan: --
+Status: Ready to plan
+Last activity: 2026-03-19 -- Roadmap created for v4.1
+
+Progress: [..........] 0%
 
 ## Performance Metrics
 
 **Cumulative:**
-- Total milestones: 5 (v1.0, v2.0, v2.1, v3.0, v4.0)
-- Total phases: 48
-- Total plans: 278
-- Total requirements: 226/227
+- Total milestones: 5 shipped + 1 active
+- Total phases: 48 shipped + 6 planned = 54
+- Total plans: 278 shipped
+- Total requirements: 226/227 shipped + 36 active
 
 ## Accumulated Context
 
@@ -49,11 +51,13 @@ None.
 ### Blockers/Concerns
 
 - BRMSE-01: Burmese translation naturalness needs native speaker assessment (carried since v2.1)
-- CELB-06: DotLottie animation assets not sourced (code complete, graceful degradation)
-- VISC-05: Dark mode glass panel readability needs human visual QA
+- CELB-06: DotLottie to be removed in Phase 48 (DEPS-01)
+- VISC-05: Dark mode glass panel readability -- targeted by A11Y-04 in Phase 52
+- Research flag: SW skipWaiting transition has one-deployment gap (Phase 50)
+- Research flag: E2E interview tests must use text input fallback (Phase 52)
 
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Defining v4.1 requirements
+Stopped at: Roadmap created for v4.1 Production Hardening
 Resume file: None
