@@ -170,6 +170,16 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 - ✓ Cross-device sync for settings, bookmarks, streaks, and answer history — v4.0
 - ✓ Dynamic imports and bundle optimization with documented before/after — v4.0
 
+- ✓ Shared renderWithProviders test utility with preset system (minimal/core/full) — v4.1
+- ✓ Playwright E2E framework configured with smoke test — v4.1
+- ✓ Coverage thresholds on 22 src/lib/ files + 40% global floor — v4.1
+- ✓ DotLottie package and WASM infrastructure removed — v4.1
+- ✓ Sentry fingerprinting verified with 16 tests — v4.1
+- ✓ lint:css in CI pipeline — v4.1
+- ✓ Knip dead code detection with 10 files removed — v4.1
+- ✓ safeAsync documented as reserved infrastructure — v4.1
+- ✓ 5 redundant RLS INSERT policies cleaned — v4.1
+
 ### Active
 
 ## Current Milestone: v4.1 Production Hardening
@@ -214,7 +224,7 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 
 ## Context
 
-**Current state (post v4.0):** Premium bilingual PWA with 226 validated requirements across 5 milestones (v1.0 + v2.0 + v2.1 + v3.0 + v4.0). 78,281 LOC TypeScript across ~300 source files. 48 phases, 278 plans executed. Deployed at https://civic-test-2025.vercel.app/
+**Current state (v4.1 in progress, Phase 48 complete):** Premium bilingual PWA with 226 validated requirements across 5 milestones + Phase 48 of v4.1 complete. 643 tests passing across 36 test files. Playwright E2E framework configured. Coverage thresholds on 22 src/lib/ files. DotLottie removed. Deployed at https://civic-test-2025.vercel.app/
 
 **Tech stack:** Next.js 16 (App Router) + React 19 + TypeScript 5.9 + Supabase (Auth + Postgres + RLS). Tailwind CSS 3 with design token architecture (tokens.css → tailwind.config.js). motion/react for spring physics. Sentry for error tracking + Web Vitals. @serwist/next for PWA. ts-fsrs for spaced repetition. Deployed on Vercel.
 
@@ -285,4 +295,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-19 after v4.1 milestone started*
+*Last updated: 2026-03-20 after Phase 48 complete*
