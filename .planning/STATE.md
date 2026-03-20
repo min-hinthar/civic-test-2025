@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
 status: unknown
-stopped_at: Phase 49 UI-SPEC approved
-last_updated: "2026-03-20T05:05:32.692Z"
+stopped_at: Completed 49-01-PLAN.md
+last_updated: "2026-03-20T05:54:28.517Z"
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 48 — Test Infrastructure + Quick Wins
+**Current focus:** Phase 49 — Error Handling + Security
 
 ## Current Position
 
-Phase: 48 (Test Infrastructure + Quick Wins) — COMPLETE
-Plan: 4 of 4 (all complete)
+Phase: 49 (Error Handling + Security) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -41,6 +41,7 @@ Plan: 4 of 4 (all complete)
 | 48 | 02 | 13min | 2 | 2 |
 | 48 | 03 | 13min | 1 | 2 |
 | 48 | 04 | 15min | 3 | 19 |
+| Phase 49 P01 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -55,6 +56,9 @@ Plan: 4 of 4 (all complete)
 - Chromium-only for Playwright; full browser matrix deferred to Phase 52
 - 10 genuinely unused files deleted; 5 Knip false positives kept (import chain traversal limitation)
 - Sentry fingerprint precedence fixed: Next.js noise filters take priority over app-specific fingerprinting
+- [Phase 49]: SharedErrorFallback extracted as shared bilingual error component with BilingualMessage props
+- [Phase 49]: error.tsx useLanguage() in try-catch with localStorage fallback (hook always called, catch handles runtime failure)
+- [Phase 49]: global-error.tsx uses Sentry.captureException directly (not captureError wrapper) for catastrophic resilience
 
 ### Pending Todos
 
@@ -69,6 +73,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T05:05:32.688Z
-Stopped at: Phase 49 UI-SPEC approved
-Resume file: .planning/phases/49/49-UI-SPEC.md
+Last session: 2026-03-20T05:54:28.513Z
+Stopped at: Completed 49-01-PLAN.md
+Resume file: None
