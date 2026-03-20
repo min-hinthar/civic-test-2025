@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Confetti } from './Confetti';
-import { DotLottieAnimation } from './DotLottieAnimation';
 import { useCelebrationListener, isFirstTimeCelebration } from '@/hooks/useCelebration';
 import type { CelebrationDetail, CelebrationLevel } from '@/hooks/useCelebration';
 import { hapticLight, hapticMedium, hapticHeavy } from '@/lib/haptics';
@@ -23,8 +22,6 @@ interface LevelConfig {
   peakDuration: number;
   hapticFn: () => void;
   soundFn: (() => void) | null;
-  dotLottieSrc: string | null;
-  dotLottieSize: number;
   hasScreenShake: boolean;
 }
 
@@ -34,8 +31,6 @@ const LEVEL_CONFIG: Record<CelebrationLevel, LevelConfig> = {
     peakDuration: 800,
     hapticFn: hapticLight,
     soundFn: null,
-    dotLottieSrc: null,
-    dotLottieSize: 0,
     hasScreenShake: false,
   },
   burst: {
@@ -43,8 +38,6 @@ const LEVEL_CONFIG: Record<CelebrationLevel, LevelConfig> = {
     peakDuration: 1200,
     hapticFn: hapticMedium,
     soundFn: playConfettiBurst,
-    dotLottieSrc: '/lottie/checkmark.lottie',
-    dotLottieSize: 80,
     hasScreenShake: false,
   },
   celebration: {
@@ -52,8 +45,6 @@ const LEVEL_CONFIG: Record<CelebrationLevel, LevelConfig> = {
     peakDuration: 2000,
     hapticFn: hapticHeavy,
     soundFn: playPassReveal,
-    dotLottieSrc: '/lottie/trophy.lottie',
-    dotLottieSize: 200,
     hasScreenShake: false,
   },
   ultimate: {
@@ -61,8 +52,6 @@ const LEVEL_CONFIG: Record<CelebrationLevel, LevelConfig> = {
     peakDuration: 2500,
     hapticFn: hapticHeavy,
     soundFn: playUltimateFanfare,
-    dotLottieSrc: '/lottie/trophy.lottie',
-    dotLottieSize: 200,
     hasScreenShake: true,
   },
 };
@@ -120,8 +109,8 @@ const SHAKE_KEYFRAMES = `
 // ---------------------------------------------------------------------------
 
 /**
- * Global celebration overlay that orchestrates confetti, DotLottie animations,
- * sound, and haptics based on CustomEvent dispatches from `celebrate()`.
+ * Global celebration overlay that orchestrates confetti, sound, and haptics
+ * based on CustomEvent dispatches from `celebrate()`.
  *
  * Features:
  * - Queue management: multiple celebrations play sequentially with 300ms gap
@@ -304,20 +293,6 @@ export function CelebrationOverlay() {
             duration={config.peakDuration + QUEUE_GAP_MS}
             onComplete={handleConfettiComplete}
           />
-        )}
-
-        {/* DotLottie animation (skip for reduced motion + sparkle level) */}
-        {!shouldReduceMotion && config.dotLottieSrc && (
-          <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-            <DotLottieAnimation
-              src={config.dotLottieSrc}
-              width={config.dotLottieSize}
-              height={config.dotLottieSize}
-              autoplay
-              loop={false}
-              glowColor={effectiveLevel === 'ultimate' ? '#FFD700' : undefined}
-            />
-          </div>
         )}
 
         {/* Flag surprise: render a small flag emoji floating in center */}
