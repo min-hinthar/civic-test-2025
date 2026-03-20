@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Export question English text to JSON for edge-tts generation.
  *

@@ -392,6 +392,7 @@ export function Flashcard3D({
 
             {/* TTS and flip hint */}
             <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4">
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- stopPropagation wrapper prevents card flip when clicking TTS buttons */}
               <div
                 className="flex gap-2"
                 onClick={handleTTSClick}
@@ -568,6 +569,7 @@ export function Flashcard3D({
 
               {/* Explanation card - stopPropagation prevents flip on interact */}
               {explanation && (
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- stopPropagation prevents card flip when interacting with explanation content
                 <div
                   className="mt-3"
                   role="region"
@@ -587,6 +589,7 @@ export function Flashcard3D({
 
             {/* TTS and flip hint */}
             <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-4 shrink-0">
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- stopPropagation wrapper prevents card flip when clicking TTS buttons */}
               <div
                 className="flex gap-2"
                 onClick={handleTTSClick}

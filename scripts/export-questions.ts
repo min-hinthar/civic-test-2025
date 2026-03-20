@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Export question Burmese text to JSON for edge-tts generation.
  *

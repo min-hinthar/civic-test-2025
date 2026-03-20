@@ -1,6 +1,5 @@
 {
   "mode": "yolo",
-  "depth": "comprehensive",
   "parallelization": true,
   "commit_docs": true,
   "model_profile": "quality",
@@ -19,7 +18,8 @@
     "auto_advance": false,
     "code_review": true,
     "build_verification": true,
-    "nyquist_validation": true
+    "nyquist_validation": true,
+    "_auto_chain_active": true
   },
   "git": {
     "branching_strategy": "none"
@@ -33,5 +33,6 @@
       "pnpm test",
       "pnpm build"
     ]
-  }
+  },
+  "granularity": "fine"
 }

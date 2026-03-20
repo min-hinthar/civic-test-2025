@@ -96,7 +96,7 @@ const Segment = memo(function Segment({
 
   return (
     <div
-      role="listitem"
+      role={isTappable ? 'button' : 'listitem'}
       aria-label={`Question ${index + 1}: ${statusLabels[status]}`}
       className={clsx(
         'flex-1 min-w-[8px] h-full rounded-full transition-colors duration-300',
@@ -104,9 +104,7 @@ const Segment = memo(function Segment({
         isCurrent && !shouldReduceMotion && 'animate-pulse',
         isTappable && 'cursor-pointer hover:opacity-80'
       )}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={isTappable ? 0 : undefined}
+      {...(isTappable ? { onClick: handleClick, onKeyDown: handleKeyDown, tabIndex: 0 } : {})}
     />
   );
 });

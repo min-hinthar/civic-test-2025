@@ -206,6 +206,7 @@ function AnswerOptionGroup({
     <div
       role="radiogroup"
       aria-label="Answer options"
+      tabIndex={-1}
       onKeyDown={handleKeyDown}
       className="flex flex-col gap-3"
     >

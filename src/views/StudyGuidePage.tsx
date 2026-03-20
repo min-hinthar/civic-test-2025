@@ -623,6 +623,7 @@ const StudyGuidePage = () => {
                               ))}
                             </ul>
                             {question.explanation && (
+                              // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- stopPropagation prevents accordion collapse when interacting with explanation
                               <div
                                 className="mt-3"
                                 role="region"

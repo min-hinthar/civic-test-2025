@@ -63,7 +63,7 @@ export function PillTabBar({
         'rounded-2xl border border-border/40 bg-surface/80 p-1 backdrop-blur-lg',
         className
       )}
-      role="tablist"
+      role="tablist" // eslint-disable-line jsx-a11y/no-noninteractive-element-to-interactive-role -- nav with tablist is the recommended WAI-ARIA tabs pattern
       aria-label={ariaLabel}
     >
       <div

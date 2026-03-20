@@ -98,6 +98,7 @@ function SegmentReviewDialog({
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
     >
       {/* Backdrop */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- backdrop dismiss, close button provides keyboard access */}
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* Dialog */}
@@ -253,6 +254,7 @@ function ExitConfirmInline({
       transition={shouldReduceMotion ? { duration: 0.1 } : { duration: 0.2 }}
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
     >
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- backdrop dismiss, cancel button provides keyboard access */}
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl text-center">
         <h3 className="text-lg font-bold text-foreground">{strings.quiz.exit.en}?</h3>
