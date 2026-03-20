@@ -29,7 +29,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [ ] **ERRS-03**: Component-level error boundaries on InterviewSession, PracticeSession, TestPage, CelebrationOverlay
 - [ ] **ERRS-04**: Error boundaries trigger session save in `componentDidCatch` to prevent data loss
 - [x] **ERRS-05**: Sentry error fingerprinting groups network/IndexedDB/Supabase errors by class
-- [ ] **ERRS-06**: Provider ordering dev-mode runtime guard validates mount order in `ClientProviders.tsx`
+- [x] **ERRS-06**: Provider ordering dev-mode runtime guard validates mount order in `ClientProviders.tsx`
 
 ### Architecture Resilience
 
@@ -59,7 +59,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 - [x] **DX-01**: `lint:css` step added to CI pipeline
 - [x] **DX-02**: Dead code detection run (Knip) with findings addressed
-- [ ] **DX-03**: Console output in production replaced with structured `captureError()` where impactful
+- [x] **DX-03**: Console output in production replaced with structured `captureError()` where impactful
 
 ## Future Requirements
 
@@ -102,7 +102,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | ERRS-03 | Phase 49 | Pending |
 | ERRS-04 | Phase 49 | Pending |
 | ERRS-05 | Phase 48 | Complete |
-| ERRS-06 | Phase 49 | Pending |
+| ERRS-06 | Phase 49 | Complete |
 | ARCH-01 | Phase 50 | Pending |
 | ARCH-02 | Phase 50 | Pending |
 | ARCH-03 | Phase 50 | Pending |
@@ -120,7 +120,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | DEPS-05 | Phase 51 | Pending |
 | DX-01 | Phase 48 | Complete |
 | DX-02 | Phase 48 | Complete |
-| DX-03 | Phase 49 | Pending |
+| DX-03 | Phase 49 | Complete |
 
 **Coverage:**
 - v4.1 requirements: 36 total
