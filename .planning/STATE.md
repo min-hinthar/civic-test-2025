@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
-status: planning
-stopped_at: Phase 48 context gathered
-last_updated: "2026-03-20T01:44:07.146Z"
-last_activity: 2026-03-19 -- Roadmap created for v4.1
+status: unknown
+stopped_at: Completed 48-01-PLAN.md
+last_updated: "2026-03-20T02:12:53.991Z"
 progress:
   total_phases: 6
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 4
+  completed_plans: 3
 ---
 
 # Project State
@@ -21,17 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** v4.1 Production Hardening -- Phase 48 ready to plan
+**Current focus:** Phase 48 — Test Infrastructure + Quick Wins
 
 ## Current Position
 
-Milestone: v4.1 Production Hardening (6 phases, 36 requirements)
-Phase: 48 of 53 (Test Infrastructure + Quick Wins)
-Plan: --
-Status: Ready to plan
-Last activity: 2026-03-19 -- Roadmap created for v4.1
-
-Progress: [..........] 0%
+Phase: 48 (Test Infrastructure + Quick Wins) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -42,11 +35,16 @@ Progress: [..........] 0%
 - Total plans: 278 shipped
 - Total requirements: 226/227 shipped + 36 active
 
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 48 | 01 | 12min | 2 | 7 |
+
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
+- DotLottie removal safe: no .lottie assets in public/, component rendered nothing
+- safeAsync kept as reserved infrastructure (tree-shaken, zero runtime cost)
 
 ### Pending Todos
 
@@ -55,13 +53,12 @@ None.
 ### Blockers/Concerns
 
 - BRMSE-01: Burmese translation naturalness needs native speaker assessment (carried since v2.1)
-- CELB-06: DotLottie to be removed in Phase 48 (DEPS-01)
 - VISC-05: Dark mode glass panel readability -- targeted by A11Y-04 in Phase 52
 - Research flag: SW skipWaiting transition has one-deployment gap (Phase 50)
 - Research flag: E2E interview tests must use text input fallback (Phase 52)
 
 ## Session Continuity
 
-Last session: 2026-03-20T01:44:07.142Z
-Stopped at: Phase 48 context gathered
-Resume file: .planning/phases/48/48-CONTEXT.md
+Last session: 2026-03-20T02:12:38.450Z
+Stopped at: Completed 48-01-PLAN.md
+Resume file: None
