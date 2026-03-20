@@ -11,6 +11,8 @@
 
 import { createStore, get, set, del, keys, clear } from 'idb-keyval';
 import type { Question } from '@/types';
+import { STORAGE_VERSIONS } from '@/lib/db/storageVersions';
+import { captureError } from '@/lib/sentry';
 
 // Create separate stores for different data types
 export const questionsStore = createStore('civic-prep-questions', 'questions');
@@ -39,24 +41,42 @@ export async function cacheQuestions(questions: Question[]): Promise<void> {
   const meta: CacheMeta = {
     cachedAt: new Date().toISOString(),
     count: questions.length,
-    version: 1,
+    version: STORAGE_VERSIONS.QUESTIONS,
   };
   await set(CACHE_META_KEY, meta, questionsStore);
 }
 
 /**
- * Retrieve cached questions from IndexedDB
- * @returns Promise<Question[] | undefined> - Cached questions or undefined if not cached
+ * Retrieve cached questions from IndexedDB.
+ * Validates cache version -- clears stale data on mismatch.
+ * @returns Promise<Question[] | undefined> - Cached questions or undefined if not cached/stale
  */
 export async function getCachedQuestions(): Promise<Question[] | undefined> {
+  const meta = await get<CacheMeta>(CACHE_META_KEY, questionsStore);
+  // If meta exists and version mismatches, invalidate stale cache
+  if (meta && meta.version !== STORAGE_VERSIONS.QUESTIONS) {
+    captureError(new Error('Questions cache version mismatch'), {
+      operation: 'offlineDb.getCachedQuestions',
+      component: 'questions-cache',
+      context: { cached: meta.version, expected: STORAGE_VERSIONS.QUESTIONS },
+    });
+    await clearQuestionsCache();
+    return undefined;
+  }
   return get<Question[]>(QUESTIONS_KEY, questionsStore);
 }
 
 /**
- * Check if questions are cached in IndexedDB
- * @returns Promise<boolean> - True if cache exists
+ * Check if questions are cached in IndexedDB.
+ * Validates cache version -- clears stale data on mismatch.
+ * @returns Promise<boolean> - True if valid cache exists
  */
 export async function hasQuestionsCache(): Promise<boolean> {
+  const meta = await get<CacheMeta>(CACHE_META_KEY, questionsStore);
+  if (meta && meta.version !== STORAGE_VERSIONS.QUESTIONS) {
+    await clearQuestionsCache();
+    return false;
+  }
   const questions = await get<Question[]>(QUESTIONS_KEY, questionsStore);
   return questions !== undefined && questions.length > 0;
 }
