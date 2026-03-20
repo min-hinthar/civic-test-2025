@@ -193,6 +193,31 @@ export default defineConfig({
           functions: 100,
           lines: 100,
         },
+        // Context provider thresholds (Phase 51, Plan 01)
+        'src/contexts/StateContext.tsx': {
+          statements: 93,
+          branches: 83,
+          functions: 100,
+          lines: 96,
+        },
+        'src/components/navigation/NavigationProvider.tsx': {
+          statements: 92,
+          branches: 81,
+          functions: 100,
+          lines: 96,
+        },
+        'src/contexts/LanguageContext.tsx': {
+          statements: 89,
+          branches: 78,
+          functions: 100,
+          lines: 92,
+        },
+        'src/contexts/OfflineContext.tsx': {
+          statements: 87,
+          branches: 75,
+          functions: 100,
+          lines: 89,
+        },
       },
     },
   },
