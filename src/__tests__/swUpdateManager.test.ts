@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createSWUpdateManager } from '@/lib/pwa/swUpdateManager';
 
-// We'll import these after creating the module
-// For now, use dynamic imports to avoid compile errors during RED phase
+// Mock sentry to avoid @sentry/nextjs import issues in test
+vi.mock('@/lib/sentry', () => ({
+  captureError: vi.fn(),
+}));
 
 describe('swUpdateManager', () => {
   // Mock navigator.serviceWorker
@@ -68,8 +71,7 @@ describe('swUpdateManager', () => {
     vi.restoreAllMocks();
   });
 
-  it('registers controllerchange listener on init', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('registers controllerchange listener on init', () => {
     const manager = createSWUpdateManager();
     const callback = vi.fn();
 
@@ -83,8 +85,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('calls onUpdateAvailable when controllerchange fires and session is NOT locked', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('calls onUpdateAvailable when controllerchange fires and session is NOT locked', () => {
     const manager = createSWUpdateManager();
     const callback = vi.fn();
 
@@ -100,8 +101,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('defers update when session IS locked via setSessionLocked', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('defers update when session IS locked via setSessionLocked', () => {
     const manager = createSWUpdateManager();
     const callback = vi.fn();
 
@@ -118,8 +118,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('fires deferred update when setSessionLocked(false) is called', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('fires deferred update when setSessionLocked(false) is called', () => {
     const manager = createSWUpdateManager();
     const callback = vi.fn();
 
@@ -139,8 +138,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('calls location.reload() when acceptUpdate is called and online', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('calls location.reload() when acceptUpdate is called and online', () => {
     const manager = createSWUpdateManager();
 
     manager.acceptUpdate();
@@ -150,8 +148,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('does NOT reload when acceptUpdate is called offline', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('does NOT reload when acceptUpdate is called offline', () => {
     const manager = createSWUpdateManager();
 
     Object.defineProperty(navigator, 'onLine', {
@@ -167,8 +164,7 @@ describe('swUpdateManager', () => {
     manager.destroy();
   });
 
-  it('detects history.state interviewGuard as session locked', async () => {
-    const { createSWUpdateManager } = await import('@/lib/pwa/swUpdateManager');
+  it('detects history.state interviewGuard as session locked', () => {
     const manager = createSWUpdateManager();
     const callback = vi.fn();
 

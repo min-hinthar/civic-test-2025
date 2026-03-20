@@ -22,7 +22,11 @@ interface ToastInstance {
   id: string;
   type: ToastType;
   message: BilingualMessage;
-  duration: number;
+  duration: number | null; // null = persistent (no auto-dismiss)
+  action?: {
+    label: BilingualMessage;
+    onClick: () => void;
+  };
 }
 
 /**
@@ -37,6 +41,12 @@ interface ToastContextValue {
   showInfo: (message: BilingualMessage) => string;
   /** Show a warning toast with bilingual message (orange, non-data-loss errors) */
   showWarning: (message: BilingualMessage) => string;
+  /** Show a persistent toast with optional action button */
+  showPersistent: (
+    type: ToastType,
+    message: BilingualMessage,
+    action?: { label: BilingualMessage; onClick: () => void }
+  ) => string;
   /** Dismiss a specific toast by ID */
   dismiss: (id: string) => void;
   /** Dismiss all toasts */
@@ -108,11 +118,26 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [addToast]
   );
 
+  const showPersistent = useCallback(
+    (
+      type: ToastType,
+      message: BilingualMessage,
+      action?: { label: BilingualMessage; onClick: () => void }
+    ): string => {
+      const id = generateId();
+      const toast: ToastInstance = { id, type, message, duration: null, action };
+      setToasts(prev => [...prev, toast]);
+      return id;
+    },
+    []
+  );
+
   const contextValue: ToastContextValue = {
     showError,
     showSuccess,
     showInfo,
     showWarning,
+    showPersistent,
     dismiss,
     dismissAll,
   };
@@ -134,6 +159,7 @@ const TOAST_FALLBACK: ToastContextValue = {
   showSuccess: () => NOOP_ID,
   showInfo: () => NOOP_ID,
   showWarning: () => NOOP_ID,
+  showPersistent: () => NOOP_ID,
   dismiss: () => {},
   dismissAll: () => {},
 };
@@ -223,7 +249,7 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
   // Auto-dismiss timer management
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startTimeRef = useRef(0);
-  const remainingRef = useRef(toast.duration);
+  const remainingRef = useRef(toast.duration ?? 0);
 
   // Haptic threshold tracking
   const thresholdCrossedRef = useRef(false);
@@ -231,8 +257,9 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
   // Track whether dismiss animation has fired to prevent double-dismiss
   const isDismissingRef = useRef(false);
 
-  // Start or resume auto-dismiss timer
+  // Start or resume auto-dismiss timer (skipped for persistent toasts)
   const startTimer = useCallback(() => {
+    if (toast.duration === null) return;
     if (timerRef.current) clearTimeout(timerRef.current);
     startTimeRef.current = Date.now();
     timerRef.current = setTimeout(() => {
@@ -251,7 +278,7 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
         onDismiss(toast.id);
       }
     }, remainingRef.current);
-  }, [animate, onDismiss, scope, toast.id]);
+  }, [animate, onDismiss, scope, toast.duration, toast.id]);
 
   // Pause auto-dismiss timer
   const pauseTimer = useCallback(() => {
@@ -275,13 +302,15 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
     }
   }, [animate, scope]);
 
-  // Start auto-dismiss timer on mount
+  // Start auto-dismiss timer on mount (skipped for persistent toasts)
   useEffect(() => {
-    startTimer();
+    if (toast.duration !== null) {
+      startTimer();
+    }
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [startTimer]);
+  }, [startTimer, toast.duration]);
 
   // Track drag distance for haptic threshold feedback
   useEffect(() => {
@@ -390,11 +419,28 @@ function Toast({ toast, onDismiss }: { toast: ToastInstance; onDismiss: (id: str
         )}
       </div>
 
-      {/* Dismiss button -- opacity-0 by default, revealed on hover (desktop) */}
+      {/* Action button (for persistent toasts like SW update) */}
+      {toast.action && (
+        <button
+          type="button"
+          onClick={toast.action.onClick}
+          className="flex-shrink-0 min-h-[44px] rounded-md bg-white/20 px-3 py-2 text-sm font-semibold text-white hover:bg-white/30 focus:ring-2 focus:ring-white focus:outline-none"
+        >
+          <span>{toast.action.label.en}</span>
+          {showBurmese && (
+            <span className="font-myanmar ml-1 text-xs text-white/80">{toast.action.label.my}</span>
+          )}
+        </button>
+      )}
+
+      {/* Dismiss button -- always visible for persistent toasts, hover-reveal for timed */}
       <button
         type="button"
         onClick={handleManualDismiss}
-        className="flex-shrink-0 rounded-full p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:!opacity-100 focus:opacity-100 focus:ring-2 focus:ring-white focus:outline-none"
+        className={clsx(
+          'flex-shrink-0 rounded-full p-1 transition-opacity hover:!opacity-100 focus:opacity-100 focus:ring-2 focus:ring-white focus:outline-none min-h-[44px] min-w-[44px] flex items-center justify-center',
+          toast.duration !== null ? 'opacity-0 group-hover:opacity-70' : 'opacity-70'
+        )}
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />
