@@ -51,9 +51,8 @@ describe('SyncStatusIndicator accessibility (failed state)', () => {
       }),
     }));
 
-    const { SyncStatusIndicator: FailedIndicator } = await import(
-      '@/components/pwa/SyncStatusIndicator'
-    );
+    const { SyncStatusIndicator: FailedIndicator } =
+      await import('@/components/pwa/SyncStatusIndicator');
     const { container } = render(<FailedIndicator />);
 
     const results = await axe(container);

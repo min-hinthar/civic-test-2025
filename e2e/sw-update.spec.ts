@@ -130,6 +130,7 @@ test.describe('Service Worker Update', () => {
 
     // Verify session is active by checking that the navigation is locked.
     // The navigation guard pushes history state with a marker.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const isLocked = await authedPage.evaluate(() => {
       const state = window.history.state as Record<string, unknown> | null;
       // Check for testGuard or any navigation guard marker

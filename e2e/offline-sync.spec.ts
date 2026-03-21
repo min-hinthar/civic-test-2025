@@ -55,10 +55,14 @@ test.describe('Offline -> Online Sync', () => {
     await context.setOffline(false);
 
     // Set up request listener for sync request (Supabase REST API calls)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const syncRequestPromise = authedPage
-      .waitForRequest(request => {
-        return request.url().includes('/rest/v1/') && request.method() !== 'OPTIONS';
-      }, { timeout: 10_000 })
+      .waitForRequest(
+        request => {
+          return request.url().includes('/rest/v1/') && request.method() !== 'OPTIONS';
+        },
+        { timeout: 10_000 }
+      )
       .catch(() => null);
 
     // Wait briefly for sync to trigger on reconnection
@@ -114,10 +118,14 @@ test.describe('Offline -> Online Sync', () => {
     await context.setOffline(false);
 
     // Set up request listener to catch the settings sync request
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const syncRequest = await authedPage
-      .waitForRequest(request => {
-        return request.url().includes('/rest/v1/') && request.method() !== 'OPTIONS';
-      }, { timeout: 10_000 })
+      .waitForRequest(
+        request => {
+          return request.url().includes('/rest/v1/') && request.method() !== 'OPTIONS';
+        },
+        { timeout: 10_000 }
+      )
       .catch(() => null);
 
     // Verify setting persists after page reload

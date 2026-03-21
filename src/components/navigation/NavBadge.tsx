@@ -39,11 +39,7 @@ export function NavBadge({ type, count = 0, color = 'warning', visible }: NavBad
           exit={{ scale: 0, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
           role="status"
-          aria-label={
-            type === 'count'
-              ? `${count > 99 ? '99+' : count} new`
-              : 'Active indicator'
-          }
+          aria-label={type === 'count' ? `${count > 99 ? '99+' : count} new` : 'Active indicator'}
           className={`absolute -top-1 -right-1 flex items-center justify-center rounded-full ${colorClass} ${
             type === 'dot'
               ? 'h-2.5 w-2.5'

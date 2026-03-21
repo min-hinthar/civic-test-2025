@@ -13,7 +13,9 @@ import { test, expect } from './fixtures';
 /**
  * Format axe violations for readable test output.
  */
-function formatViolations(violations: Array<{ id: string; impact?: string | null; nodes: Array<{ html: string }> }>) {
+function formatViolations(
+  violations: Array<{ id: string; impact?: string | null; nodes: Array<{ html: string }> }>
+) {
   return violations.map(v => ({
     id: v.id,
     impact: v.impact,

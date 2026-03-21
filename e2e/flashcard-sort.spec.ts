@@ -8,7 +8,7 @@
 import { test, expect } from './fixtures';
 
 test.describe('Flashcard Sort', () => {
-  test('sort cards with Know and Don\'t Know buttons', async ({ authedPage }) => {
+  test("sort cards with Know and Don't Know buttons", async ({ authedPage }) => {
     // Navigate to study page and enter sort mode via hash route
     await authedPage.goto('/study#sort');
 
@@ -49,7 +49,12 @@ test.describe('Flashcard Sort', () => {
     const maxIterations = 130; // 128 questions max
     while (iterations < maxIterations) {
       // Check if round summary appeared (shows Know % hero stat)
-      const summaryVisible = await authedPage.locator('text=Known').first().isVisible().catch(() => false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const summaryVisible = await authedPage
+        .locator('text=Known')
+        .first()
+        .isVisible()
+        .catch(() => false);
       const finishButton = authedPage.getByRole('button', { name: /Finish/i });
       const finishVisible = await finishButton.isVisible().catch(() => false);
 

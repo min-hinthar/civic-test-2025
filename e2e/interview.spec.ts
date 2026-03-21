@@ -102,14 +102,15 @@ test.describe('Interview Session', () => {
     // Verify the page contains some grading feedback content.
     // Practice mode shows per-question feedback with keyword highlights.
     // Look for mark elements (matched keywords) or feedback-related text.
-    const feedbackContent = authedPage.locator('mark[aria-label*="keyword"], [class*="success"], [class*="destructive"]');
+    const feedbackContent = authedPage.locator(
+      'mark[aria-label*="keyword"], [class*="success"], [class*="destructive"]'
+    );
     const hasFeedback = (await feedbackContent.count()) > 0;
 
     // Alternatively, check for any chat bubble content showing the grade result
     const chatContent = await authedPage.locator('body').textContent();
     const hasGradingContent =
-      hasFeedback ||
-      /correct|incorrect|keyword|matched|missing/i.test(chatContent ?? '');
+      hasFeedback || /correct|incorrect|keyword|matched|missing/i.test(chatContent ?? '');
 
     expect(hasGradingContent).toBeTruthy();
   });

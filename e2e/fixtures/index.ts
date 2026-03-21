@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { test as base, type Page } from '@playwright/test';
 import { AxeBuilder } from '@axe-core/playwright';
 import { setupAuth } from './auth';

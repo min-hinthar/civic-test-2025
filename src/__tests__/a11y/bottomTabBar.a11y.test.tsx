@@ -44,8 +44,12 @@ vi.mock('@/components/navigation/NavigationProvider', () => ({
 vi.mock('@/components/ui/FlagToggle', () => ({
   FlagToggle: ({ compact }: { compact?: boolean }) => (
     <div role="radiogroup" aria-label="Language mode" data-compact={compact}>
-      <button role="radio" aria-checked="true">EN</button>
-      <button role="radio" aria-checked="false">MY</button>
+      <button role="radio" aria-checked="true">
+        EN
+      </button>
+      <button role="radio" aria-checked="false">
+        MY
+      </button>
     </div>
   ),
 }));
@@ -60,20 +64,14 @@ vi.mock('@/components/icons/MyanmarFlag', () => ({
 
 describe('BottomTabBar accessibility', () => {
   it('has no a11y violations', async () => {
-    const { container } = renderWithProviders(
-      <BottomTabBar />,
-      { preset: 'core' }
-    );
+    const { container } = renderWithProviders(<BottomTabBar />, { preset: 'core' });
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   it('has navigation landmark with accessible label', () => {
-    const { container } = renderWithProviders(
-      <BottomTabBar />,
-      { preset: 'core' }
-    );
+    const { container } = renderWithProviders(<BottomTabBar />, { preset: 'core' });
 
     const nav = container.querySelector('nav');
     expect(nav).toBeTruthy();
@@ -81,10 +79,7 @@ describe('BottomTabBar accessibility', () => {
   });
 
   it('tab items have focus-visible ring classes', () => {
-    const { container } = renderWithProviders(
-      <BottomTabBar />,
-      { preset: 'core' }
-    );
+    const { container } = renderWithProviders(<BottomTabBar />, { preset: 'core' });
 
     // Check that interactive elements within the tab bar have focus styling
     const buttons = container.querySelectorAll('button, a');

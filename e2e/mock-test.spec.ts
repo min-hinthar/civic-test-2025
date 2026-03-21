@@ -83,7 +83,7 @@ test.describe('Mock Test Lifecycle', () => {
     const timer = authedPage.locator('[data-tour="mock-test"] svg, time, [aria-label*="timer" i]');
     // Fallback: just verify some element with timer-related content exists
     const timerArea = authedPage.locator('.flex.items-center.gap-2 svg').first();
-    const hasTimer = await timer.count() > 0 || await timerArea.count() > 0;
+    const hasTimer = (await timer.count()) > 0 || (await timerArea.count()) > 0;
     expect(hasTimer).toBeTruthy();
   });
 });
