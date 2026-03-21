@@ -184,7 +184,7 @@ Plans:
 - [x] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
 - [x] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
 - [x] 52-03-PLAN.md -- E2E tests for flashcard-sort, offline-sync, interview, SW update with session-lock deferral
-- [ ] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
+- [x] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
 
 ### Phase 53: Component Decomposition
 **Goal**: InterviewSession.tsx is maintainable and testable -- split into focused sub-components without breaking the 9-phase state machine

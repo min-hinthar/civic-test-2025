@@ -304,4 +304,4 @@ Burmese immigrants can confidently prepare for and pass the US civics test using
 | v4.0 | Complete | 2026-03-02 | 38/38 |
 
 ---
-*Last updated: 2026-03-20 after Phase 51 complete*
+*Last updated: 2026-03-21 after Phase 52 complete — E2E critical flows + accessibility*
