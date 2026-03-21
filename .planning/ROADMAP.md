@@ -212,7 +212,10 @@ Plans:
   1. `app/(protected)/error.tsx` and `app/(public)/error.tsx` use `sanitizeError()` + `SharedErrorFallback` — no raw `error.message` exposure
   2. Both route-group error files render bilingual text with "Return home" navigation link
   3. `InterviewPage.tsx` imports `QUESTIONS_PER_SESSION` from `interviewStateMachine.ts` instead of defining a local duplicate
-**Plans**: TBD (plan with `/gsd:plan-phase 54`)
+**Plans**: 1 plan
+
+Plans:
+- [ ] 54-01-PLAN.md -- Replace route-group error.tsx files with sanitized bilingual SharedErrorFallback pattern + deduplicate QUESTIONS_PER_SESSION import
 
 ## Progress
 
@@ -227,7 +230,7 @@ Plans:
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
 | 52. E2E Critical Flows + Accessibility | 4/4 | Complete    | 2026-03-21 |
 | 53. Component Decomposition | 3/3 | Complete    | 2026-03-21 |
-| 54. Route-Group Error Files + Constant Dedup | 0/0 | Not Started | - |
+| 54. Route-Group Error Files + Constant Dedup | 0/1 | Not Started | - |
 
 ## Historical Progress
 
