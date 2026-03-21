@@ -71,6 +71,7 @@ export function useInterviewStateMachine(config: InterviewConfig): UseInterviewS
   const devDispatch: React.Dispatch<InterviewAction> =
     process.env.NODE_ENV === 'development'
       ? (action: InterviewAction) => {
+          // eslint-disable-next-line no-console -- dev-only dispatch tracing (Phase 53 decision)
           console.debug('[interview]', action.type, action);
           dispatch(action);
         }
