@@ -194,11 +194,12 @@ Plans:
   1. InterviewSession.tsx parent component is under 400 lines, with each phase-specific UI sub-component under 200 lines
   2. The `useInterviewStateMachine` hook encapsulates all interview state logic and is independently unit-testable
   3. Full 20-question Practice and Real interview flows pass the existing E2E test from Phase 52 after decomposition
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 53-01: TBD
-- [ ] 53-02: TBD
+- [ ] 53-01-PLAN.md -- State machine module (reducer + types + constants + factory) with TDD pure reducer tests + coverage threshold
+- [ ] 53-02-PLAN.md -- useInterviewStateMachine hook + 4 sub-components (InterviewHeader, InterviewChatArea, InterviewRecordingArea, QuitConfirmationDialog)
+- [ ] 53-03-PLAN.md -- Wire InterviewSession.tsx as orchestrator (<400 lines) + E2E regression gate
 
 ## Progress
 
@@ -212,7 +213,7 @@ Plans:
 | 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
 | 52. E2E Critical Flows + Accessibility | 4/4 | Complete    | 2026-03-21 |
-| 53. Component Decomposition | 0/TBD | Not started | - |
+| 53. Component Decomposition | 0/3 | Not started | - |
 
 ## Historical Progress
 
