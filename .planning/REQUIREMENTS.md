@@ -14,10 +14,10 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [x] **TEST-03**: E2E test: auth login -> dashboard render with user data
 - [x] **TEST-04**: E2E test: mock test lifecycle (start, answer 20 questions, timer, pass/fail, results saved)
 - [x] **TEST-05**: E2E test: practice session (category filter, answer, feedback panel, keyword highlights)
-- [ ] **TEST-06**: E2E test: flashcard sort (swipe cards, results, SRS batch add)
-- [ ] **TEST-07**: E2E test: offline -> online sync (go offline, answer, reconnect, verify sync)
-- [ ] **TEST-08**: E2E test: interview session (setup, questions, text input, grading, results)
-- [ ] **TEST-09**: E2E test: service worker update (detect new version, toast, user-triggered reload)
+- [x] **TEST-06**: E2E test: flashcard sort (swipe cards, results, SRS batch add)
+- [x] **TEST-07**: E2E test: offline -> online sync (go offline, answer, reconnect, verify sync)
+- [x] **TEST-08**: E2E test: interview session (setup, questions, text input, grading, results)
+- [x] **TEST-09**: E2E test: service worker update (detect new version, toast, user-triggered reload)
 - [x] **TEST-10**: Unit tests for 8 untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation)
 - [x] **TEST-11**: Coverage thresholds enforced on all `src/lib/` files with existing test suites (~15 files)
 - [x] **TEST-12**: Global coverage minimum floor established
@@ -90,10 +90,10 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | TEST-03 | Phase 52 | Complete |
 | TEST-04 | Phase 52 | Complete |
 | TEST-05 | Phase 52 | Complete |
-| TEST-06 | Phase 52 | Pending |
-| TEST-07 | Phase 52 | Pending |
-| TEST-08 | Phase 52 | Pending |
-| TEST-09 | Phase 52 | Pending |
+| TEST-06 | Phase 52 | Complete |
+| TEST-07 | Phase 52 | Complete |
+| TEST-08 | Phase 52 | Complete |
+| TEST-09 | Phase 52 | Complete |
 | TEST-10 | Phase 51 | Complete |
 | TEST-11 | Phase 48 | Complete |
 | TEST-12 | Phase 48 | Complete |
