@@ -85,6 +85,12 @@ export default defineConfig({
           functions: 100,
           lines: 87,
         },
+        'src/lib/interview/interviewStateMachine.ts': {
+          statements: 93,
+          branches: 96,
+          functions: 100,
+          lines: 93,
+        },
         'src/lib/mastery/calculateMastery.ts': {
           statements: 95,
           branches: 83,
