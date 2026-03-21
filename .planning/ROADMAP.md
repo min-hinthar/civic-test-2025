@@ -7,7 +7,7 @@
 - v2.1 Quality & Polish - Phases 18-28 (shipped 2026-02-19)
 - v3.0 World-Class UX - Phases 29-38 (shipped 2026-02-22)
 - v4.0 Next-Gen Architecture - Phases 39-47 (shipped 2026-03-02)
-- v4.1 Production Hardening - Phases 48-53 (in progress)
+- v4.1 Production Hardening - Phases 48-54 (in progress)
 
 See `.planning/MILESTONES.md` for completed milestone details.
 
@@ -101,6 +101,8 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup (completed 2026-03-20)
 - [x] **Phase 52: E2E Critical Flows + Accessibility** - 7 Playwright E2E tests for critical user flows, axe-core WCAG 2.2 scans, touch target audit, glass contrast verification (completed 2026-03-21)
 - [x] **Phase 53: Component Decomposition** - InterviewSession.tsx split into state machine hook + rendering sub-components under full E2E safety net (completed 2026-03-21)
+- [ ] **Phase 54: Route-Group Error Files + Constant Deduplication** - Apply SharedErrorFallback pattern to 2 missed route-group error.tsx files, deduplicate QUESTIONS_PER_SESSION constant
+  **Gap Closure:** Closes ERRS-01, ERRS-02, integration gap from v4.1 audit
 
 ## Phase Details
 
@@ -201,9 +203,20 @@ Plans:
 - [x] 53-02-PLAN.md -- useInterviewStateMachine hook + 4 sub-components (InterviewHeader, InterviewChatArea, InterviewRecordingArea, QuitConfirmationDialog)
 - [x] 53-03-PLAN.md -- Wire InterviewSession.tsx as orchestrator (<400 lines) + E2E regression gate
 
+### Phase 54: Route-Group Error Files + Constant Deduplication
+**Goal**: All error.tsx files use sanitized bilingual rendering (closes audit gaps ERRS-01, ERRS-02) and QUESTIONS_PER_SESSION has a single canonical source
+**Depends on**: Phase 49 (SharedErrorFallback, sanitizeError patterns)
+**Requirements**: ERRS-01, ERRS-02
+**Gap Closure**: Closes gaps from v4.1 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. `app/(protected)/error.tsx` and `app/(public)/error.tsx` use `sanitizeError()` + `SharedErrorFallback` — no raw `error.message` exposure
+  2. Both route-group error files render bilingual text with "Return home" navigation link
+  3. `InterviewPage.tsx` imports `QUESTIONS_PER_SESSION` from `interviewStateMachine.ts` instead of defining a local duplicate
+**Plans**: TBD (plan with `/gsd:plan-phase 54`)
+
 ## Progress
 
-**Execution Order:** 48 -> 49 -> 50 -> 51 -> 52 -> 53
+**Execution Order:** 48 -> 49 -> 50 -> 51 -> 52 -> 53 -> 54
 (Phases 49 and 50 both depend on 48 but are sequential; Phase 51 needs both 48+49; Phase 52 needs 50+51; Phase 53 needs 52)
 
 | Phase | Plans Complete | Status | Completed |
@@ -214,6 +227,7 @@ Plans:
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
 | 52. E2E Critical Flows + Accessibility | 4/4 | Complete    | 2026-03-21 |
 | 53. Component Decomposition | 3/3 | Complete    | 2026-03-21 |
+| 54. Route-Group Error Files + Constant Dedup | 0/0 | Not Started | - |
 
 ## Historical Progress
 
