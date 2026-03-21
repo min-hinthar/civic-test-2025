@@ -25,7 +25,6 @@ import {
   RATE_MAP,
   type QuestionPhase,
   type InterviewState,
-  type InterviewAction,
   type InterviewConfig,
 } from '@/lib/interview/interviewStateMachine';
 import type { InterviewResult, Question } from '@/types';
@@ -270,7 +269,10 @@ describe('ADD_MESSAGE', () => {
 describe('SET_EXAMINER_STATE', () => {
   test('updates examinerState', () => {
     const state = initialInterviewState(makeTestConfig());
-    const result = interviewReducer(state, { type: 'SET_EXAMINER_STATE', examinerState: 'speaking' });
+    const result = interviewReducer(state, {
+      type: 'SET_EXAMINER_STATE',
+      examinerState: 'speaking',
+    });
     expect(result.examinerState).toBe('speaking');
   });
 });
@@ -383,8 +385,15 @@ describe('isValidTransition', () => {
 describe('isValidQuestionPhase', () => {
   test('returns true for all 9 phases', () => {
     const phases: QuestionPhase[] = [
-      'greeting', 'chime', 'typing', 'reading', 'responding',
-      'transcription', 'grading', 'feedback', 'transition',
+      'greeting',
+      'chime',
+      'typing',
+      'reading',
+      'responding',
+      'transcription',
+      'grading',
+      'feedback',
+      'transition',
     ];
     for (const phase of phases) {
       expect(isValidQuestionPhase(phase)).toBe(true);

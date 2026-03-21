@@ -7,10 +7,7 @@ import { ModeBadge } from '@/components/interview/ModeBadge';
 import { InterviewProgress } from '@/components/interview/InterviewProgress';
 import { InterviewTimer } from '@/components/interview/InterviewTimer';
 import { LongPressButton } from '@/components/interview/LongPressButton';
-import {
-  REALISTIC_TIMER_SECONDS,
-  QUESTIONS_PER_SESSION,
-} from '@/lib/interview/interviewStateMachine';
+import { REALISTIC_TIMER_SECONDS } from '@/lib/interview/interviewStateMachine';
 import type { InterviewMode } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -65,9 +62,7 @@ export function InterviewHeader({
           {mode === 'practice' && (
             <span className="text-xs text-white/50">
               {correctCount} correct
-              {showBurmese && (
-                <span className="font-myanmar ml-1">{correctCount} မှန်</span>
-              )}
+              {showBurmese && <span className="font-myanmar ml-1">{correctCount} မှန်</span>}
             </span>
           )}
 
@@ -100,11 +95,7 @@ export function InterviewHeader({
       {/* Timer for realistic mode */}
       {showTimer && (
         <div className="px-4 pt-2" key={currentIndex}>
-          <InterviewTimer
-            duration={REALISTIC_TIMER_SECONDS}
-            onExpired={onTimerExpired}
-            isActive
-          />
+          <InterviewTimer duration={REALISTIC_TIMER_SECONDS} onExpired={onTimerExpired} isActive />
         </div>
       )}
     </>

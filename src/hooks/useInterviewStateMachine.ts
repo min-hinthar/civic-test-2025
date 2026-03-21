@@ -30,9 +30,7 @@ export interface UseInterviewStateMachine {
 // Hook
 // ---------------------------------------------------------------------------
 
-export function useInterviewStateMachine(
-  config: InterviewConfig
-): UseInterviewStateMachine {
+export function useInterviewStateMachine(config: InterviewConfig): UseInterviewStateMachine {
   const [state, dispatch] = useReducer(interviewReducer, config, initialInterviewState);
 
   // --- Audio player refs (lazy-initialised) ---

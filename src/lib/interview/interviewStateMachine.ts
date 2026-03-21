@@ -128,6 +128,7 @@ export type InterviewAction =
   | { type: 'INCREMENT_REPLAY' }
   | { type: 'INCREMENT_RECORD_ATTEMPT' }
   | { type: 'RESET_QUESTION_STATE' }
+  | { type: 'ADVANCE_INDEX' }
   | { type: 'COMPLETE_SESSION'; endReason: InterviewEndReason };
 
 // ---------------------------------------------------------------------------
@@ -245,11 +246,16 @@ export function interviewReducer(state: InterviewState, action: InterviewAction)
       return { ...state, replaysUsed: 0, recordAttempt: 1 };
     }
 
+    case 'ADVANCE_INDEX': {
+      return { ...state, currentIndex: state.currentIndex + 1 };
+    }
+
     case 'COMPLETE_SESSION': {
       return { ...state, isComplete: true, endReason: action.endReason };
     }
 
     default: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _exhaustive: never = action;
       return state;
     }
