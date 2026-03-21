@@ -24,8 +24,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 ### Error Handling & Security
 
-- [ ] **ERRS-01**: All 3 error.tsx files use `sanitizeError()` to prevent raw message exposure
-- [ ] **ERRS-02**: All 3 error.tsx files render bilingual error messages with "Return home" navigation
+- [x] **ERRS-01**: All 3 error.tsx files use `sanitizeError()` to prevent raw message exposure
+- [x] **ERRS-02**: All 3 error.tsx files render bilingual error messages with "Return home" navigation
 - [x] **ERRS-03**: Component-level error boundaries on InterviewSession, PracticeSession, TestPage, CelebrationOverlay
 - [x] **ERRS-04**: Error boundaries trigger session save in `componentDidCatch` to prevent data loss
 - [x] **ERRS-05**: Sentry error fingerprinting groups network/IndexedDB/Supabase errors by class
@@ -97,8 +97,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | TEST-10 | Phase 51 | Complete |
 | TEST-11 | Phase 48 | Complete |
 | TEST-12 | Phase 48 | Complete |
-| ERRS-01 | Phase 54 | Pending |
-| ERRS-02 | Phase 54 | Pending |
+| ERRS-01 | Phase 54 | Complete |
+| ERRS-02 | Phase 54 | Complete |
 | ERRS-03 | Phase 49 | Complete |
 | ERRS-04 | Phase 49 | Complete |
 | ERRS-05 | Phase 48 | Complete |
@@ -124,8 +124,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 **Coverage:**
 - v4.1 requirements: 36 total
-- Satisfied: 34
-- Pending (gap closure): 2 (ERRS-01, ERRS-02 → Phase 54)
+- Satisfied: 36
+- Pending (gap closure): 0
 - Mapped to phases: 36
 - Unmapped: 0
 

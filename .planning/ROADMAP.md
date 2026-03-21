@@ -215,7 +215,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 54-01-PLAN.md -- Replace route-group error.tsx files with sanitized bilingual SharedErrorFallback pattern + deduplicate QUESTIONS_PER_SESSION import
+- [x] 54-01-PLAN.md -- Replace route-group error.tsx files with sanitized bilingual SharedErrorFallback pattern + deduplicate QUESTIONS_PER_SESSION import
 
 ## Progress
 
