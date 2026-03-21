@@ -101,7 +101,7 @@ See `.planning/MILESTONES.md` for completed milestone details.
 - [x] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup (completed 2026-03-20)
 - [x] **Phase 52: E2E Critical Flows + Accessibility** - 7 Playwright E2E tests for critical user flows, axe-core WCAG 2.2 scans, touch target audit, glass contrast verification (completed 2026-03-21)
 - [x] **Phase 53: Component Decomposition** - InterviewSession.tsx split into state machine hook + rendering sub-components under full E2E safety net (completed 2026-03-21)
-- [ ] **Phase 54: Route-Group Error Files + Constant Deduplication** - Apply SharedErrorFallback pattern to 2 missed route-group error.tsx files, deduplicate QUESTIONS_PER_SESSION constant
+- [x] **Phase 54: Route-Group Error Files + Constant Deduplication** - Apply SharedErrorFallback pattern to 2 missed route-group error.tsx files, deduplicate QUESTIONS_PER_SESSION constant (completed 2026-03-21)
   **Gap Closure:** Closes ERRS-01, ERRS-02, integration gap from v4.1 audit
 
 ## Phase Details
@@ -230,7 +230,7 @@ Plans:
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
 | 52. E2E Critical Flows + Accessibility | 4/4 | Complete    | 2026-03-21 |
 | 53. Component Decomposition | 3/3 | Complete    | 2026-03-21 |
-| 54. Route-Group Error Files + Constant Dedup | 0/1 | Not Started | - |
+| 54. Route-Group Error Files + Constant Dedup | 1/1 | Complete    | 2026-03-21 |
 
 ## Historical Progress
 
