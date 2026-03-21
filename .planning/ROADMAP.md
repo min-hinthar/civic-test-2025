@@ -182,7 +182,7 @@ Plans:
 
 Plans:
 - [ ] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
-- [ ] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
+- [x] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
 - [ ] 52-03-PLAN.md -- E2E tests for flashcard-sort, offline-sync, interview, SW update with session-lock deferral
 - [ ] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
 

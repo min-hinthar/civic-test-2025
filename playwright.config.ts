@@ -4,17 +4,31 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    actionTimeout: 15_000,
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        reducedMotion: 'reduce',
+        serviceWorkers: 'block',
+      },
+    },
+    {
+      name: 'chromium-sw',
+      testMatch: ['**/sw-update.spec.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        reducedMotion: 'reduce',
+        serviceWorkers: 'allow',
+      },
     },
   ],
   webServer: {

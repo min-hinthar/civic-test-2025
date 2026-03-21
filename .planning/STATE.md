@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Production Hardening
-status: unknown
-stopped_at: Completed 51-02-PLAN.md
-last_updated: "2026-03-20T10:52:13.457Z"
+status: executing
+stopped_at: Completed 52-02-PLAN.md
+last_updated: "2026-03-21T07:46:20.000Z"
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 13
+  total_plans: 17
   completed_plans: 13
 ---
 
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Burmese immigrants can confidently prepare for and pass the US civics test using an app that feels welcoming and speaks their language.
-**Current focus:** Phase 51 — Unit Test Expansion
+**Current focus:** Phase 52 — E2E Critical Flows + Accessibility
 
 ## Current Position
 
-Phase: 51 (Unit Test Expansion) — EXECUTING
-Plan: 3 of 3 (COMPLETE)
+Phase: 52 (E2E Critical Flows + Accessibility) — EXECUTING
+Plan: 0 of 4
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 3 of 3 (COMPLETE)
 | Phase 51 P01 | 12min | 2 tasks | 5 files |
 | 51 | 02 | 23min | 2 | 5 |
 | 51 | 03 | 14min | 1 | 1 |
+| 52 | 02 | 5min | 2 | 11 |
 
 ## Accumulated Context
 
@@ -90,6 +91,9 @@ Plan: 3 of 3 (COMPLETE)
 - [Phase 51]: setupAuthenticated/setupUnauthenticated helpers encapsulate session + onAuthStateChange mock patterns
 - [Phase 51]: Global coverage floor kept at 40/40/30/40 (many UI components at 0% prevent bump to 45)
 - [Phase 51]: Per-file thresholds for complex providers: Theme 93/81/93/94, Social 55/34/61/61, SRS 85/63/84/87, Auth 48/22/50/47
+- [Phase 52]: Glass-heavy opacity 0.45 provides ~5.2:1 contrast ratio (WCAG AA pass), resolves VISC-05
+- [Phase 52]: Amber-700 primitive added as 32 90% 35% for warning text contrast on subtle backgrounds
+- [Phase 52]: NavItem gets focus-visible rings on both Link and button elements for D-16
 
 ### Pending Todos
 
@@ -98,12 +102,12 @@ None.
 ### Blockers/Concerns
 
 - BRMSE-01: Burmese translation naturalness needs native speaker assessment (carried since v2.1)
-- VISC-05: Dark mode glass panel readability -- targeted by A11Y-04 in Phase 52
+- VISC-05: RESOLVED -- glass-heavy opacity 0.45 provides ~5.2:1 contrast (52-02)
 - Research flag: SW skipWaiting transition has one-deployment gap (Phase 50)
 - Research flag: E2E interview tests must use text input fallback (Phase 52)
 
 ## Session Continuity
 
-Last session: 2026-03-20T10:44:22Z
-Stopped at: Completed 51-02-PLAN.md
+Last session: 2026-03-21T07:46:20Z
+Stopped at: Completed 52-02-PLAN.md
 Resume file: None
