@@ -85,7 +85,7 @@ function RelatedQuestionItem({ question }: { question: Question }) {
         onClick={() => setIsExpanded(prev => !prev)}
         className={clsx(
           'flex w-full items-center gap-2 px-3 py-2 text-left',
-          'min-h-[36px]',
+          'min-h-[44px]',
           'transition-colors duration-150',
           'hover:bg-muted/40',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset'

@@ -428,7 +428,7 @@ export function AchievementsTab({
               <button
                 onClick={() => setBoardType('all-time')}
                 className={clsx(
-                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[36px]',
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
                   boardType === 'all-time'
                     ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
                     : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
@@ -441,7 +441,7 @@ export function AchievementsTab({
               <button
                 onClick={() => setBoardType('weekly')}
                 className={clsx(
-                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[36px]',
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
                   boardType === 'weekly'
                     ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
                     : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
@@ -470,7 +470,7 @@ export function AchievementsTab({
                   <button
                     onClick={() => setOptInClosed(false)}
                     className={clsx(
-                      'shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white min-h-[36px]',
+                      'shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white min-h-[44px]',
                       'shadow-[0_2px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[1px]',
                       'transition-all'
                     )}

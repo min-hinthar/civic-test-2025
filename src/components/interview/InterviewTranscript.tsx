@@ -149,7 +149,7 @@ export function InterviewTranscript({
                       questionId={result.questionId}
                       audioType="q"
                       label="မြန်မာ"
-                      className="!py-1 !px-2.5 !text-caption !min-h-[28px]"
+                      className="!py-1 !px-2.5 !text-caption !min-h-[44px]"
                       showSpeedLabel={!!speedLabel}
                       speedLabel={speedLabel}
                     />

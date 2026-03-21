@@ -42,7 +42,7 @@ export function SubcategoryBar({ percentage, label, onClick }: SubcategoryBarPro
     ? {
         type: 'button' as const,
         onClick,
-        className: 'w-full text-left min-h-[36px] cursor-pointer group',
+        className: 'w-full text-left min-h-[44px] cursor-pointer group',
       }
     : { className: 'w-full text-left' };
 

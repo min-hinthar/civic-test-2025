@@ -116,7 +116,7 @@ export function FlagToggle({ compact = false, vertical = false, className }: Fla
           transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_BOUNCY}
           className={clsx(
             'relative flex items-center justify-center rounded-md p-1',
-            'min-h-[36px] min-w-[36px]',
+            'min-h-[44px] min-w-[44px]',
             'transition-all duration-150',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             !isBilingual
@@ -146,7 +146,7 @@ export function FlagToggle({ compact = false, vertical = false, className }: Fla
           transition={shouldReduceMotion ? { duration: 0.15, ease: 'easeOut' } : SPRING_BOUNCY}
           className={clsx(
             'relative flex items-center justify-center rounded-md p-1',
-            'min-h-[36px] min-w-[36px]',
+            'min-h-[44px] min-w-[44px]',
             'transition-all duration-150',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             isBilingual

@@ -177,7 +177,7 @@ export function NavItem({
     return (
       <button
         type="button"
-        className={wrapperClasses}
+        className={`${wrapperClasses} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2`}
         onClick={handleLockedClick}
         aria-disabled
         data-tour={tab.dataTour}
@@ -190,7 +190,7 @@ export function NavItem({
   return (
     <Link
       href={tab.href}
-      className={wrapperClasses}
+      className={`${wrapperClasses} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2`}
       aria-current={isActive ? 'page' : undefined}
       data-tour={tab.dataTour}
       onClick={() => {

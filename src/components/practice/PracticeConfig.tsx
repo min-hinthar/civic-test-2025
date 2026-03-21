@@ -539,7 +539,7 @@ export function PracticeConfig({ onStart, initialCategory }: PracticeConfigProps
                 Want to practice{' '}
                 <button
                   onClick={() => handleCategorySelect(weakestCategory)}
-                  className="inline-flex items-center rounded-full px-3 py-1 min-h-[36px] bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors"
+                  className="inline-flex items-center rounded-full px-3 py-1 min-h-[44px] bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors"
                 >
                   {USCIS_CATEGORY_NAMES[weakestCategory].en}
                 </button>{' '}
@@ -547,7 +547,7 @@ export function PracticeConfig({ onStart, initialCategory }: PracticeConfigProps
               </p>
               <button
                 onClick={handleStart}
-                className="mt-2 inline-flex items-center rounded-full px-4 py-2 min-h-[36px] bg-primary/10 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+                className="mt-2 inline-flex items-center rounded-full px-4 py-2 min-h-[44px] bg-primary/10 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
               >
                 {strings.practice.practiceAnyway.en}
                 {showBurmese && (

@@ -1194,7 +1194,7 @@ export function InterviewSession({
                         questionId={msg.questionId}
                         audioType="q"
                         label="မြန်မာ"
-                        className="!py-1 !px-2.5 !text-caption !min-h-[32px]"
+                        className="!py-1 !px-2.5 !text-caption !min-h-[44px]"
                         showSpeedLabel
                         speedLabel={effectiveSpeed === 'normal' ? undefined : effectiveSpeed}
                       />
