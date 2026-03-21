@@ -181,7 +181,7 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
+- [x] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
 - [x] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
 - [ ] 52-03-PLAN.md -- E2E tests for flashcard-sort, offline-sync, interview, SW update with session-lock deferral
 - [ ] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
@@ -211,7 +211,7 @@ Plans:
 | 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
 | 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
-| 52. E2E Critical Flows + Accessibility | 0/4 | Not started | - |
+| 52. E2E Critical Flows + Accessibility | 2/4 | In Progress | - |
 | 53. Component Decomposition | 0/TBD | Not started | - |
 
 ## Historical Progress

@@ -11,9 +11,9 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 - [x] **TEST-01**: Shared `renderWithProviders` test utility with configurable provider stack and sensible defaults
 - [x] **TEST-02**: Playwright E2E framework configured with `webServer` pointing to production build
-- [ ] **TEST-03**: E2E test: auth login -> dashboard render with user data
-- [ ] **TEST-04**: E2E test: mock test lifecycle (start, answer 20 questions, timer, pass/fail, results saved)
-- [ ] **TEST-05**: E2E test: practice session (category filter, answer, feedback panel, keyword highlights)
+- [x] **TEST-03**: E2E test: auth login -> dashboard render with user data
+- [x] **TEST-04**: E2E test: mock test lifecycle (start, answer 20 questions, timer, pass/fail, results saved)
+- [x] **TEST-05**: E2E test: practice session (category filter, answer, feedback panel, keyword highlights)
 - [ ] **TEST-06**: E2E test: flashcard sort (swipe cards, results, SRS batch add)
 - [ ] **TEST-07**: E2E test: offline -> online sync (go offline, answer, reconnect, verify sync)
 - [ ] **TEST-08**: E2E test: interview session (setup, questions, text input, grading, results)
@@ -87,9 +87,9 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 |-------------|-------|--------|
 | TEST-01 | Phase 48 | Complete |
 | TEST-02 | Phase 48 | Complete |
-| TEST-03 | Phase 52 | Pending |
-| TEST-04 | Phase 52 | Pending |
-| TEST-05 | Phase 52 | Pending |
+| TEST-03 | Phase 52 | Complete |
+| TEST-04 | Phase 52 | Complete |
+| TEST-05 | Phase 52 | Complete |
 | TEST-06 | Phase 52 | Pending |
 | TEST-07 | Phase 52 | Pending |
 | TEST-08 | Phase 52 | Pending |
