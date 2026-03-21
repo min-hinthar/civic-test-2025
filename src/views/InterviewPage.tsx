@@ -9,6 +9,7 @@ import { InterviewCountdown } from '@/components/interview/InterviewCountdown';
 import { InterviewSession } from '@/components/interview/InterviewSession';
 import { InterviewResults } from '@/components/interview/InterviewResults';
 import { withSessionErrorBoundary } from '@/components/withSessionErrorBoundary';
+import { QUESTIONS_PER_SESSION } from '@/lib/interview/interviewStateMachine';
 import { getSessionsByType, deleteSession } from '@/lib/sessions/sessionStore';
 import { ResumePromptModal } from '@/components/sessions/ResumePromptModal';
 import { allQuestions } from '@/constants/questions';
@@ -24,9 +25,6 @@ type InterviewPhase = 'setup' | 'countdown' | 'session' | 'results';
 const ProtectedInterviewSession = withSessionErrorBoundary(InterviewSession, {
   componentName: 'InterviewSession',
 });
-
-/** Number of questions per interview session */
-const QUESTIONS_PER_SESSION = 20;
 
 /**
  * Interview simulation page managing setup -> countdown -> session -> results flow.

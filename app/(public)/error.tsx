@@ -1,5 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
+import { sanitizeError } from '@/lib/errorSanitizer';
+import { captureError } from '@/lib/sentry';
+import { SharedErrorFallback } from '@/components/ui/SharedErrorFallback';
+import { useLanguage } from '@/contexts/LanguageContext';
+
 export default function PublicError({
   error,
   reset,
@@ -7,16 +13,32 @@ export default function PublicError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  let showBurmese = true;
+  try {
+    const lang = useLanguage();
+    showBurmese = lang.showBurmese;
+  } catch {
+    try {
+      showBurmese = localStorage.getItem('civic-test-language-mode') !== 'english-only';
+    } catch {
+      // localStorage blocked (private browsing) -- default true
+    }
+  }
+
+  useEffect(() => {
+    captureError(error, { source: '(public)/error.tsx', digest: error.digest });
+  }, [error]);
+
+  const message = sanitizeError(error);
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-center">
-      <h2 className="mb-4 text-xl font-semibold text-foreground">Something went wrong</h2>
-      <p className="mb-6 text-secondary">{error.message || 'An unexpected error occurred.'}</p>
-      <button
-        onClick={reset}
-        className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90"
-      >
-        Try Again
-      </button>
-    </div>
+    <SharedErrorFallback
+      message={message}
+      showBurmese={showBurmese}
+      onRetry={reset}
+      onGoHome={() => {
+        window.location.href = '/';
+      }}
+    />
   );
 }
