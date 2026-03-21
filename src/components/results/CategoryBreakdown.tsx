@@ -112,7 +112,14 @@ export function CategoryBreakdown({ results, showBurmese }: CategoryBreakdownPro
               </div>
 
               {/* Percentage bar */}
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted/50">
+              <div
+                className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted/50"
+                role="progressbar"
+                aria-label={`${name?.en ?? stat.category} mastery: ${stat.percentage}%`}
+                aria-valuenow={stat.percentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
                 <div
                   className={clsx(
                     'h-full rounded-full transition-all duration-500',
