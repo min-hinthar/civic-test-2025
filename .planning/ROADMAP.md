@@ -178,12 +178,13 @@ Plans:
   2. axe-core WCAG 2.2 AA scans pass on dashboard, test, interview, and settings pages with documented exceptions for backdrop-filter elements
   3. All interactive components across 30+ directories have touch targets verified at 44px minimum, with violations fixed
   4. Glass-morphism color contrast is verified against WCAG AA requirements, resolving VISC-05
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 52-01: TBD
-- [ ] 52-02: TBD
-- [ ] 52-03: TBD
+- [ ] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
+- [ ] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
+- [ ] 52-03-PLAN.md -- E2E tests for flashcard-sort, offline-sync, interview, SW update with session-lock deferral
+- [ ] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
 
 ### Phase 53: Component Decomposition
 **Goal**: InterviewSession.tsx is maintainable and testable -- split into focused sub-components without breaking the 9-phase state machine
@@ -210,7 +211,7 @@ Plans:
 | 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
 | 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
 | 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
-| 52. E2E Critical Flows + Accessibility | 0/TBD | Not started | - |
+| 52. E2E Critical Flows + Accessibility | 0/4 | Not started | - |
 | 53. Component Decomposition | 0/TBD | Not started | - |
 
 ## Historical Progress
