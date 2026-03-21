@@ -42,8 +42,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 
 ### Accessibility
 
-- [ ] **A11Y-01**: Automated WCAG 2.2 axe-core scans on dashboard, test, interview, settings pages via Playwright
-- [ ] **A11Y-02**: vitest-axe coverage expanded to all interactive components
+- [x] **A11Y-01**: Automated WCAG 2.2 axe-core scans on dashboard, test, interview, settings pages via Playwright
+- [x] **A11Y-02**: vitest-axe coverage expanded to all interactive components
 - [x] **A11Y-03**: Touch target 44px audit across all 30+ component directories
 - [x] **A11Y-04**: Glass-morphism color contrast verification (VISC-05 resolution)
 
@@ -109,8 +109,8 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | ARCH-04 | Phase 53 | Pending |
 | ARCH-05 | Phase 53 | Pending |
 | ARCH-06 | Phase 50 | Complete |
-| A11Y-01 | Phase 52 | Pending |
-| A11Y-02 | Phase 52 | Pending |
+| A11Y-01 | Phase 52 | Complete |
+| A11Y-02 | Phase 52 | Complete |
 | A11Y-03 | Phase 52 | Complete |
 | A11Y-04 | Phase 52 | Complete |
 | DEPS-01 | Phase 48 | Complete |
