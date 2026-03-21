@@ -36,7 +36,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 - [x] **ARCH-01**: Service worker update UX with persistent "New version available" toast
 - [x] **ARCH-02**: SW update deferred during active mock test/interview sessions (check NavigationProvider.isLocked)
 - [x] **ARCH-03**: Settings sync upgraded from server-wins to per-field last-write-wins with timestamps
-- [ ] **ARCH-04**: InterviewSession.tsx decomposed into sub-components (<400 line parent, <200 line children)
+- [x] **ARCH-04**: InterviewSession.tsx decomposed into sub-components (<400 line parent, <200 line children)
 - [x] **ARCH-05**: `useInterviewStateMachine` hook extracted for shared interview state
 - [x] **ARCH-06**: IndexedDB cache versioning with stale data invalidation on version mismatch
 
@@ -106,7 +106,7 @@ Requirements for Production Hardening milestone. Each maps to roadmap phases.
 | ARCH-01 | Phase 50 | Complete |
 | ARCH-02 | Phase 50 | Complete |
 | ARCH-03 | Phase 50 | Complete |
-| ARCH-04 | Phase 53 | Pending |
+| ARCH-04 | Phase 53 | Complete |
 | ARCH-05 | Phase 53 | Complete |
 | ARCH-06 | Phase 50 | Complete |
 | A11Y-01 | Phase 52 | Complete |
