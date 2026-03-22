@@ -7,7 +7,7 @@
 - v2.1 Quality & Polish - Phases 18-28 (shipped 2026-02-19)
 - v3.0 World-Class UX - Phases 29-38 (shipped 2026-02-22)
 - v4.0 Next-Gen Architecture - Phases 39-47 (shipped 2026-03-02)
-- v4.1 Production Hardening - Phases 48-54 (in progress)
+- v4.1 Production Hardening - Phases 48-54 (shipped 2026-03-21)
 
 See `.planning/MILESTONES.md` for completed milestone details.
 
@@ -89,148 +89,18 @@ See `.planning/MILESTONES.md` for completed milestone details.
 
 </details>
 
-## v4.1 Production Hardening (In Progress)
+<details>
+<summary>v4.1 Production Hardening (Phases 48-54) - SHIPPED 2026-03-21</summary>
 
-**Milestone Goal:** Harden the shipped 226-requirement codebase against regressions, security leaks, and maintenance burden through testing infrastructure, error resilience, PWA stability, accessibility compliance, and dependency cleanup.
+- [x] Phase 48: Test Infrastructure + Quick Wins (4 plans) - completed 2026-03-20
+- [x] Phase 49: Error Handling + Security (3 plans) - completed 2026-03-20
+- [x] Phase 50: PWA + Sync Resilience (3 plans) - completed 2026-03-20
+- [x] Phase 51: Unit Test Expansion (3 plans) - completed 2026-03-20
+- [x] Phase 52: E2E Critical Flows + Accessibility (4 plans) - completed 2026-03-21
+- [x] Phase 53: Component Decomposition (3 plans) - completed 2026-03-21
+- [x] Phase 54: Route-Group Error Files + Constant Dedup (1 plan) - completed 2026-03-21
 
-## Phases
-
-- [x] **Phase 48: Test Infrastructure + Quick Wins** - Safety net for all subsequent phases: shared test utility, Playwright config, dead code removal, CI hardening, coverage thresholds, Sentry fingerprinting (completed 2026-03-20)
-- [x] **Phase 49: Error Handling + Security** - Error.tsx sanitization and bilingual rendering, component error boundaries with session save, provider ordering guard (completed 2026-03-20)
-- [x] **Phase 50: PWA + Sync Resilience** - Service worker update UX with session-lock guard, per-field LWW settings sync, IndexedDB cache versioning (completed 2026-03-20)
-- [x] **Phase 51: Unit Test Expansion** - Provider tests for 8 untested contexts using renderWithProviders, dependency audit and cleanup (completed 2026-03-20)
-- [x] **Phase 52: E2E Critical Flows + Accessibility** - 7 Playwright E2E tests for critical user flows, axe-core WCAG 2.2 scans, touch target audit, glass contrast verification (completed 2026-03-21)
-- [x] **Phase 53: Component Decomposition** - InterviewSession.tsx split into state machine hook + rendering sub-components under full E2E safety net (completed 2026-03-21)
-- [x] **Phase 54: Route-Group Error Files + Constant Deduplication** - Apply SharedErrorFallback pattern to 2 missed route-group error.tsx files, deduplicate QUESTIONS_PER_SESSION constant (completed 2026-03-21)
-  **Gap Closure:** Closes ERRS-01, ERRS-02, integration gap from v4.1 audit
-
-## Phase Details
-
-### Phase 48: Test Infrastructure + Quick Wins
-**Goal**: Developers have a complete testing foundation and CI catches regressions that currently slip through
-**Depends on**: Nothing (first phase of v4.1)
-**Requirements**: TEST-01, TEST-02, TEST-11, TEST-12, DEPS-01, DEPS-02, DEPS-03, DX-01, DX-02, ERRS-05
-**Success Criteria** (what must be TRUE):
-  1. Any developer can write a provider or view test using `renderWithProviders` without manually wiring 10+ providers
-  2. Running `pnpm test:e2e` executes Playwright against a production build with a working webServer config
-  3. CI pipeline fails on CSS regressions (lint:css) and coverage drops below established thresholds on src/lib/ files
-  4. The @lottiefiles/dotlottie-react package and its WASM infrastructure are fully removed from the bundle
-  5. Sentry groups network/IndexedDB/Supabase errors by operation class instead of creating individual issues per occurrence
-**Plans**: 4 plans
-
-Plans:
-- [ ] 48-01-PLAN.md -- Dependency cleanup: DotLottie removal, safeAsync docs, RLS policy cleanup
-- [ ] 48-02-PLAN.md -- CI hardening: lint:css step, per-file coverage thresholds, global 40% floor
-- [ ] 48-03-PLAN.md -- renderWithProviders test utility with preset system
-- [ ] 48-04-PLAN.md -- Playwright E2E setup, Knip dead code detection, Sentry fingerprinting verification
-
-### Phase 49: Error Handling + Security
-**Goal**: Users never see raw error messages or English-only error screens, and feature-level crashes are contained without killing the entire app
-**Depends on**: Phase 48
-**Requirements**: ERRS-01, ERRS-02, ERRS-03, ERRS-04, ERRS-06, DX-03
-**Success Criteria** (what must be TRUE):
-  1. When an error occurs on any route, the user sees a sanitized bilingual error message with a "Return home" button -- never raw SQL, stack traces, or English-only text
-  2. A crash in InterviewSession, PracticeSession, TestPage, or CelebrationOverlay shows a localized error fallback without disrupting other parts of the app
-  3. When an error boundary catches a crash during an active session, in-progress state is saved to IndexedDB before the fallback renders
-  4. In development mode, mounting providers in the wrong order produces a console warning identifying the ordering violation
-**Plans**: 3 plans
-
-Plans:
-- [ ] 49-01-PLAN.md -- SharedErrorFallback component + error.tsx/global-error.tsx/not-found.tsx bilingual sanitization
-- [ ] 49-02-PLAN.md -- ProviderOrderGuard dev-mode validation + console.error to captureError() migration
-- [ ] 49-03-PLAN.md -- Session error boundaries on 4 components with cleanup callbacks + ErrorBoundary test expansion
-
-### Phase 50: PWA + Sync Resilience
-**Goal**: Users are notified of app updates without mid-session disruption, offline settings changes survive sync, and stale cached data is invalidated on version mismatch
-**Depends on**: Phase 48
-**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-06
-**Success Criteria** (what must be TRUE):
-  1. When a new service worker version is detected, a persistent bilingual toast appears offering "Update now" -- the update never activates silently mid-session
-  2. During an active mock test or interview, the update toast is suppressed until the session completes
-  3. A user who changes settings offline and then logs in on another device retains their offline changes via per-field last-write-wins merge
-  4. When the app deploys with updated question content, stale IndexedDB-cached questions are invalidated and refreshed on next load
-**Plans**: 3 plans
-
-Plans:
-- [ ] 50-01-PLAN.md -- IndexedDB cache versioning with centralized STORAGE_VERSIONS constants and questions cache validation
-- [ ] 50-02-PLAN.md -- SW update toast with persistent bilingual notification and session-lock deferral guard
-- [ ] 50-03-PLAN.md -- Per-field LWW settings sync with timestamps, dirty flags, and merge algorithm
-
-### Phase 51: Unit Test Expansion
-**Goal**: All context providers have unit test coverage, preventing provider bugs from reaching production undetected
-**Depends on**: Phase 48, Phase 49
-**Requirements**: TEST-10, DEPS-04, DEPS-05
-**Success Criteria** (what must be TRUE):
-  1. All 8 previously untested context providers (SupabaseAuth, Language, Theme, SRS, Social, Offline, State, Navigation) have unit tests exercising their core behaviors
-  2. Per-file coverage thresholds are added simultaneously with each new test file -- no speculative thresholds on untested code
-  3. Dependency overrides and ignored CVEs are re-evaluated with current audit data, and react-joyride is pinned to stable 3.0.0 if available
-**Plans**: 3 plans
-
-Plans:
-- [ ] 51-01-PLAN.md -- Unit tests for State, Navigation, Language, Offline providers + 4 per-file coverage thresholds
-- [ ] 51-02-PLAN.md -- Unit tests for Theme, Social, SRS, SupabaseAuth providers + 4 per-file thresholds + global floor bump
-- [ ] 51-03-PLAN.md -- Dependency audit re-evaluation (overrides, CVEs, react-joyride status)
-
-### Phase 52: E2E Critical Flows + Accessibility
-**Goal**: The 7 most critical user flows have automated regression detection, and WCAG 2.2 compliance gaps in touch targets and glass contrast are identified and resolved
-**Depends on**: Phase 50, Phase 51
-**Requirements**: TEST-03, TEST-04, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09, A11Y-01, A11Y-02, A11Y-03, A11Y-04
-**Success Criteria** (what must be TRUE):
-  1. Playwright E2E tests cover: auth login to dashboard, mock test lifecycle, practice session, flashcard sort, offline-to-online sync, interview session (text input), and SW update flow
-  2. axe-core WCAG 2.2 AA scans pass on dashboard, test, interview, and settings pages with documented exceptions for backdrop-filter elements
-  3. All interactive components across 30+ directories have touch targets verified at 44px minimum, with violations fixed
-  4. Glass-morphism color contrast is verified against WCAG AA requirements, resolving VISC-05
-**Plans**: 4 plans
-
-Plans:
-- [x] 52-01-PLAN.md -- E2E fixtures (auth mock, storage cleanup, axe builder) + auth-dashboard, mock-test, practice E2E tests
-- [x] 52-02-PLAN.md -- Accessibility CSS fixes: touch target 44px across 8 components, glass contrast, accent colors, focus rings, Myanmar text
-- [x] 52-03-PLAN.md -- E2E tests for flashcard-sort, offline-sync, interview, SW update with session-lock deferral
-- [x] 52-04-PLAN.md -- axe-core WCAG scans on 4 pages, touch target regression test, color-only indicator fixes, vitest-axe expansion
-
-### Phase 53: Component Decomposition
-**Goal**: InterviewSession.tsx is maintainable and testable -- split into focused sub-components without breaking the 9-phase state machine
-**Depends on**: Phase 52
-**Requirements**: ARCH-04, ARCH-05
-**Success Criteria** (what must be TRUE):
-  1. InterviewSession.tsx parent component is under 400 lines, with each phase-specific UI sub-component under 200 lines
-  2. The `useInterviewStateMachine` hook encapsulates all interview state logic and is independently unit-testable
-  3. Full 20-question Practice and Real interview flows pass the existing E2E test from Phase 52 after decomposition
-**Plans**: 3 plans
-
-Plans:
-- [x] 53-01-PLAN.md -- State machine module (reducer + types + constants + factory) with TDD pure reducer tests + coverage threshold
-- [x] 53-02-PLAN.md -- useInterviewStateMachine hook + 4 sub-components (InterviewHeader, InterviewChatArea, InterviewRecordingArea, QuitConfirmationDialog)
-- [x] 53-03-PLAN.md -- Wire InterviewSession.tsx as orchestrator (<400 lines) + E2E regression gate
-
-### Phase 54: Route-Group Error Files + Constant Deduplication
-**Goal**: All error.tsx files use sanitized bilingual rendering (closes audit gaps ERRS-01, ERRS-02) and QUESTIONS_PER_SESSION has a single canonical source
-**Depends on**: Phase 49 (SharedErrorFallback, sanitizeError patterns)
-**Requirements**: ERRS-01, ERRS-02
-**Gap Closure**: Closes gaps from v4.1 milestone audit
-**Success Criteria** (what must be TRUE):
-  1. `app/(protected)/error.tsx` and `app/(public)/error.tsx` use `sanitizeError()` + `SharedErrorFallback` — no raw `error.message` exposure
-  2. Both route-group error files render bilingual text with "Return home" navigation link
-  3. `InterviewPage.tsx` imports `QUESTIONS_PER_SESSION` from `interviewStateMachine.ts` instead of defining a local duplicate
-**Plans**: 1 plan
-
-Plans:
-- [x] 54-01-PLAN.md -- Replace route-group error.tsx files with sanitized bilingual SharedErrorFallback pattern + deduplicate QUESTIONS_PER_SESSION import
-
-## Progress
-
-**Execution Order:** 48 -> 49 -> 50 -> 51 -> 52 -> 53 -> 54
-(Phases 49 and 50 both depend on 48 but are sequential; Phase 51 needs both 48+49; Phase 52 needs 50+51; Phase 53 needs 52)
-
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 48. Test Infrastructure + Quick Wins | 4/4 | Complete    | 2026-03-20 |
-| 49. Error Handling + Security | 3/3 | Complete    | 2026-03-20 |
-| 50. PWA + Sync Resilience | 3/3 | Complete    | 2026-03-20 |
-| 51. Unit Test Expansion | 3/3 | Complete    | 2026-03-20 |
-| 52. E2E Critical Flows + Accessibility | 4/4 | Complete    | 2026-03-21 |
-| 53. Component Decomposition | 3/3 | Complete    | 2026-03-21 |
-| 54. Route-Group Error Files + Constant Dedup | 1/1 | Complete    | 2026-03-21 |
+</details>
 
 ## Historical Progress
 
@@ -241,9 +111,10 @@ Plans:
 | v2.1 Quality & Polish | 18-28 | 82 | 65/66 | Complete | 2026-02-19 |
 | v3.0 World-Class UX | 29-38 | 47 | 39/39 | Complete | 2026-02-22 |
 | v4.0 Next-Gen Architecture | 39-47 | 30 | 38/38 | Complete | 2026-03-02 |
+| v4.1 Production Hardening | 48-54 | 21 | 36/36 | Complete | 2026-03-21 |
 
-**Total (through v4.0):** 48 phases, 278 plans, 226/227 requirements across 5 milestones
+**Total:** 54 phases, 299 plans, 262/263 requirements across 6 milestones
 
 ---
 *Roadmap created: 2026-02-05*
-*v4.1 roadmap added: 2026-03-19*
+*v4.1 completed: 2026-03-21*

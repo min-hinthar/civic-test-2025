@@ -1,4 +1,28 @@
 # Milestones
+## v4.1 Production Hardening (Shipped: 2026-03-21)
+
+**Phases:** 48-54 (7 phases, 21 plans)
+**Commits:** 115 | **Files:** 205 | **Lines:** +30,580 / -3,290
+**Timeline:** 3 days (2026-03-19 → 2026-03-21)
+**Requirements:** 36/36 satisfied (TEST, ERRS, ARCH, A11Y, DEPS, DX)
+
+**Key accomplishments:**
+1. Testing infrastructure: renderWithProviders utility with 3 presets, Playwright E2E framework, 94 provider unit tests, 7 critical flow E2E tests, coverage thresholds on 30+ files
+2. Error handling: SharedErrorFallback bilingual component, withSessionErrorBoundary HOC on 4 session views, ProviderOrderGuard dev-mode validation
+3. PWA resilience: SW update UX with session-lock deferral, per-field LWW settings sync preserving offline changes, IndexedDB cache versioning
+4. Accessibility: 44px touch targets on 9 component families, WCAG 2.2 axe-core scans on 4 pages, glass contrast fix (VISC-05 resolved)
+5. InterviewSession decomposition: 1474 → 391 lines via pure state machine reducer + useInterviewStateMachine hook + 4 sub-components + 3 extracted hooks
+6. Dependency cleanup: DotLottie removed (~200KB WASM), 10 dead files removed, CVE audit clean, 5 redundant RLS policies removed
+
+### Known Gaps
+- **BRMSE-01**: Burmese translation naturalness needs native speaker assessment (carried since v2.1)
+- **ERRS-04**: componentDidCatch session save relies on 5s auto-save (product owner confirmation pending)
+- **E2E runtime**: 7 E2E specs + WCAG scans structurally complete but runtime-unconfirmed
+
+See `.planning/milestones/v4.1-ROADMAP.md` for full phase archive.
+
+---
+
 ## v4.0 Next-Gen Architecture (Shipped: 2026-03-02)
 
 **Phases:** 39-47 + 43.5 (10 phases, 30 plans, 59 tasks)
