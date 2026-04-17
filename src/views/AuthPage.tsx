@@ -35,8 +35,8 @@ const AuthPage = ({ nonce }: AuthPageProps) => {
       } else if (mode === 'register') {
         await register(form.name, form.email, form.password);
         showSuccess({
-          en: 'Account created! Check your email to confirm.',
-          my: 'အကောင့်ဖွင့်ပြီးပါပြီ! အီးမေးလ်စစ်ပြီး အတည်ပြုပါ။',
+          en: 'Welcome! Account created.',
+          my: 'ကြိုဆိုပါတယ်! အကောင့်ဖွင့်ပြီးပါပြီ။',
         });
       } else {
         await sendPasswordReset(form.email, `${window.location.origin}/auth/update-password`);
@@ -93,28 +93,6 @@ const AuthPage = ({ nonce }: AuthPageProps) => {
 
         <FadeIn delay={100}>
           <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-lg">
-            {/* Mode tabs */}
-            <div className="mb-6 grid grid-cols-3 gap-1 rounded-xl bg-muted/50 p-1 text-sm font-bold">
-              <button
-                className={`min-h-[44px] rounded-xl px-2 transition-colors ${mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}
-                onClick={() => setMode('login')}
-              >
-                Sign in
-              </button>
-              <button
-                className={`min-h-[44px] rounded-xl px-2 transition-colors ${mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}
-                onClick={() => setMode('register')}
-              >
-                Register
-              </button>
-              <button
-                className={`min-h-[44px] rounded-xl px-2 transition-colors ${mode === 'forgot' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}
-                onClick={() => setMode('forgot')}
-              >
-                Forgot?
-              </button>
-            </div>
-
             {/* Google sign-in */}
             {mode !== 'forgot' && (
               <div className="mb-5">
@@ -223,12 +201,6 @@ const AuthPage = ({ nonce }: AuthPageProps) => {
                 {mode === 'forgot' && 'Send Reset Email'}
               </Button>
 
-              {mode === 'register' && (
-                <p className="text-center text-xs text-muted-foreground">
-                  You will receive a confirmation email.{' '}
-                  {showBurmese && <span className="font-myanmar">အီးမေးလ်ဖြင့် အတည်ပြုပါ။</span>}
-                </p>
-              )}
               {mode === 'forgot' && (
                 <p className="text-center text-xs text-muted-foreground">
                   We will send a secure reset link.{' '}
@@ -241,12 +213,47 @@ const AuthPage = ({ nonce }: AuthPageProps) => {
               )}
             </form>
 
-            <p className="mt-5 text-center text-sm text-muted-foreground">
-              <Link className="font-semibold text-primary" href="/">
-                Back to home
-              </Link>
-              {showBurmese && <span className="font-myanmar text-sm"> · ပင်မစာမျက်နှာသို့</span>}
-            </p>
+            <div className="mt-5 space-y-2 text-center text-sm text-muted-foreground">
+              {mode === 'login' && (
+                <p>
+                  New here?{' '}
+                  <button
+                    className="font-semibold text-primary"
+                    onClick={() => setMode('register')}
+                  >
+                    Create account
+                  </button>
+                  {showBurmese && (
+                    <span className="font-myanmar text-sm"> · အကောင့်အသစ်ဖွင့်ပါ</span>
+                  )}
+                </p>
+              )}
+              {mode === 'register' && (
+                <p>
+                  Have an account?{' '}
+                  <button className="font-semibold text-primary" onClick={() => setMode('login')}>
+                    Sign in
+                  </button>
+                  {showBurmese && <span className="font-myanmar text-sm"> · အကောင့်ဝင်ပါ</span>}
+                </p>
+              )}
+              {mode === 'forgot' && (
+                <p>
+                  <button className="font-semibold text-primary" onClick={() => setMode('login')}>
+                    Back to Sign in
+                  </button>
+                  {showBurmese && (
+                    <span className="font-myanmar text-sm"> · အကောင့်ဝင်ရန်ပြန်သွားပါ</span>
+                  )}
+                </p>
+              )}
+              <p>
+                <Link className="font-semibold text-primary" href="/">
+                  Back to home
+                </Link>
+                {showBurmese && <span className="font-myanmar text-sm"> · ပင်မစာမျက်နှာသို့</span>}
+              </p>
+            </div>
           </div>
         </FadeIn>
       </div>
