@@ -415,6 +415,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // so its stale result can't resurrect this signed-out session.
         hydrationGenerationRef.current += 1;
         sessionIdentityRef.current = null;
+        // Clear the hydrated latch so a later sign-in whose hydration times out
+        // can still fall back to guest mode (the guard is a "real user already
+        // present" check; after sign-out no real user is present).
+        hydratedRef.current = false;
         setUser(null);
         // Re-read local guest history so the post-sign-out view reflects this
         // device's actual stored history (not a stale value from boot).

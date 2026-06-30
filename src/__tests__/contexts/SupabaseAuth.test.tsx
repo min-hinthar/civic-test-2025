@@ -799,6 +799,91 @@ describe('SupabaseAuthContext', () => {
         vi.useRealTimers();
       }
     });
+
+    it('recovers a slow sign-in that follows a prior sign-out', async () => {
+      vi.useFakeTimers();
+      try {
+        const sessionA = {
+          user: {
+            id: 'user-a',
+            email: 'a@example.com',
+            user_metadata: { full_name: 'User A' },
+          },
+          access_token: 'token-a',
+          refresh_token: 'refresh-a',
+        };
+        mockGetSession.mockResolvedValue({ data: { session: sessionA }, error: null });
+        let authChangeCallback: (event: string, session: unknown) => void = () => {};
+        mockOnAuthStateChange.mockImplementation(
+          (cb: (event: string, session: unknown) => void) => {
+            authChangeCallback = cb;
+            return { data: { subscription: { unsubscribe: vi.fn() } } };
+          }
+        );
+
+        // User A hydrates immediately (sets the hydrated latch).
+        const chainA = buildFromMock();
+        chainA.maybeSingle.mockResolvedValue({ data: { full_name: 'User A' }, error: null });
+        chainA.order.mockResolvedValue({ data: [], error: null });
+        mockFromChain.mockReturnValue(chainA);
+
+        renderWithProviders(<AuthConsumer />, { preset: 'full' });
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(0);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('user-a');
+
+        // Sign out.
+        await act(async () => {
+          authChangeCallback('SIGNED_OUT', null);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+
+        // Sign into B whose queries hang past the timeout. With the hydrated
+        // latch reset on sign-out, this still falls back to guest cleanly and
+        // the late recovery promotes B once the queries resolve.
+        let resolveProfileB!: (v: unknown) => void;
+        let resolveTestsB!: (v: unknown) => void;
+        const chainB = buildFromMock();
+        chainB.maybeSingle.mockReturnValue(
+          new Promise(r => {
+            resolveProfileB = r;
+          })
+        );
+        chainB.order.mockReturnValue(
+          new Promise(r => {
+            resolveTestsB = r;
+          })
+        );
+        mockFromChain.mockReturnValue(chainB);
+
+        const sessionB = {
+          user: {
+            id: 'user-b',
+            email: 'b@example.com',
+            user_metadata: { full_name: 'User B' },
+          },
+          access_token: 'token-b',
+          refresh_token: 'refresh-b',
+        };
+        await act(async () => {
+          authChangeCallback('SIGNED_IN', sessionB);
+          await vi.advanceTimersByTimeAsync(AUTH_TIMEOUT + 100);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+        expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+
+        // B's queries resolve -> promoted to the real signed-in user.
+        await act(async () => {
+          resolveProfileB({ data: { full_name: 'User B' }, error: null });
+          resolveTestsB({ data: [], error: null });
+          await vi.advanceTimersByTimeAsync(0);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('user-b');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe('guest (no account) test history', () => {
