@@ -51,13 +51,11 @@ export function addGuestTestSession(session: Omit<TestSession, 'id'>): TestSessi
     id: `guest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   };
   const next = [persisted, ...getGuestTestHistory()].slice(0, MAX_SESSIONS);
-  if (typeof window !== 'undefined') {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // localStorage unavailable or quota exceeded — history stays in memory only
-    }
-  }
+  if (typeof window === 'undefined') return next;
+  // Let write errors (quota exceeded / storage blocked) propagate so callers
+  // can surface the failure instead of reporting a durable save that isn't —
+  // e.g. TestPage keeps the recoverable session and warns rather than deleting it.
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   return next;
 }
 

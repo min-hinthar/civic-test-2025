@@ -272,13 +272,14 @@ export default function SettingsPage() {
                 </p>
               )}
               <p className="mt-1 text-sm text-muted-foreground">
-                Your progress is saved on this device. Create a free account to sync across devices
-                and join the leaderboard — no account is needed to keep studying.
+                Your progress is saved on this device. Create a free account to sync future progress
+                across your devices and join the leaderboard — no account is needed to keep
+                studying.
               </p>
               {showBurmese && (
                 <p className="mt-1 font-myanmar text-sm text-muted-foreground">
                   {
-                    'သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ စက်များအကြား sync လုပ်ဖို့နဲ့ leaderboard မှာ ပါဝင်ဖို့ အခမဲ့အကောင့်ဖွင့်ပါ — ဆက်လေ့လာဖို့ အကောင့်မလိုပါ။'
+                    'သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ နောက်ထပ်တိုးတက်မှုကို စက်များအကြား sync လုပ်ဖို့နဲ့ leaderboard မှာ ပါဝင်ဖို့ အခမဲ့အကောင့်ဖွင့်ပါ — ဆက်လေ့လာဖို့ အကောင့်မလိုပါ။'
                   }
                 </p>
               )}

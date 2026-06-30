@@ -124,6 +124,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
   const saveGuardRef = useRef(createSaveSessionGuard());
+  // Tracks whether a real signed-in user has been hydrated, so the bootstrap
+  // timeout/error fallback never clobbers an active session with guest mode.
+  const hydratedRef = useRef(false);
 
   const syncProfile = useCallback(
     async (payload: { id: string; email: string; full_name: string }) => {
@@ -175,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       name: profileResult.data?.full_name ?? authUser.email ?? 'Learner',
       testHistory: history,
     });
+    hydratedRef.current = true;
     setIsLoading(false);
 
     // Pull settings with per-field LWW merge (Phase 50: ARCH-03)
@@ -285,21 +289,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Guard against a hung/unreachable auth backend (e.g. a paused or
         // suspended Supabase project): if getSession doesn't resolve quickly,
         // fall back to guest mode so study still works. A real session that
-        // arrives later is still picked up by onAuthStateChange below.
+        // arrives later is still picked up by onAuthStateChange below — and the
+        // fallback must never clobber a user that has already been hydrated.
         let timeoutId: ReturnType<typeof setTimeout> | undefined;
-        const sessionTimeout = new Promise<{ data: { session: Session | null } }>(resolve => {
+        const sessionTimeout = new Promise<{ session: Session | null; timedOut: true }>(resolve => {
           timeoutId = setTimeout(
-            () => resolve({ data: { session: null } }),
+            () => resolve({ session: null, timedOut: true }),
             SESSION_FETCH_TIMEOUT_MS
           );
         });
-        const { data } = await Promise.race([supabase.auth.getSession(), sessionTimeout]);
+        const result = await Promise.race([
+          supabase.auth
+            .getSession()
+            .then(r => ({ session: r.data.session ?? null, timedOut: false as const })),
+          sessionTimeout,
+        ]);
         if (timeoutId) clearTimeout(timeoutId);
         if (!mounted) return;
-        await hydrateFromSupabase(data.session ?? null);
+        if (result.timedOut) {
+          // getSession hung. Only drop to guest mode if nothing has hydrated a
+          // signed-in user yet; otherwise leave the active session intact.
+          if (!hydratedRef.current) {
+            setUser(null);
+            setGuestHistory(getGuestTestHistory());
+            setIsLoading(false);
+          }
+          return;
+        }
+        await hydrateFromSupabase(result.session);
       } catch (error) {
         captureError(error, { operation: 'AuthContext.bootstrap' });
-        if (mounted) {
+        if (mounted && !hydratedRef.current) {
           setUser(null);
           setGuestHistory(getGuestTestHistory());
           setIsLoading(false);

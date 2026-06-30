@@ -2,7 +2,7 @@
  * Unit tests for the guest (no-account) mock-test history store.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   getGuestTestHistory,
   addGuestTestSession,
@@ -70,6 +70,17 @@ describe('guestTestHistory', () => {
   it('recovers from corrupt stored data', () => {
     localStorage.setItem('civic-prep-guest-test-history', '{not valid json');
     expect(getGuestTestHistory()).toEqual([]);
+  });
+
+  it('propagates write failures (quota/blocked) instead of reporting a false save', () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('quota exceeded', 'QuotaExceededError');
+    });
+    try {
+      expect(() => addGuestTestSession(baseSession)).toThrow();
+    } finally {
+      setItemSpy.mockRestore();
+    }
   });
 
   it('drops malformed entries while keeping well-formed ones', () => {
