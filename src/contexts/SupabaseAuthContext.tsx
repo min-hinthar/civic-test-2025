@@ -148,19 +148,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     const authUser: SupabaseUser = session.user;
-    const [profileResult, testsResult] = await Promise.all([
-      supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
-      supabase
-        .from('mock_tests')
-        .select(
-          `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
+
+    // Bound the profile/history queries with the same timeout as getSession, so
+    // a paused/unreachable backend can't pin a cached signed-in user on the
+    // loading spinner. On timeout, sign in with the session's own data; the
+    // cloud profile/history loads on a later refresh once the backend recovers.
+    const HYDRATE_TIMEOUT = { timedOut: true } as const;
+    let hydrateTimeoutId: ReturnType<typeof setTimeout> | undefined;
+    const hydrateTimeout = new Promise<typeof HYDRATE_TIMEOUT>(resolve => {
+      hydrateTimeoutId = setTimeout(() => resolve(HYDRATE_TIMEOUT), SESSION_FETCH_TIMEOUT_MS);
+    });
+    const queryResult = await Promise.race([
+      Promise.all([
+        supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
+        supabase
+          .from('mock_tests')
+          .select(
+            `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
               question_id, question_en, question_my, category, selected_answer_en, selected_answer_my,
               correct_answer_en, correct_answer_my, is_correct
             )`
-        )
-        .eq('user_id', authUser.id)
-        .order('completed_at', { ascending: false }),
+          )
+          .eq('user_id', authUser.id)
+          .order('completed_at', { ascending: false }),
+      ]).then(results => ({ timedOut: false as const, results })),
+      hydrateTimeout,
     ]);
+    if (hydrateTimeoutId) clearTimeout(hydrateTimeoutId);
+
+    if (queryResult.timedOut) {
+      // Backend hung mid-hydration: keep the user signed in with session data
+      // so the app is usable instead of stuck loading.
+      setUser({
+        id: authUser.id,
+        email: authUser.email ?? '',
+        name: (authUser.user_metadata as UserMetadata)?.full_name ?? authUser.email ?? 'Learner',
+        testHistory: [],
+      });
+      hydratedRef.current = true;
+      setIsLoading(false);
+      return;
+    }
+
+    const [profileResult, testsResult] = queryResult.results;
 
     // Log query errors but still hydrate the user with available data
     if (profileResult.error) {

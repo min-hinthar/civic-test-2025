@@ -108,9 +108,15 @@ export function Sidebar() {
 
   // --- Sign in (guests) ---
   const handleSignIn = useCallback(() => {
+    // Respect the active-test navigation lock so signing in can't bypass the
+    // exit confirmation and drop an in-progress mock test.
+    if (isLocked) {
+      handleLockedTap();
+      return;
+    }
     hapticLight();
     router.push('/auth');
-  }, [router]);
+  }, [isLocked, handleLockedTap, router]);
 
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
@@ -266,7 +272,7 @@ export function Sidebar() {
             label="Sign In"
             isExpanded={isExpanded}
             onClick={handleSignIn}
-            tooltip="Sign in to sync your progress"
+            tooltip="Sign in to sync future progress"
             spring={spring}
           />
         )}

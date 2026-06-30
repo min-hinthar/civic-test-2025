@@ -621,7 +621,18 @@ export default function SettingsPage() {
                 </span>
               )}
             </div>
-            <NotificationSettings />
+            {user ? (
+              <NotificationSettings />
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Sign in to enable study reminders.
+                {showBurmese && (
+                  <span className="block font-myanmar mt-0.5">
+                    {'လေ့လာရန် သတိပေးချက်များ ဖွင့်ရန် ဝင်ရောက်ပါ။'}
+                  </span>
+                )}
+              </p>
+            )}
           </div>
 
           {/* Review Reminder Time */}
