@@ -52,13 +52,6 @@ interface AuthContextValue {
    * `user?.testHistory` so guest progress surfaces too.
    */
   testHistory: TestSession[];
-  /**
-   * True when the signed-in user's `testHistory` is a placeholder because the
-   * profile/history hydration timed out (backend hung). Consumers that publish
-   * derived data (e.g. the leaderboard composite score) should skip while stale,
-   * so a transient hang can't overwrite real progress with empty values.
-   */
-  isHistoryStale: boolean;
   isLoading: boolean;
   authError: string | null;
   isSavingSession: boolean;
@@ -128,9 +121,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Locally-stored mock-test history for guests (no account). Ignored once
   // a Supabase user is present, where user.testHistory is the source of truth.
   const [guestHistory, setGuestHistory] = useState<TestSession[]>([]);
-  // True only while a signed-in user's history is the timeout placeholder
-  // (hydration hung); cleared once real history loads.
-  const [isHistoryStale, setIsHistoryStale] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
@@ -155,7 +145,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Guest visitor: surface any locally-stored mock-test history so the
       // app works fully without an account (and even if Supabase is down).
       setGuestHistory(getGuestTestHistory());
-      setIsHistoryStale(false);
       setIsLoading(false);
       return;
     }
@@ -163,8 +152,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Bound the profile/history queries with the same timeout as getSession, so
     // a paused/unreachable backend can't pin a cached signed-in user on the
-    // loading spinner. On timeout, sign in with the session's own data; the
-    // cloud profile/history loads on a later refresh once the backend recovers.
+    // loading spinner. On timeout, fall back to GUEST mode (local history) so
+    // the app stays fully usable. The Supabase session is still alive, so the
+    // next auth event (token refresh, navigation, manual sign-in) re-runs this
+    // and hydrates the real profile/history once the backend recovers.
     const HYDRATE_TIMEOUT = { timedOut: true } as const;
     let hydrateTimeoutId: ReturnType<typeof setTimeout> | undefined;
     const hydrateTimeout = new Promise<typeof HYDRATE_TIMEOUT>(resolve => {
@@ -190,49 +181,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (hydrateTimeoutId) clearTimeout(hydrateTimeoutId);
 
     if (queryResult.timedOut) {
-      // Backend hung mid-hydration: keep the user signed in with session data so
-      // the app is usable instead of stuck loading. Use a functional update so a
-      // concurrent hydrate that already populated this user is never downgraded,
-      // and keep the real queries running — upgrade the history in place once the
-      // backend responds, so a transient hang never pins an empty history.
-      setUser(prev =>
-        prev?.id === authUser.id
-          ? prev
-          : {
-              id: authUser.id,
-              email: authUser.email ?? '',
-              name:
-                (authUser.user_metadata as UserMetadata)?.full_name ?? authUser.email ?? 'Learner',
-              testHistory: [],
-            }
-      );
-      hydratedRef.current = true;
-      // Mark history as a placeholder so derived publishers (leaderboard) skip
-      // it; cleared when the real query resolves below.
-      setIsHistoryStale(true);
-      setIsLoading(false);
-      queriesPromise
-        .then(([lateProfile, lateTests]) => {
-          const recovered: TestSession[] = ((lateTests.data ?? []) as MockTestRow[]).map(
-            mapResponses
-          );
-          setUser(prev => {
-            if (prev?.id !== authUser.id) return prev;
-            // Merge: keep sessions already in state (e.g. a test saved during the
-            // hang) that this older in-flight query didn't include; dedupe by id.
-            const recoveredIds = new Set(recovered.map(s => s.id));
-            const newer = prev.testHistory.filter(s => !s.id || !recoveredIds.has(s.id));
-            return {
-              ...prev,
-              name: lateProfile.data?.full_name ?? prev.name,
-              testHistory: [...newer, ...recovered],
-            };
-          });
-          setIsHistoryStale(false);
-        })
-        .catch(error =>
-          captureError(error, { operation: 'AuthContext.hydrateFromSupabase.lateResolve' })
-        );
+      // Don't leave the in-flight queries dangling as an unhandled rejection.
+      void queriesPromise.catch(() => {});
+      // Backend hung mid-hydration: fall back to guest mode so the app is fully
+      // usable with local history instead of stuck loading. Guard on the
+      // hydrated flag so a concurrent hydrate that already populated a real user
+      // is never downgraded to guest.
+      if (!hydratedRef.current) {
+        setUser(null);
+        setGuestHistory(getGuestTestHistory());
+        setIsLoading(false);
+      }
       return;
     }
 
@@ -255,7 +214,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       testHistory: history,
     });
     hydratedRef.current = true;
-    setIsHistoryStale(false);
     setIsLoading(false);
 
     // Pull settings with per-field LWW merge (Phase 50: ARCH-03)
@@ -659,8 +617,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       user,
       testHistory: user?.testHistory ?? guestHistory,
-      // Guests are never "stale" — their local history is the source of truth.
-      isHistoryStale: user ? isHistoryStale : false,
       isLoading,
       authError,
       isSavingSession,
@@ -675,7 +631,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [
       authError,
       guestHistory,
-      isHistoryStale,
       isLoading,
       isSavingSession,
       login,

@@ -92,15 +92,19 @@ const MIN_REFRESH_INTERVAL_MS = 30_000;
  *
  * @param boardType - 'all-time' or 'weekly' leaderboard view
  * @param limit - Maximum number of entries to fetch (default 25)
+ * @param enabled - When false, skips all fetching and stays idle (default true).
+ *   Used to avoid an anonymous leaderboard fetch for guests, who can't see the
+ *   board until they sign in and opt in.
  */
 export function useLeaderboard(
   boardType: 'all-time' | 'weekly' = 'all-time',
-  limit: number = 25
+  limit: number = 25,
+  enabled: boolean = true
 ): UseLeaderboardReturn {
   const { user } = useAuth();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [userRank, setUserRank] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [lastFetchTime, setLastFetchTime] = useState(0);
 
   // Stable fetch function
@@ -170,6 +174,13 @@ export function useLeaderboard(
 
   // Initial load
   useEffect(() => {
+    if (!enabled) {
+      // Disabled (e.g. guest): clear any prior data and idle.
+      setEntries([]);
+      setUserRank(null);
+      setIsLoading(false);
+      return;
+    }
     const cancelled = { current: false };
     setIsLoading(true);
     fetchLeaderboard(cancelled);
@@ -177,10 +188,12 @@ export function useLeaderboard(
     return () => {
       cancelled.current = true;
     };
-  }, [fetchLeaderboard]);
+  }, [enabled, fetchLeaderboard]);
 
   // Refresh on tab focus/visibility with minimum interval
   useEffect(() => {
+    if (!enabled) return;
+
     function handleVisibilityChange() {
       if (document.visibilityState !== 'visible') return;
       const now = Date.now();
@@ -199,14 +212,15 @@ export function useLeaderboard(
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [fetchLeaderboard, lastFetchTime]);
+  }, [enabled, fetchLeaderboard, lastFetchTime]);
 
   // Manual refresh function
   const refresh = useCallback(() => {
+    if (!enabled) return;
     const cancelled = { current: false };
     setIsLoading(true);
     fetchLeaderboard(cancelled);
-  }, [fetchLeaderboard]);
+  }, [enabled, fetchLeaderboard]);
 
   return useMemo(
     () => ({ entries, userRank, isLoading, refresh }),

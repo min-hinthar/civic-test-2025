@@ -50,7 +50,7 @@ const MAX_MANUAL_RETRIES = 3;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, testHistory, isHistoryStale, isLoading: authLoading } = useAuth();
+  const { user, testHistory, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
   const { showWarning } = useToast();
@@ -190,9 +190,7 @@ const Dashboard = () => {
 
   // Composite score sync to Supabase on mount
   useEffect(() => {
-    // Skip while history is a hydration placeholder (would publish empty
-    // accuracy/coverage and reset the leaderboard standing).
-    if (!user?.id || !badgeCheckData || isHistoryStale) return;
+    if (!user?.id || !badgeCheckData) return;
 
     const testHistory = user.testHistory ?? [];
     const bestAccuracy = testHistory.reduce((best, session) => {
@@ -222,7 +220,7 @@ const Dashboard = () => {
     updateCompositeScore(user.id, composite, currentStreak, topBadge).catch(() => {
       // Sync failure is non-critical
     });
-  }, [user?.id, user?.testHistory, badgeCheckData, currentStreak, isHistoryStale]);
+  }, [user?.id, user?.testHistory, badgeCheckData, currentStreak]);
 
   // Dashboard-level loading: all async data sources still loading
   const isDashboardLoading =
