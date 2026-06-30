@@ -545,6 +545,13 @@ export function AchievementsTab({
                       Keep studying as a guest — your progress is saved on this device. Create a
                       free account to compete on the leaderboard.
                     </p>
+                    {showBurmese && (
+                      <p className="mt-1 font-myanmar text-xs text-muted-foreground">
+                        {
+                          'ဧည့်သည်အဖြစ် ဆက်လေ့လာနိုင်ပါတယ် — သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ အဆင့်ဇယားတွင် ယှဉ်ပြိုင်ရန် အခမဲ့အကောင့်ဖွင့်ပါ။'
+                        }
+                      </p>
+                    )}
                   </div>
                   <button
                     type="button"

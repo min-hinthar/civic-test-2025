@@ -619,6 +619,188 @@ describe('SupabaseAuthContext', () => {
     setTimeoutSpy.mockRestore();
   });
 
+  describe('hydration timeout', () => {
+    // AUTH_FETCH_TIMEOUT_MS in SupabaseAuthContext (not exported).
+    const AUTH_TIMEOUT = 8000;
+
+    it('late recovery: queries resolving after the timeout promote guest -> signed-in', async () => {
+      vi.useFakeTimers();
+      try {
+        const session = {
+          user: {
+            id: 'test-user-id',
+            email: 'test@example.com',
+            user_metadata: { full_name: 'Test User' },
+          },
+          access_token: 'mock-token',
+          refresh_token: 'mock-refresh',
+        };
+        mockGetSession.mockResolvedValue({ data: { session }, error: null });
+        // No INITIAL_SESSION emission -> only the bootstrap hydrate runs.
+        mockOnAuthStateChange.mockReturnValue({
+          data: { subscription: { unsubscribe: vi.fn() } },
+        });
+
+        // Profile + mock_tests queries stay pending until we resolve them, so the
+        // hydrate races them against the timeout and loses.
+        let resolveProfile!: (v: unknown) => void;
+        let resolveTests!: (v: unknown) => void;
+        const chain = buildFromMock();
+        chain.maybeSingle.mockReturnValue(
+          new Promise(r => {
+            resolveProfile = r;
+          })
+        );
+        chain.order.mockReturnValue(
+          new Promise(r => {
+            resolveTests = r;
+          })
+        );
+        mockFromChain.mockReturnValue(chain);
+
+        renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+        // Fire the hydrate timeout -> fall back to guest mode.
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(AUTH_TIMEOUT + 100);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+        expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+
+        // The slow queries finally resolve -> late recovery promotes the user.
+        await act(async () => {
+          resolveProfile({ data: { full_name: 'Test User' }, error: null });
+          resolveTests({ data: [], error: null });
+          await vi.advanceTimersByTimeAsync(0);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('test-user-id');
+        expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('save during the guest-fallback window targets the account, not guest storage', async () => {
+      vi.useFakeTimers();
+      try {
+        const session = {
+          user: {
+            id: 'test-user-id',
+            email: 'test@example.com',
+            user_metadata: { full_name: 'Test User' },
+          },
+          access_token: 'mock-token',
+          refresh_token: 'mock-refresh',
+        };
+        mockGetSession.mockResolvedValue({ data: { session }, error: null });
+        mockOnAuthStateChange.mockReturnValue({
+          data: { subscription: { unsubscribe: vi.fn() } },
+        });
+
+        // Hydration queries hang -> the hydrate times out into guest mode, but
+        // the session identity is still recorded.
+        const chain = buildFromMock();
+        chain.maybeSingle.mockReturnValue(new Promise(() => {}));
+        chain.order.mockReturnValue(new Promise(() => {}));
+        chain.upsert.mockResolvedValue({ error: null });
+        chain.single.mockResolvedValue({
+          data: {
+            id: 'mock-test-1',
+            completed_at: '2026-06-30T00:00:00.000Z',
+            incorrect_count: 2,
+            end_reason: 'complete',
+            passed: true,
+          },
+          error: null,
+        });
+        mockFromChain.mockReturnValue(chain);
+
+        renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+        // Timeout -> guest fallback: user is null but a session exists.
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(AUTH_TIMEOUT + 100);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+
+        mockFromChain.mockClear();
+
+        // Save a mock test while degraded to guest mode.
+        await act(async () => {
+          fireEvent.click(screen.getByTestId('save-guest-test'));
+          await vi.advanceTimersByTimeAsync(0);
+        });
+
+        // Routed to the Supabase account (mock_tests insert), NOT persisted to
+        // local guest storage where it would be orphaned from the account.
+        expect(mockFromChain).toHaveBeenCalledWith('mock_tests');
+        expect(localStorage.getItem('civic-prep-guest-test-history')).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('late recovery is suppressed after sign-out (no resurrection of a signed-out session)', async () => {
+      vi.useFakeTimers();
+      try {
+        const session = {
+          user: {
+            id: 'test-user-id',
+            email: 'test@example.com',
+            user_metadata: { full_name: 'Test User' },
+          },
+          access_token: 'mock-token',
+          refresh_token: 'mock-refresh',
+        };
+        mockGetSession.mockResolvedValue({ data: { session }, error: null });
+        let authChangeCallback: (event: string, session: unknown) => void = () => {};
+        mockOnAuthStateChange.mockImplementation(
+          (cb: (event: string, session: unknown) => void) => {
+            authChangeCallback = cb;
+            return { data: { subscription: { unsubscribe: vi.fn() } } };
+          }
+        );
+
+        let resolveProfile!: (v: unknown) => void;
+        let resolveTests!: (v: unknown) => void;
+        const chain = buildFromMock();
+        chain.maybeSingle.mockReturnValue(
+          new Promise(r => {
+            resolveProfile = r;
+          })
+        );
+        chain.order.mockReturnValue(
+          new Promise(r => {
+            resolveTests = r;
+          })
+        );
+        mockFromChain.mockReturnValue(chain);
+
+        renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+        // Timeout -> guest fallback.
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(AUTH_TIMEOUT + 100);
+        });
+
+        // Sign out while the slow queries are still in flight.
+        await act(async () => {
+          authChangeCallback('SIGNED_OUT', null);
+        });
+
+        // Now the stale queries resolve: they must NOT resurrect the user.
+        await act(async () => {
+          resolveProfile({ data: { full_name: 'Test User' }, error: null });
+          resolveTests({ data: [], error: null });
+          await vi.advanceTimersByTimeAsync(0);
+        });
+        expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
   describe('guest (no account) test history', () => {
     it('exposes empty testHistory for a guest', async () => {
       renderWithProviders(<AuthConsumer />, { preset: 'full' });
