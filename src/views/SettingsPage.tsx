@@ -635,46 +635,48 @@ export default function SettingsPage() {
             )}
           </div>
 
-          {/* Review Reminder Time */}
-          <div className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
-              {showBurmese && (
-                <span className="font-myanmar text-sm text-muted-foreground">
-                  {'သတိပေးချက် အချိန်'}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
-                Time / <span className="font-myanmar">အချိန်</span>:
-              </label>
-              <input
-                type="time"
-                id="srs-reminder-time"
-                value={reminderTime}
-                onChange={handleReminderTimeChange}
-                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px]"
-              />
-            </div>
-
-            {!isSubscribed && (
-              <div className="mt-2 rounded-xl border border-warning bg-warning-subtle px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-warning" />
-                  <p className="text-xs text-warning">
-                    Enable push notifications above to receive reminders.
-                  </p>
-                </div>
+          {/* Preferred Reminder Time — signed-in only (guests can't subscribe to push) */}
+          {user && (
+            <div className="py-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
                 {showBurmese && (
-                  <p className="font-myanmar text-xs text-warning mt-1 ml-6">
-                    {'သတိပေးချက်တွေ ရရှိဖို့ push notification ဖွင့်ပါ။'}
-                  </p>
+                  <span className="font-myanmar text-sm text-muted-foreground">
+                    {'သတိပေးချက် အချိန်'}
+                  </span>
                 )}
               </div>
-            )}
-          </div>
+              <div className="flex items-center gap-3">
+                <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
+                  Time / <span className="font-myanmar">အချိန်</span>:
+                </label>
+                <input
+                  type="time"
+                  id="srs-reminder-time"
+                  value={reminderTime}
+                  onChange={handleReminderTimeChange}
+                  className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px]"
+                />
+              </div>
+
+              {!isSubscribed && (
+                <div className="mt-2 rounded-xl border border-warning bg-warning-subtle px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-warning" />
+                    <p className="text-xs text-warning">
+                      Enable push notifications above to receive reminders.
+                    </p>
+                  </div>
+                  {showBurmese && (
+                    <p className="font-myanmar text-xs text-warning mt-1 ml-6">
+                      {'သတိပေးချက်တွေ ရရှိဖို့ push notification ဖွင့်ပါ။'}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </SettingsSection>
 
         {/* ======= Social Section ======= */}

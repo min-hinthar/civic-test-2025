@@ -67,8 +67,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const PASS_THRESHOLD = 12;
-/** Max wait for the initial session fetch before falling back to guest mode. */
-const SESSION_FETCH_TIMEOUT_MS = 8000;
+/** Max wait for the initial session fetch AND for profile/history hydration
+ *  before falling back to a usable state (guest, or minimal signed-in user). */
+const AUTH_FETCH_TIMEOUT_MS = 8000;
 const END_REASONS: TestEndReason[] = ['passThreshold', 'failThreshold', 'time', 'complete'];
 const isEndReason = (value: unknown): value is TestEndReason =>
   typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
@@ -156,37 +157,60 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const HYDRATE_TIMEOUT = { timedOut: true } as const;
     let hydrateTimeoutId: ReturnType<typeof setTimeout> | undefined;
     const hydrateTimeout = new Promise<typeof HYDRATE_TIMEOUT>(resolve => {
-      hydrateTimeoutId = setTimeout(() => resolve(HYDRATE_TIMEOUT), SESSION_FETCH_TIMEOUT_MS);
+      hydrateTimeoutId = setTimeout(() => resolve(HYDRATE_TIMEOUT), AUTH_FETCH_TIMEOUT_MS);
     });
-    const queryResult = await Promise.race([
-      Promise.all([
-        supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
-        supabase
-          .from('mock_tests')
-          .select(
-            `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
+    const queriesPromise = Promise.all([
+      supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
+      supabase
+        .from('mock_tests')
+        .select(
+          `id, completed_at, score, total_questions, duration_seconds, incorrect_count, end_reason, passed, mock_test_responses (
               question_id, question_en, question_my, category, selected_answer_en, selected_answer_my,
               correct_answer_en, correct_answer_my, is_correct
             )`
-          )
-          .eq('user_id', authUser.id)
-          .order('completed_at', { ascending: false }),
-      ]).then(results => ({ timedOut: false as const, results })),
+        )
+        .eq('user_id', authUser.id)
+        .order('completed_at', { ascending: false }),
+    ]);
+    const queryResult = await Promise.race([
+      queriesPromise.then(results => ({ timedOut: false as const, results })),
       hydrateTimeout,
     ]);
     if (hydrateTimeoutId) clearTimeout(hydrateTimeoutId);
 
     if (queryResult.timedOut) {
-      // Backend hung mid-hydration: keep the user signed in with session data
-      // so the app is usable instead of stuck loading.
-      setUser({
-        id: authUser.id,
-        email: authUser.email ?? '',
-        name: (authUser.user_metadata as UserMetadata)?.full_name ?? authUser.email ?? 'Learner',
-        testHistory: [],
-      });
+      // Backend hung mid-hydration: keep the user signed in with session data so
+      // the app is usable instead of stuck loading. Use a functional update so a
+      // concurrent hydrate that already populated this user is never downgraded,
+      // and keep the real queries running — upgrade the history in place once the
+      // backend responds, so a transient hang never pins an empty history.
+      setUser(prev =>
+        prev?.id === authUser.id
+          ? prev
+          : {
+              id: authUser.id,
+              email: authUser.email ?? '',
+              name:
+                (authUser.user_metadata as UserMetadata)?.full_name ?? authUser.email ?? 'Learner',
+              testHistory: [],
+            }
+      );
       hydratedRef.current = true;
       setIsLoading(false);
+      queriesPromise
+        .then(([lateProfile, lateTests]) => {
+          const recovered: TestSession[] = ((lateTests.data ?? []) as MockTestRow[]).map(
+            mapResponses
+          );
+          setUser(prev =>
+            prev?.id === authUser.id
+              ? { ...prev, name: lateProfile.data?.full_name ?? prev.name, testHistory: recovered }
+              : prev
+          );
+        })
+        .catch(error =>
+          captureError(error, { operation: 'AuthContext.hydrateFromSupabase.lateResolve' })
+        );
       return;
     }
 
@@ -325,7 +349,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const sessionTimeout = new Promise<{ session: Session | null; timedOut: true }>(resolve => {
           timeoutId = setTimeout(
             () => resolve({ session: null, timedOut: true }),
-            SESSION_FETCH_TIMEOUT_MS
+            AUTH_FETCH_TIMEOUT_MS
           );
         });
         const result = await Promise.race([
