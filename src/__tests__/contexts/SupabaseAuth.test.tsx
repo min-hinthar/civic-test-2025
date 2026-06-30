@@ -232,7 +232,17 @@ if (typeof window !== 'undefined') {
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 function AuthConsumer() {
-  const { user, isLoading, authError, isSavingSession, login, register, logout } = useAuth();
+  const {
+    user,
+    testHistory,
+    isLoading,
+    authError,
+    isSavingSession,
+    login,
+    register,
+    logout,
+    saveTestSession,
+  } = useAuth();
 
   return (
     <div>
@@ -243,6 +253,7 @@ function AuthConsumer() {
       <div data-testid="auth-error">{authError ?? 'no-error'}</div>
       <div data-testid="is-saving">{String(isSavingSession)}</div>
       <div data-testid="test-history-count">{user?.testHistory?.length ?? 0}</div>
+      <div data-testid="ctx-test-history-count">{testHistory.length}</div>
       <button
         data-testid="login"
         onClick={() => login('test@example.com', 'password').catch(() => {})}
@@ -257,6 +268,23 @@ function AuthConsumer() {
       </button>
       <button data-testid="logout" onClick={() => logout()}>
         Logout
+      </button>
+      <button
+        data-testid="save-guest-test"
+        onClick={() =>
+          saveTestSession({
+            date: '2026-06-30T00:00:00.000Z',
+            score: 18,
+            totalQuestions: 20,
+            durationSeconds: 300,
+            passed: true,
+            incorrectCount: 2,
+            endReason: 'complete',
+            results: [],
+          }).catch(() => {})
+        }
+      >
+        Save Guest Test
       </button>
     </div>
   );
@@ -589,5 +617,39 @@ describe('SupabaseAuthContext', () => {
     // Verify setTimeout was used (deferred hydration pattern - G4)
     expect(setTimeoutSpy).toHaveBeenCalled();
     setTimeoutSpy.mockRestore();
+  });
+
+  describe('guest (no account) test history', () => {
+    it('exposes empty testHistory for a guest', async () => {
+      renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+      });
+
+      expect(screen.getByTestId('user-id')).toHaveTextContent('no-user');
+      expect(screen.getByTestId('ctx-test-history-count')).toHaveTextContent('0');
+    });
+
+    it('saveTestSession persists locally for a guest instead of throwing', async () => {
+      renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+      });
+
+      await act(async () => {
+        fireEvent.click(screen.getByTestId('save-guest-test'));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ctx-test-history-count')).toHaveTextContent('1');
+      });
+
+      // Persisted to localStorage so it survives a reload
+      const stored = localStorage.getItem('civic-prep-guest-test-history');
+      expect(stored).toBeTruthy();
+      expect(JSON.parse(stored as string)).toHaveLength(1);
+    });
   });
 });

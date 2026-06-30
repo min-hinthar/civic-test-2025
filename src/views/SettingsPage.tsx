@@ -16,6 +16,7 @@ import {
   Calendar,
   Clock,
   Globe,
+  LogIn,
   LogOut,
   MapPin,
   Mic,
@@ -253,6 +254,51 @@ export default function SettingsPage() {
 
       {/* Content */}
       <main className="mx-auto max-w-2xl px-4 py-5">
+        {/* ======= Guest Account Nudge (no-account visitors) ======= */}
+        {!user && (
+          <SettingsSection
+            icon={<LogIn className="h-5 w-5" />}
+            titleEn="Account"
+            titleMy="အကောင့်"
+            showBurmese={showBurmese}
+          >
+            <div className="py-3">
+              <p className="text-sm font-semibold text-foreground">
+                You&apos;re studying as a guest
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
+                  {'ဧည့်သည်အဖြစ် လေ့လာနေပါသည်'}
+                </p>
+              )}
+              <p className="mt-1 text-sm text-muted-foreground">
+                Your progress is saved on this device. Create a free account to sync across devices
+                and join the leaderboard — no account is needed to keep studying.
+              </p>
+              {showBurmese && (
+                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                  {
+                    'သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ စက်များအကြား sync လုပ်ဖို့နဲ့ leaderboard မှာ ပါဝင်ဖို့ အခမဲ့အကောင့်ဖွင့်ပါ — ဆက်လေ့လာဖို့ အကောင့်မလိုပါ။'
+                  }
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => router.push('/auth')}
+                className="mt-3 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors min-h-[44px]"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign in / Create free account
+                {showBurmese && (
+                  <span className="font-myanmar font-normal ml-1">
+                    {'ဝင်ရန် / အကောင့်ဖွင့်ရန်'}
+                  </span>
+                )}
+              </button>
+            </div>
+          </SettingsSection>
+        )}
+
         {/* ======= Appearance Section ======= */}
         <SettingsSection
           icon={<Palette className="h-5 w-5" />}

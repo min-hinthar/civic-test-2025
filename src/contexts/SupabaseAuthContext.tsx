@@ -32,6 +32,7 @@ import {
   getAllBookmarkIds,
   setBookmark,
 } from '@/lib/bookmarks';
+import { getGuestTestHistory, addGuestTestSession } from '@/lib/testHistory/guestTestHistory';
 import type {
   QuestionResult,
   TestEndReason,
@@ -44,6 +45,13 @@ import type {
 
 interface AuthContextValue {
   user: User | null;
+  /**
+   * Mock-test history for the current visitor. For signed-in users this is
+   * `user.testHistory` (synced with Supabase); for guests it is their
+   * locally-stored history. Consumers should read this instead of
+   * `user?.testHistory` so guest progress surfaces too.
+   */
+  testHistory: TestSession[];
   isLoading: boolean;
   authError: string | null;
   isSavingSession: boolean;
@@ -59,6 +67,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const PASS_THRESHOLD = 12;
+/** Max wait for the initial session fetch before falling back to guest mode. */
+const SESSION_FETCH_TIMEOUT_MS = 8000;
 const END_REASONS: TestEndReason[] = ['passThreshold', 'failThreshold', 'time', 'complete'];
 const isEndReason = (value: unknown): value is TestEndReason =>
   typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
@@ -107,6 +117,9 @@ const mapResponses = (test: MockTestRow): TestSession => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  // Locally-stored mock-test history for guests (no account). Ignored once
+  // a Supabase user is present, where user.testHistory is the source of truth.
+  const [guestHistory, setGuestHistory] = useState<TestSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
@@ -125,6 +138,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const hydrateFromSupabase = useCallback(async (session: Session | null) => {
     if (!session?.user) {
       setUser(null);
+      // Guest visitor: surface any locally-stored mock-test history so the
+      // app works fully without an account (and even if Supabase is down).
+      setGuestHistory(getGuestTestHistory());
       setIsLoading(false);
       return;
     }
@@ -266,13 +282,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     let mounted = true;
     const bootstrap = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        // Guard against a hung/unreachable auth backend (e.g. a paused or
+        // suspended Supabase project): if getSession doesn't resolve quickly,
+        // fall back to guest mode so study still works. A real session that
+        // arrives later is still picked up by onAuthStateChange below.
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        const sessionTimeout = new Promise<{ data: { session: Session | null } }>(resolve => {
+          timeoutId = setTimeout(
+            () => resolve({ data: { session: null } }),
+            SESSION_FETCH_TIMEOUT_MS
+          );
+        });
+        const { data } = await Promise.race([supabase.auth.getSession(), sessionTimeout]);
+        if (timeoutId) clearTimeout(timeoutId);
         if (!mounted) return;
         await hydrateFromSupabase(data.session ?? null);
       } catch (error) {
         captureError(error, { operation: 'AuthContext.bootstrap' });
         if (mounted) {
           setUser(null);
+          setGuestHistory(getGuestTestHistory());
           setIsLoading(false);
         }
       }
@@ -400,7 +429,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const saveTestSession = useCallback(
     async (session: Omit<TestSession, 'id'>) => {
       if (!user) {
-        throw new Error('User must be signed in to save a mock test');
+        // Guest (no account): persist the mock test locally so anyone can
+        // study with full functionality without signing in.
+        const updated = addGuestTestSession(session);
+        setGuestHistory(updated);
+        return;
       }
 
       const guard = saveGuardRef.current;
@@ -525,6 +558,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const value = useMemo(
     () => ({
       user,
+      testHistory: user?.testHistory ?? guestHistory,
       isLoading,
       authError,
       isSavingSession,
@@ -538,6 +572,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }),
     [
       authError,
+      guestHistory,
       isLoading,
       isSavingSession,
       login,

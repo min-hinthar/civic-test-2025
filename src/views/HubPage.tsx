@@ -86,7 +86,7 @@ export default function HubPage({ initialTab }: HubPageProps) {
   const pathname = usePathname() ?? '/hub';
   const router = useRouter();
   const { showBurmese } = useLanguage();
-  const { user, isLoading: isLoadingAuth } = useAuth();
+  const { user, testHistory, isLoading: isLoadingAuth } = useAuth();
   const { showWarning } = useToast();
   const { testDate } = useTestDate();
 
@@ -151,8 +151,9 @@ export default function HubPage({ initialTab }: HubPageProps) {
     }
   }
 
-  // Build BadgeCheckData for badge detection
-  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+  // Build BadgeCheckData for badge detection. Test history comes from the
+  // auth context (Supabase for signed-in users, local storage for guests).
+  const history = testHistory;
 
   const badgeCheckData: BadgeCheckData | null = useMemo(() => {
     if (streakLoading) return null;

@@ -49,7 +49,7 @@ const MAX_MANUAL_RETRIES = 3;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, testHistory, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
   const { showWarning } = useToast();
@@ -125,8 +125,9 @@ const Dashboard = () => {
     };
   }, [fetchTrigger]);
 
-  // Test history from auth user
-  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+  // Test history for the current visitor (Supabase for signed-in users,
+  // local storage for guests) — provided by the auth context.
+  const history = testHistory;
 
   // Badge check data - derived from dashboard stats
   const badgeCheckData: BadgeCheckData | null = useMemo(() => {
