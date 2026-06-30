@@ -67,7 +67,9 @@ export async function setupAuth(page: Page) {
     })
   );
 
-  // Inject the session into localStorage before any app script runs.
+  // Inject the session into localStorage before any app script runs, and seed
+  // the flags that suppress first-run overlays (Welcome modal, onboarding tour,
+  // PWA prompt) which otherwise intercept pointer events on protected pages.
   // Supabase stores the session at `sb-{ref}-auth-token`.
   await page.addInitScript(session => {
     try {
@@ -76,6 +78,9 @@ export async function setupAuth(page: Page) {
       );
       const key = existing ?? 'sb-placeholder-auth-token';
       localStorage.setItem(key, JSON.stringify(session));
+      // Skip onboarding overlays during tests (see GlobalOverlays).
+      localStorage.setItem('civic-test-e2e', '1');
+      localStorage.setItem('civic-test-onboarding-complete', 'true');
     } catch {
       // localStorage unavailable — nothing to do
     }
