@@ -29,7 +29,13 @@ export function getGuestTestHistory(): TestSession[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as TestSession[]) : [];
+    if (!Array.isArray(parsed)) return [];
+    // Drop malformed entries (e.g. hand-tampered storage) so downstream
+    // consumers that rely on `date`/`results` don't throw.
+    return (parsed as TestSession[]).filter(
+      (s): s is TestSession =>
+        !!s && typeof s === 'object' && typeof s.date === 'string' && Array.isArray(s.results)
+    );
   } catch {
     return [];
   }

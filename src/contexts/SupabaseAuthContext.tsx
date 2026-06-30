@@ -316,6 +316,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         setUser(null);
+        // Re-read local guest history so the post-sign-out view reflects this
+        // device's actual stored history (not a stale value from boot).
+        setGuestHistory(getGuestTestHistory());
         setIsLoading(false);
         return;
       }

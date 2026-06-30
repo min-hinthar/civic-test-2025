@@ -71,4 +71,20 @@ describe('guestTestHistory', () => {
     localStorage.setItem('civic-prep-guest-test-history', '{not valid json');
     expect(getGuestTestHistory()).toEqual([]);
   });
+
+  it('drops malformed entries while keeping well-formed ones', () => {
+    localStorage.setItem(
+      'civic-prep-guest-test-history',
+      JSON.stringify([
+        { id: 'guest-1', date: '2026-06-30T00:00:00.000Z', results: [] }, // valid shape
+        { id: 'guest-2', score: 5 }, // missing date + results
+        null,
+        'nope',
+        { id: 'guest-3', date: 123, results: [] }, // non-string date
+      ])
+    );
+    const out = getGuestTestHistory();
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe('guest-1');
+  });
 });
