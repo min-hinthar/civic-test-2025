@@ -52,6 +52,13 @@ interface AuthContextValue {
    * `user?.testHistory` so guest progress surfaces too.
    */
   testHistory: TestSession[];
+  /**
+   * True when the signed-in user's `testHistory` is a placeholder because the
+   * profile/history hydration timed out (backend hung). Consumers that publish
+   * derived data (e.g. the leaderboard composite score) should skip while stale,
+   * so a transient hang can't overwrite real progress with empty values.
+   */
+  isHistoryStale: boolean;
   isLoading: boolean;
   authError: string | null;
   isSavingSession: boolean;
@@ -121,6 +128,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Locally-stored mock-test history for guests (no account). Ignored once
   // a Supabase user is present, where user.testHistory is the source of truth.
   const [guestHistory, setGuestHistory] = useState<TestSession[]>([]);
+  // True only while a signed-in user's history is the timeout placeholder
+  // (hydration hung); cleared once real history loads.
+  const [isHistoryStale, setIsHistoryStale] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
@@ -145,6 +155,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Guest visitor: surface any locally-stored mock-test history so the
       // app works fully without an account (and even if Supabase is down).
       setGuestHistory(getGuestTestHistory());
+      setIsHistoryStale(false);
       setIsLoading(false);
       return;
     }
@@ -196,17 +207,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
       );
       hydratedRef.current = true;
+      // Mark history as a placeholder so derived publishers (leaderboard) skip
+      // it; cleared when the real query resolves below.
+      setIsHistoryStale(true);
       setIsLoading(false);
       queriesPromise
         .then(([lateProfile, lateTests]) => {
           const recovered: TestSession[] = ((lateTests.data ?? []) as MockTestRow[]).map(
             mapResponses
           );
-          setUser(prev =>
-            prev?.id === authUser.id
-              ? { ...prev, name: lateProfile.data?.full_name ?? prev.name, testHistory: recovered }
-              : prev
-          );
+          setUser(prev => {
+            if (prev?.id !== authUser.id) return prev;
+            // Merge: keep sessions already in state (e.g. a test saved during the
+            // hang) that this older in-flight query didn't include; dedupe by id.
+            const recoveredIds = new Set(recovered.map(s => s.id));
+            const newer = prev.testHistory.filter(s => !s.id || !recoveredIds.has(s.id));
+            return {
+              ...prev,
+              name: lateProfile.data?.full_name ?? prev.name,
+              testHistory: [...newer, ...recovered],
+            };
+          });
+          setIsHistoryStale(false);
         })
         .catch(error =>
           captureError(error, { operation: 'AuthContext.hydrateFromSupabase.lateResolve' })
@@ -233,6 +255,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       testHistory: history,
     });
     hydratedRef.current = true;
+    setIsHistoryStale(false);
     setIsLoading(false);
 
     // Pull settings with per-field LWW merge (Phase 50: ARCH-03)
@@ -636,6 +659,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       user,
       testHistory: user?.testHistory ?? guestHistory,
+      // Guests are never "stale" — their local history is the source of truth.
+      isHistoryStale: user ? isHistoryStale : false,
       isLoading,
       authError,
       isSavingSession,
@@ -650,6 +675,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [
       authError,
       guestHistory,
+      isHistoryStale,
       isLoading,
       isSavingSession,
       login,
