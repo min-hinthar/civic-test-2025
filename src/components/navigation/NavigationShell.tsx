@@ -32,8 +32,9 @@ export function NavigationShell({ children }: NavigationShellProps) {
   const shouldReduceMotion = useReducedMotion();
   useFocusOnNavigation();
 
-  // NavigationShell only renders inside (protected)/layout.tsx,
-  // so all routes it sees are protected routes that should show nav.
+  // NavigationShell only renders inside the app shell layout
+  // ((protected)/layout.tsx), so all routes it sees are app routes
+  // that should show nav (for signed-in users and guests alike).
   // On tablet/desktop, push content to make room for the sidebar.
   // Mobile uses BottomTabBar, no margin needed.
   const marginLeft =

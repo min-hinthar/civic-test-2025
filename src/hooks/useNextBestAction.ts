@@ -51,7 +51,7 @@ interface UseNextBestActionReturn {
  * 1. useStreak -> currentStreak, activityDates
  * 2. useSRSWidget -> srsDueCount
  * 3. useCategoryMastery -> categoryMasteries, overallMastery
- * 4. useAuth -> user.testHistory
+ * 4. useAuth -> testHistory (signed-in: Supabase; guest: local storage)
  * 5. getInterviewHistory() -> interview pass/fail history (IndexedDB)
  * 6. getAnswerHistory() -> unique questions practiced count (IndexedDB)
  *
@@ -72,7 +72,7 @@ export function useNextBestAction(): UseNextBestActionReturn {
 
   const { categoryMasteries, overallMastery, isLoading: masteryLoading } = useCategoryMastery();
 
-  const { user, isLoading: authLoading } = useAuth();
+  const { testHistory, isLoading: authLoading } = useAuth();
 
   const { testDate } = useTestDate();
 
@@ -149,8 +149,8 @@ export function useNextBestAction(): UseNextBestActionReturn {
   const nbaState: NBAState | null = useMemo(() => {
     if (isLoading) return null;
 
-    // Map test history from auth user (Supabase) to NBA input format
-    const testHistory = (user?.testHistory ?? []).map(s => ({
+    // Map test history (signed-in: Supabase; guest: local) to NBA input format
+    const mappedTestHistory = testHistory.map(s => ({
       date: s.date,
       score: s.score,
       totalQuestions: s.totalQuestions,
@@ -162,7 +162,7 @@ export function useNextBestAction(): UseNextBestActionReturn {
       srsDueCount,
       overallMastery,
       categoryMasteries,
-      testHistory,
+      testHistory: mappedTestHistory,
       interviewHistory,
       uniqueQuestionsPracticed: uniqueQuestionsCount,
       totalQuestions,
@@ -175,7 +175,7 @@ export function useNextBestAction(): UseNextBestActionReturn {
     srsDueCount,
     overallMastery,
     categoryMasteries,
-    user?.testHistory,
+    testHistory,
     interviewHistory,
     uniqueQuestionsCount,
     testDate,

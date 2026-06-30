@@ -28,6 +28,7 @@ import {
   Heart,
   ChevronDown,
   ChevronUp,
+  LogIn,
   type LucideIcon,
 } from 'lucide-react';
 import { Award, Star, BookCheck } from 'lucide-react';
@@ -218,7 +219,9 @@ export function AchievementsTab({
     userRank,
     isLoading: leaderboardLoading,
     refresh: refreshLeaderboard,
-  } = useLeaderboard(boardType, leaderboardLimit);
+    // Guests can't see the leaderboard (must sign in + opt in), so skip the
+    // anonymous fetch entirely until there's a signed-in user.
+  } = useLeaderboard(boardType, leaderboardLimit, !!user?.id);
 
   const [selectedEntry, setSelectedEntry] = useState<LeaderboardEntry | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -423,103 +426,149 @@ export function AchievementsTab({
               )}
             </div>
 
-            {/* All-time / Weekly toggle */}
-            <div className="flex gap-2 mb-3">
-              <button
-                onClick={() => setBoardType('all-time')}
-                className={clsx(
-                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
-                  boardType === 'all-time'
-                    ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
-                    : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
-                )}
-              >
-                <span className={showBurmese ? 'font-myanmar' : ''}>
-                  {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
-                </span>
-              </button>
-              <button
-                onClick={() => setBoardType('weekly')}
-                className={clsx(
-                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
-                  boardType === 'weekly'
-                    ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
-                    : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
-                )}
-              >
-                <span className={showBurmese ? 'font-myanmar' : ''}>
-                  {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
-                </span>
-              </button>
-            </div>
+            {user ? (
+              <>
+                {/* All-time / Weekly toggle */}
+                <div className="flex gap-2 mb-3">
+                  <button
+                    onClick={() => setBoardType('all-time')}
+                    className={clsx(
+                      'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
+                      boardType === 'all-time'
+                        ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
+                        : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
+                    )}
+                  >
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? '\u1021\u102C\u1038\u101C\u102F\u1036\u1038' : 'All Time'}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setBoardType('weekly')}
+                    className={clsx(
+                      'rounded-xl px-3 py-1.5 text-xs font-bold transition-all min-h-[44px]',
+                      boardType === 'weekly'
+                        ? 'bg-primary text-white shadow-[0_2px_0_hsl(var(--primary-700))]'
+                        : 'bg-muted/40 text-muted-foreground hover:bg-muted/60 border border-border'
+                    )}
+                  >
+                    <span className={showBurmese ? 'font-myanmar' : ''}>
+                      {showBurmese ? '\u1021\u1015\u1010\u103A\u1005\u1025\u103A' : 'Weekly'}
+                    </span>
+                  </button>
+                </div>
 
-            {/* Social opt-in CTA */}
-            {user && !isOptedIn && !showOptIn && (
-              <GlassCard className="mb-3">
-                <div className="flex items-center justify-between gap-3 p-1">
-                  <div className="flex items-center gap-2">
-                    <Heart className="h-4 w-4 text-primary" />
-                    <p
-                      className={`text-xs font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
-                    >
-                      {showBurmese
-                        ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
-                        : 'Join the community!'}
+                {/* Social opt-in CTA */}
+                {user && !isOptedIn && !showOptIn && (
+                  <GlassCard className="mb-3">
+                    <div className="flex items-center justify-between gap-3 p-1">
+                      <div className="flex items-center gap-2">
+                        <Heart className="h-4 w-4 text-primary" />
+                        <p
+                          className={`text-xs font-bold text-foreground ${showBurmese ? 'font-myanmar' : ''}`}
+                        >
+                          {showBurmese
+                            ? '\u1021\u101E\u102D\u102F\u1004\u103A\u1038\u1019\u103E\u102C \u1015\u102B\u101D\u1004\u103A\u1015\u102B!'
+                            : 'Join the community!'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setOptInClosed(false)}
+                        className={clsx(
+                          'shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white min-h-[44px]',
+                          'shadow-[0_2px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[1px]',
+                          'transition-all'
+                        )}
+                      >
+                        <span className={showBurmese ? 'font-myanmar' : ''}>
+                          {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                        </span>
+                      </button>
+                    </div>
+                  </GlassCard>
+                )}
+
+                {/* Leaderboard table */}
+                <GlassCard className="p-0 overflow-hidden">
+                  <LeaderboardTable
+                    entries={entries}
+                    userRank={userRank}
+                    currentUserId={user?.id ?? null}
+                    onRowClick={handleRowClick}
+                    isLoading={leaderboardLoading}
+                  />
+                </GlassCard>
+
+                {/* Show more / Show less button */}
+                {!leaderboardLoading && entries.length > 0 && (
+                  <button
+                    onClick={toggleLeaderboardExpand}
+                    className={clsx(
+                      'flex items-center justify-center gap-1 w-full py-2 mt-2',
+                      'text-xs font-medium text-muted-foreground hover:text-foreground',
+                      'transition-colors rounded-lg hover:bg-muted/30'
+                    )}
+                  >
+                    {leaderboardLimit === 5 ? (
+                      <>
+                        <ChevronDown className="h-3.5 w-3.5" />
+                        <span className={showBurmese ? 'font-myanmar' : ''}>
+                          {showBurmese ? strings.hub.showMore.my : strings.hub.showMore.en}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <ChevronUp className="h-3.5 w-3.5" />
+                        <span className={showBurmese ? 'font-myanmar' : ''}>
+                          {showBurmese ? strings.hub.showLess.my : strings.hub.showLess.en}
+                        </span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </>
+            ) : (
+              /* Guest: leaderboard requires a signed-in, opted-in account. */
+              <GlassCard>
+                <div className="flex flex-col items-center gap-3 p-4 text-center">
+                  <Trophy className="h-8 w-8 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-bold text-foreground">
+                      Sign in to join the leaderboard
                     </p>
+                    {showBurmese && (
+                      <p className="mt-0.5 font-myanmar text-sm text-muted-foreground">
+                        {'အဆင့်ဇယားတွင် ပါဝင်ရန် အကောင့်ဝင်ပါ'}
+                      </p>
+                    )}
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Keep studying as a guest — your progress is saved on this device. Create a
+                      free account to compete on the leaderboard.
+                    </p>
+                    {showBurmese && (
+                      <p className="mt-1 font-myanmar text-xs text-muted-foreground">
+                        {
+                          'ဧည့်သည်အဖြစ် ဆက်လေ့လာနိုင်ပါတယ် — သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ အဆင့်ဇယားတွင် ယှဉ်ပြိုင်ရန် အခမဲ့အကောင့်ဖွင့်ပါ။'
+                        }
+                      </p>
+                    )}
                   </div>
                   <button
-                    onClick={() => setOptInClosed(false)}
+                    type="button"
+                    onClick={() => router.push('/auth')}
                     className={clsx(
-                      'shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white min-h-[44px]',
+                      'inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white min-h-[44px]',
                       'shadow-[0_2px_0_hsl(var(--primary-700))] active:shadow-[0_1px_0_hsl(var(--primary-700))] active:translate-y-[1px]',
                       'transition-all'
                     )}
                   >
+                    <LogIn className="h-4 w-4" />
                     <span className={showBurmese ? 'font-myanmar' : ''}>
-                      {showBurmese ? '\u1015\u102B\u101D\u1004\u103A\u1015\u102B' : 'Join'}
+                      {showBurmese ? 'အကောင့်ဝင်ရန်' : 'Sign in'}
                     </span>
                   </button>
                 </div>
               </GlassCard>
-            )}
-
-            {/* Leaderboard table */}
-            <GlassCard className="p-0 overflow-hidden">
-              <LeaderboardTable
-                entries={entries}
-                userRank={userRank}
-                currentUserId={user?.id ?? null}
-                onRowClick={handleRowClick}
-                isLoading={leaderboardLoading}
-              />
-            </GlassCard>
-
-            {/* Show more / Show less button */}
-            {!leaderboardLoading && entries.length > 0 && (
-              <button
-                onClick={toggleLeaderboardExpand}
-                className={clsx(
-                  'flex items-center justify-center gap-1 w-full py-2 mt-2',
-                  'text-xs font-medium text-muted-foreground hover:text-foreground',
-                  'transition-colors rounded-lg hover:bg-muted/30'
-                )}
-              >
-                {leaderboardLimit === 5 ? (
-                  <>
-                    <ChevronDown className="h-3.5 w-3.5" />
-                    <span className={showBurmese ? 'font-myanmar' : ''}>
-                      {showBurmese ? strings.hub.showMore.my : strings.hub.showMore.en}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <ChevronUp className="h-3.5 w-3.5" />
-                    <span className={showBurmese ? 'font-myanmar' : ''}>
-                      {showBurmese ? strings.hub.showLess.my : strings.hub.showLess.en}
-                    </span>
-                  </>
-                )}
-              </button>
             )}
           </FadeIn>
         </div>

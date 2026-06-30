@@ -1,12 +1,18 @@
 'use client';
 
-import { redirect, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { NavigationShell } from '@/components/navigation/NavigationShell';
 
+/**
+ * App shell layout. Renders the full navigation experience for everyone —
+ * signed-in users and guests alike. No-account visitors get full study
+ * functionality (flashcards, mock tests, interview, progress) backed by
+ * local storage, so the app stays usable even if Supabase auth is
+ * unavailable. Account-only features (cross-device sync, leaderboard)
+ * surface their own in-context sign-in prompts.
+ */
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
-  const pathname = usePathname();
+  const { isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -14,14 +20,6 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
-  }
-
-  if (!user) {
-    // Validate returnTo is a safe relative path (open redirect prevention)
-    const safeReturnTo =
-      pathname && pathname.startsWith('/') && !pathname.startsWith('//') ? pathname : undefined;
-    const authUrl = safeReturnTo ? `/auth?returnTo=${encodeURIComponent(safeReturnTo)}` : '/auth';
-    redirect(authUrl);
   }
 
   return <NavigationShell>{children}</NavigationShell>;

@@ -32,6 +32,7 @@ import {
   getAllBookmarkIds,
   setBookmark,
 } from '@/lib/bookmarks';
+import { getGuestTestHistory, addGuestTestSession } from '@/lib/testHistory/guestTestHistory';
 import type {
   QuestionResult,
   TestEndReason,
@@ -44,6 +45,13 @@ import type {
 
 interface AuthContextValue {
   user: User | null;
+  /**
+   * Mock-test history for the current visitor. For signed-in users this is
+   * `user.testHistory` (synced with Supabase); for guests it is their
+   * locally-stored history. Consumers should read this instead of
+   * `user?.testHistory` so guest progress surfaces too.
+   */
+  testHistory: TestSession[];
   isLoading: boolean;
   authError: string | null;
   isSavingSession: boolean;
@@ -59,6 +67,11 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const PASS_THRESHOLD = 12;
+/** Max wait for the initial session fetch AND for profile/history hydration
+ *  before falling back to guest mode (local history) so study still works.
+ *  A session that hydrates later is picked up by the late-recovery path or
+ *  the next onAuthStateChange event. */
+const AUTH_FETCH_TIMEOUT_MS = 8000;
 const END_REASONS: TestEndReason[] = ['passThreshold', 'failThreshold', 'time', 'complete'];
 const isEndReason = (value: unknown): value is TestEndReason =>
   typeof value === 'string' && END_REASONS.includes(value as TestEndReason);
@@ -107,10 +120,28 @@ const mapResponses = (test: MockTestRow): TestSession => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  // Locally-stored mock-test history for guests (no account). Ignored once
+  // a Supabase user is present, where user.testHistory is the source of truth.
+  const [guestHistory, setGuestHistory] = useState<TestSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSavingSession, setIsSavingSession] = useState(false);
   const saveGuardRef = useRef(createSaveSessionGuard());
+  // Tracks whether a real signed-in user has been hydrated, so the bootstrap
+  // timeout/error fallback never clobbers an active session with guest mode.
+  const hydratedRef = useRef(false);
+  // Monotonic counter bumped on every hydrate call AND on sign-out. A hydrate
+  // captures its value up front; an async result (notably the post-timeout late
+  // recovery) only applies if the counter is unchanged, so a stale in-flight
+  // query can never resurrect a signed-out session or clobber a newer hydrate.
+  const hydrationGenerationRef = useRef(0);
+  // Identity of the underlying Supabase session, tracked independently of the
+  // hydrated `user`. During a guest-fallback window (session valid but
+  // profile/history hydration timed out) `user` is null yet a real account
+  // exists; saveTestSession reads this so a signed-in user's mock test still
+  // targets their account (queued offline if the backend is down) instead of
+  // being orphaned in local guest storage. Null only for genuine guests.
+  const sessionIdentityRef = useRef<{ id: string; email: string; name: string } | null>(null);
 
   const syncProfile = useCallback(
     async (payload: { id: string; email: string; full_name: string }) => {
@@ -123,13 +154,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const hydrateFromSupabase = useCallback(async (session: Session | null) => {
+    // Claim this hydration's generation so async results can detect if a newer
+    // hydrate (or a sign-out) has since superseded them.
+    const generation = ++hydrationGenerationRef.current;
     if (!session?.user) {
+      sessionIdentityRef.current = null;
       setUser(null);
+      // Guest visitor: surface any locally-stored mock-test history so the
+      // app works fully without an account (and even if Supabase is down).
+      setGuestHistory(getGuestTestHistory());
       setIsLoading(false);
       return;
     }
     const authUser: SupabaseUser = session.user;
-    const [profileResult, testsResult] = await Promise.all([
+    // Record the session identity before any timeout, so saves during a
+    // guest-fallback window still target this account.
+    sessionIdentityRef.current = {
+      id: authUser.id,
+      email: authUser.email ?? '',
+      name: (authUser.user_metadata as UserMetadata)?.full_name ?? authUser.email ?? 'Learner',
+    };
+
+    // Bound the profile/history queries with the same timeout as getSession, so
+    // a paused/unreachable backend can't pin a cached signed-in user on the
+    // loading spinner. On timeout, fall back to GUEST mode (local history) so
+    // the app stays fully usable, but keep awaiting the in-flight queries: if
+    // they finish (a transient slow network, not a full outage), promote to the
+    // real signed-in user. A full outage simply leaves the queries pending and
+    // the user in guest mode until the next auth event re-runs hydration.
+    const HYDRATE_TIMEOUT = { timedOut: true } as const;
+    let hydrateTimeoutId: ReturnType<typeof setTimeout> | undefined;
+    const hydrateTimeout = new Promise<typeof HYDRATE_TIMEOUT>(resolve => {
+      hydrateTimeoutId = setTimeout(() => resolve(HYDRATE_TIMEOUT), AUTH_FETCH_TIMEOUT_MS);
+    });
+    const queriesPromise = Promise.all([
       supabase.from('profiles').select('full_name').eq('id', authUser.id).maybeSingle(),
       supabase
         .from('mock_tests')
@@ -142,6 +200,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .eq('user_id', authUser.id)
         .order('completed_at', { ascending: false }),
     ]);
+    const queryResult = await Promise.race([
+      queriesPromise.then(results => ({ timedOut: false as const, results })),
+      hydrateTimeout,
+    ]);
+    if (hydrateTimeoutId) clearTimeout(hydrateTimeoutId);
+
+    let resolved: Awaited<typeof queriesPromise>;
+    if (queryResult.timedOut) {
+      // Backend hung past the timeout: fall back to guest mode NOW so the app is
+      // fully usable with local history instead of stuck loading. Guard on the
+      // hydrated flag so a concurrent hydrate that already populated a real user
+      // is never downgraded to guest.
+      if (!hydratedRef.current) {
+        setUser(null);
+        setGuestHistory(getGuestTestHistory());
+        setIsLoading(false);
+      }
+      // The queries are still in flight. Keep waiting: if they finish (a
+      // transient slow network rather than a full outage), promote to the real
+      // signed-in user below instead of leaving the user as a guest until the
+      // next token refresh. If they reject, stay in guest mode. Mock tests saved
+      // while in guest mode persist to local history (guest->account migration
+      // is a separate, deferred concern).
+      try {
+        resolved = await queriesPromise;
+      } catch (error) {
+        captureError(error, { operation: 'AuthContext.hydrateFromSupabase.lateRecover' });
+        return;
+      }
+      // A newer hydrate or a sign-out superseded this one while we waited: a
+      // stale result must not resurrect a signed-out session or clobber it.
+      if (generation !== hydrationGenerationRef.current) return;
+    } else {
+      resolved = queryResult.results;
+    }
+
+    const [profileResult, testsResult] = resolved;
 
     // Log query errors but still hydrate the user with available data
     if (profileResult.error) {
@@ -159,6 +254,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       name: profileResult.data?.full_name ?? authUser.email ?? 'Learner',
       testHistory: history,
     });
+    hydratedRef.current = true;
     setIsLoading(false);
 
     // Pull settings with per-field LWW merge (Phase 50: ARCH-03)
@@ -266,13 +362,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     let mounted = true;
     const bootstrap = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        // Guard against a hung/unreachable auth backend (e.g. a paused or
+        // suspended Supabase project): if getSession doesn't resolve quickly,
+        // fall back to guest mode so study still works. A real session that
+        // arrives later is still picked up by onAuthStateChange below — and the
+        // fallback must never clobber a user that has already been hydrated.
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        const sessionTimeout = new Promise<{ session: Session | null; timedOut: true }>(resolve => {
+          timeoutId = setTimeout(
+            () => resolve({ session: null, timedOut: true }),
+            AUTH_FETCH_TIMEOUT_MS
+          );
+        });
+        const result = await Promise.race([
+          supabase.auth
+            .getSession()
+            .then(r => ({ session: r.data.session ?? null, timedOut: false as const })),
+          sessionTimeout,
+        ]);
+        if (timeoutId) clearTimeout(timeoutId);
         if (!mounted) return;
-        await hydrateFromSupabase(data.session ?? null);
+        if (result.timedOut) {
+          // getSession hung. Only drop to guest mode if nothing has hydrated a
+          // signed-in user yet; otherwise leave the active session intact.
+          if (!hydratedRef.current) {
+            setUser(null);
+            setGuestHistory(getGuestTestHistory());
+            setIsLoading(false);
+          }
+          return;
+        }
+        await hydrateFromSupabase(result.session);
       } catch (error) {
         captureError(error, { operation: 'AuthContext.bootstrap' });
-        if (mounted) {
+        if (mounted && !hydratedRef.current) {
           setUser(null);
+          setGuestHistory(getGuestTestHistory());
           setIsLoading(false);
         }
       }
@@ -286,7 +411,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // See: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
+        // Supersede any in-flight hydrate (incl. a post-timeout late recovery)
+        // so its stale result can't resurrect this signed-out session.
+        hydrationGenerationRef.current += 1;
+        sessionIdentityRef.current = null;
+        // Clear the hydrated latch so a later sign-in whose hydration times out
+        // can still fall back to guest mode (the guard is a "real user already
+        // present" check; after sign-out no real user is present).
+        hydratedRef.current = false;
         setUser(null);
+        // Re-read local guest history so the post-sign-out view reflects this
+        // device's actual stored history (not a stale value from boot).
+        setGuestHistory(getGuestTestHistory());
         setIsLoading(false);
         return;
       }
@@ -399,8 +535,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const saveTestSession = useCallback(
     async (session: Omit<TestSession, 'id'>) => {
-      if (!user) {
-        throw new Error('User must be signed in to save a mock test');
+      // Resolve the account to save under. Prefer the hydrated `user`, but fall
+      // back to the underlying session identity so a signed-in user whose
+      // hydration timed out (guest-fallback window) still saves to their
+      // account — not to local guest storage, which would orphan the result.
+      const account = user ?? sessionIdentityRef.current;
+      if (!account) {
+        // Genuine guest (no account): persist the mock test locally so anyone
+        // can study with full functionality without signing in.
+        const updated = addGuestTestSession(session);
+        setGuestHistory(updated);
+        return;
       }
 
       const guard = saveGuardRef.current;
@@ -408,12 +553,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await guard.save(async () => {
         setIsSavingSession(true);
         try {
-          await syncProfile({ id: user.id, email: user.email, full_name: user.name });
+          await syncProfile({ id: account.id, email: account.email, full_name: account.name });
 
           const { data, error } = await supabase
             .from('mock_tests')
             .insert({
-              user_id: user.id,
+              user_id: account.id,
               completed_at: session.date,
               score: session.score,
               total_questions: session.totalQuestions,
@@ -475,7 +620,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (isNetworkError) {
             // Queue for offline sync via IndexedDB
             await queueTestResult({
-              userId: user.id,
+              userId: account.id,
               completedAt: session.date,
               score: session.score,
               totalQuestions: session.totalQuestions,
@@ -525,6 +670,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const value = useMemo(
     () => ({
       user,
+      testHistory: user?.testHistory ?? guestHistory,
       isLoading,
       authError,
       isSavingSession,
@@ -538,6 +684,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }),
     [
       authError,
+      guestHistory,
       isLoading,
       isSavingSession,
       login,

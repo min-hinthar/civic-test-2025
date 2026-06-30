@@ -39,6 +39,7 @@ import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { calculateCompositeScore, updateCompositeScore } from '@/lib/social';
 import type { BadgeCheckData } from '@/lib/social';
+import { BADGE_DEFINITIONS } from '@/lib/social/badgeDefinitions';
 import { SPRING_GENTLE } from '@/lib/motion-config';
 
 // ---------------------------------------------------------------------------
@@ -49,7 +50,7 @@ const MAX_MANUAL_RETRIES = 3;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, testHistory, isLoading: authLoading } = useAuth();
   const { showBurmese } = useLanguage();
   const { shouldShow: isOnboarding } = useOnboarding();
   const { showWarning } = useToast();
@@ -125,8 +126,9 @@ const Dashboard = () => {
     };
   }, [fetchTrigger]);
 
-  // Test history from auth user
-  const history = useMemo(() => user?.testHistory ?? [], [user?.testHistory]);
+  // Test history for the current visitor (Supabase for signed-in users,
+  // local storage for guests) — provided by the auth context.
+  const history = testHistory;
 
   // Badge check data - derived from dashboard stats
   const badgeCheckData: BadgeCheckData | null = useMemo(() => {
@@ -162,7 +164,7 @@ const Dashboard = () => {
   }, [history, currentStreak, longestStreak, categoryMasteries]);
 
   // Badge detection and celebration
-  const { newlyEarnedBadge, dismissCelebration, earnedBadges } = useBadges(badgeCheckData);
+  const { newlyEarnedBadge, dismissCelebration } = useBadges(badgeCheckData);
 
   // Error recovery: retry handler for dashboard data fetch
   const handleRetry = useCallback(() => {
@@ -210,12 +212,15 @@ const Dashboard = () => {
       coveragePercent,
     });
 
-    const topBadge = earnedBadges.length > 0 ? earnedBadges[0].id : null;
+    // Derive the leaderboard top badge from the account's own stats, not the
+    // device badge store, so un-migrated guest-earned badges aren't published.
+    const accountBadges = BADGE_DEFINITIONS.filter(badge => badge.check(badgeCheckData));
+    const topBadge = accountBadges.length > 0 ? accountBadges[0].id : null;
 
     updateCompositeScore(user.id, composite, currentStreak, topBadge).catch(() => {
       // Sync failure is non-critical
     });
-  }, [user?.id, user?.testHistory, badgeCheckData, currentStreak, earnedBadges]);
+  }, [user?.id, user?.testHistory, badgeCheckData, currentStreak]);
 
   // Dashboard-level loading: all async data sources still loading
   const isDashboardLoading =

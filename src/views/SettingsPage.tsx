@@ -16,6 +16,7 @@ import {
   Calendar,
   Clock,
   Globe,
+  LogIn,
   LogOut,
   MapPin,
   Mic,
@@ -253,6 +254,52 @@ export default function SettingsPage() {
 
       {/* Content */}
       <main className="mx-auto max-w-2xl px-4 py-5">
+        {/* ======= Guest Account Nudge (no-account visitors) ======= */}
+        {!user && (
+          <SettingsSection
+            icon={<LogIn className="h-5 w-5" />}
+            titleEn="Account"
+            titleMy="အကောင့်"
+            showBurmese={showBurmese}
+          >
+            <div className="py-3">
+              <p className="text-sm font-semibold text-foreground">
+                You&apos;re studying as a guest
+              </p>
+              {showBurmese && (
+                <p className="font-myanmar text-sm text-muted-foreground mt-0.5">
+                  {'ဧည့်သည်အဖြစ် လေ့လာနေပါသည်'}
+                </p>
+              )}
+              <p className="mt-1 text-sm text-muted-foreground">
+                Your progress is saved on this device. Create a free account to sync future progress
+                across your devices and join the leaderboard — no account is needed to keep
+                studying.
+              </p>
+              {showBurmese && (
+                <p className="mt-1 font-myanmar text-sm text-muted-foreground">
+                  {
+                    'သင့်တိုးတက်မှုကို ဒီစက်ထဲမှာ သိမ်းထားပါတယ်။ နောက်ထပ်တိုးတက်မှုကို စက်များအကြား sync လုပ်ဖို့နဲ့ leaderboard မှာ ပါဝင်ဖို့ အခမဲ့အကောင့်ဖွင့်ပါ — ဆက်လေ့လာဖို့ အကောင့်မလိုပါ။'
+                  }
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => router.push('/auth')}
+                className="mt-3 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors min-h-[44px]"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign in / Create free account
+                {showBurmese && (
+                  <span className="font-myanmar font-normal ml-1">
+                    {'ဝင်ရန် / အကောင့်ဖွင့်ရန်'}
+                  </span>
+                )}
+              </button>
+            </div>
+          </SettingsSection>
+        )}
+
         {/* ======= Appearance Section ======= */}
         <SettingsSection
           icon={<Palette className="h-5 w-5" />}
@@ -574,49 +621,62 @@ export default function SettingsPage() {
                 </span>
               )}
             </div>
-            <NotificationSettings />
-          </div>
-
-          {/* Review Reminder Time */}
-          <div className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
-              {showBurmese && (
-                <span className="font-myanmar text-sm text-muted-foreground">
-                  {'သတိပေးချက် အချိန်'}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
-                Time / <span className="font-myanmar">အချိန်</span>:
-              </label>
-              <input
-                type="time"
-                id="srs-reminder-time"
-                value={reminderTime}
-                onChange={handleReminderTimeChange}
-                className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px]"
-              />
-            </div>
-
-            {!isSubscribed && (
-              <div className="mt-2 rounded-xl border border-warning bg-warning-subtle px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-warning" />
-                  <p className="text-xs text-warning">
-                    Enable push notifications above to receive reminders.
-                  </p>
-                </div>
+            {user ? (
+              <NotificationSettings />
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Sign in to enable study reminders.
                 {showBurmese && (
-                  <p className="font-myanmar text-xs text-warning mt-1 ml-6">
-                    {'သတိပေးချက်တွေ ရရှိဖို့ push notification ဖွင့်ပါ။'}
-                  </p>
+                  <span className="block font-myanmar mt-0.5">
+                    {'လေ့လာရန် သတိပေးချက်များ ဖွင့်ရန် ဝင်ရောက်ပါ။'}
+                  </span>
                 )}
-              </div>
+              </p>
             )}
           </div>
+
+          {/* Preferred Reminder Time — signed-in only (guests can't subscribe to push) */}
+          {user && (
+            <div className="py-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold text-foreground">Preferred Reminder Time</p>
+                {showBurmese && (
+                  <span className="font-myanmar text-sm text-muted-foreground">
+                    {'သတိပေးချက် အချိန်'}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label htmlFor="srs-reminder-time" className="text-xs text-muted-foreground">
+                  Time / <span className="font-myanmar">အချိန်</span>:
+                </label>
+                <input
+                  type="time"
+                  id="srs-reminder-time"
+                  value={reminderTime}
+                  onChange={handleReminderTimeChange}
+                  className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground min-h-[48px]"
+                />
+              </div>
+
+              {!isSubscribed && (
+                <div className="mt-2 rounded-xl border border-warning bg-warning-subtle px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-warning" />
+                    <p className="text-xs text-warning">
+                      Enable push notifications above to receive reminders.
+                    </p>
+                  </div>
+                  {showBurmese && (
+                    <p className="font-myanmar text-xs text-warning mt-1 ml-6">
+                      {'သတိပေးချက်တွေ ရရှိဖို့ push notification ဖွင့်ပါ။'}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </SettingsSection>
 
         {/* ======= Social Section ======= */}

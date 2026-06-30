@@ -62,7 +62,7 @@ interface UseStudyPlanReturn {
  * 2. useReadinessScore -> readiness score
  * 3. useSRSWidget -> srsDueCount
  * 4. useCategoryMastery -> categoryMasteries, overallMastery
- * 5. useAuth -> user.testHistory (for lastMockTestDate)
+ * 5. useAuth -> testHistory (for lastMockTestDate; guest history included)
  * 6. getAnswerHistory() -> unique questions practiced count (IndexedDB)
  *
  * Usage:
@@ -96,7 +96,7 @@ export function useStudyPlan(): UseStudyPlanReturn {
   // -------------------------------------------------------------------------
   // 5. Auth (test history for lastMockTestDate)
   // -------------------------------------------------------------------------
-  const { user, isLoading: authLoading } = useAuth();
+  const { testHistory, isLoading: authLoading } = useAuth();
 
   // -------------------------------------------------------------------------
   // 6. Unique questions practiced count from IndexedDB
@@ -136,8 +136,8 @@ export function useStudyPlan(): UseStudyPlanReturn {
   const dailyPlan: DailyPlan | null = useMemo(() => {
     if (isLoading) return null;
 
-    // Derive lastMockTestDate from user's test history
-    const testHistory = user?.testHistory ?? [];
+    // Derive lastMockTestDate from the visitor's test history
+    // (signed-in: Supabase; guest: local storage).
     let lastMockTestDate: string | null = null;
     if (testHistory.length > 0) {
       const sorted = testHistory.slice().sort((a, b) => b.date.localeCompare(a.date));
@@ -171,7 +171,7 @@ export function useStudyPlan(): UseStudyPlanReturn {
     srsDueCount,
     categoryMasteries,
     overallMastery,
-    user?.testHistory,
+    testHistory,
     uniqueQuestionsCount,
     testDate,
   ]);

@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
   LogOut,
+  LogIn,
   ChevronLeft,
   ChevronRight,
   AlertTriangle,
@@ -104,6 +105,18 @@ export function Sidebar() {
     hapticLight();
     logout().then(() => router.push('/'));
   }, [logout, router]);
+
+  // --- Sign in (guests) ---
+  const handleSignIn = useCallback(() => {
+    // Respect the active-test navigation lock so signing in can't bypass the
+    // exit confirmation and drop an in-progress mock test.
+    if (isLocked) {
+      handleLockedTap();
+      return;
+    }
+    hapticLight();
+    router.push('/auth');
+  }, [isLocked, handleLockedTap, router]);
 
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
@@ -242,8 +255,8 @@ export function Sidebar() {
           spring={spring}
         />
 
-        {/* Logout */}
-        {user && (
+        {/* Logout (signed-in) / Sign in (guests) */}
+        {user ? (
           <SidebarUtilityButton
             icon={LogOut}
             label="Sign Out"
@@ -251,6 +264,15 @@ export function Sidebar() {
             onClick={handleSignOut}
             tooltip="Sign Out"
             destructive
+            spring={spring}
+          />
+        ) : (
+          <SidebarUtilityButton
+            icon={LogIn}
+            label="Sign In"
+            isExpanded={isExpanded}
+            onClick={handleSignIn}
+            tooltip="Sign in to sync future progress"
             spring={spring}
           />
         )}
