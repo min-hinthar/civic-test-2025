@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -33,14 +34,33 @@ const SyncStatusIndicator = dynamic(
  * during Next.js static page generation.
  */
 export function GlobalOverlays() {
+  // E2E escape hatch: first-run overlays (PWA prompt, onboarding tour, and the
+  // sign-in Welcome modal) render full-screen and intercept pointer events,
+  // which makes the authenticated e2e flows untestable. When the test flag is
+  // present, skip them. Real users never set this flag; it is read from
+  // localStorage after mount to stay hydration-safe (matches SSR on first render).
+  const [suppressOnboarding, setSuppressOnboarding] = useState(false);
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: hydrate flag from localStorage on mount (matches useOnboarding)
+      setSuppressOnboarding(localStorage.getItem('civic-test-e2e') === '1');
+    } catch {
+      // localStorage unavailable — keep overlays enabled
+    }
+  }, []);
+
   return (
     <>
       <ErrorBoundary fallback={null}>
         <CelebrationOverlay />
       </ErrorBoundary>
-      <PWAOnboardingFlow />
-      <OnboardingTour />
-      <GreetingFlow />
+      {!suppressOnboarding && (
+        <>
+          <PWAOnboardingFlow />
+          <OnboardingTour />
+          <GreetingFlow />
+        </>
+      )}
       <SyncStatusIndicator />
     </>
   );
