@@ -680,7 +680,7 @@ describe('SupabaseAuthContext', () => {
       }
     });
 
-    it('save during the guest-fallback window targets the account, not guest storage', async () => {
+    it('save during the guest-fallback window persists to local guest history (visible), not Supabase', async () => {
       vi.useFakeTimers();
       try {
         const session = {
@@ -697,27 +697,15 @@ describe('SupabaseAuthContext', () => {
           data: { subscription: { unsubscribe: vi.fn() } },
         });
 
-        // Hydration queries hang -> the hydrate times out into guest mode, but
-        // the session identity is still recorded.
+        // Hydration queries hang -> the hydrate times out into guest mode.
         const chain = buildFromMock();
         chain.maybeSingle.mockReturnValue(new Promise(() => {}));
         chain.order.mockReturnValue(new Promise(() => {}));
-        chain.upsert.mockResolvedValue({ error: null });
-        chain.single.mockResolvedValue({
-          data: {
-            id: 'mock-test-1',
-            completed_at: '2026-06-30T00:00:00.000Z',
-            incorrect_count: 2,
-            end_reason: 'complete',
-            passed: true,
-          },
-          error: null,
-        });
         mockFromChain.mockReturnValue(chain);
 
         renderWithProviders(<AuthConsumer />, { preset: 'full' });
 
-        // Timeout -> guest fallback: user is null but a session exists.
+        // Timeout -> guest fallback: user is null.
         await act(async () => {
           await vi.advanceTimersByTimeAsync(AUTH_TIMEOUT + 100);
         });
@@ -731,10 +719,14 @@ describe('SupabaseAuthContext', () => {
           await vi.advanceTimersByTimeAsync(0);
         });
 
-        // Routed to the Supabase account (mock_tests insert), NOT persisted to
-        // local guest storage where it would be orphaned from the account.
-        expect(mockFromChain).toHaveBeenCalledWith('mock_tests');
-        expect(localStorage.getItem('civic-prep-guest-test-history')).toBeNull();
+        // Persisted to local guest storage (immediately visible), NOT inserted
+        // to Supabase — migrateGuestHistoryToAccount moves it to the account on
+        // recovery. This keeps the save visible instead of "saved-then-gone".
+        const stored = localStorage.getItem('civic-prep-guest-test-history');
+        expect(stored).toBeTruthy();
+        expect(JSON.parse(stored as string)).toHaveLength(1);
+        expect(mockFromChain).not.toHaveBeenCalledWith('mock_tests');
+        expect(screen.getByTestId('ctx-test-history-count')).toHaveTextContent('1');
       } finally {
         vi.useRealTimers();
       }
@@ -917,6 +909,51 @@ describe('SupabaseAuthContext', () => {
       const stored = localStorage.getItem('civic-prep-guest-test-history');
       expect(stored).toBeTruthy();
       expect(JSON.parse(stored as string)).toHaveLength(1);
+    });
+  });
+
+  describe('guest -> account history migration', () => {
+    it('migrates local guest history into the account on sign-in and surfaces it', async () => {
+      // Seed local guest history before mount.
+      localStorage.setItem(
+        'civic-prep-guest-test-history',
+        JSON.stringify([
+          {
+            id: 'guest-1',
+            date: '2026-06-10T00:00:00.000Z',
+            score: 16,
+            totalQuestions: 20,
+            durationSeconds: 200,
+            passed: true,
+            incorrectCount: 4,
+            endReason: 'complete',
+            results: [],
+          },
+        ])
+      );
+
+      setupSessionMock();
+      const chain = setupDefaultFromMock();
+      chain.maybeSingle.mockResolvedValue({ data: { full_name: 'Test User' }, error: null });
+      chain.order.mockResolvedValue({ data: [], error: null }); // empty account history
+      chain.single.mockResolvedValue({
+        data: { id: 'srv-1', completed_at: '2026-06-10T00:00:00.000Z' },
+        error: null,
+      });
+
+      renderWithProviders(<AuthConsumer />, { preset: 'full' });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('user-id')).toHaveTextContent('test-user-id');
+      });
+
+      // The guest session is inserted into the account and surfaced in history.
+      await waitFor(() => {
+        expect(mockFromChain).toHaveBeenCalledWith('mock_tests');
+        expect(screen.getByTestId('ctx-test-history-count')).toHaveTextContent('1');
+      });
+      // Guest store cleared once migrated.
+      expect(localStorage.getItem('civic-prep-guest-test-history')).toBeNull();
     });
   });
 });
