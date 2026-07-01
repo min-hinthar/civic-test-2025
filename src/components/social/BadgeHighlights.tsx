@@ -16,8 +16,9 @@ import clsx from 'clsx';
 
 import { GlassCard } from '@/components/hub/GlassCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { getEarnedBadges } from '@/lib/social/badgeStore';
+import { getEarnedBadges, GUEST_BADGE_SCOPE } from '@/lib/social/badgeStore';
 import type { EarnedBadge } from '@/lib/social/badgeStore';
 import { BADGE_DEFINITIONS } from '@/lib/social/badgeDefinitions';
 import { getBadgeColors } from '@/lib/social/badgeColors';
@@ -53,26 +54,34 @@ interface BadgeHighlightsProps {
 export function BadgeHighlights({ className }: BadgeHighlightsProps) {
   const router = useRouter();
   const { showBurmese } = useLanguage();
+  const { user } = useAuth();
+  const scope = user?.id ?? GUEST_BADGE_SCOPE;
   const shouldReduceMotion = useReducedMotion();
   const [earnedRecords, setEarnedRecords] = useState<EarnedBadge[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // `loadedScope` marks which scope `earnedRecords` belongs to; isLoading is
+  // derived from it so a visitor change reloads without flashing stale badges.
+  const [loadedScope, setLoadedScope] = useState<string | null>(null);
+  const isLoading = loadedScope !== scope;
 
   useEffect(() => {
     let cancelled = false;
-    getEarnedBadges()
+    getEarnedBadges(scope)
       .then(records => {
         if (!cancelled) {
           setEarnedRecords(records);
-          setIsLoading(false);
+          setLoadedScope(scope);
         }
       })
       .catch(() => {
-        if (!cancelled) setIsLoading(false);
+        if (!cancelled) {
+          setEarnedRecords([]);
+          setLoadedScope(scope);
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [scope]);
 
   const earnedIds = useMemo(() => new Set(earnedRecords.map(r => r.badgeId)), [earnedRecords]);
 
