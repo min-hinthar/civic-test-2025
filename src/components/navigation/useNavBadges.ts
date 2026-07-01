@@ -14,6 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSRS } from '@/contexts/SRSContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { getAllSessions } from '@/lib/sessions/sessionStore';
 import { swUpdateManager } from '@/lib/pwa/swUpdateManager';
 import type { NavBadges } from './navConfig';
@@ -22,13 +23,24 @@ const EARNED_KEY = 'civic-prep-earned-badge-count';
 const SEEN_KEY = 'civic-prep-seen-badge-count';
 
 /**
- * Read earned vs seen badge counts from localStorage.
- * Returns true if earned > seen (unseen badges exist).
+ * Visitor scope for the nav-dot counters — an account id, or 'guest'. Kept in
+ * sync with useBadges' scoping so a guest's badge counts and an account's don't
+ * cross-contaminate the "unseen badges" nav dot.
  */
-function checkHubBadge(): boolean {
+export function navBadgeScope(userId: string | null | undefined): string {
+  return userId ?? 'guest';
+}
+export const earnedCountKey = (scope: string): string => `${EARNED_KEY}:${scope}`;
+export const seenCountKey = (scope: string): string => `${SEEN_KEY}:${scope}`;
+
+/**
+ * Read earned vs seen badge counts (for the given visitor scope) from
+ * localStorage. Returns true if earned > seen (unseen badges exist).
+ */
+function checkHubBadge(scope: string): boolean {
   try {
-    const earned = parseInt(localStorage.getItem(EARNED_KEY) ?? '0', 10);
-    const seen = parseInt(localStorage.getItem(SEEN_KEY) ?? '0', 10);
+    const earned = parseInt(localStorage.getItem(earnedCountKey(scope)) ?? '0', 10);
+    const seen = parseInt(localStorage.getItem(seenCountKey(scope)) ?? '0', 10);
     return earned > seen;
   } catch {
     return false;
@@ -50,6 +62,8 @@ async function checkSWUpdate(): Promise<boolean> {
 
 export function useNavBadges(): NavBadges {
   const { dueCount } = useSRS();
+  const { user } = useAuth();
+  const scope = navBadgeScope(user?.id);
   const [settingsHasUpdate, setSettingsHasUpdate] = useState(false);
   const [hubHasUpdate, setHubHasUpdate] = useState(false);
   const [testSessionCount, setTestSessionCount] = useState(0);
@@ -75,7 +89,7 @@ export function useNavBadges(): NavBadges {
       }
       // Hub badge check is synchronous (localStorage)
       if (!cancelled) {
-        setHubHasUpdate(checkHubBadge());
+        setHubHasUpdate(checkHubBadge(scope));
       }
       // Session count check (IndexedDB, async)
       getAllSessions()
@@ -103,8 +117,8 @@ export function useNavBadges(): NavBadges {
 
     // Listen for storage events (cross-tab updates)
     const handleStorage = (e: StorageEvent) => {
-      if ((e.key === EARNED_KEY || e.key === SEEN_KEY) && !cancelled) {
-        setHubHasUpdate(checkHubBadge());
+      if ((e.key === earnedCountKey(scope) || e.key === seenCountKey(scope)) && !cancelled) {
+        setHubHasUpdate(checkHubBadge(scope));
       }
     };
 
@@ -116,7 +130,7 @@ export function useNavBadges(): NavBadges {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('storage', handleStorage);
     };
-  }, []);
+  }, [scope]);
 
   return {
     studyDueCount: dueCount,

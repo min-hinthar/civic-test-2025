@@ -95,7 +95,17 @@ async function persistSession(userId: string, session: TestSession): Promise<Tes
     const { error: responsesError } = await supabase
       .from('mock_test_responses')
       .insert(responsesPayload);
-    if (responsesError) throw responsesError;
+    if (responsesError) {
+      // Roll back the orphaned parent (best-effort) so the session is fully
+      // retried on the next hydrate, rather than being permanently skipped by
+      // content dedup as a parent row with no responses.
+      try {
+        await supabase.from('mock_tests').delete().eq('id', data.id);
+      } catch {
+        // ignore — worst case a parentless row remains until manual cleanup
+      }
+      throw responsesError;
+    }
   }
 
   return { ...session, id: data.id, date: data.completed_at ?? session.date };

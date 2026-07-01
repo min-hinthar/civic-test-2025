@@ -15,6 +15,7 @@ import { getAnswerHistory } from '@/lib/mastery';
 import { totalQuestions } from '@/constants/questions';
 import { strings } from '@/lib/i18n/strings';
 import type { BadgeCheckData } from '@/lib/social/badgeDefinitions';
+import { navBadgeScope, earnedCountKey, seenCountKey } from '@/components/navigation/useNavBadges';
 import { HubTabBar } from '@/components/hub/HubTabBar';
 import { OverviewTab } from '@/components/hub/OverviewTab';
 import { HistoryTab } from '@/components/hub/HistoryTab';
@@ -283,26 +284,28 @@ export default function HubPage({ initialTab }: HubPageProps) {
   // Badge count sync to localStorage for useNavBadges
   // -------------------------------------------------------------------------
 
+  const navBadgeScopeKey = navBadgeScope(user?.id);
+
   useEffect(() => {
     if (!isLoadingBadges) {
       try {
-        localStorage.setItem('civic-prep-earned-badge-count', String(earnedBadges.length));
+        localStorage.setItem(earnedCountKey(navBadgeScopeKey), String(earnedBadges.length));
       } catch {
         // localStorage not available
       }
     }
-  }, [earnedBadges.length, isLoadingBadges]);
+  }, [earnedBadges.length, isLoadingBadges, navBadgeScopeKey]);
 
   // When Achievements tab is active, mark badges as seen
   useEffect(() => {
     if (currentTab === 'achievements' && !isLoadingBadges) {
       try {
-        localStorage.setItem('civic-prep-seen-badge-count', String(earnedBadges.length));
+        localStorage.setItem(seenCountKey(navBadgeScopeKey), String(earnedBadges.length));
       } catch {
         // localStorage not available
       }
     }
-  }, [currentTab, earnedBadges.length, isLoadingBadges]);
+  }, [currentTab, earnedBadges.length, isLoadingBadges, navBadgeScopeKey]);
 
   // Don't render content until we have a valid tab (redirect in progress)
   if (!currentTab) {
