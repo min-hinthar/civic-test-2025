@@ -12,6 +12,7 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 - **Education** — Understanding rights, responsibilities, and history beyond test preparation
 - **Community Empowerment** — Free, open-source platform removing financial barriers
 - **Inclusivity** — English-only mode or bilingual (English + Burmese) mode across the entire app
+- **No barriers to entry** — the full app works with **no account required**; sign-in is optional and only adds cross-device sync
 
 ---
 
@@ -36,6 +37,13 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 - **Flashcard Sort** — Swipeable Know/Don't Know cards with multi-round drilling of missed questions
 - **Spaced Repetition (SRS)** — FSRS algorithm (ts-fsrs) with IndexedDB persistence and Supabase cloud sync
 - **Interview Simulation** — Chat-style practice with animated examiner, speech recognition, Practice/Real USCIS modes, and per-answer confidence scoring
+
+### Study Without an Account (no sign-in required)
+
+- **Full app for guests** — flashcards/SRS, mock tests, interview, and progress all work with **no account**, backed by local storage
+- **Resilient to backend outages** — if Supabase auth is paused/unreachable, the app falls back to guest mode instead of blocking on a loading spinner; a slow-but-recovering session is promoted to signed-in automatically
+- **Guest history migration** — local guest mock-test history is migrated into the account (content-deduped, idempotent) on first sign-in, so nothing is lost
+- **Optional sign-in** — account-only features (cross-device sync, leaderboard) surface gentle in-context sign-in prompts rather than gating the app
 
 ### Content
 
@@ -81,17 +89,18 @@ A free, bilingual (English + Burmese) web app designed to help **Burmese-speakin
 - **7 category study tips** as dismissible bilingual cards
 - **Tricky Question badges** and Related Question chips linking similar content
 
-### Cross-Device Sync
+### Cross-Device Sync (for signed-in users)
 
 - **Settings, bookmarks, streaks, answer history** sync via Supabase
 - **Visibility-based re-pull** on tab focus with 5s throttle
-- **Login hydration** for instant sync on new device
+- **Login hydration** for instant sync on a new device
+- **Guest → account migration** — local guest mock-test history merges into the account on sign-in (content-deduped, retried on partial failure)
 
-### Authentication & Social
+### Authentication & Social (optional)
 
-- **Supabase Auth** with email/password and Google One Tap OAuth
-- **Privacy-first leaderboard** — opt-in with Row Level Security
-- **Study streaks, badges, milestone celebrations** with Canvas-rendered share cards
+- **Optional Supabase Auth** with email/password and Google One Tap OAuth — the app is fully usable signed-out
+- **Privacy-first leaderboard** — opt-in with Row Level Security; hidden for guests behind a sign-in prompt
+- **Study streaks, badges, milestone celebrations** with Canvas-rendered share cards; earned-badge state is **scoped per visitor** (guest vs account) so it never leaks across sign-in
 - **Cross-device bookmark sync** with dedicated IndexedDB store and Supabase backup
 
 ### Security
@@ -132,7 +141,7 @@ App Router (Next.js 16)
   ├── app/layout.tsx (Server Component root)
   │     └── ClientProviders (10 nested contexts)
   │           └── NavigationShell + file-based routes
-  ├── app/(protected)/ (auth guard layout)
+  ├── app/(protected)/ (app shell — open to guests and signed-in users alike)
   │     └── /home, /study, /test, /practice, /drill, ...
   ├── app/auth/ (public)
   └── app/api/push/ (Route Handlers)
@@ -140,12 +149,14 @@ App Router (Next.js 16)
 
 **Provider hierarchy (10 nested contexts):**
 ```
-ErrorBoundary → LanguageProvider → ThemeProvider → TTSProvider → ToastProvider
-→ OfflineProvider → AuthProvider → SocialProvider → SRSProvider → StateProvider
+ErrorBoundary → AuthProvider → LanguageProvider → ThemeProvider → TTSProvider
+→ ToastProvider → OfflineProvider → SocialProvider → SRSProvider → StateProvider
 → NavigationProvider → NavigationShell → Routes
 ```
 
-**Offline-first pattern:** IndexedDB primary storage → Supabase sync when online → sync queue for offline writes → withRetry for transient failures.
+`AuthProvider` sits above Language/Theme/TTS (which call `useAuth` for cross-device sync). It never blocks the app: a hydration timeout falls back to guest mode (local history), and a slow session that resolves later is promoted to signed-in via a generation-guarded late-recovery path.
+
+**Offline-first pattern:** IndexedDB / localStorage primary storage → Supabase sync when signed in and online → sync queue for offline writes → withRetry for transient failures. Guests persist entirely locally; their mock-test history is migrated into the account on sign-in.
 
 ---
 
@@ -220,7 +231,7 @@ The build chain is `@serwist/next` (PWA) wrapping `@sentry/nextjs` (error tracki
 | Plans executed | 278 |
 | Requirements validated | 226/227 |
 | TypeScript LOC | 78,000+ |
-| Tests passing | 618 |
+| Tests passing | 871 (57 files) |
 | USCIS questions | 128 (all with bilingual explanations) |
 | Burmese audio files | 256 pre-generated MP3s |
 | IndexedDB stores | 10 |

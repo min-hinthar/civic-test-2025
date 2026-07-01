@@ -70,7 +70,11 @@ AuthProvider MUST be above Language/Theme/TTS providers (they call useAuth for c
 
 - **Bilingual app** — English + Burmese; all user-facing text needs both languages
 - **128 USCIS questions** across 7 categories with state-aware answers
-- **Hash routing** — views use react-router-dom hash routing in catch-all
+- **App Router routing** — Next.js file-based routes; the app shell lives under `app/(protected)/` but is **open to guests** (not an auth guard); Progress Hub uses an optional catch-all `/hub/[[...tab]]`
+- **Guest (no-account) access** — full app works signed-out; guest mock-test history in localStorage (`civic-prep-guest-test-history`, see `src/lib/testHistory/`). `useAuth().testHistory` = `user?.testHistory ?? guestHistory` — read it, not `user?.testHistory`
+- **Auth never blocks the app** — `SupabaseAuthContext` hydration races a timeout; on timeout it falls back to GUEST mode (no placeholder user), then a generation-guarded late-recovery promotes a slow-but-valid session to signed-in. Never gate rendering on a signed-in user
+- **Guest→account migration** — on sign-in, guest history migrates into Supabase (`migrateGuestHistory.ts`): content-deduped, idempotent, serialised by an in-flight guard (two hydrates per load), orphan-parent rollback on partial insert
+- **Per-visitor badge scoping** — badge store + nav-dot counters keyed by `user?.id ?? 'guest'`; never share badge state across sign-in
 - **Offline-first** — IndexedDB (idb-keyval) + Serwist service worker
 - **SRS algorithm** — ts-fsrs for spaced repetition, syncs IndexedDB <-> Supabase
 - **iOS glass-morphism** — 3-tier design (light/medium/heavy)
@@ -81,5 +85,5 @@ AuthProvider MUST be above Language/Theme/TTS providers (they call useAuth for c
 
 ## Learnings
 
-- `.claude/learnings/INDEX.md` - scan first (provider-ordering, tts-voice, myanmar-typography, css-specificity)
+- `.claude/learnings/INDEX.md` - scan first (provider-ordering, tts-voice, myanmar-typography, css-specificity, guest-access-and-auth-hydration)
 
